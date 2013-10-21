@@ -15,6 +15,6 @@
 
 #pragma mark - Instance Methods
 
-- (void) loadAnnotation: (id <MKAnnotation>) object;
+- (void) loadAnnotation: (id <MKAnnotation>) annotation;
 
 @end

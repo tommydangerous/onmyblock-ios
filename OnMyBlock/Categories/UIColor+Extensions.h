@@ -11,5 +11,10 @@
 @interface UIColor (Extensions)
 
 + (UIColor *) blue;
++ (UIColor *) grayLight;
++ (UIColor *) grayLightAlpha: (int) value;
++ (UIColor *) grayMedium;
++ (UIColor *) grayMediumAlpha: (int) value;
++ (UIColor *) textColor;
 
 @end

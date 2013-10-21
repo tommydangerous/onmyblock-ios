@@ -6,10 +6,17 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "OMBMapViewController.h"
 
 #import "OMBAnnotation.h"
 #import "OMBAnnotationView.h"
+#import "OMBPropertiesConnection.h"
+#import "OMBPropertiesStore.h"
+#import "OMBProperty.h"
+#import "OMBPropertyInfoView.h"
+#import "UIColor+Extensions.h"
 
 @implementation OMBMapViewController
 
@@ -24,6 +31,7 @@
     locationManager.delegate        = self;
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     locationManager.distanceFilter  = 50;
+    [OMBPropertiesStore sharedStore].mapViewController = self;
   }
   return self;
 }
@@ -35,14 +43,26 @@
 - (void) loadView
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
+  self.view = [[UIView alloc] initWithFrame: screen];
+  // Tap gesture
+  // UITapGestureRecognizer *tap = 
+  //  [[UITapGestureRecognizer alloc] initWithTarget:
+  //   self action: @selector(hidePropertyInfoView)];
   // Map view
   mapView          = [[OCMapView alloc] init];
   mapView.delegate = self;
   mapView.frame    = screen;
   mapView.mapType  = MKMapTypeStandard;
-  self.view = mapView;
+  mapView.rotateEnabled = NO;
+  mapView.showsPointsOfInterest = NO;
+  // [mapView addGestureRecognizer: tap];
+  [self.view addSubview: mapView];
   // Region, Span
   // MKMapPoint, MKMapSize, MKMapRect, MKAnnotation
+
+  // Property info view
+  propertyInfoView = [[OMBPropertyInfoView alloc] init];
+  [self.view addSubview: propertyInfoView];
 }
 
 - (void) viewDidLoad
@@ -81,21 +101,58 @@ didUpdateLocations: (NSArray *) locations
 - (void) mapView: (MKMapView *) map regionDidChangeAnimated: (BOOL) animated
 {
   // Tells the delegate that the region displayed by the map view just changed
+  // Need to do this to uncluster when zooming in
   CLLocationCoordinate2D coordinate = map.centerCoordinate;
-  NSLog(@"Center: %f, %f", coordinate.latitude, coordinate.longitude);
+  OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
+  annotation.coordinate = coordinate;
+  [mapView addAnnotation: annotation];
+  [mapView removeAnnotation: annotation];
+  // [self addAnnotationAtCoordinate: coordinate];
+  // NSLog(@"Center: %f, %f", coordinate.latitude, coordinate.longitude);
 
   MKCoordinateRegion region = map.region;
   float maxLatitude, maxLongitude, minLatitude, minLongitude;
   // Northwest = maxLatitude, minLongitude
   maxLatitude  = region.center.latitude + (region.span.latitudeDelta / 2.0);
   minLongitude = region.center.longitude - (region.span.longitudeDelta / 2.0);
-  NSLog(@"Northwest: %f, %f", maxLatitude, minLongitude);
+  // NSLog(@"Northwest: %f, %f", maxLatitude, minLongitude);
   // Southeat = minLatitude, maxLongitude
   minLatitude  = region.center.latitude - (region.span.latitudeDelta / 2.0);
   maxLongitude = region.center.longitude + (region.span.longitudeDelta / 2.0);
-  NSLog(@"Southeast: %f, %f", minLatitude, maxLongitude);
+  // NSLog(@"Southeast: %f, %f", minLatitude, maxLongitude);
 
-  [self addAnnotationAtCoordinate: coordinate];
+  NSString *bounds = [NSString stringWithFormat: @"[%f,%f,%f,%f]",
+    minLongitude, maxLatitude, maxLongitude, minLatitude];
+  NSDictionary *parameters = @{
+    @"bounds": bounds
+  };
+  OMBPropertiesConnection *connection = 
+    [[OMBPropertiesConnection alloc] initWithParameters: parameters];
+  [connection start];
+
+  [self hidePropertyInfoView];
+}
+
+- (void) mapView: (MKMapView *) map 
+didSelectAnnotationView: (MKAnnotationView *) annotationView
+{
+  // If user clicked on a cluster
+  if ([annotationView.annotation isKindOfClass: [OCAnnotation class]]) {
+    [self zoomClusterAtAnnotation: (OCAnnotation *) annotationView.annotation];
+  }
+  // If user clicked on a single property
+  else {
+    CLLocationCoordinate2D coordinate = annotationView.annotation.coordinate;
+    NSLog(@"%f, %f", coordinate.latitude, coordinate.longitude);
+    NSString *key = [NSString stringWithFormat: @"%f,%f",
+      coordinate.latitude, coordinate.longitude];
+    OMBProperty *property = 
+      [[OMBPropertiesStore sharedStore].properties objectForKey: key];
+    NSLog(@"%@ : %@", key, property);
+    [propertyInfoView loadPropertyData: property];  
+    [self showPropertyInfoView];
+    NSLog(@"%i", property.uid);
+  }
 }
 
 - (void) mapView: (MKMapView *) map
@@ -118,12 +175,14 @@ viewForAnnotation: (id <MKAnnotation>) annotation
     annotationView = 
       [[OMBAnnotationView alloc] initWithAnnotation: annotation 
         reuseIdentifier: ReuseIdentifier];
-    }
+  }
   [annotationView loadAnnotation: annotation];
   return annotationView;
 }
 
 #pragma mark - Methods
+
+#pragma mark Instance Methods
 
 - (void) addAnnotationAtCoordinate: (CLLocationCoordinate2D) coordinate
 {
@@ -144,6 +203,21 @@ viewForAnnotation: (id <MKAnnotation>) annotation
   [locationManager stopUpdatingLocation];
 }
 
+- (void) hidePropertyInfoView
+{
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  if (propertyInfoView.frame.origin.y != screen.size.height) {
+    CGRect frame = propertyInfoView.frame;
+    void (^animations) (void) = ^(void) {
+      propertyInfoView.frame = CGRectMake(frame.origin.x, 
+        screen.size.height, frame.size.width, frame.size.height);
+    };
+    [UIView animateWithDuration: 0.1 delay: 0 
+      options: UIViewAnimationOptionCurveLinear
+        animations: animations completion: nil];
+  }
+}
+
 - (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
 withMiles: (int) miles
 {
@@ -152,7 +226,36 @@ withMiles: (int) miles
   MKCoordinateRegion region =
     MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles, 
       distanceInMiles);
-  [mapView setRegion: region animated: NO];
+  [mapView setRegion: region animated: YES];
+}
+
+- (void) showPropertyInfoView
+{  
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGRect frame = propertyInfoView.frame;
+  void (^animations) (void) = ^(void) {
+    propertyInfoView.frame = CGRectMake(frame.origin.x, 
+      (screen.size.height - frame.size.height), frame.size.width, 
+        frame.size.height);
+  };
+  [UIView animateWithDuration: 0.1 delay: 0 
+    options: UIViewAnimationOptionCurveLinear
+      animations: animations completion: nil];
+}
+
+- (void) zoomClusterAtAnnotation: (OCAnnotation *) cluster
+{
+  MKMapRect zoomRect = MKMapRectNull;
+  for (id <MKAnnotation> annotation in [cluster annotationsInCluster]) {
+    MKMapPoint annotationPoint = MKMapPointForCoordinate(annotation.coordinate);
+    MKMapRect pointRect = MKMapRectMake(annotationPoint.x, annotationPoint.y, 
+      0, 0);
+    if (MKMapRectIsNull(zoomRect))
+      zoomRect = pointRect;
+    else
+      zoomRect = MKMapRectUnion(zoomRect, pointRect);
+  }
+  [mapView setVisibleMapRect: zoomRect animated: YES];
 }
 
 @end

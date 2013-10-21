@@ -32,6 +32,8 @@
 		AB9B26471811CB1300E6DAC4 /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26411811CB1300E6DAC4 /* NSString+Extensions.m */; };
 		AB9B26481811CB1300E6DAC4 /* UIColor+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26431811CB1300E6DAC4 /* UIColor+Extensions.m */; };
 		AB9B26491811CB1300E6DAC4 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26451811CB1300E6DAC4 /* UIImage+Resize.m */; };
+		AB9B264D1811CE6D00E6DAC4 /* OMBConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B264C1811CE6D00E6DAC4 /* OMBConnection.m */; };
+		AB9B26501811CE8E00E6DAC4 /* OMBPropertiesConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B264F1811CE8E00E6DAC4 /* OMBPropertiesConnection.m */; };
 		ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C56E1811719B00DD91C9 /* OMBAppDelegate.m */; };
 		ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C5731811776700DD91C9 /* OMBViewController.m */; };
 		ABB3C5771811778000DD91C9 /* OMBMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C5761811778000DD91C9 /* OMBMapViewController.m */; };
@@ -40,6 +42,10 @@
 		ABB3C585181178AE00DD91C9 /* OMBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C584181178AE00DD91C9 /* OMBNavigationController.m */; };
 		ABB3C58718117C1C00DD91C9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB3C58618117C1C00DD91C9 /* MapKit.framework */; };
 		ABB3C58918117C2200DD91C9 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB3C58818117C2200DD91C9 /* CoreLocation.framework */; };
+		ABC48E751811D89200F01D8D /* OMBPropertiesStore.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC48E741811D89200F01D8D /* OMBPropertiesStore.m */; };
+		ABC48E781811D92900F01D8D /* OMBProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC48E771811D92900F01D8D /* OMBProperty.m */; };
+		ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABC48E791812397300F01D8D /* QuartzCore.framework */; };
+		ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +100,10 @@
 		AB9B26431811CB1300E6DAC4 /* UIColor+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Extensions.m"; sourceTree = "<group>"; };
 		AB9B26441811CB1300E6DAC4 /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
 		AB9B26451811CB1300E6DAC4 /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
+		AB9B264B1811CE6D00E6DAC4 /* OMBConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBConnection.h; sourceTree = "<group>"; };
+		AB9B264C1811CE6D00E6DAC4 /* OMBConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBConnection.m; sourceTree = "<group>"; };
+		AB9B264E1811CE8E00E6DAC4 /* OMBPropertiesConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPropertiesConnection.h; sourceTree = "<group>"; };
+		AB9B264F1811CE8E00E6DAC4 /* OMBPropertiesConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertiesConnection.m; sourceTree = "<group>"; };
 		ABB3C56D1811719B00DD91C9 /* OMBAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAppDelegate.h; sourceTree = "<group>"; };
 		ABB3C56E1811719B00DD91C9 /* OMBAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAppDelegate.m; sourceTree = "<group>"; };
 		ABB3C5721811776700DD91C9 /* OMBViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBViewController.h; sourceTree = "<group>"; };
@@ -109,6 +119,13 @@
 		ABB3C584181178AE00DD91C9 /* OMBNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBNavigationController.m; sourceTree = "<group>"; };
 		ABB3C58618117C1C00DD91C9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		ABB3C58818117C2200DD91C9 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		ABC48E731811D89200F01D8D /* OMBPropertiesStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPropertiesStore.h; sourceTree = "<group>"; };
+		ABC48E741811D89200F01D8D /* OMBPropertiesStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertiesStore.m; sourceTree = "<group>"; };
+		ABC48E761811D92900F01D8D /* OMBProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBProperty.h; sourceTree = "<group>"; };
+		ABC48E771811D92900F01D8D /* OMBProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBProperty.m; sourceTree = "<group>"; };
+		ABC48E791812397300F01D8D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		ABC48E7B18125AF000F01D8D /* OMBPropertyInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPropertyInfoView.h; sourceTree = "<group>"; };
+		ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertyInfoView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */,
 				ABB3C58918117C2200DD91C9 /* CoreLocation.framework in Frameworks */,
 				ABB3C58718117C1C00DD91C9 /* MapKit.framework in Frameworks */,
 				AB802EA018109E5200E04D11 /* CoreGraphics.framework in Frameworks */,
@@ -162,6 +180,7 @@
 		AB802E9C18109E5200E04D11 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ABC48E791812397300F01D8D /* QuartzCore.framework */,
 				ABB3C58818117C2200DD91C9 /* CoreLocation.framework */,
 				ABB3C58618117C1C00DD91C9 /* MapKit.framework */,
 				AB802E9D18109E5200E04D11 /* Foundation.framework */,
@@ -175,6 +194,7 @@
 		AB802EA318109E5200E04D11 /* OnMyBlock */ = {
 			isa = PBXGroup;
 			children = (
+				AB9B264A1811CE5E00E6DAC4 /* Connections */,
 				AB9B263D1811CB1300E6DAC4 /* Categories */,
 				AB9B26241811AF6C00E6DAC4 /* Stores */,
 				AB9B260C1811AA6600E6DAC4 /* Models */,
@@ -222,6 +242,8 @@
 			children = (
 				AB9B26071811A74E00E6DAC4 /* OMBAnnotationView.h */,
 				AB9B26081811A74E00E6DAC4 /* OMBAnnotationView.m */,
+				ABC48E7B18125AF000F01D8D /* OMBPropertyInfoView.h */,
+				ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -231,6 +253,8 @@
 			children = (
 				AB9B260D1811AA7C00E6DAC4 /* OMBAnnotation.h */,
 				AB9B260E1811AA7C00E6DAC4 /* OMBAnnotation.m */,
+				ABC48E761811D92900F01D8D /* OMBProperty.h */,
+				ABC48E771811D92900F01D8D /* OMBProperty.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -240,6 +264,8 @@
 			children = (
 				AB9B26251811AF7B00E6DAC4 /* OMBAnnotationStore.h */,
 				AB9B26261811AF7B00E6DAC4 /* OMBAnnotationStore.m */,
+				ABC48E731811D89200F01D8D /* OMBPropertiesStore.h */,
+				ABC48E741811D89200F01D8D /* OMBPropertiesStore.m */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -274,6 +300,17 @@
 				AB9B26451811CB1300E6DAC4 /* UIImage+Resize.m */,
 			);
 			path = Categories;
+			sourceTree = "<group>";
+		};
+		AB9B264A1811CE5E00E6DAC4 /* Connections */ = {
+			isa = PBXGroup;
+			children = (
+				AB9B264B1811CE6D00E6DAC4 /* OMBConnection.h */,
+				AB9B264C1811CE6D00E6DAC4 /* OMBConnection.m */,
+				AB9B264E1811CE8E00E6DAC4 /* OMBPropertiesConnection.h */,
+				AB9B264F1811CE8E00E6DAC4 /* OMBPropertiesConnection.m */,
+			);
+			path = Connections;
 			sourceTree = "<group>";
 		};
 		ABB3C56C1811719B00DD91C9 /* AppDelegate */ = {
@@ -427,10 +464,15 @@
 				AB9B26471811CB1300E6DAC4 /* NSString+Extensions.m in Sources */,
 				AB9B26091811A74E00E6DAC4 /* OMBAnnotationView.m in Sources */,
 				AB9B26491811CB1300E6DAC4 /* UIImage+Resize.m in Sources */,
+				AB9B264D1811CE6D00E6DAC4 /* OMBConnection.m in Sources */,
+				AB9B26501811CE8E00E6DAC4 /* OMBPropertiesConnection.m in Sources */,
 				AB9B26391811B7ED00E6DAC4 /* OCAlgorithms.m in Sources */,
+				ABC48E751811D89200F01D8D /* OMBPropertiesStore.m in Sources */,
 				AB9B26461811CB1300E6DAC4 /* NSDate+TimeAgo.m in Sources */,
 				AB9B260F1811AA7C00E6DAC4 /* OMBAnnotation.m in Sources */,
 				AB9B26271811AF7B00E6DAC4 /* OMBAnnotationStore.m in Sources */,
+				ABC48E781811D92900F01D8D /* OMBProperty.m in Sources */,
+				ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */,
 				ABB3C57F1811781C00DD91C9 /* MFSideMenuContainerViewController.m in Sources */,
 				ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */,
 				ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */,

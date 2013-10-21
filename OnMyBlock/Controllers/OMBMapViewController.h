@@ -13,11 +13,20 @@
 
 #import "OCMapView.h"
 
+@class OMBPropertyInfoView;
+
 @interface OMBMapViewController : OMBViewController
 <CLLocationManagerDelegate, MKMapViewDelegate>
 {
   CLLocationManager *locationManager;
   OCMapView *mapView;
+  OMBPropertyInfoView *propertyInfoView;
 }
+
+#pragma mark - Methods
+
+#pragma mark Instance Methods
+
+- (void) addAnnotationAtCoordinate: (CLLocationCoordinate2D) coordinate;
 
 @end
