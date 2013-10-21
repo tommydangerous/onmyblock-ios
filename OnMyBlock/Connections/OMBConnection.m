@@ -11,6 +11,7 @@
 NSTimeInterval RequestTimeoutInterval = 10;
 NSMutableArray *sharedConnectionList  = nil;
 NSString *const OnMyBlockAPIURL       = @"http://172.17.1.23:3000";
+// NSString *const OnMyBlockAPIURL       = @"http://ombrb.nodelist.com";
 // NSString *const OnMyBlockAPIURL       = @"http://192.168.1.72:3000";
 
 @implementation OMBConnection
@@ -39,7 +40,7 @@ NSString *const OnMyBlockAPIURL       = @"http://172.17.1.23:3000";
 
 #pragma mark - Protocol
 
-#pragma mark Protocol NSURLConnectionDataDelegate
+#pragma mark - Protocol NSURLConnectionDataDelegate
 
 - (void) connection: (NSURLConnection *) connection
 didReceiveData: (NSData *) data
@@ -66,7 +67,7 @@ didReceiveData: (NSData *) data
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
-#pragma mark Protocol NSURLConnectionDelegate
+#pragma mark - Protocol NSURLConnectionDelegate
 
 - (void) connection: (NSURLConnection *) connection
 didFailWithError: (NSError *) error

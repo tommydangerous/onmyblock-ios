@@ -103,7 +103,7 @@
 
 - (void) testAddAnnotationAtCoordinate
 {
-  [mapViewController addAnnotationAtCoordinate: coordinate];
+  [mapViewController addAnnotationAtCoordinate: coordinate withTitle: @"test"];
   XCTAssertEqualWithAccuracy([[[mapViewController mapView] annotations] count],
     1, 0, @"Map view should have 1 annotation after adding an annotation");
 }

@@ -1,30 +1,30 @@
 //
-//  OMBPropertiesStore.h
+//  OMBResidenceStore.h
 //  OnMyBlock
 //
-//  Created by Tommy DANGerous on 10/18/13.
+//  Created by Tommy DANGerous on 10/21/13.
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
 @class OMBMapViewController;
-@class OMBProperty;
+@class OMBResidence;
 
-@interface OMBPropertiesStore : NSObject
+@interface OMBResidenceStore : NSObject
 
 @property (nonatomic, strong) OMBMapViewController *mapViewController;
-@property (nonatomic, strong) NSMutableDictionary *properties;
+@property (nonatomic, strong) NSMutableDictionary *residences;
 
 #pragma mark - Methods
 
-#pragma mark Class Methods
+#pragma mark - Class Methods
 
-+ (OMBPropertiesStore *) sharedStore;
++ (OMBResidenceStore *) sharedStore;
 
 #pragma mark Instance Methods
 
-- (void) addProperty: (OMBProperty *) property;
+- (void) addResidence: (OMBResidence *) residence;
 - (void) fetchPropertiesWithParameters: (NSDictionary *) parameters;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 

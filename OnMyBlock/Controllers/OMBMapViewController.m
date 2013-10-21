@@ -10,11 +10,12 @@
 
 #import "OMBMapViewController.h"
 
+#import "OCMapView.h"
 #import "OMBAnnotation.h"
 #import "OMBAnnotationView.h"
-#import "OMBPropertiesStore.h"
-#import "OMBProperty.h"
 #import "OMBPropertyInfoView.h"
+#import "OMBResidenceStore.h"
+#import "OMBResidence.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBMapViewController
@@ -25,12 +26,13 @@
 {
   self = [super init];
   if (self) {
+    self.title = @"Map";
     // Location manager
     locationManager                 = [[CLLocationManager alloc] init];
     locationManager.delegate        = self;
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     locationManager.distanceFilter  = 50;
-    [OMBPropertiesStore sharedStore].mapViewController = self;
+    [OMBResidenceStore sharedStore].mapViewController = self;
   }
   return self;
 }
@@ -42,7 +44,7 @@
 - (void) loadView
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
-  self.view = [[UIView alloc] initWithFrame: screen];
+  self.view     = [[UIView alloc] initWithFrame: screen];
   // Tap gesture
   // UITapGestureRecognizer *tap = 
   //  [[UITapGestureRecognizer alloc] initWithTarget:
@@ -125,7 +127,8 @@ didUpdateLocations: (NSArray *) locations
   NSDictionary *parameters = @{
     @"bounds": bounds
   };
-  [[OMBPropertiesStore sharedStore] fetchPropertiesWithParameters: parameters];
+  // parameters = [-116,32,-125,43]
+  [[OMBResidenceStore sharedStore] fetchPropertiesWithParameters: parameters];
 
   [self hidePropertyInfoView];
 }
@@ -137,23 +140,18 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
   if ([annotationView.annotation isKindOfClass: [OCAnnotation class]]) {
     [self zoomClusterAtAnnotation: (OCAnnotation *) annotationView.annotation];
   }
-  // If user clicked on a single property
+  // If user clicked on a single residence
   else {
     CLLocationCoordinate2D coordinate = annotationView.annotation.coordinate;
     NSString *key = [NSString stringWithFormat: @"%f,%f-%@",
       coordinate.latitude, coordinate.longitude, 
         annotationView.annotation.title];
-    OMBProperty *property = 
-      [[OMBPropertiesStore sharedStore].properties objectForKey: key];
-    [propertyInfoView loadPropertyData: property];  
+    OMBResidence *residence = 
+      [[OMBResidenceStore sharedStore].residences objectForKey: key];
+    [propertyInfoView loadResidenceData: residence];  
     [self showPropertyInfoView];
   }
-}
-
-- (void) mapView: (MKMapView *) map
-  didUpdateUserLocation: (MKUserLocation *) userLocation
-{
-
+  [map deselectAnnotation: annotationView.annotation animated: NO];
 }
 
 - (MKAnnotationView *) mapView: (MKMapView *) map 
@@ -210,7 +208,9 @@ withTitle: (NSString *) title;
     };
     [UIView animateWithDuration: 0.1 delay: 0 
       options: UIViewAnimationOptionCurveLinear
-        animations: animations completion: nil];
+        animations: animations completion: ^(BOOL finished) {
+          propertyInfoView.imageView.image = nil;
+        }];
   }
 }
 

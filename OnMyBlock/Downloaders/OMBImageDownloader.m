@@ -41,7 +41,7 @@ didFailWithError: (NSError *) error
 
 #pragma mark - Methods
 
-#pragma mark Instance Methods
+#pragma mark - Instance Methods
 
 - (void) cancelDownload
 {

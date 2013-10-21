@@ -8,31 +8,29 @@
 
 #import "OMBViewController.h"
 
-@interface OMBViewController ()
-
-@end
+#import "UIColor+Extensions.h"
 
 @implementation OMBViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+#pragma mark - Override
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
+#pragma mark - Override UIViewController
 
-- (void)didReceiveMemoryWarning
+- (void) setTitle: (NSString *) string
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+  [super setTitle: string];
+  UILabel *label = [[UILabel alloc] init];
+  label.backgroundColor = [UIColor clearColor];
+  label.font            = [UIFont fontWithName: @"HelveticaNeue-Light" 
+    size: 20];
+  label.frame           = CGRectMake(0, 0, 0, 44);
+  label.shadowColor     = [UIColor clearColor];
+  label.shadowOffset    = CGSizeMake(0, 0);
+  label.text            = string;
+  label.textAlignment   = NSTextAlignmentCenter;
+  label.textColor       = [UIColor textColor];
+  [label sizeToFit];
+  self.navigationItem.titleView = label;
 }
 
 @end

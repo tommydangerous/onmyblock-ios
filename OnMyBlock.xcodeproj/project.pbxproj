@@ -23,7 +23,14 @@
 		AB8C8C16181579EE00A1B087 /* placeholder_property.png in Resources */ = {isa = PBXBuildFile; fileRef = AB8C8C14181579EE00A1B087 /* placeholder_property.png */; };
 		AB8C8C17181579EE00A1B087 /* placeholder_property@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB8C8C15181579EE00A1B087 /* placeholder_property@2x.png */; };
 		AB8C8C1918157A2600A1B087 /* marker_single@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB8C8C1818157A2600A1B087 /* marker_single@2x.png */; };
-		AB8C8C1C18157BC300A1B087 /* OMBPropertyImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8C8C1B18157BC300A1B087 /* OMBPropertyImageDownloader.m */; };
+		AB8C8C1F1815969700A1B087 /* OMBResidenceStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8C8C1E1815969700A1B087 /* OMBResidenceStore.m */; };
+		AB8C8C22181597F900A1B087 /* OMBResidence.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8C8C21181597F900A1B087 /* OMBResidence.m */; };
+		AB8C8C251815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8C8C241815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.m */; };
+		AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8C8C271815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m */; };
+		AB8C8C2A1815C31000A1B087 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB8C8C291815C31000A1B087 /* Accelerate.framework */; };
+		AB8C8C331815CF2A00A1B087 /* arrow_right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB8C8C321815CF2A00A1B087 /* arrow_right@2x.png */; };
+		AB8C8C351815D0E100A1B087 /* arrow_right.png in Resources */ = {isa = PBXBuildFile; fileRef = AB8C8C341815D0E100A1B087 /* arrow_right.png */; };
+		AB8C8C381815D7DC00A1B087 /* OMBResidenceDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8C8C371815D7DC00A1B087 /* OMBResidenceDetailViewController.m */; };
 		AB9B2602181196F400E6DAC4 /* location.gpx in Resources */ = {isa = PBXBuildFile; fileRef = AB9B2601181196F400E6DAC4 /* location.gpx */; };
 		AB9B26091811A74E00E6DAC4 /* OMBAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26081811A74E00E6DAC4 /* OMBAnnotationView.m */; };
 		AB9B260F1811AA7C00E6DAC4 /* OMBAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B260E1811AA7C00E6DAC4 /* OMBAnnotation.m */; };
@@ -47,8 +54,6 @@
 		ABB3C585181178AE00DD91C9 /* OMBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C584181178AE00DD91C9 /* OMBNavigationController.m */; };
 		ABB3C58718117C1C00DD91C9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB3C58618117C1C00DD91C9 /* MapKit.framework */; };
 		ABB3C58918117C2200DD91C9 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB3C58818117C2200DD91C9 /* CoreLocation.framework */; };
-		ABC48E751811D89200F01D8D /* OMBPropertiesStore.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC48E741811D89200F01D8D /* OMBPropertiesStore.m */; };
-		ABC48E781811D92900F01D8D /* OMBProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC48E771811D92900F01D8D /* OMBProperty.m */; };
 		ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABC48E791812397300F01D8D /* QuartzCore.framework */; };
 		ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */; };
 /* End PBXBuildFile section */
@@ -83,8 +88,19 @@
 		AB8C8C14181579EE00A1B087 /* placeholder_property.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholder_property.png; sourceTree = "<group>"; };
 		AB8C8C15181579EE00A1B087 /* placeholder_property@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder_property@2x.png"; sourceTree = "<group>"; };
 		AB8C8C1818157A2600A1B087 /* marker_single@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker_single@2x.png"; sourceTree = "<group>"; };
-		AB8C8C1A18157BC300A1B087 /* OMBPropertyImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPropertyImageDownloader.h; sourceTree = "<group>"; };
-		AB8C8C1B18157BC300A1B087 /* OMBPropertyImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertyImageDownloader.m; sourceTree = "<group>"; };
+		AB8C8C1D1815969700A1B087 /* OMBResidenceStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceStore.h; sourceTree = "<group>"; };
+		AB8C8C1E1815969700A1B087 /* OMBResidenceStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceStore.m; sourceTree = "<group>"; };
+		AB8C8C20181597F900A1B087 /* OMBResidence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidence.h; sourceTree = "<group>"; };
+		AB8C8C21181597F900A1B087 /* OMBResidence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidence.m; sourceTree = "<group>"; };
+		AB8C8C231815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceCoverPhotoURLConnection.h; sourceTree = "<group>"; };
+		AB8C8C241815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceCoverPhotoURLConnection.m; sourceTree = "<group>"; };
+		AB8C8C261815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceCoverPhotoDownloader.h; sourceTree = "<group>"; };
+		AB8C8C271815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceCoverPhotoDownloader.m; sourceTree = "<group>"; };
+		AB8C8C291815C31000A1B087 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		AB8C8C321815CF2A00A1B087 /* arrow_right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow_right@2x.png"; sourceTree = "<group>"; };
+		AB8C8C341815D0E100A1B087 /* arrow_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_right.png; sourceTree = "<group>"; };
+		AB8C8C361815D7DC00A1B087 /* OMBResidenceDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceDetailViewController.h; sourceTree = "<group>"; };
+		AB8C8C371815D7DC00A1B087 /* OMBResidenceDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceDetailViewController.m; sourceTree = "<group>"; };
 		AB9B2601181196F400E6DAC4 /* location.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = location.gpx; sourceTree = "<group>"; };
 		AB9B26071811A74E00E6DAC4 /* OMBAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAnnotationView.h; sourceTree = "<group>"; };
 		AB9B26081811A74E00E6DAC4 /* OMBAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAnnotationView.m; sourceTree = "<group>"; };
@@ -130,10 +146,6 @@
 		ABB3C584181178AE00DD91C9 /* OMBNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBNavigationController.m; sourceTree = "<group>"; };
 		ABB3C58618117C1C00DD91C9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		ABB3C58818117C2200DD91C9 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		ABC48E731811D89200F01D8D /* OMBPropertiesStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPropertiesStore.h; sourceTree = "<group>"; };
-		ABC48E741811D89200F01D8D /* OMBPropertiesStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertiesStore.m; sourceTree = "<group>"; };
-		ABC48E761811D92900F01D8D /* OMBProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBProperty.h; sourceTree = "<group>"; };
-		ABC48E771811D92900F01D8D /* OMBProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBProperty.m; sourceTree = "<group>"; };
 		ABC48E791812397300F01D8D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		ABC48E7B18125AF000F01D8D /* OMBPropertyInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPropertyInfoView.h; sourceTree = "<group>"; };
 		ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertyInfoView.m; sourceTree = "<group>"; };
@@ -158,6 +170,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB8C8C2A1815C31000A1B087 /* Accelerate.framework in Frameworks */,
 				AB802EB718109E5200E04D11 /* XCTest.framework in Frameworks */,
 				AB802EB918109E5200E04D11 /* UIKit.framework in Frameworks */,
 				AB802EB818109E5200E04D11 /* Foundation.framework in Frameworks */,
@@ -192,6 +205,7 @@
 		AB802E9C18109E5200E04D11 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AB8C8C291815C31000A1B087 /* Accelerate.framework */,
 				ABC48E791812397300F01D8D /* QuartzCore.framework */,
 				ABB3C58818117C2200DD91C9 /* CoreLocation.framework */,
 				ABB3C58618117C1C00DD91C9 /* MapKit.framework */,
@@ -256,8 +270,8 @@
 			children = (
 				AB8C8C111815784B00A1B087 /* OMBImageDownloader.h */,
 				AB8C8C121815784B00A1B087 /* OMBImageDownloader.m */,
-				AB8C8C1A18157BC300A1B087 /* OMBPropertyImageDownloader.h */,
-				AB8C8C1B18157BC300A1B087 /* OMBPropertyImageDownloader.m */,
+				AB8C8C261815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.h */,
+				AB8C8C271815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m */,
 			);
 			path = Downloaders;
 			sourceTree = "<group>";
@@ -278,8 +292,8 @@
 			children = (
 				AB9B260D1811AA7C00E6DAC4 /* OMBAnnotation.h */,
 				AB9B260E1811AA7C00E6DAC4 /* OMBAnnotation.m */,
-				ABC48E761811D92900F01D8D /* OMBProperty.h */,
-				ABC48E771811D92900F01D8D /* OMBProperty.m */,
+				AB8C8C20181597F900A1B087 /* OMBResidence.h */,
+				AB8C8C21181597F900A1B087 /* OMBResidence.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -289,8 +303,8 @@
 			children = (
 				AB9B26251811AF7B00E6DAC4 /* OMBAnnotationStore.h */,
 				AB9B26261811AF7B00E6DAC4 /* OMBAnnotationStore.m */,
-				ABC48E731811D89200F01D8D /* OMBPropertiesStore.h */,
-				ABC48E741811D89200F01D8D /* OMBPropertiesStore.m */,
+				AB8C8C1D1815969700A1B087 /* OMBResidenceStore.h */,
+				AB8C8C1E1815969700A1B087 /* OMBResidenceStore.m */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -334,6 +348,8 @@
 				AB9B264C1811CE6D00E6DAC4 /* OMBConnection.m */,
 				AB9B264E1811CE8E00E6DAC4 /* OMBPropertiesConnection.h */,
 				AB9B264F1811CE8E00E6DAC4 /* OMBPropertiesConnection.m */,
+				AB8C8C231815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.h */,
+				AB8C8C241815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.m */,
 			);
 			path = Connections;
 			sourceTree = "<group>";
@@ -350,6 +366,8 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				AB8C8C341815D0E100A1B087 /* arrow_right.png */,
+				AB8C8C321815CF2A00A1B087 /* arrow_right@2x.png */,
 				AB9B26221811AE8600E6DAC4 /* marker_single.png */,
 				AB8C8C1818157A2600A1B087 /* marker_single@2x.png */,
 				AB8C8C14181579EE00A1B087 /* placeholder_property.png */,
@@ -369,6 +387,8 @@
 				ABB3C5811811789100DD91C9 /* OMBTabBarController.m */,
 				ABB3C583181178AE00DD91C9 /* OMBNavigationController.h */,
 				ABB3C584181178AE00DD91C9 /* OMBNavigationController.m */,
+				AB8C8C361815D7DC00A1B087 /* OMBResidenceDetailViewController.h */,
+				AB8C8C371815D7DC00A1B087 /* OMBResidenceDetailViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -475,8 +495,10 @@
 				AB9B26231811AE8600E6DAC4 /* marker_single.png in Resources */,
 				AB8C8C1918157A2600A1B087 /* marker_single@2x.png in Resources */,
 				AB9B2602181196F400E6DAC4 /* location.gpx in Resources */,
+				AB8C8C351815D0E100A1B087 /* arrow_right.png in Resources */,
 				AB8C8C16181579EE00A1B087 /* placeholder_property.png in Resources */,
 				AB802EB018109E5200E04D11 /* Images.xcassets in Resources */,
+				AB8C8C331815CF2A00A1B087 /* arrow_right@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,17 +524,19 @@
 				AB9B26091811A74E00E6DAC4 /* OMBAnnotationView.m in Sources */,
 				AB9B26491811CB1300E6DAC4 /* UIImage+Resize.m in Sources */,
 				AB9B264D1811CE6D00E6DAC4 /* OMBConnection.m in Sources */,
+				AB8C8C1F1815969700A1B087 /* OMBResidenceStore.m in Sources */,
 				AB9B26501811CE8E00E6DAC4 /* OMBPropertiesConnection.m in Sources */,
 				AB9B26391811B7ED00E6DAC4 /* OCAlgorithms.m in Sources */,
-				ABC48E751811D89200F01D8D /* OMBPropertiesStore.m in Sources */,
+				AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */,
+				AB8C8C251815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.m in Sources */,
+				AB8C8C22181597F900A1B087 /* OMBResidence.m in Sources */,
+				AB8C8C381815D7DC00A1B087 /* OMBResidenceDetailViewController.m in Sources */,
 				AB9B26461811CB1300E6DAC4 /* NSDate+TimeAgo.m in Sources */,
 				AB9B260F1811AA7C00E6DAC4 /* OMBAnnotation.m in Sources */,
 				AB9B26271811AF7B00E6DAC4 /* OMBAnnotationStore.m in Sources */,
-				ABC48E781811D92900F01D8D /* OMBProperty.m in Sources */,
 				ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */,
 				AB8C8C131815784B00A1B087 /* OMBImageDownloader.m in Sources */,
 				ABB3C57F1811781C00DD91C9 /* MFSideMenuContainerViewController.m in Sources */,
-				AB8C8C1C18157BC300A1B087 /* OMBPropertyImageDownloader.m in Sources */,
 				ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */,
 				ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */,
 				AB9B263A1811B7ED00E6DAC4 /* OCAnnotation.m in Sources */,

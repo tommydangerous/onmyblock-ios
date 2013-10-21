@@ -11,8 +11,7 @@
 
 #import "OMBViewController.h"
 
-#import "OCMapView.h"
-
+@class OCMapView;
 @class OMBPropertyInfoView;
 
 @interface OMBMapViewController : OMBViewController

@@ -7,7 +7,7 @@
 //
 
 #import "OMBPropertiesConnection.h"
-#import "OMBPropertiesStore.h"
+#import "OMBResidenceStore.h"
 
 @implementation OMBPropertiesConnection
 
@@ -17,8 +17,11 @@
 {
   self = [super init];
   if (self) {
+    // http://localhost:3000/properties.json?
     NSString *string = [NSString stringWithFormat:
       @"%@/properties.json/?", OnMyBlockAPIURL];
+    // Add parameters to the end of string
+    // e.g. bounds=[-117.0459,32.836,-117.2931,32.7687]
     for (NSString *key in [parameters allKeys]) {
       NSString *param = [NSString stringWithFormat:
         @"%@=%@&", key, [parameters objectForKey: key]];
@@ -31,7 +34,7 @@
 
 #pragma mark - Protocol
 
-#pragma mark Protocol NSURLConnectionDataDelegate
+#pragma mark - Protocol NSURLConnectionDataDelegate
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
@@ -51,8 +54,8 @@
   // ]
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
-  // Returns an array of hashes
-  [[OMBPropertiesStore sharedStore] readFromDictionary: json];
+  // Returns an array of dictionary
+  [[OMBResidenceStore sharedStore] readFromDictionary: json];
   [super connectionDidFinishLoading: connection];
 }
 

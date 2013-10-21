@@ -1,21 +1,21 @@
 //
-//  OMBPropertiesStore.m
+//  OMBResidenceStore.m
 //  OnMyBlock
 //
-//  Created by Tommy DANGerous on 10/18/13.
+//  Created by Tommy DANGerous on 10/21/13.
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import "OMBPropertiesStore.h"
+#import "OMBResidenceStore.h"
 
 #import "OMBMapViewController.h"
 #import "OMBPropertiesConnection.h"
-#import "OMBProperty.h"
+#import "OMBResidence.h"
 
-@implementation OMBPropertiesStore
+@implementation OMBResidenceStore
 
 @synthesize mapViewController = _mapViewController;
-@synthesize properties        = _properties;
+@synthesize residences        = _residences;
 
 #pragma mark - Initializer
 
@@ -23,28 +23,28 @@
 {
   self = [super init];
   if (self) {
-    _properties = [NSMutableDictionary dictionary];
+    _residences = [NSMutableDictionary dictionary];
   }
   return self;
 }
 
 #pragma mark - Methods
 
-#pragma mark Class Methods
+#pragma mark - Class Methods
 
-+ (OMBPropertiesStore *) sharedStore
++ (OMBResidenceStore *) sharedStore
 {
-  static OMBPropertiesStore *store = nil;
+  static OMBResidenceStore *store = nil;
   if (!store)
-    store = [[OMBPropertiesStore alloc] init];
+    store = [[OMBResidenceStore alloc] init];
   return store;
 }
 
-#pragma mark Instance Methods
+#pragma mark - Instance Methods
 
-- (void) addProperty: (OMBProperty *) property
+- (void) addResidence: (OMBResidence *) residence
 {
-  [_properties setObject: property forKey: property.dictionaryKey];
+  [_residences setObject: residence forKey: [residence dictionaryKey]];
 }
 
 - (void) fetchPropertiesWithParameters: (NSDictionary *) parameters
@@ -56,29 +56,31 @@
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
-  // Argument is an array of hashes
+  // Argument is an array of dictionaries
   for (NSDictionary *dict in dictionary) {
     if ([dict objectForKey: @"ad"] != [NSNull null]) {
       NSString *address = [dict objectForKey: @"ad"];
       float latitude, longitude;
       latitude  = [[dict objectForKey: @"lat"] floatValue];
       longitude = [[dict objectForKey: @"lng"] floatValue];
+      // key = 32,-117-8550 fun street
       NSString *key = [NSString stringWithFormat: @"%f,%f-%@",
         latitude, longitude, address];
-      OMBProperty *property = [_properties objectForKey: key];
-      if (!property) {
-        property = [[OMBProperty alloc] init];
-        [property readFromDictionary: dict];
-        [self addProperty: property];
-        // If the property isn't in the store, add it to the map
+      OMBResidence *residence = [_residences objectForKey: key];
+      // If the residence isn't in the store, add it to the map
+      if (!residence) {
+        residence = [[OMBResidence alloc] init];
+        [residence readFromDictionary: dict];
+        [self addResidence: residence];
         CLLocationCoordinate2D coordinate;
-        coordinate.latitude  = property.latitude;
-        coordinate.longitude = property.longitude;
+        coordinate.latitude  = residence.latitude;
+        coordinate.longitude = residence.longitude;
+        // We add the annotation to the map
         [_mapViewController addAnnotationAtCoordinate: coordinate 
-          withTitle: property.address];
+          withTitle: residence.address];
       }
       else
-        [property readFromDictionary: dict];
+        [residence readFromDictionary: dict];
     }
   }
 }
