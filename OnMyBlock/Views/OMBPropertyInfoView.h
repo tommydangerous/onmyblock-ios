@@ -12,6 +12,7 @@
 
 @interface OMBPropertyInfoView : UIView
 {
+  UILabel *bedroomsLabel;
   OMBProperty *property;
   UILabel *rentLabel;
 }

@@ -10,6 +10,7 @@
 
 @interface OMBProperty : NSObject
 
+// Web app properties
 @property (nonatomic, strong) NSString *address;
 @property (nonatomic) NSTimeInterval availableOn;
 @property (nonatomic) float bathrooms;
@@ -20,11 +21,15 @@
 @property (nonatomic) float rent;
 @property (nonatomic) int uid; // ID
 
+// iOS app properties
+@property (nonatomic, strong) UIImage *image;
+
 #pragma mark - Methods
 
 #pragma mark Instance Methods
 
-- (NSString *) latitudeLongitudeKey;
+- (NSURL *) imageURL;
+- (NSString *) dictionaryKey;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (NSString *) rentToCurrencyString;
 

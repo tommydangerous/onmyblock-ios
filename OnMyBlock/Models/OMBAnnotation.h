@@ -12,9 +12,11 @@
 @interface OMBAnnotation : NSObject <MKAnnotation>
 
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
+@property (nonatomic, readonly, copy) NSString *title;
 
 #pragma mark - Setters
 
 - (void) setCoordinate: (CLLocationCoordinate2D) coord;
+- (void) setTitle: (NSString *) string;
 
 @end

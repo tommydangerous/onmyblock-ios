@@ -31,6 +31,14 @@
     rentLabel.frame = CGRectMake(100, 0, (screen.size.width - 100), 50);
     rentLabel.textColor = [UIColor textColor];
     [self addSubview: rentLabel];
+
+    // Bedrooms
+    bedroomsLabel = [[UILabel alloc] init];
+    bedroomsLabel.backgroundColor = [UIColor clearColor];
+    bedroomsLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
+    bedroomsLabel.frame = CGRectMake(100, 50, (screen.size.width - 100), 25);
+    bedroomsLabel.textColor = [UIColor textColor];
+    [self addSubview: bedroomsLabel];
   }
   return self;
 }
@@ -44,6 +52,20 @@
   property = object;
   rentLabel.text = [NSString stringWithFormat: @"%@", 
     [property rentToCurrencyString]];
+  NSString *bedsString = @"beds";
+  if (property.bedrooms == 1)
+    bedsString = @"bed";
+  NSString *bedsNumberString;
+  if (property.bedrooms == (int) property.bedrooms) {
+    bedsNumberString = [NSString stringWithFormat: @"%i", 
+      (int) property.bedrooms];
+  }
+  else {
+    bedsNumberString = [NSString stringWithFormat: @"%f",
+      property.bedrooms];
+  }
+  bedroomsLabel.text = [NSString stringWithFormat: @"%@ %@", 
+    bedsNumberString, bedsString];
 }
 
 @end

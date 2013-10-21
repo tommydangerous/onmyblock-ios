@@ -11,12 +11,18 @@
 @implementation OMBAnnotation
 
 @synthesize coordinate = _coordinate;
+@synthesize title      = _title;
 
 #pragma mark - Setters
 
 - (void) setCoordinate: (CLLocationCoordinate2D) coord
 {
   _coordinate = coord;
+}
+
+- (void) setTitle: (NSString *) string
+{
+  _title = string;
 }
 
 @end

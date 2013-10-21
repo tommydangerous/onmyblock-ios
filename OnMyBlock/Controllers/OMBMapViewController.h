@@ -27,6 +27,7 @@
 
 #pragma mark Instance Methods
 
-- (void) addAnnotationAtCoordinate: (CLLocationCoordinate2D) coordinate;
+- (void) addAnnotationAtCoordinate: (CLLocationCoordinate2D) coordinate
+withTitle: (NSString *) title;
 
 @end

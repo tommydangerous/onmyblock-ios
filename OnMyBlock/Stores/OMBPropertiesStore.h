@@ -25,6 +25,7 @@
 #pragma mark Instance Methods
 
 - (void) addProperty: (OMBProperty *) property;
+- (void) fetchPropertiesWithParameters: (NSDictionary *) parameters;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 
 @end

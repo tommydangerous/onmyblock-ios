@@ -12,7 +12,6 @@
 
 #import "OMBAnnotation.h"
 #import "OMBAnnotationView.h"
-#import "OMBPropertiesConnection.h"
 #import "OMBPropertiesStore.h"
 #import "OMBProperty.h"
 #import "OMBPropertyInfoView.h"
@@ -126,9 +125,7 @@ didUpdateLocations: (NSArray *) locations
   NSDictionary *parameters = @{
     @"bounds": bounds
   };
-  OMBPropertiesConnection *connection = 
-    [[OMBPropertiesConnection alloc] initWithParameters: parameters];
-  [connection start];
+  [[OMBPropertiesStore sharedStore] fetchPropertiesWithParameters: parameters];
 
   [self hidePropertyInfoView];
 }
@@ -143,15 +140,13 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
   // If user clicked on a single property
   else {
     CLLocationCoordinate2D coordinate = annotationView.annotation.coordinate;
-    NSLog(@"%f, %f", coordinate.latitude, coordinate.longitude);
-    NSString *key = [NSString stringWithFormat: @"%f,%f",
-      coordinate.latitude, coordinate.longitude];
+    NSString *key = [NSString stringWithFormat: @"%f,%f-%@",
+      coordinate.latitude, coordinate.longitude, 
+        annotationView.annotation.title];
     OMBProperty *property = 
       [[OMBPropertiesStore sharedStore].properties objectForKey: key];
-    NSLog(@"%@ : %@", key, property);
     [propertyInfoView loadPropertyData: property];  
     [self showPropertyInfoView];
-    NSLog(@"%i", property.uid);
   }
 }
 
@@ -185,10 +180,12 @@ viewForAnnotation: (id <MKAnnotation>) annotation
 #pragma mark Instance Methods
 
 - (void) addAnnotationAtCoordinate: (CLLocationCoordinate2D) coordinate
+withTitle: (NSString *) title;
 {
   // Add annotation
   OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
-  annotation.coordinate = coordinate;
+  annotation.coordinate     = coordinate;
+  annotation.title          = title;
   [mapView addAnnotation: annotation];
 }
 
@@ -197,7 +194,6 @@ viewForAnnotation: (id <MKAnnotation>) annotation
   CLLocationCoordinate2D coordinate;
   for (CLLocation *location in locations) {
     coordinate = location.coordinate;
-    NSLog(@"%f, %f", coordinate.latitude, coordinate.longitude);
   }
   [self setMapViewRegion: coordinate withMiles: 2];
   [locationManager stopUpdatingLocation];

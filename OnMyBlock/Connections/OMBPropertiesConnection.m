@@ -35,6 +35,20 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
+  // Sample JSON
+  // [
+  //   {
+  //     ad: null,             // Address
+  //     available_on: "Soon", // Available on
+  //     ba: 0,                // Bathrooms
+  //     bd: 0,                // Bedrooms
+  //     id: 10,               // ID
+  //     lat: 32.79383,        // Latitude
+  //     lease_months: null,   // Lease months
+  //     lng: -117.07943,      // Longitude
+  //     rt: 0                 // Rent
+  //   }
+  // ]
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
   // Returns an array of hashes
