@@ -13,7 +13,6 @@
 
 @interface OMBPropertyInfoView : UIView
 {
-  UILabel *addressLabel;
   UIImageView *arrowImageView;
   UILabel *bedBathLabel;
   OMBResidence *residence;

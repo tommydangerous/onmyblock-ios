@@ -45,10 +45,7 @@
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view     = [[UIView alloc] initWithFrame: screen];
-  // Tap gesture
-  // UITapGestureRecognizer *tap = 
-  //  [[UITapGestureRecognizer alloc] initWithTarget:
-  //   self action: @selector(hidePropertyInfoView)];
+
   // Map view
   mapView          = [[OCMapView alloc] init];
   mapView.delegate = self;
@@ -56,7 +53,6 @@
   mapView.mapType  = MKMapTypeStandard;
   mapView.rotateEnabled = NO;
   mapView.showsPointsOfInterest = NO;
-  // [mapView addGestureRecognizer: tap];
   [self.view addSubview: mapView];
   // Region, Span
   // MKMapPoint, MKMapSize, MKMapRect, MKAnnotation
@@ -64,6 +60,11 @@
   // Property info view
   propertyInfoView = [[OMBPropertyInfoView alloc] init];
   [self.view addSubview: propertyInfoView];
+  // Add a tap gesture to property info view
+  // UITapGestureRecognizer *tap = 
+  //   [[UITapGestureRecognizer alloc] initWithTarget:
+  //     self action: @selector(showResidenceDetailViewController)];
+  // [mapView addGestureRecognizer: tap];
 }
 
 - (void) viewDidLoad
@@ -130,7 +131,14 @@ didUpdateLocations: (NSArray *) locations
   // parameters = [-116,32,-125,43]
   [[OMBResidenceStore sharedStore] fetchPropertiesWithParameters: parameters];
 
+  [self deselectAnnotations];
   [self hidePropertyInfoView];
+}
+
+- (void) mapView: (MKMapView *) map 
+didDeselectAnnotationView: (MKAnnotationView *) annotationView
+{
+  [(OMBAnnotationView *) annotationView deselect];
 }
 
 - (void) mapView: (MKMapView *) map 
@@ -148,10 +156,11 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
         annotationView.annotation.title];
     OMBResidence *residence = 
       [[OMBResidenceStore sharedStore].residences objectForKey: key];
-    [propertyInfoView loadResidenceData: residence];  
+    [propertyInfoView loadResidenceData: residence];
     [self showPropertyInfoView];
+
+    [(OMBAnnotationView *) annotationView select];
   }
-  [map deselectAnnotation: annotationView.annotation animated: NO];
 }
 
 - (MKAnnotationView *) mapView: (MKMapView *) map 
@@ -185,6 +194,14 @@ withTitle: (NSString *) title;
   annotation.coordinate     = coordinate;
   annotation.title          = title;
   [mapView addAnnotation: annotation];
+}
+
+- (void) deselectAnnotations
+{
+  for (OMBAnnotation *annotation in mapView.selectedAnnotations) {
+    [annotation.annotationView deselect];
+    [mapView deselectAnnotation: annotation animated: NO];
+  }
 }
 
 - (void) foundLocations: (NSArray *) locations

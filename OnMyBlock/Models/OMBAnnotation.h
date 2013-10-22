@@ -9,8 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 
+@class OMBAnnotationView;
+
 @interface OMBAnnotation : NSObject <MKAnnotation>
 
+@property (nonatomic, strong) OMBAnnotationView *annotationView;
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 @property (nonatomic, readonly, copy) NSString *title;
 

@@ -55,12 +55,12 @@
   UIImage *img = [self coverPhoto];
   float newHeight, newWidth;
   if (img.size.width < img.size.height) {
-    newWidth  = size.width;
-    newHeight = (newWidth / img.size.width) * img.size.height;
-  }
-  else {
     newHeight = size.height;
     newWidth  = (newHeight / img.size.height) * img.size.width;
+  }
+  else {
+    newWidth  = size.width;
+    newHeight = (newWidth / img.size.width) * img.size.height;
   }
   CGPoint point = CGPointMake(0, 0);
   // Center it horizontally

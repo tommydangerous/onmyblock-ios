@@ -8,31 +8,17 @@
 
 #import "OMBNavigationController.h"
 
-@interface OMBNavigationController ()
-
-@end
-
 @implementation OMBNavigationController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+#pragma mark - Initializer
 
-- (void)viewDidLoad
+- (id) initWithRootViewController: (UIViewController *) viewController
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+  self = [super initWithRootViewController: viewController];
+  if (self) {
+    
+  }
+  return self;
 }
 
 @end

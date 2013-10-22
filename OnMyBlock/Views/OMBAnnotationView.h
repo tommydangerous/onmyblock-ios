@@ -15,6 +15,8 @@
 
 #pragma mark - Instance Methods
 
+- (void) deselect;
 - (void) loadAnnotation: (id <MKAnnotation>) annotation;
+- (void) select;
 
 @end

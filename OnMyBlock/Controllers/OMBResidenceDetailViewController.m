@@ -8,6 +8,20 @@
 
 #import "OMBResidenceDetailViewController.h"
 
+#import "OMBResidence.h"
+
 @implementation OMBResidenceDetailViewController
+
+#pragma mark - Initializer
+
+- (id) initWithResidence: (OMBResidence *) object
+{
+  self = [super init];
+  if (self) {
+    residence  = object;
+    self.title = residence.address;
+  }
+  return self;
+}
 
 @end

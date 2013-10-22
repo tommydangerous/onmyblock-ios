@@ -10,8 +10,9 @@
 
 @implementation OMBAnnotation
 
-@synthesize coordinate = _coordinate;
-@synthesize title      = _title;
+@synthesize annotationView = _annotationView;
+@synthesize coordinate     = _coordinate;
+@synthesize title          = _title;
 
 #pragma mark - Setters
 

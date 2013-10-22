@@ -11,6 +11,7 @@
 #import "OMBAnnotationView.h"
 
 #import "OCMapView.h"
+#import "OMBAnnotation.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
 
@@ -43,10 +44,16 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 #pragma mark Instance Methods
 
+- (void) deselect
+{
+  self.backgroundColor = [UIColor blue];
+}
+
 - (void) loadAnnotation: (id <MKAnnotation>) annotation
 {
   float dimension = DEFAULT_DIMENSION;
   NSString *text  = @"1";
+  [self deselect];
   // If it is a cluster
   if ([annotation isKindOfClass: [OCAnnotation class]]) {
     int number = [[(OCAnnotation *) annotation annotationsInCluster] count];
@@ -56,10 +63,17 @@ reuseIdentifier: (NSString *) reuseIdentifier
       dimension = 60;
     text = [NSString stringWithFormat: @"%i", number];
   }
+  else
+    [(OMBAnnotation *) annotation setAnnotationView: self];
   self.frame  = CGRectMake(0, 0, dimension, dimension);
   self.layer.cornerRadius = dimension / 2.0;
   label.frame = self.frame;
   label.text  = text;
+}
+
+- (void) select
+{
+  self.backgroundColor = [UIColor grayDark];
 }
 
 @end
