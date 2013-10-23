@@ -21,7 +21,6 @@
 #pragma mark - Getters
 
 - (CLLocationManager *) locationManager;
-- (OCMapView *) mapView;
 - (OMBPropertyInfoView *) propertyInfoView;
 
 @end
@@ -33,11 +32,6 @@
 - (CLLocationManager *) locationManager
 {
   return locationManager;
-}
-
-- (OCMapView *) mapView
-{
-  return mapView;
 }
 
 - (OMBPropertyInfoView *) propertyInfoView

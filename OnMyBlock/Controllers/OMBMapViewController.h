@@ -19,6 +19,8 @@
 @interface OMBMapViewController : OMBViewController
 <CLLocationManagerDelegate, MKMapViewDelegate>
 {
+  UILabel *filterLabel;
+  UIView *filterView;
   CLLocationManager *locationManager;
   OMBNavigationController *mapFilterNavigationController;
   OMBMapFilterViewController *mapFilterViewController;
@@ -38,5 +40,6 @@ withTitle: (NSString *) title;
 - (void) removeAllAnnotations;
 - (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
 withMiles: (int) miles;
+- (void) updateFilterLabel;
 
 @end

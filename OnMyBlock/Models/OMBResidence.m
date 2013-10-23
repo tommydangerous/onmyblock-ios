@@ -8,6 +8,7 @@
 
 #import "OMBResidence.h"
 
+#import "NSString+Extensions.h"
 #import "UIImage+Resize.h"
 
 @implementation OMBResidence
@@ -84,8 +85,8 @@
   // keys are based on image position; e.g. 1-12
   NSArray *keys = [_images allKeys];
   keys = [keys sortedArrayUsingComparator: ^(id obj1, id obj2) {
-    int key1 = [(NSString *) obj1 integerValue];
-    int key2 = [(NSString *) obj2 integerValue];
+    int key1 = [(NSString *) obj1 intValue];
+    int key2 = [(NSString *) obj2 intValue];
     if (key1 > key2)
       return (NSComparisonResult) NSOrderedAscending;
     if (key1 < key2)
@@ -133,20 +134,16 @@
     _leaseMonths = 0;
   }
   else {
-    _leaseMonths = [[dictionary objectForKey: @"lease_months"] integerValue];
+    _leaseMonths = [[dictionary objectForKey: @"lease_months"] intValue];
   }
   _longitude = [[dictionary objectForKey: @"lng"] floatValue];
   _rent      = [[dictionary objectForKey: @"rt"] floatValue];
-  _uid       = [[dictionary objectForKey: @"id"] integerValue];
+  _uid       = [[dictionary objectForKey: @"id"] intValue];
 }
 
 - (NSString *) rentToCurrencyString
 {
-  NSNumberFormatter *formatter = [NSNumberFormatter new];
-  [formatter setMaximumFractionDigits: 0];
-  [formatter setNumberStyle: NSNumberFormatterCurrencyStyle];
-  return [formatter stringFromNumber: 
-    [NSNumber numberWithInteger: (int) _rent]];
+  return [NSString numberToCurrencyString: (int) _rent];
 }
 
 @end

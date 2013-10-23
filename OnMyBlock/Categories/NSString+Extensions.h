@@ -10,6 +10,7 @@
 
 @interface NSString (Extensions)
 
++ (NSString *) numberToCurrencyString: (int) number;
 + (NSString *) stripLower: (NSString *) string;
 
 @end

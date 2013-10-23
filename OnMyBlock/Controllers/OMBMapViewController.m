@@ -10,6 +10,7 @@
 
 #import "OMBMapViewController.h"
 
+#import "NSString+Extensions.h"
 #import "OCMapView.h"
 #import "OMBAnnotation.h"
 #import "OMBAnnotationView.h"
@@ -53,8 +54,8 @@
   self.view     = [[UIView alloc] initWithFrame: screen];
 
   // Navigation item
-  // Right bar button item
-  self.navigationItem.rightBarButtonItem = 
+  // Left bar button item
+  self.navigationItem.leftBarButtonItem = 
     [[UIBarButtonItem alloc] initWithImage: [UIImage image:
       [UIImage imageNamed: @"search.png"] size: CGSizeMake(26, 26)]
         style: UIBarButtonItemStylePlain target: self 
@@ -95,6 +96,24 @@
     [[UITapGestureRecognizer alloc] initWithTarget: self 
       action: @selector(mapViewTapped)];
   [_mapView addGestureRecognizer: mapViewTap];
+
+  // Filter
+  // View
+  filterView = [[UIView alloc] init];
+  filterView.backgroundColor = [UIColor grayDarkAlpha: 0.8];
+  filterView.frame = CGRectMake(0, (20 + 44), screen.size.width, 30);
+  filterView.hidden = YES;
+  [self.view addSubview: filterView];
+  // Label
+  filterLabel = [[UILabel alloc] init];
+  filterLabel.backgroundColor = [UIColor clearColor];
+  filterLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  filterLabel.frame = CGRectMake(10, 0, (filterView.frame.size.width - 20),
+    filterView.frame.size.height);
+  filterLabel.text = @"";
+  filterLabel.textAlignment = NSTextAlignmentCenter;
+  filterLabel.textColor = [UIColor whiteColor];
+  [filterView addSubview: filterLabel];
 
   // Property info view
   propertyInfoView = [[OMBPropertyInfoView alloc] init];
@@ -162,13 +181,23 @@ didUpdateLocations: (NSArray *) locations
   maxLongitude = region.center.longitude + (region.span.longitudeDelta / 2.0);
   // NSLog(@"Southeast: %f, %f", minLatitude, maxLongitude);
 
+  // Fetch properties with parameters
+  NSString *bath = [NSString stringWithFormat: @"%@",
+    mapFilterViewController.bath ? mapFilterViewController.bath : @""];
   NSString *beds = 
     [[mapFilterViewController.beds allValues] componentsJoinedByString: @","];
   NSString *bounds = [NSString stringWithFormat: @"[%f,%f,%f,%f]",
     minLongitude, maxLatitude, maxLongitude, minLatitude];
+  NSString *maxRent = [NSString stringWithFormat: @"%@",
+    mapFilterViewController.maxRent ? mapFilterViewController.maxRent : @""];
+  NSString *minRent = [NSString stringWithFormat: @"%@",
+    mapFilterViewController.minRent ? mapFilterViewController.minRent : @""];
   NSDictionary *parameters = @{
-    @"bd":     beds,
-    @"bounds": bounds
+    @"ba":       bath,
+    @"bd":       beds,
+    @"bounds":   bounds,
+    @"max_rent": maxRent,
+    @"min_rent": minRent
   };
   // parameters = [-116,32,-125,43]
   [[OMBResidenceStore sharedStore] fetchPropertiesWithParameters: parameters];
@@ -338,6 +367,72 @@ withMiles: (int) miles
       propertyInfoView.residence] animated: YES];
 }
 
+- (void) updateFilterLabel
+{
+  filterLabel.text = @"";
+  NSMutableArray *strings = [NSMutableArray array];
+
+  // Rent
+  NSString *maxRentString = @"";
+  NSString *minRentString = @"";
+  NSString *rentString    = @"";
+  if (mapFilterViewController.maxRent)
+    maxRentString = [NSString numberToCurrencyString: 
+      [mapFilterViewController.maxRent intValue]];
+  if (mapFilterViewController.minRent)
+    minRentString = [NSString numberToCurrencyString: 
+      [mapFilterViewController.minRent intValue]];
+  // $1,234 - $5,678
+  if ([maxRentString length] > 0 && [minRentString length] > 0)
+    rentString = [NSString stringWithFormat: @"%@ - %@", 
+      minRentString, maxRentString];
+  // Below $5,678
+  else if ([maxRentString length] > 0 && [minRentString length] == 0)
+    rentString = [NSString stringWithFormat: @"Below %@", maxRentString];
+  // Above $1,234
+  else if ([maxRentString length] == 0 && [minRentString length] > 0)
+    rentString = [NSString stringWithFormat: @"Above %@", minRentString];
+  if ([rentString length] > 0)
+    [strings addObject: rentString];
+
+  // Beds
+  NSString *bedString = @"";
+  NSString *lastBed   = @"";
+  for (NSString *bed in mapFilterViewController.bedsArray) {
+    if ([[mapFilterViewController.beds objectForKey: bed] length] > 0) {
+      if ([lastBed length] > 0)
+        bedString = [bedString stringByAppendingString: @", "];
+      bedString = [bedString stringByAppendingString: bed];
+      lastBed = bed;
+    }
+  }
+  if ([lastBed length] > 0) {
+    if ([lastBed isEqualToString: @"Studio"])
+      lastBed = @"";
+    else if ([lastBed isEqualToString: @"1"])
+      lastBed = @" bed";
+    else
+      lastBed = @" beds";
+  }
+  bedString = [bedString stringByAppendingString: lastBed];
+  if ([bedString length] > 0)
+    [strings addObject: bedString];
+
+  // Bath
+  if (mapFilterViewController.bath)
+    [strings addObject: [NSString stringWithFormat: @"%@+ baths", 
+      mapFilterViewController.bath]];
+
+  // Put everything together
+  if ([strings count] > 0)
+    filterLabel.text = [strings componentsJoinedByString: @", "];
+  // Figure out if the filter label needs to be hidden or not
+  if ([filterLabel.text length] > 0)
+    filterView.hidden = NO;
+  else
+    filterView.hidden = YES;
+}
+
 - (void) zoomClusterAtAnnotation: (OCAnnotation *) cluster
 {
   MKMapRect zoomRect = MKMapRectNull;
@@ -351,7 +446,6 @@ withMiles: (int) miles
       zoomRect = MKMapRectUnion(zoomRect, pointRect);
   }
   [_mapView setVisibleMapRect: zoomRect animated: YES];
-  NSLog(@"%f, %f", zoomRect.size.width, zoomRect.size.height);
 }
 
 @end

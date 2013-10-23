@@ -74,12 +74,12 @@ reuseIdentifier: (NSString *) reuseIdentifier
   [self deselect];
   // If it is a cluster
   if ([annotation isKindOfClass: [OCAnnotation class]]) {
-    int number = [[(OCAnnotation *) annotation annotationsInCluster] count];
+    int number = (int) [[(OCAnnotation *) annotation annotationsInCluster] count];
     if (number > 10)
       dimension = (DEFAULT_DIMENSION * 1.1) * 1.1 * (number / 10);
     if (dimension > DEFAULT_DIMENSION * 2 * (1 + DEFAULT_BORDER_PERCENTAGE))
       dimension = DEFAULT_DIMENSION * 2 * (1 + DEFAULT_BORDER_PERCENTAGE);
-    text = [NSString stringWithFormat: @"%i", number];
+    text = [NSString stringWithFormat: @"%i", (int) number];
   }
   else
     [(OMBAnnotation *) annotation setAnnotationView: self];

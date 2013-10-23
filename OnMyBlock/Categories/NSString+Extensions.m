@@ -10,6 +10,15 @@
 
 @implementation NSString (Extensions)
 
++ (NSString *) numberToCurrencyString: (int) number
+{
+  NSNumberFormatter *formatter = [NSNumberFormatter new];
+  [formatter setMaximumFractionDigits: 0];
+  [formatter setNumberStyle: NSNumberFormatterCurrencyStyle];
+  return [formatter stringFromNumber: 
+    [NSNumber numberWithInteger: number]];
+}
+
 + (NSString *) stripLower: (NSString *) string
 {
   return [[string stringByTrimmingCharactersInSet: 

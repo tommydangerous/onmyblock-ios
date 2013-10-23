@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB76C0E018187B3F006354FB /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76C0DF18187B3F006354FB /* UIImage+Color.m */; };
 		AB802E9E18109E5200E04D11 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB802E9D18109E5200E04D11 /* Foundation.framework */; };
 		AB802EA018109E5200E04D11 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB802E9F18109E5200E04D11 /* CoreGraphics.framework */; };
 		AB802EA218109E5200E04D11 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB802EA118109E5200E04D11 /* UIKit.framework */; };
@@ -84,6 +85,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB76C0DE18187B3F006354FB /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
+		AB76C0DF18187B3F006354FB /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
 		AB802E9A18109E5200E04D11 /* OnMyBlock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnMyBlock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB802E9D18109E5200E04D11 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AB802E9F18109E5200E04D11 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -380,6 +383,8 @@
 				AB9B26431811CB1300E6DAC4 /* UIColor+Extensions.m */,
 				AB9B26441811CB1300E6DAC4 /* UIImage+Resize.h */,
 				AB9B26451811CB1300E6DAC4 /* UIImage+Resize.m */,
+				AB76C0DE18187B3F006354FB /* UIImage+Color.h */,
+				AB76C0DF18187B3F006354FB /* UIImage+Color.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -612,6 +617,7 @@
 				AB9B26481811CB1300E6DAC4 /* UIColor+Extensions.m in Sources */,
 				ABB3C5821811789100DD91C9 /* OMBTabBarController.m in Sources */,
 				AB802EAA18109E5200E04D11 /* main.m in Sources */,
+				AB76C0E018187B3F006354FB /* UIImage+Color.m in Sources */,
 				AB9B263C1811B7ED00E6DAC4 /* OCMapView.m in Sources */,
 				ABF18BBA1816D3F0002DD723 /* TextFieldPadding.m in Sources */,
 			);

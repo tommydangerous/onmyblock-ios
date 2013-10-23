@@ -49,7 +49,7 @@
     };
     int position = 1;
     if ([json objectForKey: @"position"] != [NSNull null])
-      position = [[json objectForKey: @"position"] integerValue];
+      position = [[json objectForKey: @"position"] intValue];
     downloader.position = position;
     [downloader startDownload];
   }
