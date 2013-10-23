@@ -10,10 +10,28 @@
 
 @implementation UIColor (Extensions)
 
++ (UIColor *) backgroundColor
+{
+  return [UIColor colorWithRed: (245/255.0) green: (245/255.0) 
+    blue: (245/255.0) alpha: 1]; 
+}
+
++ (UIColor *) backgroundColorAlpha: (float) value
+{
+  return [UIColor colorWithRed: (245/255.0) green: (245/255.0) 
+    blue: (245/255.0) alpha: value]; 
+}
+
 + (UIColor *) blue
 {
   return [UIColor colorWithRed: (111/255.0) green: (174/255.0) 
     blue: (193/255.0) alpha: 1];
+}
+
++ (UIColor *) blueDarkAlpha: (float) value
+{
+  return [UIColor colorWithRed: (80/255.0) green: (145/255.0) 
+    blue: (165/255.0) alpha: value];
 }
 
 + (UIColor *) grayDark

@@ -10,7 +10,10 @@
 
 @interface UIColor (Extensions)
 
++ (UIColor *) backgroundColor;
++ (UIColor *) backgroundColorAlpha: (float) value;
 + (UIColor *) blue;
++ (UIColor *) blueDarkAlpha: (float) value;
 + (UIColor *) grayDark;
 + (UIColor *) grayDarkAlpha: (float) value;
 + (UIColor *) grayLight;

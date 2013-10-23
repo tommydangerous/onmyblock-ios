@@ -9,18 +9,24 @@
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 
+#import "OMBNavigationController.h"
 #import "OMBViewController.h"
 
 @class OCMapView;
+@class OMBMapFilterViewController;
 @class OMBPropertyInfoView;
 
 @interface OMBMapViewController : OMBViewController
 <CLLocationManagerDelegate, MKMapViewDelegate>
 {
   CLLocationManager *locationManager;
-  OCMapView *mapView;
+  OMBNavigationController *mapFilterNavigationController;
+  OMBMapFilterViewController *mapFilterViewController;
   OMBPropertyInfoView *propertyInfoView;
+  UISegmentedControl *segmentedControl;
 }
+
+@property (nonatomic, strong) OCMapView *mapView;
 
 #pragma mark - Methods
 
@@ -28,5 +34,9 @@
 
 - (void) addAnnotationAtCoordinate: (CLLocationCoordinate2D) coordinate
 withTitle: (NSString *) title;
+- (void) refreshProperties;
+- (void) removeAllAnnotations;
+- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
+withMiles: (int) miles;
 
 @end

@@ -15,7 +15,8 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
 
-const int DEFAULT_DIMENSION = 30;
+const float DEFAULT_BORDER_PERCENTAGE = 0.075;
+const float DEFAULT_DIMENSION         = 30 * (1 + DEFAULT_BORDER_PERCENTAGE);
 
 @implementation OMBAnnotationView
 
@@ -26,8 +27,24 @@ reuseIdentifier: (NSString *) reuseIdentifier
     reuseIdentifier: reuseIdentifier];
   if (self) {
     self.frame = CGRectMake(0, 0, DEFAULT_DIMENSION, DEFAULT_DIMENSION);
-    self.backgroundColor = [UIColor blue];
+    self.backgroundColor = [UIColor clearColor];
+
+    // Inside view
+    insideView = [[UIView alloc] init];
+    insideView.backgroundColor = [UIColor blue];
+    insideView.frame = CGRectMake(
+      (DEFAULT_DIMENSION * DEFAULT_BORDER_PERCENTAGE), 
+        (DEFAULT_DIMENSION * DEFAULT_BORDER_PERCENTAGE), 
+          (DEFAULT_DIMENSION * (1 - (DEFAULT_BORDER_PERCENTAGE * 2))),
+            (DEFAULT_DIMENSION * (1 - (DEFAULT_BORDER_PERCENTAGE * 2))));
+    insideView.layer.cornerRadius = insideView.frame.size.width / 2.0;
+    [self addSubview: insideView];
+
+    // Border
+    self.layer.borderColor  = [UIColor blueDarkAlpha: 0.5].CGColor;
+    self.layer.borderWidth  = DEFAULT_DIMENSION * DEFAULT_BORDER_PERCENTAGE;
     self.layer.cornerRadius = DEFAULT_DIMENSION / 2.0;
+
     label = [[UILabel alloc] init];
     label.backgroundColor = [UIColor clearColor];
     label.font   = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 13];
@@ -46,7 +63,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 - (void) deselect
 {
-  self.backgroundColor = [UIColor blue];
+  insideView.backgroundColor = [UIColor blue];
+  self.layer.borderColor     = [UIColor blueDarkAlpha: 0.5].CGColor;
 }
 
 - (void) loadAnnotation: (id <MKAnnotation>) annotation
@@ -57,23 +75,40 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // If it is a cluster
   if ([annotation isKindOfClass: [OCAnnotation class]]) {
     int number = [[(OCAnnotation *) annotation annotationsInCluster] count];
-    if (number > 15)
-      dimension = (DEFAULT_DIMENSION * 1.1) * 1.1 * (number / 15);
-    if (dimension > 60)
-      dimension = 60;
+    if (number > 10)
+      dimension = (DEFAULT_DIMENSION * 1.1) * 1.1 * (number / 10);
+    if (dimension > DEFAULT_DIMENSION * 2 * (1 + DEFAULT_BORDER_PERCENTAGE))
+      dimension = DEFAULT_DIMENSION * 2 * (1 + DEFAULT_BORDER_PERCENTAGE);
     text = [NSString stringWithFormat: @"%i", number];
   }
   else
     [(OMBAnnotation *) annotation setAnnotationView: self];
-  self.frame  = CGRectMake(0, 0, dimension, dimension);
+
+  // Resize
+  // Frame
+  self.frame = CGRectMake(0, 0, dimension, dimension);
+
+  // Inside view
+  insideView.frame = CGRectMake(
+    (dimension * DEFAULT_BORDER_PERCENTAGE), 
+      (dimension * DEFAULT_BORDER_PERCENTAGE), 
+        (dimension * (1 - (DEFAULT_BORDER_PERCENTAGE * 2))),
+          (dimension * (1 - (DEFAULT_BORDER_PERCENTAGE * 2))));
+  insideView.layer.cornerRadius = insideView.frame.size.width / 2.0;
+
+  // Border
+  self.layer.borderWidth  = dimension * DEFAULT_BORDER_PERCENTAGE;
   self.layer.cornerRadius = dimension / 2.0;
+
+  // Label
   label.frame = self.frame;
   label.text  = text;
 }
 
 - (void) select
 {
-  self.backgroundColor = [UIColor grayDark];
+  insideView.backgroundColor = [UIColor grayDark];
+  self.layer.borderColor     = [UIColor grayDarkAlpha: 0.5].CGColor;
 }
 
 @end

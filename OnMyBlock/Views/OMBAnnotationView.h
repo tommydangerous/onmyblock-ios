@@ -10,6 +10,7 @@
 
 @interface OMBAnnotationView : MKAnnotationView
 {
+  UIView *insideView;
   UILabel *label;
 }
 

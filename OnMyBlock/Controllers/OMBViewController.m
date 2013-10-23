@@ -12,6 +12,20 @@
 
 @implementation OMBViewController
 
+#pragma mark - Initializer
+
+- (id) init
+{
+  self = [super init];
+  if (self) {
+    self.view.backgroundColor = [UIColor backgroundColor];
+    self.navigationItem.backBarButtonItem = 
+      [[UIBarButtonItem alloc] initWithTitle: @"" 
+        style:UIBarButtonItemStylePlain target: nil action: nil];
+  }
+  return self;
+}
+
 #pragma mark - Override
 
 #pragma mark - Override UIViewController
@@ -22,7 +36,7 @@
   UILabel *label = [[UILabel alloc] init];
   label.backgroundColor = [UIColor clearColor];
   label.font            = [UIFont fontWithName: @"HelveticaNeue-Light" 
-    size: 20];
+    size: 18];
   label.frame           = CGRectMake(0, 0, 0, 44);
   label.shadowColor     = [UIColor clearColor];
   label.shadowOffset    = CGSizeMake(0, 0);

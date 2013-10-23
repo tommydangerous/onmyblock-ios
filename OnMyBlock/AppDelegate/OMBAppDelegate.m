@@ -10,6 +10,7 @@
 
 #import "MFSideMenu.h"
 #import "OMBTabBarController.h"
+#import "UIColor+Extensions.h"
 
 @implementation OMBAppDelegate
 
@@ -21,9 +22,6 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
-
-  // Defaults
-  [[UINavigationBar appearance] setBarTintColor: [UIColor whiteColor]];
 
   // View controllers
   _tabBarController = [[OMBTabBarController alloc] init];

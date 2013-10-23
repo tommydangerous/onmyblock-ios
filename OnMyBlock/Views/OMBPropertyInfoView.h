@@ -15,11 +15,11 @@
 {
   UIImageView *arrowImageView;
   UILabel *bedBathLabel;
-  OMBResidence *residence;
   UILabel *rentLabel;
 }
 
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) OMBResidence *residence;
 
 #pragma mark - Methods
 

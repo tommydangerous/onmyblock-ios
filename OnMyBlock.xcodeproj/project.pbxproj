@@ -56,6 +56,21 @@
 		ABB3C58918117C2200DD91C9 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB3C58818117C2200DD91C9 /* CoreLocation.framework */; };
 		ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABC48E791812397300F01D8D /* QuartzCore.framework */; };
 		ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */; };
+		ABF18BA41816BC53002DD723 /* marker_circle_deselected.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA01816BC53002DD723 /* marker_circle_deselected.png */; };
+		ABF18BA51816BC53002DD723 /* marker_circle_deselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA11816BC53002DD723 /* marker_circle_deselected@2x.png */; };
+		ABF18BA61816BC53002DD723 /* marker_circle_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA21816BC53002DD723 /* marker_circle_selected.png */; };
+		ABF18BA71816BC53002DD723 /* marker_circle_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA31816BC53002DD723 /* marker_circle_selected@2x.png */; };
+		ABF18BAA1816C3AD002DD723 /* list_segmented_control@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA81816C3AD002DD723 /* list_segmented_control@2x.png */; };
+		ABF18BAB1816C3AD002DD723 /* map_segmented_control@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA91816C3AD002DD723 /* map_segmented_control@2x.png */; };
+		ABF18BAE1816C73B002DD723 /* OMBMapFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF18BAD1816C73B002DD723 /* OMBMapFilterViewController.m */; };
+		ABF18BB11816CC65002DD723 /* OMBNeighborhood.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF18BB01816CC65002DD723 /* OMBNeighborhood.m */; };
+		ABF18BB41816CCDA002DD723 /* OMBNeighborhoodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF18BB31816CCDA002DD723 /* OMBNeighborhoodStore.m */; };
+		ABF18BBA1816D3F0002DD723 /* TextFieldPadding.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF18BB91816D3F0002DD723 /* TextFieldPadding.m */; };
+		ABF18BBD1816F913002DD723 /* OMBListButton.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF18BBC1816F913002DD723 /* OMBListButton.m */; };
+		ABF18BBF181703A3002DD723 /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BBE181703A3002DD723 /* search@2x.png */; };
+		ABF18BC118170EED002DD723 /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BC018170EED002DD723 /* search.png */; };
+		ABF18BC418170F43002DD723 /* list_segmented_control.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BC218170F43002DD723 /* list_segmented_control.png */; };
+		ABF18BC518170F43002DD723 /* map_segmented_control.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BC318170F43002DD723 /* map_segmented_control.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,6 +165,26 @@
 		ABC48E7B18125AF000F01D8D /* OMBPropertyInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPropertyInfoView.h; sourceTree = "<group>"; };
 		ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertyInfoView.m; sourceTree = "<group>"; };
 		ABDAA81B181563310027F04C /* OMBMapViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapViewControllerTests.m; sourceTree = "<group>"; };
+		ABF18BA01816BC53002DD723 /* marker_circle_deselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = marker_circle_deselected.png; sourceTree = "<group>"; };
+		ABF18BA11816BC53002DD723 /* marker_circle_deselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker_circle_deselected@2x.png"; sourceTree = "<group>"; };
+		ABF18BA21816BC53002DD723 /* marker_circle_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = marker_circle_selected.png; sourceTree = "<group>"; };
+		ABF18BA31816BC53002DD723 /* marker_circle_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker_circle_selected@2x.png"; sourceTree = "<group>"; };
+		ABF18BA81816C3AD002DD723 /* list_segmented_control@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "list_segmented_control@2x.png"; sourceTree = "<group>"; };
+		ABF18BA91816C3AD002DD723 /* map_segmented_control@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "map_segmented_control@2x.png"; sourceTree = "<group>"; };
+		ABF18BAC1816C73B002DD723 /* OMBMapFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterViewController.h; sourceTree = "<group>"; };
+		ABF18BAD1816C73B002DD723 /* OMBMapFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterViewController.m; sourceTree = "<group>"; };
+		ABF18BAF1816CC65002DD723 /* OMBNeighborhood.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBNeighborhood.h; sourceTree = "<group>"; };
+		ABF18BB01816CC65002DD723 /* OMBNeighborhood.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBNeighborhood.m; sourceTree = "<group>"; };
+		ABF18BB21816CCDA002DD723 /* OMBNeighborhoodStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBNeighborhoodStore.h; sourceTree = "<group>"; };
+		ABF18BB31816CCDA002DD723 /* OMBNeighborhoodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBNeighborhoodStore.m; sourceTree = "<group>"; };
+		ABF18BB81816D3F0002DD723 /* TextFieldPadding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldPadding.h; sourceTree = "<group>"; };
+		ABF18BB91816D3F0002DD723 /* TextFieldPadding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldPadding.m; sourceTree = "<group>"; };
+		ABF18BBB1816F913002DD723 /* OMBListButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBListButton.h; sourceTree = "<group>"; };
+		ABF18BBC1816F913002DD723 /* OMBListButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBListButton.m; sourceTree = "<group>"; };
+		ABF18BBE181703A3002DD723 /* search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search@2x.png"; sourceTree = "<group>"; };
+		ABF18BC018170EED002DD723 /* search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search.png; sourceTree = "<group>"; };
+		ABF18BC218170F43002DD723 /* list_segmented_control.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_segmented_control.png; sourceTree = "<group>"; };
+		ABF18BC318170F43002DD723 /* map_segmented_control.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map_segmented_control.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -279,10 +314,14 @@
 		AB9B26031811A49200E6DAC4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				ABF18BB81816D3F0002DD723 /* TextFieldPadding.h */,
+				ABF18BB91816D3F0002DD723 /* TextFieldPadding.m */,
 				AB9B26071811A74E00E6DAC4 /* OMBAnnotationView.h */,
 				AB9B26081811A74E00E6DAC4 /* OMBAnnotationView.m */,
 				ABC48E7B18125AF000F01D8D /* OMBPropertyInfoView.h */,
 				ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */,
+				ABF18BBB1816F913002DD723 /* OMBListButton.h */,
+				ABF18BBC1816F913002DD723 /* OMBListButton.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -294,6 +333,8 @@
 				AB9B260E1811AA7C00E6DAC4 /* OMBAnnotation.m */,
 				AB8C8C20181597F900A1B087 /* OMBResidence.h */,
 				AB8C8C21181597F900A1B087 /* OMBResidence.m */,
+				ABF18BAF1816CC65002DD723 /* OMBNeighborhood.h */,
+				ABF18BB01816CC65002DD723 /* OMBNeighborhood.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -305,6 +346,8 @@
 				AB9B26261811AF7B00E6DAC4 /* OMBAnnotationStore.m */,
 				AB8C8C1D1815969700A1B087 /* OMBResidenceStore.h */,
 				AB8C8C1E1815969700A1B087 /* OMBResidenceStore.m */,
+				ABF18BB21816CCDA002DD723 /* OMBNeighborhoodStore.h */,
+				ABF18BB31816CCDA002DD723 /* OMBNeighborhoodStore.m */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -368,10 +411,20 @@
 			children = (
 				AB8C8C341815D0E100A1B087 /* arrow_right.png */,
 				AB8C8C321815CF2A00A1B087 /* arrow_right@2x.png */,
+				ABF18BC218170F43002DD723 /* list_segmented_control.png */,
+				ABF18BA81816C3AD002DD723 /* list_segmented_control@2x.png */,
+				ABF18BC318170F43002DD723 /* map_segmented_control.png */,
+				ABF18BA91816C3AD002DD723 /* map_segmented_control@2x.png */,
+				ABF18BA01816BC53002DD723 /* marker_circle_deselected.png */,
+				ABF18BA11816BC53002DD723 /* marker_circle_deselected@2x.png */,
+				ABF18BA21816BC53002DD723 /* marker_circle_selected.png */,
+				ABF18BA31816BC53002DD723 /* marker_circle_selected@2x.png */,
 				AB9B26221811AE8600E6DAC4 /* marker_single.png */,
 				AB8C8C1818157A2600A1B087 /* marker_single@2x.png */,
 				AB8C8C14181579EE00A1B087 /* placeholder_property.png */,
 				AB8C8C15181579EE00A1B087 /* placeholder_property@2x.png */,
+				ABF18BC018170EED002DD723 /* search.png */,
+				ABF18BBE181703A3002DD723 /* search@2x.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -389,6 +442,8 @@
 				ABB3C584181178AE00DD91C9 /* OMBNavigationController.m */,
 				AB8C8C361815D7DC00A1B087 /* OMBResidenceDetailViewController.h */,
 				AB8C8C371815D7DC00A1B087 /* OMBResidenceDetailViewController.m */,
+				ABF18BAC1816C73B002DD723 /* OMBMapFilterViewController.h */,
+				ABF18BAD1816C73B002DD723 /* OMBMapFilterViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -490,15 +545,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABF18BBF181703A3002DD723 /* search@2x.png in Resources */,
+				ABF18BC518170F43002DD723 /* map_segmented_control.png in Resources */,
 				AB8C8C17181579EE00A1B087 /* placeholder_property@2x.png in Resources */,
 				AB802EA818109E5200E04D11 /* InfoPlist.strings in Resources */,
+				ABF18BC118170EED002DD723 /* search.png in Resources */,
+				ABF18BA71816BC53002DD723 /* marker_circle_selected@2x.png in Resources */,
 				AB9B26231811AE8600E6DAC4 /* marker_single.png in Resources */,
 				AB8C8C1918157A2600A1B087 /* marker_single@2x.png in Resources */,
+				ABF18BA51816BC53002DD723 /* marker_circle_deselected@2x.png in Resources */,
+				ABF18BC418170F43002DD723 /* list_segmented_control.png in Resources */,
 				AB9B2602181196F400E6DAC4 /* location.gpx in Resources */,
+				ABF18BAA1816C3AD002DD723 /* list_segmented_control@2x.png in Resources */,
+				ABF18BAB1816C3AD002DD723 /* map_segmented_control@2x.png in Resources */,
 				AB8C8C351815D0E100A1B087 /* arrow_right.png in Resources */,
 				AB8C8C16181579EE00A1B087 /* placeholder_property.png in Resources */,
+				ABF18BA61816BC53002DD723 /* marker_circle_selected.png in Resources */,
 				AB802EB018109E5200E04D11 /* Images.xcassets in Resources */,
 				AB8C8C331815CF2A00A1B087 /* arrow_right@2x.png in Resources */,
+				ABF18BA41816BC53002DD723 /* marker_circle_deselected.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -517,6 +582,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABF18BBD1816F913002DD723 /* OMBListButton.m in Sources */,
 				AB9B263B1811B7ED00E6DAC4 /* OCDistance.m in Sources */,
 				ABB3C585181178AE00DD91C9 /* OMBNavigationController.m in Sources */,
 				ABB3C5771811778000DD91C9 /* OMBMapViewController.m in Sources */,
@@ -525,6 +591,7 @@
 				AB9B26491811CB1300E6DAC4 /* UIImage+Resize.m in Sources */,
 				AB9B264D1811CE6D00E6DAC4 /* OMBConnection.m in Sources */,
 				AB8C8C1F1815969700A1B087 /* OMBResidenceStore.m in Sources */,
+				ABF18BB41816CCDA002DD723 /* OMBNeighborhoodStore.m in Sources */,
 				AB9B26501811CE8E00E6DAC4 /* OMBPropertiesConnection.m in Sources */,
 				AB9B26391811B7ED00E6DAC4 /* OCAlgorithms.m in Sources */,
 				AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */,
@@ -533,17 +600,20 @@
 				AB8C8C381815D7DC00A1B087 /* OMBResidenceDetailViewController.m in Sources */,
 				AB9B26461811CB1300E6DAC4 /* NSDate+TimeAgo.m in Sources */,
 				AB9B260F1811AA7C00E6DAC4 /* OMBAnnotation.m in Sources */,
+				ABF18BAE1816C73B002DD723 /* OMBMapFilterViewController.m in Sources */,
 				AB9B26271811AF7B00E6DAC4 /* OMBAnnotationStore.m in Sources */,
 				ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */,
 				AB8C8C131815784B00A1B087 /* OMBImageDownloader.m in Sources */,
 				ABB3C57F1811781C00DD91C9 /* MFSideMenuContainerViewController.m in Sources */,
 				ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */,
 				ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */,
+				ABF18BB11816CC65002DD723 /* OMBNeighborhood.m in Sources */,
 				AB9B263A1811B7ED00E6DAC4 /* OCAnnotation.m in Sources */,
 				AB9B26481811CB1300E6DAC4 /* UIColor+Extensions.m in Sources */,
 				ABB3C5821811789100DD91C9 /* OMBTabBarController.m in Sources */,
 				AB802EAA18109E5200E04D11 /* main.m in Sources */,
 				AB9B263C1811B7ED00E6DAC4 /* OCMapView.m in Sources */,
+				ABF18BBA1816D3F0002DD723 /* TextFieldPadding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

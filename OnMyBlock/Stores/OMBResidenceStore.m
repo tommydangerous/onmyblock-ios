@@ -8,6 +8,8 @@
 
 #import "OMBResidenceStore.h"
 
+#import "OCMapView.h"
+#import "OMBAnnotation.h"
 #import "OMBMapViewController.h"
 #import "OMBPropertiesConnection.h"
 #import "OMBResidence.h"
@@ -72,15 +74,27 @@
         residence = [[OMBResidence alloc] init];
         [residence readFromDictionary: dict];
         [self addResidence: residence];
-        CLLocationCoordinate2D coordinate;
-        coordinate.latitude  = residence.latitude;
-        coordinate.longitude = residence.longitude;
+      }
+      else {
+        [residence readFromDictionary: dict];
+      }
+      BOOL exists = NO;
+      CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+        residence.latitude, residence.longitude);
+      for (OMBAnnotation *annotation in 
+        _mapViewController.mapView.annotations) {
+        NSString *k = [NSString stringWithFormat: @"%f,%f-%@",
+          coordinate.latitude, coordinate.longitude, annotation.title];
+        if ([k isEqualToString: [residence dictionaryKey]]) {
+          exists = YES;
+          break;
+        }      
+      }
+      if (!exists) {
         // We add the annotation to the map
         [_mapViewController addAnnotationAtCoordinate: coordinate 
           withTitle: residence.address];
       }
-      else
-        [residence readFromDictionary: dict];
     }
   }
 }

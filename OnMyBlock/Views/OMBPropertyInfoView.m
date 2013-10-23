@@ -18,6 +18,7 @@ const float kBorderTopHeight = 0.5;
 @implementation OMBPropertyInfoView
 
 @synthesize imageView = _imageView;
+@synthesize residence = _residence;
 
 #pragma mark - Initializer
 
@@ -27,8 +28,8 @@ const float kBorderTopHeight = 0.5;
   if (self) {
     CGRect screen     = [[UIScreen mainScreen] bounds];
     float imageHeight = screen.size.height * 0.3;
-    self.backgroundColor = [UIColor colorWithRed: (210/255.0) green: (210/255.0)
-      blue: (210/255.0) alpha: 0.9];
+    self.backgroundColor = [UIColor colorWithRed: (245/255.0) green: (245/255.0)
+      blue: (245/255.0) alpha: 0.8];
     self.frame = CGRectMake(0, screen.size.height, screen.size.width, 
       (kBorderTopHeight + imageHeight));
 
@@ -49,24 +50,12 @@ const float kBorderTopHeight = 0.5;
       screen.size.width, imageHeight);
     [self addSubview: _imageView];
 
-    arrowImageView = [[UIImageView alloc] init];
-    arrowImageView.backgroundColor = [UIColor clearColor];
-    arrowImageView.clipsToBounds = YES;
-    arrowImageView.contentMode = UIViewContentModeTopLeft;
-    arrowImageView.frame = CGRectMake(
-      (screen.size.width - ((imageHeight * 0.4) + 10)), 
-        (1 + (imageHeight * 0.3)), (imageHeight * 0.4), 
-          (imageHeight * 0.4));
-    arrowImageView.image = [UIImage image: 
-      [UIImage imageNamed: @"arrow_right.png"] 
-        size: CGSizeMake((imageHeight * 0.4), (imageHeight * 0.4))];
-
     // Info view; this is where the rent, bed, bath, and arrow go
     UIView *infoView = [[UIView alloc] init];
-    infoView.backgroundColor = [UIColor whiteAlpha: 0.7];
+    infoView.backgroundColor = [UIColor whiteAlpha: 0.8];
     infoView.frame = CGRectMake(0, 
-      (kBorderTopHeight + (imageHeight * 0.6)),
-        screen.size.width, (imageHeight * 0.4));
+      (kBorderTopHeight + (imageHeight * 0.70)),
+        screen.size.width, (imageHeight * 0.30));
     [self addSubview: infoView];
 
     // Rent
@@ -86,6 +75,21 @@ const float kBorderTopHeight = 0.5;
       0, ((screen.size.width / 2.0) - 30), infoView.frame.size.height);
     bedBathLabel.textColor = color;
     [infoView addSubview: bedBathLabel];
+
+    // arrowImageView = [[UIImageView alloc] init];
+    // arrowImageView.backgroundColor = [UIColor clearColor];
+    // arrowImageView.clipsToBounds = YES;
+    // arrowImageView.contentMode = UIViewContentModeTopLeft;
+    // arrowImageView.frame = CGRectMake(
+    //   (screen.size.width - ((infoView.frame.size.height / 2.0) + 10)), 
+    //     (infoView.frame.size.height / 4.0), 
+    //        (infoView.frame.size.height / 2.0), 
+    //       (infoView.frame.size.height / 2.0));
+    // arrowImageView.image = [UIImage image: 
+    //   [UIImage imageNamed: @"arrow_right.png"] 
+    //     size: CGSizeMake((arrowImageView.frame.size.width), 
+    //       (arrowImageView.frame.size.height))];
+    // [infoView addSubview: arrowImageView];
   }
   return self;
 }
@@ -99,48 +103,48 @@ const float kBorderTopHeight = 0.5;
   CGRect screen     = [[UIScreen mainScreen] bounds];
   float imageHeight = screen.size.height * 0.35;
 
-  residence = object;
+  _residence = object;
 
   // Bedrooms
-  NSString *bedsString = @"beds";
-  if (residence.bedrooms == 1)
-    bedsString = @"bed";
+  NSString *bedsString = @"bd";
+  // if (_residence.bedrooms == 1)
+  //   bedsString = @"bed";
   NSString *bedsNumberString;
-  if (residence.bedrooms == (int) residence.bedrooms)
+  if (_residence.bedrooms == (int) _residence.bedrooms)
     bedsNumberString = [NSString stringWithFormat: @"%i", 
-      (int) residence.bedrooms];
+      (int) _residence.bedrooms];
   else
-    bedsNumberString = [NSString stringWithFormat: @"%.02f",
-      residence.bedrooms];
+    bedsNumberString = [NSString stringWithFormat: @"%.01f",
+      _residence.bedrooms];
   NSString *beds = [NSString stringWithFormat: @"%@ %@", 
     bedsNumberString, bedsString];
   // Bathrooms
-  NSString *bathsString = @"baths";
-  if (residence.bathrooms == 1)
-    bathsString = @"bath";
+  NSString *bathsString = @"ba";
+  // if (_residence.bathrooms == 1)
+  //   bathsString = @"bath";
   NSString *bathsNumberString;
-  if (residence.bathrooms == (int) residence.bathrooms)
+  if (_residence.bathrooms == (int) _residence.bathrooms)
     bathsNumberString = [NSString stringWithFormat: @"%i",
-      (int) residence.bathrooms];
+      (int) _residence.bathrooms];
   else
-    bathsNumberString = [NSString stringWithFormat: @"%.02f",
-      residence.bathrooms];
+    bathsNumberString = [NSString stringWithFormat: @"%.01f",
+      _residence.bathrooms];
   NSString *baths = [NSString stringWithFormat: @"%@ %@",
     bathsNumberString, bathsString];
   // Bedrooms / Bathrooms
   bedBathLabel.text = [NSString stringWithFormat: @"%@ / %@", beds, baths];
 
   // Image
-  if ([residence coverPhoto])
-    _imageView.image = [residence coverPhotoWithSize: 
+  if ([_residence coverPhoto])
+    _imageView.image = [_residence coverPhotoWithSize: 
       CGSizeMake(screen.size.width, imageHeight)];
   else {
-    // Get residence cover photo url
+    // Get _residence cover photo url
     OMBResidenceCoverPhotoURLConnection *connection = 
       [[OMBResidenceCoverPhotoURLConnection alloc] initWithResidence: 
-        residence];
+        _residence];
     connection.completionBlock = ^(NSError *error) {
-      _imageView.image = [residence coverPhotoWithSize: 
+      _imageView.image = [_residence coverPhotoWithSize: 
         CGSizeMake(screen.size.width, imageHeight)];
     };
     [connection start];
@@ -151,7 +155,7 @@ const float kBorderTopHeight = 0.5;
 
   // Rent
   rentLabel.text = [NSString stringWithFormat: @"%@", 
-    [residence rentToCurrencyString]];
+    [_residence rentToCurrencyString]];
 
   CGRect rentLabelFrame = rentLabel.frame;
   CGRect rentRect = [rentLabel.text boundingRectWithSize:
@@ -164,7 +168,9 @@ const float kBorderTopHeight = 0.5;
 
   CGRect bedBathLabelFrame = bedBathLabel.frame;
   CGRect bedBathRect = [bedBathLabel.text boundingRectWithSize:
-      CGSizeMake((screen.size.width - (20 + rentLabel.frame.size.width + 40)), 
+      CGSizeMake((screen.size.width - 
+        (20 + rentLabel.frame.size.width + 20 + 10 + 
+          arrowImageView.frame.size.width + 10)), 
         bedBathLabel.frame.size.height)
           options: NSStringDrawingUsesLineFragmentOrigin 
             attributes: @{NSFontAttributeName: bedBathLabel.font} 
