@@ -9,16 +9,19 @@
 #import "OMBViewController.h"
 
 @class OMBResidence;
+@class OMBResidenceImageSlideViewController;
 
 @interface OMBResidenceDetailViewController : OMBViewController
 <UIScrollViewDelegate>
 {
-  OMBResidence *residence;
-  UIScrollView *imagesScrollView;
   UIScrollView *mainScrollView;
+  OMBResidence *residence;
   NSMutableArray *subviews;
 }
 
+@property (nonatomic, strong) UIScrollView *imagesScrollView;
+@property (nonatomic, strong) OMBResidenceImageSlideViewController
+  *imageSlideViewController;
 // Array of image views for the images scroll view
 @property (nonatomic, strong) NSMutableArray *imageViewArray;
 

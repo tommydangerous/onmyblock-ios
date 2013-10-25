@@ -15,6 +15,8 @@
 		AB4F9D1E181AAAED0086D618 /* OMBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4F9D1D181AAAED0086D618 /* OMBMenuViewController.m */; };
 		AB4F9D21181ABD160086D618 /* OMBResidenceImagesConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4F9D20181ABD160086D618 /* OMBResidenceImagesConnection.m */; };
 		AB4F9D24181ABFA20086D618 /* OMBResidenceImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4F9D23181ABFA20086D618 /* OMBResidenceImageDownloader.m */; };
+		AB4F9D26181AF49D0086D618 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = AB4F9D25181AF49D0086D618 /* background.png */; };
+		AB4F9D29181B00B20086D618 /* OMBResidenceImageSlideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4F9D28181B00B20086D618 /* OMBResidenceImageSlideViewController.m */; };
 		AB76C0E018187B3F006354FB /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76C0DF18187B3F006354FB /* UIImage+Color.m */; };
 		AB802E9E18109E5200E04D11 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB802E9D18109E5200E04D11 /* Foundation.framework */; };
 		AB802EA018109E5200E04D11 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB802E9F18109E5200E04D11 /* CoreGraphics.framework */; };
@@ -108,6 +110,9 @@
 		AB4F9D20181ABD160086D618 /* OMBResidenceImagesConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceImagesConnection.m; sourceTree = "<group>"; };
 		AB4F9D22181ABFA20086D618 /* OMBResidenceImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceImageDownloader.h; sourceTree = "<group>"; };
 		AB4F9D23181ABFA20086D618 /* OMBResidenceImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceImageDownloader.m; sourceTree = "<group>"; };
+		AB4F9D25181AF49D0086D618 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
+		AB4F9D27181B00B20086D618 /* OMBResidenceImageSlideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceImageSlideViewController.h; sourceTree = "<group>"; };
+		AB4F9D28181B00B20086D618 /* OMBResidenceImageSlideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceImageSlideViewController.m; sourceTree = "<group>"; };
 		AB76C0DE18187B3F006354FB /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
 		AB76C0DF18187B3F006354FB /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
 		AB802E9A18109E5200E04D11 /* OnMyBlock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnMyBlock.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -457,6 +462,7 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				AB4F9D25181AF49D0086D618 /* background.png */,
 				AB8C8C341815D0E100A1B087 /* arrow_right.png */,
 				AB8C8C321815CF2A00A1B087 /* arrow_right@2x.png */,
 				ABF18BC218170F43002DD723 /* list_segmented_control.png */,
@@ -498,6 +504,8 @@
 				AB26131618197D030053A8AA /* OMBCollectionViewController.m */,
 				AB4F9D1C181AAAED0086D618 /* OMBMenuViewController.h */,
 				AB4F9D1D181AAAED0086D618 /* OMBMenuViewController.m */,
+				AB4F9D27181B00B20086D618 /* OMBResidenceImageSlideViewController.h */,
+				AB4F9D28181B00B20086D618 /* OMBResidenceImageSlideViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -608,6 +616,7 @@
 				AB9B26231811AE8600E6DAC4 /* marker_single.png in Resources */,
 				AB8C8C1918157A2600A1B087 /* marker_single@2x.png in Resources */,
 				ABF18BA51816BC53002DD723 /* marker_circle_deselected@2x.png in Resources */,
+				AB4F9D26181AF49D0086D618 /* background.png in Resources */,
 				ABF18BC418170F43002DD723 /* list_segmented_control.png in Resources */,
 				AB9B2602181196F400E6DAC4 /* location.gpx in Resources */,
 				AB26130E1818E9970053A8AA /* menu_icon.png in Resources */,
@@ -654,6 +663,7 @@
 				AB9B26391811B7ED00E6DAC4 /* OCAlgorithms.m in Sources */,
 				AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */,
 				AB8C8C251815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.m in Sources */,
+				AB4F9D29181B00B20086D618 /* OMBResidenceImageSlideViewController.m in Sources */,
 				AB8C8C22181597F900A1B087 /* OMBResidence.m in Sources */,
 				AB8C8C381815D7DC00A1B087 /* OMBResidenceDetailViewController.m in Sources */,
 				AB9B26461811CB1300E6DAC4 /* NSDate+TimeAgo.m in Sources */,

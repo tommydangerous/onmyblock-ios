@@ -11,6 +11,7 @@
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
 #import "OMBResidenceImageDownloader.h"
+#import "UIImage+Resize.h"
 
 @implementation OMBResidenceImagesConnection
 
@@ -58,8 +59,12 @@
        [[OMBResidenceImageDownloader alloc] initWithResidence: residence];
       downloader.completionBlock = ^(NSError *error) {
         // When the download is complete, set the image for the image view
-        imageView.image = [residence.images objectForKey: 
+        UIImage *image = [residence.images objectForKey: 
           [NSString stringWithFormat: @"%i", position]];
+        CGSize size = CGSizeMake(
+          viewController.imagesScrollView.frame.size.width,
+            viewController.imagesScrollView.frame.size.height);
+        imageView.image = [UIImage image: image size: size];
         [super connectionDidFinishLoading: connection];
       };
       downloader.imageURL = [NSURL URLWithString: string];

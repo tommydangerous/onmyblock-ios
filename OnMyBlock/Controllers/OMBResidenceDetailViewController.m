@@ -10,11 +10,15 @@
 
 #import "OMBResidence.h"
 #import "OMBResidenceImagesConnection.h"
+#import "OMBResidenceImageSlideViewController.h"
 #import "UIColor+Extensions.h"
+#import "UIImage+Resize.h"
 
 @implementation OMBResidenceDetailViewController
 
-@synthesize imageViewArray = _imageViewArray;
+@synthesize imagesScrollView = _imagesScrollView;
+@synthesize imageSlideViewController = _imageSlideViewController;
+@synthesize imageViewArray   = _imageViewArray;
 
 #pragma mark - Initializer
 
@@ -22,6 +26,10 @@
 {
   if (!(self = [super init])) return nil;
 
+  _imageSlideViewController = 
+    [[OMBResidenceImageSlideViewController alloc] init];
+  _imageSlideViewController.modalTransitionStyle = 
+    UIModalTransitionStyleCrossDissolve;
   residence  = object;
   self.title = [residence.address capitalizedString];
 
@@ -49,14 +57,19 @@
   self.view = mainScrollView;
 
   // Images scrolling view; image slides
-  imagesScrollView = [[UIScrollView alloc] init];
-  imagesScrollView.backgroundColor = [UIColor grayLight];
-  imagesScrollView.delegate = self;
-  imagesScrollView.frame = CGRectMake(0, 0, screen.size.width, 
+  _imagesScrollView = [[UIScrollView alloc] init];
+  _imagesScrollView.backgroundColor = [UIColor grayLight];
+  _imagesScrollView.delegate = self;
+  _imagesScrollView.frame = CGRectMake(0, 0, screen.size.width, 
     (screen.size.height * 0.4));
-  imagesScrollView.pagingEnabled = YES;
-  imagesScrollView.showsHorizontalScrollIndicator = NO;
-  [subviews addObject: imagesScrollView];
+  _imagesScrollView.pagingEnabled = YES;
+  _imagesScrollView.showsHorizontalScrollIndicator = NO;
+  [subviews addObject: _imagesScrollView];
+
+  UITapGestureRecognizer *tapGesture = 
+    [[UITapGestureRecognizer alloc] initWithTarget: self 
+      action: @selector(showImageSlideViewController)];
+  [_imagesScrollView addGestureRecognizer: tapGesture];
 
   // Add all views to scroll view
   float totalHeightSize = 0;
@@ -82,7 +95,9 @@
       imageView.backgroundColor = [UIColor clearColor];
       imageView.clipsToBounds   = YES;
       imageView.contentMode     = UIViewContentModeTopLeft;
-      imageView.image           = image;
+      imageView.image           = [UIImage image: image size:
+        CGSizeMake(_imagesScrollView.frame.size.width,
+          _imagesScrollView.frame.size.height)];
       [_imageViewArray addObject: imageView];
     }
     [self addImageViewsToImageScrollView];
@@ -103,27 +118,36 @@
 
 - (void) addImageViewsToImageScrollView
 {
-  // Add imageViews to imagesScrollView from _imagesViewArray
-  // and then set the imagesScrollView content size
+  // Add imageViews to _imagesScrollView from _imagesViewArray
+  // and then set the _imagesScrollView content size
   for (UIImageView *imageView in _imageViewArray) {
-    imageView.frame = CGRectMake((imagesScrollView.frame.size.width * 
+    imageView.frame = CGRectMake((_imagesScrollView.frame.size.width * 
       [_imageViewArray indexOfObject: imageView]), 0, 
-        imagesScrollView.frame.size.width, imagesScrollView.frame.size.height);
-    [imagesScrollView addSubview: imageView];
+        _imagesScrollView.frame.size.width, 
+          _imagesScrollView.frame.size.height);
+    [_imagesScrollView addSubview: imageView];
   }
-  imagesScrollView.contentSize = CGSizeMake(
-    (imagesScrollView.frame.size.width * [_imageViewArray count]), 
-      imagesScrollView.frame.size.height);
+  _imagesScrollView.contentSize = CGSizeMake(
+    (_imagesScrollView.frame.size.width * [_imageViewArray count]), 
+      _imagesScrollView.frame.size.height);
 }
 
 - (void) resetImageViews
 {
-  [imagesScrollView.subviews enumerateObjectsUsingBlock: 
+  // Remove UIImageView from _imagesScrollView
+  [_imagesScrollView.subviews enumerateObjectsUsingBlock: 
     ^(UIImageView *imageView, NSUInteger idx, BOOL *stop) {
       [imageView removeFromSuperview];
     }
   ];
+  // Empty out any UIImageView from the _imageViewArray
   [_imageViewArray removeAllObjects];
+}
+
+- (void) showImageSlideViewController
+{
+  [self presentViewController: _imageSlideViewController animated: YES
+    completion: nil];
 }
 
 @end
