@@ -17,15 +17,24 @@
 #import "OMBMapFilterViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBPropertyInfoView.h"
+#import "OMBResidenceCell.h"
+#import "OMBResidenceCollectionViewCell.h"
 #import "OMBResidenceStore.h"
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
+#import "OMBSpringFlowLayout.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
 
 @implementation OMBMapViewController
 
-@synthesize mapView = _mapView;
+
+static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
+
+@synthesize collectionView       = _collectionView;
+@synthesize collectionViewLayout = _collectionViewLayout;
+@synthesize listView             = _listView;
+@synthesize mapView              = _mapView;
 
 #pragma mark Initializer
 
@@ -50,6 +59,8 @@
 
 - (void) loadView
 {
+  [super loadView];
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view     = [[UIView alloc] initWithFrame: screen];
 
@@ -61,7 +72,7 @@
         style: UIBarButtonItemStylePlain target: self 
           action: @selector(showMapFilterViewController)];
   // Title view
-  CGSize segmentedControlImageSize = CGSizeMake(29 * 0.6, 29 * 0.6);
+  CGSize segmentedControlImageSize = CGSizeMake(29 * 0.7, 29 * 0.7);
   segmentedControl = [[UISegmentedControl alloc] initWithItems: 
     @[
       [UIImage image: [UIImage imageNamed: @"map_segmented_control.png"] 
@@ -74,6 +85,8 @@
   CGRect segmentedFrame = segmentedControl.frame;
   segmentedFrame.size.width = screen.size.width * 0.4;
   segmentedControl.frame = segmentedFrame;
+  [segmentedControl addTarget: self action: @selector(switchViews:)
+    forControlEvents: UIControlEventValueChanged];
   self.navigationItem.titleView = segmentedControl;
 
   // Map filter navigation and view controller
@@ -84,6 +97,30 @@
     [[OMBNavigationController alloc] initWithRootViewController: 
       mapFilterViewController];
 
+  // Collection view
+  _collectionViewLayout = [[OMBSpringFlowLayout alloc] init];
+  _collectionView = [[UICollectionView alloc] initWithFrame: screen
+    collectionViewLayout: _collectionViewLayout];
+  _collectionView.alpha      = 0.0;
+  _collectionView.alwaysBounceVertical = YES;
+  _collectionView.dataSource = self;
+  _collectionView.delegate   = self;
+  _collectionView.showsVerticalScrollIndicator = NO;
+
+  [self.view addSubview: _collectionView];
+
+  // List view
+  _listView = [[UITableView alloc] init];
+  _listView.alpha           = 0.0;
+  _listView.backgroundColor = [UIColor redColor];
+  _listView.dataSource      = self;
+  _listView.delegate        = self;
+  _listView.frame           = screen;
+  _listView.separatorColor  = [UIColor clearColor];
+  _listView.separatorStyle  = UITableViewCellSeparatorStyleNone;
+  _listView.showsVerticalScrollIndicator = NO;
+  [self.view addSubview: _listView];
+
   // Map view
   _mapView          = [[OCMapView alloc] init];
   _mapView.delegate = self;
@@ -91,11 +128,11 @@
   _mapView.mapType  = MKMapTypeStandard;
   // mapView.rotateEnabled = NO;
   _mapView.showsPointsOfInterest = NO;
-  [self.view addSubview: _mapView];
   UITapGestureRecognizer *mapViewTap = 
     [[UITapGestureRecognizer alloc] initWithTarget: self 
       action: @selector(mapViewTapped)];
   [_mapView addGestureRecognizer: mapViewTap];
+  [self.view addSubview: _mapView];
 
   // Filter
   // View
@@ -117,7 +154,7 @@
 
   // Property info view
   propertyInfoView = [[OMBPropertyInfoView alloc] init];
-  [self.view addSubview: propertyInfoView];
+  [_mapView addSubview: propertyInfoView];
   // Add a tap gesture to property info view
   UITapGestureRecognizer *tap = 
     [[UITapGestureRecognizer alloc] initWithTarget:
@@ -127,6 +164,7 @@
 
 - (void) viewDidLoad
 {
+  [super viewDidLoad];
   _mapView.showsUserLocation = YES;
   // Load default latitude and longitude
   CLLocationCoordinate2D coordinate;
@@ -137,6 +175,10 @@
 
   // Find user's location
   [locationManager startUpdatingLocation];
+
+  _collectionView.backgroundColor = [UIColor backgroundColor];
+  [_collectionView registerClass: [OMBResidenceCollectionViewCell class] 
+    forCellWithReuseIdentifier: CollectionCellIdentifier];
 }
 
 #pragma mark - Protocol
@@ -200,7 +242,11 @@ didUpdateLocations: (NSArray *) locations
     @"min_rent": minRent
   };
   // parameters = [-116,32,-125,43]
-  [[OMBResidenceStore sharedStore] fetchPropertiesWithParameters: parameters];
+  [[OMBResidenceStore sharedStore] fetchPropertiesWithParameters: parameters
+    completion: ^(NSError *error) {
+      [self reloadTable];
+    }
+  ];
 
   [self deselectAnnotations];
   [self hidePropertyInfoView];
@@ -260,6 +306,72 @@ viewForAnnotation: (id <MKAnnotation>) annotation
   return annotationView;
 }
 
+#pragma mark - Protocol UICollectionViewDataSource
+
+- (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView 
+cellForItemAtIndexPath: (NSIndexPath *) indexPath 
+{
+  OMBResidenceCollectionViewCell *cell = 
+    [collectionView dequeueReusableCellWithReuseIdentifier: 
+      CollectionCellIdentifier forIndexPath: indexPath];
+  OMBResidence *residence = [[self propertiesSortedBy: @"" 
+    ascending: YES] objectAtIndex: indexPath.row];
+  [cell loadResidenceData: residence];
+  return cell;
+}
+
+
+- (NSInteger) collectionView: (UICollectionView *) collectionView 
+numberOfItemsInSection: (NSInteger) section 
+{
+  return [[self propertiesSortedBy: @"" ascending: NO] count];
+}
+
+#pragma mark - Protocol UICollectionViewDelegate
+
+- (void) collectionView: (UICollectionView *) collectionView 
+didHighlightItemAtIndexPath: (NSIndexPath *) indexPath
+{
+  OMBResidence *residence = [[self propertiesSortedBy: @"" 
+    ascending: NO] objectAtIndex: indexPath.row];
+  [self.navigationController pushViewController:
+    [[OMBResidenceDetailViewController alloc] initWithResidence: 
+      residence] animated: YES];
+}
+
+#pragma mark - Protocol UITableViewDataSource
+
+- (UITableViewCell *) tableView: (UITableView *) tableView
+cellForRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  static NSString *CellIdentifier = @"CellIdentifier";
+  OMBResidenceCell *cell = [tableView dequeueReusableCellWithIdentifier:
+    CellIdentifier];
+  if (!cell) {
+    cell = [[OMBResidenceCell alloc] initWithStyle: 
+      UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+  }
+  NSArray *properties = [self propertiesSortedBy: @"" ascending: NO];
+  if ([properties count] > 0)
+    [cell loadResidence: [properties objectAtIndex: indexPath.row]];
+  return cell;
+}
+
+- (NSInteger) tableView: (UITableView *) tableView
+numberOfRowsInSection: (NSInteger) section
+{
+  return [[self propertiesSortedBy: @"" ascending: NO] count];
+}
+
+#pragma mark - Protocol UITableViewDelegate
+
+- (CGFloat) tableView: (UITableView *) tableView
+heightForRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  return screen.size.height * 0.3;
+}
+
 #pragma mark - Methods
 
 #pragma mark Instance Methods
@@ -316,9 +428,24 @@ withTitle: (NSString *) title;
   [self hidePropertyInfoView];
 }
 
+- (NSArray *) propertiesSortedBy: (NSString *) key ascending: (BOOL) ascending
+{
+  NSSet *visibleAnnotations = [_mapView annotationsInMapRect: 
+    _mapView.visibleMapRect];
+  return [[OMBResidenceStore sharedStore] propertiesFromAnnotations: 
+      visibleAnnotations sortedBy: key ascending: ascending];
+}
+
 - (void) refreshProperties
 {
   [self mapView: _mapView regionDidChangeAnimated: YES];
+}
+
+- (void) reloadTable
+{
+  if (_collectionView.alpha == 1.0)
+    [_collectionView reloadData];
+  // [_listView reloadData];
 }
 
 - (void) removeAllAnnotations
@@ -365,6 +492,29 @@ withMiles: (int) miles
   [self.navigationController pushViewController: 
     [[OMBResidenceDetailViewController alloc] initWithResidence: 
       propertyInfoView.residence] animated: YES];
+}
+
+- (void) switchViews: (UISegmentedControl *) control
+{
+  switch (control.selectedSegmentIndex) {
+    // Show map
+    case 0: {
+      _collectionView.alpha = 0.0;
+      _listView.alpha = 0.0;
+      _mapView.alpha  = 1.0;     
+      break;
+    }
+    // Show list
+    case 1: {
+      _collectionView.alpha = 1.0;
+      _listView.alpha = 0.0;
+      _mapView.alpha  = 0.0;     
+      [self reloadTable];  
+      break;
+    }
+    default:
+      break;
+  }
 }
 
 - (void) updateFilterLabel

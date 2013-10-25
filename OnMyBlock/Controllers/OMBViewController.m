@@ -8,6 +8,9 @@
 
 #import "OMBViewController.h"
 
+#import "MFSideMenu.h"
+#import "OMBAppDelegate.h"
+#import "UIImage+Resize.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBViewController
@@ -30,13 +33,24 @@
 
 #pragma mark - Override UIViewController
 
+- (void) loadView
+{
+  [super loadView];
+  
+  self.navigationItem.rightBarButtonItem =
+    [[UIBarButtonItem alloc] initWithImage: 
+      [UIImage image:  [UIImage imageNamed: @"menu_icon.png"] 
+        size: CGSizeMake(26, 26)] style: UIBarButtonItemStylePlain 
+          target: self action: @selector(showRightMenu)];
+}
+
 - (void) setTitle: (NSString *) string
 {
   [super setTitle: string];
   UILabel *label = [[UILabel alloc] init];
   label.backgroundColor = [UIColor clearColor];
   label.font            = [UIFont fontWithName: @"HelveticaNeue-Light" 
-    size: 18];
+    size: 20];
   label.frame           = CGRectMake(0, 0, 0, 44);
   label.shadowColor     = [UIColor clearColor];
   label.shadowOffset    = CGSizeMake(0, 0);
@@ -45,6 +59,17 @@
   label.textColor       = [UIColor textColor];
   [label sizeToFit];
   self.navigationItem.titleView = label;
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) showRightMenu
+{
+  OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
+    [UIApplication sharedApplication].delegate;
+  [appDelegate.menuContainer toggleRightSideMenuCompletion: ^{}];
 }
 
 @end

@@ -17,7 +17,9 @@
 @class OMBPropertyInfoView;
 
 @interface OMBMapViewController : OMBViewController
-<CLLocationManagerDelegate, MKMapViewDelegate>
+<CLLocationManagerDelegate, MKMapViewDelegate, 
+  UICollectionViewDataSource, UICollectionViewDelegate,
+    UITableViewDataSource, UITableViewDelegate>
 {
   UILabel *filterLabel;
   UIView *filterView;
@@ -28,6 +30,9 @@
   UISegmentedControl *segmentedControl;
 }
 
+@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UICollectionViewLayout *collectionViewLayout;
+@property (nonatomic, strong) UITableView *listView;
 @property (nonatomic, strong) OCMapView *mapView;
 
 #pragma mark - Methods
@@ -37,6 +42,7 @@
 - (void) addAnnotationAtCoordinate: (CLLocationCoordinate2D) coordinate
 withTitle: (NSString *) title;
 - (void) refreshProperties;
+- (void) reloadTable;
 - (void) removeAllAnnotations;
 - (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
 withMiles: (int) miles;

@@ -25,8 +25,9 @@
 @synthesize uid         = _uid;
 
 // iOS app properties
-@synthesize coverPhotoURL = _coverPhotoImageURL;
-@synthesize images        = _images;
+@synthesize coverPhotoForCell = _coverPhotoForCell;
+@synthesize coverPhotoURL     = _coverPhotoImageURL;
+@synthesize images            = _images;
 
 #pragma mark - Initializer
 
@@ -78,6 +79,11 @@
 {
   return [NSString stringWithFormat: @"%f,%f-%@", _latitude, _longitude,
     _address];
+}
+
+- (void) downloadImages
+{
+  
 }
 
 - (NSArray *) imagesArray

@@ -13,7 +13,7 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
 
-const float kBorderTopHeight = 0.5;
+const float kBorderTopHeight = 0.0;
 
 @implementation OMBPropertyInfoView
 
@@ -32,14 +32,6 @@ const float kBorderTopHeight = 0.5;
       blue: (245/255.0) alpha: 0.8];
     self.frame = CGRectMake(0, screen.size.height, screen.size.width, 
       (kBorderTopHeight + imageHeight));
-
-    UIColor *color = [UIColor textColor];
-
-    CALayer *borderTop = [CALayer layer];
-    borderTop.backgroundColor = [UIColor grayDark].CGColor;
-    borderTop.frame = CGRectMake(0, 0, screen.size.width, kBorderTopHeight);
-    borderTop.opacity = 1;
-    [self.layer addSublayer: borderTop];
 
     // Image view
     _imageView                 = [[UIImageView alloc] init];
@@ -61,19 +53,19 @@ const float kBorderTopHeight = 0.5;
     // Rent
     rentLabel = [[UILabel alloc] init];
     rentLabel.backgroundColor = [UIColor clearColor];
-    rentLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 27];
+    rentLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 27];
     rentLabel.frame = CGRectMake(20, 0, ((screen.size.width / 2.0) - 30), 
       infoView.frame.size.height);
-    rentLabel.textColor = color;
+    rentLabel.textColor = [UIColor textColor];
     [infoView addSubview: rentLabel];
 
     // Bedrooms / Bathrooms
     bedBathLabel = [[UILabel alloc] init];
     bedBathLabel.backgroundColor = [UIColor clearColor];
-    bedBathLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];;
+    bedBathLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
     bedBathLabel.frame = CGRectMake((20 + rentLabel.frame.size.width + 10),
       0, ((screen.size.width / 2.0) - 30), infoView.frame.size.height);
-    bedBathLabel.textColor = color;
+    bedBathLabel.textColor = [UIColor textColor];
     [infoView addSubview: bedBathLabel];
 
     // arrowImageView = [[UIImageView alloc] init];
@@ -101,7 +93,7 @@ const float kBorderTopHeight = 0.5;
 - (void) loadResidenceData: (OMBResidence *) object
 {
   CGRect screen     = [[UIScreen mainScreen] bounds];
-  float imageHeight = screen.size.height * 0.35;
+  float imageHeight = screen.size.height * 0.3;
 
   _residence = object;
 
@@ -135,22 +127,19 @@ const float kBorderTopHeight = 0.5;
   bedBathLabel.text = [NSString stringWithFormat: @"%@ / %@", beds, baths];
 
   // Image
-  if ([_residence coverPhoto])
-    _imageView.image = [_residence coverPhotoWithSize: 
-      CGSizeMake(screen.size.width, imageHeight)];
+  if (_residence.coverPhotoForCell)
+    _imageView.image = _residence.coverPhotoForCell;
   else {
     // Get _residence cover photo url
     OMBResidenceCoverPhotoURLConnection *connection = 
       [[OMBResidenceCoverPhotoURLConnection alloc] initWithResidence: 
         _residence];
     connection.completionBlock = ^(NSError *error) {
-      _imageView.image = [_residence coverPhotoWithSize: 
+      _residence.coverPhotoForCell = [_residence coverPhotoWithSize: 
         CGSizeMake(screen.size.width, imageHeight)];
+      _imageView.image = _residence.coverPhotoForCell;
     };
     [connection start];
-    // _imageView.image = [UIImage image: 
-    //   [UIImage imageNamed: @"placeholder_property.png"]
-    //     size: CGSizeMake(100, 100)];
   }
 
   // Rent

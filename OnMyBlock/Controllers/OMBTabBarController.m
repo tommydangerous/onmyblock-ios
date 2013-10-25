@@ -19,23 +19,34 @@
 
 - (id) init
 {
-  self = [super init];
-  if (self) {
-    CGRect screen = [[UIScreen mainScreen] bounds];
-    // Hide UITabBar
-    CGRect frame      = self.tabBar.frame;
-    frame.origin.y    = screen.size.height;
-    self.tabBar.frame = frame;
-    // View controllers
-    _mapViewController = 
-      [[OMBNavigationController alloc] initWithRootViewController: 
-        [[OMBMapViewController alloc] init]];
+  if (!(self = [super init])) return nil;
+  
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  // Hide UITabBar
+  CGRect frame      = self.tabBar.frame;
+  frame.origin.y    = screen.size.height;
+  self.tabBar.frame = frame;
+  // View controllers
+  _mapViewController = 
+    [[OMBNavigationController alloc] initWithRootViewController: 
+      [[OMBMapViewController alloc] init]];
 
-    self.viewControllers = @[
-      _mapViewController
-    ];
-  }
+  self.viewControllers = @[
+    _mapViewController
+  ];
+
   return self;
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) switchToViewController: (UIViewController *) vc
+{
+  self.viewControllers = [NSArray arrayWithObjects: 
+    self.selectedViewController, vc, nil];
+  self.selectedViewController = vc;
 }
 
 @end

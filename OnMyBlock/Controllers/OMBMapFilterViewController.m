@@ -49,12 +49,14 @@ const int kPadding = 20;
 
 - (void) loadView
 {
+  [super loadView];
+  
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view     = [[UIView alloc] initWithFrame: screen];
   UIColor *borderColor = [UIColor grayMedium];
-  UIFont *labelFont = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  UIFont *labelFont = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 16];
   UIFont *textFieldFont = [UIFont fontWithName: @"HelveticaNeue-Light" 
-    size: 15];
+    size: 16];
 
   // Create beds array and dictionary
   _bedsArray = @[@"Studio", @"1", @"2", @"3", @"4+"];
@@ -396,8 +398,6 @@ const int kPadding = 20;
   if (_neighborhood)
     [_mapViewController setMapViewRegion: _neighborhood.coordinate
       withMiles: 4];
-  // Tells the map that region did change so that it fetches the properties
-  [_mapViewController refreshProperties];
   [self dismissViewController];
 }
 
@@ -423,7 +423,6 @@ const int kPadding = 20;
   // Bath
   _bath = nil;
 
-  [_mapViewController refreshProperties];
   [self clearAllButtons];
   [self dismissViewController];
 }
@@ -508,6 +507,8 @@ const int kPadding = 20;
 {
   // Show the filter label with what filters were applied
   [_mapViewController updateFilterLabel];
+  // Tells the map that region did change so that it fetches the properties
+  [_mapViewController refreshProperties];
 
   [self dismissViewControllerAnimated: YES completion: ^{
     [self hideDropdownLists];
@@ -600,6 +601,7 @@ const int kPadding = 20;
   }
   else if (_bath == number)
     _bath = nil;
+  [self hideDropdownLists];
   // Need to do this in order to remove all previous annotations and 
   // only show properties with the filters applied
   [_mapViewController removeAllAnnotations];
@@ -621,6 +623,7 @@ const int kPadding = 20;
     button.backgroundColor = [UIColor grayMedium];
     [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
   }
+  [self hideDropdownLists];
   // Need to do this in order to remove all previous annotations and 
   // only show properties with the filters applied
   [_mapViewController removeAllAnnotations];

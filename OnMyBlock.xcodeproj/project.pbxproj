@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB26130C1818E5920053A8AA /* menu_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB26130B1818E5920053A8AA /* menu_icon@2x.png */; };
+		AB26130E1818E9970053A8AA /* menu_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = AB26130D1818E9970053A8AA /* menu_icon.png */; };
+		AB2613111818EC800053A8AA /* OMBResidenceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2613101818EC800053A8AA /* OMBResidenceCell.m */; };
+		AB26131718197D030053A8AA /* OMBCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB26131618197D030053A8AA /* OMBCollectionViewController.m */; };
+		AB26131E18198E570053A8AA /* OMBSpringFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */; };
+		AB4F9D1E181AAAED0086D618 /* OMBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4F9D1D181AAAED0086D618 /* OMBMenuViewController.m */; };
+		AB4F9D21181ABD160086D618 /* OMBResidenceImagesConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4F9D20181ABD160086D618 /* OMBResidenceImagesConnection.m */; };
+		AB4F9D24181ABFA20086D618 /* OMBResidenceImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4F9D23181ABFA20086D618 /* OMBResidenceImageDownloader.m */; };
 		AB76C0E018187B3F006354FB /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76C0DF18187B3F006354FB /* UIImage+Color.m */; };
 		AB802E9E18109E5200E04D11 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB802E9D18109E5200E04D11 /* Foundation.framework */; };
 		AB802EA018109E5200E04D11 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB802E9F18109E5200E04D11 /* CoreGraphics.framework */; };
@@ -47,6 +55,7 @@
 		AB9B26491811CB1300E6DAC4 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26451811CB1300E6DAC4 /* UIImage+Resize.m */; };
 		AB9B264D1811CE6D00E6DAC4 /* OMBConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B264C1811CE6D00E6DAC4 /* OMBConnection.m */; };
 		AB9B26501811CE8E00E6DAC4 /* OMBPropertiesConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B264F1811CE8E00E6DAC4 /* OMBPropertiesConnection.m */; };
+		AB9B8C1F1819EECF0009199A /* OMBResidenceCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B8C1E1819EECF0009199A /* OMBResidenceCollectionViewCell.m */; };
 		ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C56E1811719B00DD91C9 /* OMBAppDelegate.m */; };
 		ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C5731811776700DD91C9 /* OMBViewController.m */; };
 		ABB3C5771811778000DD91C9 /* OMBMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C5761811778000DD91C9 /* OMBMapViewController.m */; };
@@ -85,6 +94,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB26130B1818E5920053A8AA /* menu_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu_icon@2x.png"; sourceTree = "<group>"; };
+		AB26130D1818E9970053A8AA /* menu_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_icon.png; sourceTree = "<group>"; };
+		AB26130F1818EC800053A8AA /* OMBResidenceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceCell.h; sourceTree = "<group>"; };
+		AB2613101818EC800053A8AA /* OMBResidenceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceCell.m; sourceTree = "<group>"; };
+		AB26131518197D030053A8AA /* OMBCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCollectionViewController.h; sourceTree = "<group>"; };
+		AB26131618197D030053A8AA /* OMBCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCollectionViewController.m; sourceTree = "<group>"; };
+		AB26131C18198E570053A8AA /* OMBSpringFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSpringFlowLayout.h; sourceTree = "<group>"; };
+		AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSpringFlowLayout.m; sourceTree = "<group>"; };
+		AB4F9D1C181AAAED0086D618 /* OMBMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMenuViewController.h; sourceTree = "<group>"; };
+		AB4F9D1D181AAAED0086D618 /* OMBMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMenuViewController.m; sourceTree = "<group>"; };
+		AB4F9D1F181ABD160086D618 /* OMBResidenceImagesConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceImagesConnection.h; sourceTree = "<group>"; };
+		AB4F9D20181ABD160086D618 /* OMBResidenceImagesConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceImagesConnection.m; sourceTree = "<group>"; };
+		AB4F9D22181ABFA20086D618 /* OMBResidenceImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceImageDownloader.h; sourceTree = "<group>"; };
+		AB4F9D23181ABFA20086D618 /* OMBResidenceImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceImageDownloader.m; sourceTree = "<group>"; };
 		AB76C0DE18187B3F006354FB /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
 		AB76C0DF18187B3F006354FB /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
 		AB802E9A18109E5200E04D11 /* OnMyBlock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnMyBlock.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -149,6 +172,8 @@
 		AB9B264C1811CE6D00E6DAC4 /* OMBConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBConnection.m; sourceTree = "<group>"; };
 		AB9B264E1811CE8E00E6DAC4 /* OMBPropertiesConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPropertiesConnection.h; sourceTree = "<group>"; };
 		AB9B264F1811CE8E00E6DAC4 /* OMBPropertiesConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertiesConnection.m; sourceTree = "<group>"; };
+		AB9B8C1D1819EECF0009199A /* OMBResidenceCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceCollectionViewCell.h; sourceTree = "<group>"; };
+		AB9B8C1E1819EECF0009199A /* OMBResidenceCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceCollectionViewCell.m; sourceTree = "<group>"; };
 		ABB3C56D1811719B00DD91C9 /* OMBAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAppDelegate.h; sourceTree = "<group>"; };
 		ABB3C56E1811719B00DD91C9 /* OMBAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAppDelegate.m; sourceTree = "<group>"; };
 		ABB3C5721811776700DD91C9 /* OMBViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBViewController.h; sourceTree = "<group>"; };
@@ -218,6 +243,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AB26131B18198E260053A8AA /* Layouts */ = {
+			isa = PBXGroup;
+			children = (
+				AB26131C18198E570053A8AA /* OMBSpringFlowLayout.h */,
+				AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */,
+			);
+			path = Layouts;
+			sourceTree = "<group>";
+		};
 		AB802E9118109E5200E04D11 = {
 			isa = PBXGroup;
 			children = (
@@ -265,6 +299,7 @@
 				AB8C8C101815783A00A1B087 /* Downloaders */,
 				ABB3C56F1811719B00DD91C9 /* Images */,
 				AB802EAF18109E5200E04D11 /* Images.xcassets */,
+				AB26131B18198E260053A8AA /* Layouts */,
 				AB9B260C1811AA6600E6DAC4 /* Models */,
 				AB9B26241811AF6C00E6DAC4 /* Stores */,
 				AB802EA418109E5200E04D11 /* Supporting Files */,
@@ -310,6 +345,8 @@
 				AB8C8C121815784B00A1B087 /* OMBImageDownloader.m */,
 				AB8C8C261815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.h */,
 				AB8C8C271815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m */,
+				AB4F9D22181ABFA20086D618 /* OMBResidenceImageDownloader.h */,
+				AB4F9D23181ABFA20086D618 /* OMBResidenceImageDownloader.m */,
 			);
 			path = Downloaders;
 			sourceTree = "<group>";
@@ -325,6 +362,10 @@
 				ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */,
 				ABF18BBB1816F913002DD723 /* OMBListButton.h */,
 				ABF18BBC1816F913002DD723 /* OMBListButton.m */,
+				AB26130F1818EC800053A8AA /* OMBResidenceCell.h */,
+				AB2613101818EC800053A8AA /* OMBResidenceCell.m */,
+				AB9B8C1D1819EECF0009199A /* OMBResidenceCollectionViewCell.h */,
+				AB9B8C1E1819EECF0009199A /* OMBResidenceCollectionViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -398,6 +439,8 @@
 				AB9B264F1811CE8E00E6DAC4 /* OMBPropertiesConnection.m */,
 				AB8C8C231815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.h */,
 				AB8C8C241815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.m */,
+				AB4F9D1F181ABD160086D618 /* OMBResidenceImagesConnection.h */,
+				AB4F9D20181ABD160086D618 /* OMBResidenceImagesConnection.m */,
 			);
 			path = Connections;
 			sourceTree = "<group>";
@@ -426,6 +469,8 @@
 				ABF18BA31816BC53002DD723 /* marker_circle_selected@2x.png */,
 				AB9B26221811AE8600E6DAC4 /* marker_single.png */,
 				AB8C8C1818157A2600A1B087 /* marker_single@2x.png */,
+				AB26130D1818E9970053A8AA /* menu_icon.png */,
+				AB26130B1818E5920053A8AA /* menu_icon@2x.png */,
 				AB8C8C14181579EE00A1B087 /* placeholder_property.png */,
 				AB8C8C15181579EE00A1B087 /* placeholder_property@2x.png */,
 				ABF18BC018170EED002DD723 /* search.png */,
@@ -449,6 +494,10 @@
 				AB8C8C371815D7DC00A1B087 /* OMBResidenceDetailViewController.m */,
 				ABF18BAC1816C73B002DD723 /* OMBMapFilterViewController.h */,
 				ABF18BAD1816C73B002DD723 /* OMBMapFilterViewController.m */,
+				AB26131518197D030053A8AA /* OMBCollectionViewController.h */,
+				AB26131618197D030053A8AA /* OMBCollectionViewController.m */,
+				AB4F9D1C181AAAED0086D618 /* OMBMenuViewController.h */,
+				AB4F9D1D181AAAED0086D618 /* OMBMenuViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -561,6 +610,7 @@
 				ABF18BA51816BC53002DD723 /* marker_circle_deselected@2x.png in Resources */,
 				ABF18BC418170F43002DD723 /* list_segmented_control.png in Resources */,
 				AB9B2602181196F400E6DAC4 /* location.gpx in Resources */,
+				AB26130E1818E9970053A8AA /* menu_icon.png in Resources */,
 				ABF18BAA1816C3AD002DD723 /* list_segmented_control@2x.png in Resources */,
 				ABF18BAB1816C3AD002DD723 /* map_segmented_control@2x.png in Resources */,
 				AB8C8C351815D0E100A1B087 /* arrow_right.png in Resources */,
@@ -568,6 +618,7 @@
 				ABF18BA61816BC53002DD723 /* marker_circle_selected.png in Resources */,
 				AB802EB018109E5200E04D11 /* Images.xcassets in Resources */,
 				AB8C8C331815CF2A00A1B087 /* arrow_right@2x.png in Resources */,
+				AB26130C1818E5920053A8AA /* menu_icon@2x.png in Resources */,
 				ABF18BA41816BC53002DD723 /* marker_circle_deselected.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -588,6 +639,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABF18BBD1816F913002DD723 /* OMBListButton.m in Sources */,
+				AB26131718197D030053A8AA /* OMBCollectionViewController.m in Sources */,
+				AB4F9D24181ABFA20086D618 /* OMBResidenceImageDownloader.m in Sources */,
 				AB9B263B1811B7ED00E6DAC4 /* OCDistance.m in Sources */,
 				ABB3C585181178AE00DD91C9 /* OMBNavigationController.m in Sources */,
 				ABB3C5771811778000DD91C9 /* OMBMapViewController.m in Sources */,
@@ -604,19 +657,24 @@
 				AB8C8C22181597F900A1B087 /* OMBResidence.m in Sources */,
 				AB8C8C381815D7DC00A1B087 /* OMBResidenceDetailViewController.m in Sources */,
 				AB9B26461811CB1300E6DAC4 /* NSDate+TimeAgo.m in Sources */,
+				AB2613111818EC800053A8AA /* OMBResidenceCell.m in Sources */,
 				AB9B260F1811AA7C00E6DAC4 /* OMBAnnotation.m in Sources */,
 				ABF18BAE1816C73B002DD723 /* OMBMapFilterViewController.m in Sources */,
 				AB9B26271811AF7B00E6DAC4 /* OMBAnnotationStore.m in Sources */,
 				ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */,
 				AB8C8C131815784B00A1B087 /* OMBImageDownloader.m in Sources */,
+				AB4F9D1E181AAAED0086D618 /* OMBMenuViewController.m in Sources */,
 				ABB3C57F1811781C00DD91C9 /* MFSideMenuContainerViewController.m in Sources */,
 				ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */,
+				AB9B8C1F1819EECF0009199A /* OMBResidenceCollectionViewCell.m in Sources */,
 				ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */,
 				ABF18BB11816CC65002DD723 /* OMBNeighborhood.m in Sources */,
+				AB26131E18198E570053A8AA /* OMBSpringFlowLayout.m in Sources */,
 				AB9B263A1811B7ED00E6DAC4 /* OCAnnotation.m in Sources */,
 				AB9B26481811CB1300E6DAC4 /* UIColor+Extensions.m in Sources */,
 				ABB3C5821811789100DD91C9 /* OMBTabBarController.m in Sources */,
 				AB802EAA18109E5200E04D11 /* main.m in Sources */,
+				AB4F9D21181ABD160086D618 /* OMBResidenceImagesConnection.m in Sources */,
 				AB76C0E018187B3F006354FB /* UIImage+Color.m in Sources */,
 				AB9B263C1811B7ED00E6DAC4 /* OCMapView.m in Sources */,
 				ABF18BBA1816D3F0002DD723 /* TextFieldPadding.m in Sources */,

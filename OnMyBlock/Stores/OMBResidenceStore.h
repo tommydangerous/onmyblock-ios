@@ -25,7 +25,10 @@
 #pragma mark Instance Methods
 
 - (void) addResidence: (OMBResidence *) residence;
-- (void) fetchPropertiesWithParameters: (NSDictionary *) parameters;
+- (void) fetchPropertiesWithParameters: (NSDictionary *) parameters
+completion: (void (^)(NSError *error)) completion;
+- (NSArray *) propertiesFromAnnotations: (NSSet *) annotations 
+sortedBy: (NSString *) string ascending: (BOOL) ascending;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 
 @end

@@ -22,6 +22,7 @@
 @property (nonatomic) int uid; // ID
 
 // iOS app properties
+@property (nonatomic, strong) UIImage *coverPhotoForCell;
 @property (nonatomic, strong) NSURL *coverPhotoURL;
 @property (nonatomic, strong) NSMutableDictionary *images;
 

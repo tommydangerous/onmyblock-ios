@@ -9,12 +9,14 @@
 #import "OMBAppDelegate.h"
 
 #import "MFSideMenu.h"
+#import "OMBMenuViewController.h"
 #import "OMBTabBarController.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBAppDelegate
 
-@synthesize sideMenu         = _sideMenu;
+@synthesize menuContainer    = _menuContainer;
+@synthesize rightMenu        = _rightMenu;
 @synthesize tabBarController = _tabBarController;
 
 - (BOOL) application: (UIApplication *) application 
@@ -25,16 +27,17 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 
   // View controllers
   _tabBarController = [[OMBTabBarController alloc] init];
-  _sideMenu = 
+  _rightMenu        = [[OMBMenuViewController alloc] init];
+  _menuContainer = 
     [MFSideMenuContainerViewController containerWithCenterViewController:
       _tabBarController leftMenuViewController: nil
-        rightMenuViewController: nil];
-  [_sideMenu setMenuWidth: screen.size.width / 1.618];
-  [_sideMenu setShadowEnabled: NO];
+        rightMenuViewController: _rightMenu];
+  [_menuContainer setMenuWidth: screen.size.width * 0.8];
+  [_menuContainer setShadowEnabled: NO];
 
   // Set root view controller for app
   self.window.backgroundColor    = [UIColor whiteColor];
-  self.window.rootViewController = _sideMenu;
+  self.window.rootViewController = _menuContainer;
   [self.window makeKeyAndVisible];
 
   return YES;

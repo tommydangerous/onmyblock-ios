@@ -9,6 +9,7 @@
 #import "OMBResidenceDetailViewController.h"
 
 #import "OMBResidence.h"
+#import "OMBResidenceImagesConnection.h"
 
 @implementation OMBResidenceDetailViewController
 
@@ -19,9 +20,26 @@
   self = [super init];
   if (self) {
     residence  = object;
-    self.title = residence.address;
+    self.title = [residence.address capitalizedString];
   }
   return self;
+}
+
+#pragma mark - Override
+
+#pragma mark - Override UIViewController
+
+- (void) loadView
+{
+  [super loadView];
+}
+
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+  OMBResidenceImagesConnection *connection = 
+    [[OMBResidenceImagesConnection alloc] initWithResidence: residence];
+  [connection start];
 }
 
 @end

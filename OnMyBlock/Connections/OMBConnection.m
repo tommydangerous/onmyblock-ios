@@ -10,9 +10,16 @@
 
 NSTimeInterval RequestTimeoutInterval = 10;
 NSMutableArray *sharedConnectionList  = nil;
+// Localhost
 // NSString *const OnMyBlockAPIURL       = @"http://localhost:3000";
+
+// Evonexus
 NSString *const OnMyBlockAPIURL       = @"http://172.17.1.23:3000";
+
+// Home
 // NSString *const OnMyBlockAPIURL       = @"http://192.168.1.72:3000";
+
+// Staging server
 // NSString *const OnMyBlockAPIURL       = @"http://ombrb.nodelist.com";
 
 @implementation OMBConnection

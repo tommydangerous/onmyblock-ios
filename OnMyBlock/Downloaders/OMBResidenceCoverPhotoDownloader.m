@@ -12,32 +12,15 @@
 
 @implementation OMBResidenceCoverPhotoDownloader
 
-@synthesize position  = _position;
-@synthesize residence = _residence;
-
 #pragma mark - Initializer
 
 - (id) initWithResidence: (OMBResidence *) object
 {
-  self = [super init];
-  if (self) {
-    _residence = object;
-    imageURL   = _residence.coverPhotoURL;
-  }
+  if (!(self = [super initWithResidence: object])) return nil;
+
+  self.imageURL = self.residence.coverPhotoURL;
+
   return self;
-}
-
-#pragma mark - Protocol
-
-#pragma mark - Protocol NSURLConnectionDataDelegate
-
-- (void) connectionDidFinishLoading: (NSURLConnection *) connection
-{
-  UIImage *image = [[UIImage alloc] initWithData: activeDownload];
-  if (image)
-    [_residence.images setObject: image
-      forKey: [NSString stringWithFormat: @"%i", _position]];
-  [super connectionDidFinishLoading: connection];
 }
 
 @end

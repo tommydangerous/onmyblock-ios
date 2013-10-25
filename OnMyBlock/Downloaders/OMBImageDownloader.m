@@ -11,6 +11,7 @@
 @implementation OMBImageDownloader
 
 @synthesize completionBlock = _completionBlock;
+@synthesize imageURL        = _imageURL;
 
 #pragma mark - Protocol
 
@@ -54,7 +55,7 @@ didFailWithError: (NSError *) error
 {
   activeDownload  = [NSMutableData data];
   imageConnection = [[NSURLConnection alloc] initWithRequest:
-    [NSURLRequest requestWithURL: imageURL] delegate: self
+    [NSURLRequest requestWithURL: _imageURL] delegate: self
       startImmediately: YES];
 }
 

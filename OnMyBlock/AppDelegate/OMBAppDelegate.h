@@ -9,11 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @class MFSideMenuContainerViewController;
+@class OMBMenuViewController;
 @class OMBTabBarController;
 
 @interface OMBAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic, strong) MFSideMenuContainerViewController *sideMenu;
+@property (nonatomic, strong) MFSideMenuContainerViewController *menuContainer;
+@property (nonatomic, strong) OMBMenuViewController *rightMenu;
 @property (nonatomic, strong) OMBTabBarController *tabBarController;
 @property (nonatomic, strong) UIWindow *window;
 

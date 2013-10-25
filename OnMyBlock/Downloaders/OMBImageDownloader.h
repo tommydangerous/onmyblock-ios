@@ -12,10 +12,10 @@
 {
   NSMutableData *activeDownload;
   NSURLConnection *imageConnection;
-  NSURL *imageURL;
 }
 
 @property (nonatomic, copy) void (^completionBlock) (NSError *error);
+@property (nonatomic, strong) NSURL *imageURL;
 
 #pragma mark - Protocol
 

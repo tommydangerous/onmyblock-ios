@@ -6,17 +6,8 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import "OMBImageDownloader.h"
+#import "OMBResidenceImageDownloader.h"
 
-@class OMBResidence;
-
-@interface OMBResidenceCoverPhotoDownloader : OMBImageDownloader
-
-@property (nonatomic) int position;
-@property (nonatomic, weak) OMBResidence *residence;
-
-#pragma mark - Initializer
-
-- (id) initWithResidence: (OMBResidence *) object;
+@interface OMBResidenceCoverPhotoDownloader : OMBResidenceImageDownloader
 
 @end

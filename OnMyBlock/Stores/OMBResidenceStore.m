@@ -50,11 +50,38 @@
 }
 
 - (void) fetchPropertiesWithParameters: (NSDictionary *) parameters
+completion: (void (^)(NSError *error)) completion
 {
   OMBPropertiesConnection *connection = 
     [[OMBPropertiesConnection alloc] initWithParameters: parameters];
+  connection.completionBlock = completion;
   [connection start];
 }
+
+- (NSArray *) propertiesFromAnnotations: (NSSet *) annotations 
+sortedBy: (NSString *) string ascending: (BOOL) ascending
+{
+  NSMutableArray *array = [NSMutableArray array];
+  for (id <MKAnnotation> annotation in annotations) {
+    OMBResidence *residence;
+    // If it is a cluster, loop through the annotations in the cluster
+    if ([annotation isKindOfClass: [OCAnnotation class]]) {
+      for (OMBAnnotation *annot in 
+        [(OCAnnotation *) annotation annotationsInCluster]) {
+        residence = [self residenceForAnnotation: annot];
+        if (residence)
+          [array addObject: residence];
+      }
+    }
+    else {
+      residence = [self residenceForAnnotation: (OMBAnnotation *) annotation];
+      if (residence)
+        [array addObject: residence];
+    }
+  } 
+  return (NSArray *) array;
+}
+
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
@@ -97,6 +124,13 @@
       }
     }
   }
+}
+
+- (OMBResidence *) residenceForAnnotation: (OMBAnnotation *) annotation
+{
+  return [_residences objectForKey: [NSString stringWithFormat: 
+    @"%f,%f-%@", annotation.coordinate.latitude, 
+      annotation.coordinate.longitude, annotation.title]];
 }
 
 @end
