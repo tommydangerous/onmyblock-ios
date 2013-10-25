@@ -83,7 +83,7 @@
 
 - (void) downloadImages
 {
-  
+
 }
 
 - (NSArray *) imagesArray
@@ -94,9 +94,9 @@
     int key1 = [(NSString *) obj1 intValue];
     int key2 = [(NSString *) obj2 intValue];
     if (key1 > key2)
-      return (NSComparisonResult) NSOrderedAscending;
-    if (key1 < key2)
       return (NSComparisonResult) NSOrderedDescending;
+    if (key1 < key2)
+      return (NSComparisonResult) NSOrderedAscending;
     return (NSComparisonResult) NSOrderedSame;
   }];
   NSMutableArray *array = [NSMutableArray array];

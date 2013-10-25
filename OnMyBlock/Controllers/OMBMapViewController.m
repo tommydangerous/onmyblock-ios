@@ -330,7 +330,7 @@ numberOfItemsInSection: (NSInteger) section
 #pragma mark - Protocol UICollectionViewDelegate
 
 - (void) collectionView: (UICollectionView *) collectionView 
-didHighlightItemAtIndexPath: (NSIndexPath *) indexPath
+didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 {
   OMBResidence *residence = [[self propertiesSortedBy: @"" 
     ascending: NO] objectAtIndex: indexPath.row];

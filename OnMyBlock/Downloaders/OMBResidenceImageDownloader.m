@@ -22,7 +22,7 @@
   if (!(self = [super init])) return nil;
 
   _residence = object;
-  
+
   return self;
 }
 
