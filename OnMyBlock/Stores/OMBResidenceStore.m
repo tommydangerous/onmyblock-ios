@@ -85,6 +85,7 @@ sortedBy: (NSString *) string ascending: (BOOL) ascending
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
+  NSMutableArray *annotations = [NSMutableArray array];
   // Argument is an array of dictionaries
   for (NSDictionary *dict in dictionary) {
     if ([dict objectForKey: @"ad"] != [NSNull null]) {
@@ -119,11 +120,16 @@ sortedBy: (NSString *) string ascending: (BOOL) ascending
       }
       if (!exists) {
         // We add the annotation to the map
-        [_mapViewController addAnnotationAtCoordinate: coordinate 
-          withTitle: residence.address];
+        OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
+        annotation.coordinate = coordinate;
+        annotation.title      = residence.address;
+        [annotations addObject: annotation];
+        // [_mapViewController addAnnotationAtCoordinate: coordinate 
+        //   withTitle: residence.address];
       }
     }
   }
+  [_mapViewController.mapView addAnnotations: annotations];
 }
 
 - (OMBResidence *) residenceForAnnotation: (OMBAnnotation *) annotation

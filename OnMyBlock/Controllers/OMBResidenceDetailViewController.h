@@ -12,18 +12,22 @@
 @class OMBResidenceImageSlideViewController;
 
 @interface OMBResidenceDetailViewController : OMBViewController
-<UIScrollViewDelegate>
+<UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
 {
-  UIScrollView *mainScrollView;
   OMBResidence *residence;
-  NSMutableArray *subviews;
 }
 
+@property (nonatomic, strong) UILabel *addressLabel;
+@property (nonatomic, strong) UIButton *addToFavoritesButton;
 @property (nonatomic, strong) UIScrollView *imagesScrollView;
+@property (nonatomic, strong) UIView *infoView;
 @property (nonatomic, strong) OMBResidenceImageSlideViewController
   *imageSlideViewController;
 // Array of image views for the images scroll view
 @property (nonatomic, strong) NSMutableArray *imageViewArray;
+@property (nonatomic, strong) UILabel *pageOfImagesLabel;
+@property (nonatomic, strong) UILabel *rentLabel;
+@property (nonatomic, strong) UITableView *table;
 
 #pragma mark - Initializer
 
@@ -34,5 +38,6 @@
 #pragma mark - Instance Methods
 
 - (void) addImageViewsToImageScrollView;
+- (int) currentPageOfImages;
 
 @end

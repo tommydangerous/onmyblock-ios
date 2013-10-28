@@ -65,6 +65,10 @@
           viewController.imagesScrollView.frame.size.width,
             viewController.imagesScrollView.frame.size.height);
         imageView.image = [UIImage image: image size: size];
+        // Update the number of pages for the images scroll view
+        viewController.pageOfImagesLabel.text = [NSString stringWithFormat:
+          @"%i/%i", [viewController currentPageOfImages], 
+            [[residence imagesArray] count]];
         [super connectionDidFinishLoading: connection];
       };
       downloader.imageURL = [NSURL URLWithString: string];

@@ -8,11 +8,25 @@
 
 #import "OMBResidenceImageSlideViewController.h"
 
+#import "OMBResidence.h"
+#import "OMBResidenceDetailViewController.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBResidenceImageSlideViewController
 
 @synthesize imageSlideScrollView  = _imageSlideScrollView;
+@synthesize residenceDetailViewController = _residenceDetailViewController;
+
+#pragma mark - Initializer
+
+- (id) initWithResidence: (OMBResidence *) object
+{
+  if (!(self = [super init])) return nil;
+
+  residence = object;
+
+  return self;
+}
 
 #pragma mark - Override
 
@@ -28,42 +42,18 @@
   self.view.frame = screen;
 
   // Image slide scroll view
-  _imageSlideScrollView = [[UIScrollView alloc] init];
-  _imageSlideScrollView.bounces = NO;
-  _imageSlideScrollView.contentSize = CGSizeMake((screen.size.width * 2),
-    screen.size.height);
-  _imageSlideScrollView.frame = screen;
+  _imageSlideScrollView               = [[UIScrollView alloc] init];
+  _imageSlideScrollView.bounces       = NO;
+  _imageSlideScrollView.delegate      = self;
+  _imageSlideScrollView.frame         = screen;
   _imageSlideScrollView.pagingEnabled = YES;
   [self.view addSubview: _imageSlideScrollView];
-
-  int i = 0;
-  while (i < 2) {
-    UIScrollView *scroll = [[UIScrollView alloc] init];
-    scroll.delegate = self;
-    scroll.frame = CGRectMake((i * screen.size.width), 0, 
-      screen.size.width, screen.size.height);
-    scroll.backgroundColor = [UIColor blackColor];
-    [_imageSlideScrollView addSubview: scroll];
-
-    UIImageView *imageView = [[UIImageView alloc] init];
-    UIImage *image  = [UIImage imageNamed: @"background.png"];
-    imageView.image = image;
-    imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
-    [scroll addSubview: imageView];
-
-    scroll.minimumZoomScale = screen.size.width / image.size.width;
-    scroll.maximumZoomScale = 1.0;
-    scroll.showsHorizontalScrollIndicator = NO;
-    scroll.showsVerticalScrollIndicator   = NO;
-    scroll.zoomScale = scroll.minimumZoomScale;
-    i += 1;
-  }
 
   // Close button
   UIButton *button = [[UIButton alloc] init];
   button.backgroundColor = [UIColor clearColor];
   button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
-    size: 18];
+    size: 15];
   [button addTarget: self action: @selector(close) 
     forControlEvents: UIControlEventTouchUpInside];
   [button setTitle: @"Close" forState: UIControlStateNormal];
@@ -74,16 +64,69 @@
     NSFontAttributeName: button.titleLabel.font
   }];
   button.frame = CGRectMake((screen.size.width - (buttonSize.width + 20)), 
-    (20 + 10), (buttonSize.width + 20), (buttonSize.height + 20));
+    20, (buttonSize.width + 20), (buttonSize.height + 20));
+}
+
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  CGRect screen = [[UIScreen mainScreen] bounds];
+
+  for (UIImage *image in residence.imagesArray) {
+    UIScrollView *scroll   = [[UIScrollView alloc] init];
+    scroll.backgroundColor = [UIColor blackColor];
+    scroll.delegate = self;
+    scroll.frame    = CGRectMake(
+      ([residence.imagesArray indexOfObject: image] * screen.size.width), 0,
+        screen.size.width, screen.size.height);
+    [_imageSlideScrollView addSubview: scroll];
+
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
+    imageView.image = image;
+    [scroll addSubview: imageView];
+
+    scroll.minimumZoomScale = screen.size.width / image.size.width;
+    scroll.maximumZoomScale = 1.0;
+    scroll.showsHorizontalScrollIndicator = NO;
+    scroll.showsVerticalScrollIndicator   = NO;
+    scroll.zoomScale = scroll.minimumZoomScale;
+  }
+  _imageSlideScrollView.contentSize = CGSizeMake(
+    (screen.size.width * [residence.imagesArray count]), screen.size.height);
+
+  // Adjust the content offset depending on the residence detail current page
+  CGPoint point = CGPointMake(
+    (_imageSlideScrollView.frame.size.width * 
+      ([_residenceDetailViewController currentPageOfImages] - 1)), 0);
+  [_imageSlideScrollView setContentOffset: point animated: NO];
+}
+
+- (void) viewWillDisappear: (BOOL) animated
+{
+  [super viewWillDisappear: animated];
+
+  [self removeAllImages];
 }
 
 #pragma mark - Protocol
 
 #pragma mark - Protocol UIScrollViewDelegate
 
+- (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView
+{
+  if (scrollView == _imageSlideScrollView) {
+    CGPoint point = CGPointMake(
+      (_residenceDetailViewController.imagesScrollView.frame.size.width * 
+        (scrollView.contentOffset.x / scrollView.frame.size.width)), 0);
+    [_residenceDetailViewController.imagesScrollView setContentOffset: point];  
+  }
+}
+
 - (void) scrollViewDidZoom: (UIScrollView *) scrollView
 {
-  int index = [scrollView.subviews indexOfObjectPassingTest: 
+  NSUInteger index = [scrollView.subviews indexOfObjectPassingTest:
     ^(id obj, NSUInteger idx, BOOL *stop) {
       return [obj isKindOfClass: [UIImageView class]];
     }
@@ -112,7 +155,7 @@
 
 - (UIView *) viewForZoomingInScrollView: (UIScrollView *) scrollView
 {
-  int index = [scrollView.subviews indexOfObjectPassingTest: 
+  NSUInteger index = [scrollView.subviews indexOfObjectPassingTest:
     ^(id obj, NSUInteger idx, BOOL *stop) {
       return [obj isKindOfClass: [UIImageView class]];
     }
@@ -128,7 +171,7 @@
 
 - (void) close
 {
-  [self dismissViewControllerAnimated: YES completion: ^{
+  [self dismissViewControllerAnimated: NO completion: ^{
     for (UIView *v in _imageSlideScrollView.subviews) {
       if ([v isKindOfClass: [UIScrollView class]]) {
         UIScrollView *scroll = (UIScrollView *) v;
@@ -136,6 +179,15 @@
       }
     }
   }];
+}
+
+- (void) removeAllImages
+{
+  [_imageSlideScrollView.subviews enumerateObjectsUsingBlock: 
+    ^(UIView *v, NSUInteger idx, BOOL *stop) {
+      [v removeFromSuperview];
+    }
+  ];
 }
 
 @end

@@ -58,6 +58,11 @@
 		AB9B264D1811CE6D00E6DAC4 /* OMBConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B264C1811CE6D00E6DAC4 /* OMBConnection.m */; };
 		AB9B26501811CE8E00E6DAC4 /* OMBPropertiesConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B264F1811CE8E00E6DAC4 /* OMBPropertiesConnection.m */; };
 		AB9B8C1F1819EECF0009199A /* OMBResidenceCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B8C1E1819EECF0009199A /* OMBResidenceCollectionViewCell.m */; };
+		ABACA723181EC6FB004EBF6A /* ADClusterAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = ABACA71C181EC6FB004EBF6A /* ADClusterAnnotation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		ABACA724181EC6FB004EBF6A /* ADClusterMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABACA71E181EC6FB004EBF6A /* ADClusterMapView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		ABACA725181EC6FB004EBF6A /* ADMapCluster.m in Sources */ = {isa = PBXBuildFile; fileRef = ABACA720181EC6FB004EBF6A /* ADMapCluster.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		ABACA726181EC6FB004EBF6A /* ADMapPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = ABACA722181EC6FB004EBF6A /* ADMapPointAnnotation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		ABACA728181EDDBB004EBF6A /* favorite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABACA727181EDDBB004EBF6A /* favorite@2x.png */; };
 		ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C56E1811719B00DD91C9 /* OMBAppDelegate.m */; };
 		ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C5731811776700DD91C9 /* OMBViewController.m */; };
 		ABB3C5771811778000DD91C9 /* OMBMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C5761811778000DD91C9 /* OMBMapViewController.m */; };
@@ -179,6 +184,15 @@
 		AB9B264F1811CE8E00E6DAC4 /* OMBPropertiesConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertiesConnection.m; sourceTree = "<group>"; };
 		AB9B8C1D1819EECF0009199A /* OMBResidenceCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceCollectionViewCell.h; sourceTree = "<group>"; };
 		AB9B8C1E1819EECF0009199A /* OMBResidenceCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceCollectionViewCell.m; sourceTree = "<group>"; };
+		ABACA71B181EC6FB004EBF6A /* ADClusterAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADClusterAnnotation.h; sourceTree = "<group>"; };
+		ABACA71C181EC6FB004EBF6A /* ADClusterAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADClusterAnnotation.m; sourceTree = "<group>"; };
+		ABACA71D181EC6FB004EBF6A /* ADClusterMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADClusterMapView.h; sourceTree = "<group>"; };
+		ABACA71E181EC6FB004EBF6A /* ADClusterMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADClusterMapView.m; sourceTree = "<group>"; };
+		ABACA71F181EC6FB004EBF6A /* ADMapCluster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADMapCluster.h; sourceTree = "<group>"; };
+		ABACA720181EC6FB004EBF6A /* ADMapCluster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADMapCluster.m; sourceTree = "<group>"; };
+		ABACA721181EC6FB004EBF6A /* ADMapPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADMapPointAnnotation.h; sourceTree = "<group>"; };
+		ABACA722181EC6FB004EBF6A /* ADMapPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADMapPointAnnotation.m; sourceTree = "<group>"; };
+		ABACA727181EDDBB004EBF6A /* favorite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite@2x.png"; sourceTree = "<group>"; };
 		ABB3C56D1811719B00DD91C9 /* OMBAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAppDelegate.h; sourceTree = "<group>"; };
 		ABB3C56E1811719B00DD91C9 /* OMBAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAppDelegate.m; sourceTree = "<group>"; };
 		ABB3C5721811776700DD91C9 /* OMBViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBViewController.h; sourceTree = "<group>"; };
@@ -260,6 +274,7 @@
 		AB802E9118109E5200E04D11 = {
 			isa = PBXGroup;
 			children = (
+				ABACA71A181EC6FB004EBF6A /* ADClusterMapView */,
 				AB9B262E1811B7ED00E6DAC4 /* OCMapView */,
 				AB9B2601181196F400E6DAC4 /* location.gpx */,
 				ABB3C57B1811781C00DD91C9 /* MFSideMenu */,
@@ -450,6 +465,21 @@
 			path = Connections;
 			sourceTree = "<group>";
 		};
+		ABACA71A181EC6FB004EBF6A /* ADClusterMapView */ = {
+			isa = PBXGroup;
+			children = (
+				ABACA71B181EC6FB004EBF6A /* ADClusterAnnotation.h */,
+				ABACA71C181EC6FB004EBF6A /* ADClusterAnnotation.m */,
+				ABACA71D181EC6FB004EBF6A /* ADClusterMapView.h */,
+				ABACA71E181EC6FB004EBF6A /* ADClusterMapView.m */,
+				ABACA71F181EC6FB004EBF6A /* ADMapCluster.h */,
+				ABACA720181EC6FB004EBF6A /* ADMapCluster.m */,
+				ABACA721181EC6FB004EBF6A /* ADMapPointAnnotation.h */,
+				ABACA722181EC6FB004EBF6A /* ADMapPointAnnotation.m */,
+			);
+			path = ADClusterMapView;
+			sourceTree = "<group>";
+		};
 		ABB3C56C1811719B00DD91C9 /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -462,6 +492,7 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				ABACA727181EDDBB004EBF6A /* favorite@2x.png */,
 				AB4F9D25181AF49D0086D618 /* background.png */,
 				AB8C8C341815D0E100A1B087 /* arrow_right.png */,
 				AB8C8C321815CF2A00A1B087 /* arrow_right@2x.png */,
@@ -628,6 +659,7 @@
 				AB802EB018109E5200E04D11 /* Images.xcassets in Resources */,
 				AB8C8C331815CF2A00A1B087 /* arrow_right@2x.png in Resources */,
 				AB26130C1818E5920053A8AA /* menu_icon@2x.png in Resources */,
+				ABACA728181EDDBB004EBF6A /* favorite@2x.png in Resources */,
 				ABF18BA41816BC53002DD723 /* marker_circle_deselected.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -649,6 +681,7 @@
 			files = (
 				ABF18BBD1816F913002DD723 /* OMBListButton.m in Sources */,
 				AB26131718197D030053A8AA /* OMBCollectionViewController.m in Sources */,
+				ABACA725181EC6FB004EBF6A /* ADMapCluster.m in Sources */,
 				AB4F9D24181ABFA20086D618 /* OMBResidenceImageDownloader.m in Sources */,
 				AB9B263B1811B7ED00E6DAC4 /* OCDistance.m in Sources */,
 				ABB3C585181178AE00DD91C9 /* OMBNavigationController.m in Sources */,
@@ -679,11 +712,14 @@
 				AB9B8C1F1819EECF0009199A /* OMBResidenceCollectionViewCell.m in Sources */,
 				ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */,
 				ABF18BB11816CC65002DD723 /* OMBNeighborhood.m in Sources */,
+				ABACA723181EC6FB004EBF6A /* ADClusterAnnotation.m in Sources */,
 				AB26131E18198E570053A8AA /* OMBSpringFlowLayout.m in Sources */,
 				AB9B263A1811B7ED00E6DAC4 /* OCAnnotation.m in Sources */,
 				AB9B26481811CB1300E6DAC4 /* UIColor+Extensions.m in Sources */,
+				ABACA724181EC6FB004EBF6A /* ADClusterMapView.m in Sources */,
 				ABB3C5821811789100DD91C9 /* OMBTabBarController.m in Sources */,
 				AB802EAA18109E5200E04D11 /* main.m in Sources */,
+				ABACA726181EC6FB004EBF6A /* ADMapPointAnnotation.m in Sources */,
 				AB4F9D21181ABD160086D618 /* OMBResidenceImagesConnection.m in Sources */,
 				AB76C0E018187B3F006354FB /* UIImage+Color.m in Sources */,
 				AB9B263C1811B7ED00E6DAC4 /* OCMapView.m in Sources */,

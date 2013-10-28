@@ -81,11 +81,6 @@
     _address];
 }
 
-- (void) downloadImages
-{
-
-}
-
 - (NSArray *) imagesArray
 {
   // keys are based on image position; e.g. 1-12

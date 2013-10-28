@@ -54,7 +54,6 @@
   // ]
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
-  // Returns an array of dictionary
   [[OMBResidenceStore sharedStore] readFromDictionary: json];
   [super connectionDidFinishLoading: connection];
 }

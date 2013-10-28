@@ -74,7 +74,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
   [self deselect];
   // If it is a cluster
   if ([annotation isKindOfClass: [OCAnnotation class]]) {
-    int number = (int) [[(OCAnnotation *) annotation annotationsInCluster] count];
+    int number = 
+      (int) [[(OCAnnotation *) annotation annotationsInCluster] count];
     if (number > 10)
       dimension = (DEFAULT_DIMENSION * 1.1) * 1.1 * (number / 10);
     if (dimension > DEFAULT_DIMENSION * 2 * (1 + DEFAULT_BORDER_PERCENTAGE))

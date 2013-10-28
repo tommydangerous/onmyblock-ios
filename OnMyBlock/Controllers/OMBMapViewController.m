@@ -250,6 +250,31 @@ didUpdateLocations: (NSArray *) locations
 
   [self deselectAnnotations];
   [self hidePropertyInfoView];
+
+  // Max zoom level
+  // 1609 meters = 1 mile
+  int distanceInMiles = 1609 * 5;
+  MKCoordinateRegion maxRegion =
+    MKCoordinateRegionMakeWithDistance(map.region.center, distanceInMiles, 
+      distanceInMiles);
+
+  if (map.region.span.latitudeDelta > maxRegion.span.latitudeDelta ||
+    map.region.span.longitudeDelta > maxRegion.span.longitudeDelta)
+    [_mapView setRegion: maxRegion animated: YES];
+}
+
+- (void) mapView: (MKMapView *) map regionWillChangeAnimated: (BOOL) animated
+{
+  // Max zoom level
+  // 1609 meters = 1 mile
+  int distanceInMiles = 1609 * 5;
+  MKCoordinateRegion maxRegion =
+    MKCoordinateRegionMakeWithDistance(map.region.center, distanceInMiles, 
+      distanceInMiles);
+
+  if (map.region.span.latitudeDelta > maxRegion.span.latitudeDelta ||
+    map.region.span.longitudeDelta > maxRegion.span.longitudeDelta)
+    [_mapView setRegion: maxRegion animated: YES];
 }
 
 - (void) mapView: (MKMapView *) map 
@@ -389,7 +414,9 @@ withTitle: (NSString *) title;
 - (void) deselectAnnotations
 {
   for (OMBAnnotation *annotation in _mapView.selectedAnnotations) {
-    if ([annotation class] != [MKUserLocation class])
+    if ([annotation class] != [MKUserLocation class] &&
+      [annotation class] != [OCAnnotation class])
+      
       [annotation.annotationView deselect];
     [_mapView deselectAnnotation: annotation animated: NO];
   }
