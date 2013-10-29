@@ -13,6 +13,7 @@
 + (UIColor *) backgroundColor;
 + (UIColor *) backgroundColorAlpha: (float) value;
 + (UIColor *) blue;
++ (UIColor *) blueDark;
 + (UIColor *) blueDarkAlpha: (float) value;
 + (UIColor *) grayDark;
 + (UIColor *) grayDarkAlpha: (float) value;
@@ -20,6 +21,11 @@
 + (UIColor *) grayLightAlpha: (float) value;
 + (UIColor *) grayMedium;
 + (UIColor *) grayMediumAlpha: (float) value;
++ (UIColor *) green;
++ (UIColor *) greenDark;
++ (UIColor *) pink;
++ (UIColor *) pinkAlpha: (float) value;
++ (UIColor *) pinkDark;
 + (UIColor *) textColor;
 + (UIColor *) whiteAlpha: (float) value;
 

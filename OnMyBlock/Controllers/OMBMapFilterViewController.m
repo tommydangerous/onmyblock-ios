@@ -395,9 +395,15 @@ const int kPadding = 20;
 
 - (void) apply
 {
-  if (_neighborhood)
+  if (_neighborhood) {
     [_mapViewController setMapViewRegion: _neighborhood.coordinate
       withMiles: 4];
+    // Need this so it doesn't crash after applying filter and clicking on
+    // a cell that is no longer there but just hasn't reloaded yet
+    [_mapViewController reloadTable];
+  }
+  [_mapViewController.listView setContentOffset: 
+    CGPointMake(0, (-1 * (20 + 44))) animated: NO];
   [self dismissViewController];
 }
 

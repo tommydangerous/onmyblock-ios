@@ -14,20 +14,31 @@
 @implementation OMBResidence
 
 // Web app properties
-@synthesize address     = _address;
-@synthesize availableOn = _availableOn;
-@synthesize bathrooms   = _bathrooms;
-@synthesize bedrooms    = _bedrooms;
-@synthesize latitude    = _latitude;
-@synthesize leaseMonths = _leaseMonths;
-@synthesize longitude   = _longitude;
-@synthesize rent        = _rent;
-@synthesize uid         = _uid;
+@synthesize address      = _address;
+@synthesize availableOn  = _availableOn;
+@synthesize bathrooms    = _bathrooms;
+@synthesize bedrooms     = _bedrooms;
+@synthesize city         = _city;
+@synthesize createdAt    = _createdAt;
+@synthesize description  = _description;
+@synthesize email        = _email;
+@synthesize landlordName = _landlordName;
+@synthesize latitude     = _latitude;
+@synthesize leaseMonths  = _leaseMonths;
+@synthesize longitude    = _longitude;
+@synthesize phone        = _phone;
+@synthesize rent         = _rent;
+@synthesize squareFeet   = _squareFeet;
+@synthesize state        = _state;
+@synthesize uid          = _uid;
+@synthesize updatedAt    = _updatedAt;
+@synthesize zip          = _zip;
 
 // iOS app properties
 @synthesize coverPhotoForCell = _coverPhotoForCell;
 @synthesize coverPhotoURL     = _coverPhotoImageURL;
 @synthesize images            = _images;
+@synthesize lastImagePosition = _lastImagePosition;
 
 #pragma mark - Initializer
 
@@ -35,7 +46,8 @@
 {
   self = [super init];
   if (self) {
-    _images = [NSMutableDictionary dictionary];
+    _images            = [NSMutableDictionary dictionary];
+    _lastImagePosition = 1000;
   }
   return self;
 }
@@ -43,6 +55,21 @@
 #pragma mark - Methods
 
 #pragma mark Instance Methods
+
+- (NSString *) availableOnString
+{
+  if (_availableOn) {
+    if (_availableOn > [[NSDate date] timeIntervalSince1970]) {
+      NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+      dateFormatter.dateFormat       = @"MMMM d, yyyy";
+      return [dateFormatter stringFromDate: 
+        [NSDate dateWithTimeIntervalSince1970: _availableOn]];
+    }
+    else
+      return @"Immediately";
+  }
+  return @"Soon";
+}
 
 - (UIImage *) coverPhoto
 {
@@ -101,7 +128,7 @@
   return array;
 }
 
-- (void) readFromDictionary: (NSDictionary *) dictionary
+- (void) readFromPropertyDictionary: (NSDictionary *) dictionary
 {
   // Sample JSON
   //   {
@@ -119,7 +146,7 @@
   // Available on example value: October 23, 2013
   NSString *dateString        = [dictionary objectForKey: @"available_on"];
   NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-  [dateFormat setDateFormat: @"MMMM d, yyyyy"];
+  [dateFormat setDateFormat: @"MMMM d, yyyy"];
   if ([dateString isEqualToString: @"Immediately"] || 
     [dateString isEqualToString: @"Soon"]) {
     _availableOn = [[NSDate date] timeIntervalSince1970];
@@ -140,6 +167,100 @@
   _longitude = [[dictionary objectForKey: @"lng"] floatValue];
   _rent      = [[dictionary objectForKey: @"rt"] floatValue];
   _uid       = [[dictionary objectForKey: @"id"] intValue];
+}
+
+- (void) readFromResidenceDictionary: (NSDictionary *) dictionary
+{
+  // Sample JSON
+  // {
+  //   address: "3915 Broadlawn Street ",
+  //   available_on: "2013-11-14 00:00:00 +0000",
+  //   bathrooms: "2.0",
+  //   bedrooms: "4.0",
+  //   city: "San Diego",
+  //   created_at: "2013-10-11 17:34:06 -0700",
+  //   description: "Address of Available Listing",
+  //   email: null,
+  //   id: 3415,
+  //   landlord_name: null,
+  //   latitude: 32.815313,
+  //   lease_months: null,
+  //   longitude: -117.168185,
+  //   phone: "(858) 695-9400",
+  //   rent: 2505,
+  //   sqft: 1466,
+  //   state: "CA",
+  //   updated_at: "2013-10-11 17:34:06 -0700",
+  //   zip: "92111"
+  // }
+
+  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+  dateFormatter.dateFormat       = @"yyyy-MM-dd hh:mm:ss ZZZ";
+
+  // Address
+  if ([dictionary objectForKey: @"address"] != [NSNull null])
+    _address = [dictionary objectForKey: @"address"];
+  // Available on
+  if ([dictionary objectForKey: @"available_on"] != [NSNull null])
+    _availableOn = [[dateFormatter dateFromString:
+      [dictionary objectForKey: @"available_on"]] timeIntervalSince1970];
+  // Bathrooms
+  if ([dictionary objectForKey: @"bathrooms"] != [NSNull null])
+    _bathrooms = [[dictionary objectForKey: @"bathrooms"] floatValue];
+  // Bedrooms
+  if ([dictionary objectForKey: @"bedrooms"] != [NSNull null])
+    _bedrooms = [[dictionary objectForKey: @"bedrooms"] floatValue];
+  // City
+  if ([dictionary objectForKey: @"city"] != [NSNull null])
+    _city = [dictionary objectForKey: @"city"];
+  // Created at
+  if ([dictionary objectForKey: @"created_at"] != [NSNull null])
+    _createdAt = [[dateFormatter dateFromString:
+      [dictionary objectForKey: @"created_at"]] timeIntervalSince1970];
+  // Description
+  if ([dictionary objectForKey: @"description"] != [NSNull null])
+    _description = [dictionary objectForKey: @"description"];
+  // Email
+  if ([dictionary objectForKey: @"email"] != [NSNull null])
+    _email = [dictionary objectForKey: @"email"];
+  // ID
+  if ([dictionary objectForKey: @"id"] != [NSNull null])
+    _uid = [[dictionary objectForKey: @"id"] intValue];
+  // Landlord name
+  if ([dictionary objectForKey: @"landlord_name"] != [NSNull null])
+    _landlordName = [dictionary objectForKey: @"landlord_name"];
+  // Latitude
+  if ([dictionary objectForKey: @"latitude"] != [NSNull null])
+    _latitude = [[dictionary objectForKey: @"latitude"] floatValue];
+  // Lease months
+  if ([dictionary objectForKey: @"lease_months"] == [NSNull null]) {
+    _leaseMonths = 0;
+  }
+  else {
+    _leaseMonths = [[dictionary objectForKey: @"lease_months"] intValue];
+  }
+  // Longitude
+  if ([dictionary objectForKey: @"longitude"] != [NSNull null])
+    _longitude = [[dictionary objectForKey: @"longitude"] floatValue];
+  // Phone
+  if ([dictionary objectForKey: @"phone"] != [NSNull null])
+    _phone = [dictionary objectForKey: @"phone"];
+  // Rent
+  if ([dictionary objectForKey: @"rent"] != [NSNull null])
+    _rent = [[dictionary objectForKey: @"rent"] floatValue];
+  // Square feet
+  if ([dictionary objectForKey: @"sqft"] != [NSNull null])
+    _squareFeet = [[dictionary objectForKey: @"sqft"] intValue];
+  // State
+  if ([dictionary objectForKey: @"state"] != [NSNull null])
+    _state = [dictionary objectForKey: @"state"];
+  // Updated at
+  if ([dictionary objectForKey: @"updated_at"] != [NSNull null])
+    _updatedAt = [[dateFormatter dateFromString:
+      [dictionary objectForKey: @"updated_at"]] timeIntervalSince1970];
+  // Zip
+  if ([dictionary objectForKey: @"zip"] != [NSNull null])
+    _zip = [dictionary objectForKey: @"zip"];
 }
 
 - (NSString *) rentToCurrencyString

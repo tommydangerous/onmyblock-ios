@@ -55,7 +55,7 @@
 
 #pragma mark - Setup and Teardown
 
-- (void)setUp
+- (void) setUp
 {
   [super setUp];
   coordinate.latitude  = 32;
@@ -65,7 +65,7 @@
   [mapViewController loadView];
 }
 
-- (void)tearDown
+- (void) tearDown
 {
   [super tearDown];
   mapViewController = nil;

@@ -33,9 +33,21 @@
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
   UIImage *image = [[UIImage alloc] initWithData: activeDownload];
-  if (image)
+  // If image was downloaded and the position is not the first (cover photo)
+  if (image) {
+    if (_position == 1) {
+      // Sometimes it is adding the cover photo image again
+    }
+    // If image at position already exists
+    else if ([_residence.images objectForKey: 
+      [NSString stringWithFormat: @"%i", _position]]) {
+
+      _residence.lastImagePosition += 1;
+      _position = _residence.lastImagePosition;
+    }
     [_residence.images setObject: image
       forKey: [NSString stringWithFormat: @"%i", _position]];
+  }
   [super connectionDidFinishLoading: connection];
 }
 

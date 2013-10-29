@@ -52,7 +52,14 @@
       NSDictionary *dict = [NSJSONSerialization JSONObjectWithData: data
         options: 0 error: nil];
       NSString *string = [dict objectForKey: @"image"];
-      int position     = [[dict objectForKey: @"position"] intValue];
+      int position;
+      if ([dict objectForKey: @"position"] == [NSNull null]) {
+        residence.lastImagePosition += 1;
+        position = residence.lastImagePosition;
+      }
+      else {
+        position = [[dict objectForKey: @"position"] intValue];
+      }
       if (![string hasPrefix: @"http"])
         string = [NSString stringWithFormat: @"%@%@", OnMyBlockAPIURL, string];
       OMBResidenceImageDownloader *downloader = 
@@ -64,7 +71,7 @@
         CGSize size = CGSizeMake(
           viewController.imagesScrollView.frame.size.width,
             viewController.imagesScrollView.frame.size.height);
-        imageView.image = [UIImage image: image size: size];
+        imageView.image = [UIImage image: image sizeToFitVertical: size];
         // Update the number of pages for the images scroll view
         viewController.pageOfImagesLabel.text = [NSString stringWithFormat:
           @"%i/%i", [viewController currentPageOfImages], 

@@ -28,7 +28,6 @@
 
 @implementation OMBMapViewController
 
-
 static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
 @synthesize collectionView       = _collectionView;
@@ -106,18 +105,19 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   _collectionView.dataSource = self;
   _collectionView.delegate   = self;
   _collectionView.showsVerticalScrollIndicator = NO;
-
-  [self.view addSubview: _collectionView];
+  // [self.view addSubview: _collectionView];
 
   // List view
   _listView = [[UITableView alloc] init];
-  _listView.alpha           = 0.0;
-  _listView.backgroundColor = [UIColor redColor];
-  _listView.dataSource      = self;
-  _listView.delegate        = self;
-  _listView.frame           = screen;
-  _listView.separatorColor  = [UIColor clearColor];
-  _listView.separatorStyle  = UITableViewCellSeparatorStyleNone;
+  _listView.alpha                        = 0.0;
+  _listView.backgroundColor              = [UIColor clearColor];
+  _listView.canCancelContentTouches      = YES;
+  _listView.contentInset                 = UIEdgeInsetsMake(0, 0, -49, 0);
+  _listView.dataSource                   = self;
+  _listView.delegate                     = self;
+  _listView.frame                        = screen;
+  _listView.separatorColor               = [UIColor clearColor];
+  _listView.separatorStyle               = UITableViewCellSeparatorStyleNone;
   _listView.showsVerticalScrollIndicator = NO;
   [self.view addSubview: _listView];
 
@@ -378,7 +378,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   NSArray *properties = [self propertiesSortedBy: @"" ascending: NO];
   if ([properties count] > 0)
-    [cell loadResidence: [properties objectAtIndex: indexPath.row]];
+    [cell loadResidenceData: [properties objectAtIndex: indexPath.row]];
   return cell;
 }
 
@@ -390,11 +390,21 @@ numberOfRowsInSection: (NSInteger) section
 
 #pragma mark - Protocol UITableViewDelegate
 
+- (void) tableView: (UITableView *) tableView
+didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  OMBResidence *residence = [[self propertiesSortedBy: @"" 
+    ascending: NO] objectAtIndex: indexPath.row];
+  [self.navigationController pushViewController:
+    [[OMBResidenceDetailViewController alloc] initWithResidence: 
+      residence] animated: YES];
+}
+
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
-  return screen.size.height * 0.3;
+  return (screen.size.height * 0.3) + 5;
 }
 
 #pragma mark - Methods
@@ -470,9 +480,10 @@ withTitle: (NSString *) title;
 
 - (void) reloadTable
 {
-  if (_collectionView.alpha == 1.0)
-    [_collectionView reloadData];
-  // [_listView reloadData];
+  // if (_collectionView.alpha == 1.0)
+  //   [_collectionView reloadData];
+  if (_listView.alpha == 1.0)
+    [_listView reloadData];
 }
 
 - (void) removeAllAnnotations
@@ -527,15 +538,15 @@ withMiles: (int) miles
     // Show map
     case 0: {
       _collectionView.alpha = 0.0;
-      _listView.alpha = 0.0;
-      _mapView.alpha  = 1.0;     
+      _listView.alpha       = 0.0;
+      _mapView.alpha        = 1.0;     
       break;
     }
     // Show list
     case 1: {
-      _collectionView.alpha = 1.0;
-      _listView.alpha = 0.0;
-      _mapView.alpha  = 0.0;     
+      _collectionView.alpha = 0.0;
+      _listView.alpha       = 1.0;
+      _mapView.alpha        = 0.0;     
       [self reloadTable];  
       break;
     }

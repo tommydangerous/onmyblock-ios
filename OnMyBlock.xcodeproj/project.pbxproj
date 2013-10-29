@@ -73,6 +73,9 @@
 		ABB3C58918117C2200DD91C9 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB3C58818117C2200DD91C9 /* CoreLocation.framework */; };
 		ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABC48E791812397300F01D8D /* QuartzCore.framework */; };
 		ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */; };
+		ABD8EF4C181FFC4B00C28686 /* OMBResidenceDetailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD8EF4B181FFC4B00C28686 /* OMBResidenceDetailConnection.m */; };
+		ABD8EF4F1820071600C28686 /* OMBResidenceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD8EF4E1820071600C28686 /* OMBResidenceTests.m */; };
+		ABD8EF5218205AE200C28686 /* OMBResidenceSimilarConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD8EF5118205AE200C28686 /* OMBResidenceSimilarConnection.m */; };
 		ABF18BA41816BC53002DD723 /* marker_circle_deselected.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA01816BC53002DD723 /* marker_circle_deselected.png */; };
 		ABF18BA51816BC53002DD723 /* marker_circle_deselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA11816BC53002DD723 /* marker_circle_deselected@2x.png */; };
 		ABF18BA61816BC53002DD723 /* marker_circle_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA21816BC53002DD723 /* marker_circle_selected.png */; };
@@ -211,6 +214,11 @@
 		ABC48E791812397300F01D8D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		ABC48E7B18125AF000F01D8D /* OMBPropertyInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPropertyInfoView.h; sourceTree = "<group>"; };
 		ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertyInfoView.m; sourceTree = "<group>"; };
+		ABD8EF4A181FFC4B00C28686 /* OMBResidenceDetailConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceDetailConnection.h; sourceTree = "<group>"; };
+		ABD8EF4B181FFC4B00C28686 /* OMBResidenceDetailConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceDetailConnection.m; sourceTree = "<group>"; };
+		ABD8EF4E1820071600C28686 /* OMBResidenceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceTests.m; sourceTree = "<group>"; };
+		ABD8EF5018205AE200C28686 /* OMBResidenceSimilarConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceSimilarConnection.h; sourceTree = "<group>"; };
+		ABD8EF5118205AE200C28686 /* OMBResidenceSimilarConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceSimilarConnection.m; sourceTree = "<group>"; };
 		ABDAA81B181563310027F04C /* OMBMapViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapViewControllerTests.m; sourceTree = "<group>"; };
 		ABF18BA01816BC53002DD723 /* marker_circle_deselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = marker_circle_deselected.png; sourceTree = "<group>"; };
 		ABF18BA11816BC53002DD723 /* marker_circle_deselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker_circle_deselected@2x.png"; sourceTree = "<group>"; };
@@ -342,6 +350,7 @@
 		AB802EBC18109E5200E04D11 /* OnMyBlockTests */ = {
 			isa = PBXGroup;
 			children = (
+				ABD8EF4D182006EE00C28686 /* Models */,
 				ABDAA81A181562EB0027F04C /* Controllers */,
 				AB802EC218109E5200E04D11 /* OnMyBlockTests.m */,
 				AB802EBD18109E5200E04D11 /* Supporting Files */,
@@ -461,6 +470,10 @@
 				AB8C8C241815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.m */,
 				AB4F9D1F181ABD160086D618 /* OMBResidenceImagesConnection.h */,
 				AB4F9D20181ABD160086D618 /* OMBResidenceImagesConnection.m */,
+				ABD8EF4A181FFC4B00C28686 /* OMBResidenceDetailConnection.h */,
+				ABD8EF4B181FFC4B00C28686 /* OMBResidenceDetailConnection.m */,
+				ABD8EF5018205AE200C28686 /* OMBResidenceSimilarConnection.h */,
+				ABD8EF5118205AE200C28686 /* OMBResidenceSimilarConnection.m */,
 			);
 			path = Connections;
 			sourceTree = "<group>";
@@ -549,6 +562,14 @@
 				ABB3C57E1811781C00DD91C9 /* MFSideMenuContainerViewController.m */,
 			);
 			path = MFSideMenu;
+			sourceTree = "<group>";
+		};
+		ABD8EF4D182006EE00C28686 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				ABD8EF4E1820071600C28686 /* OMBResidenceTests.m */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		ABDAA81A181562EB0027F04C /* Controllers */ = {
@@ -682,6 +703,7 @@
 				ABF18BBD1816F913002DD723 /* OMBListButton.m in Sources */,
 				AB26131718197D030053A8AA /* OMBCollectionViewController.m in Sources */,
 				ABACA725181EC6FB004EBF6A /* ADMapCluster.m in Sources */,
+				ABD8EF5218205AE200C28686 /* OMBResidenceSimilarConnection.m in Sources */,
 				AB4F9D24181ABFA20086D618 /* OMBResidenceImageDownloader.m in Sources */,
 				AB9B263B1811B7ED00E6DAC4 /* OCDistance.m in Sources */,
 				ABB3C585181178AE00DD91C9 /* OMBNavigationController.m in Sources */,
@@ -697,6 +719,7 @@
 				AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */,
 				AB8C8C251815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.m in Sources */,
 				AB4F9D29181B00B20086D618 /* OMBResidenceImageSlideViewController.m in Sources */,
+				ABD8EF4C181FFC4B00C28686 /* OMBResidenceDetailConnection.m in Sources */,
 				AB8C8C22181597F900A1B087 /* OMBResidence.m in Sources */,
 				AB8C8C381815D7DC00A1B087 /* OMBResidenceDetailViewController.m in Sources */,
 				AB9B26461811CB1300E6DAC4 /* NSDate+TimeAgo.m in Sources */,
@@ -732,6 +755,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB8C8C0F1815699B00A1B087 /* OMBMapViewControllerTests.m in Sources */,
+				ABD8EF4F1820071600C28686 /* OMBResidenceTests.m in Sources */,
 				AB802EC318109E5200E04D11 /* OnMyBlockTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

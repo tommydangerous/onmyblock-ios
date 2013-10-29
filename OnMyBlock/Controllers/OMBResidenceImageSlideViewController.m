@@ -171,7 +171,7 @@
 
 - (void) close
 {
-  [self dismissViewControllerAnimated: NO completion: ^{
+  [self dismissViewControllerAnimated: YES completion: ^{
     for (UIView *v in _imageSlideScrollView.subviews) {
       if ([v isKindOfClass: [UIScrollView class]]) {
         UIScrollView *scroll = (UIScrollView *) v;

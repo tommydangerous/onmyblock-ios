@@ -12,8 +12,10 @@
 
 #pragma mark - Methods
 
++ (UIImage *) image: (UIImage *) image proportionatelySized: (CGSize) size;
 + (UIImage *) image: (UIImage *) image size: (CGSize) size;
 + (UIImage *) image: (UIImage *) image size: (CGSize) size 
 point: (CGPoint) point;
++ (UIImage *) image: (UIImage *) image sizeToFitVertical: (CGSize) size;
 
 @end

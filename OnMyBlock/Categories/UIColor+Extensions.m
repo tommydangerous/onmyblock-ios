@@ -28,6 +28,12 @@
     blue: (193/255.0) alpha: 1];
 }
 
++ (UIColor *) blueDark
+{
+  return [UIColor colorWithRed: (80/255.0) green: (145/255.0) 
+    blue: (165/255.0) alpha: 1];
+}
+
 + (UIColor *) blueDarkAlpha: (float) value
 {
   return [UIColor colorWithRed: (80/255.0) green: (145/255.0) 
@@ -68,6 +74,36 @@
 {
   return [UIColor colorWithRed: (140/255.0) green: (140/255.0) 
     blue: (140/255.0) alpha: value];
+}
+
++ (UIColor *) green
+{
+  return [UIColor colorWithRed: (88/255.0) green: (209/255.0) 
+    blue: (136/255.0) alpha: 1];
+}
+
++ (UIColor *) greenDark
+{
+  return [UIColor colorWithRed: (42/255.0) green: (186/255.0) 
+    blue: (100/255.0) alpha: 1];
+}
+
++ (UIColor *) pink
+{
+  return [UIColor colorWithRed: (193/255.0) green: (25/255.0) 
+    blue: (120/255.0) alpha: 1];
+}
+
++ (UIColor *) pinkAlpha: (float) value
+{
+  return [UIColor colorWithRed: (193/255.0) green: (25/255.0) 
+    blue: (120/255.0) alpha: value];
+}
+
++ (UIColor *) pinkDark
+{
+  return [UIColor colorWithRed: (173/255.0) green: (5/255.0) 
+    blue: (100/255.0) alpha: 1];
 }
 
 + (UIColor *) textColor

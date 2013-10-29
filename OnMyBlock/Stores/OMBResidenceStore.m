@@ -83,7 +83,7 @@ sortedBy: (NSString *) string ascending: (BOOL) ascending
 }
 
 
-- (void) readFromDictionary: (NSDictionary *) dictionary
+- (void) readFromPropertiesDictionary: (NSDictionary *) dictionary
 {
   NSMutableArray *annotations = [NSMutableArray array];
   // Argument is an array of dictionaries
@@ -100,11 +100,11 @@ sortedBy: (NSString *) string ascending: (BOOL) ascending
       // If the residence isn't in the store, add it to the map
       if (!residence) {
         residence = [[OMBResidence alloc] init];
-        [residence readFromDictionary: dict];
+        [residence readFromPropertyDictionary: dict];
         [self addResidence: residence];
       }
       else {
-        [residence readFromDictionary: dict];
+        [residence readFromPropertyDictionary: dict];
       }
       BOOL exists = NO;
       CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(

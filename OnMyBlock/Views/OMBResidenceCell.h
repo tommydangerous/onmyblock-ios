@@ -11,17 +11,15 @@
 @class OMBResidence;
 
 @interface OMBResidenceCell : UITableViewCell
-{
-  UILabel *addressLabel;
-  UIImageView *imageView;
-}
 
-@property (nonatomic, strong) OMBResidence *residence;
+@property (nonatomic, strong) UILabel *bedBathLabel;
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UILabel *rentLabel;
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
-- (void) loadResidence: (OMBResidence *) object;
+- (void) loadResidenceData: (OMBResidence *) residence;
 
 @end
