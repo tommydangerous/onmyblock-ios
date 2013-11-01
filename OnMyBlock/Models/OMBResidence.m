@@ -9,6 +9,7 @@
 #import "OMBResidence.h"
 
 #import "NSString+Extensions.h"
+#import "OMBUser.h"
 #import "UIImage+Resize.h"
 
 @implementation OMBResidence
@@ -100,6 +101,15 @@
     point.y = (newHeight - size.height) / -2.0;
   return [UIImage image: img size: CGSizeMake(newWidth, newHeight) 
     point: point];
+}
+
+- (NSString *) defaultContactMessage
+{
+  if ([OMBUser currentUser].accessToken)
+    return [NSString stringWithFormat: @"Hello\n\nI found your listing for %@ using OnMyBlock.\nI am interested in this place and would love to schedule a viewing.\nYou can reach me at %@\n\nThank you.", 
+      _address, [OMBUser currentUser].email];
+  else
+    return [NSString stringWithFormat: @"Hello\n\nI found your listing for %@ using OnMyBlock.\nI am interested in this place and would love to schedule a viewing.\nYou can reach me at ...\n\nThank you.", _address];
 }
 
 - (NSString *) dictionaryKey
@@ -195,7 +205,7 @@
   // }
 
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-  dateFormatter.dateFormat       = @"yyyy-MM-dd hh:mm:ss ZZZ";
+  dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
 
   // Address
   if ([dictionary objectForKey: @"address"] != [NSNull null])

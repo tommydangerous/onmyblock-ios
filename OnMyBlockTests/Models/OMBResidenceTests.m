@@ -65,7 +65,7 @@
 - (void) testReadFromResidenceDictionary
 {
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-  dateFormatter.dateFormat       = @"yyyy-MM-dd hh:mm:ss ZZZ";
+  dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
   [residence readFromResidenceDictionary: residenceDictionary];
   XCTAssertEqual(residence.address, 
     [residenceDictionary objectForKey: @"address"], 

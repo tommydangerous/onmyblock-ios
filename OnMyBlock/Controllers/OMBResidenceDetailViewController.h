@@ -15,15 +15,22 @@
 
 @interface OMBResidenceDetailViewController : OMBViewController
 <MKMapViewDelegate, UIScrollViewDelegate, UITableViewDataSource, 
-  UITableViewDelegate>
+  UITableViewDelegate, UITextViewDelegate>
 {
+  UIButton *bottomButton;
+  UIButton *callButton;
   CALayer *descriptionBorderBottom;
+  UIImage *favoritePinkImage;
+  UIImage *favoriteWhiteImage;
+  CALayer *infoViewBorderBottom;
   OMBResidence *residence;
+  BOOL showContactTextView;
   NSMutableArray *similarResidences;
 }
 
 @property (nonatomic, strong) UILabel *addressLabel;
 @property (nonatomic, strong) UIButton *addToFavoritesButton;
+@property (nonatomic, strong) UIView *addToFavoritesView;
 @property (nonatomic, strong) UILabel *availableLabel;
 @property (nonatomic, strong) UIView *availableView;
 @property (nonatomic, strong) UILabel *bathLabel;
@@ -31,6 +38,8 @@
 @property (nonatomic, strong) UILabel *bedLabel;
 @property (nonatomic, strong) UILabel *bedSubLabel;
 @property (nonatomic, strong) UIButton *contactButton;
+@property (nonatomic, strong) UITextView *contactTextView;
+@property (nonatomic, strong) UIView *contactView;
 @property (nonatomic, strong) UILabel *descriptionLabel;
 @property (nonatomic, strong) UIView *descriptionView;
 @property (nonatomic, strong) UIScrollView *imagesScrollView;
@@ -45,6 +54,7 @@
 @property (nonatomic, strong) MKMapView *miniMap;
 @property (nonatomic, strong) UILabel *pageOfImagesLabel;
 @property (nonatomic, strong) UILabel *rentLabel;
+@property (nonatomic, strong) UIView *similarResidenceBottomView;
 @property (nonatomic, strong) UIView *similarResidencesView;
 @property (nonatomic, strong) UILabel *squareFeetLabel;
 @property (nonatomic, strong) UILabel *squareFeetSubLabel;

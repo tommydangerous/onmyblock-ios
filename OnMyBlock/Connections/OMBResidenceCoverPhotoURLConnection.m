@@ -22,7 +22,7 @@
     residence = object;
     // http://localhost:3000/places/141/cover_photo_url.json
     NSString *string = [NSString stringWithFormat:
-      @"%@/places/%i/cover_photo_url.json", OnMyBlockAPIURL, residence.uid];
+      @"%@/places/%i/cover_photo_url", OnMyBlockAPIURL, residence.uid];
     [self setRequestFromString: string];
   }
   return self;
@@ -37,8 +37,11 @@
   NSString *string = [json objectForKey: @"image"];
   // If the cover photo URL is not empty.png
   if ([string rangeOfString: @"empty"].location == NSNotFound) {
-    if (![string hasPrefix: @"http"])
-      string = [NSString stringWithFormat: @"%@%@", OnMyBlockAPIURL, string];
+    if (![string hasPrefix: @"http"]) {
+      NSString *baseURLString = [[OnMyBlockAPIURL componentsSeparatedByString: 
+        OnMyBlockAPI] objectAtIndex: 0];
+      string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
+    }
     residence.coverPhotoURL = [NSURL URLWithString: string];
     // Download the residence cover photo from the cover photo url
     OMBResidenceCoverPhotoDownloader *downloader = 

@@ -8,6 +8,7 @@
 
 #import "OMBResidenceImageSlideViewController.h"
 
+#import "OMBImageScrollView.h"
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
 #import "UIColor+Extensions.h"
@@ -74,9 +75,9 @@
   CGRect screen = [[UIScreen mainScreen] bounds];
 
   for (UIImage *image in residence.imagesArray) {
-    UIScrollView *scroll   = [[UIScrollView alloc] init];
-    scroll.backgroundColor = [UIColor blackColor];
-    scroll.delegate = self;
+    OMBImageScrollView* scroll = [[OMBImageScrollView alloc] init];
+    scroll.backgroundColor     = [UIColor blackColor];
+    scroll.delegate            = self;
     scroll.frame    = CGRectMake(
       ([residence.imagesArray indexOfObject: image] * screen.size.width), 0,
         screen.size.width, screen.size.height);

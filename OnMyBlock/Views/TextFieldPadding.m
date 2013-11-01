@@ -19,10 +19,10 @@
 {
   self = [super init];
   if (self) {
-    self.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.enablesReturnKeyAutomatically = YES;
-    self.returnKeyType = UIReturnKeySearch;
+    // self.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    // self.autocorrectionType = UITextAutocorrectionTypeNo;
+    // self.enablesReturnKeyAutomatically = YES;
+    // self.returnKeyType = UIReturnKeySearch;
   }
   return self;
 }

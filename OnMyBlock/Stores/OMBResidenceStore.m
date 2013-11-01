@@ -82,8 +82,27 @@ sortedBy: (NSString *) string ascending: (BOOL) ascending
   return (NSArray *) array;
 }
 
-
 - (void) readFromPropertiesDictionary: (NSDictionary *) dictionary
+{
+  NSMutableArray *annotations = [NSMutableArray array];
+  for (NSDictionary *dict in dictionary) {
+    // Create residence
+    OMBResidence *residence = [[OMBResidence alloc] init];
+    [residence readFromPropertyDictionary: dict];
+    [self addResidence: residence];
+    // Create annotation
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+      residence.latitude, residence.longitude);
+    OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
+    annotation.coordinate = coordinate;
+    annotation.title      = residence.address;
+    // Add to array
+    [annotations addObject: annotation];
+  }
+  [_mapViewController addAnnotations: annotations];
+}
+
+- (void) readFromPropertiesDictionary1: (NSDictionary *) dictionary
 {
   NSMutableArray *annotations = [NSMutableArray array];
   // Argument is an array of dictionaries
@@ -129,7 +148,7 @@ sortedBy: (NSString *) string ascending: (BOOL) ascending
       }
     }
   }
-  [_mapViewController.mapView addAnnotations: annotations];
+  [_mapViewController addAnnotations: annotations];
 }
 
 - (OMBResidence *) residenceForAnnotation: (OMBAnnotation *) annotation

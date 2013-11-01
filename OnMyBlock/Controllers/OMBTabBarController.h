@@ -12,6 +12,13 @@
 
 @interface OMBTabBarController : UITabBarController
 
+@property (nonatomic, strong) OMBNavigationController *favoritesViewController;
 @property (nonatomic, strong) OMBNavigationController *mapViewController;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) switchToViewController: (OMBNavigationController *) vc;
 
 @end

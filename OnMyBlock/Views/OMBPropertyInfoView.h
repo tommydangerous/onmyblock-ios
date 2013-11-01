@@ -13,8 +13,11 @@
 
 @interface OMBPropertyInfoView : UIView
 {
+  UIButton *addToFavoritesButton;
   UIImageView *arrowImageView;
   UILabel *bedBathLabel;
+  UIImage *minusFavoriteImage;
+  UIImage *plusFavoriteImage;
   UILabel *rentLabel;
 }
 

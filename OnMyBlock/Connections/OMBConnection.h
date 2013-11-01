@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import "OMBUser.h"
+
 extern NSTimeInterval RequestTimeoutInterval;
 extern NSMutableArray *sharedConnectionList;
+extern NSString *const OnMyBlockAPI;
 extern NSString *const OnMyBlockAPIURL;
 
 @interface OMBConnection : NSURLConnection

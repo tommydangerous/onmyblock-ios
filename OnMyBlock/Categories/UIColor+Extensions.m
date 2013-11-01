@@ -40,6 +40,18 @@
     blue: (165/255.0) alpha: value];
 }
 
++ (UIColor *) facebookBlue
+{
+  return [UIColor colorWithRed: (59/255.0) green: (87/255.0) 
+    blue: (157/255.0) alpha: 1];
+}
+
++ (UIColor *) facebookBlueDark
+{
+  return [UIColor colorWithRed: (39/255.0) green: (67/255.0) 
+    blue: (137/255.0) alpha: 1];
+}
+
 + (UIColor *) grayDark
 {
   return [UIColor colorWithRed: (80/255.0) green: (80/255.0) 

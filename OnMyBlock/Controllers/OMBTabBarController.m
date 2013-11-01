@@ -8,12 +8,16 @@
 
 #import "OMBTabBarController.h"
 
+#import "OMBFavoritesListViewController.h"
+#import "OMBLoginViewController.h"
 #import "OMBMapViewController.h"
 #import "OMBNavigationController.h"
+#import "OMBUser.h"
 
 @implementation OMBTabBarController
 
-@synthesize mapViewController = _mapViewController;
+@synthesize favoritesViewController = _favoritesViewController;
+@synthesize mapViewController       = _mapViewController;
 
 #pragma mark Initializer
 
@@ -27,6 +31,9 @@
   frame.origin.y    = screen.size.height;
   self.tabBar.frame = frame;
   // View controllers
+  _favoritesViewController = 
+    [[OMBNavigationController alloc] initWithRootViewController:
+      [[OMBFavoritesListViewController alloc] init]];
   _mapViewController = 
     [[OMBNavigationController alloc] initWithRootViewController: 
       [[OMBMapViewController alloc] init]];
@@ -35,6 +42,10 @@
     _mapViewController
   ];
 
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(switchToMapViewController)
+      name: OMBUserLoggedOutNotification object: nil];
+
   return self;
 }
 
@@ -42,10 +53,15 @@
 
 #pragma mark - Instance Methods
 
-- (void) switchToViewController: (UIViewController *) vc
+- (void) switchToMapViewController
 {
-  self.viewControllers = [NSArray arrayWithObjects: 
-    self.selectedViewController, vc, nil];
+  if (self.selectedViewController == _favoritesViewController)
+    [self switchToViewController: _mapViewController];
+}
+
+- (void) switchToViewController: (OMBNavigationController *) vc
+{
+  self.viewControllers        = @[self.selectedViewController, vc];
   self.selectedViewController = vc;
 }
 

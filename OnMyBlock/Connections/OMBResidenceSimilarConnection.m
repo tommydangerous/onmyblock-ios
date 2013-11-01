@@ -21,7 +21,7 @@
   if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: 
-    @"%@/places/%i/show_similar.json", OnMyBlockAPIURL, residence.uid];
+    @"%@/places/%i/show_similar/", OnMyBlockAPIURL, residence.uid];
   [self setRequestFromString: string];
 
   return self;

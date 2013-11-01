@@ -13,6 +13,7 @@
 #import "NSString+Extensions.h"
 #import "OCMapView.h"
 #import "OMBAnnotation.h"
+#import "OMBAnnotationCity.h"
 #import "OMBAnnotationView.h"
 #import "OMBMapFilterViewController.h"
 #import "OMBNavigationController.h"
@@ -250,21 +251,13 @@ didUpdateLocations: (NSArray *) locations
 
   [self deselectAnnotations];
   [self hidePropertyInfoView];
-
-  // Max zoom level
-  // 1609 meters = 1 mile
-  int distanceInMiles = 1609 * 5;
-  MKCoordinateRegion maxRegion =
-    MKCoordinateRegionMakeWithDistance(map.region.center, distanceInMiles, 
-      distanceInMiles);
-
-  if (map.region.span.latitudeDelta > maxRegion.span.latitudeDelta ||
-    map.region.span.longitudeDelta > maxRegion.span.longitudeDelta)
-    [_mapView setRegion: maxRegion animated: YES];
 }
 
-- (void) mapView: (MKMapView *) map regionWillChangeAnimated: (BOOL) animated
+- (void) DONOTHINGmapView: (MKMapView *) map 
+regionWillChangeAnimated: (BOOL) animated
 {
+  // This messes up the map because it drag/scrolls every other time
+
   // Max zoom level
   // 1609 meters = 1 mile
   int distanceInMiles = 1609 * 5;
@@ -294,6 +287,9 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
   if ([annotationView.annotation isKindOfClass: [OCAnnotation class]]) {
     [self zoomClusterAtAnnotation: (OCAnnotation *) annotationView.annotation];
   }
+  else if ([annotationView.annotation isKindOfClass: [OMBAnnotationCity class]])
+    [self setMapViewRegion: annotationView.annotation.coordinate
+      withMiles: 20];
   // If user clicked on a single residence
   else if ([[NSString stringWithFormat: @"%@",
     [annotationView class]] isEqualToString: @"MKModernUserLocationView"]) {
@@ -320,6 +316,11 @@ viewForAnnotation: (id <MKAnnotation>) annotation
     return nil;
 
   static NSString *ReuseIdentifier = @"AnnotationViewIdentifier";
+  // MKAnnotationView *av = [map dequeueReusableAnnotationViewWithIdentifier:
+  //   ReuseIdentifier];
+  // if (!av)
+  //   av = [[MKAnnotationView alloc] init];
+  // return av;
   OMBAnnotationView *annotationView = (OMBAnnotationView *)
     [map dequeueReusableAnnotationViewWithIdentifier: ReuseIdentifier];
   if (!annotationView) {
@@ -419,6 +420,26 @@ withTitle: (NSString *) title;
   annotation.coordinate     = coordinate;
   annotation.title          = title;
   [_mapView addAnnotation: annotation];
+}
+
+- (void) addAnnotations: (NSArray *) annotations
+{
+  int count = [annotations count];
+  NSLog(@"Count: %i", count);
+  [_mapView removeAnnotations: _mapView.annotations];
+  if (count < 700)
+    [_mapView addAnnotations: annotations];
+  else {
+    // Create annotation
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+      32.7150, -117.1625);
+    OMBAnnotationCity *annotation = [[OMBAnnotationCity alloc] init];
+    annotation.cityName   = @"San Diego";
+    annotation.coordinate = coordinate;
+    annotation.title      = [NSString stringWithFormat: @"%i", count];
+    [_mapView addAnnotation: annotation];
+  }
+  NSLog(@"Annotations: %i", [_mapView.annotations count]);
 }
 
 - (void) deselectAnnotations

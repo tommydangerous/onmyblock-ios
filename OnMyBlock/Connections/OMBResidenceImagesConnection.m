@@ -24,7 +24,7 @@
   residence = object;
   // http://localhost:3000/places/135/show_images.json
   NSString *string = [NSString stringWithFormat:
-    @"%@/places/%i/show_images.json", OnMyBlockAPIURL, residence.uid];
+    @"%@/places/%i/show_images/", OnMyBlockAPIURL, residence.uid];
   [self setRequestFromString: string];
 
   return self;
@@ -60,8 +60,12 @@
       else {
         position = [[dict objectForKey: @"position"] intValue];
       }
-      if (![string hasPrefix: @"http"])
-        string = [NSString stringWithFormat: @"%@%@", OnMyBlockAPIURL, string];
+      if (![string hasPrefix: @"http"]) {
+        NSString *baseURLString = 
+          [[OnMyBlockAPIURL componentsSeparatedByString: 
+            OnMyBlockAPI] objectAtIndex: 0];
+        string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
+      }
       OMBResidenceImageDownloader *downloader = 
        [[OMBResidenceImageDownloader alloc] initWithResidence: residence];
       downloader.completionBlock = ^(NSError *error) {

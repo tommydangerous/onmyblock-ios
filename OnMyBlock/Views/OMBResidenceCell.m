@@ -8,9 +8,14 @@
 
 #import "OMBResidenceCell.h"
 
+#import "OMBAppDelegate.h"
+#import "OMBFavoriteResidence.h"
+#import "OMBFavoriteResidenceConnection.h"
 #import "OMBResidence.h"
 #import "OMBResidenceCoverPhotoURLConnection.h"
+#import "OMBUser.h"
 #import "UIColor+Extensions.h"
+#import "UIImage+Resize.h"
 
 @implementation OMBResidenceCell
 
@@ -65,8 +70,34 @@ reuseIdentifier: (NSString *) reuseIdentifier
     _bedBathLabel.frame = CGRectMake(
       (20 + _rentLabel.frame.size.width + 10), 0, 
         ((screen.size.width / 2.0) - 30), infoView.frame.size.height);
-    _bedBathLabel.textColor = [UIColor textColor];
+    _bedBathLabel.textColor = _rentLabel.textColor;
     [infoView addSubview: _bedBathLabel];
+
+    float buttonDimension = self.contentView.frame.size.height * 0.3;
+    addToFavoritesButton = [[UIButton alloc] init];
+    addToFavoritesButton.backgroundColor = [UIColor clearColor];
+    CGSize favoriteButtonSize = CGSizeMake(buttonDimension, buttonDimension);
+    addToFavoritesButton.frame = CGRectMake(
+      (self.contentView.frame.size.width - (favoriteButtonSize.width)), 
+        (self.contentView.frame.size.height - (favoriteButtonSize.height + 5)), 
+          favoriteButtonSize.width, favoriteButtonSize.height);
+    minusFavoriteImage = [UIImage image: 
+      [UIImage imageNamed: @"favorite_pink.png"] 
+        size: addToFavoritesButton.frame.size];
+    plusFavoriteImage = [UIImage image: 
+      [UIImage imageNamed: @"favorite_outline.png"] 
+        size: addToFavoritesButton.frame.size];
+    [addToFavoritesButton addTarget: self 
+      action: @selector(addToFavoritesButtonSelected) 
+        forControlEvents: UIControlEventTouchUpInside];
+    [self.contentView addSubview: addToFavoritesButton];
+
+    [[NSNotificationCenter defaultCenter] addObserver: self
+      selector: @selector(adjustFavoriteButton)
+        name: OMBCurrentUserChangedFavorite object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self
+      selector: @selector(adjustFavoriteButton)
+        name: OMBUserLoggedOutNotification object: nil];
   }
   return self;
 }
@@ -75,8 +106,65 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 #pragma mark - Instance Methods
 
-- (void) loadResidenceData: (OMBResidence *) residence
+- (void) addToFavoritesButtonSelected
 {
+  if ([[OMBUser currentUser] loggedIn]) {
+    if ([[OMBUser currentUser] alreadyFavoritedResidence: residence]) {
+      [[OMBUser currentUser] removeResidenceFromFavorite: residence];
+      [UIView animateWithDuration: 0.5 animations: ^{
+        [addToFavoritesButton setImage: plusFavoriteImage
+          forState: UIControlStateNormal];
+      }];
+    }
+    else {
+      OMBFavoriteResidence *favoriteResidence = 
+        [[OMBFavoriteResidence alloc] init];
+      favoriteResidence.createdAt = [[NSDate date] timeIntervalSince1970];
+      favoriteResidence.residence = residence;
+      [[OMBUser currentUser] addFavoriteResidence: favoriteResidence];
+      UIImageView *imageView = addToFavoritesButton.imageView;
+      [UIView animateWithDuration: 0.5 delay:0
+        options: UIViewAnimationOptionBeginFromCurrentState
+          animations: ^{
+            imageView.transform = CGAffineTransformMakeScale(0.7, 0.7);
+            [addToFavoritesButton setImage: minusFavoriteImage
+              forState: UIControlStateNormal];
+          }
+          completion: ^(BOOL finished){
+            imageView.transform = CGAffineTransformIdentity;
+          }
+        ];
+    }
+    OMBFavoriteResidenceConnection *connection = 
+      [[OMBFavoriteResidenceConnection alloc] initWithResidence: residence];
+    [connection start];
+  }
+  else {
+    OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    [appDelegate showLogin];
+  }
+}
+
+- (void) adjustFavoriteButton
+{
+  if ([[OMBUser currentUser] loggedIn]) {
+    if ([[OMBUser currentUser] alreadyFavoritedResidence: residence])
+      [addToFavoritesButton setImage: minusFavoriteImage
+        forState: UIControlStateNormal];
+    else
+      [addToFavoritesButton setImage: plusFavoriteImage
+        forState: UIControlStateNormal];
+  }
+  else {
+    [addToFavoritesButton setImage: plusFavoriteImage
+      forState: UIControlStateNormal];
+  }
+}
+
+- (void) loadResidenceData: (OMBResidence *) object
+{
+  residence = object;
+
   // Bedrooms
   NSString *bedsString = @"bd";
   // if (residence.bedrooms == 1)
@@ -149,6 +237,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
     _rentLabel.frame.origin.x + _rentLabel.frame.size.width + 20;
   bedBathLabelFrame.size.width = bedBathRect.size.width;
   _bedBathLabel.frame = bedBathLabelFrame;
+
+  // Add to favorites button image
+  [self adjustFavoriteButton];
 }
 
 @end

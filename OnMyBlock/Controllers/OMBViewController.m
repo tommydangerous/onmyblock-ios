@@ -36,12 +36,17 @@
 - (void) loadView
 {
   [super loadView];
-  
-  self.navigationItem.rightBarButtonItem =
+
+  doneEditingBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithTitle: @"Done" 
+      style: UIBarButtonItemStylePlain target: self 
+        action: @selector(doneEditing)];
+  menuBarButtonItem =
     [[UIBarButtonItem alloc] initWithImage: 
       [UIImage image:  [UIImage imageNamed: @"menu_icon.png"] 
         size: CGSizeMake(26, 26)] style: UIBarButtonItemStylePlain 
           target: self action: @selector(showRightMenu)];
+  self.navigationItem.rightBarButtonItem = menuBarButtonItem;
 }
 
 - (void) setTitle: (NSString *) string
@@ -64,6 +69,23 @@
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) doneEditing
+{
+  [self.view endEditing: YES];
+  [self showMenuBarButtonItem];
+}
+
+- (void) showDoneEditingBarButtonItem
+{
+  [self.navigationItem setRightBarButtonItem: doneEditingBarButtonItem 
+    animated: YES];
+}
+
+- (void) showMenuBarButtonItem
+{
+  [self.navigationItem setRightBarButtonItem: menuBarButtonItem animated: YES];
+}
 
 - (void) showRightMenu
 {

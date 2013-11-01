@@ -12,6 +12,10 @@
 
 #import "OMBAnnotation.h"
 #import "OMBAnnotationView.h"
+#import "OMBContactResidenceLandlordConnection.h"
+#import "OMBFavoriteResidence.h"
+#import "OMBFavoriteResidenceConnection.h"
+#import "OMBLoginViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceCell.h"
 #import "OMBResidenceSimilarConnection.h"
@@ -52,14 +56,19 @@ int kResidenceDetailPaddingDouble = 10 * 2;
 {
   if (!(self = [super init])) return nil;
 
-  residence         = object;
-  similarResidences = [NSMutableArray array];
+  residence           = object;
+  showContactTextView = NO;
+  similarResidences   = [NSMutableArray array];
   self.title = [residence.address capitalizedString];
   _imageSlideViewController = 
     [[OMBResidenceImageSlideViewController alloc] initWithResidence: residence];
   _imageSlideViewController.modalTransitionStyle = 
     UIModalTransitionStyleCrossDissolve;
   _imageSlideViewController.residenceDetailViewController = self;
+
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(currentUserLogout) name: OMBUserLoggedOutNotification 
+      object: nil];
 
   return self;
 }
@@ -133,25 +142,27 @@ int kResidenceDetailPaddingDouble = 10 * 2;
   [_infoView addSubview: _rentLabel];
 
   // Add to favorites button
+  favoritePinkImage  = [UIImage image: 
+    [UIImage imageNamed: @"favorite_pink.png"] size: CGSizeMake(30, 30)];
+  favoriteWhiteImage = [UIImage image: [UIImage imageNamed: @"favorite.png"] 
+    size: CGSizeMake(30, 30)];
+
   _addToFavoritesButton = [[UIButton alloc] init];
-  _addToFavoritesButton.backgroundColor = [UIColor pink];
+  _addToFavoritesButton.backgroundColor = [UIColor grayMedium];
   _addToFavoritesButton.clipsToBounds = YES;
   _addToFavoritesButton.frame = CGRectMake(
     (screen.size.width - (70 + _rentLabel.frame.origin.x)), 
-    _rentLabel.frame.origin.y, 70, 50);
+      _rentLabel.frame.origin.y, 70, 50);
   _addToFavoritesButton.layer.cornerRadius = 2.0;
-  UIImage *favoriteImage = 
-    [UIImage image: [UIImage imageNamed: @"favorite.png"] 
-      size: CGSizeMake(30, 30)];
   [_addToFavoritesButton addTarget: self 
     action: @selector(addToFavoritesButtonSelected) 
       forControlEvents: UIControlEventTouchUpInside];
   [_addToFavoritesButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor pinkDark]] 
+    [UIImage imageWithColor: [UIColor grayDark]] 
       forState: UIControlStateHighlighted];
-  [_addToFavoritesButton setImage: favoriteImage 
+  [_addToFavoritesButton setImage: favoriteWhiteImage
     forState: UIControlStateNormal];
-  [_addToFavoritesButton setImage: favoriteImage 
+  [_addToFavoritesButton setImage: favoriteWhiteImage 
     forState: UIControlStateHighlighted];
   [_infoView addSubview: _addToFavoritesButton];
   // Address label
@@ -259,13 +270,39 @@ int kResidenceDetailPaddingDouble = 10 * 2;
   _squareFeetSubLabel.textColor     = _bedSubLabel.textColor;
   [squareFeetView addSubview: _squareFeetSubLabel];
 
+  // Contact view
+  _contactView = [[UIView alloc] init];
+  _contactView.backgroundColor = [UIColor whiteColor];
+  _contactView.frame = CGRectMake(0, 0, screen.size.width, 
+    ((18 * 3) + (kResidenceDetailPaddingDouble * 2)));
+  infoViewBorderBottom = [CALayer layer];
+  infoViewBorderBottom.backgroundColor = [UIColor grayMedium].CGColor;
+  infoViewBorderBottom.frame = CGRectMake(0, 
+    (_contactView.frame.size.height - 0.5), _contactView.frame.size.width, 0.5);
+  [_contactView.layer addSublayer: infoViewBorderBottom];
+
+  // Contact text view
+  _contactTextView = [[UITextView alloc] init];
+  _contactTextView.alpha = 0.0;
+  _contactTextView.backgroundColor = [UIColor clearColor];
+  _contactTextView.delegate = self;
+  _contactTextView.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
+    size: 15];
+  _contactTextView.frame = CGRectMake(_rentLabel.frame.origin.x,
+    kResidenceDetailPaddingDouble, _rentLabel.frame.size.width, (20 * 10));
+  _contactTextView.layer.borderColor = [UIColor grayLight].CGColor;
+  _contactTextView.layer.borderWidth = 1;
+  _contactTextView.scrollEnabled = YES;
+  _contactTextView.textColor = [UIColor textColor];
+  _contactTextView.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
+  [_contactView addSubview: _contactTextView];
+
   // Contact button
   _contactButton                 = [[UIButton alloc] init];
   _contactButton.backgroundColor = [UIColor green];
   _contactButton.clipsToBounds   = YES;
-  _contactButton.frame = CGRectMake(_rentLabel.frame.origin.x,
-    (bedView.frame.origin.y + bedView.frame.size.height + 
-      kResidenceDetailPaddingDouble), _rentLabel.frame.size.width, (18 * 3));
+  _contactButton.frame = CGRectMake(_rentLabel.frame.origin.x, 
+    kResidenceDetailPaddingDouble, _rentLabel.frame.size.width, (18 * 3));
   _contactButton.layer.cornerRadius = 2.0;
   _contactButton.titleLabel.font    = fontMedium18;
   [_contactButton addTarget: self action: @selector(contactButtonSelected)
@@ -275,17 +312,30 @@ int kResidenceDetailPaddingDouble = 10 * 2;
   [_contactButton setTitle: @"CONTACT" forState: UIControlStateNormal];
   [_contactButton setTitleColor: [UIColor whiteColor] 
     forState: UIControlStateNormal];
-  [_infoView addSubview: _contactButton];
+  [_contactView addSubview: _contactButton];
+
+  // Call button
+  callButton = [[UIButton alloc] init];
+  callButton.alpha = 0.0;
+  callButton.backgroundColor = [UIColor blue];
+  callButton.clipsToBounds = YES;
+  callButton.frame = CGRectMake(_rentLabel.frame.origin.x,
+    _contactButton.frame.origin.y, (_contactTextView.frame.size.width * 0.4),
+      _contactButton.frame.size.height);
+  callButton.layer.cornerRadius = 2.0;
+  [callButton addTarget: self action: @selector(callResidencePhone)
+    forControlEvents: UIControlEventTouchUpInside];
+  [callButton setBackgroundImage: [UIImage imageWithColor: [UIColor blueDark]]
+    forState: UIControlStateHighlighted];
+  UIImage *callButtonImage = [UIImage image: [UIImage imageNamed: @"phone.png"]
+    size: CGSizeMake(30, 30)];
+  [callButton setImage: callButtonImage forState: UIControlStateNormal];
+  [callButton setImage: callButtonImage forState: UIControlStateHighlighted];
+  [_contactView addSubview: callButton];
 
   // Info view frame
   _infoView.frame = CGRectMake(0, 0, screen.size.width, 
-    (_contactButton.frame.origin.y + _contactButton.frame.size.height + 
-      kResidenceDetailPaddingDouble));
-  CALayer *infoViewBorderBottom = [CALayer layer];
-  infoViewBorderBottom.backgroundColor = [UIColor grayMedium].CGColor;
-  infoViewBorderBottom.frame = CGRectMake(0, 
-    (_infoView.frame.size.height - 0.5), _infoView.frame.size.width, 0.5);
-  [_infoView.layer addSublayer: infoViewBorderBottom];
+    (bedView.frame.origin.y + bedView.frame.size.height));
 
   // Available view
   _availableView                 = [[UIView alloc] init];
@@ -435,6 +485,52 @@ int kResidenceDetailPaddingDouble = 10 * 2;
   similarResidencesHeaderLabel.text = @"Similar";
   similarResidencesHeaderLabel.textColor = availableHeaderLabel.textColor;
   [_similarResidencesView addSubview: similarResidencesHeaderLabel];
+  // Bottom view
+  _similarResidenceBottomView = [[UIView alloc] init];
+  _similarResidenceBottomView.backgroundColor = 
+    _similarResidencesView.backgroundColor;
+  _similarResidenceBottomView.frame = _similarResidencesView.frame;
+  CALayer *similarResidencesBorderBottom = [CALayer layer];
+  similarResidencesBorderBottom.backgroundColor = 
+    availableBorderBottom.backgroundColor;
+  similarResidencesBorderBottom.frame = CGRectMake(
+    similarResidencesBorderTop.frame.origin.x, 
+      (_similarResidenceBottomView.frame.size.height - 
+        similarResidencesBorderTop.frame.size.height), 
+          similarResidencesBorderTop.frame.size.width, 
+            similarResidencesBorderTop.frame.size.height);
+  [_similarResidenceBottomView.layer addSublayer: 
+    similarResidencesBorderBottom];
+
+  // Add to favorites button at the bottom
+  _addToFavoritesView = [[UIView alloc] init];
+  _addToFavoritesView.backgroundColor = [UIColor clearColor];
+  _addToFavoritesView.frame = CGRectMake(0, 0, screen.size.width,
+    (_contactButton.frame.size.height * 3));
+  bottomButton = [[UIButton alloc] init];
+  bottomButton.backgroundColor = _addToFavoritesButton.backgroundColor;
+  bottomButton.clipsToBounds = YES;
+  bottomButton.frame = CGRectMake(kResidenceDetailPaddingDouble, 
+    _contactButton.frame.size.height, 
+      (_addToFavoritesView.frame.size.width - 
+        (kResidenceDetailPaddingDouble * 2)), 
+          _contactButton.frame.size.height);
+  bottomButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 20);
+  bottomButton.layer.cornerRadius = 2.0;
+  bottomButton.titleLabel.font    = fontMedium18;
+  [bottomButton addTarget: self action: @selector(addToFavoritesButtonSelected)
+    forControlEvents: UIControlEventTouchUpInside];
+  [bottomButton setBackgroundImage: 
+    [UIImage imageWithColor: [UIColor grayDark]] 
+      forState: UIControlStateHighlighted];
+  [bottomButton setImage: favoriteWhiteImage 
+    forState: UIControlStateNormal];
+  [bottomButton setImage: favoriteWhiteImage 
+    forState: UIControlStateHighlighted];
+  [bottomButton setTitle: @"ADD TO FAVORITES" forState: UIControlStateNormal];
+  [bottomButton setTitleColor: [UIColor whiteColor] 
+    forState: UIControlStateNormal];
+  [_addToFavoritesView addSubview: bottomButton];
 }
 
 - (void) viewDidAppear: (BOOL) animated
@@ -539,6 +635,15 @@ int kResidenceDetailPaddingDouble = 10 * 2;
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
+  if (!_table.delegate)
+    _table.delegate = self;
+  [self adjustFavoriteButtons];
+}
+
+- (void) viewWillDisappear: (BOOL) animated
+{
+  [super viewWillDisappear: animated];
+  _table.delegate = nil;
 }
 
 #pragma mark - Protocol
@@ -574,11 +679,17 @@ viewForAnnotation: (id <MKAnnotation>) annotation
   }
 }
 
+- (void) scrollViewDidScroll: (UIScrollView *) scrollView
+{
+  if ([_contactTextView isFirstResponder])
+    [_contactTextView resignFirstResponder];
+}
+
 #pragma mark - Protocol UITableViewDataSource
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
-  return 6;
+  return 7;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView 
@@ -595,6 +706,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     else if (indexPath.row == 1) {
       cell.selectedBackgroundView = [[UIView alloc] init];
       [cell.contentView addSubview: _infoView];
+    }
+    else if (indexPath.row == 2) {
+      [cell.contentView addSubview: _contactView];
     }
   }
   else if (indexPath.section == 1) {
@@ -618,6 +732,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.row == 0) {
       [cell.contentView addSubview: _similarResidencesView];
     }
+    else if (indexPath.row == [similarResidences count] + 1) {
+      [cell.contentView addSubview: _similarResidenceBottomView];
+    }
     else {
       static NSString *CellIdentifier = @"CellIdentifier";
       OMBResidenceCell *rCell = [tableView dequeueReusableCellWithIdentifier:
@@ -631,6 +748,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       return rCell;
     }
   }
+  else if (indexPath.section == 6) {
+    if (indexPath.row == 0) {
+      cell.backgroundColor = [UIColor clearColor];
+      [cell.contentView addSubview: _addToFavoritesView];
+    }
+  }
   return cell;
 }
 
@@ -639,7 +762,7 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Image scroll and info view
   if (section == 0)
-    return 2;
+    return 3;
   // Available view
   else if (section == 1)
     return 1;
@@ -651,11 +774,14 @@ numberOfRowsInSection: (NSInteger) section
     return 1;
   else if (section == 5) {
     if ([similarResidences count] > 0) {
-      return [similarResidences count] + 1;
+      return [similarResidences count] + 2;
     }
     else {
       return 0;
     }
+  }
+  else if (section == 6) {
+    return 1;
   }
   return 0;
 }
@@ -666,7 +792,7 @@ numberOfRowsInSection: (NSInteger) section
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (indexPath.section == 5) {
-    if (indexPath.row > 0) {
+    if (indexPath.row > 0 && indexPath.row < [similarResidences count] + 1) {
       OMBResidenceDetailViewController *vc = 
         [[OMBResidenceDetailViewController alloc] initWithResidence: 
           [similarResidences objectAtIndex: (indexPath.row - 1)]];
@@ -676,10 +802,10 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 }
 
 - (CGFloat) tableView: (UITableView *) tableView 
-heightForFooterInSection: (NSInteger) section
+heightForHeaderInSection: (NSInteger) section
 {
-  if (section == 0 || section == 1 || section == 2 || section == 3 
-    || section == 4)
+  if (section == 1 || section == 2 || section == 3 
+    || section == 4 || section == 5)
     return kResidenceDetailPaddingDouble;
   return 0;
 }
@@ -694,8 +820,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return _imagesScrollView.frame.size.height;
     }
     // Info view
-    if (indexPath.row == 1) {
+    else if (indexPath.row == 1) {
       return _infoView.frame.size.height;
+    }
+    else if (indexPath.row == 2) {
+      return _contactView.frame.size.height;
     }
   }
   else if (indexPath.section == 1) {
@@ -715,26 +844,41 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return _map.frame.size.height;
   }
   else if (indexPath.section == 5) {
-    if (indexPath.row == 0)
+    if (indexPath.row == 0 || indexPath.row == [similarResidences count] + 1)
       return _similarResidencesView.frame.size.height;
     else {
       CGRect screen = [[UIScreen mainScreen] bounds];
       return (screen.size.height * 0.3) + 1;
     }
   }
+  else if (indexPath.section == 6) {
+    return _addToFavoritesView.frame.size.height;
+  }
   return 0;
 }
 
 - (UIView *) tableView: (UITableView *) tableView 
-viewForFooterInSection: (NSInteger) section
+viewForHeaderInSection: (NSInteger) section
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
   UIView *footerView = [[UIView alloc] init];
-  if (section == 0 || section == 1 || section == 2 || section == 3 
-    || section == 4)
+  if (section == 1 || section == 2 || section == 3 
+    || section == 4 || section == 5)
     footerView.frame = CGRectMake(0, 0, screen.size.width, 
       kResidenceDetailPaddingDouble);
   return footerView;
+}
+
+#pragma mark - Protocol UITextViewDelegate
+
+- (void) textViewDidEndEditing: (UITextView *) textView
+{
+  [self showMenuBarButtonItem];
+}
+
+- (void) textViewDidBeginEditing: (UITextView *) textView
+{
+  [self showDoneEditingBarButtonItem];
 }
 
 #pragma mark - Methods
@@ -761,17 +905,174 @@ viewForFooterInSection: (NSInteger) section
 {
   [similarResidences addObject: object];
   [_table reloadSections: [NSIndexSet indexSetWithIndex: 5] 
-    withRowAnimation: UITableViewRowAnimationTop];
+    withRowAnimation: UITableViewRowAnimationAutomatic];
 }
 
 - (void) addToFavoritesButtonSelected
 {
-  NSLog(@"Add to favorites");
+  if ([[OMBUser currentUser] loggedIn]) {
+    // If user already has this in their favorites
+    if ([[OMBUser currentUser] alreadyFavoritedResidence: residence]) {
+      // Remove it
+      [[OMBUser currentUser] removeResidenceFromFavorite: residence];
+      [UIView animateWithDuration: 0.5 animations: ^{
+        [self makeAddToFavoritesButtonUnselected];
+      }];
+    }
+    else {
+      // Add the favorite
+      OMBFavoriteResidence *favoriteResidence = 
+        [[OMBFavoriteResidence alloc] init];
+      favoriteResidence.createdAt = [[NSDate date] timeIntervalSince1970];
+      favoriteResidence.residence = residence;
+      [[OMBUser currentUser] addFavoriteResidence: favoriteResidence];
+
+      // Change image from white to pink
+      [_addToFavoritesButton setImage: favoritePinkImage
+        forState: UIControlStateNormal];
+      [_addToFavoritesButton setImage: favoritePinkImage
+        forState: UIControlStateHighlighted];
+      [bottomButton setImage: favoritePinkImage
+        forState: UIControlStateNormal];
+      [bottomButton setImage: favoritePinkImage
+        forState: UIControlStateHighlighted];
+
+      // Make image pulse
+      UIImageView *imageView = _addToFavoritesButton.imageView;
+      UIImageView *bottomImageView = bottomButton.imageView;
+      [UIView animateWithDuration: 0.5 delay:0
+        options: UIViewAnimationOptionBeginFromCurrentState
+          animations: ^{
+            bottomImageView.transform = CGAffineTransformMakeScale(0.7, 0.7);
+            imageView.transform       = CGAffineTransformMakeScale(0.7, 0.7);
+            [self makeAddToFavoritesButtonSelected];
+          }
+          completion: ^(BOOL finished){
+            bottomImageView.transform = CGAffineTransformIdentity;
+            imageView.transform       = CGAffineTransformIdentity;
+          }
+        ];
+    }
+    OMBFavoriteResidenceConnection *connection = 
+      [[OMBFavoriteResidenceConnection alloc] initWithResidence: residence];
+    [connection start];
+  }
+  else {
+    OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    [appDelegate showLogin];
+  }
+}
+
+- (void) adjustFavoriteButtons
+{
+  if ([[OMBUser currentUser] loggedIn]) {
+    if ([[OMBUser currentUser] alreadyFavoritedResidence: residence]) {
+      [self makeAddToFavoritesButtonSelected];
+      [_addToFavoritesButton setImage: favoritePinkImage
+        forState: UIControlStateNormal];
+      [_addToFavoritesButton setImage: favoritePinkImage
+        forState: UIControlStateHighlighted];
+      [bottomButton setImage: favoritePinkImage
+        forState: UIControlStateNormal];
+      [bottomButton setImage: favoritePinkImage
+        forState: UIControlStateHighlighted];
+    }
+    else
+      [self makeAddToFavoritesButtonUnselected];
+  }
+}
+
+- (void) callResidencePhone
+{
+  NSString *string = [[residence.phone componentsSeparatedByCharactersInSet: 
+    [[NSCharacterSet decimalDigitCharacterSet] invertedSet]] 
+      componentsJoinedByString: @""];  
+  [[UIApplication sharedApplication] openURL: 
+    [NSURL URLWithString: [NSString stringWithFormat: 
+      @"telprompt:%@", string]]];
+  NSLog(@"%@", string);
 }
 
 - (void) contactButtonSelected
 {
-  NSLog(@"Contact");
+  if (![[OMBUser currentUser] loggedIn]) {
+    OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    [appDelegate showLogin];
+    return;
+  }
+  // Send the message
+  if (showContactTextView) {
+    OMBContactResidenceLandlordConnection *connection = 
+      [[OMBContactResidenceLandlordConnection alloc] initWithResidence:
+        residence message: _contactTextView.text];
+    [connection start];
+
+    [_contactTextView resignFirstResponder];
+    showContactTextView = NO;
+    CGRect frame = _contactView.frame;
+    frame.size.height = (kResidenceDetailPaddingDouble * 2) + 
+      _contactButton.frame.size.height;
+    [_table beginUpdates];
+    _contactView.frame = frame;
+    infoViewBorderBottom.frame = CGRectMake(infoViewBorderBottom.frame.origin.x,
+      _contactView.frame.size.height - infoViewBorderBottom.frame.size.height, 
+        infoViewBorderBottom.frame.size.width, 
+          infoViewBorderBottom.frame.size.height);
+    [_table endUpdates];
+    [UIView animateWithDuration: 0.2 animations: ^{
+      _contactTextView.alpha = 0.0;
+      _contactButton.frame = CGRectMake(_contactButton.frame.origin.x, 
+        kResidenceDetailPaddingDouble, _contactButton.frame.size.width, 
+          _contactButton.frame.size.height);
+      _contactButton.userInteractionEnabled = NO;
+      [_contactButton setBackgroundImage: [UIImage imageWithColor: 
+        [UIColor greenDark]] forState: UIControlStateNormal];
+      [_contactButton setTitle: @"SENT" forState: UIControlStateNormal];
+      callButton.frame = CGRectMake(callButton.frame.origin.x,
+        _contactButton.frame.origin.y, callButton.frame.size.width,
+          callButton.frame.size.height);
+    }];
+  }
+  // Show the contact text view
+  else {
+    showContactTextView = YES;
+    CGRect frame = _contactView.frame;
+    if (showContactTextView)
+      frame.size.height = (kResidenceDetailPaddingDouble * 3) + 
+        _contactTextView.frame.size.height + _contactButton.frame.size.height;
+    else
+      frame.size.height = (kResidenceDetailPaddingDouble * 2) + 
+        _contactButton.frame.size.height;
+    [_table beginUpdates];
+    _contactView.frame = frame;
+    infoViewBorderBottom.frame = CGRectMake(infoViewBorderBottom.frame.origin.x,
+      _contactView.frame.size.height - infoViewBorderBottom.frame.size.height, 
+        infoViewBorderBottom.frame.size.width, 
+          infoViewBorderBottom.frame.size.height);
+    [_table endUpdates];
+    [UIView animateWithDuration: 0.3 delay: 0.15 
+      options: UIViewAnimationOptionCurveLinear animations: ^{
+        _contactTextView.alpha = 1.0;
+    } completion: nil];
+    [UIView animateWithDuration: 0.3 animations: ^{
+      float contactButtonWidth = _contactButton.frame.size.width * 0.4;
+      _contactButton.frame = CGRectMake(
+        (_contactView.frame.size.width - 
+          (contactButtonWidth + kResidenceDetailPaddingDouble)), 
+        (_contactTextView.frame.origin.y + _contactTextView.frame.size.height +
+          kResidenceDetailPaddingDouble), contactButtonWidth, 
+            _contactButton.frame.size.height);
+      [_contactButton setTitle: @"SEND" forState: UIControlStateNormal];
+      if ([residence.phone length] > 0)
+        callButton.alpha = 1.0;
+      callButton.frame = CGRectMake(callButton.frame.origin.x,
+        _contactButton.frame.origin.y, _contactButton.frame.size.width,
+          _contactButton.frame.size.height);
+    }];
+  }
+  [_table scrollToRowAtIndexPath: 
+    [NSIndexPath indexPathForRow: 2 inSection: 0] 
+      atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
 - (int) currentPageOfImages
@@ -780,12 +1081,62 @@ viewForFooterInSection: (NSInteger) section
     _imagesScrollView.contentOffset.x / _imagesScrollView.frame.size.width);
 }
 
+- (void) currentUserLogout
+{
+  [self hideContact];
+  [self makeAddToFavoritesButtonUnselected];
+}
+
+- (void) hideContact
+{
+  [_contactTextView resignFirstResponder];
+  showContactTextView = NO;
+  CGRect frame = _contactView.frame;
+  frame.size.height = (kResidenceDetailPaddingDouble * 2) + 
+    _contactButton.frame.size.height;
+  [_table beginUpdates];
+  _contactView.frame = frame;
+  infoViewBorderBottom.frame = CGRectMake(infoViewBorderBottom.frame.origin.x,
+    _contactView.frame.size.height - infoViewBorderBottom.frame.size.height, 
+      infoViewBorderBottom.frame.size.width, 
+        infoViewBorderBottom.frame.size.height);
+  [_table endUpdates];
+  [UIView animateWithDuration: 0.2 animations: ^{
+    _contactTextView.alpha = 0.0;
+    _contactButton.frame = CGRectMake(_rentLabel.frame.origin.x, 
+      kResidenceDetailPaddingDouble, _rentLabel.frame.size.width, 
+        _contactButton.frame.size.height);
+    [_contactButton setTitle: @"CONTACT" forState: UIControlStateNormal];
+    callButton.alpha = 0.0;
+  }];
+}
+
+- (void) makeAddToFavoritesButtonSelected
+{
+  [bottomButton setTitle: @"ADDED TO FAVORITES" forState: UIControlStateNormal];
+}
+
+- (void) makeAddToFavoritesButtonUnselected
+{
+  [bottomButton setTitle: @"ADD TO FAVORITES" forState: UIControlStateNormal];
+  [_addToFavoritesButton setImage: favoriteWhiteImage
+    forState: UIControlStateNormal];
+  [_addToFavoritesButton setImage: favoriteWhiteImage
+    forState: UIControlStateHighlighted];
+  [bottomButton setImage: favoriteWhiteImage
+    forState: UIControlStateNormal];
+  [bottomButton setImage: favoriteWhiteImage
+    forState: UIControlStateHighlighted];
+}
+
 - (void) refreshResidenceData
 {
   [_table beginUpdates];
   // Square feet
   _squareFeetLabel.text = [NSString stringWithFormat: @"%i", 
     residence.squareFeet];
+  // Contact message
+  _contactTextView.text = [residence defaultContactMessage];
   // Available on
   _availableLabel.text = [residence availableOnString];
   // Lease months

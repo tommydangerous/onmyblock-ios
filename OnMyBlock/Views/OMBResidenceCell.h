@@ -11,6 +11,12 @@
 @class OMBResidence;
 
 @interface OMBResidenceCell : UITableViewCell
+{
+  UIButton *addToFavoritesButton;
+  UIImage *minusFavoriteImage;
+  UIImage *plusFavoriteImage;
+  OMBResidence *residence;
+}
 
 @property (nonatomic, strong) UILabel *bedBathLabel;
 @property (nonatomic, strong) UIImageView *imageView;
@@ -20,6 +26,6 @@
 
 #pragma mark - Instance Methods
 
-- (void) loadResidenceData: (OMBResidence *) residence;
+- (void) loadResidenceData: (OMBResidence *) object;
 
 @end

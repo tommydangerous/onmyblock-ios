@@ -44,6 +44,7 @@
 - (NSString *) availableOnString;
 - (UIImage *) coverPhoto;
 - (UIImage *) coverPhotoWithSize: (CGSize) size;
+- (NSString *) defaultContactMessage;
 - (NSString *) dictionaryKey;
 - (NSArray *) imagesArray;
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary;

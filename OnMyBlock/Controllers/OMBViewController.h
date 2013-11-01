@@ -8,6 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+#import "OMBAppDelegate.h"
+#import "OMBTabBarController.h"
+
 @interface OMBViewController : UIViewController
+{
+  UIBarButtonItem *doneEditingBarButtonItem;
+  UIBarButtonItem *menuBarButtonItem;
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) showDoneEditingBarButtonItem;
+- (void) showMenuBarButtonItem;
 
 @end

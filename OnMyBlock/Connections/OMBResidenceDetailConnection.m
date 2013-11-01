@@ -20,7 +20,7 @@
 
   residence = object;
   NSString *string = [NSString stringWithFormat: 
-    @"%@/places/%i.json", OnMyBlockAPIURL, residence.uid];
+    @"%@/places/%i/", OnMyBlockAPIURL, residence.uid];
   [self setRequestFromString: string];
 
   return self;

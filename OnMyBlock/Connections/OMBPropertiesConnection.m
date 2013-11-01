@@ -19,7 +19,7 @@
   if (self) {
     // http://localhost:3000/properties.json?
     NSString *string = [NSString stringWithFormat:
-      @"%@/properties.json/?", OnMyBlockAPIURL];
+      @"%@/properties/?", OnMyBlockAPIURL];
     // Add parameters to the end of string
     // e.g. bounds=[-117.0459,32.836,-117.2931,32.7687]
     for (NSString *key in [parameters allKeys]) {

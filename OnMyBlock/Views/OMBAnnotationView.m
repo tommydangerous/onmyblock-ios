@@ -12,6 +12,7 @@
 
 #import "OCMapView.h"
 #import "OMBAnnotation.h"
+#import "OMBAnnotationCity.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
 
@@ -72,8 +73,17 @@ reuseIdentifier: (NSString *) reuseIdentifier
   float dimension = DEFAULT_DIMENSION;
   NSString *text  = @"1";
   [self deselect];
+  // If a city
+  if ([annotation isKindOfClass: [OMBAnnotationCity class]]) {
+    int number = [annotation.title intValue];
+    dimension = (DEFAULT_DIMENSION * 1.1) * 1.1 * (number / 10);
+    if (dimension > DEFAULT_DIMENSION * 3 * (1 + DEFAULT_BORDER_PERCENTAGE))
+      dimension = DEFAULT_DIMENSION * 3 * (1 + DEFAULT_BORDER_PERCENTAGE);
+    OMBAnnotationCity *annotationCity = annotation;
+    text = annotationCity.cityName;
+  }
   // If it is a cluster
-  if ([annotation isKindOfClass: [OCAnnotation class]]) {
+  else if ([annotation isKindOfClass: [OCAnnotation class]]) {
     int number = 
       (int) [[(OCAnnotation *) annotation annotationsInCluster] count];
     if (number > 10)

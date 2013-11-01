@@ -41,6 +41,7 @@
 
 - (void) addAnnotationAtCoordinate: (CLLocationCoordinate2D) coordinate
 withTitle: (NSString *) title;
+- (void) addAnnotations: (NSArray *) annotations;
 - (void) refreshProperties;
 - (void) reloadTable;
 - (void) removeAllAnnotations;
