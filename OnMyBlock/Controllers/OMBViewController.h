@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+#import "GAITrackedViewController.h"
+
 #import "OMBAppDelegate.h"
 #import "OMBTabBarController.h"
 
-@interface OMBViewController : UIViewController
+@interface OMBViewController : GAITrackedViewController
 {
   UIBarButtonItem *doneEditingBarButtonItem;
   UIBarButtonItem *menuBarButtonItem;

@@ -13,7 +13,7 @@ NSMutableArray *sharedConnectionList  = nil;
 NSString *const OnMyBlockAPI          = @"/api-v1";
 
 // Production server
-NSString *const OnMyBlockAPIURL = @"http://onmyblock.com/api-v1";
+NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
 // Staging server
 // NSString *const OnMyBlockAPIURL = @"http://ombrb.nodelist.com/api-v1";
 

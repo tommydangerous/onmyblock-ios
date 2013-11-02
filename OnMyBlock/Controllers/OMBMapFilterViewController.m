@@ -38,6 +38,7 @@ const int kPadding = 20;
   if (self) {
     self.edgesForExtendedLayout = 
       (UIRectEdgeBottom | UIRectEdgeLeft | UIRectEdgeRight);
+    self.screenName = @"Map Filter View Controller";
     self.title = @"Filter";
   }
   return self;
@@ -507,6 +508,12 @@ const int kPadding = 20;
   listView.contentSize = CGSizeMake(
     listView.frame.size.width, 
       ([priceList count] * minRentTextField.frame.size.height));
+
+  if (listView.contentSize.height < listView.frame.size.height) {
+    CGRect frame = listView.frame;
+    frame.size.height = listView.contentSize.height;
+    listView.frame = frame;
+  }
 }
 
 - (void) dismissViewController

@@ -42,6 +42,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 {
   self = [super init];
   if (self) {
+    self.screenName = @"Map View Controller";
     // self.title = @"Map";
     // Location manager
     locationManager                 = [[CLLocationManager alloc] init];
@@ -177,9 +178,17 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // Find user's location
   [locationManager startUpdatingLocation];
 
+  // Unused collection view
   _collectionView.backgroundColor = [UIColor backgroundColor];
   [_collectionView registerClass: [OMBResidenceCollectionViewCell class] 
     forCellWithReuseIdentifier: CollectionCellIdentifier];
+}
+
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+  // This causes image flickering when going back from residence detail
+  // [self mapView: _mapView regionDidChangeAnimated: NO];
 }
 
 #pragma mark - Protocol
@@ -424,8 +433,7 @@ withTitle: (NSString *) title;
 
 - (void) addAnnotations: (NSArray *) annotations
 {
-  int count = [annotations count];
-  NSLog(@"Count: %i", count);
+  int count = (int) [annotations count];
   [_mapView removeAnnotations: _mapView.annotations];
   if (count < 700)
     [_mapView addAnnotations: annotations];
@@ -439,7 +447,6 @@ withTitle: (NSString *) title;
     annotation.title      = [NSString stringWithFormat: @"%i", count];
     [_mapView addAnnotation: annotation];
   }
-  NSLog(@"Annotations: %i", [_mapView.annotations count]);
 }
 
 - (void) deselectAnnotations
@@ -456,10 +463,12 @@ withTitle: (NSString *) title;
 - (void) foundLocations: (NSArray *) locations
 {
   CLLocationCoordinate2D coordinate;
-  for (CLLocation *location in locations) {
-    coordinate = location.coordinate;
+  if ([locations count]) {
+    for (CLLocation *location in locations) {
+      coordinate = location.coordinate;
+    }
+    [self setMapViewRegion: coordinate withMiles: 2];
   }
-  [self setMapViewRegion: coordinate withMiles: 2];
   [locationManager stopUpdatingLocation];
 }
 

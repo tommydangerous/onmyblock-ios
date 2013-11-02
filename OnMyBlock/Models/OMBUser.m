@@ -9,6 +9,7 @@
 #import "OMBUser.h"
 
 #import "OMBAppDelegate.h"
+#import "OMBFavoritesListConnection.h"
 #import "OMBFavoriteResidence.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
@@ -89,9 +90,11 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   OMBUserFacebookAuthenticationConnection *connection = 
     [[OMBUserFacebookAuthenticationConnection alloc] initWithUser: self];
   connection.completionBlock = ^(NSError *error) {
-    if ([[OMBUser currentUser] loggedIn])
+    if ([[OMBUser currentUser] loggedIn]) {
+      [self fetchFavorites];
       [[NSNotificationCenter defaultCenter] postNotificationName: 
         OMBUserLoggedInNotification object: nil];
+    }
   };
   [connection start];
   NSLog(@"Authenticate with server");
@@ -109,6 +112,11 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
     [array addObject: favoriteResidence.residence];
   }
   return array;
+}
+
+- (void) fetchFavorites
+{
+  [[[OMBFavoritesListConnection alloc] init] start];
 }
 
 - (BOOL) loggedIn
@@ -221,7 +229,7 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   NSString *key = [NSString stringWithFormat: @"%i", residence.uid];
   OMBFavoriteResidence *favoriteResidence = [_favorites objectForKey: key];
   if (favoriteResidence) {
-    NSUInteger index = [[self favoritesArray] indexOfObjectPassingTest:
+    int index = (int) [[self favoritesArray] indexOfObjectPassingTest:
       ^BOOL (OMBResidence* residence, NSUInteger idx, BOOL *stop) {
         return residence.uid == favoriteResidence.residence.uid;
       }
@@ -229,7 +237,7 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
     [_favorites removeObjectForKey: key];
     [[NSNotificationCenter defaultCenter] postNotificationName:
       OMBCurrentUserChangedFavorite object: nil userInfo: @{
-        @"index": [NSNumber numberWithUnsignedInt: index]
+        @"index": [NSNumber numberWithInt: index]
       }];
   }
 }

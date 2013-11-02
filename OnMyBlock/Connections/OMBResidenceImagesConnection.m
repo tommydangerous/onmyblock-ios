@@ -79,7 +79,7 @@
         // Update the number of pages for the images scroll view
         viewController.pageOfImagesLabel.text = [NSString stringWithFormat:
           @"%i/%i", [viewController currentPageOfImages], 
-            [[residence imagesArray] count]];
+            (int) [[residence imagesArray] count]];
         [super connectionDidFinishLoading: connection];
       };
       downloader.imageURL = [NSURL URLWithString: string];

@@ -25,6 +25,8 @@
 {
   if (!(self = [super init])) return nil;
 
+  self.screenName = [NSString stringWithFormat: 
+    @"Favorites List View Controller - User ID: %i", [OMBUser currentUser].uid];
   self.title = @"Favorites";
   // [[NSNotificationCenter defaultCenter] addObserver: self
   //   selector: @selector(reloadTable)
@@ -32,9 +34,9 @@
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(currentUserChangedFavorite:)
       name: OMBCurrentUserChangedFavorite object: nil];
-  [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(fetchFavorites)
-      name: OMBUserLoggedInNotification object: nil];
+  // [[NSNotificationCenter defaultCenter] addObserver: self
+  //   selector: @selector(fetchFavorites)
+  //     name: OMBUserLoggedInNotification object: nil];
 
   return self;
 }
