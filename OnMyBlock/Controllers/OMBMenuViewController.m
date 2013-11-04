@@ -28,6 +28,8 @@
 {
   if (!(self = [super init])) return nil;
 
+  self.screenName = @"Menu View Controller";
+
   buttons = [NSMutableArray array];
   OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
   tabBarController = appDelegate.tabBarController;

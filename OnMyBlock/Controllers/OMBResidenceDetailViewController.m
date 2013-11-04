@@ -59,6 +59,8 @@ int kResidenceDetailPaddingDouble = 10 * 2;
   residence           = object;
   showContactTextView = NO;
   similarResidences   = [NSMutableArray array];
+  self.screenName = [NSString stringWithFormat:
+    @"Residence Detail View Controller - Residence ID: %i", residence.uid];
   self.title = [residence.address capitalizedString];
   _imageSlideViewController = 
     [[OMBResidenceImageSlideViewController alloc] initWithResidence: residence];

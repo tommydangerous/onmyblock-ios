@@ -27,6 +27,7 @@
 
   self.edgesForExtendedLayout = 
     (UIRectEdgeBottom | UIRectEdgeLeft | UIRectEdgeRight);
+  self.screenName = @"Login View Controller";
   self.title = @"Login";
 
   return self;

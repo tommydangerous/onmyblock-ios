@@ -6,7 +6,8 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import "TestFlight.h"
+#import <NewRelicAgent/NewRelicAgent.h>
+#import "GAI.h"
 
 #import "OMBAppDelegate.h"
 
@@ -30,7 +31,18 @@ NSString *const FBSessionStateChangedNotification =
 - (BOOL) application: (UIApplication *) application 
 didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
-  [TestFlight takeOff: @"15e1558a-a34f-4a2f-b224-5df00bfd1d28"];
+  [NewRelicAgent startWithApplicationToken:
+    @"AA232e12d9b2fba4fa3e73a8f3e6b102a75fc517a2"];
+
+  // Optional: automatically send uncaught exceptions to Google Analytics.
+  [GAI sharedInstance].trackUncaughtExceptions = YES;
+  // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
+  [GAI sharedInstance].dispatchInterval = 20;
+  // Optional: set Logger to VERBOSE for debug information.
+  [[[GAI sharedInstance] logger] setLogLevel: kGAILogLevelVerbose];
+  // Initialize tracker.
+  id <GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:
+    @"UA-45382533-1"];
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];

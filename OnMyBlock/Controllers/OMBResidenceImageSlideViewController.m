@@ -25,6 +25,9 @@
   if (!(self = [super init])) return nil;
 
   residence = object;
+  self.screenName = [NSString stringWithFormat:
+    @"Residence Images Slide View Controller - Residence ID: %i",
+      residence.uid];
 
   return self;
 }
