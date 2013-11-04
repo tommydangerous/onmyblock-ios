@@ -126,4 +126,59 @@
       @"Residence should parse zip correctly");
 }
 
+- (void) TestavailableOnString :(NSString *) expectedString : (OMBResidence *) testResidence
+{
+  XCTAssertTrue(([expectedString isEqualToString: testResidence.availableOnString],
+                 @"Supposed to be correct"));
+}
+
+- (void) TestcoverPhoto : (UIImage *) indexZeroPhoto : (OMBResidence *) testResidence
+{
+  XCTAssertEqualObjects([[testResidence imagesArray] objectAtIndex:0], indexZeroPhoto,
+                @"If the image and given image are same then it returns true and assertion success");
+}
+
+- (void) TestcoverPhotoWithSize: (CGSize) testSize : (OMBResidence *) testResidence
+{
+  //what to test??
+  
+}
+
+- (void) TestdictionaryKey : (NSString *) testFormatedString : (OMBResidence *) testResidence
+{
+  XCTAssertEqualObjects( testFormatedString, [testResidence dictionaryKey],
+                        @"Supposed to be -- latitude,longitude,-address format");
+}
+
+- (void) TestimagesArray
+{
+  
+}
+
+- (void) TestReadFromPropertyDictionary: (NSDictionary *) dictionary
+{
+  // Sample JSON
+  //   {
+  //     ad: 8550 fun street,  // Address
+  //     available_on: "Soon", // Available on
+  //     ba: 0,                // Bathrooms
+  //     bd: 0,                // Bedrooms
+  //     id: 10,               // ID
+  //     lat: 32.79383,        // Latitude
+  //     lease_months: null,   // Lease months
+  //     lng: -117.07943,      // Longitude
+  //     rt: 0                 // Rent
+  //   }
+}
+
+- (void) TestReadFromResidenceDictionary: (NSDictionary *) dictionary
+{
+  
+}
+
+- (void) TestrentToCurrencyString
+{
+  
+}
+
 @end
