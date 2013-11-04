@@ -126,36 +126,36 @@
       @"Residence should parse zip correctly");
 }
 
-- (void) TestavailableOnString :(NSString *) expectedString : (OMBResidence *) testResidence
+- (void) testavailableOnString :(NSString *) expectedString : (OMBResidence *) testResidence
 {
   XCTAssertTrue(([expectedString isEqualToString: testResidence.availableOnString],
                  @"Supposed to be correct"));
 }
 
-- (void) TestcoverPhoto : (UIImage *) indexZeroPhoto : (OMBResidence *) testResidence
+- (void) testcoverPhoto : (UIImage *) indexZeroPhoto : (OMBResidence *) testResidence
 {
   XCTAssertEqualObjects([[testResidence imagesArray] objectAtIndex:0], indexZeroPhoto,
                 @"If the image and given image are same then it returns true and assertion success");
 }
 
-- (void) TestcoverPhotoWithSize: (CGSize) testSize : (OMBResidence *) testResidence
+- (void) testcoverPhotoWithSize: (CGSize) testSize : (OMBResidence *) testResidence
 {
   //what to test??
   
 }
 
-- (void) TestdictionaryKey : (NSString *) testFormatedString : (OMBResidence *) testResidence
+- (void) testdictionaryKey : (NSString *) testFormatedString : (OMBResidence *) testResidence
 {
   XCTAssertEqualObjects( testFormatedString, [testResidence dictionaryKey],
                         @"Supposed to be -- latitude,longitude,-address format");
 }
 
-- (void) TestimagesArray
+- (void) testimagesArray
 {
   
 }
 
-- (void) TestReadFromPropertyDictionary: (NSDictionary *) dictionary
+- (void) testReadFromPropertyDictionary: (NSDictionary *) dictionary
 {
   // Sample JSON
   //   {
@@ -171,12 +171,12 @@
   //   }
 }
 
-- (void) TestReadFromResidenceDictionary: (NSDictionary *) dictionary
+- (void) testReadFromResidenceDictionary: (NSDictionary *) dictionary
 {
   
 }
 
-- (void) TestrentToCurrencyString
+- (void) testrentToCurrencyString
 {
   
 }
