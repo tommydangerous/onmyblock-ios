@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *const OMBActivityIndicatorViewStartAnimatingNotification;
+extern NSString *const OMBActivityIndicatorViewStopAnimatingNotification;
 extern NSString *const OMBCurrentUserChangedFavorite;
 extern NSString *const OMBCurrentUserLogoutNotification;
 extern NSString *const OMBUserLoggedInNotification;

@@ -12,6 +12,7 @@
 #import "OMBAppDelegate.h"
 
 #import "MFSideMenu.h"
+#import "OMBIntroViewController.h"
 #import "OMBLoginViewController.h"
 #import "OMBMenuViewController.h"
 #import "OMBNavigationController.h"
@@ -24,9 +25,10 @@ NSString *const FBSessionStateChangedNotification =
 
 @implementation OMBAppDelegate
 
-@synthesize menuContainer    = _menuContainer;
-@synthesize rightMenu        = _rightMenu;
-@synthesize tabBarController = _tabBarController;
+@synthesize introViewController = _introViewController;
+@synthesize menuContainer       = _menuContainer;
+@synthesize rightMenu           = _rightMenu;
+@synthesize tabBarController    = _tabBarController;
 
 - (BOOL) application: (UIApplication *) application 
 didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
@@ -44,10 +46,17 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   id <GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:
     @"UA-45382533-1"];
 
+  // Notifications
+  // When user logs out, show the intro view controller
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(showIntro) name: OMBUserLoggedOutNotification
+      object: nil];
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
 
   // View controllers
+  _introViewController = [[OMBIntroViewController alloc] init];
   _loginViewController =
     [[OMBNavigationController alloc] initWithRootViewController:
       [[OMBLoginViewController alloc] init]];
@@ -69,6 +78,10 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded)
     // If current session has a valid Facebook token
     [self openSession];
+
+  // If user is not signed in, show the intro view controller
+  if (![[OMBUser currentUser] loggedIn])
+    [self showIntro];
 
   return YES;
 }
@@ -123,6 +136,9 @@ state: (FBSessionState) state error: (NSError *) error
     // If the user was or is logged in
     case FBSessionStateOpen: {
       [OMBUser currentUser];
+      // Dismiss the intro view controller
+      [_introViewController dismissViewControllerAnimated: NO
+        completion: nil];
       // Dismiss login view controller
       [_loginViewController dismissViewControllerAnimated: NO
         completion: nil];
@@ -146,6 +162,15 @@ state: (FBSessionState) state error: (NSError *) error
         cancelButtonTitle: @"Try again" otherButtonTitles: nil];
     [alertView show];
   }
+}
+
+- (void) showIntro
+{
+  _introViewController.scroll.contentOffset = CGPointZero;
+  UINavigationController *nav = 
+    (UINavigationController *) _tabBarController.selectedViewController;
+  [nav.topViewController presentViewController: _introViewController
+    animated: YES completion: nil];
 }
 
 - (void) showLogin

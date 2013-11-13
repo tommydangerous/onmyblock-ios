@@ -11,10 +11,15 @@
 #import "OMBAppDelegate.h"
 #import "OMBFavoritesListConnection.h"
 #import "OMBFavoriteResidence.h"
+#import "OMBIntroViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
 #import "OMBUserFacebookAuthenticationConnection.h"
 
+NSString *const OMBActivityIndicatorViewStartAnimatingNotification =
+  @"OMBActivityIndicatorViewStartAnimatingNotification";
+NSString *const OMBActivityIndicatorViewStopAnimatingNotification =
+  @"OMBActivityIndicatorViewStopAnimatingNotification";
 NSString *const OMBCurrentUserChangedFavorite = 
   @"OMBCurrentUserChangedFavorite";
 NSString *const OMBCurrentUserLogoutNotification = 
@@ -91,10 +96,19 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
     [[OMBUserFacebookAuthenticationConnection alloc] initWithUser: self];
   connection.completionBlock = ^(NSError *error) {
     if ([[OMBUser currentUser] loggedIn]) {
+      // Load the user's favorites
       [self fetchFavorites];
+      // Post notification
       [[NSNotificationCenter defaultCenter] postNotificationName: 
         OMBUserLoggedInNotification object: nil];
+      // Hide the intro view controller
+      OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+      [appDelegate.introViewController dismissViewControllerAnimated: YES
+        completion: nil];
     }
+    // Tell all the activity indicators to stop spinning
+    [[NSNotificationCenter defaultCenter] postNotificationName:
+      OMBActivityIndicatorViewStopAnimatingNotification object: nil];
   };
   [connection start];
   NSLog(@"Authenticate with server");
