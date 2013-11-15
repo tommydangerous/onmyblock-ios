@@ -9,6 +9,7 @@
 #import "OMBLoginViewController.h"
 
 #import "OMBLoginConnection.h"
+#import "OMBIntroViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBSignUpConnection.h"
 #import "OMBUser.h"
@@ -25,6 +26,13 @@
 {
   if (!(self = [super init])) return nil;
 
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(startSpinning) 
+      name: OMBActivityIndicatorViewStartAnimatingNotification object: nil];
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(stopSpinning) 
+      name: OMBActivityIndicatorViewStopAnimatingNotification object: nil];
+
   self.edgesForExtendedLayout = 
     (UIRectEdgeBottom | UIRectEdgeLeft | UIRectEdgeRight);
   self.screenName = @"Login View Controller";
@@ -39,13 +47,12 @@
 
 - (void) loadView
 {
-  int padding = 20;
-
   [super loadView];
 
   CGRect screen = [[UIScreen mainScreen] bounds];
-
   self.view = [[UIView alloc] initWithFrame: screen];
+
+  int padding = 20;
 
   // Navigation item
   // Left bar button item
@@ -60,8 +67,13 @@
     style: UIBarButtonItemStylePlain target: self 
       action: @selector(showSignUp)];
   self.navigationItem.rightBarButtonItem = signUpBarButtonItem;
-    
 
+  scroll = [[UIScrollView alloc] init];
+  scroll.alwaysBounceVertical = YES;
+  scroll.frame = screen;
+  scroll.showsVerticalScrollIndicator = NO;
+  [self.view addSubview: scroll];
+    
   // Facebook button
   facebookButton = [[UIButton alloc] init];
   facebookButton.backgroundColor = [UIColor facebookBlue];
@@ -79,7 +91,7 @@
   [facebookButton setBackgroundImage: 
     [UIImage imageWithColor: [UIColor facebookBlueDark]] 
       forState: UIControlStateHighlighted];
-  [self.view addSubview: facebookButton];
+  [scroll addSubview: facebookButton];
   UIImageView *facebookImageView = [[UIImageView alloc] init];
   facebookImageView.frame = CGRectMake((padding / 2.0), (padding / 2.0), 
     30, 30);
@@ -91,7 +103,7 @@
   orView.frame = CGRectMake(0, (facebookButton.frame.origin.y + 
     facebookButton.frame.size.height + padding), screen.size.width, 
       facebookButton.frame.size.height);
-  [self.view addSubview: orView];
+  [scroll addSubview: orView];
   UILabel *orLabel = [[UILabel alloc] init];
   orLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
   orLabel.frame = CGRectMake(0, 0, orView.frame.size.width, 
@@ -142,7 +154,7 @@
   nameImageView.image = [UIImage image: [UIImage imageNamed: @"user_icon.png"]
     size: nameImageView.frame.size];
   [nameRightView addSubview: nameImageView];
-  [self.view addSubview: nameTextField];
+  [scroll addSubview: nameTextField];
 
   // Email
   emailTextField = [[TextFieldPadding alloc] init];
@@ -170,7 +182,7 @@
   emailImageView.image = [UIImage image: [UIImage imageNamed: @"email_icon.png"]
     size: emailImageView.frame.size];
   [emailRightView addSubview: emailImageView];
-  [self.view addSubview: emailTextField];
+  [scroll addSubview: emailTextField];
 
   // Password
   passwordTextField = [[TextFieldPadding alloc] init];
@@ -202,7 +214,7 @@
     [UIImage imageNamed: @"password_icon.png"]
       size: emailImageView.frame.size];
   [passwordRightView addSubview: passwordImageView];
-  [self.view addSubview: passwordTextField];
+  [scroll addSubview: passwordTextField];
 
   loginButton = [[UIButton alloc] init];
   loginButton.backgroundColor = [UIColor blue];
@@ -218,12 +230,22 @@
   [loginButton setTitle: @"LOGIN" forState: UIControlStateNormal];
   [loginButton setBackgroundImage: [UIImage imageWithColor: [UIColor blueDark]]
     forState: UIControlStateHighlighted];
-  [self.view addSubview: loginButton];
+  [scroll addSubview: loginButton];
+
+  activityIndicatorView = 
+    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
+      UIActivityIndicatorViewStyleWhiteLarge];
+  activityIndicatorView.color = [UIColor grayDark];
+  activityIndicatorView.frame = CGRectMake(((screen.size.width - 60) / 2.0),
+    ((screen.size.height - (20 + 40 + 60)) / 2.0), 60, 60);
+  [self.view addSubview: activityIndicatorView];
+
+  [self updateScrollContentSize];
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
-  [self resetViewOrigins];
+  [self updateScrollContentSize];
 }
 
 #pragma mark - Protocol
@@ -232,14 +254,30 @@
 
 - (void) textFieldDidBeginEditing: (UITextField *) textField
 {
-  float y = 20 - textField.frame.origin.y;
-  [self moveViewsToPoint: CGPointMake(0, y)];
+  // Height of the new content size should be where the login button is
+  // plus padding plus keyboard height of 216
+  float height = (20 + 40 + loginButton.frame.origin.y + 
+    loginButton.frame.size.height + 20 + 216);
+  // Scroll near to the bottom
+  float y = height - 
+    (20 + scroll.frame.size.height + loginButton.frame.size.height);
+  if (y < 0)
+    y = 0;
+  CGPoint point = CGPointMake(scroll.contentOffset.x, y);  
+  [UIView animateWithDuration: 0.25 animations: ^{
+      scroll.contentOffset = point;
+    } completion: ^(BOOL finished) {
+      scroll.contentSize = CGSizeMake(scroll.contentSize.width, height);
+    }
+  ];
 }
 
 - (BOOL) textFieldShouldReturn: (UITextField *) textField
 {
-  [self resetViewOrigins];
-  [self loginOrSignUp];
+  [textField resignFirstResponder];
+  [UIView animateWithDuration: 0.25 animations: ^{
+    [self updateScrollContentSize];
+  }];
   return YES;
 }
 
@@ -250,8 +288,22 @@
 - (void) close
 {
   OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  [appDelegate.loginViewController dismissViewControllerAnimated: YES
+  [appDelegate.introViewController dismissViewControllerAnimated: YES
     completion: nil];
+}
+
+- (void) hideLoginAndIntro
+{
+  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+  [self dismissViewControllerAnimated: YES
+    completion: ^{
+      [appDelegate.introViewController dismissViewControllerAnimated: YES
+        completion: nil];
+    }
+  ];
+  emailTextField.text    = @"";
+  nameTextField.text     = @"";
+  passwordTextField.text = @"";
 }
 
 - (void) login
@@ -265,14 +317,8 @@
       [[OMBLoginConnection alloc] initWithParameters: dictionary];
     connection.completionBlock = ^(NSError *error) {
       // User logged in
-      if ([OMBUser currentUser].accessToken) {
-        OMBAppDelegate *appDelegate = 
-          [UIApplication sharedApplication].delegate;
-        [appDelegate.loginViewController dismissViewControllerAnimated: YES
-          completion: nil];
-        emailTextField.text    = @"";
-        passwordTextField.text = @"";
-      }
+      if ([OMBUser currentUser].accessToken)
+        [self hideLoginAndIntro];
       // User failed to login
       else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
@@ -280,12 +326,16 @@
             cancelButtonTitle: @"Try again" otherButtonTitles: nil];
         [alertView show];
         passwordTextField.text = @"";
-        [self resetViewOrigins];
       }
+      [self stopSpinning];    
     };
+    [self startSpinning];
     [connection start];
   }
   [self.view endEditing: YES];
+  [UIView animateWithDuration: 0.25 animations: ^{
+    [self updateScrollContentSize];
+  }];
 }
 
 - (void) loginOrSignUp
@@ -315,7 +365,7 @@
     options: UIViewAnimationOptionCurveEaseInOut animations: ^{
       facebookButton.frame    = facebookButtonFrame;
       orView.frame            = orViewFrame;
-      nameTextField.frame    = nameTextFieldFrame;
+      nameTextField.frame     = nameTextFieldFrame;
       emailTextField.frame    = emailTextFieldFrame;
       passwordTextField.frame = passwordTextFieldFrame;
       loginButton.frame       = loginButtonFrame;
@@ -323,14 +373,10 @@
   ];
 }
 
-- (void) resetViewOrigins
-{
-  float y = 20 + (facebookButton.frame.origin.y * -1);
-  [self moveViewsToPoint: CGPointMake(0, y)];
-}
-
 - (void) showFacebookLogin
 {
+  [[NSNotificationCenter defaultCenter] postNotificationName:
+    OMBActivityIndicatorViewStartAnimatingNotification object: nil];
   OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
   [appDelegate openSession];
 }
@@ -360,8 +406,8 @@
   }
   [self.navigationItem setRightBarButtonItem: signUpBarButtonItem 
     animated: YES];
-  [self resetViewOrigins];
   [self.view endEditing: YES];
+  [self updateScrollContentSize];
 }
 
 - (void) showSignUp
@@ -388,8 +434,8 @@
     }];
   }  
   [self.navigationItem setRightBarButtonItem: loginBarButtonItem animated: YES];
-  [self resetViewOrigins];
   [self.view endEditing: YES];
+  [self updateScrollContentSize];
 }
 
 - (void) signUp
@@ -406,27 +452,41 @@
       [[OMBSignUpConnection alloc] initWithParameters: dictionary];
     connection.completionBlock = ^(NSError *error) {
       // User signed up
-      if ([OMBUser currentUser].accessToken) {
-        OMBAppDelegate *appDelegate = 
-          [UIApplication sharedApplication].delegate;
-        [appDelegate.loginViewController dismissViewControllerAnimated: YES
-          completion: nil];
-        nameTextField.text     = @"";
-        emailTextField.text    = @"";
-        passwordTextField.text = @"";
-      }
+      if ([OMBUser currentUser].accessToken)
+        [self hideLoginAndIntro];
       // User failed to sign up
       else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
           @"Sign up failed" message: @"Please try again" delegate: nil
             cancelButtonTitle: @"Try again" otherButtonTitles: nil];
         [alertView show];
-        [self resetViewOrigins];
       }
+      [self stopSpinning];
     };
+    [self startSpinning];
     [connection start];
   }
   [self.view endEditing: YES];
+  [UIView animateWithDuration: 0.25 animations: ^{
+    [self updateScrollContentSize];
+  }];
+}
+
+- (void) startSpinning
+{
+  [activityIndicatorView startAnimating];
+}
+
+- (void) stopSpinning
+{
+  [activityIndicatorView stopAnimating];
+}
+
+- (void) updateScrollContentSize
+{
+  scroll.contentSize = CGSizeMake(scroll.frame.size.width,
+    (loginButton.frame.origin.y + loginButton.frame.size.height + 
+      20));
 }
 
 @end

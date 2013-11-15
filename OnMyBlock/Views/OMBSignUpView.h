@@ -1,35 +1,35 @@
 //
-//  OMBLoginViewController.h
+//  OMBSignUpView.h
 //  OnMyBlock
 //
-//  Created by Tommy DANGerous on 10/30/13.
+//  Created by Tommy DANGerous on 11/8/13.
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import "OMBViewController.h"
+#import <UIKit/UIKit.h>
 
 @class TextFieldPadding;
 
-@interface OMBLoginViewController : OMBViewController
-<UIScrollViewDelegate, UITextFieldDelegate>
+@interface OMBSignUpView : UIScrollView
+<UITextFieldDelegate>
 {
   UIActivityIndicatorView *activityIndicatorView;
-  TextFieldPadding *emailTextField;
-  UIButton *facebookButton;
+  TextFieldPadding *emailTextField;  
   UIBarButtonItem *loginBarButtonItem;
   UIButton *loginButton;
-  TextFieldPadding *nameTextField;
   UIView *orView;
   TextFieldPadding *passwordTextField;
-  UIScrollView *scroll;
   UIBarButtonItem *signUpBarButtonItem;
 }
+
+@property (nonatomic, strong) UIButton *facebookButton;
+@property (nonatomic, strong) TextFieldPadding *nameTextField;
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
-- (void) showLogin;
-- (void) showSignUp;
+- (void) resetViewOrigins;
+- (void) signUp;
 
 @end
