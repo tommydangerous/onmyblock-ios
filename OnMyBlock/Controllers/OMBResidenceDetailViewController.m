@@ -121,6 +121,17 @@ int kResidenceDetailPaddingDouble = 10 * 2;
       action: @selector(showImageSlideViewController)];
   [_imagesScrollView addGestureRecognizer: tapGesture];
 
+  // Activity indicator view
+  activityIndicatorView = 
+    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
+      UIActivityIndicatorViewStyleWhiteLarge];
+  activityIndicatorView.backgroundColor = [UIColor redColor];
+  activityIndicatorView.color = [UIColor grayDark];
+  activityIndicatorView.frame = CGRectMake(
+    ((_imagesScrollView.frame.size.width - 60) / 2.0), 
+      ((_imagesScrollView.frame.size.height - 60) / 2.0), 60, 60);
+  [_imagesScrollView addSubview: activityIndicatorView];
+
   // Page of images
   _pageOfImagesLabel = [[UILabel alloc] init];
   _pageOfImagesLabel.backgroundColor = [UIColor colorWithRed: 0 
@@ -562,8 +573,12 @@ int kResidenceDetailPaddingDouble = 10 * 2;
   else {
     OMBResidenceImagesConnection *connection = 
       [[OMBResidenceImagesConnection alloc] initWithResidence: residence];
+    connection.completionBlock = ^(NSError *error) {
+      [activityIndicatorView stopAnimating];
+    };
     connection.delegate = self;
     [connection start];
+    [activityIndicatorView startAnimating];
   }
 
   // Mini map
@@ -730,6 +745,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.row == 0)
       [cell.contentView addSubview: _map];
   }
+  // Similar residences
   else if (indexPath.section == 5) {
     if (indexPath.row == 0) {
       [cell.contentView addSubview: _similarResidencesView];
@@ -745,8 +761,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         rCell = [[OMBResidenceCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
       }
-      [rCell loadResidenceData: 
-        [similarResidences objectAtIndex: (indexPath.row - 1)]];
       return rCell;
     }
   }
@@ -774,6 +788,7 @@ numberOfRowsInSection: (NSInteger) section
     return 1;
   else if (section == 4)
     return 1;
+  // Similar residences
   else if (section == 5) {
     if ([similarResidences count] > 0) {
       return [similarResidences count] + 2;
@@ -790,10 +805,26 @@ numberOfRowsInSection: (NSInteger) section
 
 #pragma mark - Protocol UITableViewDelegate
 
+- (void) tableView: (UITableView *) tableView 
+didEndDisplayingCell: (UITableViewCell *) cell 
+forRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  // Similar residences
+  if (indexPath.section == 5) {
+    // If it is not the first or last row
+    if (indexPath.row > 0 && indexPath.row < [similarResidences count] + 1) {
+      OMBResidenceCell *c = (OMBResidenceCell *) cell;
+      c.imageView.image   = nil;
+    }
+  }
+}
+
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  // Similar residences
   if (indexPath.section == 5) {
+    // If it is not the first or last row
     if (indexPath.row > 0 && indexPath.row < [similarResidences count] + 1) {
       OMBResidenceDetailViewController *vc = 
         [[OMBResidenceDetailViewController alloc] initWithResidence: 
@@ -869,6 +900,20 @@ viewForHeaderInSection: (NSInteger) section
     footerView.frame = CGRectMake(0, 0, screen.size.width, 
       kResidenceDetailPaddingDouble);
   return footerView;
+}
+
+- (void) tableView: (UITableView *) tableView 
+willDisplayCell: (UITableViewCell *) cell 
+forRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  // Similar residences
+  if (indexPath.section == 5) {
+    // If it is not the first or last row
+    if (indexPath.row > 0 && indexPath.row < [similarResidences count] + 1) {
+      [(OMBResidenceCell *) cell loadResidenceData: 
+        [similarResidences objectAtIndex: (indexPath.row - 1)]];
+    }
+  }
 }
 
 #pragma mark - Protocol UITextViewDelegate

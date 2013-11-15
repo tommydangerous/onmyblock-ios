@@ -12,6 +12,7 @@
 
 @interface OMBResidencePartialView : UIView
 {
+  UIActivityIndicatorView *activityIndicatorView;
   UILabel *addressLabel;
   UIButton *addToFavoritesButton;
   UIImageView *arrowImageView;

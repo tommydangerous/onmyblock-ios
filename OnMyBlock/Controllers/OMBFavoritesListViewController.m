@@ -88,8 +88,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell = [[OMBResidenceCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
   }
-  [cell loadResidenceData: 
-    [[[OMBUser currentUser] favoritesArray] objectAtIndex: indexPath.row]];
   return cell;
 }
 
@@ -100,6 +98,14 @@ numberOfRowsInSection: (NSInteger) section
 }
 
 #pragma mark - Protocol UITableViewDelegate
+
+- (void) tableView: (UITableView *) tableView 
+didEndDisplayingCell: (UITableViewCell *) cell 
+forRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  OMBResidenceCell *c = (OMBResidenceCell *) cell;
+  c.imageView.image   = nil;
+}
 
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
@@ -116,6 +122,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
   return (screen.size.height * PropertyInfoViewImageHeightPercentage) + 5;
+}
+
+- (void) tableView: (UITableView *) tableView 
+willDisplayCell: (UITableViewCell *) cell 
+forRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  [(OMBResidenceCell *) cell loadResidenceData: 
+    [[[OMBUser currentUser] favoritesArray] objectAtIndex: indexPath.row]];
 }
 
 #pragma mark - Methods

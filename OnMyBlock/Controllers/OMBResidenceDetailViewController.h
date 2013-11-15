@@ -17,6 +17,7 @@
 <MKMapViewDelegate, UIScrollViewDelegate, UITableViewDataSource, 
   UITableViewDelegate, UITextViewDelegate>
 {
+  UIActivityIndicatorView *activityIndicatorView;
   UIButton *bottomButton;
   UIButton *callButton;
   CALayer *descriptionBorderBottom;

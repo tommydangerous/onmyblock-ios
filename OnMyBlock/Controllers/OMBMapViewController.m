@@ -394,9 +394,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell = [[OMBResidenceCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
   }
-  NSArray *properties = [self propertiesSortedBy: @"" ascending: NO];
-  if ([properties count] > 0)
-    [cell loadResidenceData: [properties objectAtIndex: indexPath.row]];
   return cell;
 }
 
@@ -407,6 +404,14 @@ numberOfRowsInSection: (NSInteger) section
 }
 
 #pragma mark - Protocol UITableViewDelegate
+
+- (void) tableView: (UITableView *) tableView 
+didEndDisplayingCell: (UITableViewCell *) cell 
+forRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  OMBResidenceCell *c = (OMBResidenceCell *) cell;
+  c.imageView.image   = nil;
+}
 
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
@@ -423,6 +428,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
   return (screen.size.height * PropertyInfoViewImageHeightPercentage) + 5;
+}
+
+- (void) tableView: (UITableView *) tableView 
+willDisplayCell: (UITableViewCell *) cell 
+forRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  NSArray *properties = [self propertiesSortedBy: @"" ascending: NO];
+  if ([properties count] > 0)
+    [(OMBResidenceCell *) cell loadResidenceData: 
+      [properties objectAtIndex: indexPath.row]];
 }
 
 #pragma mark - Methods

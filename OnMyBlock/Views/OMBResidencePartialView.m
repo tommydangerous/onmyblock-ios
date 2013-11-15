@@ -61,6 +61,15 @@ const float kPropertyInfoViewAddressHeight = 28;
         infoViewHeight);
     [self addSubview: infoView];
 
+    // Activity indicator
+    activityIndicatorView = 
+      [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
+        UIActivityIndicatorViewStyleWhite];
+    activityIndicatorView.color = [UIColor grayDark];
+    activityIndicatorView.frame = CGRectMake(((screen.size.width - 40) / 2.0),
+      ((_imageView.frame.size.height - (infoViewHeight + 40)) / 2.0), 40, 40);
+    [self addSubview: activityIndicatorView];
+
     // Rent
     rentLabel = [[UILabel alloc] init];
     rentLabel.backgroundColor = [UIColor clearColor];
@@ -228,8 +237,10 @@ const float kPropertyInfoViewAddressHeight = 28;
       _residence.coverPhotoForCell = [_residence coverPhotoWithSize: 
         CGSizeMake(screen.size.width, imageHeight)];
       _imageView.image = _residence.coverPhotoForCell;
+      [activityIndicatorView stopAnimating];
     };
     [connection start];
+    [activityIndicatorView startAnimating];
   }
 
   // Rent
