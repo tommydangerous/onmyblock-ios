@@ -125,11 +125,14 @@ int kResidenceDetailPaddingDouble = 10 * 2;
   activityIndicatorView = 
     [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
       UIActivityIndicatorViewStyleWhiteLarge];
-  activityIndicatorView.backgroundColor = [UIColor redColor];
   activityIndicatorView.color = [UIColor grayDark];
-  activityIndicatorView.frame = CGRectMake(
-    ((_imagesScrollView.frame.size.width - 60) / 2.0), 
-      ((_imagesScrollView.frame.size.height - 60) / 2.0), 60, 60);
+  CGRect activityFrame = activityIndicatorView.frame;
+  activityFrame.origin.x = (_imagesScrollView.frame.size.width - 
+    activityFrame.size.width) / 2.0;
+  activityFrame.origin.y = (_imagesScrollView.frame.size.height - 
+    activityFrame.size.height) / 2.0;
+  activityIndicatorView.frame = activityFrame;
+  activityIndicatorView.layer.zPosition = 9999;
   [_imagesScrollView addSubview: activityIndicatorView];
 
   // Page of images
@@ -1220,8 +1223,9 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // Remove UIImageView from _imagesScrollView
   [_imagesScrollView.subviews enumerateObjectsUsingBlock: 
-    ^(UIImageView *imageView, NSUInteger idx, BOOL *stop) {
-      [imageView removeFromSuperview];
+    ^(UIView *v, NSUInteger idx, BOOL *stop) {
+      if ([v isKindOfClass: [UIImageView class]])
+        [v removeFromSuperview];
     }
   ];
   // Empty out any UIImageView from the _imageViewArray

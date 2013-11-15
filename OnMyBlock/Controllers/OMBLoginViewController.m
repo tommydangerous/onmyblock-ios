@@ -236,10 +236,14 @@
     [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
       UIActivityIndicatorViewStyleWhiteLarge];
   activityIndicatorView.color = [UIColor grayDark];
-  activityIndicatorView.frame = CGRectMake(((screen.size.width - 60) / 2.0),
-    ((screen.size.height - (20 + 40 + 60)) / 2.0), 60, 60);
+  CGRect activityFrame = activityIndicatorView.frame;
+  activityFrame.origin.x = (screen.size.width - 
+    activityFrame.size.width) / 2.0;
+  // 20 is the height of the status bar, 44 is the height of the navigation bar
+  activityFrame.origin.y = (screen.size.height - 
+    (((20 + 44) * 2) + activityFrame.size.height)) / 2.0;
+  activityIndicatorView.frame = activityFrame;
   [self.view addSubview: activityIndicatorView];
-
   [self updateScrollContentSize];
 }
 

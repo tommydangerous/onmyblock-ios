@@ -66,8 +66,12 @@ const float kPropertyInfoViewAddressHeight = 28;
       [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
         UIActivityIndicatorViewStyleWhite];
     activityIndicatorView.color = [UIColor grayDark];
-    activityIndicatorView.frame = CGRectMake(((screen.size.width - 40) / 2.0),
-      ((_imageView.frame.size.height - (infoViewHeight + 40)) / 2.0), 40, 40);
+    CGRect activityFrame = activityIndicatorView.frame;
+    activityFrame.origin.x = (screen.size.width - 
+      activityFrame.size.width) / 2.0;
+    activityFrame.origin.y = (_imageView.frame.size.height - 
+      (infoViewHeight + activityFrame.size.height)) / 2.0;
+    activityIndicatorView.frame = activityFrame;
     [self addSubview: activityIndicatorView];
 
     // Rent

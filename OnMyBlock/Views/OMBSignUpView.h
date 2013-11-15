@@ -10,7 +10,7 @@
 
 @class TextFieldPadding;
 
-@interface OMBSignUpView : UIScrollView
+@interface OMBSignUpView : UIView
 <UITextFieldDelegate>
 {
   UIActivityIndicatorView *activityIndicatorView;
@@ -19,6 +19,7 @@
   UIButton *loginButton;
   UIView *orView;
   TextFieldPadding *passwordTextField;
+  UIScrollView *scroll;
   UIBarButtonItem *signUpBarButtonItem;
 }
 

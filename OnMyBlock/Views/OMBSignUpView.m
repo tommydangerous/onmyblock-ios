@@ -35,10 +35,13 @@
       name: OMBActivityIndicatorViewStopAnimatingNotification object: nil];
 
   CGRect screen = [[UIScreen mainScreen] bounds];
+  self.frame    = screen;
 
-  self.alwaysBounceVertical = YES;
-  self.frame                = screen;
-  self.showsVerticalScrollIndicator = NO;
+  scroll = [[UIScrollView alloc] init];
+  scroll.alwaysBounceVertical = YES;
+  scroll.frame                = self.frame;
+  scroll.showsVerticalScrollIndicator = NO;
+  [self addSubview: scroll];
 
   int padding = 20;
 
@@ -50,7 +53,7 @@
   getStarted.text = @"Get Started!";
   getStarted.textAlignment = NSTextAlignmentCenter;
   getStarted.textColor = [UIColor grayDark];
-  [self addSubview: getStarted];
+  [scroll addSubview: getStarted];
 
   // Facebook button
   _facebookButton = [[UIButton alloc] init];
@@ -71,7 +74,7 @@
   [_facebookButton setBackgroundImage: 
     [UIImage imageWithColor: [UIColor facebookBlueDark]] 
       forState: UIControlStateHighlighted];
-  [self addSubview: _facebookButton];
+  [scroll addSubview: _facebookButton];
   UIImageView *facebookImageView = [[UIImageView alloc] init];
   facebookImageView.frame = CGRectMake((padding / 2.0), (padding / 2.0), 
     30, 30);
@@ -83,7 +86,7 @@
   orView.frame = CGRectMake(0, (_facebookButton.frame.origin.y + 
     _facebookButton.frame.size.height + padding), screen.size.width, 
       _facebookButton.frame.size.height);
-  [self addSubview: orView];
+  [scroll addSubview: orView];
   UILabel *orLabel = [[UILabel alloc] init];
   orLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
   orLabel.frame = CGRectMake(0, 0, orView.frame.size.width, 
@@ -133,7 +136,7 @@
   nameImageView.image = [UIImage image: [UIImage imageNamed: @"user_icon.png"]
     size: nameImageView.frame.size];
   [nameRightView addSubview: nameImageView];
-  [self addSubview: _nameTextField];
+  [scroll addSubview: _nameTextField];
 
   // Email
   emailTextField = [[TextFieldPadding alloc] init];
@@ -164,7 +167,7 @@
   emailImageView.image = [UIImage image: [UIImage imageNamed: @"email_icon.png"]
     size: emailImageView.frame.size];
   [emailRightView addSubview: emailImageView];
-  [self addSubview: emailTextField];
+  [scroll addSubview: emailTextField];
 
   // Password
   passwordTextField = [[TextFieldPadding alloc] init];
@@ -196,7 +199,7 @@
     [UIImage imageNamed: @"password_icon.png"]
       size: emailImageView.frame.size];
   [passwordRightView addSubview: passwordImageView];
-  [self addSubview: passwordTextField];
+  [scroll addSubview: passwordTextField];
 
   loginButton = [[UIButton alloc] init];
   loginButton.backgroundColor = [UIColor blue];
@@ -212,9 +215,9 @@
   [loginButton setTitle: @"SIGN UP" forState: UIControlStateNormal];
   [loginButton setBackgroundImage: [UIImage imageWithColor: [UIColor blueDark]]
     forState: UIControlStateHighlighted];
-  [self addSubview: loginButton];
+  [scroll addSubview: loginButton];
 
-  self.contentSize = CGSizeMake(screen.size.width, 
+  scroll.contentSize = CGSizeMake(screen.size.width, 
     (loginButton.frame.origin.y + loginButton.frame.size.height + 
     padding + 50)); // 50 is the height of the sign up and login buttons
 
@@ -222,8 +225,12 @@
     [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
       UIActivityIndicatorViewStyleWhiteLarge];
   activityIndicatorView.color = [UIColor grayDark];
-  activityIndicatorView.frame = CGRectMake(((screen.size.width - 60) / 2.0),
-    ((screen.size.height - 60) / 2.0), 60, 60);
+  CGRect activityFrame = activityIndicatorView.frame;
+  activityFrame.origin.x = (self.frame.size.width - 
+    activityFrame.size.width) / 2.0;
+  activityFrame.origin.y = (self.frame.size.height - 
+    activityFrame.size.height) / 2.0;
+  activityIndicatorView.frame = activityFrame;
   [self addSubview: activityIndicatorView];
 
   return self;
@@ -241,14 +248,14 @@
   float height = (loginButton.frame.origin.y + 
     loginButton.frame.size.height + padding + 216);
   float y = height - 
-    (20 + self.frame.size.height + loginButton.frame.size.height);
+    (20 + scroll.frame.size.height + loginButton.frame.size.height);
   if (y < 0)
     y = 0;
-  CGPoint point = CGPointMake(self.contentOffset.x, y);
+  CGPoint point = CGPointMake(scroll.contentOffset.x, y);
   [UIView animateWithDuration: 0.25 animations: ^{
-    self.contentOffset = point;
+    scroll.contentOffset = point;
   } completion: ^(BOOL finished) {
-    self.contentSize = CGSizeMake(self.contentSize.width, height);
+    scroll.contentSize = CGSizeMake(scroll.contentSize.width, height);
   }];
 }
 
@@ -279,7 +286,7 @@
   float height = (loginButton.frame.origin.y + 
     loginButton.frame.size.height + padding + 50);
   [UIView animateWithDuration: 0.25 animations: ^{
-    self.contentSize = CGSizeMake(self.contentSize.width, height);
+    scroll.contentSize = CGSizeMake(scroll.contentSize.width, height);
   }];  
 }
 
