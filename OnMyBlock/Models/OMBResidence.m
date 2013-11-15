@@ -9,6 +9,7 @@
 #import "OMBResidence.h"
 
 #import "NSString+Extensions.h"
+#import "OMBResidenceGoogleStaticImageDownloader.h"
 #import "OMBUser.h"
 #import "UIImage+Resize.h"
 
@@ -118,6 +119,55 @@
     _address];
 }
 
+- (NSURL *) googleStaticMapImageURL
+{
+  NSString *base = @"https://maps.googleapis.com/maps/api/staticmap?";
+  NSString *center = [NSString stringWithFormat: 
+    @"%f,%f", _latitude, _longitude];
+  NSString *markers = [NSString stringWithFormat:
+    @"size:mid%%7Ccolor:0x1174d2%%7C%@", center];
+  NSString *zoom = @"14";
+  NSString *size = @"640x320";
+  NSString *sensor = @"false";
+  NSString *visualRefresh = @"true";
+  NSDictionary *params = @{
+    @"center":         center,
+    @"markers":        markers,
+    @"sensor":         sensor,
+    @"size":           size,
+    @"visual_refresh": visualRefresh,
+    @"zoom":           zoom
+  };
+  NSString *paramsString = @"";
+  for (NSString *key in [params allKeys]) {
+    paramsString = [paramsString stringByAppendingString: 
+      [NSString stringWithFormat: @"%@=%@&", key, [params objectForKey: key]]];
+  }
+  return [NSURL URLWithString: 
+    [NSString stringWithFormat: @"%@%@", base, paramsString]];
+}
+
+- (NSURL *) googleStaticStreetViewImageURL
+{
+  NSString *base = @"http://maps.googleapis.com/maps/api/streetview?";
+  NSString *location = [NSString stringWithFormat: 
+    @"%f,%f", _latitude, _longitude];
+  NSString *size = @"640x320";
+  NSString *sensor = @"false";
+  NSDictionary *params = @{
+    @"location": location,
+    @"sensor":   sensor,
+    @"size":     size
+  };
+  NSString *paramsString = @"";
+  for (NSString *key in [params allKeys]) {
+    paramsString = [paramsString stringByAppendingString: 
+      [NSString stringWithFormat: @"%@=%@&", key, [params objectForKey: key]]];
+  }
+  return [NSURL URLWithString: 
+    [NSString stringWithFormat: @"%@%@", base, paramsString]];
+}
+
 - (NSArray *) imagesArray
 {
   // keys are based on image position; e.g. 1-12
@@ -152,7 +202,10 @@
   //     lng: -117.07943,      // Longitude
   //     rt: 0                 // Rent
   //   }
-  _address   = [dictionary objectForKey: @"ad"];
+  if ([dictionary objectForKey: @"ad"] == [NSNull null])
+    _address = @"Address currently unavailable";
+  else
+    _address = [dictionary objectForKey: @"ad"];
   // Available on example value: October 23, 2013
   NSString *dateString        = [dictionary objectForKey: @"available_on"];
   NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
@@ -208,7 +261,9 @@
   dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
 
   // Address
-  if ([dictionary objectForKey: @"address"] != [NSNull null])
+  if ([dictionary objectForKey: @"address"] == [NSNull null])
+    _address = @"Address currently unavailable";
+  else
     _address = [dictionary objectForKey: @"address"];
   // Available on
   if ([dictionary objectForKey: @"available_on"] != [NSNull null])

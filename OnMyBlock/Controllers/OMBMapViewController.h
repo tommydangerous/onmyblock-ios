@@ -16,6 +16,8 @@
 @class OMBMapFilterViewController;
 @class OMBPropertyInfoView;
 
+extern float const PropertyInfoViewImageHeightPercentage;
+
 @interface OMBMapViewController : OMBViewController
 <CLLocationManagerDelegate, MKMapViewDelegate, 
   UICollectionViewDataSource, UICollectionViewDelegate,

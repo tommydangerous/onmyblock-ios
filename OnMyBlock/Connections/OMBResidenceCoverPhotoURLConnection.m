@@ -10,6 +10,7 @@
 
 #import "OMBResidence.h"
 #import "OMBResidenceCoverPhotoDownloader.h"
+#import "OMBResidenceGoogleStaticImageDownloader.h"
 
 @implementation OMBResidenceCoverPhotoURLConnection
 
@@ -37,7 +38,11 @@
   NSString *string = [json objectForKey: @"image"];
   // If the cover photo URL is not empty.png
   if ([string rangeOfString: @"empty"].location == NSNotFound) {
-    if (![string hasPrefix: @"http"]) {
+    // If URL is something like this //ombrb-prod.s3.amazonaws.com
+    if ([string hasPrefix: @"//"]) {
+      string = [@"http:" stringByAppendingString: string];
+    }
+    else if (![string hasPrefix: @"http"]) {
       NSString *baseURLString = [[OnMyBlockAPIURL componentsSeparatedByString: 
         OnMyBlockAPI] objectAtIndex: 0];
       string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
@@ -57,9 +62,16 @@
     [downloader startDownload];
   }
   else {
+    // If the residence has no image, show the Google Static street view
+    OMBResidenceGoogleStaticImageDownloader *downloader =
+      [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:
+        residence url: [residence googleStaticStreetViewImageURL]];
+    downloader.completionBlock = ^(NSError *error) {
+      [super connectionDidFinishLoading: connection];
+    };
+    [downloader startDownload];
     [residence.images setObject:
       [UIImage imageNamed: @"placeholder_property.png"] forKey: @"1"];
-    [super connectionDidFinishLoading: connection];
   }
 }
 

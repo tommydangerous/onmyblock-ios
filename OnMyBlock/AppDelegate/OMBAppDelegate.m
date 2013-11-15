@@ -45,6 +45,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // Initialize tracker.
   id <GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:
     @"UA-45382533-1"];
+  NSLog(@"GAITracker: %@", tracker);
 
   // Notifications
   // When user logs out, show the intro view controller

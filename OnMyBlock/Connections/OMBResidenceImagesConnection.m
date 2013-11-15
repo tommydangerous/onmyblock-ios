@@ -10,6 +10,7 @@
 
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
+#import "OMBResidenceGoogleStaticImageDownloader.h"
 #import "OMBResidenceImageDownloader.h"
 #import "UIImage+Resize.h"
 
@@ -40,6 +41,46 @@
   OMBResidenceDetailViewController *viewController = 
     (OMBResidenceDetailViewController *) self.delegate;
   if ([viewController.imageViewArray count] == 0) {
+    CGSize size = CGSizeMake(
+      viewController.imagesScrollView.frame.size.width,
+        viewController.imagesScrollView.frame.size.height);
+    // If the residence has no image, use the cover photo
+    // which is most likely the Google Static street view image
+    if ([array count] == 0) {
+      // This will set the cover photo as the first and probably
+      // only image in the residence's image scroll view
+      void (^block) (void) = ^(void) {
+        UIImageView *imageView    = [[UIImageView alloc] init];
+        imageView.backgroundColor = [UIColor clearColor];
+        imageView.clipsToBounds   = YES;
+        imageView.contentMode     = UIViewContentModeTopLeft;
+        imageView.image           = [UIImage image: 
+          [residence coverPhoto] sizeToFitVertical: size];
+        [viewController.imageViewArray addObject: imageView];
+        [viewController addImageViewsToImageScrollView];
+        viewController.pageOfImagesLabel.text = 
+          [NSString stringWithFormat: @"%i/%i",
+            [viewController currentPageOfImages], 
+              (int) [[residence imagesArray] count]];
+      };
+      // If residence has a cover photo
+      if ([residence coverPhoto]) {
+        block();
+      }
+      else {
+        // Download the Google Static street view image
+        OMBResidenceGoogleStaticImageDownloader *downloader =
+          [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:
+            residence url: [residence googleStaticStreetViewImageURL]];
+        downloader.completionBlock = ^(NSError *error) {
+          block();
+          [super connectionDidFinishLoading: connection];
+        };
+        [downloader startDownload];
+        [residence.images setObject:
+          [UIImage imageNamed: @"placeholder_property.png"] forKey: @"1"];
+      }
+    }
     for (NSString *jsonString in array) {
       // Create X number of image views for the residence detail view controller
       UIImageView *imageView    = [[UIImageView alloc] init];
@@ -60,7 +101,11 @@
       else {
         position = [[dict objectForKey: @"position"] intValue];
       }
-      if (![string hasPrefix: @"http"]) {
+      // If URL is something like this //ombrb-prod.s3.amazonaws.com
+      if ([string hasPrefix: @"//"]) {
+        string = [@"http:" stringByAppendingString: string];
+      }
+      else if (![string hasPrefix: @"http"]) {
         NSString *baseURLString = 
           [[OnMyBlockAPIURL componentsSeparatedByString: 
             OnMyBlockAPI] objectAtIndex: 0];
@@ -72,9 +117,6 @@
         // When the download is complete, set the image for the image view
         UIImage *image = [residence.images objectForKey: 
           [NSString stringWithFormat: @"%i", position]];
-        CGSize size = CGSizeMake(
-          viewController.imagesScrollView.frame.size.width,
-            viewController.imagesScrollView.frame.size.height);
         imageView.image = [UIImage image: image sizeToFitVertical: size];
         // Update the number of pages for the images scroll view
         viewController.pageOfImagesLabel.text = [NSString stringWithFormat:

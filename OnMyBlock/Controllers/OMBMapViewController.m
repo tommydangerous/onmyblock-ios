@@ -20,12 +20,16 @@
 #import "OMBPropertyInfoView.h"
 #import "OMBResidenceCell.h"
 #import "OMBResidenceCollectionViewCell.h"
+#import "OMBResidencePartialView.h"
 #import "OMBResidenceStore.h"
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
 #import "OMBSpringFlowLayout.h"
+#import "OMBUser.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
+
+float const PropertyInfoViewImageHeightPercentage = 0.4;
 
 @implementation OMBMapViewController
 
@@ -50,6 +54,10 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     locationManager.distanceFilter  = 50;
     [OMBResidenceStore sharedStore].mapViewController = self;
+
+    [[NSNotificationCenter defaultCenter] addObserver: self 
+      selector: @selector(refreshProperties) 
+        name: OMBUserLoggedInNotification object: nil];
   }
   return self;
 }
@@ -414,7 +422,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
-  return (screen.size.height * 0.3) + 5;
+  return (screen.size.height * PropertyInfoViewImageHeightPercentage) + 5;
 }
 
 #pragma mark - Methods

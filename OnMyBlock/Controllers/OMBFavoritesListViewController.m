@@ -9,6 +9,7 @@
 #import "OMBFavoritesListViewController.h"
 
 #import "OMBFavoritesListConnection.h"
+#import "OMBMapViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceCell.h"
 #import "OMBResidenceDetailViewController.h"
@@ -114,7 +115,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
-  return (screen.size.height * 0.3) + 5;
+  return (screen.size.height * PropertyInfoViewImageHeightPercentage) + 5;
 }
 
 #pragma mark - Methods

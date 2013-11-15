@@ -16,6 +16,7 @@
 #import "OMBFavoriteResidence.h"
 #import "OMBFavoriteResidenceConnection.h"
 #import "OMBLoginViewController.h"
+#import "OMBMapViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceCell.h"
 #import "OMBResidenceSimilarConnection.h"
@@ -538,7 +539,6 @@ int kResidenceDetailPaddingDouble = 10 * 2;
 - (void) viewDidAppear: (BOOL) animated
 {
   [super viewDidAppear: animated];
-
   [self resetImageViews];
   // If images were already downloaded for the residence,
   // create image views and set the residence images to them
@@ -850,7 +850,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return _similarResidencesView.frame.size.height;
     else {
       CGRect screen = [[UIScreen mainScreen] bounds];
-      return (screen.size.height * 0.3) + 1;
+      return (screen.size.height * PropertyInfoViewImageHeightPercentage) + 1;
     }
   }
   else if (indexPath.section == 6) {

@@ -18,7 +18,7 @@ NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
 // NSString *const OnMyBlockAPIURL = @"http://ombrb.nodelist.com/api-v1";
 
 // Localhost
-// NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1"";
+// NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
 // Evonexus
 // NSString *const OnMyBlockAPIURL = @"http://172.17.1.23:3000/api-v1";
 // Home

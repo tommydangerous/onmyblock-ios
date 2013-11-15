@@ -46,6 +46,8 @@
 - (UIImage *) coverPhotoWithSize: (CGSize) size;
 - (NSString *) defaultContactMessage;
 - (NSString *) dictionaryKey;
+- (NSURL *) googleStaticMapImageURL;
+- (NSURL *) googleStaticStreetViewImageURL;
 - (NSArray *) imagesArray;
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidenceDictionary: (NSDictionary *) dictionary;

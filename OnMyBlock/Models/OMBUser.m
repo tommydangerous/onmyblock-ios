@@ -22,9 +22,12 @@ NSString *const OMBActivityIndicatorViewStopAnimatingNotification =
   @"OMBActivityIndicatorViewStopAnimatingNotification";
 NSString *const OMBCurrentUserChangedFavorite = 
   @"OMBCurrentUserChangedFavorite";
+// Menu view controller posts this, and user listens for it
 NSString *const OMBCurrentUserLogoutNotification = 
   @"OMBCurrentUserLogoutNotification";
+// Whenever the user logs in
 NSString *const OMBUserLoggedInNotification  = @"OMBUserLoggedInNotification";
+// User posts this after sending logout message to itself
 NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
 @implementation OMBUser

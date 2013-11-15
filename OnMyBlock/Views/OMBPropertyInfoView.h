@@ -6,23 +6,18 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>
 
 @class OMBResidence;
+@class OMBResidencePartialView;
 
 @interface OMBPropertyInfoView : UIView
 {
-  UIButton *addToFavoritesButton;
-  UIImageView *arrowImageView;
-  UILabel *bedBathLabel;
-  UIImage *minusFavoriteImage;
-  UIImage *plusFavoriteImage;
-  UILabel *rentLabel;
+  OMBResidencePartialView *residencePartialView;
 }
 
-@property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, strong) OMBResidence *residence;
+@property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic, weak) OMBResidence *residence;
 
 #pragma mark - Methods
 
