@@ -128,6 +128,10 @@
 		ABBB18DA1824432D00211499 /* OMBImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBB18D91824432D00211499 /* OMBImageScrollView.m */; };
 		ABBB18DD182453BF00211499 /* OMBAnnotationCity.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBB18DC182453BF00211499 /* OMBAnnotationCity.m */; };
 		ABBB18E9182458E200211499 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ABBB18E8182458E200211499 /* libz.dylib */; };
+		ABC00B3018374A1C0092364A /* gps_cursor.png in Resources */ = {isa = PBXBuildFile; fileRef = ABC00B2E18374A1C0092364A /* gps_cursor.png */; };
+		ABC00B3118374A1C0092364A /* gps_cursor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABC00B2F18374A1C0092364A /* gps_cursor@2x.png */; };
+		ABC00B3418374F660092364A /* gps_cursor_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = ABC00B3218374F660092364A /* gps_cursor_blue.png */; };
+		ABC00B3518374F660092364A /* gps_cursor_blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABC00B3318374F660092364A /* gps_cursor_blue@2x.png */; };
 		ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABC48E791812397300F01D8D /* QuartzCore.framework */; };
 		ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */; };
 		ABD8EF4C181FFC4B00C28686 /* OMBResidenceDetailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD8EF4B181FFC4B00C28686 /* OMBResidenceDetailConnection.m */; };
@@ -361,6 +365,10 @@
 		ABBB18DB182453BF00211499 /* OMBAnnotationCity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAnnotationCity.h; sourceTree = "<group>"; };
 		ABBB18DC182453BF00211499 /* OMBAnnotationCity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAnnotationCity.m; sourceTree = "<group>"; };
 		ABBB18E8182458E200211499 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		ABC00B2E18374A1C0092364A /* gps_cursor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gps_cursor.png; sourceTree = "<group>"; };
+		ABC00B2F18374A1C0092364A /* gps_cursor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gps_cursor@2x.png"; sourceTree = "<group>"; };
+		ABC00B3218374F660092364A /* gps_cursor_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gps_cursor_blue.png; sourceTree = "<group>"; };
+		ABC00B3318374F660092364A /* gps_cursor_blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gps_cursor_blue@2x.png"; sourceTree = "<group>"; };
 		ABC48E791812397300F01D8D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		ABC48E7B18125AF000F01D8D /* OMBPropertyInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPropertyInfoView.h; sourceTree = "<group>"; };
 		ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertyInfoView.m; sourceTree = "<group>"; };
@@ -748,6 +756,10 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				ABC00B3218374F660092364A /* gps_cursor_blue.png */,
+				ABC00B3318374F660092364A /* gps_cursor_blue@2x.png */,
+				ABC00B2E18374A1C0092364A /* gps_cursor.png */,
+				ABC00B2F18374A1C0092364A /* gps_cursor@2x.png */,
 				AB5B49CF1832D99E00ED96DC /* logo_marker.png */,
 				AB5B49D01832D99E00ED96DC /* logo_marker@2x.png */,
 				AB5B49C81832CDC900ED96DC /* intro_map_faded.png */,
@@ -952,11 +964,13 @@
 				AB5B49C21832CB3400ED96DC /* logo_shadow.png in Resources */,
 				ABF18BBF181703A3002DD723 /* search@2x.png in Resources */,
 				ABF18BC518170F43002DD723 /* map_segmented_control.png in Resources */,
+				ABC00B3518374F660092364A /* gps_cursor_blue@2x.png in Resources */,
 				ABBB18D718243D4F00211499 /* favorite_outline.png in Resources */,
 				AB8C8C17181579EE00A1B087 /* placeholder_property@2x.png in Resources */,
 				AB0269A818220CD600E72F53 /* email_icon.png in Resources */,
 				AB5B49D21832D99E00ED96DC /* logo_marker@2x.png in Resources */,
 				AB5B49CB1832CDC900ED96DC /* intro_map_faded@2x.png in Resources */,
+				ABC00B3018374A1C0092364A /* gps_cursor.png in Resources */,
 				ABBB18CF1824138E00211499 /* favorite_pink@2x.png in Resources */,
 				AB5B49D11832D99E00ED96DC /* logo_marker.png in Resources */,
 				ABF8ECA9182D6C6B0080B1E2 /* intro_contact_view_background.jpg in Resources */,
@@ -986,6 +1000,7 @@
 				AB026BC51822B4DB00E72F53 /* facebook_icon.png in Resources */,
 				AB1D4A85182C3D4900FF4F23 /* logo.png in Resources */,
 				ABF8EC9E182D43F60080B1E2 /* map_background.png in Resources */,
+				ABC00B3118374A1C0092364A /* gps_cursor@2x.png in Resources */,
 				AB63D21D1821B5E400D63800 /* password_icon@2x.png in Resources */,
 				ABF8ECAE182D7A370080B1E2 /* intro_favorites_view_background.jpg in Resources */,
 				ABF18BC418170F43002DD723 /* list_segmented_control.png in Resources */,
@@ -995,6 +1010,7 @@
 				AB0269C618229CA400E72F53 /* sign_up_icon.png in Resources */,
 				ABF18BAA1816C3AD002DD723 /* list_segmented_control@2x.png in Resources */,
 				ABF18BAB1816C3AD002DD723 /* map_segmented_control@2x.png in Resources */,
+				ABC00B3418374F660092364A /* gps_cursor_blue.png in Resources */,
 				AB8C8C351815D0E100A1B087 /* arrow_right.png in Resources */,
 				AB8C8C16181579EE00A1B087 /* placeholder_property.png in Resources */,
 				ABF18BA61816BC53002DD723 /* marker_circle_selected.png in Resources */,
@@ -1220,8 +1236,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Tommy Dang (FZP2738S6Z)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tommy Dang (FZP2738S6Z)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Tommy Dang (ETDM478EZ7)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tommy Dang (ETDM478EZ7)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/tommydangerous/Dropbox/Xcode/OnMyBlock/FacebookSDK,

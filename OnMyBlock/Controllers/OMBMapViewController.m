@@ -162,6 +162,26 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   filterLabel.textColor = [UIColor whiteColor];
   [filterView addSubview: filterLabel];
 
+  // Current location button
+  currentLocationButton = [[UIButton alloc] init];
+  currentLocationButton.backgroundColor = [UIColor whiteColor];
+  currentLocationButton.frame = CGRectMake(10, (screen.size.height - (10 + 40)),
+    40, 40);
+  currentLocationButton.imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+  // currentLocationButton.layer.borderColor = [UIColor grayMedium].CGColor;
+  // currentLocationButton.layer.borderWidth = 1.0;
+  currentLocationButton.layer.cornerRadius = 2.0;
+  currentLocationButton.layer.shadowOffset = CGSizeMake(0, 0);
+  currentLocationButton.layer.shadowRadius = 1;
+  currentLocationButton.layer.shadowOpacity = 0.5;
+  [currentLocationButton setImage: [UIImage imageNamed: @"gps_cursor.png"]
+    forState: UIControlStateNormal];
+  [currentLocationButton setImage: [UIImage imageNamed: @"gps_cursor_blue.png"]
+    forState: UIControlStateHighlighted];
+  [currentLocationButton addTarget: self action: @selector(goToCurrentLocation)
+    forControlEvents: UIControlEventTouchUpInside];
+  [_mapView addSubview: currentLocationButton];
+
   // Property info view
   propertyInfoView = [[OMBPropertyInfoView alloc] init];
   [_mapView addSubview: propertyInfoView];
@@ -493,6 +513,12 @@ withTitle: (NSString *) title;
     [self setMapViewRegion: coordinate withMiles: 2];
   }
   [locationManager stopUpdatingLocation];
+}
+
+- (void) goToCurrentLocation
+{
+  [_mapView setCenterCoordinate: [_mapView userLocation].coordinate
+    animated: YES];
 }
 
 - (void) hidePropertyInfoView

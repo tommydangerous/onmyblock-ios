@@ -23,6 +23,7 @@ extern float const PropertyInfoViewImageHeightPercentage;
   UICollectionViewDataSource, UICollectionViewDelegate,
     UITableViewDataSource, UITableViewDelegate>
 {
+  UIButton *currentLocationButton;
   UILabel *filterLabel;
   UIView *filterView;
   CLLocationManager *locationManager;
