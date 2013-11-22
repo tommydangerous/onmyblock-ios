@@ -12,6 +12,7 @@
 
 @interface OMBResidenceImageDownloader : OMBImageDownloader
 
+@property (nonatomic, strong) NSString *originalString;
 @property (nonatomic) int position;
 @property (nonatomic, weak) OMBResidence *residence;
 

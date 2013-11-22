@@ -45,11 +45,12 @@ extern float const PropertyInfoViewImageHeightPercentage;
 - (void) addAnnotationAtCoordinate: (CLLocationCoordinate2D) coordinate
 withTitle: (NSString *) title;
 - (void) addAnnotations: (NSArray *) annotations;
+- (void) goToCurrentLocationAnimated: (BOOL) animated;
 - (void) refreshProperties;
 - (void) reloadTable;
 - (void) removeAllAnnotations;
 - (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
-withMiles: (int) miles;
+withMiles: (int) miles animated: (BOOL) animated;
 - (void) updateFilterLabel;
 
 @end

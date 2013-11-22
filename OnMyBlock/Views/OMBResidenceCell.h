@@ -12,12 +12,10 @@
 @class OMBResidencePartialView;
 
 @interface OMBResidenceCell : UITableViewCell
-{
-  OMBResidencePartialView *residencePartialView;
-}
 
 @property (nonatomic, weak) UIImageView *imageView;
 @property (nonatomic, weak) OMBResidence *residence;
+@property (nonatomic, strong) OMBResidencePartialView *residencePartialView;
 
 #pragma mark - Methods
 

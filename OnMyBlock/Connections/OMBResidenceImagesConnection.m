@@ -77,10 +77,9 @@
           [super connectionDidFinishLoading: connection];
         };
         [downloader startDownload];
-        [residence.images setObject:
-          [UIImage imageNamed: @"placeholder_property.png"] forKey: @"1"];
       }
     }
+    // Or loop through the array of JSON hashes
     for (NSString *jsonString in array) {
       // Create X number of image views for the residence detail view controller
       UIImageView *imageView    = [[UIImageView alloc] init];
@@ -92,7 +91,8 @@
       NSData *data = [jsonString dataUsingEncoding: NSUTF8StringEncoding];
       NSDictionary *dict = [NSJSONSerialization JSONObjectWithData: data
         options: 0 error: nil];
-      NSString *string = [dict objectForKey: @"image"];
+      NSString *originalString = [dict objectForKey: @"image"];
+      NSString *string         = [dict objectForKey: @"image"];
       int position;
       if ([dict objectForKey: @"position"] == [NSNull null]) {
         residence.lastImagePosition += 1;
@@ -115,8 +115,7 @@
        [[OMBResidenceImageDownloader alloc] initWithResidence: residence];
       downloader.completionBlock = ^(NSError *error) {
         // When the download is complete, set the image for the image view
-        UIImage *image = [residence.images objectForKey: 
-          [NSString stringWithFormat: @"%i", position]];
+        UIImage *image  = [residence imageAtPosition: position];
         imageView.image = [UIImage image: image sizeToFitVertical: size];
         // Update the number of pages for the images scroll view
         viewController.pageOfImagesLabel.text = [NSString stringWithFormat:
@@ -124,8 +123,9 @@
             (int) [[residence imagesArray] count]];
         [super connectionDidFinishLoading: connection];
       };
-      downloader.imageURL = [NSURL URLWithString: string];
-      downloader.position = position;
+      downloader.imageURL       = [NSURL URLWithString: string];
+      downloader.originalString = originalString;
+      downloader.position       = position;
       [downloader startDownload];
     }
     [viewController addImageViewsToImageScrollView];

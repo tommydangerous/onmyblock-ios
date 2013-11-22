@@ -54,10 +54,17 @@ const int kPadding = 20;
   
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view     = [[UIView alloc] initWithFrame: screen];
-  UIColor *borderColor = [UIColor grayMedium];
+  UIColor *borderColor = [UIColor grayDark];
   UIFont *labelFont = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 16];
   UIFont *textFieldFont = [UIFont fontWithName: @"HelveticaNeue-Light" 
     size: 16];
+
+  scroll = [[UIScrollView alloc] init];
+  scroll.alwaysBounceVertical         = YES;
+  scroll.backgroundColor              = [UIColor clearColor];
+  scroll.frame                        = self.view.frame;
+  scroll.showsVerticalScrollIndicator = NO;
+  [self.view addSubview: scroll];
 
   // Create beds array and dictionary
   _bedsArray = @[@"Studio", @"1", @"2", @"3", @"4+"];
@@ -71,7 +78,7 @@ const int kPadding = 20;
       style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
   // Right bar button item
   self.navigationItem.rightBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithTitle: @"Apply" 
+    [[UIBarButtonItem alloc] initWithTitle: @"Search" 
       style: UIBarButtonItemStylePlain target: self action: @selector(apply)];
   // Hide views when tapping on the view 
   UITapGestureRecognizer *tapView =
@@ -85,7 +92,7 @@ const int kPadding = 20;
   neighborhoodView.backgroundColor = [UIColor clearColor];
   neighborhoodView.frame = CGRectMake(kPadding, (kPadding * 0.5),
     (screen.size.width - (kPadding * 2)), (40 + 24 + kPadding));
-  [self.view addSubview: neighborhoodView];
+  [scroll addSubview: neighborhoodView];
   // Label
   UILabel *neighborhoodLabel = [[UILabel alloc] init];
   neighborhoodLabel.backgroundColor = [UIColor clearColor];
@@ -126,7 +133,7 @@ const int kPadding = 20;
       (kPadding * 0.5)),
         (screen.size.width - (kPadding * 2)), 
           neighborhoodView.frame.size.height);
-  [self.view addSubview: rentView];
+  [scroll addSubview: rentView];
   // Label
   UILabel *rentLabel = [[UILabel alloc] init];
   rentLabel.backgroundColor = [UIColor clearColor];
@@ -197,17 +204,17 @@ const int kPadding = 20;
   // View
   bedsView = [[UIView alloc] init];
   bedsView.backgroundColor = [UIColor clearColor];
-  bedsView.frame = CGRectMake(kPadding,
+  bedsView.frame = CGRectMake(0,
     (rentView.frame.origin.y + rentView.frame.size.height + (kPadding * 0.5)),
-      (screen.size.width - (kPadding * 2)), 
+      screen.size.width, 
         neighborhoodView.frame.size.height);
-  [self.view addSubview: bedsView];
+  [scroll addSubview: bedsView];
   // Label
   UILabel *bedsLabel = [[UILabel alloc] init];
   bedsLabel.backgroundColor = [UIColor clearColor];
   bedsLabel.font = labelFont;
-  bedsLabel.frame = CGRectMake(0, 0, 
-    bedsView.frame.size.width, 40);
+  bedsLabel.frame = CGRectMake(kPadding, 0, 
+    (bedsView.frame.size.width - (kPadding * 2)), 40);
   bedsLabel.text = @"Bedrooms";
   bedsLabel.textColor = [UIColor textColor];
   [bedsView addSubview: bedsLabel];
@@ -227,6 +234,23 @@ const int kPadding = 20;
       (index * (bedsView.frame.size.width / [_bedsArray count])), 0,
         (bedButtons.frame.size.width / [_bedsArray count]), 
             bedButtons.frame.size.height);
+    if (index > 0) {
+      CALayer *borderLeft = [CALayer layer];
+      borderLeft.backgroundColor = borderColor.CGColor;
+      borderLeft.frame = CGRectMake(0, 0, 0.5, button.frame.size.height);
+      [button.layer addSublayer: borderLeft];
+    }
+    CALayer *buttonBottomBorder = [CALayer layer];
+    buttonBottomBorder.backgroundColor = borderColor.CGColor;
+    buttonBottomBorder.frame = CGRectMake(0, 
+      (button.frame.size.height - 0.5), button.frame.size.width, 0.5);
+    [button.layer addSublayer: buttonBottomBorder];
+    CALayer *buttonTopBorder = [CALayer layer];
+    buttonTopBorder.backgroundColor = buttonBottomBorder.backgroundColor;
+    buttonTopBorder.frame = CGRectMake(buttonBottomBorder.frame.origin.x, 0, 
+      buttonBottomBorder.frame.size.width, 
+        buttonBottomBorder.frame.size.height);
+    [button.layer addSublayer: buttonTopBorder];
     button.titleLabel.font = textFieldFont;
     [button addTarget: self action: @selector(toggleBedButton:)
       forControlEvents: UIControlEventTouchUpInside];
@@ -243,17 +267,19 @@ const int kPadding = 20;
   // View
   bathView = [[UIView alloc] init];
   bathView.backgroundColor = [UIColor clearColor];
-  bathView.frame = CGRectMake(kPadding,
+  bathView.frame = CGRectMake(bedsView.frame.origin.x,
     (bedsView.frame.origin.y + bedsView.frame.size.height + 
       (kPadding * 0.5)),
-        (screen.size.width - (kPadding * 2)), 
+        bedsView.frame.size.width, 
           neighborhoodView.frame.size.height);
-  [self.view addSubview: bathView];
+  [scroll addSubview: bathView];
   // Label
   UILabel *bathLabel = [[UILabel alloc] init];
   bathLabel.backgroundColor = [UIColor clearColor];
   bathLabel.font = labelFont;
-  bathLabel.frame = CGRectMake(0, 0, bathView.frame.size.width, 40);
+  bathLabel.frame = CGRectMake(bedsLabel.frame.origin.x, 
+    bedsLabel.frame.origin.y, bedsLabel.frame.size.width,
+      bedsLabel.frame.size.height);
   bathLabel.text = @"Bathrooms";
   bathLabel.textColor = [UIColor textColor];
   [bathView addSubview: bathLabel];
@@ -274,6 +300,23 @@ const int kPadding = 20;
       (index * (bedsView.frame.size.width / [bathArray count])), 0,
         (bathButtons.frame.size.width / [bathArray count]), 
             bathButtons.frame.size.height);
+    if (index > 0) {
+      CALayer *borderLeft = [CALayer layer];
+      borderLeft.backgroundColor = borderColor.CGColor;
+      borderLeft.frame = CGRectMake(0, 0, 0.5, button.frame.size.height);
+      [button.layer addSublayer: borderLeft];
+    }
+    CALayer *buttonBottomBorder = [CALayer layer];
+    buttonBottomBorder.backgroundColor = borderColor.CGColor;
+    buttonBottomBorder.frame = CGRectMake(0, 
+      (button.frame.size.height - 0.5), button.frame.size.width, 0.5);
+    [button.layer addSublayer: buttonBottomBorder];
+    CALayer *buttonTopBorder = [CALayer layer];
+    buttonTopBorder.backgroundColor = buttonBottomBorder.backgroundColor;
+    buttonTopBorder.frame = CGRectMake(buttonBottomBorder.frame.origin.x, 0, 
+      buttonBottomBorder.frame.size.width, 
+        buttonBottomBorder.frame.size.height);
+    [button.layer addSublayer: buttonTopBorder];
     button.titleLabel.font = textFieldFont;
     [button addTarget: self action: @selector(toggleBathButton:)
       forControlEvents: UIControlEventTouchUpInside];
@@ -293,6 +336,7 @@ const int kPadding = 20;
         neighborhoodTextField.frame.origin.y + kPadding));
   neighborhoodListView = [[UIScrollView alloc] init];
   neighborhoodListView.alpha = 0;
+  neighborhoodListView.alwaysBounceVertical = YES;
   neighborhoodListView.backgroundColor = [UIColor grayDarkAlpha: 0.9];
   neighborhoodListView.frame = CGRectMake(
     neighborhoodView.frame.origin.x, 
@@ -302,7 +346,7 @@ const int kPadding = 20;
   neighborhoodListView.showsVerticalScrollIndicator = NO;
   [self.view addSubview: neighborhoodListView];
   NSMutableArray *neighborhoodList = [NSMutableArray array];
-  // Create buttons
+  // Neighborhood buttons
   for (OMBNeighborhood *neighborhood in 
     [[OMBNeighborhoodStore sharedStore] sortedNeighborhoods]) {
 
@@ -354,6 +398,7 @@ const int kPadding = 20;
   // Min list
   minRentListView = [[UIScrollView alloc] init];
   minRentListView.alpha = 0.0;
+  minRentListView.alwaysBounceVertical = YES;
   minRentListView.backgroundColor = neighborhoodListView.backgroundColor;
   minRentListView.frame = CGRectMake(kPadding, kPadding, 
     minRentTextField.frame.size.width, rentButtonsHeight);
@@ -364,6 +409,7 @@ const int kPadding = 20;
   // Max list
   maxRentListView = [[UIScrollView alloc] init];
   maxRentListView.alpha = 0.0;
+  maxRentListView.alwaysBounceVertical = YES;
   maxRentListView.backgroundColor = neighborhoodListView.backgroundColor;
   maxRentListView.frame = CGRectMake(
     (maxRentTextField.frame.origin.x + kPadding), kPadding, 
@@ -372,6 +418,11 @@ const int kPadding = 20;
   maxRentListView.showsVerticalScrollIndicator = NO;
   [self createButtonsForRentList: maxRentListView];
   [self.view addSubview: maxRentListView];
+
+  // Set the content size for the main scroll view
+  scroll.contentSize = CGSizeMake(scroll.frame.size.width,
+    (bathView.frame.origin.y + bathView.frame.size.height + 
+    neighborhoodView.frame.origin.y));
 }
 
 #pragma mark - Protocol
@@ -397,8 +448,17 @@ const int kPadding = 20;
 - (void) apply
 {
   if (_neighborhood) {
-    [_mapViewController setMapViewRegion: _neighborhood.coordinate
-      withMiles: 4];
+    // User's current location
+    if (_neighborhood.coordinate.latitude == 0 
+      && _neighborhood.coordinate.longitude == 0) {
+
+      [_mapViewController goToCurrentLocationAnimated: NO];
+    }
+    // If neighborhood has a coordinate
+    else {
+      [_mapViewController setMapViewRegion: _neighborhood.coordinate
+        withMiles: 4 animated: NO];
+    }
     // Need this so it doesn't crash after applying filter and clicking on
     // a cell that is no longer there but just hasn't reloaded yet
     [_mapViewController reloadTable];
@@ -459,12 +519,12 @@ const int kPadding = 20;
   }
 }
 
-- (void) createButtonsForRentList: (UIScrollView *) scroll
+- (void) createButtonsForRentList: (UIScrollView *) scrollView
 {
   UIScrollView *listView;
-  if (scroll == maxRentListView)
+  if (scrollView == maxRentListView)
     listView = maxRentListView;
-  else if (scroll == minRentListView)
+  else if (scrollView == minRentListView)
     listView = minRentListView;
   NSMutableArray *priceList = [NSMutableArray array];
   int price = 0;
@@ -571,7 +631,8 @@ const int kPadding = 20;
   [self hideDropdownLists];
   // Need to do this in order to remove all previous annotations and 
   // only show properties with the filters applied
-  [_mapViewController removeAllAnnotations];
+  // This is taken care of already in map view controller's addAnnotations
+  // [_mapViewController removeAllAnnotations];
 }
 
 - (void) showNeighborhoodList
@@ -617,7 +678,8 @@ const int kPadding = 20;
   [self hideDropdownLists];
   // Need to do this in order to remove all previous annotations and 
   // only show properties with the filters applied
-  [_mapViewController removeAllAnnotations];
+  // This is taken care of already in map view controller's addAnnotations
+  // [_mapViewController removeAllAnnotations];
 }
 
 - (void) toggleBedButton: (UIButton *) button
@@ -639,7 +701,8 @@ const int kPadding = 20;
   [self hideDropdownLists];
   // Need to do this in order to remove all previous annotations and 
   // only show properties with the filters applied
-  [_mapViewController removeAllAnnotations];
+  // This is taken care of already in map view controller's addAnnotations
+  // [_mapViewController removeAllAnnotations];
 }
 
 @end

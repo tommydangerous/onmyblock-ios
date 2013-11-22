@@ -43,7 +43,7 @@
         action: @selector(doneEditing)];
   menuBarButtonItem =
     [[UIBarButtonItem alloc] initWithImage: 
-      [UIImage image:  [UIImage imageNamed: @"menu_icon.png"] 
+      [UIImage image:  [UIImage imageNamed: @"menu_icon_staggered.png"] 
         size: CGSizeMake(26, 26)] style: UIBarButtonItemStylePlain 
           target: self action: @selector(showRightMenu)];
   self.navigationItem.rightBarButtonItem = menuBarButtonItem;

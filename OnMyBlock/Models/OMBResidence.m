@@ -10,6 +10,7 @@
 
 #import "NSString+Extensions.h"
 #import "OMBResidenceGoogleStaticImageDownloader.h"
+#import "OMBResidenceImage.h"
 #import "OMBUser.h"
 #import "UIImage+Resize.h"
 
@@ -48,7 +49,7 @@
 {
   self = [super init];
   if (self) {
-    _images            = [NSMutableDictionary dictionary];
+    _images            = [NSMutableArray array];
     _lastImagePosition = 1000;
   }
   return self;
@@ -57,6 +58,22 @@
 #pragma mark - Methods
 
 #pragma mark Instance Methods
+
+- (void) addImage: (UIImage *) image atPosition: (int) position 
+withString: (NSString *) string
+{
+  // Check to see if an image with string already exists
+  NSPredicate *predicate = [NSPredicate predicateWithFormat:
+    @"%K == %@", @"absoluteString", string];
+  NSArray *array = [_images filteredArrayUsingPredicate: predicate];
+  if ([array count] == 0) {
+    OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
+    residenceImage.absoluteString     = string;
+    residenceImage.image              = image;
+    residenceImage.position           = position;
+    [_images addObject: residenceImage];
+  }
+}
 
 - (NSString *) availableOnString
 {
@@ -76,7 +93,8 @@
 - (UIImage *) coverPhoto
 {
   if ([_images count] > 0) {
-    return [[self imagesArray] objectAtIndex: 0];
+    OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex: 0];
+    return residenceImage.image;
   }
   return nil;
 }
@@ -171,21 +189,37 @@
 - (NSArray *) imagesArray
 {
   // keys are based on image position; e.g. 1-12
-  NSArray *keys = [_images allKeys];
-  keys = [keys sortedArrayUsingComparator: ^(id obj1, id obj2) {
-    int key1 = [(NSString *) obj1 intValue];
-    int key2 = [(NSString *) obj2 intValue];
-    if (key1 > key2)
-      return (NSComparisonResult) NSOrderedDescending;
-    if (key1 < key2)
-      return (NSComparisonResult) NSOrderedAscending;
-    return (NSComparisonResult) NSOrderedSame;
-  }];
-  NSMutableArray *array = [NSMutableArray array];
-  for (NSString *key in keys) {
-    [array addObject: [_images objectForKey: key]];
+  // NSArray *keys = [_images allKeys];
+  // keys = [keys sortedArrayUsingComparator: ^(id obj1, id obj2) {
+  //   int key1 = [(NSString *) obj1 intValue];
+  //   int key2 = [(NSString *) obj2 intValue];
+  //   if (key1 > key2)
+  //     return (NSComparisonResult) NSOrderedDescending;
+  //   if (key1 < key2)
+  //     return (NSComparisonResult) NSOrderedAscending;
+  //   return (NSComparisonResult) NSOrderedSame;
+  // }];
+  // NSMutableArray *array = [NSMutableArray array];
+  // for (NSString *key in keys) {
+  //   [array addObject: [_images objectForKey: key]];
+  // }
+  // return array;
+
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"position" 
+    ascending: YES];
+  return [_images sortedArrayUsingDescriptors: @[sort]];
+}
+
+- (UIImage *) imageAtPosition: (int) position
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat:
+    @"%K == %i", @"position", position];
+  NSArray *array = [_images filteredArrayUsingPredicate: predicate];
+  if ([array count] > 0) {
+    OMBResidenceImage *residenceImage = [array objectAtIndex: 0];
+    return residenceImage.image;
   }
-  return array;
+  return nil;
 }
 
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary

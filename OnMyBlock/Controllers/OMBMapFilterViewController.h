@@ -29,6 +29,7 @@
   UIScrollView *neighborhoodListView;
   UIView *neighborhoodView;
   UIView *rentView;
+  UIScrollView *scroll;
 }
 
 @property (nonatomic, strong) NSNumber *bath;

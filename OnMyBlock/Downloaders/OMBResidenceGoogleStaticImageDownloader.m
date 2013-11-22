@@ -32,7 +32,8 @@
 {
   UIImage *image = [[UIImage alloc] initWithData: activeDownload];
   if (image)
-    [residence.images setObject: image forKey: @"1"];
+    [residence addImage: image atPosition: 1 
+      withString: [self.imageURL absoluteString]];
   [super connectionDidFinishLoading: connection];
 }
 

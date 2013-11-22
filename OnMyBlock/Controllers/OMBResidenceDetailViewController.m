@@ -19,6 +19,7 @@
 #import "OMBMapViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceCell.h"
+#import "OMBResidenceImage.h"
 #import "OMBResidenceSimilarConnection.h"
 #import "OMBResidenceDetailConnection.h"
 #import "OMBResidenceImagesConnection.h"
@@ -108,8 +109,9 @@ int kResidenceDetailPaddingDouble = 10 * 2;
 
   // Images scrolling view; image slides
   _imagesScrollView                 = [[UIScrollView alloc] init];
+  _imagesScrollView.alwaysBounceHorizontal = YES;
   _imagesScrollView.backgroundColor = [UIColor grayLight];
-  _imagesScrollView.bounces  = NO;
+  _imagesScrollView.bounces  = YES;
   _imagesScrollView.delegate = self;
   _imagesScrollView.frame    = CGRectMake(0, 0, screen.size.width, 
     (screen.size.height * 0.5));
@@ -557,12 +559,12 @@ int kResidenceDetailPaddingDouble = 10 * 2;
   // If images were already downloaded for the residence,
   // create image views and set the residence images to them
   if ([[residence imagesArray] count] > 1) {
-    for (UIImage *image in residence.imagesArray) {
+    for (OMBResidenceImage *residenceImage in [residence imagesArray]) {
       UIImageView *imageView    = [[UIImageView alloc] init];
       imageView.backgroundColor = [UIColor clearColor];
       imageView.clipsToBounds   = YES;
       imageView.contentMode     = UIViewContentModeTopLeft;
-      imageView.image           = [UIImage image: image sizeToFitVertical:
+      imageView.image = [UIImage image: residenceImage.image sizeToFitVertical:
         CGSizeMake(_imagesScrollView.frame.size.width,
           _imagesScrollView.frame.size.height)];
       [_imageViewArray addObject: imageView];
@@ -652,9 +654,18 @@ int kResidenceDetailPaddingDouble = 10 * 2;
   [self refreshResidenceData];
 }
 
+- (void) viewDidDisappear: (BOOL) animated
+{
+  [super viewDidDisappear: animated];
+  // Need to do this or an error occurs
+  _table.delegate = nil;
+}
+
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
+  // Need to set this again because when the view disappears, 
+  // the _table.delegate is set to nil
   if (!_table.delegate)
     _table.delegate = self;
   [self adjustFavoriteButtons];
@@ -662,8 +673,8 @@ int kResidenceDetailPaddingDouble = 10 * 2;
 
 - (void) viewWillDisappear: (BOOL) animated
 {
-  [super viewWillDisappear: animated];
-  _table.delegate = nil;
+  // [super viewWillDisappear: animated];
+  // _table.delegate = nil;
 }
 
 #pragma mark - Protocol
@@ -691,18 +702,15 @@ viewForAnnotation: (id <MKAnnotation>) annotation
 
 #pragma mark - Protocol UIScrollViewDelegate
 
-- (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView
-{
-  if (scrollView == _imagesScrollView) {
-    _pageOfImagesLabel.text = [NSString stringWithFormat: @"%i/%i",
-      [self currentPageOfImages], (int) [[residence imagesArray] count]];
-  }
-}
-
 - (void) scrollViewDidScroll: (UIScrollView *) scrollView
 {
   if ([_contactTextView isFirstResponder])
     [_contactTextView resignFirstResponder];
+  // Change the page numbers when scrolling
+  if (scrollView == _imagesScrollView) {
+    _pageOfImagesLabel.text = [NSString stringWithFormat: @"%i/%i",
+      [self currentPageOfImages], (int) [[residence imagesArray] count]];
+  }
 }
 
 #pragma mark - Protocol UITableViewDataSource
@@ -884,7 +892,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return _similarResidencesView.frame.size.height;
     else {
       CGRect screen = [[UIScreen mainScreen] bounds];
-      return (screen.size.height * PropertyInfoViewImageHeightPercentage) + 1;
+      return screen.size.height * PropertyInfoViewImageHeightPercentage;
     }
   }
   else if (indexPath.section == 6) {
@@ -1040,7 +1048,6 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
   [[UIApplication sharedApplication] openURL: 
     [NSURL URLWithString: [NSString stringWithFormat: 
       @"telprompt:%@", string]]];
-  NSLog(@"%@", string);
 }
 
 - (void) contactButtonSelected

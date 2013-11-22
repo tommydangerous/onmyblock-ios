@@ -11,15 +11,13 @@
 #import "OMBAppDelegate.h"
 #import "OMBFavoriteResidence.h"
 #import "OMBFavoriteResidenceConnection.h"
+#import "OMBGradientView.h"
 #import "OMBMapViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceCoverPhotoURLConnection.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
-
-const float kBorderTopHeight               = 0.0;
-const float kPropertyInfoViewAddressHeight = 28;
 
 @implementation OMBResidencePartialView
 
@@ -35,93 +33,106 @@ const float kPropertyInfoViewAddressHeight = 28;
     CGRect screen     = [[UIScreen mainScreen] bounds];
     float imageHeight = 
       screen.size.height * PropertyInfoViewImageHeightPercentage;
-    self.backgroundColor = [UIColor colorWithRed: (245/255.0) green: (245/255.0)
-      blue: (245/255.0) alpha: 0.8];
-    self.frame = CGRectMake(0, 0, screen.size.width, 
-      (kBorderTopHeight + imageHeight));
+    self.backgroundColor = [UIColor colorWithRed: (0/255.0) green: (0/255.0)
+      blue: (0/255.0) alpha: 1.0];
+    self.frame = CGRectMake(0, 0, screen.size.width, imageHeight);
 
     // Image view
     _imageView                 = [[UIImageView alloc] init];
     _imageView.backgroundColor = [UIColor clearColor];
     _imageView.clipsToBounds   = YES;
     _imageView.contentMode     = UIViewContentModeTopLeft;
-    _imageView.frame           = CGRectMake(0, kBorderTopHeight, 
-      screen.size.width, imageHeight);
+    _imageView.frame = CGRectMake(0, 0, screen.size.width, imageHeight);
     [self addSubview: _imageView];
 
+    // Add to favorites button
+    float buttonDimension = 40;
+    float buttonMargin    = 5;
+    addToFavoritesButtonView = [[OMBGradientView alloc] init];
+    addToFavoritesButtonView.colors = @[
+      [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.5],
+        [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.0]];
+    addToFavoritesButtonView.frame = CGRectMake(0, 0, 
+      _imageView.frame.size.width, (buttonDimension + (buttonMargin * 2)));
+    [self addSubview: addToFavoritesButtonView];
+
+    addToFavoritesButton                 = [[UIButton alloc] init];
+    addToFavoritesButton.backgroundColor = [UIColor clearColor];
+    // CGSize favoriteButtonSize = CGSizeMake(buttonDimension, buttonDimension);
+    // addToFavoritesButton.frame = CGRectMake(
+    //   (self.frame.size.width - (favoriteButtonSize.width)), 
+    //     (self.frame.size.height - (favoriteButtonSize.height)), 
+    //       favoriteButtonSize.width, favoriteButtonSize.height);
+    addToFavoritesButton.frame = CGRectMake(buttonMargin, buttonMargin,
+      buttonDimension, buttonDimension);
+    minusFavoriteImage = [UIImage image: 
+      [UIImage imageNamed: @"favorite_filled_white.png"] 
+        size: addToFavoritesButton.frame.size];
+    plusFavoriteImage = [UIImage image: 
+      [UIImage imageNamed: @"favorite_outline_white.png"] 
+        size: addToFavoritesButton.frame.size];
+    [addToFavoritesButton addTarget: self 
+      action: @selector(addToFavoritesButtonSelected) 
+        forControlEvents: UIControlEventTouchUpInside];
+    [addToFavoritesButtonView addSubview: addToFavoritesButton];
+
     // Info view; this is where the rent, bed, bath, and arrow go
-    float rentLabelHeight    = 36;
-    float rentLabelMarginTop = 0;
-    float infoViewHeight     = rentLabelMarginTop + rentLabelHeight + 
-      kPropertyInfoViewAddressHeight;
-    infoView = [[UIView alloc] init];
-    infoView.backgroundColor = [UIColor whiteAlpha: 0.9];
+    float marginBottom       = 5;
+    float marginTop          = 20;
+    float bedBathLabelHeight = 25;
+    float rentLabelHeight    = 40;
+    float rentLabelWidth     = (screen.size.width - 30) / 2.0;
+    float infoViewHeight     = (bedBathLabelHeight * 2) + marginTop + 
+      marginBottom;
+    infoView = [[OMBGradientView alloc] init];
+    infoView.colors = @[
+      [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.0],
+        [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.5]];
     infoView.frame = CGRectMake(0,  
       (self.frame.size.height - infoViewHeight), screen.size.width, 
         infoViewHeight);
     [self addSubview: infoView];
 
-    // Activity indicator
-    activityIndicatorView = 
-      [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
-        UIActivityIndicatorViewStyleWhite];
-    activityIndicatorView.color = [UIColor grayDark];
-    CGRect activityFrame = activityIndicatorView.frame;
-    activityFrame.origin.x = (screen.size.width - 
-      activityFrame.size.width) / 2.0;
-    activityFrame.origin.y = (_imageView.frame.size.height - 
-      (infoViewHeight + activityFrame.size.height)) / 2.0;
-    activityIndicatorView.frame = activityFrame;
-    [self addSubview: activityIndicatorView];
-
     // Rent
     rentLabel = [[UILabel alloc] init];
     rentLabel.backgroundColor = [UIColor clearColor];
     rentLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 27];
-    rentLabel.frame = CGRectMake(20, rentLabelMarginTop, 
-      ((screen.size.width / 2.0) - 30), rentLabelHeight);
-    rentLabel.textColor = [UIColor textColor];
+    rentLabel.frame = CGRectMake((screen.size.width - rentLabelWidth), 
+      marginTop, rentLabelWidth, rentLabelHeight);
+    rentLabel.textColor = [UIColor whiteColor];
     [infoView addSubview: rentLabel];
 
     // Bedrooms / Bathrooms
     bedBathLabel = [[UILabel alloc] init];
     bedBathLabel.backgroundColor = [UIColor clearColor];
     bedBathLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
-    bedBathLabel.frame = CGRectMake((20 + rentLabel.frame.size.width + 10),
-      rentLabel.frame.origin.y, ((screen.size.width / 2.0) - 30), 
-        rentLabel.frame.size.height);
+    bedBathLabel.frame = CGRectMake(10, rentLabel.frame.origin.y, 
+      rentLabelHeight, bedBathLabelHeight);
     bedBathLabel.textColor = rentLabel.textColor;
     [infoView addSubview: bedBathLabel];
-
-    float buttonDimension = infoView.frame.size.height * 0.8;
-    addToFavoritesButton = [[UIButton alloc] init];
-    addToFavoritesButton.backgroundColor = [UIColor clearColor];
-    CGSize favoriteButtonSize = CGSizeMake(buttonDimension, buttonDimension);
-    addToFavoritesButton.frame = CGRectMake(
-      (self.frame.size.width - (favoriteButtonSize.width)), 
-        (self.frame.size.height - (favoriteButtonSize.height)), 
-          favoriteButtonSize.width, favoriteButtonSize.height);
-    minusFavoriteImage = [UIImage image: 
-      [UIImage imageNamed: @"favorite_pink.png"] 
-        size: addToFavoritesButton.frame.size];
-    plusFavoriteImage = [UIImage image: 
-      [UIImage imageNamed: @"favorite_outline.png"] 
-        size: addToFavoritesButton.frame.size];
-    [addToFavoritesButton addTarget: self 
-      action: @selector(addToFavoritesButtonSelected) 
-        forControlEvents: UIControlEventTouchUpInside];
-    [self addSubview: addToFavoritesButton];
 
     addressLabel = [[UILabel alloc] init];
     addressLabel.backgroundColor = [UIColor clearColor];
     addressLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-    addressLabel.frame = CGRectMake(rentLabel.frame.origin.x, 
-      (rentLabel.frame.origin.y + rentLabel.frame.size.height), 
-        (infoView.frame.size.width - ((rentLabel.frame.origin.x * 2) + 
-        addToFavoritesButton.frame.size.width)),
-          kPropertyInfoViewAddressHeight);
+    addressLabel.frame = CGRectMake(bedBathLabel.frame.origin.x, 
+      (bedBathLabel.frame.origin.y + bedBathLabel.frame.size.height), 
+        (screen.size.width - (bedBathLabel.frame.origin.x * 2)), 
+          bedBathLabelHeight);
     addressLabel.textColor = rentLabel.textColor;
     [infoView addSubview: addressLabel];
+
+    // Activity indicator
+    activityIndicatorView = 
+      [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
+        UIActivityIndicatorViewStyleWhite];
+    activityIndicatorView.color = [UIColor whiteColor];
+    CGRect activityFrame = activityIndicatorView.frame;
+    activityFrame.origin.x = (screen.size.width - 
+      activityFrame.size.width) / 2.0;
+    activityFrame.origin.y = (_imageView.frame.size.height - 
+      activityFrame.size.height) / 2.0;
+    activityIndicatorView.frame = activityFrame;
+    [self addSubview: activityIndicatorView];
 
     [[NSNotificationCenter defaultCenter] addObserver: self
       selector: @selector(adjustFavoriteButton)
@@ -131,6 +142,12 @@ const float kPropertyInfoViewAddressHeight = 28;
         name: OMBUserLoggedOutNotification object: nil];
   }
   return self;
+}
+
+- (void) dealloc
+{
+  // Must dealloc or notifications get sent to zombies
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 #pragma mark - Methods
@@ -253,13 +270,15 @@ const float kPropertyInfoViewAddressHeight = 28;
 
   CGRect rentLabelFrame = rentLabel.frame;
   CGRect rentRect = [rentLabel.text boundingRectWithSize:
-      CGSizeMake(((screen.size.width / 2.0) - 30), rentLabel.frame.size.height)
-        options: NSStringDrawingUsesLineFragmentOrigin 
-          attributes: @{NSFontAttributeName: rentLabel.font} 
-            context: nil];
+    CGSizeMake(((screen.size.width / 2.0) - 30), rentLabel.frame.size.height)
+      options: NSStringDrawingUsesLineFragmentOrigin 
+        attributes: @{NSFontAttributeName: rentLabel.font} 
+          context: nil];
+  rentLabelFrame.origin.x = screen.size.width - (rentRect.size.width + 10);
   rentLabelFrame.size.width = rentRect.size.width;
   rentLabel.frame = rentLabelFrame;
 
+  // Bed bath
   CGRect bedBathLabelFrame = bedBathLabel.frame;
   CGRect bedBathRect = [bedBathLabel.text boundingRectWithSize:
       CGSizeMake((screen.size.width - 
@@ -269,8 +288,6 @@ const float kPropertyInfoViewAddressHeight = 28;
           options: NSStringDrawingUsesLineFragmentOrigin 
             attributes: @{NSFontAttributeName: bedBathLabel.font} 
               context: nil];
-  bedBathLabelFrame.origin.x = 
-    rentLabel.frame.origin.x + rentLabel.frame.size.width + 20;
   bedBathLabelFrame.size.width = bedBathRect.size.width;
   bedBathLabel.frame = bedBathLabelFrame;
 

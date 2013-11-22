@@ -201,7 +201,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   coordinate.latitude  = 32.78166389765503;
   coordinate.longitude = -117.16957478041991;
 
-  [self setMapViewRegion: coordinate withMiles: 4];
+  [self setMapViewRegion: coordinate withMiles: 4 animated: YES];
 
   // Find user's location
   [locationManager startUpdatingLocation];
@@ -215,6 +215,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
+
   // This causes image flickering when going back from residence detail
   // [self mapView: _mapView regionDidChangeAnimated: NO];
 }
@@ -326,7 +327,7 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
   }
   else if ([annotationView.annotation isKindOfClass: [OMBAnnotationCity class]])
     [self setMapViewRegion: annotationView.annotation.coordinate
-      withMiles: 20];
+      withMiles: 20 animated: YES];
   // If user clicked on a single residence
   else if ([[NSString stringWithFormat: @"%@",
     [annotationView class]] isEqualToString: @"MKModernUserLocationView"]) {
@@ -447,7 +448,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
-  return (screen.size.height * PropertyInfoViewImageHeightPercentage) + 5;
+  return screen.size.height * PropertyInfoViewImageHeightPercentage;
 }
 
 - (void) tableView: (UITableView *) tableView 
@@ -510,15 +511,20 @@ withTitle: (NSString *) title;
     for (CLLocation *location in locations) {
       coordinate = location.coordinate;
     }
-    [self setMapViewRegion: coordinate withMiles: 2];
+    [self setMapViewRegion: coordinate withMiles: 2 animated: YES];
   }
   [locationManager stopUpdatingLocation];
 }
 
 - (void) goToCurrentLocation
 {
+  [self goToCurrentLocationAnimated: YES];
+}
+
+- (void) goToCurrentLocationAnimated: (BOOL) animated
+{
   [_mapView setCenterCoordinate: [_mapView userLocation].coordinate
-    animated: YES];
+    animated: animated];
 }
 
 - (void) hidePropertyInfoView
@@ -574,14 +580,14 @@ withTitle: (NSString *) title;
 }
 
 - (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
-withMiles: (int) miles
+withMiles: (int) miles animated: (BOOL) animated
 {
   // 1609 meters = 1 mile
   int distanceInMiles = 1609 * miles;
   MKCoordinateRegion region =
     MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles, 
       distanceInMiles);
-  [_mapView setRegion: region animated: YES];
+  [_mapView setRegion: region animated: animated];
 }
 
 - (void) showMapFilterViewController

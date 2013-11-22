@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+@class OMBGradientView;
 @class OMBResidence;
 
 @interface OMBResidencePartialView : UIView
@@ -15,9 +16,10 @@
   UIActivityIndicatorView *activityIndicatorView;
   UILabel *addressLabel;
   UIButton *addToFavoritesButton;
+  OMBGradientView *addToFavoritesButtonView;
   UIImageView *arrowImageView;
   UILabel *bedBathLabel;
-  UIView *infoView;
+  OMBGradientView *infoView;
   UIImage *minusFavoriteImage;
   UIImage *plusFavoriteImage;
   UILabel *rentLabel;

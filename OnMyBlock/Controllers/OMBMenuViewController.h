@@ -17,6 +17,7 @@
   UIButton *favoritesButton;
   UIButton *loginButton;
   UIButton *logoutButton;
+  UIScrollView *scroll;
   UIButton *searchButton;
   UIButton *signUpButton;
   OMBTabBarController *tabBarController;

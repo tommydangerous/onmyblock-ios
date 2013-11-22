@@ -121,7 +121,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
-  return (screen.size.height * PropertyInfoViewImageHeightPercentage) + 5;
+  return screen.size.height * PropertyInfoViewImageHeightPercentage;
 }
 
 - (void) tableView: (UITableView *) tableView 

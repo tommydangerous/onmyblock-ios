@@ -35,7 +35,8 @@
 {
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
-  NSString *string = [json objectForKey: @"image"];
+  NSString *originalString = [json objectForKey: @"image"];
+  NSString *string         = [json objectForKey: @"image"];
   // If the cover photo URL is not empty.png
   if ([string rangeOfString: @"empty"].location == NSNotFound) {
     // If URL is something like this //ombrb-prod.s3.amazonaws.com
@@ -55,10 +56,13 @@
     downloader.completionBlock = ^(NSError *error) {
       [super connectionDidFinishLoading: connection];
     };
+
     int position = 1;
     if ([json objectForKey: @"position"] != [NSNull null])
       position = [[json objectForKey: @"position"] intValue];
-    downloader.position = position;
+    
+    downloader.originalString = originalString;
+    downloader.position       = position;
     [downloader startDownload];
   }
   else {
@@ -70,8 +74,6 @@
       [super connectionDidFinishLoading: connection];
     };
     [downloader startDownload];
-    [residence.images setObject:
-      [UIImage imageNamed: @"placeholder_property.png"] forKey: @"1"];
   }
 }
 
