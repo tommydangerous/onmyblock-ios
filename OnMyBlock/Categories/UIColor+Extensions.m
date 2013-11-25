@@ -12,14 +12,14 @@
 
 + (UIColor *) backgroundColor
 {
-  return [UIColor colorWithRed: (245/255.0) green: (245/255.0) 
-    blue: (245/255.0) alpha: 1]; 
+  return [UIColor colorWithRed: (255/255.0) green: (255/255.0) 
+    blue: (255/255.0) alpha: 1]; 
 }
 
 + (UIColor *) backgroundColorAlpha: (float) value
 {
-  return [UIColor colorWithRed: (245/255.0) green: (245/255.0) 
-    blue: (245/255.0) alpha: value]; 
+  return [UIColor colorWithRed: (255/255.0) green: (255/255.0) 
+    blue: (255/255.0) alpha: value]; 
 }
 
 + (UIColor *) blue

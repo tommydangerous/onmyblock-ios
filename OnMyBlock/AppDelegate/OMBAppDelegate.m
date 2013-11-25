@@ -33,19 +33,19 @@ NSString *const FBSessionStateChangedNotification =
 - (BOOL) application: (UIApplication *) application 
 didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
-  [NewRelicAgent startWithApplicationToken:
-    @"AA232e12d9b2fba4fa3e73a8f3e6b102a75fc517a2"];
+  // [NewRelicAgent startWithApplicationToken:
+  //   @"AA232e12d9b2fba4fa3e73a8f3e6b102a75fc517a2"];
 
   // Optional: automatically send uncaught exceptions to Google Analytics.
-  [GAI sharedInstance].trackUncaughtExceptions = YES;
+  // [GAI sharedInstance].trackUncaughtExceptions = YES;
   // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
-  [GAI sharedInstance].dispatchInterval = 20;
+  // [GAI sharedInstance].dispatchInterval = 20;
   // Optional: set Logger to VERBOSE for debug information.
-  [[[GAI sharedInstance] logger] setLogLevel: kGAILogLevelVerbose];
+  // [[[GAI sharedInstance] logger] setLogLevel: kGAILogLevelVerbose];
   // Initialize tracker.
-  id <GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:
-    @"UA-45382533-1"];
-  NSLog(@"GAITracker: %@", tracker);
+  // id <GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:
+  //   @"UA-45382533-1"];
+  // NSLog(@"GAITracker: %@", tracker);
 
   // Notifications
   // When user logs out, show the intro view controller
