@@ -31,8 +31,8 @@
   self.screenName = @"Menu View Controller";
 
   buttons = [NSMutableArray array];
-  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  tabBarController = appDelegate.tabBarController;
+  // OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+  // tabBarController = appDelegate.tabBarController;
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(showLoggedInButtons)
@@ -268,8 +268,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     @"Logout" message: @"Are you sure?" delegate: self
       cancelButtonTitle: @"No" otherButtonTitles: @"Yes", nil];
   [alertView show];
-  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  [appDelegate.menuContainer toggleRightSideMenuCompletion: ^{}];
+  // OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+  // [appDelegate.menuContainer toggleRightSideMenuCompletion: ^{}];
 }
 
 - (void) showSearch
@@ -298,10 +298,10 @@ fromButton: (UIButton *) button;
   tabBarController.viewControllers = 
     @[tabBarController.selectedViewController, nav];
   tabBarController.selectedViewController = nav;
-  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  [appDelegate.menuContainer setMenuState: MFSideMenuStateClosed completion: ^{
-    [self buttonSelected: button];
-  }];
+  // OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+  // [appDelegate.menuContainer setMenuState: MFSideMenuStateClosed completion: ^{
+  //   [self buttonSelected: button];
+  // }];
 }
 
 - (void) unselectAllButtons

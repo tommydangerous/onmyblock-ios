@@ -10,7 +10,10 @@
 
 #import "OMBAppDelegate.h"
 #import "OMBIntroViewController.h"
+#import "OMBLoginConnection.h"
+#import "OMBLoginViewController.h"
 #import "OMBSignUpConnection.h"
+#import "OMBViewControllerContainer.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -18,8 +21,12 @@
 
 @implementation OMBSignUpView
 
-@synthesize facebookButton = _facebookButton;
-@synthesize nameTextField  = _nameTextField;
+@synthesize emailTextField     = _emailTextField;
+@synthesize facebookButton     = _facebookButton;
+@synthesize firstNameTextField = _firstNameTextField;
+@synthesize lastNameTextField  = _lastNameTextField;
+@synthesize loginButton        = _loginButton;
+@synthesize passwordTextField  = _passwordTextField;
 
 #pragma mark - Initializer
 
@@ -34,8 +41,10 @@
     selector: @selector(stopSpinning) 
       name: OMBActivityIndicatorViewStopAnimatingNotification object: nil];
 
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  self.frame    = screen;
+  CGRect screen     = [[UIScreen mainScreen] bounds];
+  float screenWidth = screen.size.width;
+
+  self.frame = screen;
 
   scroll = [[UIScrollView alloc] init];
   scroll.alwaysBounceVertical = YES;
@@ -45,28 +54,16 @@
 
   int padding = 20;
 
-  // Get started
-  UILabel *getStarted = [[UILabel alloc] init];
-  getStarted.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 27];
-  getStarted.frame = CGRectMake(padding, (padding * 3), 
-    (screen.size.width - (padding * 2)), 36);
-  getStarted.text = @"Get Started!";
-  getStarted.textAlignment = NSTextAlignmentCenter;
-  getStarted.textColor = [UIColor grayDark];
-  [scroll addSubview: getStarted];
-
   // Facebook button
   _facebookButton = [[UIButton alloc] init];
   _facebookButton.backgroundColor = [UIColor facebookBlue];
   _facebookButton.clipsToBounds = YES;
-  _facebookButton.frame = CGRectMake(padding, 
-    (getStarted.frame.origin.y + getStarted.frame.size.height + padding), 
-      (screen.size.width - (padding * 2)), 
-        ((padding / 2.0) + 30 + (padding / 2.0)));
+  _facebookButton.frame = CGRectMake((padding + screenWidth), (padding * 3), 
+    (screen.size.width - (padding * 2)), 
+      ((padding / 2.0) + 30 + (padding / 2.0)));
   _facebookButton.layer.cornerRadius = 2.0;
   _facebookButton.titleLabel.font = 
-    [UIFont fontWithName: @"HelveticaNeue-Medium"
-    size: 15];
+    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   [_facebookButton addTarget: self action: @selector(showFacebookLogin)
     forControlEvents: UIControlEventTouchUpInside];
   [_facebookButton setTitle: @"Sign up using Facebook" 
@@ -88,20 +85,19 @@
       _facebookButton.frame.size.height);
   [scroll addSubview: orView];
   UILabel *orLabel = [[UILabel alloc] init];
-  orLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  orLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 18];
   orLabel.frame = CGRectMake(0, 0, orView.frame.size.width, 
     orView.frame.size.height);
-  orLabel.text = @"or";
+  orLabel.text = @"OR";
   orLabel.textAlignment = NSTextAlignmentCenter;
-  orLabel.textColor = [UIColor grayMedium];
+  orLabel.textColor = [UIColor textColor];
   [orView addSubview: orLabel];
   CALayer *leftLine         = [CALayer layer];
   CALayer *rightLine        = [CALayer layer]; 
   leftLine.backgroundColor  = orLabel.textColor.CGColor;
   rightLine.backgroundColor = leftLine.backgroundColor;
-  leftLine.frame = CGRectMake(_facebookButton.frame.origin.x, 
-    (orView.frame.size.height / 2.0), 
-      (_facebookButton.frame.size.width * 0.4), 0.5);
+  leftLine.frame = CGRectMake((padding * 2), (orView.frame.size.height / 2.0), 
+    (_facebookButton.frame.size.width * 0.3), 0.5);
   rightLine.frame = CGRectMake(
     (screen.size.width - (leftLine.frame.origin.x + 
       leftLine.frame.size.width)), leftLine.frame.origin.y, 
@@ -109,129 +105,162 @@
   [orView.layer addSublayer: leftLine];
   [orView.layer addSublayer: rightLine];
 
-  // Name
-  _nameTextField = [[TextFieldPadding alloc] init];
-  _nameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-  _nameTextField.backgroundColor = [UIColor whiteColor];
-  _nameTextField.delegate = self;
-  _nameTextField.font = [UIFont fontWithName: @"HelveticaNeue-Light"
+  // First name
+  _firstNameTextField = [[TextFieldPadding alloc] init];
+  _firstNameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+  _firstNameTextField.backgroundColor = [UIColor whiteColor];
+  _firstNameTextField.delegate = self;
+  _firstNameTextField.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
-  _nameTextField.frame = CGRectMake(padding, (orView.frame.origin.y +
-    orView.frame.size.height + padding),
+  _firstNameTextField.frame = CGRectMake(_facebookButton.frame.origin.x, 
+    (orView.frame.origin.y + orView.frame.size.height + padding),
       (screen.size.width - (padding * 2)), 
-        ((padding / 2.0) + 22 + (padding / 2.0)));
-  _nameTextField.layer.borderColor = [UIColor grayLight].CGColor;
-  _nameTextField.layer.borderWidth = 1.0;
-  _nameTextField.paddingX = padding / 2.0;
-  _nameTextField.paddingY = padding / 2.0;
-  _nameTextField.placeholder = @"Name";
-  _nameTextField.returnKeyType = UIReturnKeyDone;
-  UIView *nameRightView = [[UIView alloc] init];
-  nameRightView.alpha = 0.3;
-  nameRightView.frame = CGRectMake(0, 0, (22 + (padding / 2.0)), 22);
-  _nameTextField.rightView = nameRightView;
-  _nameTextField.rightViewMode = UITextFieldViewModeAlways;
-  UIImageView *nameImageView = [[UIImageView alloc] init];
-  nameImageView.frame = CGRectMake(0, 0, 22, 22);
-  nameImageView.image = [UIImage image: [UIImage imageNamed: @"user_icon.png"]
-    size: nameImageView.frame.size];
-  [nameRightView addSubview: nameImageView];
-  [scroll addSubview: _nameTextField];
+        ((padding / 2.0) + 24 + (padding / 2.0)));
+  _firstNameTextField.layer.borderColor = [UIColor grayLight].CGColor;
+  _firstNameTextField.layer.borderWidth = 1.0;
+  _firstNameTextField.paddingX = padding / 2.0;
+  _firstNameTextField.paddingY = padding / 2.0;
+  _firstNameTextField.placeholder = @"First name";
+  _firstNameTextField.returnKeyType = UIReturnKeyDone;
+  [scroll addSubview: _firstNameTextField];
+
+  // Last name
+  _lastNameTextField = [[TextFieldPadding alloc] init];
+  _lastNameTextField.autocorrectionType = 
+    _firstNameTextField.autocorrectionType;
+  _lastNameTextField.backgroundColor = _firstNameTextField.backgroundColor;
+  _lastNameTextField.delegate = self;
+  _lastNameTextField.font = _firstNameTextField.font;
+  _lastNameTextField.frame = CGRectMake(_firstNameTextField.frame.origin.x,
+    (_firstNameTextField.frame.origin.y + 
+    _firstNameTextField.frame.size.height + padding),
+      _firstNameTextField.frame.size.width, 
+        _firstNameTextField.frame.size.height);
+  _lastNameTextField.layer.borderColor = _firstNameTextField.layer.borderColor;
+  _lastNameTextField.layer.borderWidth = _firstNameTextField.layer.borderWidth;
+  _lastNameTextField.paddingX = _firstNameTextField.paddingX;
+  _lastNameTextField.paddingY = _firstNameTextField.paddingY;
+  _lastNameTextField.placeholder = @"Last name";
+  _lastNameTextField.returnKeyType = _firstNameTextField.returnKeyType;
+  [scroll addSubview: _lastNameTextField];
 
   // Email
-  emailTextField = [[TextFieldPadding alloc] init];
-  emailTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-  emailTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-  emailTextField.backgroundColor = [UIColor whiteColor];
-  emailTextField.delegate = self;
-  emailTextField.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-    size: 15];
-  emailTextField.frame = CGRectMake(_nameTextField.frame.origin.x,
-    (_nameTextField.frame.origin.y + _nameTextField.frame.size.height + 
-    padding),
-      _nameTextField.frame.size.width, _nameTextField.frame.size.height);
-  emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
-  emailTextField.layer.borderColor = [UIColor grayLight].CGColor;
-  emailTextField.layer.borderWidth = 1.0;
-  emailTextField.paddingX = padding / 2.0;
-  emailTextField.paddingY = padding / 2.0;
-  emailTextField.placeholder = @"Email";
-  emailTextField.returnKeyType = UIReturnKeyDone;
-  UIView *emailRightView = [[UIView alloc] init];
-  emailRightView.alpha = 0.3;
-  emailRightView.frame = CGRectMake(0, 0, (22 + (padding / 2.0)), 22);
-  emailTextField.rightView = emailRightView;
-  emailTextField.rightViewMode = UITextFieldViewModeAlways;
-  UIImageView *emailImageView = [[UIImageView alloc] init];
-  emailImageView.frame = CGRectMake(0, 0, 22, 22);
-  emailImageView.image = [UIImage image: [UIImage imageNamed: @"email_icon.png"]
-    size: emailImageView.frame.size];
-  [emailRightView addSubview: emailImageView];
-  [scroll addSubview: emailTextField];
+  _emailTextField = [[TextFieldPadding alloc] init];
+  _emailTextField.autocapitalizationType = 
+    _firstNameTextField.autocapitalizationType;
+  _emailTextField.autocorrectionType = 
+    _firstNameTextField.autocorrectionType;
+  _emailTextField.backgroundColor = _firstNameTextField.backgroundColor;
+  _emailTextField.delegate = self;
+  _emailTextField.font = _firstNameTextField.font;
+  _emailTextField.frame = CGRectMake(_lastNameTextField.frame.origin.x,
+    (_lastNameTextField.frame.origin.y + _lastNameTextField.frame.size.height + 
+      padding), _lastNameTextField.frame.size.width, 
+        _lastNameTextField.frame.size.height);
+  _emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
+  _emailTextField.layer.borderColor = _firstNameTextField.layer.borderColor;
+  _emailTextField.layer.borderWidth = _firstNameTextField.layer.borderWidth;
+  _emailTextField.paddingX = _firstNameTextField.paddingX;
+  _emailTextField.paddingY = _firstNameTextField.paddingY;
+  _emailTextField.placeholder = @"Email";
+  _emailTextField.returnKeyType = _firstNameTextField.returnKeyType;
+  [scroll addSubview: _emailTextField];
 
   // Password
-  passwordTextField = [[TextFieldPadding alloc] init];
-  passwordTextField.autocapitalizationType = 
-    emailTextField.autocapitalizationType;
-  passwordTextField.autocorrectionType = emailTextField.autocorrectionType;
-  passwordTextField.backgroundColor = emailTextField.backgroundColor;
-  passwordTextField.delegate = self;
-  passwordTextField.font = emailTextField.font;
-  passwordTextField.frame = CGRectMake(emailTextField.frame.origin.x,
-    (emailTextField.frame.origin.y + emailTextField.frame.size.height + 
-      padding), emailTextField.frame.size.width, 
-        emailTextField.frame.size.height);
-  passwordTextField.layer.borderColor = emailTextField.layer.borderColor;
-  passwordTextField.layer.borderWidth = emailTextField.layer.borderWidth;
-  passwordTextField.paddingX = emailTextField.paddingX;
-  passwordTextField.paddingY = emailTextField.paddingY;
-  passwordTextField.placeholder = @"Password";
-  passwordTextField.returnKeyType = emailTextField.returnKeyType;
-  passwordTextField.secureTextEntry = YES;
-  UIView *passwordRightView = [[UIView alloc] init];
-  passwordRightView.alpha = emailRightView.alpha;
-  passwordRightView.frame = emailRightView.frame;
-  passwordTextField.rightView = passwordRightView;
-  passwordTextField.rightViewMode = UITextFieldViewModeAlways;
-  UIImageView *passwordImageView = [[UIImageView alloc] init];
-  passwordImageView.frame = emailImageView.frame;
-  passwordImageView.image = [UIImage image: 
-    [UIImage imageNamed: @"password_icon.png"]
-      size: emailImageView.frame.size];
-  [passwordRightView addSubview: passwordImageView];
-  [scroll addSubview: passwordTextField];
+  _passwordTextField = [[TextFieldPadding alloc] init];
+  _passwordTextField.autocapitalizationType = 
+    _emailTextField.autocapitalizationType;
+  _passwordTextField.autocorrectionType = _emailTextField.autocorrectionType;
+  _passwordTextField.backgroundColor = _emailTextField.backgroundColor;
+  _passwordTextField.delegate = self;
+  _passwordTextField.font = _emailTextField.font;
+  _passwordTextField.frame = CGRectMake(_emailTextField.frame.origin.x,
+    (_emailTextField.frame.origin.y + _emailTextField.frame.size.height + 
+      padding), _emailTextField.frame.size.width, 
+        _emailTextField.frame.size.height);
+  _passwordTextField.layer.borderColor = _emailTextField.layer.borderColor;
+  _passwordTextField.layer.borderWidth = _emailTextField.layer.borderWidth;
+  _passwordTextField.paddingX = _emailTextField.paddingX;
+  _passwordTextField.paddingY = _emailTextField.paddingY;
+  _passwordTextField.placeholder = @"Password";
+  _passwordTextField.returnKeyType = _emailTextField.returnKeyType;
+  _passwordTextField.secureTextEntry = YES;  
+  [scroll addSubview: _passwordTextField];
 
-  loginButton = [[UIButton alloc] init];
-  loginButton.backgroundColor = [UIColor blue];
-  loginButton.clipsToBounds = YES;
-  loginButton.frame = CGRectMake(_facebookButton.frame.origin.x,
-    (passwordTextField.frame.origin.y + passwordTextField.frame.size.height +
+  _loginButton = [[UIButton alloc] init];
+  _loginButton.backgroundColor = [UIColor blue];
+  _loginButton.clipsToBounds = YES;
+  _loginButton.frame = CGRectMake(_facebookButton.frame.origin.x,
+    (_passwordTextField.frame.origin.y + _passwordTextField.frame.size.height +
       padding), _facebookButton.frame.size.width, 
         _facebookButton.frame.size.height);
-  loginButton.titleLabel.font = _facebookButton.titleLabel.font;
-  loginButton.layer.cornerRadius = 2.0;
-  [loginButton addTarget: self action: @selector(signUp)
+  _loginButton.titleLabel.font = _facebookButton.titleLabel.font;
+  _loginButton.layer.cornerRadius = 2.0;
+  [_loginButton addTarget: self action: @selector(loginOrSignUp)
     forControlEvents: UIControlEventTouchUpInside];
-  [loginButton setTitle: @"SIGN UP" forState: UIControlStateNormal];
-  [loginButton setBackgroundImage: [UIImage imageWithColor: [UIColor blueDark]]
+  [_loginButton setTitle: @"Sign up" forState: UIControlStateNormal];
+  [_loginButton setBackgroundImage: [UIImage imageWithColor: [UIColor blueDark]]
     forState: UIControlStateHighlighted];
-  [scroll addSubview: loginButton];
+  [scroll addSubview: _loginButton];
 
-  scroll.contentSize = CGSizeMake(screen.size.width, 
-    (loginButton.frame.origin.y + loginButton.frame.size.height + 
-    padding + 50)); // 50 is the height of the sign up and login buttons
+  UIFont *font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  // Sign up switch button
+  // attributed string
+  NSMutableAttributedString *newUserString = 
+    [[NSMutableAttributedString alloc] initWithString: @"New user? " 
+      attributes: @{ NSForegroundColorAttributeName: [UIColor grayMedium] }];
+  NSAttributedString *signUpString = [[NSAttributedString alloc] initWithString:
+    @"Sign up" attributes: @{ NSForegroundColorAttributeName: [UIColor blue] }];
+  [newUserString appendAttributedString: signUpString];
+  // button
+  signUpSwitchButton = [[UIButton alloc] init];
+  CGRect signUpSwitchButtonRect = [@"New user? Sign up" boundingRectWithSize:
+    CGSizeMake(_facebookButton.frame.size.width, 
+    _facebookButton.frame.size.height)
+      options: NSStringDrawingUsesLineFragmentOrigin
+        attributes: @{ NSFontAttributeName: font }
+          context: nil];
+  signUpSwitchButton.alpha = 0.0;
+  signUpSwitchButton.frame = CGRectMake(
+    (screenWidth - (signUpSwitchButtonRect.size.width + padding)), 
+      (_loginButton.frame.origin.y + _loginButton.frame.size.height + padding), 
+        signUpSwitchButtonRect.size.width, signUpSwitchButtonRect.size.height);
+  signUpSwitchButton.titleLabel.font = font;
+  [signUpSwitchButton addTarget: self action: @selector(showSignUp)
+    forControlEvents: UIControlEventTouchUpInside];
+  [signUpSwitchButton setAttributedTitle: newUserString 
+    forState: UIControlStateNormal];
+  [scroll addSubview: signUpSwitchButton];
 
-  activityIndicatorView = 
-    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
-      UIActivityIndicatorViewStyleWhiteLarge];
-  activityIndicatorView.color = [UIColor grayDark];
-  CGRect activityFrame = activityIndicatorView.frame;
-  activityFrame.origin.x = (self.frame.size.width - 
-    activityFrame.size.width) / 2.0;
-  activityFrame.origin.y = (self.frame.size.height - 
-    activityFrame.size.height) / 2.0;
-  activityIndicatorView.frame = activityFrame;
-  [self addSubview: activityIndicatorView];
+  // Login switch button
+  // attributed string
+  NSMutableAttributedString *alreadyString = 
+    [[NSMutableAttributedString alloc] initWithString: @"Already a user? "
+      attributes: @{ NSForegroundColorAttributeName: [UIColor grayMedium] }];
+  NSAttributedString *loginString = [[NSAttributedString alloc] initWithString:
+    @"Login" attributes: @{ NSForegroundColorAttributeName: [UIColor blue] }];
+  [alreadyString appendAttributedString: loginString];
+  // button
+  loginSwitchButton = [[UIButton alloc] init];
+  CGRect loginButtonRect = [@"Already a user? Login" boundingRectWithSize:
+    CGSizeMake(_facebookButton.frame.size.width, 
+    _facebookButton.frame.size.height)
+      options: NSStringDrawingUsesLineFragmentOrigin
+        attributes: @{ NSFontAttributeName: font }
+          context: nil];
+  loginSwitchButton.alpha = signUpSwitchButton.alpha;
+  loginSwitchButton.frame = CGRectMake(
+    (screenWidth - (loginButtonRect.size.width + padding)), 
+      signUpSwitchButton.frame.origin.y, 
+        loginButtonRect.size.width, loginButtonRect.size.height);
+  loginSwitchButton.titleLabel.font = signUpSwitchButton.titleLabel.font;
+  [loginSwitchButton addTarget: self action: @selector(showLogin)
+    forControlEvents: UIControlEventTouchUpInside];
+  [loginSwitchButton setAttributedTitle: alreadyString
+    forState: UIControlStateNormal];
+  [scroll addSubview: loginSwitchButton];
+
+  [self updateScrollContentSize];
 
   return self;
 }
@@ -245,10 +274,12 @@
   // If it lags, that is because the 1st time the keyboard loads it lags
   int padding = 20;
   // Don't add 50 here because the height of the keyboard (216) covers the 50
-  float height = (loginButton.frame.origin.y + 
-    loginButton.frame.size.height + padding + 216);
+  float height = (loginSwitchButton.frame.origin.y + 
+    loginSwitchButton.frame.size.height + padding + 216);
   float y = height - 
-    (20 + scroll.frame.size.height + loginButton.frame.size.height);
+    (20 + scroll.frame.size.height + 20 + 
+      _loginButton.frame.size.height + 20 + 
+        loginSwitchButton.frame.size.height);
   if (y < 0)
     y = 0;
   CGPoint point = CGPointMake(scroll.contentOffset.x, y);
@@ -270,23 +301,147 @@
 
 #pragma mark - Instance Methods
 
-- (void) hideIntro
+- (void) clearTextFieldText
 {
-  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  [appDelegate.introViewController dismissViewControllerAnimated: YES
-    completion: nil];
-  emailTextField.text    = @"";
-  _nameTextField.text    = @"";
-  passwordTextField.text = @"";
+  _emailTextField.text     = @"";
+  _firstNameTextField.text = @"";
+  _lastNameTextField.text  = @"";
+  _passwordTextField.text  = @"";
+}
+
+- (CGFloat) heightForScrollContentSize
+{
+  CGFloat height = 0;
+  int padding    = 20;
+  if (loginSwitchButton.alpha == 1.0 || signUpSwitchButton.alpha == 1.0)
+    height = (loginSwitchButton.frame.origin.y + 
+      loginSwitchButton.frame.size.height + padding);
+  else
+    height = (_loginButton.frame.origin.y + 
+      _loginButton.frame.size.height + padding);
+  return height;
+}
+
+- (void) login
+{
+  if ([_emailTextField.text length] > 0 && 
+    [_passwordTextField.text length] > 0) {
+
+    NSDictionary *dictionary = @{
+      @"email":    _emailTextField.text,
+      @"password": _passwordTextField.text
+    };
+    OMBLoginConnection *connection = 
+      [[OMBLoginConnection alloc] initWithParameters: dictionary];
+    connection.completionBlock = ^(NSError *error) {
+      // User logged in
+      if ([OMBUser currentUser].accessToken)
+        [self clearTextFieldText];
+      // User failed to login
+      else {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+          @"Login failed" message: @"Invalid email or password" delegate: nil
+            cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+        [alertView show];
+        _passwordTextField.text = @"";
+      }
+      [self stopSpinning];
+    };
+    [self startSpinning];
+    [connection start];
+  }
+  [self endEditing: YES];
+  [UIView animateWithDuration: 0.25 animations: ^{
+    [self updateScrollContentSize];
+  }];
+}
+
+- (void) loginOrSignUp
+{
+  if (_firstNameTextField.alpha < 1)
+    [self login];
+  else
+    [self signUp];
+}
+
+- (void) resetOriginX
+{
+  int padding = 20;
+
+  CGRect rect1          = _facebookButton.frame;
+  rect1.origin.x        = padding;
+  _facebookButton.frame = rect1;
+
+  CGRect rect2              = _firstNameTextField.frame;
+  rect2.origin.x            = padding;
+  _firstNameTextField.frame = rect2;
+
+  CGRect rect3             = _lastNameTextField.frame;
+  rect3.origin.x           = padding;
+  _lastNameTextField.frame = rect3;
+
+  CGRect rect4          = _emailTextField.frame;
+  rect4.origin.x        = padding;
+  _emailTextField.frame = rect4;
+
+  CGRect rect5             = _passwordTextField.frame;
+  rect5.origin.x           = padding;
+  _passwordTextField.frame = rect5;
+
+  CGRect rect6       = _loginButton.frame;
+  rect6.origin.x     = padding;
+  _loginButton.frame = rect6;
+}
+
+- (void) resetOriginY
+{
+  // int padding = 20;
+  // height of the close button on the login view controller
+  float difference = -1 * 25;
+  // float difference = _facebookButton.frame.origin.y - padding;
+
+  CGRect rect1          = _facebookButton.frame;
+  rect1.origin.y        -= difference;
+  _facebookButton.frame = rect1;
+
+  CGRect rect2              = _firstNameTextField.frame;
+  rect2.origin.y            -= difference;
+  _firstNameTextField.frame = rect2;
+
+  CGRect rect3             = _lastNameTextField.frame;
+  rect3.origin.y           -= difference;
+  _lastNameTextField.frame = rect3;
+
+  CGRect rect4          = _emailTextField.frame;
+  rect4.origin.y        -= difference;
+  _emailTextField.frame = rect4;
+
+  CGRect rect5             = _passwordTextField.frame;
+  rect5.origin.y           -= difference;
+  _passwordTextField.frame = rect5;
+
+  CGRect rect6       = _loginButton.frame;
+  rect6.origin.y     -= difference;
+  _loginButton.frame = rect6;
+
+  CGRect rect7   = orView.frame;
+  rect7.origin.y -= difference;
+  orView.frame   = rect7;
+
+  CGRect rect8            = loginSwitchButton.frame;
+  rect8.origin.y          -= difference;
+  loginSwitchButton.frame = rect8;
+
+  CGRect rect9             = signUpSwitchButton.frame;
+  rect9.origin.y           -= difference;
+  signUpSwitchButton.frame = rect9;
 }
 
 - (void) resetViewOrigins
 {
-  int padding = 20;
-  float height = (loginButton.frame.origin.y + 
-    loginButton.frame.size.height + padding + 50);
   [UIView animateWithDuration: 0.25 animations: ^{
-    scroll.contentSize = CGSizeMake(scroll.contentSize.width, height);
+    scroll.contentSize = CGSizeMake(scroll.contentSize.width, 
+      [self heightForScrollContentSize]);
   }];  
 }
 
@@ -298,22 +453,99 @@
   [appDelegate openSession];
 }
 
+- (void) showLogin
+{
+  [UIView animateWithDuration: 0.25 animations: ^{
+    loginSwitchButton.alpha  = 0.0;
+    signUpSwitchButton.alpha = 1.0;
+    [_facebookButton setTitle: @"Login using Facebook" 
+      forState: UIControlStateNormal];
+    [_loginButton setTitle: @"Login" forState: UIControlStateNormal];
+  }];
+  if (_firstNameTextField.alpha == 1) {
+    float y = (_firstNameTextField.frame.size.height + 20) * -1;
+    // Cover the space for first name and last name field
+    y *= 2;
+    CGRect emailTextFieldFrame      = _emailTextField.frame;
+    emailTextFieldFrame.origin.y    = emailTextFieldFrame.origin.y + y;
+    CGRect passwordTextFieldFrame   = _passwordTextField.frame;
+    passwordTextFieldFrame.origin.y = passwordTextFieldFrame.origin.y + y;
+    CGRect loginButtonFrame         = _loginButton.frame;
+    loginButtonFrame.origin.y       = loginButtonFrame.origin.y + y;
+    CGRect loginSwitchRect    = loginSwitchButton.frame;
+    loginSwitchRect.origin.y  = loginSwitchRect.origin.y + y;
+    CGRect signUpSwitchRect   = signUpSwitchButton.frame;
+    signUpSwitchRect.origin.y = signUpSwitchRect.origin.y + y;
+    [UIView animateWithDuration: 0.25 animations: ^{
+      _firstNameTextField.alpha = 0.0;
+      _lastNameTextField.alpha  = 0.0;
+      _emailTextField.frame    = emailTextFieldFrame;
+      _passwordTextField.frame = passwordTextFieldFrame;
+      _loginButton.frame       = loginButtonFrame;
+      loginSwitchButton.frame  = loginSwitchRect;
+      signUpSwitchButton.frame = signUpSwitchRect;
+    }];
+  }
+  [self endEditing: YES];
+  [self updateScrollContentSize];
+}
+
+- (void) showSignUp
+{
+  [UIView animateWithDuration: 0.25 animations: ^{
+    loginSwitchButton.alpha  = 1.0;
+    signUpSwitchButton.alpha = 0.0;
+    [_facebookButton setTitle: @"Sign up using Facebook" 
+      forState: UIControlStateNormal];
+    [_loginButton setTitle: @"Sign up" forState: UIControlStateNormal];
+  }];
+  if (_firstNameTextField.alpha == 0) {
+    float y = (_firstNameTextField.frame.size.height + 20) * 1;
+    // Cover the space for first name and last name field
+    y *= 2;
+    CGRect emailTextFieldFrame      = _emailTextField.frame;
+    emailTextFieldFrame.origin.y    = emailTextFieldFrame.origin.y + y;
+    CGRect passwordTextFieldFrame   = _passwordTextField.frame;
+    passwordTextFieldFrame.origin.y = passwordTextFieldFrame.origin.y + y;
+    CGRect loginButtonFrame         = _loginButton.frame;
+    loginButtonFrame.origin.y       = loginButtonFrame.origin.y + y;
+    CGRect loginSwitchRect    = loginSwitchButton.frame;
+    loginSwitchRect.origin.y  = loginSwitchRect.origin.y + y;
+    CGRect signUpSwitchRect   = signUpSwitchButton.frame;
+    signUpSwitchRect.origin.y = signUpSwitchRect.origin.y + y;
+    [UIView animateWithDuration: 0.25 animations: ^{
+      _firstNameTextField.alpha = 1.0;
+      _lastNameTextField.alpha  = 1.0;
+      _emailTextField.frame    = emailTextFieldFrame;
+      _passwordTextField.frame = passwordTextFieldFrame;
+      _loginButton.frame       = loginButtonFrame;
+      loginSwitchButton.frame  = loginSwitchRect;
+      signUpSwitchButton.frame = signUpSwitchRect;
+    }];
+  }
+  [self endEditing: YES];
+  [self updateScrollContentSize];
+}
+
 - (void) signUp
 {
-  if ([_nameTextField.text length] > 0 && [emailTextField.text length] > 0 && 
-    [passwordTextField.text length] > 0) {
+  if ([_emailTextField.text length] > 0 && 
+      [_firstNameTextField.text length] > 0 && 
+      [_lastNameTextField.text length] > 0 &&
+      [_passwordTextField.text length] > 0) {
 
     NSDictionary *dictionary = @{
-      @"name":     _nameTextField.text,
-      @"email":    emailTextField.text,
-      @"password": passwordTextField.text
+      @"email":      _emailTextField.text,
+      @"first_name": _firstNameTextField.text,
+      @"last_name":  _lastNameTextField.text,
+      @"password":   _passwordTextField.text
     };
     OMBSignUpConnection *connection = 
       [[OMBSignUpConnection alloc] initWithParameters: dictionary];
     connection.completionBlock = ^(NSError *error) {
       // User signed up
       if ([OMBUser currentUser].accessToken)
-        [self hideIntro];
+        [self clearTextFieldText];      
       // User failed to sign up
       else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
@@ -332,13 +564,39 @@
 
 - (void) startSpinning
 {
-  [activityIndicatorView startAnimating];
+  OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
+    [UIApplication sharedApplication].delegate;
+  // Container -> login view controller spinner
+  [appDelegate.container.loginViewController.activityIndicatorView 
+    startAnimating];
+  // Container -> intro view controller spinner
+  [appDelegate.container.introViewController.activityIndicatorView 
+    startAnimating];
+  // Container -> intro view controller -> login view controller spinner
+  [appDelegate.container.introViewController.loginViewController.activityIndicatorView startAnimating];
+  NSLog(@"START SPINNING");
 }
 
 - (void) stopSpinning
 {
-  [activityIndicatorView stopAnimating];
+  OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
+    [UIApplication sharedApplication].delegate;
+  // Container -> login view controller spinner
+  [appDelegate.container.loginViewController.activityIndicatorView 
+    stopAnimating];
+  // Container -> intro view controller spinner
+  [appDelegate.container.introViewController.activityIndicatorView 
+    stopAnimating];
+  // Container -> intro view controller -> login view controller spinner
+  [appDelegate.container.introViewController.loginViewController.activityIndicatorView stopAnimating];
+  NSLog(@"STOP SPINNING");
 }
 
+- (void) updateScrollContentSize
+{
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  scroll.contentSize = CGSizeMake(screen.size.width, 
+    [self heightForScrollContentSize]);
+}
 
 @end

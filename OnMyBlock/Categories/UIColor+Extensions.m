@@ -88,6 +88,18 @@
     blue: (140/255.0) alpha: value];
 }
 
++ (UIColor *) grayUltraLight
+{  
+  return [UIColor colorWithRed: (245/255.0) green: (245/255.0) 
+    blue: (245/255.0) alpha: 1];
+}
+
++ (UIColor *) grayUltraLightAlpha: (float) value
+{
+  return [UIColor colorWithRed: (245/255.0) green: (245/255.0) 
+    blue: (245/255.0) alpha: value];
+}
+
 + (UIColor *) green
 {
   return [UIColor colorWithRed: (88/255.0) green: (209/255.0) 

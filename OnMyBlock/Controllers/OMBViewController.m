@@ -8,8 +8,7 @@
 
 #import "OMBViewController.h"
 
-#import "MFSideMenu.h"
-#import "OMBAppDelegate.h"
+#import "OMBViewControllerContainer.h"
 #import "UIImage+Resize.h"
 #import "UIColor+Extensions.h"
 
@@ -22,9 +21,6 @@
   self = [super init];
   if (self) {
     self.view.backgroundColor = [UIColor backgroundColor];
-    self.navigationItem.backBarButtonItem = 
-      [[UIBarButtonItem alloc] initWithTitle: @"" 
-        style:UIBarButtonItemStylePlain target: nil action: nil];
   }
   return self;
 }
@@ -45,8 +41,11 @@
     [[UIBarButtonItem alloc] initWithImage: 
       [UIImage image:  [UIImage imageNamed: @"menu_icon_staggered.png"] 
         size: CGSizeMake(26, 26)] style: UIBarButtonItemStylePlain 
-          target: self action: @selector(showRightMenu)];
-  self.navigationItem.rightBarButtonItem = menuBarButtonItem;
+          target: self action: @selector(showContainer)];
+
+  self.navigationItem.backBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithTitle: @"" 
+      style: UIBarButtonItemStylePlain target: nil action: nil];
 }
 
 - (void) setTitle: (NSString *) string
@@ -55,7 +54,7 @@
   UILabel *label = [[UILabel alloc] init];
   label.backgroundColor = [UIColor clearColor];
   label.font            = [UIFont fontWithName: @"HelveticaNeue-Light" 
-    size: 20];
+    size: 18];
   label.frame           = CGRectMake(0, 0, 0, 44);
   label.shadowColor     = [UIColor clearColor];
   label.shadowOffset    = CGSizeMake(0, 0);
@@ -76,6 +75,18 @@
   [self showMenuBarButtonItem];
 }
 
+- (void) setMenuBarButtonItem
+{
+  self.navigationItem.leftBarButtonItem = menuBarButtonItem;
+}
+
+- (void) showContainer
+{
+  OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
+    [UIApplication sharedApplication].delegate;
+  [appDelegate.container showMenuWithFactor: 1];
+}
+
 - (void) showDoneEditingBarButtonItem
 {
   [self.navigationItem setRightBarButtonItem: doneEditingBarButtonItem 
@@ -85,13 +96,6 @@
 - (void) showMenuBarButtonItem
 {
   [self.navigationItem setRightBarButtonItem: menuBarButtonItem animated: YES];
-}
-
-- (void) showRightMenu
-{
-  OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
-    [UIApplication sharedApplication].delegate;
-  [appDelegate.menuContainer toggleRightSideMenuCompletion: ^{}];
 }
 
 @end

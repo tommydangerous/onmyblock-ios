@@ -10,27 +10,32 @@
 
 @class TextFieldPadding;
 
-@interface OMBSignUpView : UIView
-<UITextFieldDelegate>
+@interface OMBSignUpView : UIView <UITextFieldDelegate>
 {
-  UIActivityIndicatorView *activityIndicatorView;
-  TextFieldPadding *emailTextField;  
-  UIBarButtonItem *loginBarButtonItem;
-  UIButton *loginButton;
+  UIButton *loginSwitchButton;
   UIView *orView;
-  TextFieldPadding *passwordTextField;
   UIScrollView *scroll;
-  UIBarButtonItem *signUpBarButtonItem;
+  UIButton *signUpSwitchButton;
 }
 
+@property (nonatomic, strong) TextFieldPadding *emailTextField;
 @property (nonatomic, strong) UIButton *facebookButton;
-@property (nonatomic, strong) TextFieldPadding *nameTextField;
+@property (nonatomic, strong) TextFieldPadding *firstNameTextField;
+@property (nonatomic, strong) TextFieldPadding *lastNameTextField;
+@property (nonatomic, strong) UIButton *loginButton;
+@property (nonatomic, strong) TextFieldPadding *passwordTextField;
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
+- (void) login;
+- (void) resetOriginX;
+- (void) resetOriginY;
 - (void) resetViewOrigins;
+- (void) showLogin;
+- (void) showSignUp;
 - (void) signUp;
+- (void) updateScrollContentSize;
 
 @end

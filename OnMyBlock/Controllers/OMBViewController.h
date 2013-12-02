@@ -12,6 +12,7 @@
 
 #import "OMBAppDelegate.h"
 #import "OMBTabBarController.h"
+#import "OMBUser.h"
 
 @interface OMBViewController : GAITrackedViewController
 {
@@ -23,6 +24,7 @@
 
 #pragma mark - Instance Methods
 
+- (void) setMenuBarButtonItem;
 - (void) showDoneEditingBarButtonItem;
 - (void) showMenuBarButtonItem;
 

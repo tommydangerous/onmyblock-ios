@@ -10,7 +10,7 @@
 
 @interface OMBIntroAuctionView : UIView
 
-@property (nonatomic, strong) UIView *cameraFlash;
+@property (nonatomic, strong) UIImageView *cameraFlash;
 @property (nonatomic, strong) UIImageView *iphoneImageView;
 @property (nonatomic, strong) UIView *iphoneScreen;
 @property (nonatomic, strong) UIView *iphoneView;

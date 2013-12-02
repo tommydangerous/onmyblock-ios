@@ -10,13 +10,9 @@
 #import "GAI.h"
 
 #import "OMBAppDelegate.h"
-
-#import "MFSideMenu.h"
 #import "OMBIntroViewController.h"
 #import "OMBLoginViewController.h"
-#import "OMBMenuViewController.h"
-#import "OMBNavigationController.h"
-#import "OMBTabBarController.h"
+#import "OMBViewControllerContainer.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
 
@@ -25,10 +21,7 @@ NSString *const FBSessionStateChangedNotification =
 
 @implementation OMBAppDelegate
 
-@synthesize introViewController = _introViewController;
-@synthesize menuContainer       = _menuContainer;
-@synthesize rightMenu           = _rightMenu;
-@synthesize tabBarController    = _tabBarController;
+@synthesize container = _container;
 
 - (BOOL) application: (UIApplication *) application 
 didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
@@ -46,33 +39,15 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // id <GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:
   //   @"UA-45382533-1"];
   // NSLog(@"GAITracker: %@", tracker);
-
-  // Notifications
-  // When user logs out, show the intro view controller
-  [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(showIntro) name: OMBUserLoggedOutNotification
-      object: nil];
-
+  
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
 
-  // View controllers
-  _introViewController = [[OMBIntroViewController alloc] init];
-  _loginViewController =
-    [[OMBNavigationController alloc] initWithRootViewController:
-      [[OMBLoginViewController alloc] init]];
-  _tabBarController = [[OMBTabBarController alloc] init];
-  _rightMenu        = [[OMBMenuViewController alloc] init];
-  _menuContainer = 
-    [MFSideMenuContainerViewController containerWithCenterViewController:
-      _tabBarController leftMenuViewController: nil
-        rightMenuViewController: _rightMenu];
-  [_menuContainer setMenuWidth: screen.size.width * 0.8];
-  [_menuContainer setShadowEnabled: NO];
+  _container = [[OMBViewControllerContainer alloc] init];
 
   // Set root view controller for app
-  self.window.backgroundColor    = [UIColor whiteColor];
-  self.window.rootViewController = _menuContainer;
+  self.window.backgroundColor    = [UIColor backgroundColor];
+  self.window.rootViewController = _container;
   [self.window makeKeyAndVisible];
 
   // Facebook
@@ -80,9 +55,9 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // If current session has a valid Facebook token
     [self openSession];
 
-  // If user is not signed in, show the intro view controller
-  if (![[OMBUser currentUser] loggedIn])
-    [self showIntro];
+  [_container showIntroAnimatedDissolve: NO];
+  // if ([[OMBUser currentUser] loggedIn])
+    // [self hideIntro];
 
   return YES;
 }
@@ -119,6 +94,18 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
 
 #pragma mark - Instance Methods
 
+- (void) hideIntro
+{
+  [_container.introViewController dismissViewControllerAnimated: NO
+    completion: nil];
+}
+
+- (void) hideLogin
+{
+  [_container.loginViewController dismissViewControllerAnimated: NO
+    completion: nil];
+}
+
 - (void) openSession
 {
   [FBSession openActiveSessionWithReadPermissions: @[@"email"] 
@@ -138,13 +125,9 @@ state: (FBSessionState) state error: (NSError *) error
     case FBSessionStateOpen: {
       [OMBUser currentUser];
       // Dismiss the intro view controller
-      [_introViewController dismissViewControllerAnimated: NO
-        completion: nil];
+      // [self hideIntro];
       // Dismiss login view controller
-      [_loginViewController dismissViewControllerAnimated: NO
-        completion: nil];
-      // Dismiss sign up view controller
-
+      // [self hideLogin];
       break;
     }
     case FBSessionStateClosed:
@@ -165,37 +148,14 @@ state: (FBSessionState) state error: (NSError *) error
   }
 }
 
-- (void) showIntro
-{
-  _introViewController.scroll.contentOffset = CGPointZero;
-  UINavigationController *nav = 
-    (UINavigationController *) _tabBarController.selectedViewController;
-  [nav.topViewController presentViewController: _introViewController
-    animated: YES completion: nil];
-}
-
 - (void) showLogin
 {
-  [(OMBLoginViewController *) _loginViewController.topViewController showLogin];
-  [self showLoginViewController];
-}
-
-- (void) showLoginViewController
-{
-  UINavigationController *nav = 
-    (UINavigationController *) _tabBarController.selectedViewController;
-  [nav.topViewController presentViewController: _loginViewController 
-    animated: YES completion: ^{
-      [_menuContainer setMenuState: MFSideMenuStateClosed completion: nil];
-    }
-  ];
+  [_container showLogin];
 }
 
 - (void) showSignUp
 {
-  [(OMBLoginViewController *) 
-    _loginViewController.topViewController showSignUp];
-  [self showLoginViewController];
+  [_container showSignUp];
 }
 
 @end

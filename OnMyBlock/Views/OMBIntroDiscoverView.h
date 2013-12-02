@@ -10,6 +10,7 @@
 
 @interface OMBIntroDiscoverView : UIView
 
+@property (nonatomic, strong) UIImageView *map;
 @property (nonatomic, strong) UIImageView *marker1;
 @property (nonatomic, strong) UIImageView *marker2;
 @property (nonatomic, strong) UIImageView *marker3;

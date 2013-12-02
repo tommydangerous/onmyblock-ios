@@ -16,11 +16,12 @@
 
 - (id) initWithRootViewController: (UIViewController *) viewController
 {
-  self = [super initWithRootViewController: viewController];
-  if (self) {
-    // self.navigationBar.barTintColor = [UIColor whiteColor];
-    self.navigationBar.tintColor    = [UIColor blue];
-  }
+  if (!([super initWithRootViewController: viewController])) return nil;
+  
+  self.navigationBar.barTintColor = [UIColor backgroundColor];
+  self.navigationBar.tintColor    = [UIColor blue];
+  self.navigationBar.translucent  = YES;
+  
   return self;
 }
 

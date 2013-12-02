@@ -50,21 +50,7 @@
 {
   [super loadView];
 
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  self.view     = [[UIView alloc] initWithFrame: screen];
-
-  _table = [[UITableView alloc] initWithFrame: screen
-    style: UITableViewStylePlain];
-  _table.alwaysBounceVertical         = YES;
-  _table.backgroundColor              = [UIColor backgroundColor];
-  _table.canCancelContentTouches      = YES;
-  _table.contentInset                 = UIEdgeInsetsMake(0, 0, -49, 0);
-  _table.dataSource                   = self;
-  _table.delegate                     = self;
-  _table.separatorColor               = [UIColor clearColor];
-  _table.separatorStyle               = UITableViewCellSeparatorStyleNone;
-  _table.showsVerticalScrollIndicator = NO;
-  [self.view addSubview: _table];
+  [self setMenuBarButtonItem];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -72,6 +58,7 @@
   [super viewWillAppear: animated];
   [self fetchFavorites];
   [self reloadTable];
+  NSLog(@"VIEW WILL APPEAR");
 }
 
 #pragma mark - Protocol
@@ -94,6 +81,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
+  NSLog(@"%@", [[OMBUser currentUser] favoritesArray]);
   return [[[OMBUser currentUser] favoritesArray] count];
 }
 

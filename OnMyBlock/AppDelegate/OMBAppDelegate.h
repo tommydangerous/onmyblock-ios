@@ -11,19 +11,11 @@
 
 extern NSString *const FBSessionStateChangedNotification;
 
-@class MFSideMenuContainerViewController;
-@class OMBIntroViewController;
-@class OMBMenuViewController;
-@class OMBNavigationController;
-@class OMBTabBarController;
+@class OMBViewControllerContainer;
 
 @interface OMBAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic, strong) OMBNavigationController *loginViewController;
-@property (nonatomic, strong) MFSideMenuContainerViewController *menuContainer;
-@property (nonatomic, strong) OMBIntroViewController *introViewController;
-@property (nonatomic, strong) OMBMenuViewController *rightMenu;
-@property (nonatomic, strong) OMBTabBarController *tabBarController;
+@property (nonatomic, strong) OMBViewControllerContainer *container;
 @property (nonatomic, strong) UIWindow *window;
 
 #pragma mark - Methods

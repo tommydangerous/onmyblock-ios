@@ -20,14 +20,20 @@ extern NSString *const OMBUserLoggedOutNotification;
 
 @interface OMBUser : NSObject
 
+@property (nonatomic, strong) NSString *about;
 @property (nonatomic, strong) NSString *accessToken;
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *facebookAccessToken;
 @property (nonatomic, strong) NSString *facebookId;
-@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *firstName;
+@property (nonatomic, strong) NSString *lastName;
+@property (nonatomic, strong) NSString *phone;
+@property (nonatomic, strong) NSString *school;
 @property (nonatomic, strong) NSString *userType;
 
 @property (nonatomic, strong) NSMutableDictionary *favorites;
+@property (nonatomic, strong) UIImage *image;
+@property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic) int uid;
 
 #pragma mark - Methods
@@ -40,9 +46,13 @@ extern NSString *const OMBUserLoggedOutNotification;
 
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence;
+- (void) downloadImageFromImageURLWithCompletion: 
+(void (^) (NSError *error)) block;
 - (NSArray *) favoritesArray;
+- (NSString *) fullName;
 - (BOOL) loggedIn;
 - (void) logout;
+- (NSString *) phoneString;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence;

@@ -16,6 +16,7 @@
 @synthesize marker1 = _marker1;
 @synthesize marker2 = _marker2;
 @synthesize marker3 = _marker3;
+@synthesize map     = _map;
 
 - (id) init
 {
@@ -27,12 +28,13 @@
 
   self.frame = screen;
 
-  UIImageView *map = [[UIImageView alloc] init];
-  map.clipsToBounds = YES;
-  map.contentMode = UIViewContentModeScaleAspectFill;
-  map.frame = screen;
-  map.image = [UIImage imageNamed: @"map_background_image.png"];
-  [self addSubview: map];
+  _map = [[UIImageView alloc] init];
+  _map.alpha = 0.0;
+  _map.clipsToBounds = YES;
+  _map.contentMode = UIViewContentModeScaleAspectFill;
+  _map.frame = screen;
+  _map.image = [UIImage imageNamed: @"map_background_image.png"];
+  [self addSubview: _map];
 
   OMBGradientView *gradientView = [[OMBGradientView alloc] init];
   gradientView.colors = @[

@@ -26,10 +26,11 @@
   float screenHeight = screen.size.height;
   float screenWidth  = screen.size.width;
 
+  self.clipsToBounds = YES;
   self.frame = screen;
 
   float bedroomView1Height = screenWidth * 0.8;
-  float bedroomView1Width  = screenWidth * 0.7;
+  float bedroomView1Width  = screenWidth * 0.8;
   OMBBedroomView *bedroomView1 = [[OMBBedroomView alloc] initWithFrame:
     CGRectMake(10, ((screenHeight - bedroomView1Height) * 0.4), 
       bedroomView1Width, bedroomView1Height)];
@@ -45,8 +46,17 @@
 
   _iphoneView = [[UIView alloc] init];
   _iphoneView.frame = CGRectMake((screenWidth - (iphoneImageViewWidth + 10)), 
-    ((screenHeight - iphoneImageViewHeight) * 0.35), 
-      iphoneImageViewWidth, iphoneImageViewHeight);
+    screenHeight, iphoneImageViewWidth, iphoneImageViewHeight);
+
+  float cameraFlashHeight = screenWidth * 0.7;
+  float cameraFlashWidth  = cameraFlashHeight;
+  _cameraFlash = [[UIImageView alloc] init];
+  _cameraFlash.alpha = 0;
+  _cameraFlash.frame = CGRectMake((-1 * (cameraFlashWidth * 0.45)), 
+    ((-1 * (cameraFlashHeight * 0.45))), cameraFlashHeight, cameraFlashWidth);
+  _cameraFlash.image = [UIImage imageNamed: @"camera_flash_image.png"];
+  [_iphoneView addSubview: _cameraFlash];
+
   [self addSubview: _iphoneView];
 
   _iphoneImageView = [[UIImageView alloc] init];
@@ -63,13 +73,14 @@
   _iphoneScreen = [[UIView alloc] init];
   _iphoneScreen.alpha = 0.0;
   _iphoneScreen.backgroundColor = [UIColor backgroundColor];
+  _iphoneScreen.clipsToBounds = YES;
   _iphoneScreen.frame = CGRectMake(iphoneOriginX, iphoneOriginY,
     iphoneScreenWidth, iphoneScreenHeight);
   _iphoneScreen.layer.borderColor = [UIColor grayDark].CGColor;
   _iphoneScreen.layer.borderWidth = 1.0;
   [_iphoneView addSubview: _iphoneScreen];
 
-  float bedroomView2Height = _iphoneScreen.frame.size.width * (0.7 / 0.8);
+  float bedroomView2Height = _iphoneScreen.frame.size.width * (0.8 / 0.8);
   float bedroomView2Width  = _iphoneScreen.frame.size.width;
   OMBBedroomView *bedroomView2 = [[OMBBedroomView alloc] initWithFrame:
     CGRectMake(
@@ -106,11 +117,6 @@
   label2.textAlignment = label1.textAlignment;
   label2.textColor = label1.textColor;
   [self addSubview: label2];
-
-  _cameraFlash = [[UIView alloc] initWithFrame: self.frame];
-  _cameraFlash.alpha = 0;
-  _cameraFlash.backgroundColor = [UIColor whiteColor];
-  [self addSubview: _cameraFlash];
 
   return self;
 }

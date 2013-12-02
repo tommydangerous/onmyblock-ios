@@ -75,21 +75,17 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Navigation item
   // Left bar button item
-  self.navigationItem.leftBarButtonItem = 
+  [self setMenuBarButtonItem];
+  // Right bar button item
+  self.navigationItem.rightBarButtonItem = 
     [[UIBarButtonItem alloc] initWithImage: [UIImage image:
-      [UIImage imageNamed: @"search.png"] size: CGSizeMake(26, 26)]
+      [UIImage imageNamed: @"search_icon.png"] size: CGSizeMake(26, 26)]
         style: UIBarButtonItemStylePlain target: self 
           action: @selector(showMapFilterViewController)];
+
   // Title view
-  CGSize segmentedControlImageSize = CGSizeMake(29 * 0.7, 29 * 0.7);
   segmentedControl = [[UISegmentedControl alloc] initWithItems: 
-    @[
-      [UIImage image: [UIImage imageNamed: @"map_segmented_control.png"] 
-        size: segmentedControlImageSize],
-      [UIImage image: [UIImage imageNamed: @"list_segmented_control.png"] 
-        size: segmentedControlImageSize]
-    ]
-  ];
+    @[@"Map", @"Recent"]];
   segmentedControl.selectedSegmentIndex = 0;
   CGRect segmentedFrame = segmentedControl.frame;
   segmentedFrame.size.width = screen.size.width * 0.4;

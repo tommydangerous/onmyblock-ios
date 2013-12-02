@@ -32,8 +32,7 @@
   float d2 = screen.size.width * 0.5;
 
   _stopwatchView = [[OMBStopwatchView alloc] initWithFrame:
-    CGRectMake(0, 0, d1, d1)];  
-  [self addSubview: _stopwatchView];
+    CGRectMake(0, 0, d1, d1)];
   _stopwatchView.frame = CGRectMake(0, 
     ((screen.size.height - _stopwatchView.frame.size.height) * 0.25),
       _stopwatchView.frame.size.width, _stopwatchView.frame.size.height);
@@ -48,6 +47,8 @@
   _paddleView.paddleView.transform = 
     CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(35));
   [self addSubview: _paddleView];
+
+  [self addSubview: _stopwatchView];
 
   UILabel *label1 = [[UILabel alloc] init];
   label1.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 22];

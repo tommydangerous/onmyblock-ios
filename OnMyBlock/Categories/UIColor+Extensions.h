@@ -23,6 +23,8 @@
 + (UIColor *) grayLightAlpha: (float) value;
 + (UIColor *) grayMedium;
 + (UIColor *) grayMediumAlpha: (float) value;
++ (UIColor *) grayUltraLight;
++ (UIColor *) grayUltraLightAlpha: (float) value;
 + (UIColor *) green;
 + (UIColor *) greenDark;
 + (UIColor *) pink;

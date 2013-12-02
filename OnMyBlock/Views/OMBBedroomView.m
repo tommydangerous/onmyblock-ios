@@ -38,8 +38,9 @@
   float pictureFrameImageViewWidth  = self.frame.size.width * 0.7;
   float pictureFrameImageViewHeight = pictureFrameImageViewWidth * 
     (pictureFrameImageHeight / pictureFrameImageWidth);
-  pictureFrameImageView.frame = CGRectMake(0, 0, 
-    pictureFrameImageViewWidth, pictureFrameImageViewHeight);
+  pictureFrameImageView.frame = CGRectMake(
+    (-1 * (pictureFrameImageWidth * 0.5)), 0, 
+      pictureFrameImageViewWidth, pictureFrameImageViewHeight);
   pictureFrameImageView.image = pictureFrameImage;
   [self addSubview: pictureFrameImageView];
 
