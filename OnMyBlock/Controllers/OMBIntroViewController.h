@@ -15,6 +15,7 @@
 @class OMBIntroBidView;
 @class OMBIntroDiscoverView;
 @class OMBIntroFavoritesView;
+@class OMBIntroWelcomeView;
 @class OMBLoginViewController;
 @class OMBSignUpView;
 @class OMBWelcomeView;
@@ -29,6 +30,7 @@
 }
 
 // Views that go inside the scroll view
+@property (nonatomic, strong) OMBIntroWelcomeView *introWelcomeView;
 @property (nonatomic, strong) OMBWelcomeView *welcomeView;
 @property (nonatomic, strong) OMBIntroDiscoverView *introDiscoverView;
 @property (nonatomic, strong) OMBIntroBidView *introBidView;

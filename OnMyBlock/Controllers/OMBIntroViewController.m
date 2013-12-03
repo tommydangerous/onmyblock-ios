@@ -17,6 +17,7 @@
 #import "OMBIntroBidView.h"
 #import "OMBIntroDiscoverView.h"
 #import "OMBIntroFavoritesView.h"
+#import "OMBIntroWelcomeView.h"
 #import "OMBLoginViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBPaddleView.h"
@@ -63,7 +64,7 @@
   // because it cannot present the container's login view controller
   _loginViewController = [[OMBLoginViewController alloc] init];
 
-  int numberOfPages = 6;
+  int numberOfPages = 7;
 
   _scroll               = [[UIScrollView alloc] init];
   _scroll.bounces       = YES;
@@ -75,12 +76,19 @@
   _scroll.showsHorizontalScrollIndicator = NO;
   [self.view addSubview: _scroll];
 
+  _introWelcomeView = [[OMBIntroWelcomeView alloc] init];
+  _introWelcomeView.frame = CGRectMake(screenWidth * 0, 0, 
+    screenWidth, screenHeight);
+  [_scroll addSubview: _introWelcomeView];
+
   _welcomeView = [[OMBWelcomeView alloc] init];
-  _welcomeView.frame = CGRectMake(0, 0, screen.size.width, screen.size.height);
+  _welcomeView.frame = CGRectMake(screenWidth * 1, 
+    _introWelcomeView.frame.origin.y, _introWelcomeView.frame.size.width, 
+      _introWelcomeView.frame.size.height);
 
   // 2. Discover
   _introDiscoverView = [[OMBIntroDiscoverView alloc] init];
-  _introDiscoverView.frame = CGRectMake((screen.size.width * 1), 0, 
+  _introDiscoverView.frame = CGRectMake((screen.size.width * 2), 0, 
     _welcomeView.frame.size.width, _welcomeView.frame.size.height);
   [_scroll addSubview: _introDiscoverView];
 
@@ -89,25 +97,25 @@
 
   // 3. Bid
   _introBidView = [[OMBIntroBidView alloc] init];
-  _introBidView.frame = CGRectMake((screen.size.width * 2), 0, 
+  _introBidView.frame = CGRectMake((screen.size.width * 3), 0, 
     _welcomeView.frame.size.width, _welcomeView.frame.size.height);
   [_scroll addSubview: _introBidView];
 
   // 4. Auction
   _introAuctionView = [[OMBIntroAuctionView alloc] init];
-  _introAuctionView.frame = CGRectMake((screen.size.width * 3), 0,
+  _introAuctionView.frame = CGRectMake((screen.size.width * 4), 0,
     _welcomeView.frame.size.width, _welcomeView.frame.size.height);
   [_scroll addSubview: _introAuctionView];
 
   // 5. Get started
   _getStartedView = [[OMBGetStartedView alloc] init];
-  _getStartedView.frame = CGRectMake((screen.size.width * 4), 0,
+  _getStartedView.frame = CGRectMake((screen.size.width * 5), 0,
     _welcomeView.frame.size.width, _welcomeView.frame.size.height);
   [_scroll addSubview: _getStartedView];
 
   // 6. Sign up
   _signUpView = [[OMBSignUpView alloc] init];
-  _signUpView.frame = CGRectMake((screen.size.width * 5), 0,
+  _signUpView.frame = CGRectMake((screen.size.width * 6), 0,
     _welcomeView.frame.size.width, _welcomeView.frame.size.height);
   [_scroll addSubview: _signUpView];
 
@@ -163,7 +171,7 @@
     CGRectMake(0, 0, (screen.size.width * 0.5), (screen.size.width * 0.5))];
   [_scroll addSubview: houseGraphicView];
   houseGraphicView.frame = CGRectMake(
-    ((screen.size.width - houseGraphicView.frame.size.width) * 0.5),
+    screenWidth + ((screenWidth - houseGraphicView.frame.size.width) * 0.5),
       ((screen.size.height - houseGraphicView.frame.size.height) * 0.5), 
         houseGraphicView.frame.size.width, houseGraphicView.frame.size.height);
   houseGraphicView.image = [UIImage imageNamed: @"house_image.png"];
@@ -212,17 +220,25 @@ willDecelerate: (BOOL)decelerate
   float width   = scrollView.frame.size.width;
   float x       = scrollView.contentOffset.x;
   float page    = x / width;
-  // 0 - 1 pages
   if (page <= 1) {
     percent = (x - (width * 0)) / width;
-
+    // Turn the hands on the stop watch
+    _welcomeView.stopwatchView.minuteHand.transform =
+      CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(360 * percent * 12.0));
+    _welcomeView.stopwatchView.hourHand.transform = 
+      CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(360 * percent));
+  }
+  // 1 - 2 pages
+  if (page > 1 && page <= 2) {
+    percent = (x - (width * 1)) / width;
+    
     // Turn the hands on the stop watch
     _welcomeView.stopwatchView.minuteHand.transform =
       CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(360 * percent * 12.0));
     _welcomeView.stopwatchView.hourHand.transform = 
       CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(360 * percent));
     // Move the stop watch
-    _welcomeView.stopwatchView.frame = CGRectMake((x * 3),
+    _welcomeView.stopwatchView.frame = CGRectMake((x - screenWidth) * 3,
       _welcomeView.stopwatchView.frame.origin.y, 
         _welcomeView.stopwatchView.frame.size.width,
           _welcomeView.stopwatchView.frame.size.height);
@@ -276,9 +292,9 @@ willDecelerate: (BOOL)decelerate
               _introDiscoverView.marker2.frame.size.height);
     }
   }
-  // 1 - 2 pages
-  if (page <= 2 && page > 1) {
-    percent = (x - (width * 1)) / width;
+  // 2 - 3 pages
+  if (page > 2 && page <= 3) {
+    percent = (x - (width * 2)) / width;
 
     // Discover view
     _introDiscoverView.map.alpha = 1 - percent;
@@ -342,9 +358,9 @@ willDecelerate: (BOOL)decelerate
               _introBidView.paddleView3.frame.size.height);
     }
   }
-  // 2 - 3
-  if (page <= 3 && page > 2) {
-    percent = (x - (width * 2)) / width;
+  // 3 - 4
+  if (page > 3 && page <= 4) {
+    percent = (x - (width * 3)) / width;
 
     // Bid view
     float bottomLine = _introBidView.bottomView.frame.origin.y;
@@ -404,9 +420,9 @@ willDecelerate: (BOOL)decelerate
     else
       _introAuctionView.cameraFlash.alpha = 0;
   }
-  // 3 - 4
-  if (page <= 4 && page > 3) {
-    percent = (x - (width * 3)) / width;
+  // 4 - 5
+  if (page > 4 && page <= 5) {
+    percent = (x - (width * 4)) / width;
 
     float getStartedViewOriginX = 
       ((screenWidth - _getStartedView.getStartedButton.frame.size.width) * 0.5);
@@ -419,7 +435,7 @@ willDecelerate: (BOOL)decelerate
             _getStartedView.getStartedButton.frame.size.height);
   }
   // Scroll the close button view and the page control
-  if (page <= 4) {
+  if (page <= 5) {
     _pageControl.frame = CGRectMake(x, 
       _pageControl.frame.origin.y, 
         _pageControl.frame.size.width, _pageControl.frame.size.height);
@@ -429,9 +445,9 @@ willDecelerate: (BOOL)decelerate
         closeButtonView.frame.origin.y, 
           closeButtonView.frame.size.width, closeButtonView.frame.size.height);
   }
-  // 4 - 5
-  if (page <= 5 && page > 4) {
-    percent = (x - (width * 4)) / width;
+  // 5 - 6
+  if (page > 5 && page <= 6) {
+    percent = (x - (width * 5)) / width;
 
     // Get started view
     float getStartedViewOriginX = 
@@ -514,9 +530,9 @@ willDecelerate: (BOOL)decelerate
             rect.size.height);
     }
   }
-  // 5 - 6
-  if (page <= 6 && page > 5) {
-    percent = (x - (width * 5)) / width;
+  // 6 - 7
+  if (page > 6 && page <= 7) {
+    percent = (x - (width * 6)) / width;
   }
 }
 
@@ -546,7 +562,7 @@ willDecelerate: (BOOL)decelerate
 {
   _getStartedView.hidden     = YES;
   _signUpView.hidden         = YES;
-  _pageControl.numberOfPages = 4;
+  _pageControl.numberOfPages = 5;
   _pageControl.frame = CGRectMake(0.0f, (_scroll.frame.size.height - 60.0f), 
     _scroll.frame.size.width, 60.0f);
   _scroll.contentSize = CGSizeMake(
@@ -558,7 +574,7 @@ willDecelerate: (BOOL)decelerate
 {
   _getStartedView.hidden     = NO;
   _signUpView.hidden         = NO;
-  _pageControl.numberOfPages = 5;
+  _pageControl.numberOfPages = 6;
   _pageControl.frame = CGRectMake(0.0f, (_scroll.frame.size.height - 60.0f), 
     _scroll.frame.size.width, 60.0f);
   // Number of pages + 1 for the sign up view at the end of the intro

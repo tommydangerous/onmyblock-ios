@@ -352,7 +352,8 @@
   [accountView addSubview: accountButton];
   accountView.transform = CGAffineTransformMakeScale(0, 0);
 
-  [self presentDetailViewController: _mapNavigationController];
+  // [self presentDetailViewController: _mapNavigationController];
+  [self presentDetailViewController: _accountNavigationController];
 
   // Set the frame for the buttons
   [self setFramesForButtons: buttonsLoggedIn];

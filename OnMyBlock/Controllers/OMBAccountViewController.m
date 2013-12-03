@@ -9,6 +9,9 @@
 #import "OMBAccountViewController.h"
 
 #import "OMBAccountProfileViewController.h"
+#import "OMBPrivacyPolicyViewController.h"
+#import "OMBRenterApplicationViewController.h"
+#import "OMBTermsOfServiceViewController.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -21,9 +24,7 @@
 {
   if (!(self = [super init])) return nil;
 
-  self.screenName = [NSString stringWithFormat: 
-    @"Account View Controller - User ID: %i", [OMBUser currentUser].uid];
-  self.title = @"Account";
+  self.screenName = self.title = @"Account";
 
   return self;
 }
@@ -58,7 +59,7 @@
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
-  // Profile, payment info, transactions
+  // Profile, renter application, payment info, transactions
   // How it works, terms of service, privacy statement
   // Logout
   return 3;
@@ -125,9 +126,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.textLabel.text = @"Profile";
       }
       else if (indexPath.row == 2) {
-        cell.textLabel.text = @"Payment Info";
+        cell.textLabel.text = @"Renter Application";
       }
       else if (indexPath.row == 3) {
+        cell.textLabel.text = @"Payment Info";
+      }
+      else if (indexPath.row == 4) {
         cell.textLabel.text = @"Transactions";
       }
     }
@@ -139,7 +143,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.textLabel.text = @"Terms of Service";
       }
       else if (indexPath.row == 3) {
-        cell.textLabel.text = @"Privacy Statement";
+        cell.textLabel.text = @"Privacy Policy";
       }
     }
     else if (indexPath.section == 2) {
@@ -156,7 +160,7 @@ numberOfRowsInSection: (NSInteger) section
 {
   // The 1 is for the spacing
   if (section == 0) {
-    return 1 + 3;
+    return 1 + 4;
   }
   else if (section == 1) {
     return 1 + 3;
@@ -179,11 +183,26 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       [self.navigationController pushViewController: 
         [[OMBAccountProfileViewController alloc] init] animated: YES];
     }
+    // Renter Application
+    else if (indexPath.row == 2) {
+      [self.navigationController pushViewController:
+        [[OMBRenterApplicationViewController alloc] init] animated: YES];
+    }
   }
   else if (indexPath.section == 1) {
     // How it Works
     if (indexPath.row == 1) {
       [appDelegate.container showIntroAnimatedVertical: YES];
+    }
+    // Terms of Service
+    else if (indexPath.row == 2) {
+      [self.navigationController pushViewController: 
+        [[OMBTermsOfServiceViewController alloc] init] animated: YES];
+    }
+    // Privacy Policy
+    else if (indexPath.row == 3) {
+      [self.navigationController pushViewController:
+        [[OMBPrivacyPolicyViewController alloc] init] animated: YES];
     }
   }
   else if (indexPath.section == 2) {

@@ -123,12 +123,13 @@
       (44 * 4) + (20 * 3));
   // First name
   firstNameTextField = [[TextFieldPadding alloc] init];
+  firstNameTextField.alpha = 0.0f;
   firstNameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
   firstNameTextField.backgroundColor = [UIColor grayUltraLight];
   firstNameTextField.delegate = self;
   firstNameTextField.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
-  firstNameTextField.frame = CGRectMake(padding, 0, 
+  firstNameTextField.frame = CGRectMake(padding, padding, 
     (screenWidth - (padding * 3)) * 0.5, 44);
   firstNameTextField.layer.borderColor = [UIColor grayLight].CGColor;
   firstNameTextField.layer.borderWidth = 1.0;
@@ -139,9 +140,10 @@
   firstNameTextField.returnKeyType = UIReturnKeyDone;
   firstNameTextField.textColor = [UIColor textColor];
   [textFieldsArray addObject: firstNameTextField];
-  [userTextFieldView addSubview: firstNameTextField];
+  // [userTextFieldView addSubview: firstNameTextField];
   // Last name
   lastNameTextField = [[TextFieldPadding alloc] init];
+  lastNameTextField.alpha = firstNameTextField.alpha;
   lastNameTextField.autocorrectionType = firstNameTextField.autocorrectionType;
   lastNameTextField.backgroundColor = firstNameTextField.backgroundColor;
   lastNameTextField.delegate = firstNameTextField.delegate;
@@ -159,9 +161,10 @@
   lastNameTextField.returnKeyType = firstNameTextField.returnKeyType;
   lastNameTextField.textColor = firstNameTextField.textColor;
   [textFieldsArray addObject: lastNameTextField];
-  [userTextFieldView addSubview: lastNameTextField];
+  // [userTextFieldView addSubview: lastNameTextField];
   // School
   schoolTextField = [[TextFieldPadding alloc] init];
+  schoolTextField.alpha = firstNameTextField.alpha;
   schoolTextField.autocorrectionType = firstNameTextField.autocorrectionType;
   schoolTextField.backgroundColor = firstNameTextField.backgroundColor;
   schoolTextField.delegate = firstNameTextField.delegate;
@@ -179,9 +182,10 @@
   schoolTextField.returnKeyType = firstNameTextField.returnKeyType;
   schoolTextField.textColor = firstNameTextField.textColor;
   [textFieldsArray addObject: schoolTextField];
-  [userTextFieldView addSubview: schoolTextField];
+  // [userTextFieldView addSubview: schoolTextField];
   // Email
   emailTextField = [[TextFieldPadding alloc] init];
+  emailTextField.alpha = firstNameTextField.alpha;
   emailTextField.autocorrectionType = firstNameTextField.autocorrectionType;
   emailTextField.backgroundColor = firstNameTextField.backgroundColor;
   emailTextField.delegate = firstNameTextField.delegate;
@@ -199,9 +203,10 @@
   emailTextField.returnKeyType = firstNameTextField.returnKeyType;
   emailTextField.textColor = firstNameTextField.textColor;
   [textFieldsArray addObject: emailTextField];
-  [userTextFieldView addSubview: emailTextField];
+  // [userTextFieldView addSubview: emailTextField];
   // Phone
   phoneTextField = [[TextFieldPadding alloc] init];
+  phoneTextField.alpha = firstNameTextField.alpha;
   phoneTextField.autocorrectionType = firstNameTextField.autocorrectionType;
   phoneTextField.backgroundColor = firstNameTextField.backgroundColor;
   phoneTextField.delegate = firstNameTextField.delegate;
@@ -219,11 +224,11 @@
   phoneTextField.returnKeyType = firstNameTextField.returnKeyType;
   phoneTextField.textColor = firstNameTextField.textColor;
   [textFieldsArray addObject: phoneTextField];
-  [userTextFieldView addSubview: phoneTextField];
+  // [userTextFieldView addSubview: phoneTextField];
 
   // About text view
   aboutTextView = [[UITextView alloc] init];
-  aboutTextView.alpha = 0.0f;
+  aboutTextView.alpha = firstNameTextField.alpha;
   aboutTextView.autocorrectionType = UITextAutocorrectionTypeYes;
   aboutTextView.backgroundColor = firstNameTextField.backgroundColor;
   aboutTextView.delegate = self;
@@ -236,6 +241,7 @@
   aboutTextView.layer.cornerRadius = firstNameTextField.layer.cornerRadius;
   aboutTextView.showsVerticalScrollIndicator = NO;
   aboutTextView.textColor = firstNameTextField.textColor;
+  [textFieldsArray addObject: aboutTextView];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -290,11 +296,33 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     else if (indexPath.row == 1) {
       [cell.contentView addSubview: userProfileView];
-      [cell.contentView addSubview: userTextFieldView];
+      // [cell.contentView addSubview: userTextFieldView];
+      [cell.contentView addSubview: firstNameTextField];
+      [cell.contentView addSubview: lastNameTextField];
     }
     else if (indexPath.row == 2) {
-      [cell.contentView addSubview: aboutLabel];
-      [cell.contentView addSubview: aboutTextView];
+      if (isEditing) {
+        [cell.contentView addSubview: schoolTextField];
+      }
+      else {
+        [cell.contentView addSubview: aboutLabel];
+      }
+      // [cell.contentView addSubview: aboutTextView];
+    }
+    else if (indexPath.row == 3) {
+      if (isEditing) {
+        [cell.contentView addSubview: emailTextField];
+      }
+    }
+    else if (indexPath.row == 4) {
+      if (isEditing) {
+        [cell.contentView addSubview: phoneTextField];
+      }
+    }
+    else if (indexPath.row == 5) {
+      if (isEditing) {
+        [cell.contentView addSubview: aboutTextView];
+      }
     }
   }
   return cell;
@@ -304,7 +332,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 numberOfRowsInSection: (NSInteger) section
 {
   if (section == 0) {
-    return 3;
+    if (isEditing) {
+      return 6;
+    }
+    else {
+      return 3;
+    }
   }
   else if (section == 1) {
     return 1;
@@ -327,7 +360,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       // 20 for the spacing between the user profile image and info
       float height = padding;
       if (isEditing) {
-        height += userTextFieldView.frame.size.height;
+        height += firstNameTextField.frame.size.height;
       }
       else {
         height += userProfileView.frame.size.height;
@@ -335,14 +368,29 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return height;
     }
     else if (indexPath.row == 2) {
-      float height = padding * 2;
+      float height = padding;
       if (isEditing) {
-        height += aboutTextView.frame.size.height;
+        height += schoolTextField.frame.size.height;
       }
       else {
-        height += aboutLabel.frame.size.height;
+        height += aboutLabel.frame.size.height + padding;
       }
       return height;
+    }
+    else if (indexPath.row == 3) {
+      if (isEditing) {
+        return padding + emailTextField.frame.size.height;
+      }
+    }
+    else if (indexPath.row == 4) {
+      if (isEditing) {
+        return padding + phoneTextField.frame.size.height;
+      }
+    }
+    else if (indexPath.row == 5) {
+      if (isEditing) {
+        return padding + aboutTextView.frame.size.height;
+      }
     }
   }
   else if (indexPath.section == 1) {
@@ -444,13 +492,20 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.navigationItem setRightBarButtonItem: saveBarButtonItem animated: YES];
   [self.table beginUpdates];
   [UIView animateWithDuration: 0.25 animations: ^{
+    for (UIView *v in labelsArray) {
+      v.alpha = 0.0f;
+    }
+    for (UIView *v in textFieldsArray) {
+      v.alpha = 1.0f;
+    }
     // User profile info
-    userProfileView.alpha   = 0.0f;
-    userTextFieldView.alpha = 1.0f;
+    // userProfileView.alpha   = 0.0f;
+    // userTextFieldView.alpha = 1.0f;
     // About
-    aboutLabel.alpha    = 0.0f;
-    aboutTextView.alpha = 1.0f;
+    // aboutLabel.alpha    = 0.0f;
+    // aboutTextView.alpha = 1.0f;
   }];
+  // [self.table insertRowsAtIndexPaths:withRowAnimation:]
   [self.table endUpdates];
 }
 
@@ -460,11 +515,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.navigationItem setRightBarButtonItem: editBarButtonItem animated: YES];
   [self.table beginUpdates];
   [UIView animateWithDuration: 0.25 animations: ^{
-    userProfileView.alpha   = 1.0f;
-    userTextFieldView.alpha = 0.0f;
+    for (UIView *v in labelsArray) {
+      v.alpha = 1.0f;
+    }
+    for (UIView *v in textFieldsArray) {
+      v.alpha = 0.0f;
+    }
+    // userProfileView.alpha   = 1.0f;
+    // userTextFieldView.alpha = 0.0f;
     // About
-    aboutLabel.alpha    = 1.0f;
-    aboutTextView.alpha = 0.0f;
+    // aboutLabel.alpha    = 1.0f;
+    // aboutTextView.alpha = 0.0f;
   }];
   [self.table endUpdates];
   [self.view endEditing: YES];
