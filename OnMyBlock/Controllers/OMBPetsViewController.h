@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import "OMBTableViewController.h"
+#import "OMBRenterApplicationSectionViewController.h"
 
-@interface OMBPetsViewController : OMBTableViewController
+@interface OMBPetsViewController : OMBRenterApplicationSectionViewController
 
 @end

@@ -1,9 +1,9 @@
 //
 //  OMBIntroWelcomeView.m
-//  OnMyBlock
+//  _onmyblockLabel
 //
 //  Created by Tommy DANGerous on 12/2/13.
-//  Copyright (c) 2013 OnMyBlock. All rights reserved.
+//  Copyright (c) 2013 _onmyblockLabel. All rights reserved.
 //
 
 #import "OMBIntroWelcomeView.h"
@@ -11,6 +11,10 @@
 #import "UIColor+Extensions.h"
 
 @implementation OMBIntroWelcomeView
+
+@synthesize logoImageView  = _logoImageView;
+@synthesize welcomeLabel   = _welcomeLabel;
+@synthesize onmyblockLabel = _onmyblockLabel;
 
 #pragma mark - Initializer
 
@@ -22,27 +26,28 @@
   float screenHeight = screen.size.height;
   float screenWidth  = screen.size.width;
 
-  UIImageView *imageView = [[UIImageView alloc] init];
+  _logoImageView = [[UIImageView alloc] init];
   float imageSize = screenHeight * 0.4;
-  imageView.frame = CGRectMake((screenWidth - imageSize) * 0.5, 
+  _logoImageView.frame = CGRectMake((screenWidth - imageSize) * 0.5, 
     (screenHeight - imageSize) * 0.5, imageSize, imageSize);
-  imageView.image = [UIImage imageNamed: @"logo_shadow.png"];
-  [self addSubview: imageView];
+  _logoImageView.image = [UIImage imageNamed: @"logo_shadow.png"];
+  [self addSubview: _logoImageView];
 
 
-  UILabel *welcomeLabel = [[UILabel alloc] init];
-  welcomeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 36];
-  welcomeLabel.frame = CGRectMake(0, imageView.frame.origin.y - 54,
+  _welcomeLabel = [[UILabel alloc] init];
+  _welcomeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 36];
+  _welcomeLabel.frame = CGRectMake(0, _logoImageView.frame.origin.y - 54,
     screenWidth, 54);
-  welcomeLabel.text = @"Welcome to";
-  welcomeLabel.textAlignment = NSTextAlignmentCenter;
-  welcomeLabel.textColor = [UIColor textColor];
-  [self addSubview: welcomeLabel];
+  _welcomeLabel.text = @"Welcome to";
+  _welcomeLabel.textAlignment = NSTextAlignmentCenter;
+  _welcomeLabel.textColor = [UIColor textColor];
+  [self addSubview: _welcomeLabel];
 
-  UILabel *onmyblock = [[UILabel alloc] init];
-  onmyblock.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 36];
-  onmyblock.frame = CGRectMake(0, 
-    imageView.frame.origin.y + imageView.frame.size.height, screenWidth, 54);
+  _onmyblockLabel = [[UILabel alloc] init];
+  _onmyblockLabel.font = _welcomeLabel.font;
+  _onmyblockLabel.frame = CGRectMake(0, 
+    _logoImageView.frame.origin.y + _logoImageView.frame.size.height, 
+      screenWidth, 54);
   NSMutableAttributedString *onmyString = 
     [[NSMutableAttributedString alloc] initWithString: @"OnMy" attributes: @{
       NSForegroundColorAttributeName: [UIColor textColor]
@@ -52,9 +57,9 @@
       NSForegroundColorAttributeName: [UIColor blue]
     }];
   [onmyString appendAttributedString: blockString];
-  onmyblock.attributedText = onmyString;
-  onmyblock.textAlignment = NSTextAlignmentCenter;
-  [self addSubview: onmyblock];
+  _onmyblockLabel.attributedText = onmyString;
+  _onmyblockLabel.textAlignment = NSTextAlignmentCenter;
+  [self addSubview: _onmyblockLabel];
 
   return self;
 }

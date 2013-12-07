@@ -12,11 +12,15 @@
 @class TextFieldPadding;
 
 @interface OMBAccountProfileViewController : OMBTableViewController
-<UITextFieldDelegate, UITextViewDelegate>
+<UIActionSheetDelegate, UIImagePickerControllerDelegate,
+  UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
 {
   UIBarButtonItem *doneBarButtonItem;
   UIBarButtonItem *editBarButtonItem;
+  UIImagePickerController *imagePickerController;
   UIBarButtonItem *saveBarButtonItem;
+  UIActionSheet *uploadActionSheet;
+  UIView *uploadPhotoView;
   OMBCenteredImageView *userProfileImageView;
 
   // View that will hold all of these views
@@ -43,6 +47,9 @@
   UITextView *aboutTextView;
 
   BOOL isEditing;
+
+  // Scroll to hold all the text fields
+  UIScrollView *textFieldScroll;
 }
 
 @end

@@ -8,13 +8,14 @@
 
 #import "OMBRenterApplicationViewController.h"
 
-#import "OMBCoApplicantsViewController.h"
-#import "OMBCoSignersViewController.h"
+#import "OMBAccountProfileViewController.h"
+#import "OMBCenteredImageView.h"
+#import "OMBCosignersListViewController.h"
 #import "OMBEmploymentViewController.h"
-#import "OMBGeneralInformationViewController.h"
+#import "OMBGradientView.h"
 #import "OMBLegalViewController.h"
 #import "OMBPetsViewController.h"
-#import "OMBPreviousRentalsViewController.h"
+#import "OMBPreviousRentalsListViewController.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
@@ -22,13 +23,13 @@
 
 #pragma mark - Initializer
 
-- (id) init
+- (id) initWithUser: (OMBUser *) object
 {
 	if (!(self = [super init])) return nil;
 
-	self.screenName = [NSString stringWithFormat: @"Renter Application - User ID: %i",
-		[OMBUser currentUser].uid];
-	self.title = @"Renter Application";
+  _user = object;
+
+	self.screenName = self.title = @"Renter Application";
 
 	return self;
 }
@@ -43,16 +44,25 @@
 
 	CGRect screen = [[UIScreen mainScreen] bounds];
   float screenWidth = screen.size.width;
+  float screenHeight = screen.size.height;
 
   self.table.backgroundColor = [UIColor grayUltraLight];
+  self.table.separatorColor = [UIColor grayLight];
+  self.table.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
+  self.table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
   self.table.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectMake(0.0f, 0.0f, screenWidth, 44.0f)];
-  self.table.tableFooterView.backgroundColor = [UIColor clearColor];
-  // Bottom border
-  CALayer *borderTop = [CALayer layer];
-  borderTop.backgroundColor = [UIColor grayLight].CGColor;
-  borderTop.frame = CGRectMake(0.0f, 0.0f, screenWidth, 0.5f);
-  [self.table.tableFooterView.layer addSublayer: borderTop];
+  self.table.tableFooterView.backgroundColor = [UIColor grayUltraLight];
+
+  userProfileImageView = [[OMBCenteredImageView alloc] initWithFrame:
+    CGRectMake(0, 0, screenWidth, screenHeight * 0.4f)];
+}
+
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+  [userProfileImageView setImage: [OMBUser currentUser].image];
+  [self reloadTable];
 }
 
 #pragma mark - Protocol
@@ -63,83 +73,87 @@
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
-  float screenWidth = screen.size.width;
-  float borderHeight = 0.5;
+  float screenWidth  = screen.size.width;
+  float borderHeight = 0.5f;
 
   static NSString *CellIdentifier = @"CellIdentifier";
-  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
-    CellIdentifier];
-  if (!cell) {
-    cell = [[UITableViewCell alloc] initWithStyle: 
-      UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
-  }
+  UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:
+    UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+  // Row with the user's image
   if (indexPath.row == 0) {
-    // Bottom border
-    CALayer *borderBottom = [CALayer layer];
-    borderBottom.backgroundColor = [UIColor grayLight].CGColor;
-    borderBottom.frame = CGRectMake(0.0f, 
-      ([self tableView: self.table 
-      heightForRowAtIndexPath: indexPath] - borderHeight), 
-        screenWidth, borderHeight);
-    [cell.contentView.layer addSublayer: borderBottom];
-    if (indexPath.section != 0) {
-      // Top border
-      CALayer *borderTop = [CALayer layer];
-      borderTop.backgroundColor = borderBottom.backgroundColor;
-      borderTop.frame = CGRectMake(0.0f, 0.0f, 
-        borderBottom.frame.size.width, borderBottom.frame.size.height);
-      [cell.contentView.layer addSublayer: borderTop];
-    }
-    cell.contentView.backgroundColor = self.table.backgroundColor;
+    cell.contentView.backgroundColor = [UIColor blackColor];
     cell.selectedBackgroundView = nil;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.separatorInset = UIEdgeInsetsMake(0, 10000, 0, 0);
     cell.textLabel.text = @"";
+    [cell.contentView addSubview: userProfileImageView];
+    OMBGradientView *gradient = [[OMBGradientView alloc] init];
+    gradient.colors = @[
+      [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.0],
+        [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.5]];
+    gradient.frame = userProfileImageView.frame;
+    [cell.contentView addSubview: gradient];
+    UILabel *nameLabel = [[UILabel alloc] init];
+    nameLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
+      size: 27];
+    nameLabel.frame = CGRectMake(20.0f, 
+      userProfileImageView.frame.size.height - (36 + 20),
+        userProfileImageView.frame.size.width - (20 * 2), 36.0f);
+    nameLabel.text = [_user fullName];
+    nameLabel.textColor = [UIColor whiteColor];
+    [cell.contentView addSubview: nameLabel];
   }
   else {
-    // If not the last row
-    if (indexPath.row != [self tableView: self.table 
-      numberOfRowsInSection: indexPath.section] - 1) {
-      // Bottom border
-      CALayer *borderBottom = [CALayer layer];
-      borderBottom.backgroundColor = [UIColor grayLight].CGColor;
-      borderBottom.frame = CGRectMake(15.0f, 
-        ([self tableView: self.table 
-        heightForRowAtIndexPath: indexPath] - borderHeight), 
-          (screenWidth - 15.0f), borderHeight);
-      [cell.contentView.layer addSublayer: borderBottom];
-    }
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.contentView.backgroundColor = [UIColor whiteColor];
     cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:
       [UIImage imageWithColor: [UIColor grayLight]]];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
       size: 15];
+    cell.textLabel.frame = CGRectMake(0, 0, 
+      screenWidth, cell.textLabel.frame.size.height);
     cell.textLabel.textColor = [UIColor textColor];
     if (indexPath.section == 0) {
     	NSString *cellText;
       if (indexPath.row == 1) {
-        cellText = @"General Information";
+        cellText = @"Profile";
       }
       else if (indexPath.row == 2) {
         cellText = @"Co-signers";
-      }
+      }      
       else if (indexPath.row == 3) {
-        cellText = @"Co-applicants";
-      }
-      else if (indexPath.row == 4) {
         cellText = @"Pets";
       }
-      else if (indexPath.row == 5) {
+      else if (indexPath.row == 4) {
       	cellText = @"Previous Rentals";
       }
-      else if (indexPath.row == 6) {
+      else if (indexPath.row == 5) {
       	cellText = @"Employment";
       }
-      else if (indexPath.row == 7) {
+      else if (indexPath.row == 6) {
       	cellText = @"Legal";
       }
       cell.textLabel.text = cellText;
     }
+  }
+  if (indexPath.row == 1) {
+    // Top border
+    CALayer *border = [CALayer layer];
+    border.backgroundColor = [UIColor grayLight].CGColor;
+    border.frame = CGRectMake(0.0f, 0.0f,
+      cell.contentView.frame.size.width, borderHeight);
+    [cell.layer addSublayer: border];
+  }
+  if (indexPath.row == 
+    [self tableView: self.table numberOfRowsInSection: 0] - 1) {
+    // Bottom border
+    CALayer *border = [CALayer layer];
+    border.backgroundColor = [UIColor grayLight].CGColor;
+    border.frame = CGRectMake(0.0f, 
+      cell.contentView.frame.size.height - borderHeight,
+        cell.contentView.frame.size.width, borderHeight);
+    [cell.layer addSublayer: border];
   }
   return cell;
 }
@@ -149,7 +163,7 @@ numberOfRowsInSection: (NSInteger) section
 {
   // The 1 is for the spacing
   if (section == 0) {
-    return 1 + 7;
+    return 1 + 6;
   }
   return 0;
 }
@@ -163,35 +177,32 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 		// General Information
 		if (indexPath.row == 1) {
 			[self.navigationController pushViewController: 
-				[[OMBGeneralInformationViewController alloc] init] animated: YES];
+				[[OMBAccountProfileViewController alloc] init] animated: YES];
 		}
 		// Co-signers
 		else if (indexPath.row == 2) {
 			[self.navigationController pushViewController:
-				[[OMBCoSignersViewController alloc] init] animated: YES];
-		}
-		// Co-applicants
-		else if (indexPath.row == 3) {
-			[self.navigationController pushViewController:
-				[[OMBCoApplicantsViewController alloc] init] animated: YES];
+				[[OMBCosignersListViewController alloc] initWithUser: _user] 
+          animated: YES];
 		}
 		// Pets
-		else if (indexPath.row == 4) {
+		else if (indexPath.row == 3) {
 			[self.navigationController pushViewController:
-				[[OMBPetsViewController alloc] init] animated: YES];
+				[[OMBPetsViewController alloc] initWithUser: _user] animated: YES];
 		}
 		// Previous Rentals
-		else if (indexPath.row == 5) {
+		else if (indexPath.row == 4) {
 			[self.navigationController pushViewController:
-				[[OMBPreviousRentalsViewController alloc] init] animated: YES];
+				[[OMBPreviousRentalsListViewController alloc] initWithUser: _user] 
+          animated: YES];
 		}
 		// Employment
-		else if (indexPath.row == 6) {
+		else if (indexPath.row == 5) {
 			[self.navigationController pushViewController:
 				[[OMBEmploymentViewController alloc] init] animated: YES];
 		}
 		// Legal
-		else if (indexPath.row == 7) {
+		else if (indexPath.row == 6) {
 			[self.navigationController pushViewController:
 				[[OMBLegalViewController alloc] init] animated: YES];
 		}
@@ -202,6 +213,10 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  float screenHeight = screen.size.height;
+  if (indexPath.row == 0)
+    return screenHeight * 0.4f;
   return 44.0f;
 }
 

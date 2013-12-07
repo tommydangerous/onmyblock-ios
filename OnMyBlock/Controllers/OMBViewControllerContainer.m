@@ -12,6 +12,7 @@
 #import "DRNRealTimeBlurView.h"
 #import "OMBAccountViewController.h"
 #import "OMBCenteredImageView.h"
+#import "OMBExtendedHitAreaViewContainer.h"
 #import "OMBFavoritesListViewController.h"
 #import "OMBGetStartedView.h"
 #import "OMBIntroViewController.h"
@@ -19,6 +20,7 @@
 #import "OMBMapViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBRenterApplicationViewController.h"
+#import "OMBUserMenu.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -68,6 +70,7 @@
 
   self.view.frame = screen;
 
+  // Gesture for sliding the menu
   panGesture = [[UIPanGestureRecognizer alloc] initWithTarget: self 
     action: @selector(drag:)];
   panGesture.cancelsTouchesInView   = YES;
@@ -76,23 +79,30 @@
   [self.view addGestureRecognizer: panGesture];
 
   // View Controllers
+  // Account
   _accountNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController:
       [[OMBAccountViewController alloc] init]];
+  // Favorites
   _favoritesNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController:
       [[OMBFavoritesListViewController alloc] init]];
+  // Intro  
   _introViewController = [[OMBIntroViewController alloc] init];
+  // Login
   _loginViewController = [[OMBLoginViewController alloc] init];
+  // Map
   _mapNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController: 
       [[OMBMapViewController alloc] init]];
+  // Renter Application
   _renterApplicationViewController = 
     [[OMBRenterApplicationViewController alloc] init];
 
+  // Background view
   backgroundView = [[UIView alloc] initWithFrame: self.view.frame];
   [self.view addSubview: backgroundView];
-  // Background view
+  // Background image
   backgroundImageView = [[UIImageView alloc] init];
   backgroundImageView.contentMode  = UIViewContentModeScaleAspectFill;
   backgroundImageView.frame        = backgroundView.frame;
@@ -110,26 +120,48 @@
   blurView.frame = backgroundView.frame;
   blurView.renderStatic = YES;
   [backgroundView addSubview: blurView];
-
+  // Scale the background larger so when they slide the menu, it "zooms"
   backgroundImageView.transform = CGAffineTransformMakeScale(2, 2);
   blurView.transform = CGAffineTransformMakeScale(2, 2);
 
   // Menu
+  // Logged out
   _menuScroll = [[UIScrollView alloc] init];
   _menuScroll.alwaysBounceVertical = YES;
   _menuScroll.frame = CGRectMake(0, 0, menuWidth, screenHeight);
+  _menuScroll.showsVerticalScrollIndicator = NO;
   [self.view addSubview: _menuScroll];
+  // Logged in
+  // Hit Area
+  hitArea = [[OMBExtendedHitAreaViewContainer alloc] init];
+  hitArea.clipsToBounds = YES;
+  hitArea.frame = _menuScroll.frame;
+  hitArea.hidden = YES;
+  [self.view addSubview: hitArea];
+  // Infinite scroll
+  _infiniteScroll = [[UIScrollView alloc] init];
+  _infiniteScroll.clipsToBounds = NO;
+  _infiniteScroll.delegate = self;
+  // 100 is the renter menu header label size
+  _infiniteScroll.frame = CGRectMake(0, 0, _menuScroll.frame.size.width,
+    _menuScroll.frame.size.height - 100);
+  _infiniteScroll.pagingEnabled = YES;
+  _infiniteScroll.panGestureRecognizer.maximumNumberOfTouches = 1;
+  _infiniteScroll.showsVerticalScrollIndicator = NO;
+  hitArea.scrollView = _infiniteScroll;
+  [hitArea addSubview: _infiniteScroll];
 
   // Buttons
   float imageSize = 22;
   float leftPad   = 25;
+  // Logged out
   // Discover
   discoverButton = [[UIButton alloc] init];
   discoverButton.contentEdgeInsets = UIEdgeInsetsMake(0, 
     (leftPad + imageSize + leftPad), 0, 20);
   discoverButton.contentHorizontalAlignment = 
     UIControlContentHorizontalAlignmentLeft;
-  discoverButton.frame = CGRectMake((-1 * menuWidth), 0, 
+  discoverButton.frame = CGRectMake(0, 0, // (-1 * menuWidth), 0, 
     menuWidth, (10 + 40 + 10));
   discoverButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
@@ -138,7 +170,7 @@
   [discoverButton setTitle: @"Discover" forState: UIControlStateNormal];
   [discoverButton setTitleColor: [UIColor grayMedium] 
     forState: UIControlStateHighlighted];
-  [buttonsLoggedIn addObject: discoverButton];
+  // [buttonsLoggedIn addObject: discoverButton];
   [buttonsLoggedOut addObject: discoverButton];
   UIImageView *discoverImageView = [[UIImageView alloc] init];
   discoverImageView.frame = CGRectMake(leftPad, 
@@ -148,8 +180,26 @@
     [UIImage imageNamed: @"search_icon.png"] 
       size: discoverImageView.frame.size];
   [discoverButton addSubview: discoverImageView];
-
-  // Logged out
+  // Create Listing
+  createListingButton = [[UIButton alloc] init];
+  createListingButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
+  createListingButton.contentHorizontalAlignment = 
+    discoverButton.contentHorizontalAlignment;
+  createListingButton.titleLabel.font = discoverButton.titleLabel.font;
+  [createListingButton addTarget: self action: @selector(showCreateListing)
+    forControlEvents: UIControlEventTouchUpInside];
+  [createListingButton setTitle: @"Create Listing" 
+    forState: UIControlStateNormal];
+  [createListingButton setTitleColor: [UIColor grayMedium] 
+    forState: UIControlStateHighlighted];
+  [buttonsLoggedOut addObject: createListingButton];
+  UIImageView *createListingImageView = [[UIImageView alloc] init];
+  createListingImageView.frame = discoverImageView.frame;
+  UIImage *createListingImage = [UIImage imageNamed: 
+    @"create_listing_icon.png"];
+  createListingImageView.image = [UIImage image: createListingImage
+    size: createListingImageView.frame.size];
+  [createListingButton addSubview: createListingImageView];
   // How it Works
   howItWorksButton = [[UIButton alloc] init];
   howItWorksButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
@@ -206,26 +256,38 @@
   [signUpButton addSubview: signUpImageView];
 
   // Logged in
-  // Create Listing
-  createListingButton = [[UIButton alloc] init];
-  createListingButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
-  createListingButton.contentHorizontalAlignment = 
-    discoverButton.contentHorizontalAlignment;
-  createListingButton.titleLabel.font = discoverButton.titleLabel.font;
-  [createListingButton addTarget: self action: @selector(showCreateListing)
-    forControlEvents: UIControlEventTouchUpInside];
-  [createListingButton setTitle: @"Create Listing" 
-    forState: UIControlStateNormal];
-  [createListingButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
-  [buttonsLoggedIn addObject: createListingButton];
-  UIImageView *createListingImageView = [[UIImageView alloc] init];
-  createListingImageView.frame = discoverImageView.frame;
-  UIImage *createListingImage = [UIImage imageNamed: 
-    @"create_listing_icon.png"];
-  createListingImageView.image = [UIImage image: createListingImage
-    size: createListingImageView.frame.size];
-  [createListingButton addSubview: createListingImageView];
+  // User menu
+  userMenu1 = [[OMBUserMenu alloc] initWithFrame: _infiniteScroll.frame];
+  userMenu2 = [[OMBUserMenu alloc] initWithFrame: _infiniteScroll.frame];
+  userMenu3 = [[OMBUserMenu alloc] initWithFrame: _infiniteScroll.frame];
+  userMenu4 = [[OMBUserMenu alloc] initWithFrame: _infiniteScroll.frame];
+  userMenu5 = [[OMBUserMenu alloc] initWithFrame: _infiniteScroll.frame];
+  userMenu6 = [[OMBUserMenu alloc] initWithFrame: _infiniteScroll.frame];
+  userMenuArray = [NSMutableArray arrayWithArray: 
+    @[userMenu1, userMenu2, userMenu3, userMenu4, userMenu5, userMenu6]];
+  _infiniteScroll.contentSize = CGSizeMake(_infiniteScroll.frame.size.width,
+    _infiniteScroll.frame.size.height * [userMenuArray count]);
+  // Set frames and setup each user menu
+  for (OMBUserMenu *m in userMenuArray) {
+    int index = [userMenuArray indexOfObject: m];
+    if (index > 0) {
+      OMBUserMenu *previous = [userMenuArray objectAtIndex: index - 1];
+      CGRect rect = CGRectMake(previous.frame.origin.x, 
+        previous.frame.origin.y + previous.frame.size.height,
+          previous.frame.size.width, previous.frame.size.height);
+      m.frame = rect;
+    }
+    if (index % 2 == 0)
+      [m setupForRenter];
+    else
+      [m setupForSeller];
+    [m setHeaderInactive];
+    [_infiniteScroll addSubview: m];
+  }
+  // Scroll to renter menu
+  [_infiniteScroll setContentOffset: 
+    CGPointMake(0, userMenu1.frame.size.height * 2) animated: NO];
+
   // My Auctions
   myAuctionsButton = [[UIButton alloc] init];
   myAuctionsButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
@@ -237,7 +299,7 @@
   [myAuctionsButton setTitle: @"My Auctions" forState: UIControlStateNormal];
   [myAuctionsButton setTitleColor: [UIColor grayMedium] 
     forState: UIControlStateHighlighted];
-  [buttonsLoggedIn addObject: myAuctionsButton];
+  // [buttonsLoggedIn addObject: myAuctionsButton];
   UIImageView *myAuctionsImageView = [[UIImageView alloc] init];
   myAuctionsImageView.frame = discoverImageView.frame;
   UIImage *myAuctionsImage = [UIImage imageNamed: @"my_auctions_icon.png"];
@@ -255,31 +317,13 @@
   [myBidsButton setTitle: @"My Bids" forState: UIControlStateNormal];
   [myBidsButton setTitleColor: [UIColor grayMedium] 
     forState: UIControlStateHighlighted];
-  [buttonsLoggedIn addObject: myBidsButton];
+  // [buttonsLoggedIn addObject: myBidsButton];
   UIImageView *myBidsImageView = [[UIImageView alloc] init];
   myBidsImageView.frame = discoverImageView.frame;
   UIImage *myBidsImage = [UIImage imageNamed: @"my_bids_icon.png"];
   myBidsImageView.image = [UIImage image: myBidsImage
     size: myBidsImageView.frame.size];
   [myBidsButton addSubview: myBidsImageView];
-  // Favorites
-  favoritesButton = [[UIButton alloc] init];
-  favoritesButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
-  favoritesButton.contentHorizontalAlignment = 
-    discoverButton.contentHorizontalAlignment;
-  favoritesButton.titleLabel.font = discoverButton.titleLabel.font;
-  [favoritesButton addTarget: self action: @selector(showFavorites)
-    forControlEvents: UIControlEventTouchUpInside];
-  [favoritesButton setTitle: @"Favorites" forState: UIControlStateNormal];
-  [favoritesButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
-  [buttonsLoggedIn addObject: favoritesButton];
-  UIImageView *favoritesImageView = [[UIImageView alloc] init];
-  favoritesImageView.frame = discoverImageView.frame;
-  UIImage *favoritesImage = [UIImage imageNamed: @"favorites_icon.png"];
-  favoritesImageView.image = [UIImage image: favoritesImage
-    size: favoritesImageView.frame.size];
-  [favoritesButton addSubview: favoritesImageView];
   // Notifications
   notificationsButton = [[UIButton alloc] init];
   notificationsButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
@@ -292,7 +336,7 @@
     forState: UIControlStateNormal];
   [notificationsButton setTitleColor: [UIColor grayMedium] 
     forState: UIControlStateHighlighted];
-  [buttonsLoggedIn addObject: notificationsButton];
+  // [buttonsLoggedIn addObject: notificationsButton];
   UIImageView *notificationsImageView = [[UIImageView alloc] init];
   notificationsImageView.frame = discoverImageView.frame;
   UIImage *notificationsImage = [UIImage imageNamed: @"notifications_icon.png"];
@@ -310,7 +354,7 @@
   [messagesButton setTitle: @"Messages" forState: UIControlStateNormal];
   [messagesButton setTitleColor: [UIColor grayMedium] 
     forState: UIControlStateHighlighted];
-  [buttonsLoggedIn addObject: messagesButton];
+  // [buttonsLoggedIn addObject: messagesButton];
   UIImageView *messagesImageView = [[UIImageView alloc] init];
   messagesImageView.frame = discoverImageView.frame;
   UIImage *messagesImage = [UIImage imageNamed: @"messages_icon.png"];
@@ -332,37 +376,40 @@
   float accountImageSize = screenHeight * 0.1;  
   // The distance between the bottom of the detail view scaled
   // and the bottom of the screen
-  float accountViewPadding = (screenHeight * (1 - zoomScale)) * 0.5;
+  float _accountViewPadding = (screenHeight * (1 - zoomScale)) * 0.5;
   // Half the difference of the image and the bottom part of the screen
-  accountViewPadding = (accountViewPadding - accountImageSize) * 0.5;
-  CGRect accountViewRect = CGRectMake(
-    (screenWidth - (accountImageSize + accountViewPadding)),
-      (screenHeight - (accountImageSize + accountViewPadding)), 
+  _accountViewPadding = (_accountViewPadding - accountImageSize) * 0.5;
+  CGRect _accountViewRect = CGRectMake(
+    (screenWidth - (accountImageSize + _accountViewPadding)),
+      (screenHeight - (accountImageSize + _accountViewPadding)), 
         accountImageSize, accountImageSize);
-  accountView = [[OMBCenteredImageView alloc] initWithFrame: accountViewRect];
-  accountView.alpha = 0.0;  
-  accountView.layer.borderColor = [UIColor whiteColor].CGColor;
-  accountView.layer.borderWidth = 1.0;  
+  _accountView = [[OMBCenteredImageView alloc] initWithFrame: _accountViewRect];
+  _accountView.alpha = 0.0;  
+  _accountView.layer.borderColor = [UIColor whiteColor].CGColor;
+  _accountView.layer.borderWidth = 1.0;  
   // Button
   accountButton = [[UIButton alloc] init];
-  accountButton.frame = CGRectMake(0, 0, accountView.frame.size.width,
-    accountView.frame.size.height);
+  accountButton.frame = CGRectMake(0, 0, _accountView.frame.size.width,
+    _accountView.frame.size.height);
   [accountButton addTarget: self action: @selector(showAccount)
     forControlEvents: UIControlEventTouchUpInside];
-  [accountView addSubview: accountButton];
-  accountView.transform = CGAffineTransformMakeScale(0, 0);
+  [_accountView addSubview: accountButton];
+  _accountView.transform = CGAffineTransformMakeScale(0, 0);
 
   // [self presentDetailViewController: _mapNavigationController];
   [self presentDetailViewController: _accountNavigationController];
 
   // Set the frame for the buttons
-  [self setFramesForButtons: buttonsLoggedIn];
+  // [self setFramesForButtons: buttonsLoggedIn];
   [self setFramesForButtons: buttonsLoggedOut];
 
   currentMenuButtons = [NSArray arrayWithArray: buttonsLoggedOut];
 
   [self adjustMenuScrollContent];
   [self addCurrentMenuButtonsToMenuScroll];
+
+  NSLog(@"CONTAINER SETUP FOR LOGGED IN USER");
+  // [self setupForLoggedInUser];
 }
 
 #pragma mark - Protocol
@@ -385,6 +432,45 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   if (gestureRecognizer == panGesture)
     return NO;
   return YES;
+}
+
+#pragma mark - Protocol UIScrollViewDelegate
+
+- (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView
+{
+  if (scrollView == _infiniteScroll) {
+    float y   = scrollView.contentOffset.y;
+    int index = y / scrollView.frame.size.height;
+    int n     = index % 2;
+    float multiplier;
+    // If user landed on a renter menu
+    if (n == 0) {
+      multiplier = 2;
+    }
+    // If user landed on a seller menu
+    else {
+      multiplier = 3;
+    }
+    [scrollView setContentOffset: 
+      CGPointMake(0, scrollView.frame.size.height * multiplier) animated: NO];
+    [self setCurrentUserMenuHeaderTextColor];
+  }
+}
+
+- (void) scrollViewDidEndDragging: (UIScrollView *) scrollView 
+willDecelerate: (BOOL) decelerate
+{
+  if (scrollView == _infiniteScroll) {
+    NSLog(@"END DRAGGING");
+  }
+}
+
+- (void) scrollViewDidScroll: (UIScrollView *) scrollView
+{
+  if (scrollView == _infiniteScroll) {
+    float y = scrollView.contentOffset.y;
+    NSLog(@"%f", y);
+  }
 }
 
 #pragma mark - Methods
@@ -482,20 +568,22 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 
       // Animate current set of menu buttons
       // Top buttons slide in first
-      for (UIButton *button in currentMenuButtons) {
-        float index = 1 + [currentMenuButtons indexOfObject: button];
-        float speed = 1 + 
-          (buttonSpeedFactor * (index / [currentMenuButtons count]));
-        CGRect rect = button.frame;
-        rect.origin.x = (-1 * menuWidth) * (1 - (percentComplete * speed));
-        if (rect.origin.x >= 0)
-          rect.origin.x = 0;
-        button.frame = rect;
+      for (OMBUserMenu *m in userMenuArray) {
+        for (UIButton *button in m.currentButtons) {
+          float index = 1 + [m.currentButtons indexOfObject: button];
+          float speed = 1 + 
+            (buttonSpeedFactor * (index / [m.currentButtons count]));
+          CGRect rect = button.frame;
+          rect.origin.x = (-1 * menuWidth) * (1 - (percentComplete * speed));
+          if (rect.origin.x >= 0)
+            rect.origin.x = 0;
+          button.frame = rect;
+        }
       }
-
+      
       // Animate the account view
-      accountView.alpha     = percentComplete;
-      accountView.transform = CGAffineTransformMakeScale(percentComplete,
+      _accountView.alpha     = percentComplete;
+      _accountView.transform = CGAffineTransformMakeScale(percentComplete,
         percentComplete);
     }
 
@@ -541,25 +629,29 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
     blurView.transform = CGAffineTransformMakeScale(2, 2);
 
     // Hide the account image view
-    accountView.alpha     = 0.0;
-    accountView.transform = CGAffineTransformMakeScale(0, 0);
+    _accountView.alpha     = 0.0;
+    _accountView.transform = CGAffineTransformMakeScale(0, 0);
   } completion: ^(BOOL finished) {
     // Remove detail view overlay from the detail view
     [_detailViewOverlay removeFromSuperview];
+    [[UIApplication sharedApplication] setStatusBarStyle:
+      UIStatusBarStyleDefault];
   }];
 
   // Animate the buttons
   // Top buttons slide out first
-  for (UIButton *button in currentMenuButtons) {
-    float index = 1 + [currentMenuButtons indexOfObject: button];
-    float speed = 1 + 
-      (buttonSpeedFactor * (([currentMenuButtons count] - index) /
-        [currentMenuButtons count]));
-    [UIView animateWithDuration: duration / speed animations: ^{
-      CGRect rect   = button.frame;
-      rect.origin.x = -1 * menuWidth;
-      button.frame  = rect;
-    }];
+  for (OMBUserMenu *m in userMenuArray) {
+    for (UIButton *button in m.currentButtons) {
+      float index = 1 + [m.currentButtons indexOfObject: button];
+      float speed = 1 + 
+        (buttonSpeedFactor * (([m.currentButtons count] - index) /
+          [m.currentButtons count]));
+      [UIView animateWithDuration: duration / speed animations: ^{
+        CGRect rect   = button.frame;
+        rect.origin.x = -1 * menuWidth;
+        button.frame  = rect;
+      }];
+    }
   }
 
   menuIsVisible = NO;
@@ -585,12 +677,16 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   [[NSNotificationCenter defaultCenter] postNotificationName:
     OMBCurrentUserLogoutNotification object: nil];
   // Remove the account view
-  [accountView removeFromSuperview];
+  [_accountView removeFromSuperview];
   // Adjust the intro view
   [_introViewController setupForLoggedOutUser];
   [self showIntroAnimatedDissolve: NO];
-  [self showLoggedOutButtons];
-  [self adjustMenuScrollContent];
+
+  // [self showLoggedOutButtons];
+  // [self adjustMenuScrollContent];
+  hitArea.hidden     = YES;
+  _menuScroll.hidden = NO;
+
   [self presentDetailViewController: _mapNavigationController];
 }
 
@@ -638,6 +734,17 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   [_currentDetailViewController removeFromParentViewController];
 }
 
+- (void) setCurrentUserMenuHeaderTextColor
+{
+  for (OMBUserMenu *m in userMenuArray) {
+    [m setHeaderInactive];
+  }
+  int index = _infiniteScroll.contentOffset.y / 
+    _infiniteScroll.frame.size.height;
+  OMBUserMenu *userMenu = [userMenuArray objectAtIndex: index];
+  [userMenu setHeaderActive];
+}
+
 - (void) setFramesForButtons: (NSArray *) array
 {
   for (UIButton *button in array) {
@@ -655,11 +762,16 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 - (void) setupForLoggedInUser
 {
   // Add the account view
-  [self.view addSubview: accountView];
+  [self.view addSubview: _accountView];
+
   // Show the buttons for users who are logged in
-  [self showLoggedInButtons];
+  // [self showLoggedInButtons];
   // Adjust the menu scroll content inset and content size
-  [self adjustMenuScrollContent];
+  // [self adjustMenuScrollContent];
+  hitArea.hidden     = NO;
+  _menuScroll.hidden = YES;
+  [self setCurrentUserMenuHeaderTextColor];
+
   // Hide the menu
   [self hideMenuWithFactor: 1];
   // Hide the intro view controller -> login view controller
@@ -691,7 +803,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
         image = [UIImage imageNamed: 
           @"default_user_image.png"];
       }
-      [accountView setImage: image];
+      [_accountView setImage: image];
     }
   ];
 }
@@ -807,25 +919,30 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
     blurView.transform = CGAffineTransformMakeScale(1, 1);
 
     // Hide the account image view
-    accountView.alpha     = 1.0;
-    accountView.transform = CGAffineTransformMakeScale(1, 1);
+    _accountView.alpha     = 1.0;
+    _accountView.transform = CGAffineTransformMakeScale(1, 1);
   } completion: ^(BOOL finished) {
     // Add detail view overlay to the detail view
     [_detailView addSubview: _detailViewOverlay];
+    [[UIApplication sharedApplication] setStatusBarStyle:
+      UIStatusBarStyleLightContent];
   }];
 
   // Animate the buttons
   // Top buttons slide in first
-  for (UIButton *button in currentMenuButtons) {
-    float index = 1 + [currentMenuButtons indexOfObject: button];
-    float speed = 1 + 
-      (buttonSpeedFactor * (index / [currentMenuButtons count]));
-    [UIView animateWithDuration: duration / speed animations: ^{
-      CGRect rect   = button.frame;
-      rect.origin.x = 0;
-      button.frame  = rect;
-    }];
+  for (OMBUserMenu *m in userMenuArray) {
+    for (UIButton *button in m.currentButtons) {
+      float index = 1 + [m.currentButtons indexOfObject: button];
+      float speed = 1 + 
+        (buttonSpeedFactor * (index / [m.currentButtons count]));
+      [UIView animateWithDuration: duration / speed animations: ^{
+        CGRect rect   = button.frame;
+        rect.origin.x = 0;
+        button.frame  = rect;
+      }];
+    }
   }
+    
   menuIsVisible = YES;
 }
 

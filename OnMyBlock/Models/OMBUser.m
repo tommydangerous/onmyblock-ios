@@ -9,11 +9,14 @@
 #import "OMBUser.h"
 
 #import "OMBAppDelegate.h"
+#import "OMBCosigner.h"
 #import "OMBFavoritesListConnection.h"
 #import "OMBFavoriteResidence.h"
 #import "OMBIntroViewController.h"
+#import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
+#import "OMBPreviousRental.h"
 #import "OMBUserFacebookAuthenticationConnection.h"
 #import "OMBUserImageDownloader.h"
 #import "OMBViewControllerContainer.h"
@@ -56,7 +59,8 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 {
   if (!(self = [super init])) return nil;
 
-  _favorites = [NSMutableDictionary dictionary];
+  _favorites         = [NSMutableDictionary dictionary];
+  _renterApplication = [[OMBRenterApplication alloc] init];
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(sessionStateChanged:)
@@ -83,6 +87,11 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
 #pragma mark - Instance Methods
 
+- (void) addCosigner: (OMBCosigner *) cosigner
+{
+  [_renterApplication addCosigner: cosigner];
+}
+
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence
 {
   if (![_favorites objectForKey: [favoriteResidence dictionaryKey]]) {
@@ -91,6 +100,12 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
     [[NSNotificationCenter defaultCenter] postNotificationName:
       OMBCurrentUserChangedFavorite object: nil];
   }
+}
+
+- (void) addPreviousRental: (OMBPreviousRental *) previousRental
+{
+  [_renterApplication addPreviousRental: previousRental];
+  NSLog(@"%@", _renterApplication.previousRentals);
 }
 
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence
@@ -211,6 +226,16 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   return @"";
 }
 
+- (void) readFromCosignerDictionary: (NSDictionary *) dictionary
+{
+  NSArray *array = [dictionary objectForKey: @"cosigners"];
+  for (NSDictionary *dict in array) {
+    OMBCosigner *cosigner = [[OMBCosigner alloc] init];
+    [cosigner readFromDictionary: dict];
+    [self addCosigner: cosigner];
+  }
+}
+
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
   // Sample JSON
@@ -257,6 +282,8 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
     _school = @"";
   _userType    = [dictionary objectForKey: @"user_type"];
   _uid         = [[dictionary objectForKey: @"id"] intValue];
+  [_renterApplication readFromDictionary: 
+    [dictionary objectForKey: @"renter_application"]];
 }
 
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary
@@ -305,6 +332,24 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   }
 }
 
+- (void) removeResidenceFromFavorite: (OMBResidence *) residence
+{
+  NSString *key = [NSString stringWithFormat: @"%i", residence.uid];
+  OMBFavoriteResidence *favoriteResidence = [_favorites objectForKey: key];
+  if (favoriteResidence) {
+    int index = (int) [[self favoritesArray] indexOfObjectPassingTest:
+      ^BOOL (OMBResidence* residence, NSUInteger idx, BOOL *stop) {
+        return residence.uid == favoriteResidence.residence.uid;
+      }
+    ];
+    [_favorites removeObjectForKey: key];
+    [[NSNotificationCenter defaultCenter] postNotificationName:
+      OMBCurrentUserChangedFavorite object: nil userInfo: @{
+        @"index": [NSNumber numberWithInt: index]
+      }];
+  }
+}
+
 - (void) sessionStateChanged: (NSNotification *) notification
 {
   void (^completion) (FBRequestConnection *connection, id <FBGraphUser> user,
@@ -332,24 +377,6 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   };
   if (FBSession.activeSession.isOpen)
     [FBRequestConnection startForMeWithCompletionHandler: completion];
-}
-
-- (void) removeResidenceFromFavorite: (OMBResidence *) residence
-{
-  NSString *key = [NSString stringWithFormat: @"%i", residence.uid];
-  OMBFavoriteResidence *favoriteResidence = [_favorites objectForKey: key];
-  if (favoriteResidence) {
-    int index = (int) [[self favoritesArray] indexOfObjectPassingTest:
-      ^BOOL (OMBResidence* residence, NSUInteger idx, BOOL *stop) {
-        return residence.uid == favoriteResidence.residence.uid;
-      }
-    ];
-    [_favorites removeObjectForKey: key];
-    [[NSNotificationCenter defaultCenter] postNotificationName:
-      OMBCurrentUserChangedFavorite object: nil userInfo: @{
-        @"index": [NSNumber numberWithInt: index]
-      }];
-  }
 }
 
 @end

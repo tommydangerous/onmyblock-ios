@@ -55,7 +55,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // If current session has a valid Facebook token
     [self openSession];
 
-  [_container showIntroAnimatedDissolve: NO];
+  NSLog(@"APP DELEGATE SHOW INTRO!");
+  // [_container showIntroAnimatedDissolve: NO];
   // if ([[OMBUser currentUser] loggedIn])
     // [self hideIntro];
 

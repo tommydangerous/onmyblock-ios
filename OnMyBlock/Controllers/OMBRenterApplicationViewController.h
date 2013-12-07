@@ -8,6 +8,15 @@
 
 #import "OMBTableViewController.h"
 
+@class OMBCenteredImageView;
+
 @interface OMBRenterApplicationViewController : OMBTableViewController
+{
+  OMBCenteredImageView *userProfileImageView;
+}
+
+@property (nonatomic, strong) OMBUser *user;
+
+- (id) initWithUser: (OMBUser *) object;
 
 @end

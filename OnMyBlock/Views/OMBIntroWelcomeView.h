@@ -10,4 +10,8 @@
 
 @interface OMBIntroWelcomeView : UIView
 
+@property (nonatomic, strong) UIImageView *logoImageView;
+@property (nonatomic, strong) UILabel *onmyblockLabel;
+@property (nonatomic, strong) UILabel *welcomeLabel;
+
 @end

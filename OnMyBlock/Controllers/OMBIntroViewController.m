@@ -175,6 +175,7 @@
       ((screen.size.height - houseGraphicView.frame.size.height) * 0.5), 
         houseGraphicView.frame.size.width, houseGraphicView.frame.size.height);
   houseGraphicView.image = [UIImage imageNamed: @"house_image.png"];
+  houseGraphicView.transform = CGAffineTransformMakeScale(0, 0);
 
   // Activity indicator spinner
   _activityIndicatorView = 
@@ -222,16 +223,24 @@ willDecelerate: (BOOL)decelerate
   float page    = x / width;
   if (page <= 1) {
     percent = (x - (width * 0)) / width;
-    // Turn the hands on the stop watch
-    _welcomeView.stopwatchView.minuteHand.transform =
-      CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(360 * percent * 12.0));
-    _welcomeView.stopwatchView.hourHand.transform = 
-      CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(360 * percent));
+
+    // Move the intro welcome view labels
+    _introWelcomeView.welcomeLabel.transform = 
+      CGAffineTransformMakeTranslation(-1 * 3 * percent * screenWidth, 0);
+    _introWelcomeView.logoImageView.transform = 
+      CGAffineTransformMakeTranslation(-1 * 2 * percent * screenWidth, 0);
+    _introWelcomeView.onmyblockLabel.transform = 
+      CGAffineTransformMakeTranslation(-1 * 1 * percent * screenWidth, 0);
+
+    // Scale the house
+    if (percent < 0)
+      percent = 0;
+    houseGraphicView.transform = CGAffineTransformMakeScale(
+      percent, percent);
   }
-  // 1 - 2 pages
-  if (page > 1 && page <= 2) {
+  if (page > 0 && page <= 2) {
     percent = (x - (width * 1)) / width;
-    
+
     // Turn the hands on the stop watch
     _welcomeView.stopwatchView.minuteHand.transform =
       CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(360 * percent * 12.0));
@@ -253,13 +262,20 @@ willDecelerate: (BOOL)decelerate
           paddleWidth, paddleHeight);
 
     // Move and resize house
-    float houseWidth = (screen.size.width * 0.5) - 
-      (((screen.size.width * 0.5) * 0.4) * percent);
+    float houseWidth = houseGraphicView.frame.size.width;
     float houseOriginX = 
       (((screen.size.width - houseWidth) * 0.5) + x);
     float houseOriginY = ((screen.size.height - houseWidth) * 0.5);
     houseGraphicView.frame = CGRectMake(houseOriginX, houseOriginY, 
       houseWidth, houseWidth);
+  }
+  // 1 - 2 pages
+  if (page > 1 && page <= 2) {
+    percent = (x - (width * 1)) / width;
+
+    // Scale the house
+    houseGraphicView.transform = CGAffineTransformMakeScale(
+      1 - (0.5 * percent), 1 - (0.5 * percent));
 
     // Discover view
     _introDiscoverView.map.alpha = percent;

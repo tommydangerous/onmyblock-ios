@@ -85,7 +85,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Title view
   segmentedControl = [[UISegmentedControl alloc] initWithItems: 
-    @[@"Map", @"Recent"]];
+    @[@"Map", @"Recent", @"Popular"]];
   segmentedControl.selectedSegmentIndex = 0;
   CGRect segmentedFrame = segmentedControl.frame;
   segmentedFrame.size.width = screen.size.width * 0.4;

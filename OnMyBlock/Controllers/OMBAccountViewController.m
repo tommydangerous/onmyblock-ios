@@ -38,19 +38,11 @@
   [super loadView];
 
   [self setMenuBarButtonItem];
-
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  float screenWidth = screen.size.width;
-
+    
   self.table.backgroundColor = [UIColor grayUltraLight];
-  self.table.tableFooterView = [[UIView alloc] initWithFrame:
-    CGRectMake(0.0f, 0.0f, screenWidth, 44.0f)];
-  self.table.tableFooterView.backgroundColor = [UIColor clearColor];
-  // Bottom border
-  CALayer *borderTop = [CALayer layer];
-  borderTop.backgroundColor = [UIColor grayLight].CGColor;
-  borderTop.frame = CGRectMake(0.0f, 0.0f, screenWidth, 0.5f);
-  [self.table.tableFooterView.layer addSublayer: borderTop];
+  self.table.separatorColor = [UIColor grayLight];
+  self.table.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
+  self.table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 }
 
 #pragma mark - Protocol
@@ -62,58 +54,27 @@
   // Profile, renter application, payment info, transactions
   // How it works, terms of service, privacy statement
   // Logout
-  return 3;
+  return 4;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  float screenWidth = screen.size.width;
-  float borderHeight = 0.5;
+  float borderHeight = 0.5f;
 
   static NSString *CellIdentifier = @"CellIdentifier";
-  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
-    CellIdentifier];
-  if (!cell) {
-    cell = [[UITableViewCell alloc] initWithStyle: 
-      UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
-  }
+  UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle: 
+    UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+  // If first row, it is the blank row used for spacing
   if (indexPath.row == 0) {
-    // Bottom border
-    CALayer *borderBottom = [CALayer layer];
-    borderBottom.backgroundColor = [UIColor grayLight].CGColor;
-    borderBottom.frame = CGRectMake(0.0f, 
-      ([self tableView: self.table 
-      heightForRowAtIndexPath: indexPath] - borderHeight), 
-        screenWidth, borderHeight);
-    [cell.contentView.layer addSublayer: borderBottom];
-    if (indexPath.section != 0) {
-      // Top border
-      CALayer *borderTop = [CALayer layer];
-      borderTop.backgroundColor = borderBottom.backgroundColor;
-      borderTop.frame = CGRectMake(0.0f, 0.0f, 
-        borderBottom.frame.size.width, borderBottom.frame.size.height);
-      [cell.contentView.layer addSublayer: borderTop];
-    }
     cell.contentView.backgroundColor = self.table.backgroundColor;
     cell.selectedBackgroundView = nil;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.text = @"";
+    cell.separatorInset = UIEdgeInsetsMake(0, 10000, 0, 0);
   }
+  // Cells with text
   else {
-    // If not the last row
-    if (indexPath.row != [self tableView: self.table 
-      numberOfRowsInSection: indexPath.section] - 1) {
-      // Bottom border
-      CALayer *borderBottom = [CALayer layer];
-      borderBottom.backgroundColor = [UIColor grayLight].CGColor;
-      borderBottom.frame = CGRectMake(15.0f, 
-        ([self tableView: self.table 
-        heightForRowAtIndexPath: indexPath] - borderHeight), 
-          (screenWidth - 15.0f), borderHeight);
-      [cell.contentView.layer addSublayer: borderBottom];
-    }
     cell.contentView.backgroundColor = [UIColor whiteColor];
     cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:
       [UIImage imageWithColor: [UIColor grayLight]]];
@@ -122,11 +83,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       size: 15];
     cell.textLabel.textColor = [UIColor textColor];
     if (indexPath.section == 0) {
+      cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
       if (indexPath.row == 1) {
         cell.textLabel.text = @"Profile";
       }
       else if (indexPath.row == 2) {
-        cell.textLabel.text = @"Renter Application";
+        cell.textLabel.text = @"My Renter Application";
       }
       else if (indexPath.row == 3) {
         cell.textLabel.text = @"Payment Info";
@@ -152,6 +114,20 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
     }
   }
+  // If it is the first or last row in the section
+  if (indexPath.row == 0 || indexPath.row == 
+    [self.table numberOfRowsInSection: indexPath.section] - 1) {
+    if (indexPath.section != 
+      [self numberOfSectionsInTableView: self.table] - 1) {
+      // Bottom border
+      CALayer *border = [CALayer layer];
+      border.backgroundColor = [UIColor grayLight].CGColor;
+      border.frame = CGRectMake(0.0f, 
+        cell.contentView.frame.size.height - borderHeight,
+          cell.contentView.frame.size.width, borderHeight);
+      [cell.layer addSublayer: border];
+    }
+  }
   return cell;
 }
 
@@ -165,8 +141,11 @@ numberOfRowsInSection: (NSInteger) section
   else if (section == 1) {
     return 1 + 3;
   }
-  else {
+  else if (section == 2) {
     return 1 + 1;
+  }
+  else if (section == 3) {
+    return 1;
   }
   return 0;
 }
@@ -186,7 +165,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Renter Application
     else if (indexPath.row == 2) {
       [self.navigationController pushViewController:
-        [[OMBRenterApplicationViewController alloc] init] animated: YES];
+        [[OMBRenterApplicationViewController alloc] initWithUser: 
+          [OMBUser currentUser]] animated: YES];
     }
   }
   else if (indexPath.section == 1) {

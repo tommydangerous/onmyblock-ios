@@ -1,0 +1,37 @@
+//
+//  OMBUserMenu.h
+//  OnMyBlock
+//
+//  Created by Tommy DANGerous on 12/4/13.
+//  Copyright (c) 2013 OnMyBlock. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface OMBUserMenu : UIView
+
+// Array to hold the buttons
+@property (nonatomic, strong) NSArray *currentButtons;
+@property (nonatomic, strong) NSMutableArray *renterButtons;
+@property (nonatomic, strong) NSMutableArray *sellerButtons;
+// Buttons
+@property (nonatomic, strong) UIButton *headerButton;
+// Renter
+@property (nonatomic, strong) UIButton *discoverButton;
+@property (nonatomic, strong) UIButton *favoritesButton;
+@property (nonatomic, strong) UIButton *renterHomebaseButton;
+// Seller
+@property (nonatomic, strong) UIButton *createListingButton;
+@property (nonatomic, strong) UIButton *manageListingButton;
+@property (nonatomic, strong) UIButton *sellerHomebaseButton;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) setHeaderActive;
+- (void) setHeaderInactive;
+- (void) setupForRenter;
+- (void) setupForSeller;
+
+@end
