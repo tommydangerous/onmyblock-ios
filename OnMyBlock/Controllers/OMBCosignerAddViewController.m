@@ -40,11 +40,13 @@
     _firstNameTextField, _lastNameTextField, _emailTextField, _phoneTextField
   ];
 
-  _firstNameTextField.placeholder = @"First name";
-  _lastNameTextField.placeholder  = @"Last name";
-  _emailTextField.placeholder     = @"Email";
+  _firstNameTextField.placeholder = @"First name (required)";
+  _lastNameTextField.placeholder  = @"Last name (required)";
+  _emailTextField.placeholder     = @"Email (required)";
   _emailTextField.keyboardType    = UIKeyboardTypeEmailAddress;
   _phoneTextField.placeholder     = @"Phone";
+  _phoneTextField.keyboardAppearance = UIKeyboardAppearanceDark;
+  _phoneTextField.keyboardType       = UIKeyboardTypePhonePad;
 
   [self setFrameForTextFields];
 }

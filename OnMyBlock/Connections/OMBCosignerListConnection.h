@@ -13,6 +13,8 @@
   OMBUser *user;
 }
 
+#pragma mark - Initializer
+
 - (id) initWithUser: (OMBUser *) object;
 
 @end

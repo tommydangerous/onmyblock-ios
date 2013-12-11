@@ -36,8 +36,9 @@
   UILabel *phoneLabel;
   UILabel *schoolLabel;
   UILabel *aboutLabel;
+  
   // Text fields
-  NSMutableArray *textFieldsArray;
+  NSArray *textFieldsArray;
   // Text fields
   TextFieldPadding *emailTextField;
   TextFieldPadding *firstNameTextField;
@@ -49,7 +50,7 @@
   BOOL isEditing;
 
   // Scroll to hold all the text fields
-  UIScrollView *textFieldScroll;
+  UITableView *textFieldTableView;
 }
 
 @end

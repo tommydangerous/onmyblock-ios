@@ -18,7 +18,14 @@
 @property (nonatomic) int leaseMonths;
 @property (nonatomic) float rent;
 @property (nonatomic, strong) NSString *state;
-@property (nonatomic) int uid;
 @property (nonatomic, strong) NSString *zip;
+
+@property (nonatomic) int uid;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) readFromDictionary: (NSDictionary *) dictionary;
 
 @end

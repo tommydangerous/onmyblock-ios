@@ -9,11 +9,12 @@
 #import "OMBPreviousRentalsListViewController.h"
 
 #import "NSString+PhoneNumber.h"
+#import "OMBDeleteRenterApplicationSectionModelConnection.h"
 #import "OMBNavigationController.h"
 #import "OMBPreviousRental.h"
 #import "OMBPreviousRentalAddViewController.h"
 #import "OMBPreviousRentalCell.h"
-#import "OMBRenterApplication.h"
+#import "OMBPreviousRentalListConnection.h"
 
 @implementation OMBPreviousRentalsListViewController
 
@@ -37,6 +38,13 @@
   [super loadView];
 
   [self setAddBarButtonItem];
+  
+  sheet = [[UIActionSheet alloc] initWithTitle: nil 
+    delegate: self cancelButtonTitle: @"Cancel" 
+      destructiveButtonTitle: @"Remove Previous Rental" 
+        otherButtonTitles: nil];
+  [self.view addSubview: sheet];
+
 
   [self setupForTable];  
 }
@@ -45,12 +53,48 @@
 {
   [super viewWillAppear: animated];
 
-  [self.table reloadData];
+  OMBPreviousRentalListConnection *connection = 
+    [[OMBPreviousRentalListConnection alloc] initWithUser: user];
+  connection.completionBlock = ^(NSError *error) {
+    if ([user.renterApplication.previousRentals count] == 0 &&
+      !showedAddModelViewControllerForTheFirstTime) {
 
-  NSLog(@"FETCH PREVIOUS RENTALS");
+      showedAddModelViewControllerForTheFirstTime = YES;
+      [self addModel];
+    } 
+    else
+      [self.table reloadData];
+  };
+  [connection start];
+  
+  [self.table reloadData];
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol UIActionSheetDelegate
+
+- (void) actionSheet: (UIActionSheet *) actionSheet 
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  // Remove cosigner
+  if (buttonIndex == 0) {
+    [self.table beginUpdates];
+    OMBPreviousRental *object = 
+      [user.renterApplication.previousRentals objectAtIndex: 
+        selectedIndexPath.row];
+    // Delete connection
+    [[[OMBDeleteRenterApplicationSectionModelConnection alloc] 
+      initWithObject: object] start];
+    // Remove previous rental from user's previous rental
+    [user.renterApplication.previousRentals removeObject: object];
+    // Reload the row
+    [self.table deleteRowsAtIndexPaths: @[selectedIndexPath]
+      withRowAnimation: UITableViewRowAnimationFade];
+    [self.table endUpdates];
+    selectedIndexPath = nil;
+  }
+}
 
 #pragma mark - Protocol UITableViewDataSource
 
@@ -77,13 +121,6 @@ numberOfRowsInSection: (NSInteger) section
 
 #pragma mark - Protocol UITableViewDelegate
 
-- (void) tableView: (UITableView *) tableView
-didSelectRowAtIndexPath: (NSIndexPath *) indexPath
-{
-  NSLog(@"SELECTED PREVIOUS RENTAL");
-  [self.table deselectRowAtIndexPath: indexPath animated: YES];
-}
-
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
@@ -107,10 +144,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) addModel
 {
+  OMBPreviousRentalAddViewController *viewController =
+    [[OMBPreviousRentalAddViewController alloc] init];
   [self presentViewController: 
     [[OMBNavigationController alloc] initWithRootViewController: 
-      [[OMBPreviousRentalAddViewController alloc] init]] animated: YES
-        completion: nil];
+      viewController] animated: YES
+        completion: ^{
+          [viewController firstTextFieldBecomeFirstResponder];
+        }];
 }
 
 @end

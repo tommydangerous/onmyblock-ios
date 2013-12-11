@@ -14,10 +14,10 @@
 
 @implementation OMBCosignerCell
 
-#pragma mark - Initialize
+#pragma mark - Initializer
 
 - (id) initWithStyle: (UITableViewCellStyle) style 
-reuseIdentifier: (NSString *)reuseIdentifier
+reuseIdentifier: (NSString *) reuseIdentifier
 { 
   if (!(self = [super initWithStyle: style 
     reuseIdentifier: reuseIdentifier])) return nil;
@@ -30,14 +30,14 @@ reuseIdentifier: (NSString *)reuseIdentifier
     screenWidth, padding + (22 * 3) + padding);
 
   nameLabel = [[UILabel alloc] init];
-  nameLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  nameLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   nameLabel.frame = CGRectMake(padding, padding, 
     screenWidth - (padding * 2), 22);
   nameLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: nameLabel];
 
   emailLabel = [[UILabel alloc] init];
-  emailLabel.font = nameLabel.font;
+  emailLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
   emailLabel.frame = CGRectMake(nameLabel.frame.origin.x,
     nameLabel.frame.origin.y + nameLabel.frame.size.height,
       nameLabel.frame.size.width, nameLabel.frame.size.height);
@@ -45,7 +45,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   [self.contentView addSubview: emailLabel];
 
   phoneLabel = [[UILabel alloc] init];
-  phoneLabel.font = nameLabel.font;
+  phoneLabel.font = emailLabel.font;
   phoneLabel.frame = CGRectMake(nameLabel.frame.origin.x,
     emailLabel.frame.origin.y + emailLabel.frame.size.height,
       nameLabel.frame.size.width, nameLabel.frame.size.height);

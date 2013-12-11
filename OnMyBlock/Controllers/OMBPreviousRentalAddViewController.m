@@ -9,6 +9,7 @@
 #import "OMBPreviousRentalAddViewController.h"
 
 #import "OMBPreviousRental.h"
+#import "OMBPreviousRentalCreateConnection.h"
 
 @implementation OMBPreviousRentalAddViewController
 
@@ -101,6 +102,8 @@
   previousRental.zip           = _zipTextField.text;
   [[OMBUser currentUser] addPreviousRental: previousRental];
   // Connection
+  [[[OMBPreviousRentalCreateConnection alloc] initWithPreviousRental: 
+    previousRental] start];
   [self cancel];
 }
 

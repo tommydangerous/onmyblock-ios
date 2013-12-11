@@ -10,9 +10,11 @@
 
 #import "OMBAppDelegate.h"
 #import "OMBCosigner.h"
+#import "OMBEmployment.h"
 #import "OMBFavoritesListConnection.h"
 #import "OMBFavoriteResidence.h"
 #import "OMBIntroViewController.h"
+#import "OMBLegalAnswer.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
@@ -31,6 +33,8 @@ NSString *const OMBCurrentUserChangedFavorite =
 NSString *const OMBCurrentUserLogoutNotification = 
   @"OMBCurrentUserLogoutNotification";
 // Whenever the user logs in
+// Login connection, sign up connection, and authenticate with server
+// posts this notification
 NSString *const OMBUserLoggedInNotification  = @"OMBUserLoggedInNotification";
 // User posts this after sending current user logout message to itself
 NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
@@ -92,6 +96,11 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   [_renterApplication addCosigner: cosigner];
 }
 
+- (void) addEmployment: (OMBEmployment *) employment
+{
+  [_renterApplication addEmployment: employment];
+}
+
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence
 {
   if (![_favorites objectForKey: [favoriteResidence dictionaryKey]]) {
@@ -102,10 +111,14 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   }
 }
 
+- (void) addLegalAnswer: (OMBLegalAnswer *) object
+{
+  [_renterApplication addLegalAnswer: object];
+}
+
 - (void) addPreviousRental: (OMBPreviousRental *) previousRental
 {
   [_renterApplication addPreviousRental: previousRental];
-  NSLog(@"%@", _renterApplication.previousRentals);
 }
 
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence
@@ -183,17 +196,18 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
 - (void) logout
 {
-  [OMBUser currentUser].accessToken         = nil;
-  [OMBUser currentUser].email               = nil;
-  [OMBUser currentUser].facebookAccessToken = nil;
-  [OMBUser currentUser].facebookId          = nil;
-  [OMBUser currentUser].firstName           = nil;
-  [OMBUser currentUser].image               = nil;
-  [OMBUser currentUser].imageURL            = nil;
-  [OMBUser currentUser].lastName            = nil;
-  [OMBUser currentUser].userType            = nil;
-  [OMBUser currentUser].uid                 = 0;
-  [[OMBUser currentUser].favorites removeAllObjects];
+  _accessToken         = nil;
+  _email               = nil;
+  _facebookAccessToken = nil;
+  _facebookId          = nil;
+  _firstName           = nil;
+  _image               = nil;
+  _imageURL            = nil;
+  _lastName            = nil;
+  _userType            = nil;
+  _uid                 = 0;
+  [_favorites removeAllObjects];
+  [_renterApplication removeAllObjects];
   [[NSNotificationCenter defaultCenter] postNotificationName: 
     OMBUserLoggedOutNotification object: nil];
 }
@@ -228,7 +242,7 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary
 {
-  NSArray *array = [dictionary objectForKey: @"cosigners"];
+  NSArray *array = [dictionary objectForKey: @"objects"];
   for (NSDictionary *dict in array) {
     OMBCosigner *cosigner = [[OMBCosigner alloc] init];
     [cosigner readFromDictionary: dict];
@@ -284,6 +298,36 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   _uid         = [[dictionary objectForKey: @"id"] intValue];
   [_renterApplication readFromDictionary: 
     [dictionary objectForKey: @"renter_application"]];
+}
+
+- (void) readFromEmploymentDictionary: (NSDictionary *) dictionary
+{
+  NSArray *array = [dictionary objectForKey: @"objects"];
+  for (NSDictionary *dict in array) {
+    OMBEmployment *employment = [[OMBEmployment alloc] init];
+    [employment readFromDictionary: dict];
+    [self addEmployment: employment];
+  }
+}
+
+- (void) readFromLegalAnswerDictionary: (NSDictionary *) dictionary
+{
+  NSArray *array = [dictionary objectForKey: @"objects"];
+  for (NSDictionary *dict in array) {
+    OMBLegalAnswer *legalAnswer = [[OMBLegalAnswer alloc] init];
+    [legalAnswer readFromDictionary: dict];
+    [self addLegalAnswer: legalAnswer];
+  }
+}
+
+- (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary
+{
+  NSArray *array = [dictionary objectForKey: @"objects"];
+  for (NSDictionary *dict in array) {
+    OMBPreviousRental *previousRental = [[OMBPreviousRental alloc] init];
+    [previousRental readFromDictionary: dict];
+    [self addPreviousRental: previousRental];
+  }
 }
 
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary

@@ -13,7 +13,11 @@
 @interface OMBRenterApplicationAddModelViewController : OMBTableViewController
 <UITextFieldDelegate>
 {
+  UIBarButtonItem *cancelBarButtonItem;
+  UIBarButtonItem *clearBarButtonItem;
+  UIBarButtonItem *doneBarButtonItem;
   BOOL isEditing;
+  UIBarButtonItem *saveBarButtonItem;
   NSArray *textFieldArray;
 }
 
@@ -22,8 +26,13 @@
 #pragma mark - Instance Methods
 
 - (void) cancel;
+- (void) clear;
+- (void) done;
+- (void) firstTextFieldBecomeFirstResponder;
 - (void) save;
 - (void) setFrameForTextFields;
+- (void) showCancelAndSaveBarButtonItems;
+- (void) showClearAndDoneBarButtonItems;
 - (id) validateFieldsInArray: (NSArray *) array;
 
 @end

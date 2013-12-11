@@ -30,6 +30,7 @@
 + (UIColor *) pink;
 + (UIColor *) pinkAlpha: (float) value;
 + (UIColor *) pinkDark;
++ (UIColor *) red;
 + (UIColor *) textColor;
 + (UIColor *) whiteAlpha: (float) value;
 

@@ -10,10 +10,5 @@
 
 @interface OMBCosignersListViewController : 
   OMBRenterApplicationSectionViewController
-<UIActionSheetDelegate>
-{
-  NSIndexPath *selectedIndexPath;
-  UIActionSheet *sheet;
-}
 
 @end

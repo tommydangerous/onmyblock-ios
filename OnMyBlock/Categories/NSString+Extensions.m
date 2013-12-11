@@ -25,4 +25,19 @@
     [NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
 }
 
++ (NSString *) stringFromDateForJSON: (NSDate *) date
+{
+  if (!date)
+    return @"";
+  NSDateFormatter *dateFormatter = [NSDateFormatter new];
+  dateFormatter.dateFormat = @"yyyy-MM-d";
+  return [dateFormatter stringFromDate: date];
+}
+
+- (NSString *) stripWhiteSpace
+{
+  return [self stringByTrimmingCharactersInSet: 
+    [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
 @end

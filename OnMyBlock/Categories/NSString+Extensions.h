@@ -10,7 +10,10 @@
 
 @interface NSString (Extensions)
 
++ (NSString *) stringFromDateForJSON: (NSDate *) date;
 + (NSString *) numberToCurrencyString: (int) number;
 + (NSString *) stripLower: (NSString *) string;
+
+- (NSString *) stripWhiteSpace;
 
 @end

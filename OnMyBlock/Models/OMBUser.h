@@ -16,7 +16,9 @@ extern NSString *const OMBUserLoggedInNotification;
 extern NSString *const OMBUserLoggedOutNotification;
 
 @class OMBCosigner;
+@class OMBEmployment;
 @class OMBFavoriteResidence;
+@class OMBLegalAnswer;
 @class OMBPreviousRental;
 @class OMBRenterApplication;
 @class OMBResidence;
@@ -49,6 +51,8 @@ extern NSString *const OMBUserLoggedOutNotification;
 #pragma mark - Instance Methods
 
 - (void) addCosigner: (OMBCosigner *) cosigner;
+- (void) addEmployment: (OMBEmployment *) employment;
+- (void) addLegalAnswer: (OMBLegalAnswer *) object;
 - (void) addPreviousRental: (OMBPreviousRental *) previousRental;
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence;
@@ -61,6 +65,9 @@ extern NSString *const OMBUserLoggedOutNotification;
 - (NSString *) phoneString;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
+- (void) readFromEmploymentDictionary: (NSDictionary *) dictionary;
+- (void) readFromLegalAnswerDictionary: (NSDictionary *) dictionary;
+- (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence;
 

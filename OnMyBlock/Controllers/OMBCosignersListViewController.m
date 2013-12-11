@@ -10,10 +10,9 @@
 
 #import "OMBCosignerAddViewController.h"
 #import "OMBCosignerCell.h"
-#import "OMBCosignerDeleteConnection.h"
 #import "OMBCosignerListConnection.h"
+#import "OMBDeleteRenterApplicationSectionModelConnection.h"
 #import "OMBNavigationController.h"
-#import "OMBRenterApplication.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBCosignersListViewController
@@ -54,7 +53,14 @@
   OMBCosignerListConnection *connection = 
     [[OMBCosignerListConnection alloc] initWithUser: user];
   connection.completionBlock = ^(NSError *error) {
-    [self.table reloadData];
+    if ([[user.renterApplication cosignersSortedByFirstName] count] == 0 &&
+      !showedAddModelViewControllerForTheFirstTime) {
+      
+      showedAddModelViewControllerForTheFirstTime = YES;
+      [self addModel];
+    }
+    else
+      [self.table reloadData];
   };
   [connection start];
   [self.table reloadData];
@@ -70,12 +76,13 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   // Remove cosigner
   if (buttonIndex == 0) {
     [self.table beginUpdates];
-    OMBCosigner *cosigner = 
+    OMBCosigner *object = 
       [[user.renterApplication cosignersSortedByFirstName]
         objectAtIndex: selectedIndexPath.row];
     // Delete connection
-    [[[OMBCosignerDeleteConnection alloc] initWithCosigner: cosigner] start];
-    [user.renterApplication.cosigners removeObject: cosigner];
+    [[[OMBDeleteRenterApplicationSectionModelConnection alloc] 
+      initWithObject: object] start];
+    [user.renterApplication.cosigners removeObject: object];
     [self.table deleteRowsAtIndexPaths: @[selectedIndexPath]
       withRowAnimation: UITableViewRowAnimationFade];
     [self.table endUpdates];
@@ -108,14 +115,6 @@ numberOfRowsInSection: (NSInteger) section
 
 #pragma mark - Protocol UITableViewDelegate
 
-- (void) tableView: (UITableView *) tableView
-didSelectRowAtIndexPath: (NSIndexPath *) indexPath
-{
-  selectedIndexPath = indexPath;
-  [sheet showInView: self.view];
-  [self.table deselectRowAtIndexPath: indexPath animated: YES];
-}
-
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {  
@@ -128,10 +127,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) addModel
 {
+  OMBCosignerAddViewController *viewController =
+    [[OMBCosignerAddViewController alloc] init];
   [self presentViewController: 
     [[OMBNavigationController alloc] initWithRootViewController: 
-      [[OMBCosignerAddViewController alloc] init]] animated: YES
-        completion: nil];
+      viewController] animated: YES
+        completion: ^{
+          [viewController firstTextFieldBecomeFirstResponder];
+        }];
 }
 
 @end

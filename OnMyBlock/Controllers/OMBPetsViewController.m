@@ -8,7 +8,6 @@
 
 #import "OMBPetsViewController.h"
 
-#import "OMBRenterApplication.h"
 #import "OMBRenterApplicationPetCell.h"
 #import "OMBRenterApplicationUpdateConnection.h"
 #import "UIColor+Extensions.h"
@@ -35,15 +34,9 @@
 {
   [super loadView];
 
-  self.navigationItem.rightBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithTitle: @"Save"
-      style: UIBarButtonItemStylePlain target: self 
-        action: @selector(save)];
+  self.navigationItem.rightBarButtonItem = saveBarButtonItem;
 
-  self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
-  self.table.separatorColor = [UIColor grayLight];
-  self.table.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
-  self.table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+  [self setupForTable];
 }
 
 #pragma mark - Protocol UITableViewDataSource
@@ -136,7 +129,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  return 100.0f;
+  return 80.0f;
 }
 
 #pragma mark - Methods

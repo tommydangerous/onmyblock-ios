@@ -16,7 +16,7 @@
 
 - (id) initWithCosigner: (OMBCosigner *) object
 {
-  if (!(self = [super init])) return self;
+  if (!(self = [super init])) return nil;
 
   cosigner = object;
 
@@ -24,12 +24,15 @@
     OnMyBlockAPIURL];
   NSURL *url = [NSURL URLWithString: string];
   NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
+  NSDictionary *objectParams = @{
+    @"email":      cosigner.email,
+    @"first_name": cosigner.firstName,
+    @"last_name":  cosigner.lastName,
+    @"phone":      cosigner.phone
+  };
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,
-    @"email":        cosigner.email,
-    @"first_name":   cosigner.firstName,
-    @"last_name":    cosigner.lastName,
-    @"phone":        cosigner.phone
+    @"cosigner":     objectParams
   };
   NSData *json = [NSJSONSerialization dataWithJSONObject: params
     options: 0 error: nil];
@@ -50,7 +53,7 @@
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
   if ([[json objectForKey: @"success"] intValue] == 1) {
-    NSDictionary *dict = [json objectForKey: @"cosigner"];
+    NSDictionary *dict = [json objectForKey: @"object"];
     cosigner.uid = [[dict objectForKey: @"id"] intValue];
   }
   [super connectionDidFinishLoading: connection];

@@ -11,7 +11,7 @@
 #import "OMBAccountProfileViewController.h"
 #import "OMBCenteredImageView.h"
 #import "OMBCosignersListViewController.h"
-#import "OMBEmploymentViewController.h"
+#import "OMBEmploymentListViewController.h"
 #import "OMBGradientView.h"
 #import "OMBLegalViewController.h"
 #import "OMBPetsViewController.h"
@@ -199,12 +199,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 		// Employment
 		else if (indexPath.row == 5) {
 			[self.navigationController pushViewController:
-				[[OMBEmploymentViewController alloc] init] animated: YES];
+				[[OMBEmploymentListViewController alloc] initWithUser: _user] 
+          animated: YES];
 		}
 		// Legal
 		else if (indexPath.row == 6) {
 			[self.navigationController pushViewController:
-				[[OMBLegalViewController alloc] init] animated: YES];
+				[[OMBLegalViewController alloc] initWithUser: _user] animated: YES];
 		}
 	}
   [self.table deselectRowAtIndexPath: indexPath animated: YES];

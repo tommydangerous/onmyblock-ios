@@ -25,7 +25,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   UIView *iconView = [[UIView alloc] init];
   iconView.backgroundColor = [UIColor clearColor];
   iconView.clipsToBounds = YES;
-  iconView.frame = CGRectMake(padding, padding, 60.0f, 60.0f);
+  iconView.frame = CGRectMake(padding, padding, 40.0f, 40.0f);
   iconView.layer.cornerRadius = iconView.frame.size.width * 0.5;
   [self.contentView addSubview: iconView];
   _iconImageView = [[UIImageView alloc] init];
@@ -39,11 +39,11 @@ reuseIdentifier: (NSString *)reuseIdentifier
   _nameLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
   _nameLabel.frame = CGRectMake(
     iconView.frame.origin.x + iconView.frame.size.width + padding,
-      iconView.frame.origin.y, iconView.frame.size.width,
+      iconView.frame.origin.y, iconView.frame.size.width * 3,
         iconView.frame.size.height);
   [self.contentView addSubview: _nameLabel];
 
-  float checkmarkBoxSize = 30.0f;
+  float checkmarkBoxSize = 26.0f;
   _checkmarkBox = [[UIView alloc] init];
   _checkmarkBox.frame = CGRectMake(
     self.contentView.frame.size.width - (checkmarkBoxSize + padding), 

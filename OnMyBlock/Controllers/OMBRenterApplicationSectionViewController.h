@@ -8,10 +8,20 @@
 
 #import "OMBTableViewController.h"
 
+#import "OMBRenterApplication.h"
+
 @class OMBUser;
 
 @interface OMBRenterApplicationSectionViewController : OMBTableViewController
+<UIActionSheetDelegate>
 {
+  UIBarButtonItem *addBarButtonItem;
+  UIBarButtonItem *doneBarButtonItem;
+  BOOL isEditing;
+  NSIndexPath *selectedIndexPath;
+  UIBarButtonItem *saveBarButtonItem;
+  UIActionSheet *sheet;
+  BOOL showedAddModelViewControllerForTheFirstTime;
   OMBUser *user;
 }
 
@@ -24,6 +34,8 @@
 #pragma mark - Instance Methods
 
 - (void) addModel;
+- (void) done;
+- (void) save;
 - (void) setAddBarButtonItem;
 - (void) setupForTable;
 

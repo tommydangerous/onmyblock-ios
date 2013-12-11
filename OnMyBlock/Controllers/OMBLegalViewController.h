@@ -6,8 +6,20 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import "OMBTableViewController.h"
+#import "OMBRenterApplicationSectionViewController.h"
 
-@interface OMBLegalViewController : OMBTableViewController
+@interface OMBLegalViewController : 
+  OMBRenterApplicationSectionViewController
+<UITextViewDelegate>
+{
+  NSMutableDictionary *legalAnswers;
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) endEditingIfEditing;
+- (void) setLegalAnswer: (OMBLegalAnswer *) object;
 
 @end

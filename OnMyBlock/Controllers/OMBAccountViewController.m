@@ -9,6 +9,7 @@
 #import "OMBAccountViewController.h"
 
 #import "OMBAccountProfileViewController.h"
+#import "OMBPaymentMethodsViewController.h"
 #import "OMBPrivacyPolicyViewController.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBTermsOfServiceViewController.h"
@@ -167,6 +168,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       [self.navigationController pushViewController:
         [[OMBRenterApplicationViewController alloc] initWithUser: 
           [OMBUser currentUser]] animated: YES];
+    }
+    // Payment Methods
+    else if (indexPath.row == 3) {
+      [self.navigationController pushViewController:
+        [[OMBPaymentMethodsViewController alloc] init] animated: YES];
     }
   }
   else if (indexPath.section == 1) {

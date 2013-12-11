@@ -21,14 +21,37 @@
 {
   [super loadView];
 
-  self.navigationItem.leftBarButtonItem = 
+  cancelBarButtonItem = 
     [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
       style: UIBarButtonItemStylePlain target: self 
         action: @selector(cancel)];
-  self.navigationItem.rightBarButtonItem = 
+  clearBarButtonItem =
+    [[UIBarButtonItem alloc] initWithTitle: @"Clear"
+      style: UIBarButtonItemStylePlain target: self
+        action: @selector(clear)];
+  doneBarButtonItem =
+    [[UIBarButtonItem alloc] initWithTitle: @"Done"
+      style: UIBarButtonItemStylePlain target: self
+        action: @selector(done)];
+  saveBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @"Save"
       style: UIBarButtonItemStylePlain target: self 
         action: @selector(save)];
+
+  self.navigationItem.leftBarButtonItem  = cancelBarButtonItem;
+  self.navigationItem.rightBarButtonItem = saveBarButtonItem;
+
+  CGRect screen = [[UIScreen mainScreen] bounds];
+
+  CGRect rect = CGRectMake(0, 0, screen.size.width, 44.0f);
+  self.table.separatorColor = [UIColor grayLight];
+  self.table.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
+  self.table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+  self.table.backgroundColor = [UIColor grayUltraLight];
+  self.table.tableFooterView = [[UIView alloc] initWithFrame: rect];
+  self.table.tableFooterView.backgroundColor = [UIColor clearColor];
+  self.table.tableHeaderView = [[UIView alloc] initWithFrame: rect];
+  self.table.tableHeaderView.backgroundColor = [UIColor clearColor];
 }
 
 #pragma mark - Protocol
@@ -53,9 +76,25 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setTextField: [textFieldArray objectAtIndex: indexPath.row]];
+    CGRect screen = [[UIScreen mainScreen] bounds];
+    if (indexPath.row == 0) {
+      CALayer *topBorder = [CALayer layer];
+      topBorder.backgroundColor = self.table.separatorColor.CGColor; 
+      topBorder.frame = CGRectMake(0.0f, 0.0f, screen.size.width, 0.5f);
+      [cell.contentView.layer addSublayer: topBorder];
+    }
+    else if (indexPath.row == [self tableView: self.table 
+      numberOfRowsInSection: 0] - 1) {
+      CALayer *bottomBorder = [CALayer layer];
+      bottomBorder.backgroundColor = self.table.separatorColor.CGColor;
+      bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f,
+        screen.size.width, 0.5f);
+      [cell.contentView.layer addSublayer: bottomBorder];
+    }
     return cell;
   }
   UITableViewCell *emptyCell = [[UITableViewCell alloc] init];
+  emptyCell.backgroundColor = [UIColor clearColor];
   emptyCell.selectionStyle = UITableViewCellSelectionStyleNone;
   return emptyCell;
 }
@@ -75,16 +114,13 @@ numberOfRowsInSection: (NSInteger) section
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  float padding = 20.0f;
   if (indexPath.section == 0) {
     UITextField *t = [textFieldArray objectAtIndex: indexPath.row];
-    return padding + t.frame.size.height;
+    return t.frame.size.height;
   }
   else if (indexPath.section == 1) {
-    float height = padding;
     if (isEditing)
-      height += 216.0f;
-    return height;
+      return 216.0f;
   }
   return 0.0f;
 }
@@ -121,6 +157,22 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self dismissViewControllerAnimated: YES completion: nil];
 }
 
+- (void) clear
+{
+  // Subclasses implement this
+}
+
+- (void) done
+{
+  // Subclasses implement this
+}
+
+- (void) firstTextFieldBecomeFirstResponder
+{
+  if ([textFieldArray count] > 0)
+    [[textFieldArray objectAtIndex: 0] becomeFirstResponder];
+}
+
 - (void) save
 {
   // Subclasses implement this
@@ -135,19 +187,26 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
   for (TextFieldPadding *textField in textFieldArray) {
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.backgroundColor = [UIColor grayUltraLight];
     textField.delegate = self;
     textField.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-    textField.frame = CGRectMake(padding, padding, 
+    textField.frame = CGRectMake(padding, 0, 
       screenWidth - (padding * 2), 44.0f);
-    textField.layer.cornerRadius = 2.0f;
-    textField.layer.borderColor = [UIColor grayLight].CGColor;
-    textField.layer.borderWidth = 1.0f;
-    textField.paddingX = padding / 2.0f;
-    textField.paddingY = padding / 2.0f;
     textField.returnKeyType = UIReturnKeyDone;
   }
 }
+
+- (void) showCancelAndSaveBarButtonItems
+{
+  [self.navigationItem setLeftBarButtonItem: cancelBarButtonItem animated: YES];
+  [self.navigationItem setRightBarButtonItem: saveBarButtonItem animated: YES];
+}
+
+- (void) showClearAndDoneBarButtonItems
+{
+  [self.navigationItem setLeftBarButtonItem: clearBarButtonItem animated: YES];
+  [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
+}
+
 
 - (id) validateFieldsInArray: (NSArray *) array
 {
