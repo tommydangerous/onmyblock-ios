@@ -27,11 +27,15 @@
 + (UIColor *) grayUltraLightAlpha: (float) value;
 + (UIColor *) green;
 + (UIColor *) greenDark;
++ (UIColor *) paypalBlue;
++ (UIColor *) paypalBlueLight;
 + (UIColor *) pink;
 + (UIColor *) pinkAlpha: (float) value;
 + (UIColor *) pinkDark;
 + (UIColor *) red;
 + (UIColor *) textColor;
++ (UIColor *) venmoBlue;
++ (UIColor *) venmoBlueDark;
 + (UIColor *) whiteAlpha: (float) value;
 
 @end

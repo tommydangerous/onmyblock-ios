@@ -72,4 +72,12 @@ numberOfRowsInSection: (NSInteger) section
   // Subclasses implement this
 }
 
+- (void) setupForTable
+{
+  self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
+  self.table.separatorColor = [UIColor grayLight];
+  self.table.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
+  self.table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+}
+
 @end

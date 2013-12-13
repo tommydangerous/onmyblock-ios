@@ -19,5 +19,6 @@
 
 - (void) fetchFavorites;
 - (void) reloadTable;
+- (void) setupForTable;
 
 @end

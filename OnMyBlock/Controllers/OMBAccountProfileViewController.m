@@ -198,7 +198,9 @@
     textField.returnKeyType = UIReturnKeyDone;
     textField.textColor = [UIColor textColor];
   }
-
+  emailTextField.keyboardType       = UIKeyboardTypeEmailAddress;
+  phoneTextField.keyboardAppearance = UIKeyboardAppearanceDark;
+  phoneTextField.keyboardType       = UIKeyboardTypePhonePad;
   // About text view
   aboutTextView = [[UITextView alloc] init];
   aboutTextView.autocorrectionType = UITextAutocorrectionTypeYes;

@@ -11,7 +11,7 @@
 @class DRNRealTimeBlurView;
 @class OMBCenteredImageView;
 @class OMBExtendedHitAreaViewContainer;
-@class OMBIntroViewController;
+@class OMBIntroStillImagesViewController;
 @class OMBLoginViewController;
 @class OMBNavigationController;
 @class OMBRenterApplicationViewController;
@@ -84,7 +84,8 @@
 @property (nonatomic, strong) OMBCenteredImageView *accountView;
 @property (nonatomic, strong) 
   OMBNavigationController *favoritesNavigationController;
-@property (nonatomic, strong) OMBIntroViewController *introViewController;
+@property (nonatomic, strong) 
+  OMBIntroStillImagesViewController *introViewController;
 @property (nonatomic, strong) OMBLoginViewController *loginViewController;
 @property (nonatomic, strong) OMBNavigationController *mapNavigationController;
 @property (nonatomic, strong) 

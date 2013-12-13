@@ -13,7 +13,7 @@
 #import "OMBEmployment.h"
 #import "OMBFavoritesListConnection.h"
 #import "OMBFavoriteResidence.h"
-#import "OMBIntroViewController.h"
+#import "OMBIntroStillImagesViewController.h"
 #import "OMBLegalAnswer.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"

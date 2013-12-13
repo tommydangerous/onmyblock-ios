@@ -15,7 +15,7 @@
 #import "OMBExtendedHitAreaViewContainer.h"
 #import "OMBFavoritesListViewController.h"
 #import "OMBGetStartedView.h"
-#import "OMBIntroViewController.h"
+#import "OMBIntroStillImagesViewController.h"
 #import "OMBLoginViewController.h"
 #import "OMBMapViewController.h"
 #import "OMBNavigationController.h"
@@ -88,7 +88,7 @@
     [[OMBNavigationController alloc] initWithRootViewController:
       [[OMBFavoritesListViewController alloc] init]];
   // Intro  
-  _introViewController = [[OMBIntroViewController alloc] init];
+  _introViewController = [[OMBIntroStillImagesViewController alloc] init];
   // Login
   _loginViewController = [[OMBLoginViewController alloc] init];
   // Map
@@ -396,8 +396,8 @@
   [_accountView addSubview: accountButton];
   _accountView.transform = CGAffineTransformMakeScale(0, 0);
 
-  // [self presentDetailViewController: _mapNavigationController];
-  [self presentDetailViewController: _accountNavigationController];
+  [self presentDetailViewController: _mapNavigationController];
+  // [self presentDetailViewController: _accountNavigationController];
 
   // Set the frame for the buttons
   // [self setFramesForButtons: buttonsLoggedIn];
@@ -841,11 +841,11 @@ willDecelerate: (BOOL) decelerate
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
 
-  CGRect getStartedButtonRect = 
-    _introViewController.getStartedView.getStartedButton.frame;
-  getStartedButtonRect.origin.x = screen.size.width;
-  _introViewController.getStartedView.getStartedButton.frame = 
-    getStartedButtonRect;
+  // CGRect getStartedButtonRect = 
+  //   _introViewController.getStartedView.getStartedButton.frame;
+  // getStartedButtonRect.origin.x = screen.size.width;
+  // _introViewController.getStartedView.getStartedButton.frame = 
+  //   getStartedButtonRect;
   _introViewController.pageControl.currentPage = 0;
   _introViewController.scroll.contentOffset    = CGPointZero;
   [self presentViewController: _introViewController animated: animated

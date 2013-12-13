@@ -10,7 +10,7 @@
 #import "GAI.h"
 
 #import "OMBAppDelegate.h"
-#import "OMBIntroViewController.h"
+#import "OMBIntroStillImagesViewController.h"
 #import "OMBLoginViewController.h"
 #import "OMBViewControllerContainer.h"
 #import "OMBUser.h"
@@ -56,7 +56,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [self openSession];
 
   NSLog(@"APP DELEGATE SHOW INTRO!");
-  // [_container showIntroAnimatedDissolve: NO];
+  [_container showIntroAnimatedDissolve: NO];
   // if ([[OMBUser currentUser] loggedIn])
     // [self hideIntro];
 

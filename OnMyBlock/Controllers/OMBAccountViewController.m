@@ -9,7 +9,7 @@
 #import "OMBAccountViewController.h"
 
 #import "OMBAccountProfileViewController.h"
-#import "OMBPaymentMethodsViewController.h"
+#import "OMBPayoutMethodsViewController.h"
 #import "OMBPrivacyPolicyViewController.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBTermsOfServiceViewController.h"
@@ -92,7 +92,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.textLabel.text = @"My Renter Application";
       }
       else if (indexPath.row == 3) {
-        cell.textLabel.text = @"Payment Info";
+        cell.textLabel.text = @"Payout Methods";
       }
       else if (indexPath.row == 4) {
         cell.textLabel.text = @"Transactions";
@@ -172,7 +172,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Payment Methods
     else if (indexPath.row == 3) {
       [self.navigationController pushViewController:
-        [[OMBPaymentMethodsViewController alloc] init] animated: YES];
+        [[OMBPayoutMethodsViewController alloc] init] animated: YES];
     }
   }
   else if (indexPath.section == 1) {

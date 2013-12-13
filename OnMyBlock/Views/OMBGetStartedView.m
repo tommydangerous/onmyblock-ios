@@ -10,7 +10,7 @@
 
 #import "DDPageControl.h"
 #import "OMBAppDelegate.h"
-#import "OMBIntroViewController.h"
+#import "OMBIntroStillImagesViewController.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"

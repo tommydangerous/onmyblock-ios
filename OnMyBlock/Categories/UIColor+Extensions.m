@@ -112,6 +112,18 @@
     blue: (100/255.0) alpha: 1];
 }
 
++ (UIColor *) paypalBlue
+{
+  return [UIColor colorWithRed: 0.0f green: 69/255.0f blue: 124/255.0f
+    alpha: 1.0f];
+}
+
++ (UIColor *) paypalBlueLight
+{
+  return [UIColor colorWithRed: 20/255.0f green: 79/255.0f blue: 144/255.0f
+    alpha: 1.0f];
+}
+
 + (UIColor *) pink
 {
   return [UIColor colorWithRed: (193/255.0) green: (25/255.0) 
@@ -139,6 +151,18 @@
 + (UIColor *) textColor
 {
   return [UIColor blackColor];
+}
+
++ (UIColor *) venmoBlue
+{
+  return [UIColor colorWithRed: 82/255.0 green: 145/255.0 blue: 203/255.0
+    alpha: 1.0f];
+}
+
++ (UIColor *) venmoBlueDark
+{
+  return [UIColor colorWithRed: 62/255.0 green: 125/255.0 blue: 183/255.0
+    alpha: 1.0f];
 }
 
 + (UIColor *) whiteAlpha: (float) value

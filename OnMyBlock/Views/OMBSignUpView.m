@@ -9,7 +9,7 @@
 #import "OMBSignUpView.h"
 
 #import "OMBAppDelegate.h"
-#import "OMBIntroViewController.h"
+#import "OMBIntroStillImagesViewController.h"
 #import "OMBLoginConnection.h"
 #import "OMBLoginViewController.h"
 #import "OMBSignUpConnection.h"

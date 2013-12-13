@@ -37,6 +37,5 @@
 - (void) done;
 - (void) save;
 - (void) setAddBarButtonItem;
-- (void) setupForTable;
 
 @end
