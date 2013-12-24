@@ -43,4 +43,16 @@
   return [self textRectForBounds: bounds];
 }
 
+- (void) setPlaceholder: (NSString *) string
+{
+  if (self.placeholderColor) {
+    self.attributedPlaceholder = 
+    [[NSAttributedString alloc] initWithString: string
+      attributes: @{ NSForegroundColorAttributeName: self.placeholderColor }];
+  }
+  else {
+    [super setPlaceholder: string];
+  }
+}
+
 @end

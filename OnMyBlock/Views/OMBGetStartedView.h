@@ -10,6 +10,7 @@
 
 @interface OMBGetStartedView : UIView
 
+@property (nonatomic, strong) UIButton *facebookButton;
 @property (nonatomic, strong) UIButton *getStartedButton;
 
 @end

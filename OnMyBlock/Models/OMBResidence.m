@@ -102,6 +102,30 @@ withString: (NSString *) string
 - (UIImage *) coverPhotoWithSize: (CGSize) size
 {
   UIImage *img = [self coverPhoto];
+  CGFloat sizeAspectRatio  = size.width / size.height;
+  CGFloat imageAspectRatio = img.size.width / img.size.height;
+  CGFloat newHeight = size.height;
+  CGFloat newWidth  = img.size.width * (size.height / img.size.height);
+  if (newWidth < size.width) {
+    newHeight = newHeight * (size.width / newWidth);
+    newWidth  = size.width;
+  }
+  CGPoint point = CGPointZero;
+  // Center it vertically
+  if (newHeight > size.height) {
+    point.y = (newHeight - size.height) * -0.5;
+  }
+  // Center it horizontally
+  if (newWidth > size.width) {
+    point.x = (newWidth - size.width) * -0.5;
+  }
+  return [UIImage image: img size: CGSizeMake(newWidth, newHeight)
+    point: point];
+}
+
+- (UIImage *) coverPhotoWithSize1: (CGSize) size
+{
+  UIImage *img = [self coverPhoto];
   float newHeight, newWidth;
   if (img.size.width < img.size.height) {
     newHeight = size.height;

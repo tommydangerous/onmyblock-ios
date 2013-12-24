@@ -74,10 +74,11 @@ numberOfRowsInSection: (NSInteger) section
 
 - (void) setupForTable
 {
+  self.table.backgroundColor = [UIColor grayUltraLight];
+  self.table.separatorColor  = [UIColor grayLight];
+  self.table.separatorInset  = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
+  self.table.separatorStyle  = UITableViewCellSeparatorStyleSingleLine;
   self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
-  self.table.separatorColor = [UIColor grayLight];
-  self.table.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
-  self.table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 }
 
 @end

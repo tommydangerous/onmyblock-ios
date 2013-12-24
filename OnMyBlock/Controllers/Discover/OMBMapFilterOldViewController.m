@@ -8,7 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "OMBMapFilterViewController.h"
+#import "OMBMapFilterOldViewController.h"
 
 #import "OMBListButton.h"
 #import "OMBMapViewController.h"
@@ -20,7 +20,7 @@
 
 const int kPadding = 20;
 
-@implementation OMBMapFilterViewController
+@implementation OMBMapFilterOldViewController
 
 @synthesize bath              = _bath;
 @synthesize beds              = _beds;

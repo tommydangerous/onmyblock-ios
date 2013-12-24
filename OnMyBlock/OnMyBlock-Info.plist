@@ -28,6 +28,16 @@
 				<string>fb225582504266345</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Venmo</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>venmo1522</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.0.4</string>

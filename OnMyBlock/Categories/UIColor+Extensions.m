@@ -28,16 +28,28 @@
     blue: (193/255.0) alpha: 1];
 }
 
++ (UIColor *) blueAlpha: (float) value
+{
+  return [UIColor colorWithRed: (111/255.0) green: (174/255.0) 
+    blue: (193/255.0) alpha: value];
+}
+
 + (UIColor *) blueDark
 {
-  return [UIColor colorWithRed: (80/255.0) green: (145/255.0) 
-    blue: (165/255.0) alpha: 1];
+  return [UIColor colorWithRed: (46/255.0) green: (112/255.0) 
+    blue: (159/255.0) alpha: 1.0f];
 }
 
 + (UIColor *) blueDarkAlpha: (float) value
 {
-  return [UIColor colorWithRed: (80/255.0) green: (145/255.0) 
-    blue: (165/255.0) alpha: value];
+  return [UIColor colorWithRed: (46/255.0) green: (112/255.0) 
+    blue: (159/255.0) alpha: value];
+}
+
++ (UIColor *) blueLight
+{
+  return [UIColor colorWithRed: (174/255.0f) green: (197/255.0f) 
+    blue: (206/255.0f) alpha: 1.0f];
 }
 
 + (UIColor *) facebookBlue
@@ -100,10 +112,21 @@
     blue: (245/255.0) alpha: value];
 }
 
++ (UIColor *) grayVeryLight
+{
+  return [UIColor colorWithWhite: 230/255.0f alpha: 1.0f];
+}
+
 + (UIColor *) green
 {
   return [UIColor colorWithRed: (88/255.0) green: (209/255.0) 
     blue: (136/255.0) alpha: 1];
+}
+
++ (UIColor *) greenAlpha: (float) value
+{
+  return [UIColor colorWithRed: (88/255.0) green: (209/255.0) 
+    blue: (136/255.0) alpha: value];
 }
 
 + (UIColor *) greenDark

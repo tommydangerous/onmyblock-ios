@@ -13,8 +13,10 @@
 + (UIColor *) backgroundColor;
 + (UIColor *) backgroundColorAlpha: (float) value;
 + (UIColor *) blue;
++ (UIColor *) blueAlpha: (float) value;
 + (UIColor *) blueDark;
 + (UIColor *) blueDarkAlpha: (float) value;
++ (UIColor *) blueLight;
 + (UIColor *) facebookBlue;
 + (UIColor *) facebookBlueDark;
 + (UIColor *) grayDark;
@@ -25,7 +27,9 @@
 + (UIColor *) grayMediumAlpha: (float) value;
 + (UIColor *) grayUltraLight;
 + (UIColor *) grayUltraLightAlpha: (float) value;
++ (UIColor *) grayVeryLight;
 + (UIColor *) green;
++ (UIColor *) greenAlpha: (float) value;
 + (UIColor *) greenDark;
 + (UIColor *) paypalBlue;
 + (UIColor *) paypalBlueLight;

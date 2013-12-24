@@ -8,6 +8,7 @@
 
 #import "OMBUserMenu.h"
 
+#import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
 
@@ -45,6 +46,8 @@
     10 + 40 + 10);
   _discoverButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
+  [_discoverButton addTarget: self action: @selector(showDiscover)
+    forControlEvents: UIControlEventTouchUpInside];
   [_discoverButton setTitle: @"Discover" forState: UIControlStateNormal];
   [_discoverButton setTitleColor: [UIColor grayMedium] 
     forState: UIControlStateHighlighted];
@@ -163,6 +166,11 @@
   }
 }
 
+- (OMBAppDelegate *) appDelegate
+{
+  return [UIApplication sharedApplication].delegate;
+}
+
 - (void) removeCurrentButtonsFromMenuScroll
 {
   for (UIView *v in _currentButtons) {
@@ -230,9 +238,14 @@
 - (void) setupForSeller
 {
   [self removeCurrentButtonsFromMenuScroll];
-  [_headerButton setTitle: @"Seller" forState: UIControlStateNormal];
+  [_headerButton setTitle: @"Subletter" forState: UIControlStateNormal];
   _currentButtons  = _sellerButtons;
   [self setupButtons];
+}
+
+- (void) showDiscover
+{
+  [[self appDelegate].container showDiscover];
 }
 
 @end

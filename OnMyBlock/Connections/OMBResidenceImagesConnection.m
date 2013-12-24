@@ -8,6 +8,7 @@
 
 #import "OMBResidenceImagesConnection.h"
 
+#import "OMBCenteredImageView.h"
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
 #import "OMBResidenceGoogleStaticImageDownloader.h"
@@ -50,18 +51,15 @@
       // This will set the cover photo as the first and probably
       // only image in the residence's image scroll view
       void (^block) (void) = ^(void) {
-        UIImageView *imageView    = [[UIImageView alloc] init];
-        imageView.backgroundColor = [UIColor clearColor];
-        imageView.clipsToBounds   = YES;
-        imageView.contentMode     = UIViewContentModeTopLeft;
-        imageView.image           = [UIImage image: 
-          [residence coverPhoto] sizeToFitVertical: size];
+        OMBCenteredImageView *imageView = [[OMBCenteredImageView alloc] init];
+        imageView.image = [residence coverPhoto];
         [viewController.imageViewArray addObject: imageView];
         [viewController addImageViewsToImageScrollView];
         viewController.pageOfImagesLabel.text = 
           [NSString stringWithFormat: @"%i/%i",
             [viewController currentPageOfImages], 
               (int) [[residence imagesArray] count]];
+        [viewController adjustPageOfImagesLabelFrame];
       };
       // If residence has a cover photo
       if ([residence coverPhoto]) {
@@ -82,10 +80,7 @@
     // Or loop through the array of JSON hashes
     for (NSString *jsonString in array) {
       // Create X number of image views for the residence detail view controller
-      UIImageView *imageView    = [[UIImageView alloc] init];
-      imageView.backgroundColor = [UIColor clearColor];
-      imageView.clipsToBounds   = YES;
-      imageView.contentMode     = UIViewContentModeTopLeft;
+      OMBCenteredImageView *imageView = [[OMBCenteredImageView alloc] init];
       [viewController.imageViewArray addObject: imageView];
       // Download the image
       NSData *data = [jsonString dataUsingEncoding: NSUTF8StringEncoding];
@@ -115,12 +110,12 @@
        [[OMBResidenceImageDownloader alloc] initWithResidence: residence];
       downloader.completionBlock = ^(NSError *error) {
         // When the download is complete, set the image for the image view
-        UIImage *image  = [residence imageAtPosition: position];
-        imageView.image = [UIImage image: image sizeToFitVertical: size];
+        imageView.image = [residence imageAtPosition: position];
         // Update the number of pages for the images scroll view
         viewController.pageOfImagesLabel.text = [NSString stringWithFormat:
           @"%i/%i", [viewController currentPageOfImages], 
             (int) [[residence imagesArray] count]];
+        [viewController adjustPageOfImagesLabelFrame];
         [super connectionDidFinishLoading: connection];
       };
       downloader.imageURL       = [NSURL URLWithString: string];

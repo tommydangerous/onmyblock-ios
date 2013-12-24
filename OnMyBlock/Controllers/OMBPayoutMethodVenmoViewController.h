@@ -8,6 +8,13 @@
 
 #import "OMBSelectedPayoutMethodViewController.h"
 
-@interface OMBPayoutMethodVenmoViewController : OMBSelectedPayoutMethodViewController
+@class OMBWebViewController;
+
+@interface OMBPayoutMethodVenmoViewController : 
+  OMBSelectedPayoutMethodViewController
+<UIWebViewDelegate>
+{
+  OMBWebViewController *webViewController;
+}
 
 @end

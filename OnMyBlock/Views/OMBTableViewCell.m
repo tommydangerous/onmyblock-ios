@@ -27,7 +27,7 @@ reuseIdentifier: (NSString *)reuseIdentifier leftPadding: (float) padding
 
 #pragma mark - Override UITableViewCell
 
-- (void)layoutSubviews 
+- (void) layoutSubviews 
 {
   [super layoutSubviews];
 
@@ -42,6 +42,16 @@ reuseIdentifier: (NSString *)reuseIdentifier leftPadding: (float) padding
   tmpFrame                   = self.detailTextLabel.frame;
   tmpFrame.origin.x          = leftPadding;
   self.detailTextLabel.frame = tmpFrame;
+}
+
+#pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (CGFloat) heightForCell
+{
+  // Subclasses implement this
+  return 0.0f;
 }
 
 @end

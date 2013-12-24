@@ -12,4 +12,11 @@
 
 @property (nonatomic, strong) UIWebView *webView;
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) close;
+- (void) showCloseBarButtonItem;
+
 @end

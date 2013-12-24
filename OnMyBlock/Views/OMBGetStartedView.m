@@ -14,6 +14,7 @@
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
+#import "UIImage+Resize.h"
 
 @implementation OMBGetStartedView
 
@@ -27,12 +28,14 @@
   float screenHeight = screen.size.height;
   float screenWidth  = screen.size.width;
 
+  CGFloat padding = 20.0f;
+
   self.frame = screen;
 
   UILabel *label1 = [[UILabel alloc] init];
   label1.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 22];
   // 33 + 40 = height of label1 plus the height of the page control
-  label1.frame = CGRectMake(0, ((screenHeight - (33 + 40)) * 0.5),
+  label1.frame = CGRectMake(0, ((screenHeight - (33 + 40)) * 0.5) - padding,
     screenWidth, 33);
   label1.text = @"Built for college students";
   label1.textAlignment = NSTextAlignmentCenter;
@@ -56,26 +59,73 @@
   onmyblock.textAlignment = NSTextAlignmentCenter;
   [self addSubview: onmyblock];
 
-  _getStartedButton = [[UIButton alloc] init];
-  float getStartedButtonWidth = screenWidth * 0.8;
-  _getStartedButton.clipsToBounds = YES;
-  _getStartedButton.frame = CGRectMake(screenWidth, 
-    (label1.frame.origin.y + label1.frame.size.height + 20), 
-      getStartedButtonWidth, 50);
-  _getStartedButton.layer.cornerRadius = 2.0;
-  _getStartedButton.titleLabel.font = 
-    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 18];
-  [_getStartedButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor blue]] forState: UIControlStateNormal];
-  [_getStartedButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor blueDark]] 
+  float getStartedButtonWidth = screenWidth - (padding * 2);
+  // Facebook button
+  _facebookButton = [[UIButton alloc] init];
+  _facebookButton.backgroundColor = [UIColor facebookBlue];
+  _facebookButton.clipsToBounds = YES;
+  _facebookButton.frame = CGRectMake(screenWidth, 
+      label1.frame.origin.y + label1.frame.size.height + (padding * 2), 
+        getStartedButtonWidth, padding + 18 + padding);
+  _facebookButton.layer.cornerRadius = 2.0f;
+  _facebookButton.titleLabel.font = 
+    [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
+  [_facebookButton addTarget: self action: @selector(showFacebookLogin)
+    forControlEvents: UIControlEventTouchUpInside];
+  [_facebookButton setTitle: @"Sign up using Facebook" 
+    forState: UIControlStateNormal];
+  [_facebookButton setBackgroundImage: 
+    [UIImage imageWithColor: [UIColor facebookBlueDark]] 
       forState: UIControlStateHighlighted];
+  [self addSubview: _facebookButton];
+  CGFloat facebookImageSize = _facebookButton.frame.size.height - padding;
+  _facebookButton.titleEdgeInsets = UIEdgeInsetsMake(0.0f,
+    facebookImageSize, 0.0f, 0.0f);
+  UIImageView *facebookImageView = [[UIImageView alloc] init];
+  facebookImageView.frame = CGRectMake(padding * 0.5, 
+    (_facebookButton.frame.size.height - facebookImageSize) * 0.5, 
+      facebookImageSize, facebookImageSize);
+  facebookImageView.image = [UIImage image: 
+    [UIImage imageNamed: @"facebook_icon.png"] 
+      size: CGSizeMake(facebookImageSize, facebookImageSize)];
+  [_facebookButton addSubview: facebookImageView];
+
+  _getStartedButton = [[UIButton alloc] init];
+  
+  _getStartedButton.clipsToBounds = YES;
+  _getStartedButton.frame = CGRectMake(_facebookButton.frame.origin.x, 
+    (_facebookButton.frame.origin.y + 
+    _facebookButton.frame.size.height + padding), 
+      _facebookButton.frame.size.width, _facebookButton.frame.size.height);
+  _getStartedButton.layer.borderColor = [UIColor textColor].CGColor;
+  _getStartedButton.layer.borderWidth = 1.0f;
+  _getStartedButton.layer.cornerRadius = _facebookButton.layer.cornerRadius;
+  _getStartedButton.titleLabel.font = _facebookButton.titleLabel.font;
+  // [_getStartedButton setBackgroundImage: 
+  //   [UIImage imageWithColor: [UIColor grayMedium]] 
+  //     forState: UIControlStateNormal];
+  // [_getStartedButton setBackgroundImage: 
+  //   [UIImage imageWithColor: [UIColor colorWithWhite: 140/255.0 alpha: 0.8]] 
+  //     forState: UIControlStateHighlighted];
   [_getStartedButton addTarget: self action: @selector(getStartedButtonTapped)
     forControlEvents: UIControlEventTouchUpInside];
-  [_getStartedButton setTitle: @"Get started" forState: UIControlStateNormal];
-  [_getStartedButton setTitleColor: [UIColor whiteColor] 
+  [_getStartedButton setTitle: @"Sign up with email" 
     forState: UIControlStateNormal];
-   [self addSubview: _getStartedButton];
+  [_getStartedButton setTitleColor: [UIColor textColor] 
+    forState: UIControlStateNormal];
+  [self addSubview: _getStartedButton];
+  CGFloat emailImageSize = 
+    _getStartedButton.frame.size.height - (padding * 1.5);
+  _getStartedButton.titleEdgeInsets = UIEdgeInsetsMake(0.0f,
+    emailImageSize, 0.0f, 0.0f);
+  UIImageView *emailImageView = [[UIImageView alloc] init];
+  emailImageView.frame = CGRectMake(padding, 
+    (_getStartedButton.frame.size.height - emailImageSize) * 0.5, 
+      emailImageSize, emailImageSize);
+  emailImageView.image = [UIImage image: 
+    [UIImage imageNamed: @"messages_icon_dark.png"] 
+      size: CGSizeMake(emailImageSize, emailImageSize)];
+  [_getStartedButton addSubview: emailImageView];
 
    // Already signed up? Login
    UIButton *login = [[UIButton alloc] init];
@@ -98,7 +148,7 @@
   [login addTarget: self action: @selector(showLogin)
     forControlEvents: UIControlEventTouchUpInside];
   [login setAttributedTitle: alreadyString forState: UIControlStateNormal];
-  [self addSubview: login];
+  // [self addSubview: login];
 
   return self;
 }
@@ -112,6 +162,14 @@
   OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
   [appDelegate.container.introViewController scrollToPage: 
     appDelegate.container.introViewController.pageControl.numberOfPages];
+}
+
+- (void) showFacebookLogin
+{
+  [[NSNotificationCenter defaultCenter] postNotificationName:
+    OMBActivityIndicatorViewStartAnimatingNotification object: nil];
+  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+  [appDelegate openSession];
 }
 
 - (void) showLogin

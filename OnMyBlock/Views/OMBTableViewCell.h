@@ -8,9 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+#import "NSString+Extensions.h"
+#import "UIColor+Extensions.h"
+
 @interface OMBTableViewCell : UITableViewCell
 {
   float leftPadding;
 }
+
+#pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (CGFloat) heightForCell;
 
 @end

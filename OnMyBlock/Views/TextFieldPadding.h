@@ -12,5 +12,6 @@
 
 @property (nonatomic) float paddingX;
 @property (nonatomic) float paddingY;
+@property (nonatomic, strong) UIColor *placeholderColor;
 
 @end

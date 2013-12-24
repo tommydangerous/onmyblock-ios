@@ -10,6 +10,7 @@
 
 #import "OMBViewController.h"
 
+@class OMBGradientView;
 @class OMBResidence;
 @class OMBResidenceImageSlideViewController;
 
@@ -18,48 +19,28 @@
   UITableViewDelegate, UITextViewDelegate>
 {
   UIActivityIndicatorView *activityIndicatorView;
-  UIButton *bottomButton;
-  UIButton *callButton;
-  CALayer *descriptionBorderBottom;
-  UIImage *favoritePinkImage;
-  UIImage *favoriteWhiteImage;
-  CALayer *infoViewBorderBottom;
   OMBResidence *residence;
-  BOOL showContactTextView;
-  NSMutableArray *similarResidences;
 }
 
-@property (nonatomic, strong) UILabel *addressLabel;
-@property (nonatomic, strong) UIButton *addToFavoritesButton;
-@property (nonatomic, strong) UIView *addToFavoritesView;
-@property (nonatomic, strong) UILabel *availableLabel;
-@property (nonatomic, strong) UIView *availableView;
-@property (nonatomic, strong) UILabel *bathLabel;
-@property (nonatomic, strong) UILabel *bathSubLabel;
-@property (nonatomic, strong) UILabel *bedLabel;
-@property (nonatomic, strong) UILabel *bedSubLabel;
-@property (nonatomic, strong) UIButton *contactButton;
-@property (nonatomic, strong) UITextView *contactTextView;
-@property (nonatomic, strong) UIView *contactView;
-@property (nonatomic, strong) UILabel *descriptionLabel;
-@property (nonatomic, strong) UIView *descriptionView;
 @property (nonatomic, strong) UIScrollView *imagesScrollView;
-@property (nonatomic, strong) UIView *infoView;
 @property (nonatomic, strong) OMBResidenceImageSlideViewController
   *imageSlideViewController;
 // Array of image views for the images scroll view
 @property (nonatomic, strong) NSMutableArray *imageViewArray;
-@property (nonatomic, strong) UILabel *leaseMonthLabel;
-@property (nonatomic, strong) UIView *leaseMonthView;
-@property (nonatomic, strong) UIView *map;
 @property (nonatomic, strong) MKMapView *miniMap;
 @property (nonatomic, strong) UILabel *pageOfImagesLabel;
-@property (nonatomic, strong) UILabel *rentLabel;
-@property (nonatomic, strong) UIView *similarResidenceBottomView;
-@property (nonatomic, strong) UIView *similarResidencesView;
-@property (nonatomic, strong) UILabel *squareFeetLabel;
-@property (nonatomic, strong) UILabel *squareFeetSubLabel;
 @property (nonatomic, strong) UITableView *table;
+
+// Views not in cells
+@property (nonatomic, strong) UIButton *bookItButton;
+@property (nonatomic, strong) UIView *bottomButtonView;
+@property (nonatomic, strong) UIButton *contactMeButton;
+@property (nonatomic, strong) UILabel *countDownTimerLabel;
+@property (nonatomic, strong) UILabel *currentOfferLabel;
+@property (nonatomic, strong) UIButton *favoritesButton;
+@property (nonatomic, strong) OMBGradientView *gradientView;
+@property (nonatomic, strong) UIView *imagesView;
+@property (nonatomic, strong) UILabel *numberOfOffersLabel;
 
 #pragma mark - Initializer
 
@@ -71,6 +52,7 @@
 
 - (void) addImageViewsToImageScrollView;
 - (void) addSimilarResidence: (OMBResidence *) object;
+- (void) adjustPageOfImagesLabelFrame;
 - (int) currentPageOfImages;
 
 @end

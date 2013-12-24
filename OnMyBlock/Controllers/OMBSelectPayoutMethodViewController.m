@@ -35,6 +35,9 @@
   [super loadView];
 
   [self setupForTable];
+
+  self.table.tableHeaderView = [[UIView alloc] initWithFrame: 
+    CGRectMake(0.0f, 0.0f, self.table.frame.size.width, 44.0f)];
 }
 
 #pragma mark - Protocol
@@ -68,6 +71,22 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.iconView.backgroundColor = 
         cell.iconViewBackgroundColor = [UIColor paypalBlue];
       cell.nameLabel.text = @"PayPal";
+    }
+    if (indexPath.row == 0) {
+      CALayer *topBorder = [CALayer layer];
+      topBorder.backgroundColor = tableView.separatorColor.CGColor;
+      topBorder.frame = CGRectMake(0.0f, 0.0f,
+        tableView.frame.size.width, 0.5f);
+      [cell.layer addSublayer: topBorder];
+    }
+    else if (indexPath.row == 
+      [tableView numberOfRowsInSection: indexPath.section] - 1) {
+      CALayer *bottomBorder = [CALayer layer];
+      bottomBorder.backgroundColor = tableView.separatorColor.CGColor;
+      bottomBorder.frame = CGRectMake(0.0f, 
+        [self tableView: tableView heightForRowAtIndexPath: indexPath] - 0.5f, 
+          tableView.frame.size.width, 0.5f);
+      [cell.layer addSublayer: bottomBorder];
     }
   }
   return cell;

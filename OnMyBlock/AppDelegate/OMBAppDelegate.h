@@ -8,6 +8,7 @@
 
 #import <FacebookSDK/FacebookSDK.h>
 #import <UIKit/UIKit.h>
+#import <VenmoAppSwitch/Venmo.h>
 
 extern NSString *const FBSessionStateChangedNotification;
 
@@ -16,6 +17,7 @@ extern NSString *const FBSessionStateChangedNotification;
 @interface OMBAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) OMBViewControllerContainer *container;
+@property (nonatomic, strong) VenmoClient *venmoClient;
 @property (nonatomic, strong) UIWindow *window;
 
 #pragma mark - Methods

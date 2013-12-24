@@ -228,7 +228,7 @@
           [userProfileImageView setImage: [OMBUser currentUser].image];
         else
           [userProfileImageView setImage: [UIImage imageNamed:
-            @"default_user_image"]];
+            @"default_user_image.png"]];
       }
     ]; 
   }

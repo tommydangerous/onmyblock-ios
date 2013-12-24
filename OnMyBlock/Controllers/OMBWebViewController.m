@@ -75,4 +75,21 @@
   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 }
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) close
+{
+  [self.navigationController dismissViewControllerAnimated: YES
+    completion: nil];
+}
+
+- (void) showCloseBarButtonItem
+{
+  self.navigationItem.rightBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithTitle: @"Close" 
+      style: UIBarButtonItemStylePlain target: self action: @selector(close)];
+}
+
 @end

@@ -102,7 +102,6 @@
   // Start out working with the test environment! 
   // When you are ready, remove this line to switch to live.
   // [PayPalPaymentViewController setEnvironment: PayPalEnvironmentSandbox];
-  [PayPalPaymentViewController setEnvironment: PayPalEnvironmentSandbox];
   // Provide a payerId that uniquely identifies a user 
   // within the scope of your system, such as an email address or user ID.
   // NSString *aPayerId = [NSString stringWithFormat: @"user_%i",
@@ -111,13 +110,11 @@
   // Create a PayPalPaymentViewController with the credentials and payerId, 
   // the PayPalPayment from the previous step, 
   // and a PayPalPaymentDelegate to handle the results.
-  // NSString *cliendId = 
-  //  @"AYF4PhAsNUDPRLYpTmTqtoo04_n7rmum1Q1fgpmApKJOF_eTrtxajPEFDK4Y";
   NSString *cliendId = 
-    @"AetqKxBgNs-WXu7L7mhq_kpihxGdOUSo0mgLppw0wvTw_pCdP6n3ANLYt4X6";
+    @"AYF4PhAsNUDPRLYpTmTqtoo04_n7rmum1Q1fgpmApKJOF_eTrtxajPEFDK4Y";
   PayPalPaymentViewController *paymentViewController = 
     [[PayPalPaymentViewController alloc] initWithClientId: cliendId 
-      receiverEmail: @"tommydangerouss-facilitator@gmail.com"
+      receiverEmail: @"tommydangerouss@gmail.com"
         payerId: aPayerId payment: payment delegate: self];
   // paymentViewController.defaultUserEmail = [OMBUser currentUser].email;
   // paymentViewController.defaultUserPhoneCountryCode = @"1";

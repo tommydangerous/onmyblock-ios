@@ -25,26 +25,26 @@
   self.frame = screen;
 
   // Background view
-  UIView *backgroundView = [[UIView alloc] initWithFrame: self.frame];
-  [self addSubview: backgroundView];
+  _backgroundView = [[UIView alloc] initWithFrame: self.frame];
+  // [self addSubview: _backgroundView];
   // Background image
   UIImageView *backgroundImageView  = [[UIImageView alloc] init];
   backgroundImageView.clipsToBounds = YES;
   backgroundImageView.contentMode   = UIViewContentModeScaleAspectFill;
-  backgroundImageView.frame         = backgroundView.frame;
+  backgroundImageView.frame         = _backgroundView.frame;
   backgroundImageView.image         = image;
-  [backgroundView addSubview: backgroundImageView];
+  [_backgroundView addSubview: backgroundImageView];
   // Black tint
   UIView *colorView         = [[UIView alloc] init];
   colorView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
-  colorView.frame           = backgroundView.frame;
-  [backgroundView addSubview: colorView];
+  colorView.frame           = _backgroundView.frame;
+  [_backgroundView addSubview: colorView];
   // Blur
-  DRNRealTimeBlurView* blurView = [[DRNRealTimeBlurView alloc] init];
+  DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
   blurView.blurRadius           = 0.3f;
-  blurView.frame                = backgroundView.frame;
+  blurView.frame                = _backgroundView.frame;
   blurView.renderStatic         = YES;
-  // [backgroundView addSubview: blurView];
+  [_backgroundView addSubview: blurView];
 
   float padding = 20.0f;
 
@@ -65,11 +65,20 @@
   _detailLabel.textColor = _titleLabel.textColor;
   [self addSubview: _detailLabel];
 
+  _secondDetailLabel = [[UILabel alloc] init];
+  _secondDetailLabel.font = _detailLabel.font;
+  _secondDetailLabel.frame = CGRectMake(_detailLabel.frame.origin.x,
+    _detailLabel.frame.origin.y + _detailLabel.frame.size.height + padding,
+      _detailLabel.frame.size.width, 27.0f);
+  _secondDetailLabel.textAlignment = _titleLabel.textAlignment;
+  _secondDetailLabel.textColor = _detailLabel.textColor;
+  [self addSubview: _secondDetailLabel];
+
   float imageSize = screenHeight * 0.3;
   _imageView = [[UIImageView alloc] init];
   _imageView.frame = CGRectMake((screenWidth - imageSize) * 0.5,
     _titleLabel.frame.origin.y - (imageSize + padding), imageSize, imageSize);
-    [self addSubview: _imageView];
+  [self addSubview: _imageView];
 
   return self;
 }

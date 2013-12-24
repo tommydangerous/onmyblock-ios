@@ -10,8 +10,10 @@
 
 @interface OMBIntroStillImageSlide : UIView
 
+@property (nonatomic, strong) UIView *backgroundView;
 @property (nonatomic, strong) UILabel *detailLabel;
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UILabel *secondDetailLabel;
 @property (nonatomic, strong) UILabel *titleLabel;
 
 #pragma mark - Initializer

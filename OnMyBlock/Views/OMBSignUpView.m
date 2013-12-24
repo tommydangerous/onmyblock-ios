@@ -58,12 +58,11 @@
   _facebookButton = [[UIButton alloc] init];
   _facebookButton.backgroundColor = [UIColor facebookBlue];
   _facebookButton.clipsToBounds = YES;
-  _facebookButton.frame = CGRectMake((padding + screenWidth), (padding * 3), 
-    (screen.size.width - (padding * 2)), 
-      ((padding / 2.0) + 30 + (padding / 2.0)));
-  _facebookButton.layer.cornerRadius = 2.0;
+  _facebookButton.frame = CGRectMake(screenWidth, padding * 2, 
+    screenWidth - (padding * 2), padding + 18 + padding);
+  _facebookButton.layer.cornerRadius = 2.0f;
   _facebookButton.titleLabel.font = 
-    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+    [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
   [_facebookButton addTarget: self action: @selector(showFacebookLogin)
     forControlEvents: UIControlEventTouchUpInside];
   [_facebookButton setTitle: @"Sign up using Facebook" 
@@ -72,17 +71,22 @@
     [UIImage imageWithColor: [UIColor facebookBlueDark]] 
       forState: UIControlStateHighlighted];
   [scroll addSubview: _facebookButton];
+  CGFloat facebookImageSize = _facebookButton.frame.size.height - padding;
+  _facebookButton.titleEdgeInsets = UIEdgeInsetsMake(0.0f,
+    facebookImageSize, 0.0f, 0.0f);
   UIImageView *facebookImageView = [[UIImageView alloc] init];
-  facebookImageView.frame = CGRectMake((padding / 2.0), (padding / 2.0), 
-    30, 30);
+  facebookImageView.frame = CGRectMake(padding * 0.5, 
+    (_facebookButton.frame.size.height - facebookImageSize) * 0.5, 
+      facebookImageSize, facebookImageSize);
   facebookImageView.image = [UIImage image: 
-    [UIImage imageNamed: @"facebook_icon.png"] size: CGSizeMake(30, 30)];
+    [UIImage imageNamed: @"facebook_icon.png"] 
+      size: CGSizeMake(facebookImageSize, facebookImageSize)];
   [_facebookButton addSubview: facebookImageView];
 
   orView = [[UIView alloc] init];  
   orView.frame = CGRectMake(0, (_facebookButton.frame.origin.y + 
     _facebookButton.frame.size.height + padding), screen.size.width, 
-      _facebookButton.frame.size.height);
+      _facebookButton.frame.size.height - padding);
   [scroll addSubview: orView];
   UILabel *orLabel = [[UILabel alloc] init];
   orLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 18];
@@ -108,18 +112,20 @@
   // First name
   _firstNameTextField = [[TextFieldPadding alloc] init];
   _firstNameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-  _firstNameTextField.backgroundColor = [UIColor whiteColor];
+  _firstNameTextField.backgroundColor = [UIColor colorWithWhite: 230/255.0f
+    alpha: 1.0f];
   _firstNameTextField.delegate = self;
   _firstNameTextField.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-    size: 15];
+    size: 18];
   _firstNameTextField.frame = CGRectMake(_facebookButton.frame.origin.x, 
     (orView.frame.origin.y + orView.frame.size.height + padding),
       (screen.size.width - (padding * 2)), 
-        ((padding / 2.0) + 24 + (padding / 2.0)));
-  _firstNameTextField.layer.borderColor = [UIColor grayLight].CGColor;
-  _firstNameTextField.layer.borderWidth = 1.0;
-  _firstNameTextField.paddingX = padding / 2.0;
-  _firstNameTextField.paddingY = padding / 2.0;
+        _facebookButton.frame.size.height);
+  // _firstNameTextField.layer.borderColor = [UIColor grayLight].CGColor;
+  // _firstNameTextField.layer.borderWidth = 1.0;
+  _firstNameTextField.layer.cornerRadius = 2.0f;
+  _firstNameTextField.paddingX = padding * 0.5f;
+  _firstNameTextField.paddingY = padding * 0.5f;
   _firstNameTextField.placeholder = @"First name";
   _firstNameTextField.returnKeyType = UIReturnKeyDone;
   [scroll addSubview: _firstNameTextField];
@@ -195,7 +201,7 @@
       padding), _facebookButton.frame.size.width, 
         _facebookButton.frame.size.height);
   _loginButton.titleLabel.font = _facebookButton.titleLabel.font;
-  _loginButton.layer.cornerRadius = 2.0;
+  _loginButton.layer.cornerRadius = _facebookButton.layer.cornerRadius;
   [_loginButton addTarget: self action: @selector(loginOrSignUp)
     forControlEvents: UIControlEventTouchUpInside];
   [_loginButton setTitle: @"Sign up" forState: UIControlStateNormal];

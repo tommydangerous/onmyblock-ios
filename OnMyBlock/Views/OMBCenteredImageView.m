@@ -40,6 +40,8 @@
   [super setFrame: rect];
   height = self.frame.size.height;
   width  = self.frame.size.width;
+  if (_image)
+    [self setImage: _image];
 }
 
 - (void) setImage: (UIImage *) object
@@ -47,6 +49,68 @@
   _image = object;
   if (!_image)
     return;
+  CGFloat newHeight = height;
+  CGFloat newWidth  = _image.size.width * (height / _image.size.height);
+  if (newWidth < width) {
+    newHeight = newHeight * (width / newWidth);
+    newWidth  = width;
+  }
+  CGPoint point = CGPointZero;
+  // Center it vertically
+  if (newHeight > height) {
+    point.y = (newHeight - height) * -0.5;
+  }
+  // Center it horizontally
+  if (newWidth > width) {
+    point.x = (newWidth - width) * -0.5;
+  }
+  _imageView.image = [UIImage image: _image 
+    size: CGSizeMake(newWidth, newHeight) point: point];
+  _imageView.frame = CGRectMake(0.0f, 0.0f, newWidth, newHeight);
+}
+
+- (void) setImage1: (UIImage *) object
+{
+  _image = object;
+  float imageHeight      = _image.size.height;
+  float imageWidth       = _image.size.width;
+  float aspectRatio      = width / height;
+  float imageAspectRatio = imageWidth / imageHeight;
+  float newAspectRatio, newHeight, newWidth;
+  CGPoint point = CGPointZero;
+  if (aspectRatio > imageAspectRatio) {
+    if (height > imageHeight || width > imageWidth) {
+      newAspectRatio = height / imageHeight;  
+    }
+    else {
+      newAspectRatio = width / imageWidth;
+    }
+    newHeight = height;
+    newWidth  = height * newAspectRatio;
+    // Center horizontally
+    point = CGPointMake((width - newWidth) * 0.5f, 0.0f);
+  }
+  else {
+    if (height > imageHeight || width > imageWidth) {
+      newAspectRatio = width / imageWidth;
+    }
+    else {
+      newAspectRatio = height / imageHeight;
+    }
+    newHeight = width * newAspectRatio;
+    newWidth  = width;
+    // Center vertically
+    point = CGPointMake(0.0f, (height - newHeight) * 0.5f);
+  }
+  _imageView.image = [UIImage image: _image
+    size: CGSizeMake(newWidth, newHeight)];
+  _imageView.frame = CGRectMake(point.x, point.y, newWidth, newHeight);
+}
+
+- (void) setImage3: (UIImage *) object
+{
+  NSLog(@"NEED FIXING");
+  _image = object;
   float imageHeight      = _image.size.height;
   float imageWidth       = _image.size.width;
   float aspectRatio      = width / height;
@@ -72,7 +136,7 @@
   }
 }
 
-- (void) setImage1: (UIImage *) object
+- (void) setImage2: (UIImage *) object
 {
   _image = object;
   float imageHeight = _image.size.height;

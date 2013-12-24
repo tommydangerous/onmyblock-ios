@@ -26,20 +26,8 @@ NSString *const FBSessionStateChangedNotification =
 - (BOOL) application: (UIApplication *) application 
 didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
-  // [NewRelicAgent startWithApplicationToken:
-  //   @"AA232e12d9b2fba4fa3e73a8f3e6b102a75fc517a2"];
-
-  // Optional: automatically send uncaught exceptions to Google Analytics.
-  // [GAI sharedInstance].trackUncaughtExceptions = YES;
-  // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
-  // [GAI sharedInstance].dispatchInterval = 20;
-  // Optional: set Logger to VERBOSE for debug information.
-  // [[[GAI sharedInstance] logger] setLogLevel: kGAILogLevelVerbose];
-  // Initialize tracker.
-  // id <GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:
-  //   @"UA-45382533-1"];
-  // NSLog(@"GAITracker: %@", tracker);
-  
+  // [self setupTracking];
+    
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
 
@@ -50,13 +38,16 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   self.window.rootViewController = _container;
   [self.window makeKeyAndVisible];
 
+  _venmoClient = [VenmoClient clientWithAppId: @"1522" 
+    secret: @"gxjvjYcXZDWh3KGSx4m6HTSkmZ8zBHqf"];
+
   // Facebook
   if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded)
     // If current session has a valid Facebook token
     [self openSession];
 
   NSLog(@"APP DELEGATE SHOW INTRO!");
-  [_container showIntroAnimatedDissolve: NO];
+  // [_container showIntroAnimatedDissolve: NO];
   // if ([[OMBUser currentUser] loggedIn])
     // [self hideIntro];
 
@@ -69,6 +60,34 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
   // Delegate method to call the Facebook session object 
   // that handles the incoming URL
   return [FBSession.activeSession handleOpenURL: url];
+
+  // Venmo App Switch
+  NSLog(@"openURL: %@", url);
+  return [_venmoClient openURL: url completionHandler:
+    ^(VenmoTransaction *transaction, NSError *error) {
+      if (transaction) {
+        NSString *success = (transaction.success ? @"Success" : @"Failure");
+        NSString *title = [@"Transaction " stringByAppendingString: success];
+        NSString *message = [@"payment_id: " stringByAppendingFormat:
+          @"%@. %@ %@ %@ (%@) $%@ %@",
+           transaction.transactionID,
+           transaction.fromUserID,
+           transaction.typeStringPast,
+           transaction.toUserHandle,
+           transaction.toUserID,
+           transaction.amountString,
+           transaction.note];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title 
+          message: message delegate: nil cancelButtonTitle: @"OK"
+            otherButtonTitles: nil];
+        [alertView show];
+      }
+      // Error
+      else {
+        NSLog(@"transaction error code: %i", error.code);
+      }
+    }
+  ];
 }
 
 - (void) applicationWillResignActive: (UIApplication *) application
@@ -147,6 +166,23 @@ state: (FBSessionState) state error: (NSError *) error
         cancelButtonTitle: @"Try again" otherButtonTitles: nil];
     [alertView show];
   }
+}
+
+- (void) setupTracking
+{
+  [NewRelicAgent startWithApplicationToken:
+    @"AA232e12d9b2fba4fa3e73a8f3e6b102a75fc517a2"];
+
+  // Optional: automatically send uncaught exceptions to Google Analytics.
+  [GAI sharedInstance].trackUncaughtExceptions = YES;
+  // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
+  [GAI sharedInstance].dispatchInterval = 20;
+  // Optional: set Logger to VERBOSE for debug information.
+  [[[GAI sharedInstance] logger] setLogLevel: kGAILogLevelVerbose];
+  // Initialize tracker.
+  id <GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:
+    @"UA-45382533-1"];
+  NSLog(@"GAITracker: %@", tracker);
 }
 
 - (void) showLogin

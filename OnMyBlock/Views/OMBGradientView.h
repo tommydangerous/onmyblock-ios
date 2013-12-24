@@ -9,12 +9,14 @@
 #import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>
 
+#import "OMBExtendedHitAreaViewContainer.h"
+
 extern const CGPoint HORIZONTAL_START_POINT;
 extern const CGPoint HORIZONTAL_END_POINT;
 extern const CGPoint VERTICAL_START_POINT;
 extern const CGPoint VERTICAL_END_POINT;
 
-@interface OMBGradientView : UIView
+@interface OMBGradientView : OMBExtendedHitAreaViewContainer
 
 // An Array of UIColors for the gradient
 @property (nonatomic, readwrite) NSArray *colors;

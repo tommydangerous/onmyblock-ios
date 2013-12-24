@@ -21,6 +21,7 @@
   UILabel *bedBathLabel;
   OMBGradientView *infoView;
   UIImage *minusFavoriteImage;
+  UILabel *offersAndTimeLabel;
   UIImage *plusFavoriteImage;
   UILabel *rentLabel;
 }

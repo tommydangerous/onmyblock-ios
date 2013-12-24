@@ -12,7 +12,7 @@
 @class OMBNeighborhood;
 @class TextFieldPadding;
 
-@interface OMBMapFilterViewController : OMBViewController
+@interface OMBMapFilterOldViewController : OMBViewController
 <UITextFieldDelegate>
 {
   UIView *availableOnView;

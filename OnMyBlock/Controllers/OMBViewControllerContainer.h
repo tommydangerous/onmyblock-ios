@@ -96,6 +96,7 @@
 #pragma mark - Instance Methods
 
 - (void) hideMenuWithFactor: (float) factor;
+- (void) showDiscover;
 - (void) showIntroAnimatedDissolve: (BOOL) animated;
 - (void) showIntroAnimatedVertical: (BOOL) animated;
 - (void) showLoggedInButtons;

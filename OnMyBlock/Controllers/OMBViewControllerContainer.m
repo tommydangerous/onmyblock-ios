@@ -161,7 +161,7 @@
     (leftPad + imageSize + leftPad), 0, 20);
   discoverButton.contentHorizontalAlignment = 
     UIControlContentHorizontalAlignmentLeft;
-  discoverButton.frame = CGRectMake(0, 0, // (-1 * menuWidth), 0, 
+  discoverButton.frame = CGRectMake(-1 * menuWidth, 0.0f, 
     menuWidth, (10 + 40 + 10));
   discoverButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
@@ -170,7 +170,6 @@
   [discoverButton setTitle: @"Discover" forState: UIControlStateNormal];
   [discoverButton setTitleColor: [UIColor grayMedium] 
     forState: UIControlStateHighlighted];
-  // [buttonsLoggedIn addObject: discoverButton];
   [buttonsLoggedOut addObject: discoverButton];
   UIImageView *discoverImageView = [[UIImageView alloc] init];
   discoverImageView.frame = CGRectMake(leftPad, 
@@ -264,7 +263,8 @@
   userMenu5 = [[OMBUserMenu alloc] initWithFrame: _infiniteScroll.frame];
   userMenu6 = [[OMBUserMenu alloc] initWithFrame: _infiniteScroll.frame];
   userMenuArray = [NSMutableArray arrayWithArray: 
-    @[userMenu1, userMenu2, userMenu3, userMenu4, userMenu5, userMenu6]];
+    @[userMenu1, userMenu2, userMenu3, userMenu4, userMenu5, userMenu6]
+  ];
   _infiniteScroll.contentSize = CGSizeMake(_infiniteScroll.frame.size.width,
     _infiniteScroll.frame.size.height * [userMenuArray count]);
   // Set frames and setup each user menu
@@ -468,8 +468,7 @@ willDecelerate: (BOOL) decelerate
 - (void) scrollViewDidScroll: (UIScrollView *) scrollView
 {
   if (scrollView == _infiniteScroll) {
-    float y = scrollView.contentOffset.y;
-    NSLog(@"%f", y);
+    // float y = scrollView.contentOffset.y;
   }
 }
 
@@ -580,6 +579,17 @@ willDecelerate: (BOOL) decelerate
           button.frame = rect;
         }
       }
+      // Buttons when logged out
+      for (UIButton *button in buttonsLoggedOut) {
+        float index = 1 + [buttonsLoggedOut indexOfObject: button];
+        float speed = 1 + 
+          (buttonSpeedFactor * (index / [buttonsLoggedOut count]));
+        CGRect rect = button.frame;
+        rect.origin.x = (-1 * menuWidth) * (1 - (percentComplete * speed));
+        if (rect.origin.x >= 0)
+          rect.origin.x = 0;
+        button.frame = rect;
+      }
       
       // Animate the account view
       _accountView.alpha     = percentComplete;
@@ -652,6 +662,18 @@ willDecelerate: (BOOL) decelerate
         button.frame  = rect;
       }];
     }
+  }
+  // Buttons when logged out
+  for (UIButton *button in buttonsLoggedOut) {
+    float index = 1 + [buttonsLoggedOut indexOfObject: button];
+    float speed = 1 + 
+      (buttonSpeedFactor * (([buttonsLoggedOut count] - index) /
+        [buttonsLoggedOut count]));
+    [UIView animateWithDuration: duration / speed animations: ^{
+      CGRect rect   = button.frame;
+      rect.origin.x = -1 * menuWidth;
+      button.frame  = rect;
+    }];
   }
 
   menuIsVisible = NO;
@@ -846,8 +868,8 @@ willDecelerate: (BOOL) decelerate
   // getStartedButtonRect.origin.x = screen.size.width;
   // _introViewController.getStartedView.getStartedButton.frame = 
   //   getStartedButtonRect;
-  _introViewController.pageControl.currentPage = 0;
-  _introViewController.scroll.contentOffset    = CGPointZero;
+  
+  [_introViewController resetViews];
   [self presentViewController: _introViewController animated: animated
     completion: nil];
 }
@@ -941,6 +963,17 @@ willDecelerate: (BOOL) decelerate
         button.frame  = rect;
       }];
     }
+  }
+  // Buttons logged out
+  for (UIButton *button in buttonsLoggedOut) {
+    float index = 1 + [buttonsLoggedOut indexOfObject: button];
+    float speed = 1 + 
+      (buttonSpeedFactor * (index / [buttonsLoggedOut count]));
+    [UIView animateWithDuration: duration / speed animations: ^{
+      CGRect rect   = button.frame;
+      rect.origin.x = 0;
+      button.frame  = rect;
+    }];
   }
     
   menuIsVisible = YES;
