@@ -35,11 +35,6 @@
   OMBUserMenu *userMenu5;
   OMBUserMenu *userMenu6;
 
-  UIButton *favoritesButton;
-  UIButton *messagesButton;
-  UIButton *myAuctionsButton;
-  UIButton *myBidsButton;
-  UIButton *notificationsButton;
   // Logged out
   UIButton *discoverButton;
   UIButton *howItWorksButton;
@@ -72,6 +67,7 @@
   OMBExtendedHitAreaViewContainer *hitArea;
 }
 
+@property (nonatomic, strong) OMBCenteredImageView *accountView;
 @property (nonatomic, strong) UIViewController *currentDetailViewController;
 @property (nonatomic, strong) UIView *detailView;
 @property (nonatomic, strong) UIView *detailViewOverlay;
@@ -79,30 +75,53 @@
 @property (nonatomic, strong) UIScrollView *menuScroll;
 
 // View controllers
+
+// Both
 @property (nonatomic, strong) 
   OMBNavigationController *accountNavigationController;
-@property (nonatomic, strong) OMBCenteredImageView *accountView;
-@property (nonatomic, strong) 
-  OMBNavigationController *favoritesNavigationController;
 @property (nonatomic, strong) 
   OMBIntroStillImagesViewController *introViewController;
 @property (nonatomic, strong) OMBLoginViewController *loginViewController;
-@property (nonatomic, strong) OMBNavigationController *mapNavigationController;
 @property (nonatomic, strong) 
   OMBRenterApplicationViewController *renterApplicationViewController;
+
+// Renter
+
+// Discover
+@property (nonatomic, strong) OMBNavigationController *mapNavigationController;
+// Favorites
+@property (nonatomic, strong) 
+  OMBNavigationController *favoritesNavigationController;
+// Home
+// Inbox
+@property (nonatomic, strong) OMBNavigationController 
+  *inboxNavigationController;
+
+// Seller
+
+// Create Listing
+// Home
+// Manage Listings
+@property (nonatomic, strong) OMBNavigationController 
+  *manageListingsNavigationController;
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
 - (void) hideMenuWithFactor: (float) factor;
+- (void) showAccount;
+- (void) showCreateListing;
 - (void) showDiscover;
+- (void) showFavorites;
+- (void) showInbox;
 - (void) showIntroAnimatedDissolve: (BOOL) animated;
 - (void) showIntroAnimatedVertical: (BOOL) animated;
 - (void) showLoggedInButtons;
 - (void) showLoggedOutButtons;
 - (void) showLogin;
 - (void) showLogout;
+- (void) showManageListings;
 - (void) showRenterApplication;
 - (void) showSignUp;
 - (void) showMenuWithFactor: (float) factor;

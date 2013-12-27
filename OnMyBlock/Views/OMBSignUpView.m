@@ -111,87 +111,65 @@
 
   // First name
   _firstNameTextField = [[TextFieldPadding alloc] init];
-  _firstNameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-  _firstNameTextField.backgroundColor = [UIColor colorWithWhite: 230/255.0f
-    alpha: 1.0f];
-  _firstNameTextField.delegate = self;
-  _firstNameTextField.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-    size: 18];
+  _firstNameTextField.autocapitalizationType = 
+    UITextAutocapitalizationTypeWords;
   _firstNameTextField.frame = CGRectMake(_facebookButton.frame.origin.x, 
     (orView.frame.origin.y + orView.frame.size.height + padding),
       (screen.size.width - (padding * 2)), 
         _facebookButton.frame.size.height);
-  // _firstNameTextField.layer.borderColor = [UIColor grayLight].CGColor;
-  // _firstNameTextField.layer.borderWidth = 1.0;
-  _firstNameTextField.layer.cornerRadius = 2.0f;
-  _firstNameTextField.paddingX = padding * 0.5f;
-  _firstNameTextField.paddingY = padding * 0.5f;
   _firstNameTextField.placeholder = @"First name";
-  _firstNameTextField.returnKeyType = UIReturnKeyDone;
   [scroll addSubview: _firstNameTextField];
 
   // Last name
   _lastNameTextField = [[TextFieldPadding alloc] init];
-  _lastNameTextField.autocorrectionType = 
-    _firstNameTextField.autocorrectionType;
-  _lastNameTextField.backgroundColor = _firstNameTextField.backgroundColor;
-  _lastNameTextField.delegate = self;
-  _lastNameTextField.font = _firstNameTextField.font;
+  _lastNameTextField.autocapitalizationType = 
+    _firstNameTextField.autocapitalizationType;
   _lastNameTextField.frame = CGRectMake(_firstNameTextField.frame.origin.x,
     (_firstNameTextField.frame.origin.y + 
     _firstNameTextField.frame.size.height + padding),
       _firstNameTextField.frame.size.width, 
         _firstNameTextField.frame.size.height);
-  _lastNameTextField.layer.borderColor = _firstNameTextField.layer.borderColor;
-  _lastNameTextField.layer.borderWidth = _firstNameTextField.layer.borderWidth;
-  _lastNameTextField.paddingX = _firstNameTextField.paddingX;
-  _lastNameTextField.paddingY = _firstNameTextField.paddingY;
   _lastNameTextField.placeholder = @"Last name";
-  _lastNameTextField.returnKeyType = _firstNameTextField.returnKeyType;
   [scroll addSubview: _lastNameTextField];
 
   // Email
   _emailTextField = [[TextFieldPadding alloc] init];
-  _emailTextField.autocapitalizationType = 
-    _firstNameTextField.autocapitalizationType;
-  _emailTextField.autocorrectionType = 
-    _firstNameTextField.autocorrectionType;
-  _emailTextField.backgroundColor = _firstNameTextField.backgroundColor;
-  _emailTextField.delegate = self;
-  _emailTextField.font = _firstNameTextField.font;
   _emailTextField.frame = CGRectMake(_lastNameTextField.frame.origin.x,
     (_lastNameTextField.frame.origin.y + _lastNameTextField.frame.size.height + 
       padding), _lastNameTextField.frame.size.width, 
         _lastNameTextField.frame.size.height);
   _emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
-  _emailTextField.layer.borderColor = _firstNameTextField.layer.borderColor;
-  _emailTextField.layer.borderWidth = _firstNameTextField.layer.borderWidth;
-  _emailTextField.paddingX = _firstNameTextField.paddingX;
-  _emailTextField.paddingY = _firstNameTextField.paddingY;
   _emailTextField.placeholder = @"Email";
-  _emailTextField.returnKeyType = _firstNameTextField.returnKeyType;
   [scroll addSubview: _emailTextField];
 
   // Password
   _passwordTextField = [[TextFieldPadding alloc] init];
-  _passwordTextField.autocapitalizationType = 
-    _emailTextField.autocapitalizationType;
-  _passwordTextField.autocorrectionType = _emailTextField.autocorrectionType;
-  _passwordTextField.backgroundColor = _emailTextField.backgroundColor;
-  _passwordTextField.delegate = self;
-  _passwordTextField.font = _emailTextField.font;
   _passwordTextField.frame = CGRectMake(_emailTextField.frame.origin.x,
     (_emailTextField.frame.origin.y + _emailTextField.frame.size.height + 
       padding), _emailTextField.frame.size.width, 
         _emailTextField.frame.size.height);
-  _passwordTextField.layer.borderColor = _emailTextField.layer.borderColor;
-  _passwordTextField.layer.borderWidth = _emailTextField.layer.borderWidth;
-  _passwordTextField.paddingX = _emailTextField.paddingX;
-  _passwordTextField.paddingY = _emailTextField.paddingY;
   _passwordTextField.placeholder = @"Password";
-  _passwordTextField.returnKeyType = _emailTextField.returnKeyType;
   _passwordTextField.secureTextEntry = YES;  
   [scroll addSubview: _passwordTextField];
+
+  NSArray *array = @[
+    _firstNameTextField,
+    _lastNameTextField,
+    _emailTextField,
+    _passwordTextField
+  ];
+  for (TextFieldPadding *textField in array) {
+    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    textField.backgroundColor = [UIColor colorWithWhite: 230/255.0f 
+      alpha: 1.0f];
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textField.delegate = self;
+    textField.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
+    textField.layer.cornerRadius = 2.0f;
+    textField.paddingX = padding; // * 0.5f;
+    textField.paddingY = 0.0f; // * 0.5f;
+    textField.returnKeyType = UIReturnKeyDone;
+  }
 
   _loginButton = [[UIButton alloc] init];
   _loginButton.backgroundColor = [UIColor blue];

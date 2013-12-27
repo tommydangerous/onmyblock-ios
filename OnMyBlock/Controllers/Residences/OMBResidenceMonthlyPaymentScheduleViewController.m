@@ -38,7 +38,6 @@
   [self setupForTable];
 
   CGRect screen        = [[UIScreen mainScreen] bounds];
-  CGFloat screenHeight = screen.size.height;
   CGFloat screenWidth  = screen.size.width;
 
   CGFloat padding = 20.0f;

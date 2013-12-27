@@ -18,12 +18,6 @@ reuseIdentifier: (NSString *)reuseIdentifier
   if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
     return nil;
 
-  CGRect screen = [[UIScreen mainScreen] bounds];
-
-  float screenWidth = screen.size.width;
-
-  float padding = 20.0f;
-
   self.titleLabel.text = @"Map";
 
   return self;

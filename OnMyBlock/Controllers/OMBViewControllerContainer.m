@@ -12,11 +12,14 @@
 #import "DRNRealTimeBlurView.h"
 #import "OMBAccountViewController.h"
 #import "OMBCenteredImageView.h"
+#import "OMBCreateListingViewController.h"
 #import "OMBExtendedHitAreaViewContainer.h"
 #import "OMBFavoritesListViewController.h"
 #import "OMBGetStartedView.h"
+#import "OMBInboxViewController.h"
 #import "OMBIntroStillImagesViewController.h"
 #import "OMBLoginViewController.h"
+#import "OMBManageListingsViewController.h"
 #import "OMBMapViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBRenterApplicationViewController.h"
@@ -79,25 +82,42 @@
   [self.view addGestureRecognizer: panGesture];
 
   // View Controllers
+
+  // Both
   // Account
   _accountNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController:
       [[OMBAccountViewController alloc] init]];
-  // Favorites
-  _favoritesNavigationController = 
-    [[OMBNavigationController alloc] initWithRootViewController:
-      [[OMBFavoritesListViewController alloc] init]];
   // Intro  
   _introViewController = [[OMBIntroStillImagesViewController alloc] init];
   // Login
   _loginViewController = [[OMBLoginViewController alloc] init];
+  // Renter Application
+  _renterApplicationViewController = 
+    [[OMBRenterApplicationViewController alloc] init];
+
+  // Renter
   // Map
   _mapNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController: 
       [[OMBMapViewController alloc] init]];
-  // Renter Application
-  _renterApplicationViewController = 
-    [[OMBRenterApplicationViewController alloc] init];
+  // Favorites
+  _favoritesNavigationController = 
+    [[OMBNavigationController alloc] initWithRootViewController:
+      [[OMBFavoritesListViewController alloc] init]];
+  // Home
+  // Inbox
+  _inboxNavigationController =
+    [[OMBNavigationController alloc] initWithRootViewController:
+      [[OMBInboxViewController alloc] init]];
+
+  // Seller
+  // Create Listing
+  // Home
+  // Manage Listings
+  _manageListingsNavigationController =
+    [[OMBNavigationController alloc] initWithRootViewController:
+      [[OMBManageListingsViewController alloc] init]];
 
   // Background view
   backgroundView = [[UIView alloc] initWithFrame: self.view.frame];
@@ -288,80 +308,6 @@
   [_infiniteScroll setContentOffset: 
     CGPointMake(0, userMenu1.frame.size.height * 2) animated: NO];
 
-  // My Auctions
-  myAuctionsButton = [[UIButton alloc] init];
-  myAuctionsButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
-  myAuctionsButton.contentHorizontalAlignment = 
-    discoverButton.contentHorizontalAlignment;
-  myAuctionsButton.titleLabel.font = discoverButton.titleLabel.font;
-  [myAuctionsButton addTarget: self action: @selector(showMyAuctions)
-    forControlEvents: UIControlEventTouchUpInside];
-  [myAuctionsButton setTitle: @"My Auctions" forState: UIControlStateNormal];
-  [myAuctionsButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
-  // [buttonsLoggedIn addObject: myAuctionsButton];
-  UIImageView *myAuctionsImageView = [[UIImageView alloc] init];
-  myAuctionsImageView.frame = discoverImageView.frame;
-  UIImage *myAuctionsImage = [UIImage imageNamed: @"my_auctions_icon.png"];
-  myAuctionsImageView.image = [UIImage image: myAuctionsImage
-    size: myAuctionsImageView.frame.size];
-  [myAuctionsButton addSubview: myAuctionsImageView];
-  // My Bids
-  myBidsButton = [[UIButton alloc] init];
-  myBidsButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
-  myBidsButton.contentHorizontalAlignment = 
-    discoverButton.contentHorizontalAlignment;
-  myBidsButton.titleLabel.font = discoverButton.titleLabel.font;
-  [myBidsButton addTarget: self action: @selector(showMyBids)
-    forControlEvents: UIControlEventTouchUpInside];
-  [myBidsButton setTitle: @"My Bids" forState: UIControlStateNormal];
-  [myBidsButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
-  // [buttonsLoggedIn addObject: myBidsButton];
-  UIImageView *myBidsImageView = [[UIImageView alloc] init];
-  myBidsImageView.frame = discoverImageView.frame;
-  UIImage *myBidsImage = [UIImage imageNamed: @"my_bids_icon.png"];
-  myBidsImageView.image = [UIImage image: myBidsImage
-    size: myBidsImageView.frame.size];
-  [myBidsButton addSubview: myBidsImageView];
-  // Notifications
-  notificationsButton = [[UIButton alloc] init];
-  notificationsButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
-  notificationsButton.contentHorizontalAlignment = 
-    discoverButton.contentHorizontalAlignment;
-  notificationsButton.titleLabel.font = discoverButton.titleLabel.font;
-  [notificationsButton addTarget: self action: @selector(showNotifications)
-    forControlEvents: UIControlEventTouchUpInside];
-  [notificationsButton setTitle: @"Notifications" 
-    forState: UIControlStateNormal];
-  [notificationsButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
-  // [buttonsLoggedIn addObject: notificationsButton];
-  UIImageView *notificationsImageView = [[UIImageView alloc] init];
-  notificationsImageView.frame = discoverImageView.frame;
-  UIImage *notificationsImage = [UIImage imageNamed: @"notifications_icon.png"];
-  notificationsImageView.image = [UIImage image: notificationsImage
-    size: notificationsImageView.frame.size];
-  [notificationsButton addSubview: notificationsImageView];
-  // Messages
-  messagesButton = [[UIButton alloc] init];
-  messagesButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
-  messagesButton.contentHorizontalAlignment = 
-    discoverButton.contentHorizontalAlignment;
-  messagesButton.titleLabel.font = discoverButton.titleLabel.font;
-  [messagesButton addTarget: self action: @selector(showMessages)
-    forControlEvents: UIControlEventTouchUpInside];
-  [messagesButton setTitle: @"Messages" forState: UIControlStateNormal];
-  [messagesButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
-  // [buttonsLoggedIn addObject: messagesButton];
-  UIImageView *messagesImageView = [[UIImageView alloc] init];
-  messagesImageView.frame = discoverImageView.frame;
-  UIImage *messagesImage = [UIImage imageNamed: @"messages_icon.png"];
-  messagesImageView.image = [UIImage image: messagesImage
-    size: messagesImageView.frame.size];
-  [messagesButton addSubview: messagesImageView];
-
   // Detail view
   _detailView = [[UIView alloc] initWithFrame: screen];
   [self.view addSubview: _detailView];
@@ -373,7 +319,7 @@
   [_detailViewOverlay addGestureRecognizer: tapGesture];
 
   // Bottom right
-  float accountImageSize = screenHeight * 0.1;  
+  float accountImageSize = screenHeight * 0.13;  
   // The distance between the bottom of the detail view scaled
   // and the bottom of the screen
   float _accountViewPadding = (screenHeight * (1 - zoomScale)) * 0.5;
@@ -387,6 +333,7 @@
   _accountView.alpha = 0.0;  
   _accountView.layer.borderColor = [UIColor whiteColor].CGColor;
   _accountView.layer.borderWidth = 1.0;  
+  _accountView.layer.cornerRadius = accountImageSize * 0.5f;
   // Button
   accountButton = [[UIButton alloc] init];
   accountButton.frame = CGRectMake(0, 0, _accountView.frame.size.width,
@@ -795,7 +742,7 @@ willDecelerate: (BOOL) decelerate
   [self setCurrentUserMenuHeaderTextColor];
 
   // Hide the menu
-  [self hideMenuWithFactor: 1];
+  [self hideMenuWithFactor: 1.0f];
   // Hide the intro view controller -> login view controller
   void (^completion)(void) = ^(void) {
     [_introViewController setupForLoggedInUser];
@@ -832,25 +779,39 @@ willDecelerate: (BOOL) decelerate
 
 - (void) showAccount
 {
-  [self hideMenuWithFactor: 1];
+  [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: _accountNavigationController];
 }
 
 - (void) showCreateListing
 {
-  NSLog(@"SHOW CREATE LISTING");
+  [self presentViewController: 
+    [[OMBNavigationController alloc] initWithRootViewController:
+      [[OMBCreateListingViewController alloc] init]] animated: YES 
+        completion: ^{
+          [self hideMenuWithFactor: 1.0f];
+          [self presentDetailViewController: 
+            _manageListingsNavigationController];
+        }
+      ];         
 }
 
 - (void) showDiscover
 {
-  [self hideMenuWithFactor: 1];
+  [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: _mapNavigationController];
 }
 
 - (void) showFavorites
 {
-  [self hideMenuWithFactor: 1];
+  [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: _favoritesNavigationController];
+}
+
+- (void) showInbox
+{
+  [self hideMenuWithFactor: 1.0f];
+  [self presentDetailViewController: _inboxNavigationController];
 }
 
 - (void) showIntroVertical
@@ -861,7 +822,7 @@ willDecelerate: (BOOL) decelerate
 
 - (void) showIntroAnimated: (BOOL) animated
 {
-  CGRect screen = [[UIScreen mainScreen] bounds];
+  // CGRect screen = [[UIScreen mainScreen] bounds];
 
   // CGRect getStartedButtonRect = 
   //   _introViewController.getStartedView.getStartedButton.frame;
@@ -914,7 +875,13 @@ willDecelerate: (BOOL) decelerate
     @"Logout" message: @"Are you sure?" delegate: self
       cancelButtonTitle: @"No" otherButtonTitles: @"Yes", nil];
   [alertView show];
-  [self hideMenuWithFactor: 1];
+  [self hideMenuWithFactor: 1.0f];
+}
+
+- (void) showManageListings
+{
+  [self hideMenuWithFactor: 1.0f];
+  [self presentDetailViewController: _manageListingsNavigationController];
 }
 
 - (void) showMenuWithFactor: (float) factor
@@ -979,26 +946,6 @@ willDecelerate: (BOOL) decelerate
   menuIsVisible = YES;
 }
 
-- (void) showMessages
-{
-  NSLog(@"SHOW MESSAGES");
-}
-
-- (void) showMyAuctions
-{
-  NSLog(@"SHOW MY AUCTIONS");
-}
-
-- (void) showMyBids
-{
-  NSLog(@"SHOW MY BIDS");
-}
-
-- (void) showNotifications
-{
-  NSLog(@"SHOW NOTIFICATIONS");
-}
-
 - (void) showRenterApplication
 {
   [self presentViewController: _renterApplicationViewController 
@@ -1014,7 +961,7 @@ willDecelerate: (BOOL) decelerate
 - (void) tappedDetailView: (UITapGestureRecognizer *) gesture
 {
   if (menuIsVisible) {
-    [self hideMenuWithFactor: 1];
+    [self hideMenuWithFactor: 1.0f];
   }
 }
 

@@ -38,19 +38,11 @@
   // Renter
   // Discover
   _discoverButton = [[UIButton alloc] init];
-  _discoverButton.contentEdgeInsets = UIEdgeInsetsMake(0, 
-    (leftPad + imageSize + leftPad), 0, 20);
-  _discoverButton.contentHorizontalAlignment = 
-    UIControlContentHorizontalAlignmentLeft;
   _discoverButton.frame = CGRectMake(-1 * rect.size.width, 0, rect.size.width, 
     10 + 40 + 10);
-  _discoverButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-    size: 15];
   [_discoverButton addTarget: self action: @selector(showDiscover)
     forControlEvents: UIControlEventTouchUpInside];
   [_discoverButton setTitle: @"Discover" forState: UIControlStateNormal];
-  [_discoverButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
   UIImageView *discoverImageView = [[UIImageView alloc] init];
   discoverImageView.frame = CGRectMake(leftPad, 
     ((_discoverButton.frame.size.height - imageSize) * 0.5), 
@@ -63,13 +55,7 @@
 
   // Homebase
   _renterHomebaseButton = [[UIButton alloc] init];
-  _renterHomebaseButton.contentEdgeInsets = _discoverButton.contentEdgeInsets;
-  _renterHomebaseButton.contentHorizontalAlignment = 
-    _discoverButton.contentHorizontalAlignment;
-  _renterHomebaseButton.titleLabel.font = _discoverButton.titleLabel.font;
   [_renterHomebaseButton setTitle: @"Homebase" forState: UIControlStateNormal];
-  [_renterHomebaseButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
   UIImageView *homebaseImageView = [[UIImageView alloc] init];
   homebaseImageView.frame = discoverImageView.frame;
   UIImage *homebaseImage = [UIImage imageNamed: @"homebase_icon.png"];
@@ -80,13 +66,9 @@
 
   // Favorites
   _favoritesButton = [[UIButton alloc] init];
-  _favoritesButton.contentEdgeInsets = _discoverButton.contentEdgeInsets;
-  _favoritesButton.contentHorizontalAlignment = 
-    _discoverButton.contentHorizontalAlignment;
-  _favoritesButton.titleLabel.font = _discoverButton.titleLabel.font;  
+  [_favoritesButton addTarget: self action: @selector(showFavorites)
+    forControlEvents: UIControlEventTouchUpInside];
   [_favoritesButton setTitle: @"Favorites" forState: UIControlStateNormal];
-  [_favoritesButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
   UIImageView *favoritesImageView = [[UIImageView alloc] init];
   favoritesImageView.frame = discoverImageView.frame;
   UIImage *favoritesImage = [UIImage imageNamed: @"favorites_icon.png"];
@@ -95,18 +77,27 @@
   [_favoritesButton addSubview: favoritesImageView];
   [_renterButtons addObject: _favoritesButton];
 
+  // Inbox
+  _inboxButton = [UIButton new];
+  [_inboxButton addTarget: self action: @selector(showInbox)
+    forControlEvents: UIControlEventTouchUpInside];
+  [_inboxButton setTitle: @"Inbox" forState: UIControlStateNormal];
+  UIImageView *inboxImageView = [UIImageView new];
+  inboxImageView.frame = discoverImageView.frame;
+  inboxImageView.image = [UIImage image: [UIImage imageNamed: @"inbox_icon.png"]
+    size: inboxImageView.frame.size];
+  [_inboxButton addSubview: inboxImageView];
+  [_renterButtons addObject: _inboxButton]; 
+
   // Seller
   // Create Listing
   _createListingButton = [[UIButton alloc] init];
-  _createListingButton.contentEdgeInsets = _discoverButton.contentEdgeInsets;
-  _createListingButton.contentHorizontalAlignment = 
-    _discoverButton.contentHorizontalAlignment;
+  // Need this since it is the top button
   _createListingButton.frame = _discoverButton.frame;
-  _createListingButton.titleLabel.font = _discoverButton.titleLabel.font;
+  [_createListingButton addTarget: self action: @selector(showCreateListing)
+    forControlEvents: UIControlEventTouchUpInside];
   [_createListingButton setTitle: @"Create Listing" 
     forState: UIControlStateNormal];
-  [_createListingButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
   UIImageView *createListingImageView = [[UIImageView alloc] init];
   createListingImageView.frame = discoverImageView.frame;
   UIImage *createListingImage = [UIImage imageNamed: 
@@ -115,16 +106,11 @@
     size: createListingImageView.frame.size];
   [_createListingButton addSubview: createListingImageView];
   [_sellerButtons addObject: _createListingButton];
+
   // Homebase
   _sellerHomebaseButton = [[UIButton alloc] init];
-  _sellerHomebaseButton.contentEdgeInsets = _discoverButton.contentEdgeInsets;
-  _sellerHomebaseButton.contentHorizontalAlignment = 
-    _discoverButton.contentHorizontalAlignment;
-  _sellerHomebaseButton.titleLabel.font = _discoverButton.titleLabel.font;
   [_sellerHomebaseButton setTitle: @"Homebase" 
     forState: UIControlStateNormal];
-  [_sellerHomebaseButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
   UIImageView *sellerHomebaseImageView = [[UIImageView alloc] init];
   sellerHomebaseImageView.frame = discoverImageView.frame;
   UIImage *sellerHomebaseImage = [UIImage imageNamed: 
@@ -134,23 +120,41 @@
   [_sellerHomebaseButton addSubview: sellerHomebaseImageView];
   [_sellerButtons addObject: _sellerHomebaseButton];
   // Manage listing
-  _manageListingButton = [[UIButton alloc] init];
-  _manageListingButton.contentEdgeInsets = _discoverButton.contentEdgeInsets;
-  _manageListingButton.contentHorizontalAlignment = 
-    _discoverButton.contentHorizontalAlignment;
-  _manageListingButton.titleLabel.font = _discoverButton.titleLabel.font;
-  [_manageListingButton setTitle: @"Manage Listing" 
+  _manageListingsButton = [[UIButton alloc] init];
+  [_manageListingsButton addTarget: self action: @selector(showManageListings)
+    forControlEvents: UIControlEventTouchUpInside];
+  [_manageListingsButton setTitle: @"Manage Listings" 
     forState: UIControlStateNormal];
-  [_manageListingButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
   UIImageView *manageListingImageView = [[UIImageView alloc] init];
   manageListingImageView.frame = discoverImageView.frame;
   UIImage *manageListingImage = [UIImage imageNamed: 
     @"account_icon.png"];
   manageListingImageView.image = [UIImage image: manageListingImage
     size: manageListingImageView.frame.size];
-  [_manageListingButton addSubview: manageListingImageView];
-  [_sellerButtons addObject: _manageListingButton];
+  [_manageListingsButton addSubview: manageListingImageView];
+  [_sellerButtons addObject: _manageListingsButton];
+
+  NSArray *buttonsArray = @[
+    // Renter
+    _discoverButton, 
+    _renterHomebaseButton,
+    _favoritesButton,
+    _inboxButton,
+    // Seller
+    _createListingButton,
+    _sellerHomebaseButton,
+    _manageListingsButton
+  ];
+  for (UIButton *button in buttonsArray) {
+    button.contentEdgeInsets = UIEdgeInsetsMake(0.0f, 
+      leftPad + imageSize + leftPad, 0.0f, 20.0f);
+    button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
+      size: 15];
+    [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+    [button setTitleColor: [UIColor grayLight] 
+      forState: UIControlStateHighlighted];
+  }
 
   return self;
 }
@@ -169,6 +173,11 @@
 - (OMBAppDelegate *) appDelegate
 {
   return [UIApplication sharedApplication].delegate;
+}
+
+- (OMBViewControllerContainer *) container
+{
+  return [self appDelegate].container;
 }
 
 - (void) removeCurrentButtonsFromMenuScroll
@@ -243,9 +252,29 @@
   [self setupButtons];
 }
 
+- (void) showCreateListing
+{
+  [[self container] showCreateListing];
+}
+
 - (void) showDiscover
 {
-  [[self appDelegate].container showDiscover];
+  [[self container] showDiscover];
+}
+
+- (void) showFavorites
+{
+  [[self container] showFavorites];
+}
+
+- (void) showInbox
+{
+  [[self container] showInbox];
+}
+
+- (void) showManageListings
+{
+  [[self container] showManageListings];
 }
 
 @end

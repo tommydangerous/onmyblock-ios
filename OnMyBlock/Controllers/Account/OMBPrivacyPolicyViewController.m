@@ -8,6 +8,8 @@
 
 #import "OMBPrivacyPolicyViewController.h"
 
+#import "OMBPrivacyPolicyStore.h"
+
 @implementation OMBPrivacyPolicyViewController
 
 #pragma mark - Initializer
@@ -15,6 +17,8 @@
 - (id) init
 {
   if (!(self = [super init])) return nil;
+
+  self.storeArray = [OMBPrivacyPolicyStore sharedStore].sections;
 
   self.screenName = self.title = @"Privacy Policy";
 

@@ -102,8 +102,6 @@ withString: (NSString *) string
 - (UIImage *) coverPhotoWithSize: (CGSize) size
 {
   UIImage *img = [self coverPhoto];
-  CGFloat sizeAspectRatio  = size.width / size.height;
-  CGFloat imageAspectRatio = img.size.width / img.size.height;
   CGFloat newHeight = size.height;
   CGFloat newWidth  = img.size.width * (size.height / img.size.height);
   if (newWidth < size.width) {

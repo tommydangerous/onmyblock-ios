@@ -26,7 +26,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat screenWidth = screen.size.width;
 
   CGFloat padding = 20.0f;
-  CGFloat height  = (padding * 0.5) + 27.0f + 22.0f + 22.0f + (padding * 0.5);
+  // CGFloat height  = (padding * 0.5) + 27.0f + 22.0f + 22.0f +
+  //   (padding * 0.5);
 
   _titleLabel = [[UILabel alloc] init];
   _titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 27];

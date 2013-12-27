@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import "OMBViewController.h"
+#import "OMBTermsPrivacyViewController.h"
 
-@interface OMBTermsOfServiceViewController : OMBViewController
+@interface OMBTermsOfServiceViewController : OMBTermsPrivacyViewController
 
 @end

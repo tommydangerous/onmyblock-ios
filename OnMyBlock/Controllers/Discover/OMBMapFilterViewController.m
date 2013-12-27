@@ -387,8 +387,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   CGFloat standardHeight = 44.0f;
   CGFloat padding = 20.0f;
   if (tableView == self.table) {
-    if (indexPath.section == 2 && indexPath.row == 1 ||
-      indexPath.section == 3 && indexPath.row == 1) {
+    if ((indexPath.section == 2 && indexPath.row == 1) ||
+      (indexPath.section == 3 && indexPath.row == 1)) {
       return (padding * 0.5) + 58.0f + (padding * 0.5);
     }
     // Header labels

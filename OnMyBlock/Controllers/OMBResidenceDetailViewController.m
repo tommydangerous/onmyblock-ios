@@ -658,6 +658,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [_imageViewArray removeAllObjects];
 }
 
+- (void) shareButtonSelected
+{
+  NSLog(@"RESIDENCE DETAIL SHARE BUTTON SELECTED");
+}
+
 - (void) showBookItNow
 {
   [self.navigationController pushViewController: 

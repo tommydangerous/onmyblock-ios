@@ -8,6 +8,8 @@
 
 #import "OMBFavoritesListViewController.h"
 
+#import "OMBFavoriteResidence.h"
+#import "OMBFavoriteResidenceCell.h"
 #import "OMBFavoritesListConnection.h"
 #import "OMBMapViewController.h"
 #import "OMBResidence.h"
@@ -18,23 +20,24 @@
 
 @implementation OMBFavoritesListViewController
 
-@synthesize table = _table;
-
 #pragma mark - Initializer
 
 - (id) init
 {
   if (!(self = [super init])) return nil;
 
-  self.screenName = [NSString stringWithFormat: 
-    @"Favorites List View Controller - User ID: %i", [OMBUser currentUser].uid];
-  self.title = @"Favorites";
+  self.screenName = self.title = @"Favorites";
+
   // [[NSNotificationCenter defaultCenter] addObserver: self
   //   selector: @selector(reloadTable)
   //     name: OMBCurrentUserChangedFavorite object: nil];
+
+  // Whenever a user adds or removes a favorite residence
+  // OMBUser - addFavoriteResidence and - remove post this notification
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(currentUserChangedFavorite:)
       name: OMBCurrentUserChangedFavorite object: nil];
+
   // [[NSNotificationCenter defaultCenter] addObserver: self
   //   selector: @selector(fetchFavorites)
   //     name: OMBUserLoggedInNotification object: nil];
@@ -51,14 +54,16 @@
   [super loadView];
 
   [self setMenuBarButtonItem];
+
+  self.table.backgroundColor = [UIColor blackColor];
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
+
   [self fetchFavorites];
   [self reloadTable];
-  NSLog(@"VIEW WILL APPEAR");
 }
 
 #pragma mark - Protocol
@@ -69,10 +74,10 @@
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   static NSString *CellIdentifier = @"CellIdentifier";
-  OMBResidenceCell *cell = [tableView dequeueReusableCellWithIdentifier:
+  OMBFavoriteResidenceCell *cell = [tableView dequeueReusableCellWithIdentifier:
     CellIdentifier];
   if (!cell) {
-    cell = [[OMBResidenceCell alloc] initWithStyle: 
+    cell = [[OMBFavoriteResidenceCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
   }
   return cell;
@@ -81,7 +86,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  NSLog(@"%@", [[OMBUser currentUser] favoritesArray]);
   return [[[OMBUser currentUser] favoritesArray] count];
 }
 
@@ -91,18 +95,18 @@ numberOfRowsInSection: (NSInteger) section
 didEndDisplayingCell: (UITableViewCell *) cell 
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  OMBResidenceCell *c = (OMBResidenceCell *) cell;
-  c.imageView.image   = nil;
+  OMBFavoriteResidenceCell *c = (OMBFavoriteResidenceCell *) cell;
+  c.imageView.image = nil;
 }
 
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  OMBResidence *residence = 
+  OMBFavoriteResidence *favorite = 
     [[[OMBUser currentUser] favoritesArray] objectAtIndex: indexPath.row];
   [self.navigationController pushViewController:
     [[OMBResidenceDetailViewController alloc] initWithResidence: 
-      residence] animated: YES];
+      favorite.residence] animated: YES];
 }
 
 - (CGFloat) tableView: (UITableView *) tableView
@@ -116,8 +120,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 willDisplayCell: (UITableViewCell *) cell 
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  [(OMBResidenceCell *) cell loadResidenceData: 
-    [[[OMBUser currentUser] favoritesArray] objectAtIndex: indexPath.row]];
+  OMBFavoriteResidence *favorite = 
+    [[[OMBUser currentUser] favoritesArray] objectAtIndex: indexPath.row];
+  [(OMBFavoriteResidenceCell *) cell loadFavoriteResidenceData: favorite];
 }
 
 #pragma mark - Methods
@@ -129,11 +134,11 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
   // If the user removed a favorite
   if ([notification userInfo]) {
     int index = [[[notification userInfo] objectForKey: @"index"] intValue];
-    [_table beginUpdates];
-    [_table deleteRowsAtIndexPaths: 
+    [self.table beginUpdates];
+    [self.table deleteRowsAtIndexPaths: 
       @[[NSIndexPath indexPathForRow: index inSection: 0]] withRowAnimation: 
         UITableViewRowAnimationFade];
-    [_table endUpdates];
+    [self.table endUpdates];
   }
   // If the user added a favorite
   else {
@@ -154,7 +159,7 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) reloadTable
 {
-  [_table reloadData];
+  [self.table reloadData];
 }
 
 @end

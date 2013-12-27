@@ -272,11 +272,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       emptyCell.textLabel.textColor = [UIColor textColor];
       // Monthly schedule
       if (indexPath.row == 1) {
-        emptyCell.text = @"Monthly Payment Schedule";
+        emptyCell.textLabel.text = @"Monthly Payment Schedule";
       }
       // Lease agreement
       else if (indexPath.row == 2) {
-        emptyCell.text = @"Lease Agreement";
+        emptyCell.textLabel.text = @"Lease Agreement";
         // Bottom border
         bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f,
           tableView.frame.size.width, 0.5f);
@@ -530,8 +530,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (TextFieldPadding *) yourOfferTextField
 {
   OMBResidenceConfirmDetailsPlaceOfferCell *cell = 
-    [self.table cellForRowAtIndexPath: 
-      [NSIndexPath indexPathForRow: 0 inSection: 0]];
+    (OMBResidenceConfirmDetailsPlaceOfferCell *)
+      [self.table cellForRowAtIndexPath: 
+        [NSIndexPath indexPathForRow: 0 inSection: 0]];
   return cell.yourOfferTextField;
 }
 

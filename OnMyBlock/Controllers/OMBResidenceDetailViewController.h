@@ -51,7 +51,7 @@
 #pragma mark - Instance Methods
 
 - (void) addImageViewsToImageScrollView;
-- (void) addSimilarResidence: (OMBResidence *) object;
+// - (void) addSimilarResidence: (OMBResidence *) object;
 - (void) adjustPageOfImagesLabelFrame;
 - (int) currentPageOfImages;
 

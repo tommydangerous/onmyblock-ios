@@ -21,6 +21,7 @@
 #import "OMBPreviousRental.h"
 #import "OMBUserFacebookAuthenticationConnection.h"
 #import "OMBUserImageDownloader.h"
+#import "OMBUserStore.h"
 #import "OMBViewControllerContainer.h"
 
 NSString *const OMBActivityIndicatorViewStartAnimatingNotification =
@@ -85,6 +86,24 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   static OMBUser *user = nil;
   if (!user) {
     user = [[OMBUser alloc] init];
+  }
+  return user;
+}
+
++ (OMBUser *) fakeUser
+{
+  static OMBUser *user = nil;
+  if (!user) {
+    user = [[OMBUser alloc] init];
+    user.about = @"I am a cool guy.";
+    user.accessToken = @"xyz";
+    user.email = @"edward_d@gmail.com";
+    user.firstName = @"edward";
+    user.lastName = @"david";
+    user.phone = @"4088581234";
+    user.school = @"university of california - berkeley";
+    user.image = [UIImage imageNamed: @"edward_d.jpg"];
+    user.uid = 9999;
   }
   return user;
 }
@@ -167,13 +186,7 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   NSArray *favoriteResidences = [_favorites allValues];
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"createdAt"
     ascending: NO];
-  favoriteResidences = [favoriteResidences sortedArrayUsingDescriptors: 
-    @[sort]];
-  NSMutableArray *array = [NSMutableArray array];
-  for (OMBFavoriteResidence *favoriteResidence in favoriteResidences) {
-    [array addObject: favoriteResidence.residence];
-  }
-  return array;
+  return [favoriteResidences sortedArrayUsingDescriptors: @[sort]];
 }
 
 - (void) fetchFavorites
@@ -298,6 +311,9 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   _uid         = [[dictionary objectForKey: @"id"] intValue];
   [_renterApplication readFromDictionary: 
     [dictionary objectForKey: @"renter_application"]];
+
+  // Add to the OMBUserStore
+  [[OMBUserStore sharedStore] addUser: self];
 }
 
 - (void) readFromEmploymentDictionary: (NSDictionary *) dictionary
@@ -334,17 +350,20 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 {
   // Sample JSON
   // {
-  //   residences: [
+  //   objects: [
   //     {
   //       created: "2013-10-31 13:26:00 -0700",
   //       residence: {
   //         address: "8482 Fun Way"        
+  //       },
+  //       user: {
+  //
   //       }
   //     }
   //   ],
   //   success: 1
   // }
-  NSArray *array = [dictionary objectForKey: @"residences"];
+  NSArray *array = [dictionary objectForKey: @"objects"];
   for (NSDictionary *d in array) {
     NSDictionary *dict = [d objectForKey: @"residence"];
     NSString *address = [dict objectForKey: @"address"];
@@ -368,10 +387,20 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
     dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
     NSTimeInterval createdAt = [[dateFormatter dateFromString:
       [d objectForKey: @"created_at"]] timeIntervalSince1970];
+
+    // User
+    NSDictionary *userDict = [d objectForKey: @"user"];
+    int userUID = [[userDict objectForKey: @"id"] intValue];
+    OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
+    if (!user)
+      [user readFromDictionary: userDict];
+
+    // Favorite residence
     OMBFavoriteResidence *favoriteResidence = 
       [[OMBFavoriteResidence alloc] init];
     favoriteResidence.createdAt = createdAt;
     favoriteResidence.residence = residence;
+    favoriteResidence.user      = user;
     [self addFavoriteResidence: favoriteResidence];
   }
 }
@@ -382,8 +411,8 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   OMBFavoriteResidence *favoriteResidence = [_favorites objectForKey: key];
   if (favoriteResidence) {
     int index = (int) [[self favoritesArray] indexOfObjectPassingTest:
-      ^BOOL (OMBResidence* residence, NSUInteger idx, BOOL *stop) {
-        return residence.uid == favoriteResidence.residence.uid;
+      ^BOOL (OMBFavoriteResidence* favorite, NSUInteger idx, BOOL *stop) {
+        return favorite.residence.uid == favoriteResidence.residence.uid;
       }
     ];
     [_favorites removeObjectForKey: key];
@@ -421,6 +450,13 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   };
   if (FBSession.activeSession.isOpen)
     [FBRequestConnection startForMeWithCompletionHandler: completion];
+}
+
+- (NSString *) shortName
+{
+  return [NSString stringWithFormat: @"%@ %@.",
+    [self.firstName capitalizedString], 
+      [[self.lastName substringToIndex: 1] capitalizedString]];
 }
 
 @end

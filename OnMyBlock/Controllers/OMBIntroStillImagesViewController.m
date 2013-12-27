@@ -252,8 +252,7 @@
   // [_signUpView endEditing: YES];
 
   CGRect screen = [[UIScreen mainScreen] bounds];
-  float screenHeight = screen.size.height;
-  float screenWidth  = screen.size.width;
+  float screenWidth = screen.size.width;
   
   float percent = 0.0;
   float width   = scrollView.frame.size.width;

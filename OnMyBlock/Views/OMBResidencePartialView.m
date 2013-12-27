@@ -178,6 +178,7 @@
         [[OMBFavoriteResidence alloc] init];
       favoriteResidence.createdAt = [[NSDate date] timeIntervalSince1970];
       favoriteResidence.residence = _residence;
+      favoriteResidence.user      = [OMBUser currentUser];
       [[OMBUser currentUser] addFavoriteResidence: favoriteResidence];
       UIImageView *imageView = addToFavoritesButton.imageView;
       [UIView animateWithDuration: 0.5 delay:0

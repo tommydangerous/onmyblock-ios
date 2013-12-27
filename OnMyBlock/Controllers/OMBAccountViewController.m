@@ -76,6 +76,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Cells with text
   else {
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.contentView.backgroundColor = [UIColor whiteColor];
     cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:
       [UIImage imageWithColor: [UIColor grayLight]]];
@@ -84,7 +85,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       size: 15];
     cell.textLabel.textColor = [UIColor textColor];
     if (indexPath.section == 0) {
-      cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
       if (indexPath.row == 1) {
         cell.textLabel.text = @"Profile";
       }
@@ -93,9 +93,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       else if (indexPath.row == 3) {
         cell.textLabel.text = @"Payout Methods";
-      }
-      else if (indexPath.row == 4) {
-        cell.textLabel.text = @"Transactions";
       }
     }
     else if (indexPath.section == 1) {
@@ -111,6 +108,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     else if (indexPath.section == 2) {
       if (indexPath.row == 1) {
+        cell.accessoryType = UITableViewCellAccessoryNone;
         cell.textLabel.text = @"Logout";
       }
     }
@@ -137,7 +135,7 @@ numberOfRowsInSection: (NSInteger) section
 {
   // The 1 is for the spacing
   if (section == 0) {
-    return 1 + 4;
+    return 1 + 3;
   }
   else if (section == 1) {
     return 1 + 3;

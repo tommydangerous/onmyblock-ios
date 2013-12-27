@@ -47,6 +47,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 #pragma mark - Class Methods
 
 + (OMBUser *) currentUser;
++ (OMBUser *) fakeUser;
 
 #pragma mark - Instance Methods
 
@@ -70,5 +71,6 @@ extern NSString *const OMBUserLoggedOutNotification;
 - (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence;
+- (NSString *) shortName;
 
 @end

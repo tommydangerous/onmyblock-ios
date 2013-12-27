@@ -20,9 +20,10 @@
 @property (nonatomic, strong) UIButton *discoverButton;
 @property (nonatomic, strong) UIButton *favoritesButton;
 @property (nonatomic, strong) UIButton *renterHomebaseButton;
+@property (nonatomic, strong) UIButton *inboxButton;
 // Seller
 @property (nonatomic, strong) UIButton *createListingButton;
-@property (nonatomic, strong) UIButton *manageListingButton;
+@property (nonatomic, strong) UIButton *manageListingsButton;
 @property (nonatomic, strong) UIButton *sellerHomebaseButton;
 
 #pragma mark - Methods

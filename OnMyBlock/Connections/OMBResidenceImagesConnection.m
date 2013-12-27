@@ -42,9 +42,9 @@
   OMBResidenceDetailViewController *viewController = 
     (OMBResidenceDetailViewController *) self.delegate;
   if ([viewController.imageViewArray count] == 0) {
-    CGSize size = CGSizeMake(
-      viewController.imagesScrollView.frame.size.width,
-        viewController.imagesScrollView.frame.size.height);
+    // CGSize size = CGSizeMake(
+    //   viewController.imagesScrollView.frame.size.width,
+    //     viewController.imagesScrollView.frame.size.height);
     // If the residence has no image, use the cover photo
     // which is most likely the Google Static street view image
     if ([array count] == 0) {

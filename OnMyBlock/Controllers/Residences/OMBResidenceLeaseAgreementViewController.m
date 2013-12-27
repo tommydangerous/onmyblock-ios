@@ -79,7 +79,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
   cell.selectionStyle = UITableViewCellSelectionStyleNone;
   cell.textLabel.numberOfLines = 0;
-  NSAttributedString *text = @"";
+  NSAttributedString *text = [NSAttributedString new];
   if (indexPath.row == 0) {
     text = text1;
   }
@@ -111,7 +111,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   CGFloat padding = 20.0f;
   CGFloat maxWidth = tableView.frame.size.width - 
     (tableView.separatorInset.left * 2);
-  NSAttributedString *text = @"";
+  NSAttributedString *text = [NSAttributedString new];
   if (indexPath.row == 0) {
     text = text1;
   }

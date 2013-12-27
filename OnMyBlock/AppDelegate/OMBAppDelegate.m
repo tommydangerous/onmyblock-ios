@@ -8,6 +8,7 @@
 
 #import <NewRelicAgent/NewRelicAgent.h>
 #import "GAI.h"
+#import "TestFlight.h"
 
 #import "OMBAppDelegate.h"
 #import "OMBIntroStillImagesViewController.h"
@@ -27,6 +28,8 @@ NSString *const FBSessionStateChangedNotification =
 didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
   // [self setupTracking];
+
+  // [self testFlightTakeOff];
     
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
@@ -47,9 +50,10 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [self openSession];
 
   NSLog(@"APP DELEGATE SHOW INTRO!");
-  // [_container showIntroAnimatedDissolve: NO];
+  // [_container showCreateListing];
+  [_container showIntroAnimatedDissolve: NO];
   // if ([[OMBUser currentUser] loggedIn])
-    // [self hideIntro];
+  //   [self hideIntro];
 
   return YES;
 }
@@ -193,6 +197,11 @@ state: (FBSessionState) state error: (NSError *) error
 - (void) showSignUp
 {
   [_container showSignUp];
+}
+
+- (void) testFlightTakeOff
+{
+  [TestFlight takeOff: @"c093afcb-4e1f-449d-8663-cfe23e1dbd74"];
 }
 
 @end
