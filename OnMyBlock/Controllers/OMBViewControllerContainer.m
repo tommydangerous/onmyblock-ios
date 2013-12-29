@@ -15,6 +15,7 @@
 #import "OMBCreateListingViewController.h"
 #import "OMBExtendedHitAreaViewContainer.h"
 #import "OMBFavoritesListViewController.h"
+#import "OMBFinishListingViewController.h"
 #import "OMBGetStartedView.h"
 #import "OMBInboxViewController.h"
 #import "OMBIntroStillImagesViewController.h"
@@ -806,6 +807,15 @@ willDecelerate: (BOOL) decelerate
 {
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: _favoritesNavigationController];
+}
+
+- (void) showFinishListing
+{
+  [self hideMenuWithFactor: 1.0f];
+  [self presentDetailViewController: _manageListingsNavigationController];
+  [_manageListingsNavigationController pushViewController:
+    [[OMBFinishListingViewController alloc] initWithResidence: nil] 
+      animated: YES];
 }
 
 - (void) showInbox

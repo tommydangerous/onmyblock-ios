@@ -15,7 +15,7 @@
 
 @implementation OMBInboxCell
 
-#pragma mark - Initialize
+#pragma mark - Initializer
 
 - (id) initWithStyle: (UITableViewCellStyle) style 
 reuseIdentifier: (NSString *)reuseIdentifier

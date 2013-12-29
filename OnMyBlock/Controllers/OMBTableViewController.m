@@ -58,6 +58,15 @@ numberOfRowsInSection: (NSInteger) section
   return 0;
 }
 
+#pragma mark - Protocol UITableViewDelegate
+
+- (CGFloat) tableView: (UITableView *) tableView
+heightForRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  // Subclasses implement this
+  return 0.0f;
+}
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods

@@ -50,8 +50,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [self openSession];
 
   NSLog(@"APP DELEGATE SHOW INTRO!");
-  // [_container showCreateListing];
-  [_container showIntroAnimatedDissolve: NO];
+  [_container showFinishListing];
+  // [_container showIntroAnimatedDissolve: NO];
   // if ([[OMBUser currentUser] loggedIn])
   //   [self hideIntro];
 

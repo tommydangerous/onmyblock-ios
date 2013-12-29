@@ -24,6 +24,7 @@
 
 #pragma mark - Instance Methods
 
+- (OMBAppDelegate *) appDelegate;
 - (void) setMenuBarButtonItem;
 - (void) showDoneEditingBarButtonItem;
 - (void) showMenuBarButtonItem;

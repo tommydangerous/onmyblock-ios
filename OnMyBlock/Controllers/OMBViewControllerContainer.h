@@ -114,6 +114,7 @@
 - (void) showCreateListing;
 - (void) showDiscover;
 - (void) showFavorites;
+- (void) showFinishListing;
 - (void) showInbox;
 - (void) showIntroAnimatedDissolve: (BOOL) animated;
 - (void) showIntroAnimatedVertical: (BOOL) animated;

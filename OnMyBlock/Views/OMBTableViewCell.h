@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "NSString+Extensions.h"
+#import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 
 @interface OMBTableViewCell : UITableViewCell

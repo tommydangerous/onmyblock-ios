@@ -105,7 +105,7 @@
     (userProfileImageView.frame.size.width - uploadPhotoViewSize) * 0.5,
       (userProfileImageView.frame.size.height - uploadPhotoViewSize) * 0.5,
         uploadPhotoViewSize, uploadPhotoViewSize);
-  uploadPhotoView.layer.cornerRadius = 5.0f;
+  uploadPhotoView.layer.cornerRadius = uploadPhotoView.frame.size.height * 0.5f;
   [userProfileImageView addSubview: uploadPhotoView];
   // Image of the camera
   UIImageView *uploadImageView = [[UIImageView alloc] init];

@@ -17,6 +17,13 @@
 
 #pragma mark - Initializer
 
+- (id) init
+{
+  if (!(self = [self initWithFrame: CGRectZero])) return nil;
+
+  return self;
+}
+
 - (id) initWithFrame: (CGRect) rect
 {
   if (!(self = [super initWithFrame: rect])) return nil;

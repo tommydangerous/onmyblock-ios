@@ -69,6 +69,11 @@
 
 #pragma mark - Instance Methods
 
+- (OMBAppDelegate *) appDelegate
+{
+  return (OMBAppDelegate *) [UIApplication sharedApplication].delegate;
+}
+
 - (void) doneEditing
 {
   [self.view endEditing: YES];
@@ -82,9 +87,7 @@
 
 - (void) showContainer
 {
-  OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
-    [UIApplication sharedApplication].delegate;
-  [appDelegate.container showMenuWithFactor: 1];
+  [[self appDelegate].container showMenuWithFactor: 1];
 }
 
 - (void) showDoneEditingBarButtonItem

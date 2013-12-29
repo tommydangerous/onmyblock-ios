@@ -6,27 +6,39 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
+#import <MapKit/MapKit.h>
+
 #import "OMBViewController.h"
 
+@class OMBActivityView;
 @class OMBCreateListingPropertyTypeView;
+@class TextFieldPadding;
 
 @interface OMBCreateListingViewController : OMBViewController
-<UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
+<MKMapViewDelegate, UIScrollViewDelegate, UITableViewDataSource, 
+  UITableViewDelegate, UITextFieldDelegate>
 {
+  OMBActivityView *activityView;
   UIBarButtonItem *backBarButtonItem;
   UIBarButtonItem *cancelBarButtonItem;
   UIBarButtonItem *nextBarButtonItem;
+  UIBarButtonItem *saveBarButtonItem;
   UIView *progressBar;
   UILabel *questionLabel;
   UILabel *stepLabel;
   int stepNumber;
 
   // Step 1
-  UIScrollView *propertyTypeScrollView;
-  NSArray *propertyTypeViewArray;
-  OMBCreateListingPropertyTypeView *housePropertyTypeView;
-  OMBCreateListingPropertyTypeView *subletPropertyTypeView;
-  OMBCreateListingPropertyTypeView *apartmentPropertyTypeView;
+  UITableView *propertyTypeTableView;
+  // Step 2
+  TextFieldPadding *cityTextField;
+  UIButton *currentLocationButton;
+  UIView *locationView;
+  MKMapView *map;
+  // Step 3
+  UITableView *detailsTableView;
+
+  NSMutableDictionary *valuesDictionary;
 }
 
 @end
