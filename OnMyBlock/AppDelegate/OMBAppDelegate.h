@@ -29,3 +29,11 @@ extern NSString *const FBSessionStateChangedNotification;
 - (void) showSignUp;
 
 @end
+
+// UIFont size - line height
+// 13 - 17
+// 14 - 18
+// 15 - 20
+// 18 - 23
+// 20 - 26
+// 27 - 33

@@ -31,9 +31,13 @@
 {
   [super loadView];
 
+  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
   saveBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Save"
     style: UIBarButtonItemStylePlain target: self action: @selector(save)];
   saveBarButtonItem.enabled = NO;
+  [saveBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+  } forState: UIControlStateNormal];
 }
 
 #pragma mark - Methods

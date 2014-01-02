@@ -67,7 +67,7 @@
   _facebookButton.frame = CGRectMake(screenWidth, 
       label1.frame.origin.y + label1.frame.size.height + (padding * 2), 
         getStartedButtonWidth, padding + 18 + padding);
-  _facebookButton.layer.cornerRadius = 2.0f;
+  _facebookButton.layer.cornerRadius = 5.0f;
   _facebookButton.titleLabel.font = 
     [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
   [_facebookButton addTarget: self action: @selector(showFacebookLogin)

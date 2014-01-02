@@ -12,6 +12,7 @@
 
 @interface OMBFinishListingSectionViewController : OMBTableViewController
 {
+  UIBarButtonItem *doneBarButtonItem;
   BOOL isEditing;
   OMBResidence *residence;
   UIBarButtonItem *saveBarButtonItem;

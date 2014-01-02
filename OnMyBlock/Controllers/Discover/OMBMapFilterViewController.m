@@ -8,6 +8,7 @@
 
 #import "OMBMapFilterViewController.h"
 
+#import "AMBlurView.h"
 #import "NSString+Extensions.h"
 #import "OMBMapFilterBathroomsCell.h"
 #import "OMBMapFilterBedroomsCell.h"
@@ -17,6 +18,8 @@
 #import "OMBNeighborhoodStore.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
+
+float kStandardHeight = 44.0f;
 
 @implementation OMBMapFilterViewController
 
@@ -53,12 +56,13 @@
       style: UIBarButtonItemStylePlain target: self action: @selector(search)];
   self.navigationItem.rightBarButtonItem = searchBarButtonItem;
 
-  self.table.backgroundColor = [UIColor clearColor];
-  self.table.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
-
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenHeight = screen.size.height;
   CGFloat screenWidth = screen.size.width;
+  CGFloat padding = 20.0f;
+
+  self.table.backgroundColor = [UIColor grayUltraLight];
+  self.table.separatorInset  = UIEdgeInsetsMake(0.0f, padding, 0.0f, 0.0f);
 
   fadedBackground = [[UIView alloc] init];
   fadedBackground.alpha = 0.0f;
@@ -75,20 +79,38 @@
     screenHeight, screenWidth, screenHeight * 0.6);
   [self.view addSubview: neighborhoodTableViewContainer];
 
-  // Header for the neighborhood
-  UIView *headerView = [[UIView alloc] init];
-  headerView.backgroundColor = [UIColor blueLight];
+  // Header for the neighborhood table view
+  AMBlurView *headerView = [[AMBlurView alloc] init];
+  headerView.blurTintColor = [UIColor blueLight];
   headerView.frame = CGRectMake(0.0f, 0.0f, 
-    neighborhoodTableViewContainer.frame.size.width, 44.0f);
+    neighborhoodTableViewContainer.frame.size.width, kStandardHeight);
   [neighborhoodTableViewContainer addSubview: headerView];
   UILabel *headerLabel = [[UILabel alloc] init];
   headerLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
-  headerLabel.frame = CGRectMake(20.0f, 0.0f, 
+  headerLabel.frame = CGRectMake(0.0f, 0.0f, 
     headerView.frame.size.width, headerView.frame.size.height);
   headerLabel.text = @"Select neighborhood";
-  headerLabel.textColor = [UIColor blueDark];
+  headerLabel.textAlignment = NSTextAlignmentCenter;
+  headerLabel.textColor = [UIColor textColor];
   [headerView addSubview: headerLabel];
+  // Cancel button
+  UIButton *neighborhoodCancelButton = [UIButton new];
+  neighborhoodCancelButton.titleLabel.font = [UIFont fontWithName: 
+    @"HelveticaNeue-Medium" size: 15];
+  CGRect neighborhoodCancelButtonRect = [@"Cancel" boundingRectWithSize:
+    CGSizeMake(headerView.frame.size.width, headerView.frame.size.height)
+      font: neighborhoodCancelButton.titleLabel.font];
+  neighborhoodCancelButton.frame = CGRectMake(padding, 0.0f,
+    neighborhoodCancelButtonRect.size.width, headerView.frame.size.height);
+  [neighborhoodCancelButton addTarget: self 
+    action: @selector(cancelSelectNeighborhood) 
+      forControlEvents: UIControlEventTouchUpInside];
+  [neighborhoodCancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
+  [neighborhoodCancelButton setTitleColor: [UIColor blueDark] 
+    forState: UIControlStateNormal];
+  [headerView addSubview: neighborhoodCancelButton];
 
+  // Neighborhood selection
   neighborhoodTableView = [[UITableView alloc] initWithFrame: 
     CGRectMake(0.0f, headerView.frame.size.height, 
       neighborhoodTableViewContainer.frame.size.width,
@@ -99,29 +121,74 @@
   neighborhoodTableView.dataSource = self;
   neighborhoodTableView.delegate = self;
   neighborhoodTableView.separatorColor = [UIColor grayLight];
-  neighborhoodTableView.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 
+  neighborhoodTableView.separatorInset = UIEdgeInsetsMake(0.0f, padding, 
     0.0f, 0.0f);
-  neighborhoodTableView.showsVerticalScrollIndicator = NO;
   neighborhoodTableView.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectZero];
   [neighborhoodTableViewContainer addSubview: neighborhoodTableView];
 
+  // Rent picker view container
+  rentPickerViewContainer = [UIView new];
+  [self.view addSubview: rentPickerViewContainer];
+
+  // Header for rent picker view with cancel and done button
+  AMBlurView *rentPickerViewHeader = [[AMBlurView alloc] init];
+  rentPickerViewHeader.blurTintColor = [UIColor blueLight];
+  rentPickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
+    self.view.frame.size.width, kStandardHeight);
+  [rentPickerViewContainer addSubview: rentPickerViewHeader];
+  // Header label
+  UILabel *rentPickerViewHeaderLabel = [UILabel new];
+  rentPickerViewHeaderLabel.font = headerLabel.font;
+  rentPickerViewHeaderLabel.frame = rentPickerViewHeader.frame;
+  rentPickerViewHeaderLabel.text = @"Rent Range";
+  rentPickerViewHeaderLabel.textAlignment = headerLabel.textAlignment;
+  rentPickerViewHeaderLabel.textColor = headerLabel.textColor;
+  [rentPickerViewHeader addSubview: rentPickerViewHeaderLabel];
+  // Cancel button
+  UIButton *rentCancelButton = [UIButton new];
+  rentCancelButton.titleLabel.font = neighborhoodCancelButton.titleLabel.font;
+  rentCancelButton.frame = neighborhoodCancelButton.frame;
+  [rentCancelButton addTarget: self
+    action: @selector(cancelSelectRent) 
+      forControlEvents: UIControlEventTouchUpInside];
+  [rentCancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
+  [rentCancelButton setTitleColor: [UIColor blueDark] 
+    forState: UIControlStateNormal];
+  [rentPickerViewHeader addSubview: rentCancelButton];
+  // Done button
+  UIButton *rentDoneButton = [UIButton new];
+  rentDoneButton.titleLabel.font = rentCancelButton.titleLabel.font;
+  CGRect rentDoneButtonRect = [@"Done" boundingRectWithSize:
+    CGSizeMake(rentPickerViewHeader.frame.size.width, 
+      rentPickerViewHeader.frame.size.height)
+        font: rentDoneButton.titleLabel.font];
+  rentDoneButton.frame = CGRectMake(rentPickerViewHeader.frame.size.width - 
+    (padding + rentDoneButtonRect.size.width), 0.0f,
+      rentDoneButtonRect.size.width, rentPickerViewHeader.frame.size.height);
+  [rentDoneButton addTarget: self 
+    action: @selector(hidePickerView) 
+      forControlEvents: UIControlEventTouchUpInside];
+  [rentDoneButton setTitle: @"Done" forState: UIControlStateNormal];
+  [rentDoneButton setTitleColor: [UIColor blueDark] 
+    forState: UIControlStateNormal];
+  [rentPickerViewHeader addSubview: rentDoneButton];
+
+  // Rent scroller
   rentPickerView = [[UIPickerView alloc] init];
   rentPickerView.backgroundColor = [UIColor whiteColor];
   rentPickerView.dataSource = self;
   rentPickerView.delegate   = self;
-  rentPickerView.frame = CGRectMake(0.0f, self.view.frame.size.height, 
-    rentPickerView.frame.size.width, rentPickerView.frame.size.height);
-  [self.view addSubview: rentPickerView];
-  CALayer *topBorder = [CALayer layer];
-  topBorder.backgroundColor = [UIColor grayDark].CGColor;
-  topBorder.frame = CGRectMake(0.0f, 0.0f, 
-    rentPickerView.frame.size.width, 0.5f);
-  [rentPickerView.layer addSublayer: topBorder];
-
-  pickerViewBackground = [[UIView alloc] init];
-  pickerViewBackground.frame = rentPickerView.frame;
-  [self.view insertSubview: pickerViewBackground belowSubview: rentPickerView];
+  rentPickerView.frame = CGRectMake(0.0f, 
+    rentPickerViewHeader.frame.origin.y + 
+    rentPickerViewHeader.frame.size.height, 
+      rentPickerView.frame.size.width, rentPickerView.frame.size.height);
+  [rentPickerViewContainer addSubview: rentPickerView];
+  
+  rentPickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
+    rentPickerView.frame.size.width, 
+      rentPickerViewHeader.frame.size.height + 
+      rentPickerView.frame.size.height);
 }
 
 #pragma mark - Protocol
@@ -207,7 +274,7 @@ widthForComponent: (NSInteger) component
     return 4;
   }
   else if (tableView == neighborhoodTableView) {
-    return 1;
+    return [[[OMBNeighborhoodStore sharedStore] cities] count];
   }
   return 0;
 }
@@ -222,11 +289,15 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (!headerCell)
       headerCell = [[UITableViewCell alloc] initWithStyle: 
         UITableViewCellStyleDefault reuseIdentifier: HeaderCellIdentifier];
+    headerCell.backgroundColor = tableView.backgroundColor;
     headerCell.selectionStyle = UITableViewCellSelectionStyleNone;
     headerCell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
       size: 15];
-    headerCell.textLabel.textColor = [UIColor textColor];
+    headerCell.textLabel.textAlignment = NSTextAlignmentCenter;
+    headerCell.textLabel.textColor = [UIColor grayMedium];
+    // Neighborhood
     if (indexPath.section == 0) {
+      // Header
       if (indexPath.row == 0) {
         headerCell.textLabel.text = @"Neighborhood";
       }
@@ -243,7 +314,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         return cell;
       }
     }
-    if (indexPath.section == 1) {
+    // Rent
+    else if (indexPath.section == 1) {
       if (indexPath.row == 0) {
         headerCell.textLabel.text = @"Rent";
       }
@@ -258,7 +330,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         return cell;
       }
     }
-    if (indexPath.section == 2) {
+    // Bedrooms
+    else if (indexPath.section == 2) {
       if (indexPath.row == 0) {
         headerCell.textLabel.text = @"Bedrooms";
       }
@@ -275,7 +348,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         return cell;
       }
     }
-    if (indexPath.section == 3) {
+    // Bathrooms
+    else if (indexPath.section == 3) {
       if (indexPath.row == 0) {
         headerCell.textLabel.text = @"Bathrooms";
       }
@@ -294,6 +368,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     return headerCell;
   }
+  // Neighborhood slide up selection
   else if (tableView == neighborhoodTableView) {
     static NSString *NeighborhoodNameCellIdentifier = 
       @"NeighborhoodNameCellIdentifier";
@@ -302,9 +377,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (!cell)
       cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
         reuseIdentifier: NeighborhoodNameCellIdentifier];
-    OMBNeighborhood *neighborhood = 
-      [[[OMBNeighborhoodStore sharedStore] sortedNeighborhoods] objectAtIndex:
-        indexPath.row];
+    NSString *city = 
+      [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: 
+        indexPath.section];
+    NSArray *neighborhoods = 
+      [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity: city];
+    OMBNeighborhood *neighborhood = [neighborhoods objectAtIndex: 
+      indexPath.row];
     if (selectedNeighborhood == neighborhood) {
       cell.accessoryType = UITableViewCellAccessoryCheckmark;
     }
@@ -323,11 +402,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
+  // Normal table with filter options
   if (tableView == self.table) {
     return 2;
   }
-  if (tableView == neighborhoodTableView) {
-    return [[[OMBNeighborhoodStore sharedStore] sortedNeighborhoods] count];
+  // Neighborhood
+  else if (tableView == neighborhoodTableView) {
+    NSString *city = 
+      [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: section];
+    NSArray *neighborhoods = 
+      [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity: city];
+    return [neighborhoods count];
   }
   return 0;
 }
@@ -355,17 +440,20 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       [self showPickerView];
     }
   }
+  // Neighborhood table view
   else if (tableView == neighborhoodTableView) {
+    NSString *city = 
+      [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: 
+        indexPath.section];
+    NSArray *neighborhoods = 
+      [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity: city];
     OMBNeighborhood *neighborhood = 
-      [[[OMBNeighborhoodStore sharedStore] sortedNeighborhoods] objectAtIndex:
-        indexPath.row];
+      [neighborhoods objectAtIndex: indexPath.row];
     if (selectedNeighborhood == neighborhood) {
       selectedNeighborhood = nil;
     }
     else {
-      selectedNeighborhood = 
-        [[[OMBNeighborhoodStore sharedStore] sortedNeighborhoods] objectAtIndex:
-          indexPath.row];
+      selectedNeighborhood = [neighborhoods objectAtIndex: indexPath.row];
     }
     OMBMapFilterNeighborhoodCell *cell = (OMBMapFilterNeighborhoodCell *)
       [self.table cellForRowAtIndexPath: 
@@ -381,28 +469,54 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+- (CGFloat) tableView: (UITableView *) tableView 
+heightForHeaderInSection: (NSInteger) section
+{
+  if (tableView == neighborhoodTableView) {
+    return kStandardHeight;
+  }
+  return 0.0f;
+}
+
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  CGFloat standardHeight = 44.0f;
-  CGFloat padding = 20.0f;
-  if (tableView == self.table) {
-    if ((indexPath.section == 2 && indexPath.row == 1) ||
-      (indexPath.section == 3 && indexPath.row == 1)) {
-      return (padding * 0.5) + 58.0f + (padding * 0.5);
-    }
+  CGFloat standardHeight = 44.0f; 
+  if (tableView == self.table) {    
     // Header labels
     if (indexPath.row == 0) {
       return standardHeight;
     }
+    // Cells
     else if (indexPath.row == 1) {
-      return (padding * 0.25) + standardHeight + (padding * 0.1);
+      return standardHeight;
     }
   }
   if (tableView == neighborhoodTableView) {
     return standardHeight;
   }
   return 0.0f;
+}
+
+- (UIView *) tableView: (UITableView *) tableView 
+viewForHeaderInSection: (NSInteger) section
+{
+  if (tableView == neighborhoodTableView) {
+    AMBlurView *blur = [[AMBlurView alloc] init];
+    blur.blurTintColor = [UIColor grayMedium];
+    blur.frame = CGRectMake(0.0f, 0.0f, 
+      tableView.frame.size.width, kStandardHeight);
+    UILabel *label = [UILabel new];
+    label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+    label.frame = blur.frame;
+    label.text = [[[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: 
+      section] capitalizedString];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor whiteColor];
+    [blur addSubview: label];
+    return blur;
+  }
+  return [[UIView alloc] initWithFrame: CGRectZero];
 }
 
 #pragma mark - Methods
@@ -428,13 +542,35 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     OMBMapFilterBedroomsCell *bedroomsCell = (OMBMapFilterBedroomsCell *)
       [self.table cellForRowAtIndexPath: 
         [NSIndexPath indexPathForRow: 1 inSection: 2]];
-    [bedroomsCell deselectAllButtons];
+    // [bedroomsCell deselectAllButtons];
     // Clear the bathrooms
     OMBMapFilterBathroomsCell *bathroomsCell = (OMBMapFilterBathroomsCell *)
       [self.table cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 1 inSection: 3]];
-    [bathroomsCell deselectAllButtons];
+    // [bathroomsCell deselectAllButtons];
   }];
+}
+
+- (void) cancelSelectNeighborhood
+{
+  selectedNeighborhood = nil;
+  OMBMapFilterNeighborhoodCell *cell = (OMBMapFilterNeighborhoodCell *)
+    [self.table cellForRowAtIndexPath: 
+      [NSIndexPath indexPathForRow: 1 inSection: 0]];
+  cell.neighborhoodTextField.text = @"";
+  [neighborhoodTableView reloadData];
+  [self hideNeighborhoodTableViewContainer];
+}
+
+- (void) cancelSelectRent
+{
+  OMBMapFilterRentCell *cell = (OMBMapFilterRentCell *) 
+    [self.table cellForRowAtIndexPath: 
+      [NSIndexPath indexPathForRow: 1 inSection: 1]];
+  cell.minRentTextField.text = cell.maxRentTextField.text = @"";
+  [rentPickerView selectRow: 0 inComponent: 0 animated: YES];
+  [rentPickerView selectRow: 0 inComponent: 1 animated: YES];
+  [self hidePickerView];
 }
 
 - (void) dismissViewControllerWithCompletion: (void (^)(void)) block
@@ -471,10 +607,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) hidePickerView
 {
-  CGRect rect = rentPickerView.frame;
+  CGRect rect = rentPickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
-    pickerViewBackground.frame = rentPickerView.frame = rect;
+    fadedBackground.alpha = 0.0f;
+    rentPickerViewContainer.frame = rect;
   }];
   [self showSearchBarButtonItem];
 }
@@ -498,18 +635,19 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     fadedBackground.alpha = 1.0f;
     neighborhoodTableViewContainer.frame = rect;
   }];
-  [self showDoneBarButtonItem];
+  // [self showDoneBarButtonItem];
 }
 
 - (void) showPickerView
 {
-  CGRect rect = rentPickerView.frame;
+  CGRect rect = rentPickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height -
-    rentPickerView.frame.size.height;
+    rentPickerViewContainer.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
-    pickerViewBackground.frame = rentPickerView.frame = rect;
+    fadedBackground.alpha = 1.0f;
+    rentPickerViewContainer.frame = rect;
   }];
-  [self showDoneBarButtonItem];
+  // [self showDoneBarButtonItem];
 }
 
 - (void) showSearchBarButtonItem

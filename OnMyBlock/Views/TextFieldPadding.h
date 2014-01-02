@@ -10,8 +10,11 @@
 
 @interface TextFieldPadding : UITextField
 
+@property (nonatomic, strong) NSIndexPath *indexPath;
+@property (nonatomic) float leftPaddingX;
 @property (nonatomic) float paddingX;
 @property (nonatomic) float paddingY;
+@property (nonatomic) float rightPaddingX;
 @property (nonatomic, strong) UIColor *placeholderColor;
 
 @end

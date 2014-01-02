@@ -34,6 +34,12 @@
     blue: (193/255.0) alpha: value];
 }
 
++ (UIColor *) blueHighlighted
+{
+  return [UIColor colorWithRed: (111 - 20)/255.0 green: (174 - 20)/255.0 
+    blue: (193 - 20)/255.0 alpha: 1]; 
+}
+
 + (UIColor *) blueDark
 {
   return [UIColor colorWithRed: (46/255.0) green: (112/255.0) 

@@ -21,6 +21,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
     return nil;
 
+  self.backgroundColor = [UIColor grayUltraLight];
   self.selectionStyle = UITableViewCellSelectionStyleNone;
 
   CGRect screen = [[UIScreen mainScreen] bounds];
@@ -32,20 +33,23 @@ reuseIdentifier: (NSString *)reuseIdentifier
   NSArray *array = @[_minRentTextField, _maxRentTextField];
 
   for (TextFieldPadding *textField in array) {
-    textField.backgroundColor = [UIColor blueLight];
+    textField.backgroundColor = [UIColor whiteColor];
     textField.clipsToBounds = YES;
     textField.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
       size: 15];
     CGFloat width = (screen.size.width - (padding * 3)) * 0.5;
     textField.frame = CGRectMake(
       padding + ((padding + width) * [array indexOfObject: textField]), 
-        padding * 0.25, width, 44.0f);
+        0.0f, width, 44.0f);
     textField.keyboardType = UIKeyboardTypeDecimalPad;
-    textField.layer.cornerRadius = 2.0f;
+    textField.layer.borderColor = [UIColor blue].CGColor;
+    textField.layer.borderWidth = 1.0f;
+    textField.layer.cornerRadius = 5.0f;
     textField.paddingX = padding;
     textField.placeholderColor = [UIColor blueDarkAlpha: 0.5f];
     textField.returnKeyType = UIReturnKeyDone;
-    textField.textColor = [UIColor blueDark];
+    textField.textAlignment = NSTextAlignmentCenter;
+    textField.textColor = [UIColor blue];
     textField.userInteractionEnabled = NO;
     
     [self.contentView addSubview: textField];

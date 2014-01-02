@@ -13,7 +13,7 @@
 #pragma mark - Initializer
 
 - (id) initWithStyle: (UITableViewCellStyle) style 
-reuseIdentifier: (NSString *)reuseIdentifier leftPadding: (float) padding
+reuseIdentifier: (NSString *) reuseIdentifier leftPadding: (float) padding
 {
   if (!(self = [super initWithStyle: style 
     reuseIdentifier: reuseIdentifier])) return nil;

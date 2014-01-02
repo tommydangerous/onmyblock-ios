@@ -64,15 +64,20 @@
     utc.name       = @"university towne center";
 
     _neighborhoods = @{
-      currentLocation.name: currentLocation,
-      downtown.name: downtown,
-      hillcrest.name: hillcrest,
-      laJolla.name: laJolla,
-      missionBeach.name: missionBeach,
-      missionValley.name: missionValley,
-      oceanBeach.name: oceanBeach,
-      pacificBeach.name: pacificBeach,
-      utc.name: utc
+      @"san jose": @{
+
+      },
+      @"san diego": @{
+        currentLocation.name: currentLocation,
+        downtown.name:        downtown,
+        hillcrest.name:       hillcrest,
+        laJolla.name:         laJolla,
+        missionBeach.name:    missionBeach,
+        missionValley.name:   missionValley,
+        oceanBeach.name:      oceanBeach,
+        pacificBeach.name:    pacificBeach,
+        utc.name:             utc
+      }
     };
   }
   return self;
@@ -92,13 +97,20 @@
 
 #pragma mark - Instance Methods
 
-- (NSArray *) sortedNeighborhoods
+- (NSArray *) cities
 {
-  NSArray *keys = [[_neighborhoods allKeys] sortedArrayUsingSelector:
+  return [[_neighborhoods allKeys] sortedArrayUsingSelector:
+    @selector(localizedCaseInsensitiveCompare:)];
+}
+
+- (NSArray *) sortedNeighborhoodsForCity: (NSString *) string
+{
+  NSDictionary *nhoods = [_neighborhoods objectForKey: string];
+  NSArray *keys = [[nhoods allKeys] sortedArrayUsingSelector:
     @selector(localizedCaseInsensitiveCompare:)];
   NSMutableArray *array = [NSMutableArray array];
   for (NSString *key in keys) {
-    [array addObject: [_neighborhoods objectForKey: key]];
+    [array addObject: [nhoods objectForKey: key]];
   }
   return array;
 }

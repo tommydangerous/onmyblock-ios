@@ -328,6 +328,17 @@
 		ABBA589B1870C59700E9BF4E /* ELCAssetTablePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABBA58911870C59700E9BF4E /* ELCAssetTablePicker.xib */; };
 		ABBA589C1870C59700E9BF4E /* Overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = ABBA58921870C59700E9BF4E /* Overlay.png */; };
 		ABBA589D1870C59700E9BF4E /* Overlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABBA58931870C59700E9BF4E /* Overlay@2x.png */; };
+		ABBA58A01870D92000E9BF4E /* OMBFinishListingRentAuctionDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA589F1870D92000E9BF4E /* OMBFinishListingRentAuctionDetailsViewController.m */; };
+		ABBA58A31870DC7300E9BF4E /* OMBFinishListingAuctionStartPriceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58A21870DC7300E9BF4E /* OMBFinishListingAuctionStartPriceCell.m */; };
+		ABBA58A6187148CC00E9BF4E /* OMBFinishListingShowMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58A5187148CC00E9BF4E /* OMBFinishListingShowMoreCell.m */; };
+		ABBA58A91871551400E9BF4E /* OMBFinishListingRentItNowPriceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58A81871551400E9BF4E /* OMBFinishListingRentItNowPriceCell.m */; };
+		ABBA58AC1871623100E9BF4E /* OMBDatePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58AB1871623100E9BF4E /* OMBDatePickerCell.m */; };
+		ABBA58AF1871C2F500E9BF4E /* OMBPickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58AE1871C2F500E9BF4E /* OMBPickerViewCell.m */; };
+		ABBA58B21871E5EF00E9BF4E /* OMBFinishListingTitleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58B11871E5EF00E9BF4E /* OMBFinishListingTitleViewController.m */; };
+		ABBA58B518723CF800E9BF4E /* OMBManageListingsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58B418723CF800E9BF4E /* OMBManageListingsCell.m */; };
+		ABBA58B818737DDD00E9BF4E /* OMBHeaderTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58B718737DDD00E9BF4E /* OMBHeaderTitleCell.m */; };
+		ABBA58BB1875A49200E9BF4E /* OMBStandardLeaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58BA1875A49200E9BF4E /* OMBStandardLeaseViewController.m */; };
+		ABBA58BE1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58BD1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m */; };
 		ABBB18CB182408DB00211499 /* OMBFavoriteResidenceConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBB18CA182408DB00211499 /* OMBFavoriteResidenceConnection.m */; };
 		ABBB18CE1824138E00211499 /* favorite_pink.png in Resources */ = {isa = PBXBuildFile; fileRef = ABBB18CC1824138E00211499 /* favorite_pink.png */; };
 		ABBB18CF1824138E00211499 /* favorite_pink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABBB18CD1824138E00211499 /* favorite_pink@2x.png */; };
@@ -916,6 +927,28 @@
 		ABBA58911870C59700E9BF4E /* ELCAssetTablePicker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ELCAssetTablePicker.xib; sourceTree = "<group>"; };
 		ABBA58921870C59700E9BF4E /* Overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Overlay.png; sourceTree = "<group>"; };
 		ABBA58931870C59700E9BF4E /* Overlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Overlay@2x.png"; sourceTree = "<group>"; };
+		ABBA589E1870D92000E9BF4E /* OMBFinishListingRentAuctionDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingRentAuctionDetailsViewController.h; sourceTree = "<group>"; };
+		ABBA589F1870D92000E9BF4E /* OMBFinishListingRentAuctionDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFinishListingRentAuctionDetailsViewController.m; sourceTree = "<group>"; };
+		ABBA58A11870DC7300E9BF4E /* OMBFinishListingAuctionStartPriceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingAuctionStartPriceCell.h; sourceTree = "<group>"; };
+		ABBA58A21870DC7300E9BF4E /* OMBFinishListingAuctionStartPriceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFinishListingAuctionStartPriceCell.m; sourceTree = "<group>"; };
+		ABBA58A4187148CC00E9BF4E /* OMBFinishListingShowMoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingShowMoreCell.h; sourceTree = "<group>"; };
+		ABBA58A5187148CC00E9BF4E /* OMBFinishListingShowMoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFinishListingShowMoreCell.m; sourceTree = "<group>"; };
+		ABBA58A71871551400E9BF4E /* OMBFinishListingRentItNowPriceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingRentItNowPriceCell.h; sourceTree = "<group>"; };
+		ABBA58A81871551400E9BF4E /* OMBFinishListingRentItNowPriceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFinishListingRentItNowPriceCell.m; sourceTree = "<group>"; };
+		ABBA58AA1871623100E9BF4E /* OMBDatePickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBDatePickerCell.h; sourceTree = "<group>"; };
+		ABBA58AB1871623100E9BF4E /* OMBDatePickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBDatePickerCell.m; sourceTree = "<group>"; };
+		ABBA58AD1871C2F500E9BF4E /* OMBPickerViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPickerViewCell.h; sourceTree = "<group>"; };
+		ABBA58AE1871C2F500E9BF4E /* OMBPickerViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPickerViewCell.m; sourceTree = "<group>"; };
+		ABBA58B01871E5EF00E9BF4E /* OMBFinishListingTitleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingTitleViewController.h; sourceTree = "<group>"; };
+		ABBA58B11871E5EF00E9BF4E /* OMBFinishListingTitleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFinishListingTitleViewController.m; sourceTree = "<group>"; };
+		ABBA58B318723CF800E9BF4E /* OMBManageListingsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBManageListingsCell.h; sourceTree = "<group>"; };
+		ABBA58B418723CF800E9BF4E /* OMBManageListingsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBManageListingsCell.m; sourceTree = "<group>"; };
+		ABBA58B618737DDD00E9BF4E /* OMBHeaderTitleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHeaderTitleCell.h; sourceTree = "<group>"; };
+		ABBA58B718737DDD00E9BF4E /* OMBHeaderTitleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHeaderTitleCell.m; sourceTree = "<group>"; };
+		ABBA58B91875A49200E9BF4E /* OMBStandardLeaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBStandardLeaseViewController.h; sourceTree = "<group>"; };
+		ABBA58BA1875A49200E9BF4E /* OMBStandardLeaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBStandardLeaseViewController.m; sourceTree = "<group>"; };
+		ABBA58BC1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterPlusMinusCell.h; sourceTree = "<group>"; };
+		ABBA58BD1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterPlusMinusCell.m; sourceTree = "<group>"; };
 		ABBB18C9182408DB00211499 /* OMBFavoriteResidenceConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFavoriteResidenceConnection.h; sourceTree = "<group>"; };
 		ABBB18CA182408DB00211499 /* OMBFavoriteResidenceConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFavoriteResidenceConnection.m; sourceTree = "<group>"; };
 		ABBB18CC1824138E00211499 /* favorite_pink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorite_pink.png; sourceTree = "<group>"; };
@@ -1178,6 +1211,12 @@
 				ABBA5875186F2E5E00E9BF4E /* OMBFinishListingDescriptionViewController.m */,
 				ABBA5877186F7D2800E9BF4E /* OMBFinishListingPhotosViewController.h */,
 				ABBA5878186F7D2800E9BF4E /* OMBFinishListingPhotosViewController.m */,
+				ABBA589E1870D92000E9BF4E /* OMBFinishListingRentAuctionDetailsViewController.h */,
+				ABBA589F1870D92000E9BF4E /* OMBFinishListingRentAuctionDetailsViewController.m */,
+				ABBA58B01871E5EF00E9BF4E /* OMBFinishListingTitleViewController.h */,
+				ABBA58B11871E5EF00E9BF4E /* OMBFinishListingTitleViewController.m */,
+				ABBA58B91875A49200E9BF4E /* OMBStandardLeaseViewController.h */,
+				ABBA58BA1875A49200E9BF4E /* OMBStandardLeaseViewController.m */,
 			);
 			path = "Manage Listings";
 			sourceTree = "<group>";
@@ -1306,6 +1345,14 @@
 				ABBA5870186EC0B400E9BF4E /* OMBFinishListingAmenityCell.m */,
 				ABBA587A18700CE500E9BF4E /* OMBEditablePhotoView.h */,
 				ABBA587B18700CE500E9BF4E /* OMBEditablePhotoView.m */,
+				ABBA58A11870DC7300E9BF4E /* OMBFinishListingAuctionStartPriceCell.h */,
+				ABBA58A21870DC7300E9BF4E /* OMBFinishListingAuctionStartPriceCell.m */,
+				ABBA58A4187148CC00E9BF4E /* OMBFinishListingShowMoreCell.h */,
+				ABBA58A5187148CC00E9BF4E /* OMBFinishListingShowMoreCell.m */,
+				ABBA58A71871551400E9BF4E /* OMBFinishListingRentItNowPriceCell.h */,
+				ABBA58A81871551400E9BF4E /* OMBFinishListingRentItNowPriceCell.m */,
+				ABBA58B318723CF800E9BF4E /* OMBManageListingsCell.h */,
+				ABBA58B418723CF800E9BF4E /* OMBManageListingsCell.m */,
 			);
 			path = "Manage Listings";
 			sourceTree = "<group>";
@@ -1418,6 +1465,12 @@
 				AB8B7940186DFA8A005AB552 /* OMBActivityView.m */,
 				AB8B7949186E17FC005AB552 /* OMBLabelTextFieldCell.h */,
 				AB8B794A186E17FC005AB552 /* OMBLabelTextFieldCell.m */,
+				ABBA58AA1871623100E9BF4E /* OMBDatePickerCell.h */,
+				ABBA58AB1871623100E9BF4E /* OMBDatePickerCell.m */,
+				ABBA58AD1871C2F500E9BF4E /* OMBPickerViewCell.h */,
+				ABBA58AE1871C2F500E9BF4E /* OMBPickerViewCell.m */,
+				ABBA58B618737DDD00E9BF4E /* OMBHeaderTitleCell.h */,
+				ABBA58B718737DDD00E9BF4E /* OMBHeaderTitleCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1607,6 +1660,8 @@
 				ABABEC5818654F4C008B6768 /* OMBMapFilterBedroomsCell.m */,
 				ABABEC5A18655ED3008B6768 /* OMBMapFilterBathroomsCell.h */,
 				ABABEC5B18655ED3008B6768 /* OMBMapFilterBathroomsCell.m */,
+				ABBA58BC1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.h */,
+				ABBA58BD1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m */,
 			);
 			path = Discover;
 			sourceTree = "<group>";
@@ -2270,6 +2325,7 @@
 				AB9B26491811CB1300E6DAC4 /* UIImage+Resize.m in Sources */,
 				AB1C218118518FD600ED7C06 /* OMBCosignerListConnection.m in Sources */,
 				AB9B264D1811CE6D00E6DAC4 /* OMBConnection.m in Sources */,
+				ABBA58BB1875A49200E9BF4E /* OMBStandardLeaseViewController.m in Sources */,
 				AB026BD01822E98500E72F53 /* OMBSignUpConnection.m in Sources */,
 				AB57EA21186BB6D7001682DB /* OMBMessageCollectionViewCell.m in Sources */,
 				ABDF175C1868D10F004E2755 /* OMBResidenceLeaseAgreementViewController.m in Sources */,
@@ -2313,10 +2369,13 @@
 				ABD8EF4C181FFC4B00C28686 /* OMBResidenceDetailConnection.m in Sources */,
 				ABBB18DA1824432D00211499 /* OMBImageScrollView.m in Sources */,
 				AB01ED3D1857FE9200333390 /* OMBLegalQuestionCell.m in Sources */,
+				ABBA58AF1871C2F500E9BF4E /* OMBPickerViewCell.m in Sources */,
+				ABBA58AC1871623100E9BF4E /* OMBDatePickerCell.m in Sources */,
 				ABBB18CB182408DB00211499 /* OMBFavoriteResidenceConnection.m in Sources */,
 				ABA5B41C1856B07000F825E1 /* OMBEmploymentAddViewController.m in Sources */,
 				AB756AAD185A16D0001AF572 /* OMBIntroStillImagesViewController.m in Sources */,
 				AB6155DC1850DB3600A193C7 /* UIImage+FixOrientation.m in Sources */,
+				ABBA58A6187148CC00E9BF4E /* OMBFinishListingShowMoreCell.m in Sources */,
 				AB8B793E186DEF13005AB552 /* OMBCreateListingDetailCell.m in Sources */,
 				AB8C8C22181597F900A1B087 /* OMBResidence.m in Sources */,
 				ABA5B4291857B20900F825E1 /* OMBEmploymentCreateConnection.m in Sources */,
@@ -2344,6 +2403,7 @@
 				AB9B26271811AF7B00E6DAC4 /* OMBAnnotationStore.m in Sources */,
 				AB01ED4018580B0700333390 /* OMBLegalAnswer.m in Sources */,
 				ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */,
+				ABBA58A01870D92000E9BF4E /* OMBFinishListingRentAuctionDetailsViewController.m in Sources */,
 				AB63D2171821ABF500D63800 /* OMBLoginViewController.m in Sources */,
 				ABDF174D18663AE8004E2755 /* OMBResidenceBookItCell.m in Sources */,
 				AB8C8C131815784B00A1B087 /* OMBImageDownloader.m in Sources */,
@@ -2353,6 +2413,7 @@
 				ABABEC4F1864D6E1008B6768 /* OMBMapFilterViewController.m in Sources */,
 				ABF8ECAC182D78280080B1E2 /* OMBIntroFavoritesView.m in Sources */,
 				AB8B7944186E0091005AB552 /* OMBFinishListingViewController.m in Sources */,
+				ABBA58B818737DDD00E9BF4E /* OMBHeaderTitleCell.m in Sources */,
 				AB19A095186172A500F84DE9 /* OMBResidenceDetailSellerCell.m in Sources */,
 				AB70CB6E186CB9400083DF4C /* OMBTermsOfServiceViewController.m in Sources */,
 				ABABEC5C18655ED3008B6768 /* OMBMapFilterBathroomsCell.m in Sources */,
@@ -2361,8 +2422,10 @@
 				ABAF2281185249FC0041BF60 /* OMBRenterApplicationPetCell.m in Sources */,
 				AB6155A9184D99F100A193C7 /* OMBCosignersListViewController.m in Sources */,
 				AB70CB7D186CD8490083DF4C /* OMBCreateListingViewController.m in Sources */,
+				ABBA58B21871E5EF00E9BF4E /* OMBFinishListingTitleViewController.m in Sources */,
 				ABABEBF518625DFA008B6768 /* OMBAuthenticationVenmoConnection.m in Sources */,
 				AB02807F1843F2C30081B30F /* OMBBedroomView.m in Sources */,
+				ABBA58A91871551400E9BF4E /* OMBFinishListingRentItNowPriceCell.m in Sources */,
 				AB1C2175185145A800ED7C06 /* OMBCosignerAddViewController.m in Sources */,
 				ABE28187186A44FF00A5D14E /* OMBMessageStore.m in Sources */,
 				AB1C2178185168A300ED7C06 /* OMBCosignerCell.m in Sources */,
@@ -2389,6 +2452,7 @@
 				ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */,
 				AB01ED491858F2F100333390 /* OMBPayoutMethodsViewController.m in Sources */,
 				AB8B7941186DFA8A005AB552 /* OMBActivityView.m in Sources */,
+				ABBA58A31870DC7300E9BF4E /* OMBFinishListingAuctionStartPriceCell.m in Sources */,
 				AB19A09218616C5100F84DE9 /* OMBResidenceDetailDescriptionCell.m in Sources */,
 				AB57EA27186C788B001682DB /* OMBMessageInputToolbar.m in Sources */,
 				AB6155A6184D99DF00A193C7 /* OMBCoApplicantsViewController.m in Sources */,
@@ -2406,6 +2470,7 @@
 				AB9B263A1811B7ED00E6DAC4 /* OCAnnotation.m in Sources */,
 				ABBA58961870C59700E9BF4E /* ELCAssetCell.m in Sources */,
 				ABB06ADE18446773009CBBEA /* OMBGetStartedView.m in Sources */,
+				ABBA58BE1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m in Sources */,
 				ABAF2288185264BB0041BF60 /* OMBRenterApplicationUpdateConnection.m in Sources */,
 				AB9B26481811CB1300E6DAC4 /* UIColor+Extensions.m in Sources */,
 				AB44FBC118358DA400F07747 /* OMBResidencePartialView.m in Sources */,
@@ -2430,6 +2495,7 @@
 				AB76C0E018187B3F006354FB /* UIImage+Color.m in Sources */,
 				AB01ED341857D67F00333390 /* OMBLegalQuestionListConnection.m in Sources */,
 				AB9B263C1811B7ED00E6DAC4 /* OCMapView.m in Sources */,
+				ABBA58B518723CF800E9BF4E /* OMBManageListingsCell.m in Sources */,
 				ABBA5876186F2E5E00E9BF4E /* OMBFinishListingDescriptionViewController.m in Sources */,
 				AB6155AC184D99FE00A193C7 /* OMBEmploymentListViewController.m in Sources */,
 				AB1C21721851436D00ED7C06 /* OMBCosigner.m in Sources */,

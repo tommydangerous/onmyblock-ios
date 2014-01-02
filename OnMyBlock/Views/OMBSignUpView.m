@@ -60,7 +60,7 @@
   _facebookButton.clipsToBounds = YES;
   _facebookButton.frame = CGRectMake(screenWidth, padding * 2, 
     screenWidth - (padding * 2), padding + 18 + padding);
-  _facebookButton.layer.cornerRadius = 2.0f;
+  _facebookButton.layer.cornerRadius = 5.0f;
   _facebookButton.titleLabel.font = 
     [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
   [_facebookButton addTarget: self action: @selector(showFacebookLogin)
@@ -160,15 +160,20 @@
   ];
   for (TextFieldPadding *textField in array) {
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.backgroundColor = [UIColor colorWithWhite: 230/255.0f 
-      alpha: 1.0f];
+    // textField.backgroundColor = [UIColor colorWithWhite: 230/255.0f 
+    //   alpha: 1.0f];
     textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     textField.delegate = self;
     textField.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
-    textField.layer.cornerRadius = 2.0f;
+    textField.layer.borderColor = [UIColor grayLight].CGColor;
+    textField.layer.borderWidth = 1.0f;
+    textField.layer.cornerRadius = _facebookButton.layer.cornerRadius;
     textField.paddingX = padding; // * 0.5f;
     textField.paddingY = 0.0f; // * 0.5f;
+    textField.placeholderColor = [UIColor grayLight];
+    textField.placeholder = textField.placeholder;
     textField.returnKeyType = UIReturnKeyDone;
+    textField.textColor = [UIColor textColor];
   }
 
   _loginButton = [[UIButton alloc] init];

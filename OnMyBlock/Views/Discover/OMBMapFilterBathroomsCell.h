@@ -6,16 +6,8 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import "OMBTableViewCell.h"
+#import "OMBMapFilterPlusMinusCell.h"
 
-@interface OMBMapFilterBathroomsCell : OMBTableViewCell
-
-@property (nonatomic, strong) NSMutableArray *buttons;
-
-#pragma mark - Methods
-
-#pragma mark - Instance Methods
-
-- (void) deselectAllButtons;
+@interface OMBMapFilterBathroomsCell : OMBMapFilterPlusMinusCell
 
 @end

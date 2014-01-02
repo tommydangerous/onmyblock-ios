@@ -347,27 +347,27 @@ const int kPadding = 20;
   [self.view addSubview: neighborhoodListView];
   NSMutableArray *neighborhoodList = [NSMutableArray array];
   // Neighborhood buttons
-  for (OMBNeighborhood *neighborhood in 
-    [[OMBNeighborhoodStore sharedStore] sortedNeighborhoods]) {
+  // for (OMBNeighborhood *neighborhood in 
+  //   [[OMBNeighborhoodStore sharedStore] sortedNeighborhoods]) {
 
-    OMBListButton *button = [[OMBListButton alloc] init];
-    button.backgroundColor = [UIColor clearColor];
-    button.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
-    button.contentHorizontalAlignment = 
-      UIControlContentHorizontalAlignmentLeft;
-    button.neighborhood = neighborhood;
-    button.titleLabel.font = textFieldFont;
-    [button addTarget: self action: @selector(selectedNeighborhood:)
-      forControlEvents: UIControlEventTouchUpInside];
-    [button setBackgroundImage: [UIImage imageWithColor: 
-      [UIColor backgroundColor]] forState: UIControlStateHighlighted];
-    [button setTitle: [neighborhood nameTitle] forState:
-      UIControlStateNormal];
-    [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
-    [button setTitleColor: [UIColor textColor] 
-      forState: UIControlStateHighlighted];
-    [neighborhoodList addObject: button];
-  }
+  //   OMBListButton *button = [[OMBListButton alloc] init];
+  //   button.backgroundColor = [UIColor clearColor];
+  //   button.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
+  //   button.contentHorizontalAlignment = 
+  //     UIControlContentHorizontalAlignmentLeft;
+  //   button.neighborhood = neighborhood;
+  //   button.titleLabel.font = textFieldFont;
+  //   [button addTarget: self action: @selector(selectedNeighborhood:)
+  //     forControlEvents: UIControlEventTouchUpInside];
+  //   [button setBackgroundImage: [UIImage imageWithColor: 
+  //     [UIColor backgroundColor]] forState: UIControlStateHighlighted];
+  //   [button setTitle: [neighborhood nameTitle] forState:
+  //     UIControlStateNormal];
+  //   [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+  //   [button setTitleColor: [UIColor textColor] 
+  //     forState: UIControlStateHighlighted];
+  //   [neighborhoodList addObject: button];
+  // }
   // Add buttons to neighborhood list
   for (UIButton *button in neighborhoodList) {
     int index = (int) [neighborhoodList indexOfObject: button];

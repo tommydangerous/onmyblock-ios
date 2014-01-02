@@ -18,8 +18,8 @@
   BOOL isEditing;
   UITableView *neighborhoodTableView;
   UIView *neighborhoodTableViewContainer;
-  UIView *pickerViewBackground;
   UIPickerView *rentPickerView;
+  UIView *rentPickerViewContainer;
   UIBarButtonItem *searchBarButtonItem;
   OMBNeighborhood *selectedNeighborhood;
 }

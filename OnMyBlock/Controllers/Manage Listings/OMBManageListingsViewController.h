@@ -8,6 +8,12 @@
 
 #import "OMBTableViewController.h"
 
+@class AMBlurView;
+
 @interface OMBManageListingsViewController : OMBTableViewController
+{
+  UIButton *createListingButton;
+  AMBlurView *createListingView;
+}
 
 @end

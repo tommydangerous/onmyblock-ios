@@ -8,11 +8,24 @@
 
 #import "OMBFinishListingSectionViewController.h"
 
+@class AMBlurView;
+
 @interface OMBFinishListingDescriptionViewController : 
   OMBFinishListingSectionViewController
 <UITextViewDelegate>
 {
+  UILabel *characterCountLabel;
+  AMBlurView *characterCountView;
   UITextView *descriptionTextView;
+  int maxCharacters;
+  UILabel *placeholderLabel;
+  NSString *placeholderString;
 }
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) updateCharacterCount;
 
 @end

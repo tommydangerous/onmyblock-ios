@@ -206,7 +206,7 @@
   createListingButton.contentHorizontalAlignment = 
     discoverButton.contentHorizontalAlignment;
   createListingButton.titleLabel.font = discoverButton.titleLabel.font;
-  [createListingButton addTarget: self action: @selector(showCreateListing)
+  [createListingButton addTarget: self action: @selector(showLogin)
     forControlEvents: UIControlEventTouchUpInside];
   [createListingButton setTitle: @"Create Listing" 
     forState: UIControlStateNormal];
