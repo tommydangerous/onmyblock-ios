@@ -36,19 +36,34 @@
 
   // Buttons
   // Renter
+  // Search
+  _searchButton = [UIButton new];
+  _searchButton.frame = CGRectMake(-1 * rect.size.width, 0.0f, rect.size.width, 
+    10.0f + 40.0f + 10.0f);
+  [_searchButton addTarget: self action: @selector(showSearch)
+    forControlEvents: UIControlEventTouchUpInside];
+  [_searchButton setTitle: @"Search" forState: UIControlStateNormal];
+  // Image view
+  UIImageView *searchImageView = [[UIImageView alloc] init];
+  searchImageView.frame = CGRectMake(leftPad, 
+    ((_searchButton.frame.size.height - imageSize) * 0.5), 
+      imageSize, imageSize);
+  searchImageView.image = [UIImage image: 
+    [UIImage imageNamed: @"search_icon.png"] 
+      size: searchImageView.frame.size];
+  [_searchButton addSubview: searchImageView];
+  [_renterButtons addObject: _searchButton];
+
   // Discover
   _discoverButton = [[UIButton alloc] init];
-  _discoverButton.frame = CGRectMake(-1 * rect.size.width, 0, rect.size.width, 
-    10 + 40 + 10);
   [_discoverButton addTarget: self action: @selector(showDiscover)
     forControlEvents: UIControlEventTouchUpInside];
   [_discoverButton setTitle: @"Discover" forState: UIControlStateNormal];
+  // Image view
   UIImageView *discoverImageView = [[UIImageView alloc] init];
-  discoverImageView.frame = CGRectMake(leftPad, 
-    ((_discoverButton.frame.size.height - imageSize) * 0.5), 
-      imageSize, imageSize);
+  discoverImageView.frame = searchImageView.frame;
   discoverImageView.image = [UIImage image: 
-    [UIImage imageNamed: @"search_icon.png"] 
+    [UIImage imageNamed: @"discover_icon.png"] 
       size: discoverImageView.frame.size];
   [_discoverButton addSubview: discoverImageView];
   [_renterButtons addObject: _discoverButton];
@@ -93,7 +108,7 @@
   // Create Listing
   _createListingButton = [[UIButton alloc] init];
   // Need this since it is the top button
-  _createListingButton.frame = _discoverButton.frame;
+  _createListingButton.frame = _searchButton.frame;
   [_createListingButton addTarget: self action: @selector(showCreateListing)
     forControlEvents: UIControlEventTouchUpInside];
   [_createListingButton setTitle: @"Create Listing" 
@@ -136,6 +151,7 @@
 
   NSArray *buttonsArray = @[
     // Renter
+    _searchButton,
     _discoverButton, 
     _renterHomebaseButton,
     _favoritesButton,
@@ -275,6 +291,11 @@
 - (void) showManageListings
 {
   [[self container] showManageListings];
+}
+
+- (void) showSearch
+{
+  [[self container] showSearch];
 }
 
 @end

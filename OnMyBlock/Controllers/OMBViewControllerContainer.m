@@ -21,6 +21,7 @@
 #import "OMBIntroStillImagesViewController.h"
 #import "OMBLoginViewController.h"
 #import "OMBManageListingsViewController.h"
+#import "OMBMapFilterViewController.h"
 #import "OMBMapViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBRenterApplicationViewController.h"
@@ -98,10 +99,18 @@
     [[OMBRenterApplicationViewController alloc] init];
 
   // Renter
-  // Map
+  OMBMapViewController *mapViewController = [[OMBMapViewController alloc] init];
+  OMBMapFilterViewController *mapFilterViewController =
+    [[OMBMapFilterViewController alloc] init];
+  // mapFilterViewController.mapViewController = mapViewController;
+  // Search
+  _mapFilterNavigationController =
+    [[OMBNavigationController alloc] initWithRootViewController:
+      mapFilterViewController];
+  // Discover
   _mapNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController: 
-      [[OMBMapViewController alloc] init]];
+      mapViewController];
   // Favorites
   _favoritesNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController:
@@ -173,46 +182,49 @@
   [hitArea addSubview: _infiniteScroll];
 
   // Buttons
-  float imageSize = 22;
-  float leftPad   = 25;
+  CGFloat imageSize = 22.0f;
+  CGFloat leftPad   = 25.0f;
   // Logged out
+  // Search
+  searchButton = [UIButton new];
+  searchButton.frame = CGRectMake(-1 * menuWidth, 0.0f, 
+    menuWidth, 10.0f + 40.0f + 10.0f);
+  [searchButton addTarget: self action: @selector(showSearch)
+    forControlEvents: UIControlEventTouchUpInside];
+  [searchButton setTitle: @"Search" forState: UIControlStateNormal];
+  [buttonsLoggedOut addObject: searchButton];
+  // Image view
+  UIImageView *searchImageView = [[UIImageView alloc] init];
+  searchImageView.frame = CGRectMake(leftPad, 
+    ((searchButton.frame.size.height - imageSize) * 0.5), 
+      imageSize, imageSize);
+  searchImageView.image = [UIImage image: 
+    [UIImage imageNamed: @"search_icon.png"] 
+      size: searchImageView.frame.size];
+  [searchButton addSubview: searchImageView];
+
   // Discover
   discoverButton = [[UIButton alloc] init];
-  discoverButton.contentEdgeInsets = UIEdgeInsetsMake(0, 
-    (leftPad + imageSize + leftPad), 0, 20);
-  discoverButton.contentHorizontalAlignment = 
-    UIControlContentHorizontalAlignmentLeft;
-  discoverButton.frame = CGRectMake(-1 * menuWidth, 0.0f, 
-    menuWidth, (10 + 40 + 10));
-  discoverButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-    size: 15];
   [discoverButton addTarget: self action: @selector(showDiscover)
     forControlEvents: UIControlEventTouchUpInside];
   [discoverButton setTitle: @"Discover" forState: UIControlStateNormal];
-  [discoverButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
   [buttonsLoggedOut addObject: discoverButton];
+  // Image view
   UIImageView *discoverImageView = [[UIImageView alloc] init];
-  discoverImageView.frame = CGRectMake(leftPad, 
-    ((discoverButton.frame.size.height - imageSize) * 0.5), 
-      imageSize, imageSize);
+  discoverImageView.frame = searchImageView.frame;
   discoverImageView.image = [UIImage image: 
-    [UIImage imageNamed: @"search_icon.png"] 
+    [UIImage imageNamed: @"discover_icon.png"] 
       size: discoverImageView.frame.size];
   [discoverButton addSubview: discoverImageView];
+
   // Create Listing
   createListingButton = [[UIButton alloc] init];
-  createListingButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
-  createListingButton.contentHorizontalAlignment = 
-    discoverButton.contentHorizontalAlignment;
-  createListingButton.titleLabel.font = discoverButton.titleLabel.font;
   [createListingButton addTarget: self action: @selector(showLogin)
     forControlEvents: UIControlEventTouchUpInside];
   [createListingButton setTitle: @"Create Listing" 
     forState: UIControlStateNormal];
-  [createListingButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
-  [buttonsLoggedOut addObject: createListingButton];
+  // [buttonsLoggedOut addObject: createListingButton];
+  // Image view
   UIImageView *createListingImageView = [[UIImageView alloc] init];
   createListingImageView.frame = discoverImageView.frame;
   UIImage *createListingImage = [UIImage imageNamed: 
@@ -220,54 +232,42 @@
   createListingImageView.image = [UIImage image: createListingImage
     size: createListingImageView.frame.size];
   [createListingButton addSubview: createListingImageView];
+
   // How it Works
   howItWorksButton = [[UIButton alloc] init];
-  howItWorksButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
-  howItWorksButton.contentHorizontalAlignment = 
-    discoverButton.contentHorizontalAlignment;
-  howItWorksButton.titleLabel.font = discoverButton.titleLabel.font;
   [howItWorksButton addTarget: self action: @selector(showIntroVertical)
     forControlEvents: UIControlEventTouchUpInside];
   [howItWorksButton setTitle: @"How it Works" forState: UIControlStateNormal];
-  [howItWorksButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];  
   [buttonsLoggedOut addObject: howItWorksButton];
+  // Image view
   UIImageView *howItWorksImageView = [[UIImageView alloc] init];
   howItWorksImageView.frame = discoverImageView.frame;
   UIImage *howItWorksImage = [UIImage imageNamed: @"how_it_works_icon.png"];
   howItWorksImageView.image = [UIImage image: howItWorksImage
     size: howItWorksImageView.frame.size];
   [howItWorksButton addSubview: howItWorksImageView];
+
   // Login
   loginButton = [[UIButton alloc] init];
-  loginButton.contentEdgeInsets = discoverButton.contentEdgeInsets;
-  loginButton.contentHorizontalAlignment = 
-    discoverButton.contentHorizontalAlignment;
-  loginButton.titleLabel.font = discoverButton.titleLabel.font;
   [loginButton addTarget: self action: @selector(showLogin)
     forControlEvents: UIControlEventTouchUpInside];
   [loginButton setTitle: @"Login" forState: UIControlStateNormal];
-  [loginButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];  
   [buttonsLoggedOut addObject: loginButton];
+  // Image view
   UIImageView *loginImageView = [[UIImageView alloc] init];
   loginImageView.frame = discoverImageView.frame;
   UIImage *loginImage = [UIImage imageNamed: @"login_icon.png"];
   loginImageView.image = [UIImage image: loginImage
     size: loginImageView.frame.size];
   [loginButton addSubview: loginImageView];
+
   // Sign up
   signUpButton = [[UIButton alloc] init];
-  signUpButton.contentEdgeInsets = loginButton.contentEdgeInsets;
-  signUpButton.contentHorizontalAlignment = 
-    loginButton.contentHorizontalAlignment;
-  signUpButton.titleLabel.font = loginButton.titleLabel.font;
   [signUpButton addTarget: self action: @selector(showSignUp)
     forControlEvents: UIControlEventTouchUpInside];
   [signUpButton setTitle: @"Sign up" forState: UIControlStateNormal];
-  [signUpButton setTitleColor: [UIColor grayMedium] 
-    forState: UIControlStateHighlighted];
   [buttonsLoggedOut addObject: signUpButton];
+  // Image view
   UIImageView *signUpImageView = [[UIImageView alloc] init];
   signUpImageView.frame = loginImageView.frame;
   UIImage *signUpImage = [UIImage imageNamed: @"sign_up_icon.png"];
@@ -349,6 +349,7 @@
 
   // Set the frame for the buttons
   // [self setFramesForButtons: buttonsLoggedIn];
+  [self setupAttributesForButtons: buttonsLoggedOut];
   [self setFramesForButtons: buttonsLoggedOut];
 
   currentMenuButtons = [NSArray arrayWithArray: buttonsLoggedOut];
@@ -729,6 +730,24 @@ willDecelerate: (BOOL) decelerate
   }
 }
 
+- (void) setupAttributesForButtons: (NSArray *) array
+{
+  CGFloat imageSize = 22.0f;
+  CGFloat leftPad   = 25.0f;
+  for (UIButton *button in array) {
+    button.contentEdgeInsets = UIEdgeInsetsMake(0.0f, 
+      leftPad + imageSize + leftPad, 0.0f, 20.0f);
+    button.contentHorizontalAlignment = 
+      UIControlContentHorizontalAlignmentLeft;
+    button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
+      size: 15];
+    [button setTitleColor: [UIColor whiteColor] 
+      forState: UIControlStateNormal];
+    [button setTitleColor: [UIColor grayMedium] 
+      forState: UIControlStateHighlighted];
+  }
+}
+
 - (void) setupForLoggedInUser
 {
   // Add the account view
@@ -960,6 +979,19 @@ willDecelerate: (BOOL) decelerate
 {
   [self presentViewController: _renterApplicationViewController 
     animated: YES completion: nil];
+}
+
+- (void) showSearch
+{
+  [self presentViewController: _mapFilterNavigationController
+    animated: YES completion: ^{
+      OMBMapViewController *mapViewController = (OMBMapViewController *)
+        [_mapNavigationController.viewControllers firstObject];
+      [_mapNavigationController popToRootViewControllerAnimated: NO];
+      [mapViewController switchToListView];
+      [self hideMenuWithFactor: 1.0f];
+      [self presentDetailViewController: _mapNavigationController];
+    }];
 }
 
 - (void) showSignUp

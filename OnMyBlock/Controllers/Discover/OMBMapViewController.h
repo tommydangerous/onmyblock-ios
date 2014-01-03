@@ -70,6 +70,8 @@ withTitle: (NSString *) title;
 - (void) removeAllAnnotations;
 - (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
 withMiles: (int) miles animated: (BOOL) animated;
+- (void) showMapFilterViewControllerAnimated: (BOOL) animated;
+- (void) switchToListView;
 - (void) updateFilterLabel;
 
 @end

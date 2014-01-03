@@ -17,6 +17,7 @@
 // Buttons
 @property (nonatomic, strong) UIButton *headerButton;
 // Renter
+@property (nonatomic, strong) UIButton *searchButton;
 @property (nonatomic, strong) UIButton *discoverButton;
 @property (nonatomic, strong) UIButton *favoritesButton;
 @property (nonatomic, strong) UIButton *renterHomebaseButton;

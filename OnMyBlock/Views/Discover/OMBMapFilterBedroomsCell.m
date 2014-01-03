@@ -10,20 +10,38 @@
 
 @implementation OMBMapFilterBedroomsCell
 
+#pragma mark - Initialize
+
+- (id) initWithStyle: (UITableViewCellStyle) style 
+reuseIdentifier: (NSString *)reuseIdentifier
+{ 
+  if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
+    return nil;
+
+  self.maxButtons = 5;
+
+  [self setupButtons];
+  [self setupButtonTitles];
+
+  return self;
+}
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
-- (void) setValueLabelText
+- (void) setupButtonTitles
 {
-  [super setValueLabelText];
-
-  if ([self.currentValue intValue] == 0) {
-    self.valueLabel.text = @"Studio";
-  }
-  else {
-    self.valueLabel.text = [NSString stringWithFormat: @"%i", 
-      [self.currentValue intValue]];
+  for (int i = 0; i < self.maxButtons; i++) {
+    UIButton *button = [self.buttons objectAtIndex: i];
+    NSString *string = [NSString stringWithFormat: @"%i", i];
+    if (i == 0) {
+      string = @"Studio";
+    }
+    else if (i == self.maxButtons - 1) {
+      string = [string stringByAppendingString: @"+"];
+    }
+    [button setTitle: string forState: UIControlStateNormal];
   }
 }
 

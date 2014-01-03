@@ -10,4 +10,10 @@
 
 @interface OMBInboxViewController : OMBTableViewController
 
+@property (nonatomic, strong) UIAlertView *alertView;
+@property (nonatomic, strong) UIButton *button;
+@property (nonatomic, strong) UIDynamicAnimator *animator;
+@property (nonatomic, strong) UIView *redSquare;
+@property (nonatomic, strong) UISnapBehavior *snapBehavior;
+
 @end

@@ -46,7 +46,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
     textField.layer.borderWidth = 1.0f;
     textField.layer.cornerRadius = 5.0f;
     textField.paddingX = padding;
-    textField.placeholderColor = [UIColor blueDarkAlpha: 0.5f];
+    textField.placeholderColor = [UIColor grayLight];
     textField.returnKeyType = UIReturnKeyDone;
     textField.textAlignment = NSTextAlignmentCenter;
     textField.textColor = [UIColor blue];

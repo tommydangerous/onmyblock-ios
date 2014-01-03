@@ -14,14 +14,9 @@
 UIPickerViewDelegate, UITextFieldDelegate>
 {
   UIActionSheet *deleteActionSheet;
-  BOOL isEditingLeaseType;
-  BOOL isEditingMoveInDate;
-  BOOL isEditingMoveOutDate;
-  BOOL isEditingOpenHouse1;
-  BOOL isEditingOpenHouse2;
-  BOOL isEditingPropertyType;
   NSArray *leaseTypeOptions;
   NSArray *propertyTypeOptions;
+  NSIndexPath *selectedIndexPath;
 }
 
 @end

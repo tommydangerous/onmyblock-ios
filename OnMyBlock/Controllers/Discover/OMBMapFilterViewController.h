@@ -13,6 +13,7 @@
 @interface OMBMapFilterViewController : OMBTableViewController
 <UIPickerViewDataSource, UIPickerViewDelegate, UIScrollViewDelegate>
 {
+  UIButton *currentLocationButton;
   UIBarButtonItem *doneBarButtonItem;
   UIView *fadedBackground;
   BOOL isEditing;

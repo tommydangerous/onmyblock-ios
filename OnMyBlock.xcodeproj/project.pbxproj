@@ -339,6 +339,11 @@
 		ABBA58B818737DDD00E9BF4E /* OMBHeaderTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58B718737DDD00E9BF4E /* OMBHeaderTitleCell.m */; };
 		ABBA58BB1875A49200E9BF4E /* OMBStandardLeaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58BA1875A49200E9BF4E /* OMBStandardLeaseViewController.m */; };
 		ABBA58BE1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58BD1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m */; };
+		ABBA58C11875F7BB00E9BF4E /* OMBMapFilterButtonsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58C01875F7BB00E9BF4E /* OMBMapFilterButtonsCell.m */; };
+		ABBA58C41875F9C200E9BF4E /* OMBMapFilterPropertyTypeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58C31875F9C200E9BF4E /* OMBMapFilterPropertyTypeCell.m */; };
+		ABBA58C71876000900E9BF4E /* discover_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = ABBA58C51876000900E9BF4E /* discover_icon.png */; };
+		ABBA58C81876000900E9BF4E /* discover_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABBA58C61876000900E9BF4E /* discover_icon@2x.png */; };
+		ABBA58CB18761D2F00E9BF4E /* OMBFinishListingOtherDetailsOpenHouseDatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA58CA18761D2F00E9BF4E /* OMBFinishListingOtherDetailsOpenHouseDatesViewController.m */; };
 		ABBB18CB182408DB00211499 /* OMBFavoriteResidenceConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBB18CA182408DB00211499 /* OMBFavoriteResidenceConnection.m */; };
 		ABBB18CE1824138E00211499 /* favorite_pink.png in Resources */ = {isa = PBXBuildFile; fileRef = ABBB18CC1824138E00211499 /* favorite_pink.png */; };
 		ABBB18CF1824138E00211499 /* favorite_pink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABBB18CD1824138E00211499 /* favorite_pink@2x.png */; };
@@ -949,6 +954,14 @@
 		ABBA58BA1875A49200E9BF4E /* OMBStandardLeaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBStandardLeaseViewController.m; sourceTree = "<group>"; };
 		ABBA58BC1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterPlusMinusCell.h; sourceTree = "<group>"; };
 		ABBA58BD1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterPlusMinusCell.m; sourceTree = "<group>"; };
+		ABBA58BF1875F7BB00E9BF4E /* OMBMapFilterButtonsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterButtonsCell.h; sourceTree = "<group>"; };
+		ABBA58C01875F7BB00E9BF4E /* OMBMapFilterButtonsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterButtonsCell.m; sourceTree = "<group>"; };
+		ABBA58C21875F9C200E9BF4E /* OMBMapFilterPropertyTypeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterPropertyTypeCell.h; sourceTree = "<group>"; };
+		ABBA58C31875F9C200E9BF4E /* OMBMapFilterPropertyTypeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterPropertyTypeCell.m; sourceTree = "<group>"; };
+		ABBA58C51876000900E9BF4E /* discover_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = discover_icon.png; sourceTree = "<group>"; };
+		ABBA58C61876000900E9BF4E /* discover_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "discover_icon@2x.png"; sourceTree = "<group>"; };
+		ABBA58C918761D2F00E9BF4E /* OMBFinishListingOtherDetailsOpenHouseDatesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingOtherDetailsOpenHouseDatesViewController.h; sourceTree = "<group>"; };
+		ABBA58CA18761D2F00E9BF4E /* OMBFinishListingOtherDetailsOpenHouseDatesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFinishListingOtherDetailsOpenHouseDatesViewController.m; sourceTree = "<group>"; };
 		ABBB18C9182408DB00211499 /* OMBFavoriteResidenceConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFavoriteResidenceConnection.h; sourceTree = "<group>"; };
 		ABBB18CA182408DB00211499 /* OMBFavoriteResidenceConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFavoriteResidenceConnection.m; sourceTree = "<group>"; };
 		ABBB18CC1824138E00211499 /* favorite_pink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorite_pink.png; sourceTree = "<group>"; };
@@ -1217,6 +1230,8 @@
 				ABBA58B11871E5EF00E9BF4E /* OMBFinishListingTitleViewController.m */,
 				ABBA58B91875A49200E9BF4E /* OMBStandardLeaseViewController.h */,
 				ABBA58BA1875A49200E9BF4E /* OMBStandardLeaseViewController.m */,
+				ABBA58C918761D2F00E9BF4E /* OMBFinishListingOtherDetailsOpenHouseDatesViewController.h */,
+				ABBA58CA18761D2F00E9BF4E /* OMBFinishListingOtherDetailsOpenHouseDatesViewController.m */,
 			);
 			path = "Manage Listings";
 			sourceTree = "<group>";
@@ -1662,6 +1677,10 @@
 				ABABEC5B18655ED3008B6768 /* OMBMapFilterBathroomsCell.m */,
 				ABBA58BC1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.h */,
 				ABBA58BD1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m */,
+				ABBA58BF1875F7BB00E9BF4E /* OMBMapFilterButtonsCell.h */,
+				ABBA58C01875F7BB00E9BF4E /* OMBMapFilterButtonsCell.m */,
+				ABBA58C21875F9C200E9BF4E /* OMBMapFilterPropertyTypeCell.h */,
+				ABBA58C31875F9C200E9BF4E /* OMBMapFilterPropertyTypeCell.m */,
 			);
 			path = Discover;
 			sourceTree = "<group>";
@@ -1692,6 +1711,8 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				ABBA58C51876000900E9BF4E /* discover_icon.png */,
+				ABBA58C61876000900E9BF4E /* discover_icon@2x.png */,
 				ABBA587D187010D400E9BF4E /* x_image_white.png */,
 				ABBA587E187010D400E9BF4E /* x_image_white@2x.png */,
 				ABBA5872186EC7D100E9BF4E /* checkmark_outline_filled@2x.png */,
@@ -2277,7 +2298,9 @@
 				ABF18BA41816BC53002DD723 /* marker_circle_deselected.png in Resources */,
 				ABB06B0C1847C866009CBBEA /* tommy_d@2x.png in Resources */,
 				AB0269CF18229DD800E72F53 /* login_icon@2x.png in Resources */,
+				ABBA58C81876000900E9BF4E /* discover_icon@2x.png in Resources */,
 				AB756AB6185A2335001AF572 /* logo_white@2x.png in Resources */,
+				ABBA58C71876000900E9BF4E /* discover_icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2345,6 +2368,7 @@
 				AB57EA24186C7662001682DB /* OMBMessageNewViewController.m in Sources */,
 				AB1C217E18518C8000ED7C06 /* OMBCosignerCreateConnection.m in Sources */,
 				ABBA58981870C59700E9BF4E /* ELCImagePickerController.m in Sources */,
+				ABBA58CB18761D2F00E9BF4E /* OMBFinishListingOtherDetailsOpenHouseDatesViewController.m in Sources */,
 				ABBA5866186E2A9100E9BF4E /* OMBFinishListingSectionViewController.m in Sources */,
 				ABE28184186A416200A5D14E /* OMBMessage.m in Sources */,
 				AB9545731848E6C1000513BE /* OMBTableViewController.m in Sources */,
@@ -2442,6 +2466,7 @@
 				ABF8ECB9182D84170080B1E2 /* OMBSignUpView.m in Sources */,
 				AB1D4A80182C35B800FF4F23 /* OMBIntroViewController.m in Sources */,
 				AB9545701848E5EB000513BE /* OMBAccountViewController.m in Sources */,
+				ABBA58C41875F9C200E9BF4E /* OMBMapFilterPropertyTypeCell.m in Sources */,
 				ABDF17501866B5F6004E2755 /* OMBResidenceBookItConfirmDetailsViewController.m in Sources */,
 				AB19A09818617C0E00F84DE9 /* OMBResidenceDetailMapCell.m in Sources */,
 				AB756AC9185A3ADE001AF572 /* OMBPayPalVerifyMobilePaymentConnection.m in Sources */,
@@ -2465,6 +2490,7 @@
 				AB95456D1848DAC0000513BE /* DDPageControl.m in Sources */,
 				ABA5B4101856873500F825E1 /* OMBPreviousRentalListConnection.m in Sources */,
 				AB26131E18198E570053A8AA /* OMBSpringFlowLayout.m in Sources */,
+				ABBA58C11875F7BB00E9BF4E /* OMBMapFilterButtonsCell.m in Sources */,
 				AB70CB6D186CB9400083DF4C /* OMBPrivacyPolicyViewController.m in Sources */,
 				ABA5B41F1857627C00F825E1 /* OMBEmploymentCell.m in Sources */,
 				AB9B263A1811B7ED00E6DAC4 /* OCAnnotation.m in Sources */,

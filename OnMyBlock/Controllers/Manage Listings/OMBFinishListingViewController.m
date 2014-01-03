@@ -19,6 +19,7 @@
 #import "OMBGradientView.h"
 #import "OMBMapViewController.h"
 #import "OMBResidence.h"
+#import "OMBResidenceDetailViewController.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
@@ -443,6 +444,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) preview
 {
   NSLog(@"PREVIEW");
+  [self.navigationController pushViewController:
+    [[OMBResidenceDetailViewController alloc] initWithResidence: residence]
+      animated: YES];
 }
 
 - (void) publishNow

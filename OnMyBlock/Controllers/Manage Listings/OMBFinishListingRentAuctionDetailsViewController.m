@@ -283,8 +283,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
       cell1.textLabel.font = cell1.detailTextLabel.font;
       cell1.textLabel.text = @"Duration";
-      cell1.textLabel.textColor = cell1.detailTextLabel.textColor;
-      if (isEditingDuration) {
+      cell1.textLabel.textColor = [UIColor textColor];
+      if (selectedIndexPath &&
+        selectedIndexPath.section == indexPath.section &&
+        selectedIndexPath.row == indexPath.row) {
+
         cell1.detailTextLabel.textColor = [UIColor blueDark];
       }
       else {
@@ -292,18 +295,23 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       return cell1;
     }
-    // Picker
+    // Duration Picker
     else if (indexPath.row == 3) {
-      static NSString *CellIdentifier3 = @"CellIdentifier3";
-      OMBPickerViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
-        CellIdentifier3];
-      if (!cell1)
-        cell1 = [[OMBPickerViewCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault reuseIdentifier: CellIdentifier3];
-      cell1.pickerView.dataSource = self;
-      cell1.pickerView.delegate   = self;
-      [cell1.pickerView selectRow: 1 inComponent: 0 animated: NO];
-      return cell1;
+      if (showMore && selectedIndexPath &&
+        selectedIndexPath.section == indexPath.section &&
+        selectedIndexPath.row == indexPath.row - 1) {
+
+        static NSString *CellIdentifier3 = @"CellIdentifier3";
+        OMBPickerViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
+          CellIdentifier3];
+        if (!cell1)
+          cell1 = [[OMBPickerViewCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: CellIdentifier3];
+        cell1.pickerView.dataSource = self;
+        cell1.pickerView.delegate   = self;
+        [cell1.pickerView selectRow: 1 inComponent: 0 animated: NO];
+        return cell1;
+      }
     }
     // Start Date
     else if (indexPath.row == 4) {
@@ -321,8 +329,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
       cell1.textLabel.font = cell1.detailTextLabel.font;
       cell1.textLabel.text = @"Start Date";
-      cell1.textLabel.textColor = cell1.detailTextLabel.textColor;
-      if (isEditingDuration) {
+      cell1.textLabel.textColor = [UIColor textColor];
+      if (selectedIndexPath &&
+        selectedIndexPath.section == indexPath.section &&
+        selectedIndexPath.row == indexPath.row) {
+        
         cell1.detailTextLabel.textColor = [UIColor blueDark];
       }
       else {
@@ -330,18 +341,23 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       return cell1;
     }
-    // Date Picker
+    // Start Date Picker
     else if (indexPath.row == 5) {
-      static NSString *CellIdentifier5 = @"CellIdentifier5";
-      OMBDatePickerCell *cell1 = 
-        [tableView dequeueReusableCellWithIdentifier:
-          CellIdentifier5];
-      if (!cell1)
-        cell1 = [[OMBDatePickerCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault reuseIdentifier: CellIdentifier5];
-      [cell1.datePicker addTarget: self action: @selector(datePickerChanged:)
-        forControlEvents: UIControlEventValueChanged];
-      return cell1;
+      if (showMore && selectedIndexPath &&
+        selectedIndexPath.section == indexPath.section &&
+        selectedIndexPath.row == indexPath.row - 1) {
+
+        static NSString *CellIdentifier5 = @"CellIdentifier5";
+        OMBDatePickerCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
+            CellIdentifier5];
+        if (!cell1)
+          cell1 = [[OMBDatePickerCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: CellIdentifier5];
+        [cell1.datePicker addTarget: self action: @selector(datePickerChanged:)
+          forControlEvents: UIControlEventValueChanged];
+        return cell1;
+      }
     }
     // Show More / Show Less
     else if (indexPath.row == 6) {
@@ -398,66 +414,59 @@ numberOfRowsInSection: (NSInteger) section
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (indexPath.section == 0) {
-    // Duration or Start Date
+    // Duration
+    // Start Date
     if (indexPath.row == 2 || indexPath.row == 4) {
-      // Duration
-      if (indexPath.row == 2) {
-        isEditing          = NO;
-        isEditingDuration  = !isEditingDuration;
-        isEditingStartDate = NO;          
-      }
-      // Start Date
-      else if (indexPath.row == 4) {
-        isEditing          = NO;
-        isEditingDuration  = NO;
-        isEditingStartDate = !isEditingStartDate;
-      }
-      // [tableView beginUpdates];
-      // [tableView reloadRowsAtIndexPaths: 
-      //   @[[NSIndexPath indexPathForRow: 2 inSection: indexPath.section]] 
-      //     withRowAnimation: UITableViewRowAnimationFade];
-      // [tableView endUpdates];
+      isEditing = NO;
+      if (selectedIndexPath) {
+        if (selectedIndexPath.section == indexPath.section &&
+          selectedIndexPath.row == indexPath.row) {
 
-      // Reload the picker view row
-      [tableView reloadRowsAtIndexPaths: 
-        @[[NSIndexPath indexPathForRow: 3 inSection: indexPath.section]] 
-          withRowAnimation: UITableViewRowAnimationFade];
-      // Reload the date picker row
-      [tableView reloadRowsAtIndexPaths: 
-        @[[NSIndexPath indexPathForRow: 5 inSection: indexPath.section]] 
-          withRowAnimation: UITableViewRowAnimationFade];
-      // Reload the spacing section at the bottom
-      [tableView reloadRowsAtIndexPaths: 
-        @[[NSIndexPath indexPathForRow: 0 inSection: 1]] 
-          withRowAnimation: UITableViewRowAnimationFade];
+          selectedIndexPath = nil;
+        }
+        else {
+          selectedIndexPath = indexPath;
+        }
+      }
+      else {
+        selectedIndexPath = indexPath;
+      }
+
+      // Change the text color for duraton and start date
       UITableViewCell *pickerViewCell = [tableView cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 2 inSection: 0]];
       UITableViewCell *datePickerCell = [tableView cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 4 inSection: 0]];
 
-      if (isEditingDuration || isEditingStartDate) {
-        if (isEditingDuration) {
+      if (selectedIndexPath) {
+        // Duration
+        if (selectedIndexPath.section == 0 && selectedIndexPath.row == 2) {
           pickerViewCell.detailTextLabel.textColor = [UIColor blueDark];
           datePickerCell.detailTextLabel.textColor = [UIColor textColor];
         }
-        else if (isEditingStartDate) {
+        // Start Date
+        else if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
           pickerViewCell.detailTextLabel.textColor = [UIColor textColor];
           datePickerCell.detailTextLabel.textColor = [UIColor blueDark];
         }
-        [tableView scrollToRowAtIndexPath: indexPath atScrollPosition:
-          UITableViewScrollPositionTop animated: YES];
       }
       else {
         pickerViewCell.detailTextLabel.textColor = [UIColor textColor];
         datePickerCell.detailTextLabel.textColor = [UIColor textColor];
       }
+
+      [tableView reloadRowsAtIndexPaths: @[
+        [NSIndexPath indexPathForRow: 
+          indexPath.row + 1 inSection: indexPath.section]
+        ] withRowAnimation: UITableViewRowAnimationFade];
+
       [self.navigationItem setRightBarButtonItem: saveBarButtonItem];
       [self.view endEditing: YES];
     }
     // Show More / Show Less
     else if (indexPath.row == 6) {
       showMore = !showMore;
-      [tableView beginUpdates];
+      
       [tableView reloadRowsAtIndexPaths: @[
         [NSIndexPath indexPathForRow: 2 inSection: indexPath.section],
         [NSIndexPath indexPathForRow: 3 inSection: indexPath.section],
@@ -466,7 +475,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         [NSIndexPath indexPathForRow: 6 inSection: indexPath.section]
         ]
         withRowAnimation: UITableViewRowAnimationFade];
-      [tableView endUpdates];
+      
       OMBFinishListingShowMoreCell *cell = (OMBFinishListingShowMoreCell *) 
         [tableView cellForRowAtIndexPath: indexPath];
       int degrees = 90;
@@ -498,9 +507,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       if (showMore)
         return 44.0f;
     }
-    // Picker
+    // Duration Picker
     else if (indexPath.row == 3) {
-      if (showMore && isEditingDuration) {
+      if (showMore && selectedIndexPath && 
+        selectedIndexPath.section == indexPath.section &&
+        selectedIndexPath.row == indexPath.row - 1) {
+
         return [OMBPickerViewCell heightForCell];
       }
     }
@@ -509,9 +521,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       if (showMore)
         return 44.0f;
     }
-    // Date Picker
+    // Start Date Picker
     else if (indexPath.row == 5) {
-      if (showMore && isEditingStartDate) {
+      if (showMore && selectedIndexPath && 
+        selectedIndexPath.section == indexPath.section &&
+        selectedIndexPath.row == indexPath.row - 1) {
+        
         return [OMBDatePickerCell heightForCell];
       }
     }
@@ -532,40 +547,51 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) textFieldDidBeginEditing: (UITextField *) textField
 {
-  if (textField != fixedRentalPriceTextField) {
-    [self.navigationItem setRightBarButtonItem: doneBarButtonItem];
+  isEditing = YES;
+
+  if (selectedIndexPath) {
+    NSIndexPath *previousIndexPath = selectedIndexPath;
+    selectedIndexPath = nil;
+    [auctionTableView reloadRowsAtIndexPaths: @[previousIndexPath]
+      withRowAnimation: UITableViewRowAnimationFade];
   }
-  isEditing          = YES;
-  isEditingDuration  = NO;
-  isEditingStartDate = NO;
+  else {
+    [auctionTableView beginUpdates];
+    [auctionTableView endUpdates];
+  }
+  
   // [auctionTableView beginUpdates];
   // [auctionTableView endUpdates];
 
-  // Reload
-  UITableViewCell *pickerViewCell = [auctionTableView cellForRowAtIndexPath:
-    [NSIndexPath indexPathForRow: 2 inSection: 0]];
-  pickerViewCell.detailTextLabel.textColor = [UIColor textColor];
-  UITableViewCell *datePickerCell = [auctionTableView cellForRowAtIndexPath:
-    [NSIndexPath indexPathForRow: 4 inSection: 0]];
-  datePickerCell.detailTextLabel.textColor = [UIColor textColor];
+  // // Reload
+  // UITableViewCell *pickerViewCell = [auctionTableView cellForRowAtIndexPath:
+  //   [NSIndexPath indexPathForRow: 2 inSection: 0]];
+  // pickerViewCell.detailTextLabel.textColor = [UIColor textColor];
+  // UITableViewCell *datePickerCell = [auctionTableView cellForRowAtIndexPath:
+  //   [NSIndexPath indexPathForRow: 4 inSection: 0]];
+  // datePickerCell.detailTextLabel.textColor = [UIColor textColor];
 
-  // Picker View
-  [auctionTableView reloadRowsAtIndexPaths: 
-    @[[NSIndexPath indexPathForRow: 3 inSection: 0]] 
-      withRowAnimation: UITableViewRowAnimationFade];
-  // Date Picker
-  [auctionTableView reloadRowsAtIndexPaths: 
-    @[[NSIndexPath indexPathForRow: 5 inSection: 0]] 
-      withRowAnimation: UITableViewRowAnimationFade];
-  // Section spacing bottom
-  [auctionTableView reloadRowsAtIndexPaths: 
-    @[[NSIndexPath indexPathForRow: 0 inSection: 1]] 
-      withRowAnimation: UITableViewRowAnimationFade];
+  // // Picker View
+  // [auctionTableView reloadRowsAtIndexPaths: 
+  //   @[[NSIndexPath indexPathForRow: 3 inSection: 0]] 
+  //     withRowAnimation: UITableViewRowAnimationFade];
+  // // Date Picker
+  // [auctionTableView reloadRowsAtIndexPaths: 
+  //   @[[NSIndexPath indexPathForRow: 5 inSection: 0]] 
+  //     withRowAnimation: UITableViewRowAnimationFade];
+  // // Section spacing bottom
+  // [auctionTableView reloadRowsAtIndexPaths: 
+  //   @[[NSIndexPath indexPathForRow: 0 inSection: 1]] 
+  //     withRowAnimation: UITableViewRowAnimationFade];
 
   // Scroll 
   [auctionTableView scrollToRowAtIndexPath: 
     [NSIndexPath indexPathForRow: textField.tag inSection: 0]
       atScrollPosition: UITableViewScrollPositionTop animated: YES];
+
+  if (textField != fixedRentalPriceTextField) {
+    [self.navigationItem setRightBarButtonItem: doneBarButtonItem];
+  }
 }
 
 #pragma mark - Methods
@@ -574,18 +600,21 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) datePickerChanged: (UIDatePicker *) datePicker
 {
-  NSDateFormatter *dateFormatter = [NSDateFormatter new];
-  dateFormatter.dateFormat = @"MMMM d, yyyy";
-  NSString *todayString = [dateFormatter stringFromDate: [NSDate date]];
-  NSString *dateSelectedString = [dateFormatter stringFromDate: 
-    datePicker.date];
-  UITableViewCell *cell = [auctionTableView cellForRowAtIndexPath:
-    [NSIndexPath indexPathForRow: 4 inSection: 0]];
-  if ([todayString isEqualToString: dateSelectedString]) {
-    cell.detailTextLabel.text = @"Immediately";
-  }
-  else {
-    cell.detailTextLabel.text = dateSelectedString;
+  if (selectedIndexPath) {
+    // Start Date
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    dateFormatter.dateFormat = @"MMMM d, yyyy";
+    NSString *todayString = [dateFormatter stringFromDate: [NSDate date]];
+    NSString *dateSelectedString = [dateFormatter stringFromDate: 
+      datePicker.date];
+    UITableViewCell *cell = [auctionTableView cellForRowAtIndexPath:
+      selectedIndexPath];
+    if ([todayString isEqualToString: dateSelectedString]) {
+      cell.detailTextLabel.text = @"Immediately";
+    }
+    else {
+      cell.detailTextLabel.text = dateSelectedString;
+    }
   }
 }
 

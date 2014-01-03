@@ -91,7 +91,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // Title view
   segmentedControl = [[UISegmentedControl alloc] initWithItems: 
     @[@"Map", @"List"]];
-  segmentedControl.selectedSegmentIndex = 0;
+  segmentedControl.selectedSegmentIndex = 1;
   CGRect segmentedFrame = segmentedControl.frame;
   segmentedFrame.size.width = screen.size.width * 0.4;
   segmentedControl.frame = segmentedFrame;
@@ -120,7 +120,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // List view container
   _listViewContainer = [[UIView alloc] init];
-  _listViewContainer.alpha = 0.0f;
+  _listViewContainer.alpha = 1.0f;
   _listViewContainer.frame = screen;
   [self.view addSubview: _listViewContainer];
 
@@ -239,7 +239,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Map view
   _mapView          = [[OCMapView alloc] init];
-  _mapView.alpha    = 1.0f;
+  _mapView.alpha    = 0.0f;
   _mapView.delegate = self;
   _mapView.frame    = screen;
   _mapView.mapType  = MKMapTypeStandard;
@@ -848,8 +848,13 @@ withMiles: (int) miles animated: (BOOL) animated
 
 - (void) showMapFilterViewController
 {
+  [self showMapFilterViewControllerAnimated: YES]; 
+}
+
+- (void) showMapFilterViewControllerAnimated: (BOOL) animated
+{
   [self presentViewController: mapFilterNavigationController
-    animated: YES completion: nil];
+    animated: animated completion: nil];
 }
 
 - (void) showNavigationBarAndSortView
@@ -1029,6 +1034,12 @@ withMiles: (int) miles animated: (BOOL) animated
     }
   }];
    NSLog(@"SORT BUTTON SELECTED");
+}
+
+- (void) switchToListView
+{
+  segmentedControl.selectedSegmentIndex = 1;
+  [self switchViews: segmentedControl];
 }
 
 - (void) switchViews: (UISegmentedControl *) control

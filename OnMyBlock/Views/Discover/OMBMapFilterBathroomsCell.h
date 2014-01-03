@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import "OMBMapFilterPlusMinusCell.h"
+#import "OMBMapFilterButtonsCell.h"
 
-@interface OMBMapFilterBathroomsCell : OMBMapFilterPlusMinusCell
+@interface OMBMapFilterBathroomsCell : OMBMapFilterButtonsCell
 
 @end

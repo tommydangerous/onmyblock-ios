@@ -36,6 +36,7 @@
   OMBUserMenu *userMenu6;
 
   // Logged out
+  UIButton *searchButton;
   UIButton *discoverButton;
   UIButton *howItWorksButton;
   UIButton *createListingButton;
@@ -87,6 +88,9 @@
 
 // Renter
 
+// Search
+@property (nonatomic, strong) 
+  OMBNavigationController *mapFilterNavigationController;
 // Discover
 @property (nonatomic, strong) OMBNavigationController *mapNavigationController;
 // Favorites
@@ -124,6 +128,7 @@
 - (void) showLogout;
 - (void) showManageListings;
 - (void) showRenterApplication;
+- (void) showSearch;
 - (void) showSignUp;
 - (void) showMenuWithFactor: (float) factor;
 

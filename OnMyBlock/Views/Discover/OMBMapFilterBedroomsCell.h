@@ -6,10 +6,8 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import "OMBMapFilterPlusMinusCell.h"
+#import "OMBMapFilterButtonsCell.h"
 
-@interface OMBMapFilterBedroomsCell : OMBMapFilterPlusMinusCell
-
-@property (nonatomic, strong) NSArray *buttons;
+@interface OMBMapFilterBedroomsCell : OMBMapFilterButtonsCell
 
 @end

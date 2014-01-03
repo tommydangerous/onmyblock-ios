@@ -22,10 +22,6 @@
   if (self) {
     _neighborhoods = [NSDictionary dictionary];
 
-    OMBNeighborhood *currentLocation = [[OMBNeighborhood alloc] init];
-    currentLocation.coordinate = CLLocationCoordinate2DMake(0, 0);
-    currentLocation.name       = @"current location";
-
     OMBNeighborhood *downtown = [[OMBNeighborhood alloc] init];
     downtown.coordinate = CLLocationCoordinate2DMake(32.7153292, -117.1572551);
     downtown.name       = @"downtown";
@@ -68,7 +64,6 @@
 
       },
       @"san diego": @{
-        currentLocation.name: currentLocation,
         downtown.name:        downtown,
         hillcrest.name:       hillcrest,
         laJolla.name:         laJolla,

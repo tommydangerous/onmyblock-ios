@@ -1,14 +1,14 @@
 //
-//  OMBMapFilterBathroomsCell.m
+//  OMBMapFilterPropertyTypeCell.m
 //  OnMyBlock
 //
-//  Created by Tommy DANGerous on 12/20/13.
-//  Copyright (c) 2013 OnMyBlock. All rights reserved.
+//  Created by Tommy DANGerous on 1/2/14.
+//  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import "OMBMapFilterBathroomsCell.h"
+#import "OMBMapFilterPropertyTypeCell.h"
 
-@implementation OMBMapFilterBathroomsCell
+@implementation OMBMapFilterPropertyTypeCell
 
 #pragma mark - Initialize
 
@@ -18,7 +18,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
     return nil;
 
-  self.maxButtons = 4;
+  self.maxButtons = 3;
 
   [self setupButtons];
   [self setupButtonTitles];
@@ -34,9 +34,15 @@ reuseIdentifier: (NSString *)reuseIdentifier
 {
   for (int i = 0; i < self.maxButtons; i++) {
     UIButton *button = [self.buttons objectAtIndex: i];
-    NSString *string = [NSString stringWithFormat: @"%i", i + 1];
-    if (i == self.maxButtons - 1) {
-      string = [string stringByAppendingString: @"+"];
+    NSString *string = @"";
+    if (i == 0) {
+      string = @"Sublet";
+    }
+    else if (i == 1) {
+      string = @"House";
+    }
+    else if (i == 2) {
+      string = @"Apartment";
     }
     [button setTitle: string forState: UIControlStateNormal];
   }

@@ -10,6 +10,7 @@
 
 #import "OMBDatePickerCell.h"
 #import "OMBFinishListingAmenitiesViewController.h"
+#import "OMBFinishListingOtherDetailsOpenHouseDatesViewController.h"
 #import "OMBHeaderTitleCell.h"
 #import "OMBLabelTextFieldCell.h"
 #import "OMBPickerViewCell.h"
@@ -18,13 +19,7 @@
 float kKeyboardHeight = 216.0;
 
 // Tags
-int kBottomBorderTag           = 9999;
-int kPropertyTypePickerViewTag = 5555;
-int kMoveInDatePickerTag       = 5554;
-int kMoveOutDatePickerTag      = 5553;
-int kOpenHouse1DatePickerTag   = 5552;
-int kOpenHouse2DatePickerTag   = 5551;
-int kLeaseTypePickerViewTag    = 5550;
+int kBottomBorderTag = 9999;
 
 @implementation OMBFinishListingOtherDetailsViewController
 
@@ -45,7 +40,7 @@ int kLeaseTypePickerViewTag    = 5550;
     @"apartment"
   ];
 
-  self.screenName = self.title = @"Other Details";
+  self.screenName = self.title = @"Additional Details";
 
   return self;
 }
@@ -91,11 +86,15 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
 - (NSInteger) numberOfComponentsInPickerView: (UIPickerView *) pickerView
 {
-  if (pickerView.tag == kPropertyTypePickerViewTag) {
-    return 1;
-  }
-  else if (pickerView.tag == kLeaseTypePickerViewTag) {
-    return 1;
+  if (selectedIndexPath) {
+    // Property Type
+    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
+      return 1;
+    }
+    // Lease Type
+    else if (selectedIndexPath.section == 1 && selectedIndexPath.row == 8) {
+      return 1; 
+    }
   }
   return 0;
 }
@@ -103,11 +102,15 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 - (NSInteger) pickerView: (UIPickerView *) pickerView
 numberOfRowsInComponent: (NSInteger) component
 {
-  if (pickerView.tag == kPropertyTypePickerViewTag) {
-    return [propertyTypeOptions count];
-  }
-  else if (pickerView.tag == kLeaseTypePickerViewTag) {
-    return [leaseTypeOptions count];
+  if (selectedIndexPath) {
+    // Property Type
+    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
+      return [propertyTypeOptions count];
+    }
+    // Lease Type
+    else if (selectedIndexPath.section == 1 && selectedIndexPath.row == 8) {
+      return [leaseTypeOptions count];
+    }
   }
   return 0;
 }
@@ -117,23 +120,18 @@ numberOfRowsInComponent: (NSInteger) component
 - (void) pickerView: (UIPickerView *) pickerView didSelectRow: (NSInteger) row
 inComponent: (NSInteger) component
 {
-  if (pickerView.tag == kPropertyTypePickerViewTag ||
-    pickerView.tag == kLeaseTypePickerViewTag) {
-
-    NSIndexPath *indexPath;
+  if (selectedIndexPath) {
     NSString *string = @"";
     // Property Type
-    if (pickerView.tag == kPropertyTypePickerViewTag) {
-      indexPath = [NSIndexPath indexPathForRow: 4 inSection: 0];
+    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
       string = [[propertyTypeOptions objectAtIndex: row] capitalizedString];
     }
     // Lease Type
-    else if (pickerView.tag == kLeaseTypePickerViewTag) {
-      indexPath = [NSIndexPath indexPathForRow: 11 inSection: 1];
+    else if (selectedIndexPath.section == 1 && selectedIndexPath.row == 8) {
       string = [leaseTypeOptions objectAtIndex: row];
     }
     OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *) 
-      [self.table cellForRowAtIndexPath: indexPath];
+      [self.table cellForRowAtIndexPath: selectedIndexPath];
     cell.textField.text = string;
   }
 }
@@ -149,11 +147,11 @@ forComponent: (NSInteger) component reusingView: (UIView *) view
 {
   NSString *string = @"";
   // Property Type
-  if (pickerView.tag == kPropertyTypePickerViewTag) {
+  if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
     string = [[propertyTypeOptions objectAtIndex: row] capitalizedString];
   }
   // Lease Type
-  else if (pickerView.tag == kLeaseTypePickerViewTag) {
+  else if (selectedIndexPath.section == 1 && selectedIndexPath.row == 8) {
     string = [leaseTypeOptions objectAtIndex: row];
   }
   if (view && [view isKindOfClass: [UILabel class]]) {
@@ -178,10 +176,9 @@ forComponent: (NSInteger) component reusingView: (UIView *) view
 {
   // Listing Details
   // Lease & Open House
-  // Amenities
   // Delete Listing
   // Spacing for when typing
-  return 5;
+  return 4;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -221,6 +218,32 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       headerTitleCell.titleLabel.text = @"Listing Details";
       return headerTitleCell;
     }
+    // Amenities
+    else if (indexPath.row == 7) {
+      static NSString *AmenitiesCellIdentifier = @"AmenitiesCellIdentifier";
+      UITableViewCell *amenitiesCell = 
+        [tableView dequeueReusableCellWithIdentifier: AmenitiesCellIdentifier];
+      if (!amenitiesCell)
+        amenitiesCell = [[UITableViewCell alloc] initWithStyle: 
+          UITableViewCellStyleValue1 reuseIdentifier: AmenitiesCellIdentifier];
+      amenitiesCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+      amenitiesCell.backgroundColor = [UIColor whiteColor];
+      amenitiesCell.detailTextLabel.font = [UIFont fontWithName:
+        @"HelveticaNeue-Medium" size: 15];
+      amenitiesCell.detailTextLabel.text = @"5";
+      amenitiesCell.detailTextLabel.textColor = [UIColor blueDark];
+      amenitiesCell.textLabel.text = @"Amenities";
+      amenitiesCell.textLabel.font = [UIFont fontWithName: 
+        @"HelveticaNeue-Light" size: 15];
+      amenitiesCell.textLabel.textColor = [UIColor textColor];
+      // Bottom border
+      CALayer *bottomBorder = [CALayer layer];
+      bottomBorder.backgroundColor = [UIColor grayLight].CGColor;
+      bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f, 
+        tableView.frame.size.width, 0.5f);
+      [amenitiesCell.layer addSublayer: bottomBorder];
+      return amenitiesCell;
+    }
     else {
       static NSString *TextFieldCellIdentifier = @"TextFieldCellIdentifier";
       OMBLabelTextFieldCell *cell1 = 
@@ -230,18 +253,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           UITableViewCellStyleDefault reuseIdentifier: TextFieldCellIdentifier];
       cell1.selectionStyle = UITableViewCellSelectionStyleNone;
       cell1.textField.userInteractionEnabled = YES;
-      // Bottom border
-      UIView *bottomBorder = [cell1.contentView viewWithTag: kBottomBorderTag];
-      if (bottomBorder) {
-        [bottomBorder removeFromSuperview];
-      }
-      else {
-        bottomBorder = [UIView new];
-        bottomBorder.backgroundColor = [UIColor grayLight];
-        bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f, 
-          tableView.frame.size.width, 0.5f);
-        bottomBorder.tag = kBottomBorderTag;
-      }
       NSString *string = @"";
       // Bedrooms
       if (indexPath.row == 2) {
@@ -264,25 +275,31 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // Picker view
       else if (indexPath.row == 5) {
-        static NSString *PickerCellIdentifier = @"PickerCellIdentifier";
-        OMBPickerViewCell *pickerCell = 
-          [tableView dequeueReusableCellWithIdentifier: PickerCellIdentifier];
-        if (!pickerCell)
-          pickerCell = [[OMBPickerViewCell alloc] initWithStyle: 
-            UITableViewCellStyleDefault reuseIdentifier: PickerCellIdentifier];
-        pickerCell.pickerView.dataSource = self;
-        pickerCell.pickerView.delegate   = self;
-        pickerCell.pickerView.tag = kPropertyTypePickerViewTag;
-        [pickerCell.pickerView selectRow: 1 inComponent: 0 animated: NO];
-        return pickerCell;
+        if (selectedIndexPath &&
+          selectedIndexPath.section == indexPath.section &&
+          selectedIndexPath.row == indexPath.row - 1) {
+
+          static NSString *PickerCellIdentifier = @"PickerCellIdentifier";
+          OMBPickerViewCell *pickerCell = 
+            [tableView dequeueReusableCellWithIdentifier: PickerCellIdentifier];
+          if (!pickerCell)
+            pickerCell = [[OMBPickerViewCell alloc] initWithStyle: 
+              UITableViewCellStyleDefault reuseIdentifier: 
+                PickerCellIdentifier];
+          pickerCell.pickerView.dataSource = self;
+          pickerCell.pickerView.delegate   = self;
+
+          // Select the correct property type
+          [pickerCell.pickerView selectRow: 1 inComponent: 0 animated: NO];
+
+          return pickerCell;
+        }
       }
       // Square footage
       else if (indexPath.row == 6) {
         string = @"Sq Footage";
         cell1.textField.keyboardType = UIKeyboardTypeNumberPad;
         cell1.textField.placeholder = @"optional";
-        // Add bottom border
-        [cell1.contentView addSubview: bottomBorder];
       }
       cell1.textField.delegate = self;
       cell1.textField.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
@@ -327,24 +344,28 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell1.textField.placeholder = @"required";
         cell1.textField.userInteractionEnabled = NO;
       }
-      // Date picker
+      // Move-in Date picker
       else if (indexPath.row == 3) {
-        // Date picker cell
-        static NSString *DatePickerCellIdentifier1 = 
-          @"DatePickerCellIdentifier1";
-        OMBDatePickerCell *datePickerCell = 
-          [tableView dequeueReusableCellWithIdentifier:
-            DatePickerCellIdentifier1];
-        if (!datePickerCell)
-          datePickerCell = [[OMBDatePickerCell alloc] initWithStyle: 
-            UITableViewCellStyleDefault reuseIdentifier: 
-              DatePickerCellIdentifier1];
-        [datePickerCell.datePicker addTarget: self 
-          action: @selector(datePickerChanged:)
-            forControlEvents: UIControlEventValueChanged];
-        datePickerCell.datePicker.datePickerMode = UIDatePickerModeDate;
-        datePickerCell.datePicker.tag = kMoveInDatePickerTag;
-        return datePickerCell;
+        if (selectedIndexPath &&
+          selectedIndexPath.section == indexPath.section &&
+          selectedIndexPath.row == indexPath.row - 1) {
+
+          // Date picker cell
+          static NSString *DatePickerCellIdentifier = 
+            @"DatePickerCellIdentifier";
+          OMBDatePickerCell *datePickerCell = 
+            [tableView dequeueReusableCellWithIdentifier:
+              DatePickerCellIdentifier];
+          if (!datePickerCell)
+            datePickerCell = [[OMBDatePickerCell alloc] initWithStyle: 
+              UITableViewCellStyleDefault reuseIdentifier: 
+                DatePickerCellIdentifier];
+          [datePickerCell.datePicker addTarget: self 
+            action: @selector(datePickerChanged:)
+              forControlEvents: UIControlEventValueChanged];
+          datePickerCell.datePicker.datePickerMode = UIDatePickerModeDate;
+          return datePickerCell;
+        }
       }
       // Move-out Date
       else if (indexPath.row == 4) {
@@ -353,24 +374,28 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell1.textField.placeholder = @"required";
         cell1.textField.userInteractionEnabled = NO;
       }
-      // Date Picker
+      // Move-out Date Picker
       else if (indexPath.row == 5) {
-        // Date picker cell
-        static NSString *DatePickerCellIdentifier2 = 
-          @"DatePickerCellIdentifier2";
-        OMBDatePickerCell *datePickerCell = 
-          [tableView dequeueReusableCellWithIdentifier:
-            DatePickerCellIdentifier2];
-        if (!datePickerCell)
-          datePickerCell = [[OMBDatePickerCell alloc] initWithStyle: 
-            UITableViewCellStyleDefault reuseIdentifier: 
-              DatePickerCellIdentifier2];
-        [datePickerCell.datePicker addTarget: self 
-          action: @selector(datePickerChanged:)
-            forControlEvents: UIControlEventValueChanged];
-        datePickerCell.datePicker.datePickerMode = UIDatePickerModeDate;
-        datePickerCell.datePicker.tag = kMoveOutDatePickerTag;
-        return datePickerCell;
+        if (selectedIndexPath &&
+          selectedIndexPath.section == indexPath.section &&
+          selectedIndexPath.row == indexPath.row - 1) {
+
+          // Date picker cell
+          static NSString *DatePickerCellIdentifier = 
+            @"DatePickerCellIdentifier";
+          OMBDatePickerCell *datePickerCell = 
+            [tableView dequeueReusableCellWithIdentifier:
+              DatePickerCellIdentifier];
+          if (!datePickerCell)
+            datePickerCell = [[OMBDatePickerCell alloc] initWithStyle: 
+              UITableViewCellStyleDefault reuseIdentifier: 
+                DatePickerCellIdentifier];
+          [datePickerCell.datePicker addTarget: self 
+            action: @selector(datePickerChanged:)
+              forControlEvents: UIControlEventValueChanged];
+          datePickerCell.datePicker.datePickerMode = UIDatePickerModeDate;
+          return datePickerCell;
+        }
       }
       // Month Lease
       else if (indexPath.row == 6) {
@@ -379,58 +404,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell1.textField.keyboardType = UIKeyboardTypeNumberPad;
         cell1.textField.text = @"12";
       }
-      // Open House 1
+      // Open House Dates
       else if (indexPath.row == 7) {
-        string = @"Open House 1";
-        cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
-        cell1.textField.userInteractionEnabled = NO;
-      }
-      // Date Picker (date and time)
-      else if (indexPath.row == 8) {
-        // Date picker cell
-        static NSString *DatePickerCellIdentifier3 = 
-          @"DatePickerCellIdentifier3";
-        OMBDatePickerCell *datePickerCell = 
-          [tableView dequeueReusableCellWithIdentifier:
-            DatePickerCellIdentifier3];
-        if (!datePickerCell)
-          datePickerCell = [[OMBDatePickerCell alloc] initWithStyle: 
-            UITableViewCellStyleDefault reuseIdentifier: 
-              DatePickerCellIdentifier3];
-        [datePickerCell.datePicker addTarget: self 
-          action: @selector(datePickerChanged:)
-            forControlEvents: UIControlEventValueChanged];
-        datePickerCell.datePicker.datePickerMode = UIDatePickerModeDateAndTime;
-        datePickerCell.datePicker.tag = kOpenHouse1DatePickerTag;
-        return datePickerCell;
-      }
-      // Open House 2
-      else if (indexPath.row == 9) {
-        string = @"Open House 2";
-        cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
-        cell1.textField.userInteractionEnabled = NO;
-      }
-      // Date Picker (date and time)
-      else if (indexPath.row == 10) {
-        // Date picker cell
-        static NSString *DatePickerCellIdentifier4 = 
-          @"DatePickerCellIdentifier4";
-        OMBDatePickerCell *datePickerCell = 
-          [tableView dequeueReusableCellWithIdentifier:
-            DatePickerCellIdentifier4];
-        if (!datePickerCell)
-          datePickerCell = [[OMBDatePickerCell alloc] initWithStyle: 
-            UITableViewCellStyleDefault reuseIdentifier: 
-              DatePickerCellIdentifier4];
-        [datePickerCell.datePicker addTarget: self 
-          action: @selector(datePickerChanged:)
-            forControlEvents: UIControlEventValueChanged];
-        datePickerCell.datePicker.datePickerMode = UIDatePickerModeDateAndTime;
-        datePickerCell.datePicker.tag = kOpenHouse2DatePickerTag;
-        return datePickerCell;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.backgroundColor = [UIColor whiteColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        cell.textLabel.text = @"Open House Dates";
+        return cell;
       }
       // Lease Type
-      else if (indexPath.row == 11) {
+      else if (indexPath.row == 8) {
         string = @"Lease Type";
         cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell1.textField.userInteractionEnabled = NO;
@@ -443,31 +426,36 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           tableView.frame.size.width, 0.5f);
         [cell1.contentView.layer addSublayer: bottomBorderLayer];
       }
-      // Picker View
-      else if (indexPath.row == 12) {
-        static NSString *PickerCellIdentifier = @"PickerCellIdentifier";
-        OMBPickerViewCell *pickerCell = 
-          [tableView dequeueReusableCellWithIdentifier: PickerCellIdentifier];
-        if (!pickerCell)
-          pickerCell = [[OMBPickerViewCell alloc] initWithStyle: 
-            UITableViewCellStyleDefault reuseIdentifier: PickerCellIdentifier];
-        pickerCell.pickerView.dataSource = self;
-        pickerCell.pickerView.delegate   = self;
-        pickerCell.pickerView.tag = kLeaseTypePickerViewTag;
-        [pickerCell.pickerView selectRow: 0 inComponent: 0 animated: NO];
+      // Lease Type Picker View
+      else if (indexPath.row == 9) {
+        if (selectedIndexPath &&
+          selectedIndexPath.section == indexPath.section &&
+          selectedIndexPath.row == indexPath.row - 1) {
 
-        // Bottom border
-        // Use layer because after clicking the row, the view goes away
-        CALayer *bottomBorderLayer = [CALayer layer];
-        bottomBorderLayer.backgroundColor = tableView.separatorColor.CGColor;
-        bottomBorderLayer.frame = CGRectMake(0.0f, kKeyboardHeight - 0.5f, 
-          tableView.frame.size.width, 0.5f);
-        [pickerCell.contentView.layer addSublayer: bottomBorderLayer];
+          static NSString *PickerCellIdentifier = @"PickerCellIdentifier";
+          OMBPickerViewCell *pickerCell = 
+            [tableView dequeueReusableCellWithIdentifier: PickerCellIdentifier];
+          if (!pickerCell)
+            pickerCell = [[OMBPickerViewCell alloc] initWithStyle: 
+              UITableViewCellStyleDefault reuseIdentifier: 
+                PickerCellIdentifier];
+          pickerCell.pickerView.dataSource = self;
+          pickerCell.pickerView.delegate   = self;
+          [pickerCell.pickerView selectRow: 0 inComponent: 0 animated: NO];
 
-        return pickerCell;
+          // Bottom border
+          // Use layer because after clicking the row, the view goes away
+          CALayer *bottomBorderLayer = [CALayer layer];
+          bottomBorderLayer.backgroundColor = tableView.separatorColor.CGColor;
+          bottomBorderLayer.frame = CGRectMake(0.0f, kKeyboardHeight - 0.5f, 
+            tableView.frame.size.width, 0.5f);
+          [pickerCell.contentView.layer addSublayer: bottomBorderLayer];
+
+          return pickerCell;
+        }
       }
       // View OMB Standard Lease
-      else if (indexPath.row == 13) {
+      else if (indexPath.row == 10) {
         static NSString *LinkCellIdentifier = @"LinkCellIdentifier";
         UITableViewCell *linkCell = 
           [tableView dequeueReusableCellWithIdentifier: LinkCellIdentifier];
@@ -506,43 +494,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
 
-  // Amenities
-  else if (indexPath.section == 2) {
-    // Spacing
-    if (indexPath.row == 0) {
-      headerTitleCell.titleLabel.text = @"";
-      return headerTitleCell;
-    }
-    // Amenities
-    else if (indexPath.row == 1) {
-      // Amenities Cell
-      static NSString *AmenitiesCellIdentifier = @"AmenitiesCellIdentifier";
-      UITableViewCell *amenitiesCell = 
-        [tableView dequeueReusableCellWithIdentifier: AmenitiesCellIdentifier];
-      if (!amenitiesCell)
-        amenitiesCell = [[UITableViewCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault reuseIdentifier: AmenitiesCellIdentifier];
-      amenitiesCell.textLabel.font = [UIFont fontWithName: 
-        @"HelveticaNeue-Light" size: 15];
-      amenitiesCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-      amenitiesCell.backgroundColor = [UIColor whiteColor];
-      amenitiesCell.textLabel.text = @"Amenities (5)";
-      amenitiesCell.textLabel.textColor = [UIColor textColor];
-
-      // Bottom border
-      // Use layer because after clicking the row, the view goes away
-      CALayer *bottomBorderLayer = [CALayer layer];
-      bottomBorderLayer.backgroundColor = tableView.separatorColor.CGColor;
-      bottomBorderLayer.frame = CGRectMake(0.0f, 44.0f - 0.5f, 
-        tableView.frame.size.width, 0.5f);
-      [amenitiesCell.contentView.layer addSublayer: bottomBorderLayer];
-
-      return amenitiesCell;
-    }
-  }
-
   // Delete Listing
-  else if (indexPath.section == 3) {
+  else if (indexPath.section == 2) {
     // Spacing
     if (indexPath.row == 0) {
       headerTitleCell.titleLabel.text = @"";
@@ -564,6 +517,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         label = [UILabel new];
         label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
         label.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 44.0f);
+        label.tag = 7777;
         label.text = @"Delete Listing";
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [UIColor red];
@@ -582,8 +536,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
 
-  // Spaing for when typing
-  else if (indexPath.section == 4) {
+  // Spacing for when typing
+  else if (indexPath.section == 3) {
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
       0.0f, 0.0f);
   }
@@ -603,7 +557,8 @@ numberOfRowsInSection: (NSInteger) section
     // Property Type
     // - Picker view
     // Sq Footage
-    return 7;
+    // Amenities
+    return 8;
   }
   // Lease & Open House
   else if (section == 1) {
@@ -614,29 +569,20 @@ numberOfRowsInSection: (NSInteger) section
     // Move-out Date
     // - Date Picker
     // Month Lease
-    // Open House 1
-    // - Date Picker
-    // Open House 2
-    // - Date Picker
+    // Open House Dates
     // Lease Type
     // - Picker view
     // View OMB Standard Lease
-    return 14;
-  }
-  // Amenities
-  else if (section == 2) {
-    // Spacing
-    // Amenities
-    return 2;
+    return 11;
   }
   // Delete Listing
-  else if (section == 3) {
+  else if (section == 2) {
     // Spacing
     // Delete Listing
     return 2;
   }
   // Spacing for when typing
-  else if (section == 4) {
+  else if (section == 3) {
     // Spacing
     // 216.0f spacing
     return 2;
@@ -653,83 +599,37 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   if (indexPath.section == 0) {
     // Property Type
     if (indexPath.row == 4) {
-      isEditingLeaseType    = NO;
-      isEditingMoveInDate   = NO;
-      isEditingMoveOutDate  = NO;
-      isEditingOpenHouse1   = NO;
-      isEditingOpenHouse2   = NO;
-      isEditingPropertyType = !isEditingPropertyType;
       [self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
+    }
+    // Amenities
+    else if (indexPath.row == 7) {
+      [self.navigationController pushViewController:
+        [[OMBFinishListingAmenitiesViewController alloc] initWithResidence: 
+          residence] animated: YES]; 
     }
   }
   // Lease & Open House
   else if (indexPath.section == 1) {
-    // Move-in Date
-    if (indexPath.row == 2) {
-      isEditingLeaseType    = NO;
-      isEditingMoveInDate   = !isEditingMoveInDate;
-      isEditingMoveOutDate  = NO;
-      isEditingOpenHouse1   = NO;
-      isEditingOpenHouse2   = NO;
-      isEditingPropertyType = NO;
-      [self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
-    }
+    // Move-in  Date
     // Move-out Date
-    else if (indexPath.row == 4) {
-      isEditingLeaseType    = NO;
-      isEditingMoveInDate   = NO;
-      isEditingMoveOutDate  = !isEditingMoveOutDate;
-      isEditingOpenHouse1   = NO;
-      isEditingOpenHouse2   = NO;
-      isEditingPropertyType = NO;
-      [self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
-    }
-    // Open House 1
-    else if (indexPath.row == 7) {
-      isEditingLeaseType    = NO;
-      isEditingMoveInDate   = NO;
-      isEditingMoveOutDate  = NO;
-      isEditingOpenHouse1   = !isEditingOpenHouse1;
-      isEditingOpenHouse2   = NO;
-      isEditingPropertyType = NO;
-      [self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
-    }
-    // Open House 2
-    else if (indexPath.row == 9) {
-      isEditingLeaseType    = NO;
-      isEditingMoveInDate   = NO;
-      isEditingMoveOutDate  = NO;
-      isEditingOpenHouse1   = NO;
-      isEditingOpenHouse2   = !isEditingOpenHouse2;
-      isEditingPropertyType = NO;
-      [self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
-    }
     // Lease Type
-    else if (indexPath.row == 11) {
-      isEditingLeaseType    = !isEditingLeaseType;
-      isEditingMoveInDate   = NO;
-      isEditingMoveOutDate  = NO;
-      isEditingOpenHouse1   = NO;
-      isEditingOpenHouse2   = NO;
-      isEditingPropertyType = NO;
+    if (indexPath.row == 2 || indexPath.row == 4 || indexPath.row == 8) {
       [self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
+    }
+    // Open House Dates
+    else if (indexPath.row == 7) {
+      [self.navigationController pushViewController: 
+        [[OMBFinishListingOtherDetailsOpenHouseDatesViewController alloc]
+          initWithResidence: residence] animated: YES];
     }
     // OMB Standard Lease
-    else if (indexPath.row == 13) {
+    else if (indexPath.row == 10) {
       [self.navigationController pushViewController: 
         [[OMBStandardLeaseViewController alloc] init] animated: YES];
     }
   }
-  // Amenities
-  else if (indexPath.section == 2) {
-    if (indexPath.row == 1) {
-      [self.navigationController pushViewController:
-        [[OMBFinishListingAmenitiesViewController alloc] initWithResidence: 
-          residence] animated: YES];
-    }
-  }
   // Delete Listing
-  else if (indexPath.section == 3) {
+  else if (indexPath.section == 2) {
     [deleteActionSheet showInView: self.view];
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
@@ -754,7 +654,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.section == 0) {
       // Property Type picker view 
       if (indexPath.row == 5) {
-        if (isEditingPropertyType) {
+        if (selectedIndexPath &&
+          selectedIndexPath.section == indexPath.section &&
+          selectedIndexPath.row == indexPath.row - 1) {
+
           return kKeyboardHeight;
         }
         else {
@@ -764,45 +667,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Lease & Open House
     else if (indexPath.section == 1) {
-      // Move-in Date date picker
-      if (indexPath.row == 3) {
-        if (isEditingMoveInDate) {
-          return kKeyboardHeight;
-        }
-        else {
-          return 0.0f;
-        }
-      }
+      // Move-in  Date date picker
       // Move-out Date date picker
-      else if (indexPath.row == 5) {
-        if (isEditingMoveOutDate) {
-          return kKeyboardHeight;
-        }
-        else {
-          return 0.0f;
-        }
-      }
-      // Open House 1 date picker
-      else if (indexPath.row == 8) {
-        if (isEditingOpenHouse1) {
-          return kKeyboardHeight;
-        }
-        else {
-          return 0.0f;
-        }
-      }
-      // Open House 2 date picker
-      else if (indexPath.row == 10) {
-        if (isEditingOpenHouse2) {
-          return kKeyboardHeight;
-        }
-        else {
-          return 0.0f;
-        }
-      }
       // Lease Type picker view
-      else if (indexPath.row == 12) {
-        if (isEditingLeaseType) {
+      if (indexPath.row == 3 || indexPath.row == 5 || indexPath.row == 9) {
+        if (selectedIndexPath &&
+          selectedIndexPath.section == indexPath.section &&
+          selectedIndexPath.row == indexPath.row - 1) {
+
           return kKeyboardHeight;
         }
         else {
@@ -819,27 +691,33 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) textFieldDidBeginEditing: (UITextField *) textField
 {
-  isEditing             = YES;
-  isEditingLeaseType    = NO;
-  isEditingMoveInDate   = NO;
-  isEditingMoveOutDate  = NO;
-  isEditingOpenHouse1   = NO;
-  isEditingOpenHouse2   = NO;
-  isEditingPropertyType = NO;
-  [self reloadPickerRows];
+  isEditing = YES;
+
+  if (selectedIndexPath) {
+    NSIndexPath *previousIndexPath = selectedIndexPath;
+    selectedIndexPath = nil;
+    [self.table reloadRowsAtIndexPaths: @[previousIndexPath]
+      withRowAnimation: UITableViewRowAnimationFade];
+  }
+  else {
+    [self.table beginUpdates];
+    [self.table endUpdates];
+  }
+
   if ([textField isKindOfClass: [TextFieldPadding class]]) {
     TextFieldPadding *tf = (TextFieldPadding *) textField;
     if (tf.indexPath) {
       [self scrollToRowAtIndexPath: tf.indexPath];
     }
   }
+
   [self.navigationItem setRightBarButtonItem: doneBarButtonItem];
 }
 
 - (BOOL) textFieldShouldReturn: (UITextField *) textField
 {
-  [textField resignFirstResponder];
   isEditing = NO;
+  [textField resignFirstResponder];
   [self.table beginUpdates];
   [self.table endUpdates];
   return YES;
@@ -853,35 +731,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSDateFormatter *dateFormatter = [NSDateFormatter new];
   dateFormatter.dateFormat = @"MMMM d, yyyy";
-  NSDateFormatter *dateTimeFormatter = [NSDateFormatter new];
-  dateTimeFormatter.dateFormat = @"MMM d, yy   h:mm a";
-  int row = 0;
-  if (datePicker.tag == kMoveInDatePickerTag   || 
-    datePicker.tag == kMoveOutDatePickerTag    ||
-    datePicker.tag == kOpenHouse1DatePickerTag ||
-    datePicker.tag == kOpenHouse2DatePickerTag) {
-
-    NSString *dateString = [dateFormatter stringFromDate: datePicker.date];
-    if (datePicker.tag == kMoveInDatePickerTag) {
-      row = 2;
-    }
-    else if (datePicker.tag == kMoveOutDatePickerTag) {
-      row = 4;
-    }
-    else if (datePicker.tag == kOpenHouse1DatePickerTag) {
-      row = 7;
-      dateString = [dateTimeFormatter stringFromDate: datePicker.date];
-    }
-    else if (datePicker.tag == kOpenHouse2DatePickerTag) {
-      row = 9;
-      dateString = [dateTimeFormatter stringFromDate: datePicker.date];
-      NSLog(@"%@", dateString);
-    }
-    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *) 
-      [self.table cellForRowAtIndexPath:
-        [NSIndexPath indexPathForRow: row inSection: 1]];
-    cell.textField.text = dateString;
-  }
+  OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *) 
+    [self.table cellForRowAtIndexPath: selectedIndexPath];
+  cell.textField.text = [dateFormatter stringFromDate: datePicker.date];
 }
 
 - (void) deleteListing
@@ -895,48 +747,40 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.navigationItem setRightBarButtonItem: saveBarButtonItem animated: YES];
   [self.view endEditing: YES];
   isEditing = NO;
-  [self.table reloadRowsAtIndexPaths: @[
-    [NSIndexPath indexPathForRow: 1 
-      inSection: [self.table numberOfSections] - 1]
-    ] 
+  [self.table reloadRowsAtIndexPaths: @[[self indexPathForSpacing]] 
     withRowAnimation: UITableViewRowAnimationFade];
 }
 
-- (void) reloadPickerRows
+- (NSIndexPath *) indexPathForSpacing
 {
-  NSArray *rows = @[
-    // Property Type picker view
-    [NSIndexPath indexPathForRow: 5 inSection: 0],
-    // Move-in Date date picker
-    [NSIndexPath indexPathForRow: 3 inSection: 1],
-    // Move-out Date date picker
-    [NSIndexPath indexPathForRow: 5 inSection: 1],
-    // Open House 1
-    [NSIndexPath indexPathForRow: 8 inSection: 1],
-    // Open House 2
-    [NSIndexPath indexPathForRow: 10 inSection: 1],
-    // Lease Type picker view
-    [NSIndexPath indexPathForRow: 12 inSection: 1],
-    // The spacing section at the bottom
-    [NSIndexPath indexPathForRow: 1 
-      inSection: [self.table numberOfSections] - 1]
-  ];
-  // Reload rows
-  [self.table reloadRowsAtIndexPaths: rows
-    withRowAnimation: UITableViewRowAnimationFade];
-  [self.navigationItem setRightBarButtonItem: saveBarButtonItem];
+  return [NSIndexPath indexPathForRow: 
+      [self.table numberOfRowsInSection: [self.table numberOfSections] - 1] - 1
+        inSection: [self.table numberOfSections] - 1];
 }
 
 - (void) reloadForDatePickerAndPickerViewRowsAtIndexPath: 
 (NSIndexPath *) indexPath
 {
   isEditing = NO;
-  // [self reloadPickerRows];
   [self.view endEditing: YES];
-  // [self scrollToRowAtIndexPath: indexPath];
 
-  [self.table beginUpdates];
-  [self.table endUpdates];
+  if (selectedIndexPath) {
+    if (selectedIndexPath.section == indexPath.section &&
+      selectedIndexPath.row == indexPath.row) {
+
+      selectedIndexPath = nil;
+    }
+    else {
+      selectedIndexPath = indexPath;
+    }
+  }
+  else {
+    selectedIndexPath = indexPath;
+  }
+  [self.table reloadRowsAtIndexPaths: @[
+    [NSIndexPath indexPathForRow: 
+      indexPath.row + 1 inSection: indexPath.section]
+    ] withRowAnimation: UITableViewRowAnimationFade];
   [self.navigationItem setRightBarButtonItem: saveBarButtonItem];
 }
 

@@ -8,6 +8,8 @@
 
 #import "OMBStandardLeaseViewController.h"
 
+#import "OMBTermsOfServiceStore.h"
+
 @implementation OMBStandardLeaseViewController
 
 #pragma mark - Initializer
@@ -15,6 +17,8 @@
 - (id) init
 {
   if (!(self = [super init])) return nil;
+
+  self.storeArray = [OMBTermsOfServiceStore sharedStore].sections;
 
   self.screenName = self.title = @"OMB Standard Lease";
 

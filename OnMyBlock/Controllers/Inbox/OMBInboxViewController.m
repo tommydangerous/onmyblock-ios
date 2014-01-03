@@ -41,15 +41,25 @@
 
   [self setupForTable];
 
-  self.navigationItem.rightBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithBarButtonSystemItem: 
-      UIBarButtonSystemItemCompose target: self action: @selector(newMessage)];
+  [self.table removeFromSuperview];
+
+  // self.navigationItem.rightBarButtonItem = 
+  //   [[UIBarButtonItem alloc] initWithBarButtonSystemItem: 
+  //     UIBarButtonSystemItemCompose target: self action: 
+  //       @selector(newMessage)];
 
   CGRect screen = [[UIScreen mainScreen] bounds];
 
   self.table.backgroundColor = [UIColor backgroundColor];
   self.table.separatorInset  = UIEdgeInsetsMake(0.0f, 
     10.0f + (screen.size.width * 0.2) + 10.0f, 0.0f, 0.0f);
+
+  self.button = [UIButton new];
+  self.button.backgroundColor = [UIColor blueColor];
+  self.button.frame = CGRectMake(100, -110, 110, 110);
+  [self.button addTarget: self action: @selector(fall)
+    forControlEvents: UIControlEventTouchUpInside];
+  [self.view addSubview: self.button];
 }
 
 - (void) viewDidAppear: (BOOL) animated
@@ -57,6 +67,36 @@
   [super viewDidAppear: animated];
   // [self tableView: self.table didSelectRowAtIndexPath: 
   //   [NSIndexPath indexPathForRow: 0 inSection: 0]];
+
+  self.redSquare = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 110, 110)];
+  self.redSquare.backgroundColor = [UIColor redColor];
+  [self.view addSubview: self.redSquare];
+
+  self.animator = [[UIDynamicAnimator alloc] initWithReferenceView: self.view];
+
+  // Gravity falling (acceleration)
+  UIGravityBehavior* gravityBehavior = [[UIGravityBehavior alloc] initWithItems:
+    @[self.redSquare]];
+  [self.animator addBehavior: gravityBehavior];
+
+  // Bounces
+  UICollisionBehavior* collisionBehavior = 
+  [[UICollisionBehavior alloc] initWithItems: @[self.redSquare]];
+  collisionBehavior.translatesReferenceBoundsIntoBoundary = YES;
+  [self.animator addBehavior: collisionBehavior];
+
+  // More bouncing
+  UIDynamicItemBehavior *elasticityBehavior = 
+    [[UIDynamicItemBehavior alloc] initWithItems: @[self.redSquare]];
+  elasticityBehavior.elasticity = 0.7f;
+  [self.animator addBehavior: elasticityBehavior];
+
+  // Snap the button in the middle
+  self.snapBehavior = [[UISnapBehavior alloc] initWithItem: 
+    self.button snapToPoint: [self appDelegate].window.center];
+  // We decrease the damping so the view has a little less spring.
+  self.snapBehavior.damping = 0.65f;
+  [self.animator addBehavior: self.snapBehavior];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -64,6 +104,12 @@
   [super viewWillAppear: animated];
 
   [[OMBMessageStore sharedStore] createFakeMessages];
+}
+
+- (void) viewDidLoad
+{
+
+  
 }
 
 #pragma mark - Protocol
@@ -124,6 +170,21 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) fall
+{
+  [self.animator removeBehavior: self.snapBehavior];
+
+  UIGravityBehavior *gravityBehaviour = 
+    [[UIGravityBehavior alloc] initWithItems: @[self.button]];
+  gravityBehaviour.gravityDirection = CGVectorMake(0, 10);
+  [self.animator addBehavior: gravityBehaviour];
+ 
+  UIDynamicItemBehavior *itemBehaviour = 
+    [[UIDynamicItemBehavior alloc] initWithItems: @[self.button]];
+  [itemBehaviour addAngularVelocity: -M_PI_2 forItem: self.button];
+  [self.animator addBehavior: itemBehaviour];
+}
 
 - (OMBMessage *) messageAtIndexPath: (NSIndexPath *) indexPath
 {

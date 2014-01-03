@@ -13,6 +13,7 @@
 #import "OMBMapFilterBathroomsCell.h"
 #import "OMBMapFilterBedroomsCell.h"
 #import "OMBMapFilterNeighborhoodCell.h"
+#import "OMBMapFilterPropertyTypeCell.h"
 #import "OMBMapFilterRentCell.h"
 #import "OMBNeighborhood.h"
 #import "OMBNeighborhoodStore.h"
@@ -63,6 +64,8 @@ float kStandardHeight = 44.0f;
 
   self.table.backgroundColor = [UIColor grayUltraLight];
   self.table.separatorInset  = UIEdgeInsetsMake(0.0f, padding, 0.0f, 0.0f);
+  self.table.tableFooterView = [[UIView alloc] initWithFrame: 
+    CGRectMake(0.0f, 0.0f, screenWidth, padding)];
 
   fadedBackground = [[UIView alloc] init];
   fadedBackground.alpha = 0.0f;
@@ -123,6 +126,38 @@ float kStandardHeight = 44.0f;
   neighborhoodTableView.separatorColor = [UIColor grayLight];
   neighborhoodTableView.separatorInset = UIEdgeInsetsMake(0.0f, padding, 
     0.0f, 0.0f);
+  // Header view
+  UIView *neighborhoodTableHeaderView = [UIView new];
+  neighborhoodTableHeaderView.frame = CGRectMake(0.0f, 0.0f, 
+    neighborhoodTableView.frame.size.width, kStandardHeight);
+  neighborhoodTableView.tableHeaderView = neighborhoodTableHeaderView;
+  // Label
+  UILabel *currentLocationLabel = [UILabel new];
+  currentLocationLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
+    size: 15];
+  currentLocationLabel.frame = CGRectMake(padding, 0.0f,
+    neighborhoodTableHeaderView.frame.size.width,
+      neighborhoodTableHeaderView.frame.size.height);
+  currentLocationLabel.text = @"User Current Location";
+  currentLocationLabel.textColor = [UIColor blue];
+  [neighborhoodTableHeaderView addSubview: currentLocationLabel];
+  // Image view
+  CGFloat imageSize = padding;
+  UIImageView *headerImageView = [UIImageView new];
+  headerImageView.frame = CGRectMake(
+    neighborhoodTableHeaderView.frame.size.width - (imageSize + padding), 
+      (neighborhoodTableHeaderView.frame.size.height - imageSize) * 0.5, 
+        imageSize, imageSize);
+  headerImageView.image = [UIImage imageNamed: @"gps_cursor_blue.png"];
+  [neighborhoodTableHeaderView addSubview: headerImageView];
+  // Current location button
+  currentLocationButton = [UIButton new];
+  currentLocationButton.frame = neighborhoodTableHeaderView.frame;
+  [currentLocationButton addTarget: self action: @selector(userCurrentLocation)
+    forControlEvents: UIControlEventTouchUpInside];
+  [neighborhoodTableHeaderView addSubview: currentLocationButton];
+
+  // Footer view
   neighborhoodTableView.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectZero];
   [neighborhoodTableViewContainer addSubview: neighborhoodTableView];
@@ -264,14 +299,12 @@ widthForComponent: (NSInteger) component
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
   // Neighborhood
-  // Price Range
+  // Rent
   // Bedrooms
   // Bathrooms
-  // Move in Date
-  // Month Term
-  // Type of Place
+  // Property Type
   if (tableView == self.table) {
-    return 4;
+    return 5;
   }
   else if (tableView == neighborhoodTableView) {
     return [[[OMBNeighborhoodStore sharedStore] cities] count];
@@ -363,6 +396,24 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell = [[OMBMapFilterBathroomsCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier: 
               BathroomsCellIdentifier];
+        return cell;
+      }
+    }
+    // Property Type
+    else if (indexPath.section == 4) {
+      if (indexPath.row == 0) {
+        headerCell.textLabel.text = @"Property Type";
+      }
+      else if (indexPath.row == 1) {
+        static NSString *PropertyTypeCellIdentifier = 
+          @"PropertyTypeCellIdentifier";
+        OMBMapFilterPropertyTypeCell *cell = 
+          [tableView dequeueReusableCellWithIdentifier: 
+            PropertyTypeCellIdentifier];
+        if (!cell)
+          cell = [[OMBMapFilterPropertyTypeCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier: 
+              PropertyTypeCellIdentifier];
         return cell;
       }
     }
@@ -503,7 +554,7 @@ viewForHeaderInSection: (NSInteger) section
 {
   if (tableView == neighborhoodTableView) {
     AMBlurView *blur = [[AMBlurView alloc] init];
-    blur.blurTintColor = [UIColor grayMedium];
+    blur.blurTintColor = [UIColor grayLight];
     blur.frame = CGRectMake(0.0f, 0.0f, 
       tableView.frame.size.width, kStandardHeight);
     UILabel *label = [UILabel new];
@@ -512,7 +563,7 @@ viewForHeaderInSection: (NSInteger) section
     label.text = [[[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: 
       section] capitalizedString];
     label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [UIColor whiteColor];
+    label.textColor = [UIColor grayMedium];
     [blur addSubview: label];
     return blur;
   }
@@ -542,12 +593,18 @@ viewForHeaderInSection: (NSInteger) section
     OMBMapFilterBedroomsCell *bedroomsCell = (OMBMapFilterBedroomsCell *)
       [self.table cellForRowAtIndexPath: 
         [NSIndexPath indexPathForRow: 1 inSection: 2]];
-    // [bedroomsCell deselectAllButtons];
+    [bedroomsCell resetButtons];
     // Clear the bathrooms
     OMBMapFilterBathroomsCell *bathroomsCell = (OMBMapFilterBathroomsCell *)
       [self.table cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 1 inSection: 3]];
-    // [bathroomsCell deselectAllButtons];
+    [bathroomsCell resetButtons];
+    // Property type
+    OMBMapFilterPropertyTypeCell *propertyTypeCell = 
+      (OMBMapFilterPropertyTypeCell *)
+        [self.table cellForRowAtIndexPath: 
+          [NSIndexPath indexPathForRow: 1 inSection: 4]];
+    [propertyTypeCell resetButtons];
   }];
 }
 
@@ -654,6 +711,19 @@ viewForHeaderInSection: (NSInteger) section
 {
   [self.navigationItem setRightBarButtonItem: searchBarButtonItem
     animated: YES];
+}
+
+- (void) userCurrentLocation
+{
+  // OMBNeighborhood *currentLocation = [[OMBNeighborhood alloc] init];
+  // currentLocation.coordinate = CLLocationCoordinate2DMake(0, 0);
+  // currentLocation.name       = @"current location";
+  // Neighborhood
+  OMBMapFilterNeighborhoodCell *neighborhoodCell = 
+    (OMBMapFilterNeighborhoodCell *) [self.table cellForRowAtIndexPath: 
+      [NSIndexPath indexPathForRow: 1 inSection: 0]];
+  neighborhoodCell.neighborhoodTextField.text = @"Current Location";
+  [self hideNeighborhoodTableViewContainer];
 }
 
 @end

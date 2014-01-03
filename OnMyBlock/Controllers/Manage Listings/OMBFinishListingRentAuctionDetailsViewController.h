@@ -20,9 +20,8 @@
   UILabel *fixedRentalPriceLabel;
   TextFieldPadding *fixedRentalPriceTextField;
   UIView *fixedRentalPriceView;
-  BOOL isEditingDuration;
-  BOOL isEditingStartDate;
   UISegmentedControl *segmentedControl;
+  NSIndexPath *selectedIndexPath;
   BOOL showMore;
 }
 
