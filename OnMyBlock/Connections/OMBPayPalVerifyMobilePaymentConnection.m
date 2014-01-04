@@ -17,11 +17,15 @@
   if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: 
-    @"%@/payouts/paypal/verify_mobile_payment", OnMyBlockAPIURL];
+    @"%@/payouts/paypal/charge", OnMyBlockAPIURL];
   NSURL *url = [NSURL URLWithString: string];
   NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
-  NSData *json = [NSJSONSerialization dataWithJSONObject: 
-    @{ @"confirmation": dictionary } options: 0 error: nil];
+  NSDictionary *params = @{
+    @"access_token": [OMBUser currentUser].accessToken,
+    @"confirmation": dictionary
+  };
+  NSData *json = [NSJSONSerialization dataWithJSONObject: params
+    options: 0 error: nil];
   [req addValue: @"application/json" forHTTPHeaderField: @"Content-Type"];
   [req setHTTPBody: json];
   [req setHTTPMethod: @"POST"];
@@ -39,8 +43,9 @@
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
   if ([[json objectForKey: @"success"] intValue]) {
-    NSLog(@"%@", json);
+    NSLog(@"SUCCESS");
   }
+  NSLog(@"%@", json);
   [super connectionDidFinishLoading: connection];
 }
 

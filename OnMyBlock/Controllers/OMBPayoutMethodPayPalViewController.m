@@ -99,9 +99,7 @@
     // this payment would not be processable. 
     // You would want to handle that here.
   }
-  // Start out working with the test environment! 
-  // When you are ready, remove this line to switch to live.
-  // [PayPalPaymentViewController setEnvironment: PayPalEnvironmentSandbox];
+  
   // Provide a payerId that uniquely identifies a user 
   // within the scope of your system, such as an email address or user ID.
   // NSString *aPayerId = [NSString stringWithFormat: @"user_%i",
@@ -112,15 +110,27 @@
   // and a PayPalPaymentDelegate to handle the results.
   NSString *cliendId = 
     @"AYF4PhAsNUDPRLYpTmTqtoo04_n7rmum1Q1fgpmApKJOF_eTrtxajPEFDK4Y";
+  NSString *receiverEmail = @"tommydangerouss@gmail.com";
+  BOOL testing = NO;
+  if (testing) {
+    cliendId = @"AetqKxBgNs-WXu7L7mhq_kpihxGdOUSo0mgLppw0wvTw_pCdP6n3ANLYt4X6";
+    receiverEmail = @"tommydangerouss-facilitator@gmail.com";
+    // Start out working with the test environment! 
+    // When you are ready, remove this line to switch to live.
+    [PayPalPaymentViewController setEnvironment: PayPalEnvironmentSandbox];
+  }
+
   PayPalPaymentViewController *paymentViewController = 
     [[PayPalPaymentViewController alloc] initWithClientId: cliendId 
-      receiverEmail: @"tommydangerouss@gmail.com"
+      receiverEmail: receiverEmail
         payerId: aPayerId payment: payment delegate: self];
   // paymentViewController.defaultUserEmail = [OMBUser currentUser].email;
   // paymentViewController.defaultUserPhoneCountryCode = @"1";
   // paymentViewController.defaultUserPhoneNumber = [OMBUser currentUser].phone;
+
   // Will only support paying with PayPal, not with credit cards
-  // paymentViewController.hideCreditCardButton = YES;
+  paymentViewController.hideCreditCardButton = YES;
+
   // This improves user experience
   // by preconnecting to PayPal to prepare the device for
   // processing payments
@@ -136,7 +146,7 @@
 {
  [[[OMBPayPalVerifyMobilePaymentConnection alloc] initWithPaymentConfirmation: 
     completedPayment.confirmation] start]; 
-  NSLog(@"VERIFY COMPLETED PAYMENT: %@", completedPayment);
+  NSLog(@"VERIFY COMPLETED PAYMENT: %@", completedPayment.confirmation);
 }
 
 @end
