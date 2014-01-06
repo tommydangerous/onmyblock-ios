@@ -47,6 +47,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 #pragma mark - Class Methods
 
 + (OMBUser *) currentUser;
++ (void) fakeLogin;
 + (OMBUser *) fakeUser;
 
 #pragma mark - Instance Methods

@@ -90,6 +90,22 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   return user;
 }
 
++ (void) fakeLogin
+{
+  [OMBUser currentUser].about = @"About me.";
+  [OMBUser currentUser].accessToken = @"xyz";
+  [OMBUser currentUser].email = @"fake_user@gmail.com";
+  [OMBUser currentUser].firstName = @"fake";
+  [OMBUser currentUser].lastName = @"user";
+  [OMBUser currentUser].phone = @"4088581234";
+  [OMBUser currentUser].school = @"university of california - berkeley";
+  [OMBUser currentUser].image = [UIImage imageNamed: @"edward_d.jpg"];
+  [OMBUser currentUser].uid = 7777;
+  // Post notification
+  [[NSNotificationCenter defaultCenter] postNotificationName: 
+    OMBUserLoggedInNotification object: nil];
+}
+
 + (OMBUser *) fakeUser
 {
   static OMBUser *user = nil;

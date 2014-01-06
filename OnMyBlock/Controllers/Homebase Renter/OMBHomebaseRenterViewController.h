@@ -12,6 +12,7 @@
 <UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
 {
   UIButton *activityButton;
+  UIButton *addRemoveRoommatesButton;
   UIView *backView;
   CGFloat backViewOffsetY;
   UIView *buttonsView;

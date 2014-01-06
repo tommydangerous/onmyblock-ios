@@ -268,7 +268,7 @@
 - (void) setupForSeller
 {
   [self removeCurrentButtonsFromMenuScroll];
-  [_headerButton setTitle: @"Subletter" forState: UIControlStateNormal];
+  [_headerButton setTitle: @"Landlord" forState: UIControlStateNormal];
   _currentButtons  = _sellerButtons;
   [self setupButtons];
 }
