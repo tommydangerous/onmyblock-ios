@@ -12,7 +12,6 @@
 #import "OMBLegalAnswer.h"
 #import "OMBLegalQuestion.h"
 #import "OMBLegalViewController.h"
-#import "UIColor+Extensions.h"
 
 NSString *const LegalAnswerTextViewPlaceholder = @"Please explain...";
 

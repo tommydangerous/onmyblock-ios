@@ -6,11 +6,11 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "OMBTableViewCell.h"
 
 @class OMBCosigner;
 
-@interface OMBCosignerCell : UITableViewCell
+@interface OMBCosignerCell : OMBTableViewCell
 {
   UILabel *emailLabel;
   UILabel *nameLabel;

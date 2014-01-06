@@ -32,6 +32,7 @@
 + (UIColor *) green;
 + (UIColor *) greenAlpha: (float) value;
 + (UIColor *) greenDark;
++ (UIColor *) linkedinBlue;
 + (UIColor *) paypalBlue;
 + (UIColor *) paypalBlueLight;
 + (UIColor *) pink;

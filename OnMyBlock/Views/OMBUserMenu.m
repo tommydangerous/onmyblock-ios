@@ -70,6 +70,8 @@
 
   // Homebase
   _renterHomebaseButton = [[UIButton alloc] init];
+  [_renterHomebaseButton addTarget: self action: @selector(showHomebaseRenter)
+    forControlEvents: UIControlEventTouchUpInside];
   [_renterHomebaseButton setTitle: @"Homebase" forState: UIControlStateNormal];
   UIImageView *homebaseImageView = [[UIImageView alloc] init];
   homebaseImageView.frame = discoverImageView.frame;
@@ -124,6 +126,8 @@
 
   // Homebase
   _sellerHomebaseButton = [[UIButton alloc] init];
+  [_sellerHomebaseButton addTarget: self action: @selector(showHomebaseLandlord)
+    forControlEvents: UIControlEventTouchUpInside];
   [_sellerHomebaseButton setTitle: @"Homebase" 
     forState: UIControlStateNormal];
   UIImageView *sellerHomebaseImageView = [[UIImageView alloc] init];
@@ -134,6 +138,7 @@
     size: sellerHomebaseImageView.frame.size];
   [_sellerHomebaseButton addSubview: sellerHomebaseImageView];
   [_sellerButtons addObject: _sellerHomebaseButton];
+
   // Manage listing
   _manageListingsButton = [[UIButton alloc] init];
   [_manageListingsButton addTarget: self action: @selector(showManageListings)
@@ -281,6 +286,16 @@
 - (void) showFavorites
 {
   [[self container] showFavorites];
+}
+
+- (void) showHomebaseLandlord
+{
+  [[self container] showHomebaseLandlord];
+}
+
+- (void) showHomebaseRenter
+{
+  [[self container] showHomebaseRenter];
 }
 
 - (void) showInbox

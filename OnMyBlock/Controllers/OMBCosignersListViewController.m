@@ -118,7 +118,7 @@ numberOfRowsInSection: (NSInteger) section
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {  
-  return 20.0f + (22.0f * 3.0f) + 20.0f;
+  return [OMBCosignerCell heightForCell];
 }
 
 #pragma mark - Methods

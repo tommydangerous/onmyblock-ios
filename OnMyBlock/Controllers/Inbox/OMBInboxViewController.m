@@ -37,11 +37,9 @@
 {
   [super loadView];
 
-  [self setMenuBarButtonItem];
-
   [self setupForTable];
 
-  [self.table removeFromSuperview];
+  // [self.table removeFromSuperview];
 
   // self.navigationItem.rightBarButtonItem = 
   //   [[UIBarButtonItem alloc] initWithBarButtonSystemItem: 
@@ -62,7 +60,7 @@
   [self.view addSubview: self.button];
 }
 
-- (void) viewDidAppear: (BOOL) animated
+- (void) viewDidAppear1: (BOOL) animated
 {
   [super viewDidAppear: animated];
   // [self tableView: self.table didSelectRowAtIndexPath: 
@@ -104,6 +102,12 @@
   [super viewWillAppear: animated];
 
   [[OMBMessageStore sharedStore] createFakeMessages];
+
+  // Homebase landlord presents this controller
+  // We only want to show the menu icon on the inbox from the side menu
+  if ([self.navigationController.viewControllers count] == 1) {
+    [self setMenuBarButtonItem];
+  }
 }
 
 - (void) viewDidLoad

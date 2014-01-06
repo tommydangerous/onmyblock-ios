@@ -124,6 +124,7 @@ numberOfRowsInSection: (NSInteger) section
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  return [OMBPreviousRentalCell heightForCell];
   float height = 20.0f + (22.0f * 3) + 20.0f;
   OMBPreviousRental *previousRental = 
     [user.renterApplication.previousRentals objectAtIndex: indexPath.row];

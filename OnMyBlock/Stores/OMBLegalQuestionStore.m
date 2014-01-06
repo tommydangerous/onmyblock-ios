@@ -31,8 +31,9 @@
 + (OMBLegalQuestionStore *) sharedStore
 {
   static OMBLegalQuestionStore *store = nil;
-  if (!store)
+  if (!store) {
     store = [[OMBLegalQuestionStore alloc] init];
+  }
   return store;
 }
 

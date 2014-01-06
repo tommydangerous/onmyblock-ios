@@ -17,6 +17,8 @@
 #import "OMBFavoritesListViewController.h"
 #import "OMBFinishListingViewController.h"
 #import "OMBGetStartedView.h"
+#import "OMBHomebaseLandlordViewController.h"
+#import "OMBHomebaseRenterViewController.h"
 #import "OMBInboxViewController.h"
 #import "OMBIntroStillImagesViewController.h"
 #import "OMBLoginViewController.h"
@@ -115,7 +117,10 @@
   _favoritesNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController:
       [[OMBFavoritesListViewController alloc] init]];
-  // Home
+  // Homebase
+  _homebaseRenterNavigationController = 
+    [[OMBNavigationController alloc] initWithRootViewController:
+      [[OMBHomebaseRenterViewController alloc] init]];
   // Inbox
   _inboxNavigationController =
     [[OMBNavigationController alloc] initWithRootViewController:
@@ -123,7 +128,10 @@
 
   // Seller
   // Create Listing
-  // Home
+  // Homebase
+  _homebaseLandlordNavigationController =
+    [[OMBNavigationController alloc] initWithRootViewController:
+      [[OMBHomebaseLandlordViewController alloc] init]];
   // Manage Listings
   _manageListingsNavigationController =
     [[OMBNavigationController alloc] initWithRootViewController:
@@ -835,6 +843,18 @@ willDecelerate: (BOOL) decelerate
   [_manageListingsNavigationController pushViewController:
     [[OMBFinishListingViewController alloc] initWithResidence: nil] 
       animated: YES];
+}
+
+- (void) showHomebaseLandlord
+{
+  [self hideMenuWithFactor: 1.0f];
+  [self presentDetailViewController: _homebaseLandlordNavigationController];
+}
+
+- (void) showHomebaseRenter
+{
+  [self hideMenuWithFactor: 1.0f];
+  [self presentDetailViewController: _homebaseRenterNavigationController];
 }
 
 - (void) showInbox

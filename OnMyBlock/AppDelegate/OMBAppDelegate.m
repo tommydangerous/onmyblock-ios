@@ -41,16 +41,13 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   self.window.rootViewController = _container;
   [self.window makeKeyAndVisible];
 
-  _venmoClient = [VenmoClient clientWithAppId: @"1522" 
-    secret: @"gxjvjYcXZDWh3KGSx4m6HTSkmZ8zBHqf"];
-
   // Facebook
   if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded)
     // If current session has a valid Facebook token
     [self openSession];
 
   NSLog(@"APP DELEGATE SHOW INTRO!");
-  [_container showInbox];
+  [_container showHomebaseRenter];
   // [_container showIntroAnimatedDissolve: NO];
   // if ([[OMBUser currentUser] loggedIn])
   //   [self hideIntro];

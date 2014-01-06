@@ -170,6 +170,19 @@ reuseIdentifier: (NSString *)reuseIdentifier
   }
 }
 
+- (void) loadFakeData
+{
+  OMBEmployment *e = [[OMBEmployment alloc] init];
+  e.companyName = @"OnMyBlock";
+  e.companyWebsite = @"www.onmyblock.com";
+  e.endDate = [[NSDate date] timeIntervalSince1970];
+  e.income = 2000.0;
+  e.startDate = [[NSDate date] timeIntervalSince1970];
+  e.title = @"Campus Founder";
+  e.uid = 9999;
+  [self loadData: e];
+}
+
 - (void) showCompanyWebsite
 {
   if (_employment) {

@@ -109,16 +109,11 @@
   // the PayPalPayment from the previous step, 
   // and a PayPalPaymentDelegate to handle the results.
   NSString *cliendId = 
-    @"AYF4PhAsNUDPRLYpTmTqtoo04_n7rmum1Q1fgpmApKJOF_eTrtxajPEFDK4Y";
-  NSString *receiverEmail = @"tommydangerouss@gmail.com";
-  BOOL testing = NO;
-  if (testing) {
-    cliendId = @"AetqKxBgNs-WXu7L7mhq_kpihxGdOUSo0mgLppw0wvTw_pCdP6n3ANLYt4X6";
-    receiverEmail = @"tommydangerouss-facilitator@gmail.com";
-    // Start out working with the test environment! 
-    // When you are ready, remove this line to switch to live.
-    [PayPalPaymentViewController setEnvironment: PayPalEnvironmentSandbox];
-  }
+    @"AetqKxBgNs-WXu7L7mhq_kpihxGdOUSo0mgLppw0wvTw_pCdP6n3ANLYt4X6";
+  NSString *receiverEmail = @"tommydangerouss-facilitator@gmail.com";
+  // Start out working with the test environment! 
+  // When you are ready, remove this line to switch to live.
+  [PayPalPaymentViewController setEnvironment: PayPalEnvironmentSandbox];
 
   PayPalPaymentViewController *paymentViewController = 
     [[PayPalPaymentViewController alloc] initWithClientId: cliendId 

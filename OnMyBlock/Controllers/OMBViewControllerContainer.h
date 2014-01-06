@@ -96,7 +96,9 @@
 // Favorites
 @property (nonatomic, strong) 
   OMBNavigationController *favoritesNavigationController;
-// Home
+// Homebase
+  @property (nonatomic, strong) OMBNavigationController
+  *homebaseRenterNavigationController;
 // Inbox
 @property (nonatomic, strong) OMBNavigationController 
   *inboxNavigationController;
@@ -104,7 +106,9 @@
 // Seller
 
 // Create Listing
-// Home
+// Homebase
+@property (nonatomic, strong) OMBNavigationController
+  *homebaseLandlordNavigationController;
 // Manage Listings
 @property (nonatomic, strong) OMBNavigationController 
   *manageListingsNavigationController;
@@ -119,6 +123,8 @@
 - (void) showDiscover;
 - (void) showFavorites;
 - (void) showFinishListing;
+- (void) showHomebaseLandlord;
+- (void) showHomebaseRenter;
 - (void) showInbox;
 - (void) showIntroAnimatedDissolve: (BOOL) animated;
 - (void) showIntroAnimatedVertical: (BOOL) animated;

@@ -6,18 +6,20 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "OMBTableViewCell.h"
 
 @class OMBPreviousRental;
 
-@interface OMBPreviousRentalCell : UITableViewCell
+@interface OMBPreviousRentalCell : OMBTableViewCell
 {
   UILabel *addressLabel;
   UILabel *addressLabel2;
   UILabel *landlordEmailLabel;
+  UIImageView *landlordImageView;
   UILabel *landlordNameLabel;
   UILabel *landlordPhoneLabel;
   UILabel *rentLeaseMonthsLabel;
+  UIImageView *residenceImageView;
 }
 
 @property (nonatomic, strong) OMBPreviousRental *previousRental;
@@ -27,5 +29,7 @@
 #pragma mark - Instance Methods
 
 - (void) loadData: (OMBPreviousRental *) object;
+- (void) loadFakeData1;
+- (void) loadFakeData2;
 
 @end

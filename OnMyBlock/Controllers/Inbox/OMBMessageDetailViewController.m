@@ -145,6 +145,15 @@ static NSString *CellIdentifier = @"CellIdentifier";
     forCellWithReuseIdentifier: CellIdentifier];
 }
 
+- (void) viewDidAppear: (BOOL) animated
+{
+  [super viewDidAppear: animated];
+
+  // [_collection scrollToItemAtIndexPath: 
+  //   [NSIndexPath indexPathForRow: [messages count] - 10 inSection: 0] 
+  //     atScrollPosition: UICollectionViewScrollPositionTop animated: NO];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol UICollectionViewDataSource

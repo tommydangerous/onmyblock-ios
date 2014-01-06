@@ -41,7 +41,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   emailLabel.frame = CGRectMake(nameLabel.frame.origin.x,
     nameLabel.frame.origin.y + nameLabel.frame.size.height,
       nameLabel.frame.size.width, nameLabel.frame.size.height);
-  emailLabel.textColor = nameLabel.textColor;
+  emailLabel.textColor = [UIColor blue];
   [self.contentView addSubview: emailLabel];
 
   phoneLabel = [[UILabel alloc] init];
@@ -49,7 +49,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   phoneLabel.frame = CGRectMake(nameLabel.frame.origin.x,
     emailLabel.frame.origin.y + emailLabel.frame.size.height,
       nameLabel.frame.size.width, nameLabel.frame.size.height);
-  phoneLabel.textColor = nameLabel.textColor;
+  phoneLabel.textColor = [UIColor blue];
   [self.contentView addSubview: phoneLabel];
 
   return self;
@@ -66,6 +66,13 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 #pragma mark - Methods
 
+#pragma mark - Class Methods
+
++ (CGFloat) heightForCell
+{
+  return 20.0f + (22.0f * 3.0f) + 20.0f;
+}
+
 #pragma mark - Instance Methods
 
 - (void) loadData: (OMBCosigner *) object
@@ -75,10 +82,14 @@ reuseIdentifier: (NSString *) reuseIdentifier
     [_cosigner.firstName capitalizedString], 
       [_cosigner.lastName capitalizedString]];
   emailLabel.text = [_cosigner.email lowercaseString];
-  if ([[_cosigner.phone phoneNumberString] length] > 0)
+  if ([[_cosigner.phone phoneNumberString] length] > 0) {
     phoneLabel.text = [_cosigner.phone phoneNumberString];
-  else
-    phoneLabel.text = @"no phone number";
+    phoneLabel.textColor = [UIColor blue];
+  }
+  else {
+    phoneLabel.text      = @"no phone number";
+    phoneLabel.textColor = [UIColor grayMedium];
+  }
 }
 
 @end

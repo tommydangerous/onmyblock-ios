@@ -26,5 +26,6 @@
 #pragma mark - Instance Methods
 
 - (void) loadData: (OMBEmployment *) object;
+- (void) loadFakeData;
 
 @end
