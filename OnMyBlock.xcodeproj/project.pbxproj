@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6758E2E2187B966D004031D7 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB026BC11822B23B00E72F53 /* FacebookSDK.framework */; };
+		6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */; };
 		AB01ED341857D67F00333390 /* OMBLegalQuestionListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED331857D67F00333390 /* OMBLegalQuestionListConnection.m */; };
 		AB01ED371857D96800333390 /* OMBLegalQuestionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED361857D96800333390 /* OMBLegalQuestionStore.m */; };
 		AB01ED3A1857DB5300333390 /* OMBLegalQuestion.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED391857DB5300333390 /* OMBLegalQuestion.m */; };
@@ -45,7 +47,6 @@
 		AB0269D61822A12600E72F53 /* AMBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0269D51822A12600E72F53 /* AMBlurView.m */; };
 		AB0269D91822A97A00E72F53 /* logout_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = AB0269D71822A97A00E72F53 /* logout_icon.png */; };
 		AB0269DA1822A97A00E72F53 /* logout_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB0269D81822A97A00E72F53 /* logout_icon@2x.png */; };
-		AB026BC21822B23B00E72F53 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB026BC11822B23B00E72F53 /* FacebookSDK.framework */; };
 		AB026BC51822B4DB00E72F53 /* facebook_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = AB026BC31822B4DB00E72F53 /* facebook_icon.png */; };
 		AB026BC61822B4DB00E72F53 /* facebook_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB026BC41822B4DB00E72F53 /* facebook_icon@2x.png */; };
 		AB026BC91822BE1200E72F53 /* OMBUserFacebookAuthenticationConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB026BC81822BE1200E72F53 /* OMBUserFacebookAuthenticationConnection.m */; };
@@ -245,7 +246,6 @@
 		ABA5B4291857B20900F825E1 /* OMBEmploymentCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA5B4281857B20900F825E1 /* OMBEmploymentCreateConnection.m */; };
 		ABA5B42C1857B9E300F825E1 /* OMBEmploymentListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA5B42B1857B9E300F825E1 /* OMBEmploymentListConnection.m */; };
 		ABABEBF518625DFA008B6768 /* OMBAuthenticationVenmoConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABABEBF418625DFA008B6768 /* OMBAuthenticationVenmoConnection.m */; };
-		ABABEC321862DED5008B6768 /* VenmoAppSwitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */; };
 		ABABEC351863C239008B6768 /* ILTranslucentView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABABEC341863C239008B6768 /* ILTranslucentView.m */; };
 		ABABEC381863DCB2008B6768 /* inbox_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = ABABEC361863DCB2008B6768 /* inbox_icon.png */; };
 		ABABEC391863DCB2008B6768 /* inbox_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABABEC371863DCB2008B6768 /* inbox_icon@2x.png */; };
@@ -1115,6 +1115,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */,
+				6758E2E2187B966D004031D7 /* FacebookSDK.framework in Frameworks */,
 				AB01ED6D185966B500333390 /* AVFoundation.framework in Frameworks */,
 				ABB022D3182490D700F98544 /* CoreData.framework in Frameworks */,
 				AB802EA018109E5200E04D11 /* CoreGraphics.framework in Frameworks */,
@@ -1122,7 +1124,6 @@
 				ABB3C58918117C2200DD91C9 /* CoreLocation.framework in Frameworks */,
 				ABB022C518248D9100F98544 /* CoreTelephony.framework in Frameworks */,
 				AB01ED6F185966BD00333390 /* CFNetwork.framework in Frameworks */,
-				AB026BC21822B23B00E72F53 /* FacebookSDK.framework in Frameworks */,
 				AB802E9E18109E5200E04D11 /* Foundation.framework in Frameworks */,
 				ABB022C318248D6E00F98544 /* NewRelicAgent.framework in Frameworks */,
 				ABB3C58718117C1C00DD91C9 /* MapKit.framework in Frameworks */,
@@ -1132,7 +1133,6 @@
 				AB01ED6B185966AC00333390 /* libxml2.dylib in Frameworks */,
 				ABE2817C186A187E00A5D14E /* libTestFlight.a in Frameworks */,
 				ABBB18E9182458E200211499 /* libz.dylib in Frameworks */,
-				ABABEC321862DED5008B6768 /* VenmoAppSwitch.framework in Frameworks */,
 				ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */,
 				ABB022C718248D9800F98544 /* SystemConfiguration.framework in Frameworks */,
 				AB802EA218109E5200E04D11 /* UIKit.framework in Frameworks */,
@@ -2794,17 +2794,17 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tommy Dang (ETDM478EZ7)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/tommydangerous/Dropbox/Xcode/OnMyBlock/FacebookSDK,
-					/Users/tommydangerous/Dropbox/Xcode/OnMyBlock,
+					"$(SRCROOT)/FacebookSDK",
+					"$(SRCROOT)/",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OnMyBlock/OnMyBlock-Prefix.pch";
 				INFOPLIST_FILE = "OnMyBlock/OnMyBlock-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/tommydangerous/Dropbox/Xcode/OnMyBlock/GoogleAnalytics,
-					/Users/tommydangerous/Dropbox/Xcode/OnMyBlock/PayPalMobile,
-					/Users/tommydangerous/Dropbox/Xcode/OnMyBlock/TestFlightSDK2.1.3,
+					"$(SRCROOT)/GoogleAnalytics",
+					"$(SRCROOT)/PayPalMobile",
+					"$(SRCROOT)/TestFlightSDK2.1.3",
 				);
 				OTHER_LDFLAGS = (
 					"-lc++",
@@ -2826,17 +2826,17 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: On My Block LLC (4PZFNY43X2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/tommydangerous/Dropbox/Xcode/OnMyBlock/FacebookSDK,
-					/Users/tommydangerous/Dropbox/Xcode/OnMyBlock,
+					"$(SRCROOT)/FacebookSDK",
+					"$(SRCROOT)/",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OnMyBlock/OnMyBlock-Prefix.pch";
 				INFOPLIST_FILE = "OnMyBlock/OnMyBlock-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/tommydangerous/Dropbox/Xcode/OnMyBlock/GoogleAnalytics,
-					/Users/tommydangerous/Dropbox/Xcode/OnMyBlock/PayPalMobile,
-					/Users/tommydangerous/Dropbox/Xcode/OnMyBlock/TestFlightSDK2.1.3,
+					"$(SRCROOT)/GoogleAnalytics",
+					"$(SRCROOT)/PayPalMobile",
+					"$(SRCROOT)/TestFlightSDK2.1.3",
 				);
 				OTHER_LDFLAGS = (
 					"-lc++",
