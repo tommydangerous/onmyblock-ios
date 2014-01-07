@@ -8,22 +8,16 @@
 
 #import <FacebookSDK/FacebookSDK.h>
 #import <UIKit/UIKit.h>
+#import <VenmoAppSwitch/Venmo.h>
 
 extern NSString *const FBSessionStateChangedNotification;
 
-@class MFSideMenuContainerViewController;
-@class OMBIntroViewController;
-@class OMBMenuViewController;
-@class OMBNavigationController;
-@class OMBTabBarController;
+@class OMBViewControllerContainer;
 
 @interface OMBAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic, strong) OMBNavigationController *loginViewController;
-@property (nonatomic, strong) MFSideMenuContainerViewController *menuContainer;
-@property (nonatomic, strong) OMBIntroViewController *introViewController;
-@property (nonatomic, strong) OMBMenuViewController *rightMenu;
-@property (nonatomic, strong) OMBTabBarController *tabBarController;
+@property (nonatomic, strong) OMBViewControllerContainer *container;
+@property (nonatomic, strong) VenmoClient *venmoClient;
 @property (nonatomic, strong) UIWindow *window;
 
 #pragma mark - Methods
@@ -35,3 +29,11 @@ extern NSString *const FBSessionStateChangedNotification;
 - (void) showSignUp;
 
 @end
+
+// UIFont size - line height
+// 13 - 17
+// 14 - 18
+// 15 - 20
+// 18 - 23
+// 20 - 26
+// 27 - 33

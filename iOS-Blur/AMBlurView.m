@@ -11,11 +11,13 @@
 
 @interface AMBlurView ()
 
-@property (nonatomic, strong) UIToolbar *toolbar;
+// @property (nonatomic, strong) UIToolbar *toolbar;
 
 @end
 
 @implementation AMBlurView
+
+@synthesize toolbar;
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];

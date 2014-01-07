@@ -24,7 +24,7 @@ extern NSString *const OnMyBlockAPIURL;
 @property (nonatomic, copy) void (^completionBlock) (NSError *error);
 @property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic, weak) id delegate;
-@property (nonatomic, strong) NSURLRequest *request;
+@property (nonatomic, strong) NSMutableURLRequest *request;
 
 #pragma mark - Initializer
 

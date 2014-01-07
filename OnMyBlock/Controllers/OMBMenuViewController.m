@@ -31,8 +31,8 @@
   self.screenName = @"Menu View Controller";
 
   buttons = [NSMutableArray array];
-  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  tabBarController = appDelegate.tabBarController;
+  // OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+  // tabBarController = appDelegate.tabBarController;
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(showLoggedInButtons)
@@ -80,6 +80,12 @@
   UIColor *fadedBlack = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.3];
   UIFont *fontLight18 = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
 
+  scroll                              = [[UIScrollView alloc] init];
+  scroll.alwaysBounceVertical         = YES;
+  scroll.frame                        = self.view.frame;
+  scroll.showsVerticalScrollIndicator = NO;
+  [self.view addSubview: scroll];
+
   // Search button
   searchButton = [[UIButton alloc] init];
   searchButton.contentEdgeInsets = UIEdgeInsetsMake(0, (20 + 24 + 20), 0, 20);
@@ -93,7 +99,7 @@
   [searchButton setBackgroundImage: [UIImage imageWithColor: fadedBlack] 
     forState: UIControlStateHighlighted];
   [buttons addObject: searchButton];
-  [self.view addSubview: searchButton];
+  [scroll addSubview: searchButton];
   UIImageView *searchImageView = [[UIImageView alloc] init];
   searchImageView.frame = CGRectMake(20, 
     ((searchButton.frame.size.height - 24) / 2.0), 24, 24);
@@ -117,7 +123,7 @@
   [signUpButton setBackgroundImage: [UIImage imageWithColor: fadedBlack] 
     forState: UIControlStateHighlighted];
   [buttons addObject: signUpButton];
-  [self.view addSubview: signUpButton];
+  [scroll addSubview: signUpButton];
   UIImageView *signUpImageView = [[UIImageView alloc] init];
   signUpImageView.frame = searchImageView.frame;
   UIImage *signUpImage = [UIImage imageNamed: @"sign_up_icon.png"];
@@ -141,7 +147,7 @@
   [favoritesButton setBackgroundImage: [UIImage imageWithColor: fadedBlack] 
     forState: UIControlStateHighlighted];
   [buttons addObject: favoritesButton];
-  [self.view addSubview: favoritesButton];
+  [scroll addSubview: favoritesButton];
   UIImageView *favoritesImageView = [[UIImageView alloc] init];
   favoritesImageView.frame = searchImageView.frame;
   UIImage *favoritesImage = [UIImage imageNamed: @"favorite.png"];
@@ -164,7 +170,7 @@
   [loginButton setBackgroundImage: [UIImage imageWithColor: fadedBlack] 
     forState: UIControlStateHighlighted];
   [buttons addObject: loginButton];
-  [self.view addSubview: loginButton];
+  [scroll addSubview: loginButton];
   UIImageView *loginImageView = [[UIImageView alloc] init];
   loginImageView.frame = searchImageView.frame;
   UIImage *loginImage = [UIImage imageNamed: @"login_icon.png"];
@@ -188,7 +194,7 @@
   [logoutButton setBackgroundImage: [UIImage imageWithColor: fadedBlack] 
     forState: UIControlStateHighlighted];
   [buttons addObject: logoutButton];
-  [self.view addSubview: logoutButton];
+  [scroll addSubview: logoutButton];
   UIImageView *logoutImageView = [[UIImageView alloc] init];
   logoutImageView.frame = searchImageView.frame;
   UIImage *logoutImage = [UIImage imageNamed: @"logout_icon.png"];
@@ -262,8 +268,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     @"Logout" message: @"Are you sure?" delegate: self
       cancelButtonTitle: @"No" otherButtonTitles: @"Yes", nil];
   [alertView show];
-  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  [appDelegate.menuContainer toggleRightSideMenuCompletion: ^{}];
+  // OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+  // [appDelegate.menuContainer toggleRightSideMenuCompletion: ^{}];
 }
 
 - (void) showSearch
@@ -292,10 +298,10 @@ fromButton: (UIButton *) button;
   tabBarController.viewControllers = 
     @[tabBarController.selectedViewController, nav];
   tabBarController.selectedViewController = nav;
-  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  [appDelegate.menuContainer setMenuState: MFSideMenuStateClosed completion: ^{
-    [self buttonSelected: button];
-  }];
+  // OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+  // [appDelegate.menuContainer setMenuState: MFSideMenuStateClosed completion: ^{
+  //   [self buttonSelected: button];
+  // }];
 }
 
 - (void) unselectAllButtons

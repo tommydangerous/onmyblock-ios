@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class OMBPaddleView;
+@class OMBStopwatchView;
+
 @interface OMBWelcomeView : UIView
+
+@property (nonatomic, strong) OMBPaddleView *paddleView;
+@property (nonatomic, strong) OMBStopwatchView *stopwatchView;
 
 @end

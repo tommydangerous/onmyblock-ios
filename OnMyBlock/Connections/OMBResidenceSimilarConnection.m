@@ -48,8 +48,8 @@
       [residence readFromResidenceDictionary: dictionary];
       [[OMBResidenceStore sharedStore] addResidence: residence];
     }
-    [(OMBResidenceDetailViewController *) self.delegate addSimilarResidence:
-      residence];
+    // [(OMBResidenceDetailViewController *) self.delegate addSimilarResidence:
+    //   residence];
   }
   [super connectionDidFinishLoading: connection];
 }

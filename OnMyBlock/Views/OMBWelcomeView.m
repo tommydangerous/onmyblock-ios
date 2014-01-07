@@ -8,75 +8,66 @@
 
 #import "OMBWelcomeView.h"
 
+#import "OMBPaddleView.h"
+#import "OMBStopwatchView.h"
 #import "UIColor+Extensions.h"
 
+#define DEGREES_TO_RADIANS(x) (M_PI * x / 180.0)
+
 @implementation OMBWelcomeView
+
+@synthesize stopwatchView = _stopwatchView;
+
+#pragma mark - Initializer
 
 - (id) init
 {
   if (!(self = [super init])) return nil;
 
   CGRect screen = [[UIScreen mainScreen] bounds];
+
   self.frame = screen;
 
-  // About 60 on 3.5 inch
-  float marginTop = screen.size.height * 0.125;
-  // About 10 on 3.5
-  float paddingTop = screen.size.height * 0.02083;
+  float d1 = screen.size.width * 0.6;
+  float d2 = screen.size.width * 0.5;
 
-  UILabel *welcomeLabel = [[UILabel alloc] init];
-  welcomeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 27];
-  welcomeLabel.frame = CGRectMake(0, marginTop, screen.size.width, 36);
-  welcomeLabel.text = @"Welcome to";
-  welcomeLabel.textAlignment = NSTextAlignmentCenter;
-  welcomeLabel.textColor = [UIColor grayDark];
-  [self addSubview: welcomeLabel];
+  _stopwatchView = [[OMBStopwatchView alloc] initWithFrame:
+    CGRectMake(0, 0, d1, d1)];
+  _stopwatchView.frame = CGRectMake(0, 
+    ((screen.size.height - _stopwatchView.frame.size.height) * 0.25),
+      _stopwatchView.frame.size.width, _stopwatchView.frame.size.height);
 
-  UILabel *onmyblock = [[UILabel alloc] init];
-  onmyblock.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 36];
-  onmyblock.frame = CGRectMake(welcomeLabel.frame.origin.x, 
-    (welcomeLabel.frame.origin.y + welcomeLabel.frame.size.height), 
-      welcomeLabel.frame.size.width, 54);
-  NSMutableAttributedString *onmyString = 
-    [[NSMutableAttributedString alloc] initWithString: @"OnMy" attributes: @{
-      NSForegroundColorAttributeName: [UIColor grayDark]
-    }];
-  NSAttributedString *blockString = [[NSAttributedString alloc] initWithString: 
-    @"Block" attributes: @{
-      NSForegroundColorAttributeName: [UIColor blue]
-    }];
-  [onmyString appendAttributedString: blockString];
-  onmyblock.attributedText = onmyString;
-  onmyblock.textAlignment = welcomeLabel.textAlignment;
-  [self addSubview: onmyblock];
+  _paddleView = [[OMBPaddleView alloc] initWithFrame: 
+    CGRectMake(0, 0, d2, d2)];
+  _paddleView.frame = CGRectMake(
+    (screen.size.width - (_paddleView.frame.size.width + 
+    (screen.size.width * 0.00))),
+      ((screen.size.height - _paddleView.frame.size.height) * 0.25),
+        _paddleView.frame.size.width, _paddleView.frame.size.height);
+  _paddleView.paddleView.transform = 
+    CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(35));
+  [self addSubview: _paddleView];
 
-  float imageDimension = screen.size.height * 0.35;
-  UIImageView *imageView = [[UIImageView alloc] init];
-  imageView.frame = CGRectMake(((screen.size.width - imageDimension) / 2.0),
-    (onmyblock.frame.origin.y + onmyblock.frame.size.height + paddingTop), 
-      imageDimension, imageDimension);
-  imageView.image = [UIImage imageNamed: @"logo_shadow.png"];
-  [self addSubview: imageView];
+  [self addSubview: _stopwatchView];
 
-  UILabel *line1 = [[UILabel alloc] init];
-  line1.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 23];
-  line1.frame = CGRectMake(0, 
-    (imageView.frame.origin.y + imageView.frame.size.height + paddingTop), 
-      screen.size.width, 36);
-  line1.text = @"Find, share, and review";
-  line1.textAlignment = NSTextAlignmentCenter;
-  line1.textColor = [UIColor grayDark];
-  [self addSubview: line1];
+  UILabel *label1 = [[UILabel alloc] init];
+  label1.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 22];
+  label1.frame = CGRectMake(0, (screen.size.height - (33 * 4)),
+    screen.size.width, 33);
+  label1.text = @"The auction marketplace";
+  label1.textAlignment = NSTextAlignmentCenter;
+  label1.textColor = [UIColor textColor];
+  [self addSubview: label1];
 
-  UILabel *line2 = [[UILabel alloc] init];
-  line2.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 23];;
-  line2.frame = CGRectMake(line1.frame.origin.x, 
-    (line1.frame.origin.y + line1.frame.size.height ), 
-      line1.frame.size.width, line1.frame.size.height);
-  line2.text = @"the best college pads.";
-  line2.textAlignment = line1.textAlignment;
-  line2.textColor = line1.textColor;
-  [self addSubview: line2];
+  UILabel *label2 = [[UILabel alloc] init];
+  label2.font = label1.font;
+  label2.frame = CGRectMake(label1.frame.origin.x,
+    (label1.frame.origin.y + label1.frame.size.height),
+      label1.frame.size.width, label1.frame.size.height);
+  label2.text = @"for student housing";
+  label2.textAlignment = label1.textAlignment;
+  label2.textColor = label1.textColor;
+  [self addSubview: label2];
 
   return self;
 }

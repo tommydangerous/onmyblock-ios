@@ -9,11 +9,13 @@
 #import <Foundation/Foundation.h>
 
 @class OMBResidence;
+@class OMBUser;
 
 @interface OMBFavoriteResidence : NSObject
 
 @property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic, strong) OMBResidence *residence;
+@property (nonatomic, strong) OMBUser *user;
 
 #pragma mark - Methods
 

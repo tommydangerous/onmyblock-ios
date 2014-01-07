@@ -9,18 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @class OMBResidence;
+@class OMBResidencePartialView;
 
 @interface OMBResidenceCell : UITableViewCell
-{
-  UIButton *addToFavoritesButton;
-  UIImage *minusFavoriteImage;
-  UIImage *plusFavoriteImage;
-  OMBResidence *residence;
-}
 
-@property (nonatomic, strong) UILabel *bedBathLabel;
-@property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, strong) UILabel *rentLabel;
+@property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic, weak) OMBResidence *residence;
+@property (nonatomic, strong) OMBResidencePartialView *residencePartialView;
 
 #pragma mark - Methods
 

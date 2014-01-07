@@ -11,6 +11,7 @@
 #import "OMBAppDelegate.h"
 #import "OMBMenuViewController.h"
 #import "OMBUser.h"
+#import "OMBViewControllerContainer.h"
 
 @implementation OMBLoginConnection
 
@@ -46,8 +47,6 @@
     options: 0 error: nil];
   if ([[json objectForKey: @"success"] intValue]) {
     [[OMBUser currentUser] readFromDictionary: json];
-    OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    [appDelegate.rightMenu showLoggedInButtons];
     [[NSNotificationCenter defaultCenter] postNotificationName: 
       OMBUserLoggedInNotification object: nil];
   }

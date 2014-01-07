@@ -25,8 +25,13 @@
     @"email=%@&"
     @"facebook_access_token=%@&"
     @"facebook_id=%@&"
-    @"name=%@",
-    user.email, user.facebookAccessToken, user.facebookId, user.name
+    @"first_name=%@&"
+    @"last_name=%@",
+    user.email, 
+    user.facebookAccessToken, 
+    user.facebookId, 
+    user.firstName, 
+    user.lastName
   ];
   [req setHTTPBody: [params dataUsingEncoding: NSUTF8StringEncoding]];
   [req setHTTPMethod: @"POST"];

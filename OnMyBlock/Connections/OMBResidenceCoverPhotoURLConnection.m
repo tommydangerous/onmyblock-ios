@@ -10,6 +10,7 @@
 
 #import "OMBResidence.h"
 #import "OMBResidenceCoverPhotoDownloader.h"
+#import "OMBResidenceGoogleStaticImageDownloader.h"
 
 @implementation OMBResidenceCoverPhotoURLConnection
 
@@ -34,10 +35,15 @@
 {
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
-  NSString *string = [json objectForKey: @"image"];
+  NSString *originalString = [json objectForKey: @"image"];
+  NSString *string         = [json objectForKey: @"image"];
   // If the cover photo URL is not empty.png
   if ([string rangeOfString: @"empty"].location == NSNotFound) {
-    if (![string hasPrefix: @"http"]) {
+    // If URL is something like this //ombrb-prod.s3.amazonaws.com
+    if ([string hasPrefix: @"//"]) {
+      string = [@"http:" stringByAppendingString: string];
+    }
+    else if (![string hasPrefix: @"http"]) {
       NSString *baseURLString = [[OnMyBlockAPIURL componentsSeparatedByString: 
         OnMyBlockAPI] objectAtIndex: 0];
       string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
@@ -50,16 +56,24 @@
     downloader.completionBlock = ^(NSError *error) {
       [super connectionDidFinishLoading: connection];
     };
+
     int position = 1;
     if ([json objectForKey: @"position"] != [NSNull null])
       position = [[json objectForKey: @"position"] intValue];
-    downloader.position = position;
+    
+    downloader.originalString = originalString;
+    downloader.position       = position;
     [downloader startDownload];
   }
   else {
-    [residence.images setObject:
-      [UIImage imageNamed: @"placeholder_property.png"] forKey: @"1"];
-    [super connectionDidFinishLoading: connection];
+    // If the residence has no image, show the Google Static street view
+    OMBResidenceGoogleStaticImageDownloader *downloader =
+      [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:
+        residence url: [residence googleStaticStreetViewImageURL]];
+    downloader.completionBlock = ^(NSError *error) {
+      [super connectionDidFinishLoading: connection];
+    };
+    [downloader startDownload];
   }
 }
 

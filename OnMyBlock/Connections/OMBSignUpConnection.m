@@ -11,6 +11,7 @@
 #import "OMBAppDelegate.h"
 #import "OMBMenuViewController.h"
 #import "OMBUser.h"
+#import "OMBViewControllerContainer.h"
 
 @implementation OMBSignUpConnection
 
@@ -24,11 +25,13 @@
   NSURL *url = [NSURL URLWithString: string];
   NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
   NSString *params = [NSString stringWithFormat:
-    @"name=%@&"
     @"email=%@&"
+    @"first_name=%@&"
+    @"last_name=%@&"
     @"password=%@",
-    [dictionary objectForKey: @"name"],
     [dictionary objectForKey: @"email"],
+    [dictionary objectForKey: @"first_name"],
+    [dictionary objectForKey: @"last_name"],
     [dictionary objectForKey: @"password"]
   ];
   [req setHTTPBody: [params dataUsingEncoding: NSUTF8StringEncoding]];
@@ -48,8 +51,8 @@
     options: 0 error: nil];
   if ([[json objectForKey: @"success"] intValue]) {
     [[OMBUser currentUser] readFromDictionary: json];
-    OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    [appDelegate.rightMenu showLoggedInButtons];
+    [[NSNotificationCenter defaultCenter] postNotificationName: 
+      OMBUserLoggedInNotification object: nil];
   }
   [super connectionDidFinishLoading: connection];
 }

@@ -34,19 +34,24 @@
 // iOS app properties
 @property (nonatomic, strong) UIImage *coverPhotoForCell;
 @property (nonatomic, strong) NSURL *coverPhotoURL;
-@property (nonatomic, strong) NSMutableDictionary *images;
+@property (nonatomic, strong) NSMutableArray *images;
 @property (nonatomic) int lastImagePosition;
 
 #pragma mark - Methods
 
 #pragma mark Instance Methods
 
+- (void) addImage: (UIImage *) image atPosition: (int) position 
+withString: (NSString *) string;
 - (NSString *) availableOnString;
 - (UIImage *) coverPhoto;
 - (UIImage *) coverPhotoWithSize: (CGSize) size;
 - (NSString *) defaultContactMessage;
 - (NSString *) dictionaryKey;
+- (NSURL *) googleStaticMapImageURL;
+- (NSURL *) googleStaticStreetViewImageURL;
 - (NSArray *) imagesArray;
+- (UIImage *) imageAtPosition: (int) position;
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidenceDictionary: (NSDictionary *) dictionary;
 - (NSString *) rentToCurrencyString;

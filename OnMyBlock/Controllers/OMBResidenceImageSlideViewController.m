@@ -11,6 +11,7 @@
 #import "OMBImageScrollView.h"
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
+#import "OMBResidenceImage.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBResidenceImageSlideViewController
@@ -77,15 +78,17 @@
 
   CGRect screen = [[UIScreen mainScreen] bounds];
 
-  for (UIImage *image in residence.imagesArray) {
-    OMBImageScrollView* scroll = [[OMBImageScrollView alloc] init];
+  NSArray *array = [residence imagesArray];
+  for (OMBResidenceImage *residenceImage in array) {
+    OMBImageScrollView *scroll = [[OMBImageScrollView alloc] init];
     scroll.backgroundColor     = [UIColor blackColor];
     scroll.delegate            = self;
-    scroll.frame    = CGRectMake(
-      ([residence.imagesArray indexOfObject: image] * screen.size.width), 0,
+    scroll.frame = CGRectMake(
+      ([array indexOfObject: residenceImage] * screen.size.width), 0,
         screen.size.width, screen.size.height);
     [_imageSlideScrollView addSubview: scroll];
 
+    UIImage *image         = residenceImage.image;
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
     imageView.image = image;
@@ -98,7 +101,7 @@
     scroll.zoomScale = scroll.minimumZoomScale;
   }
   _imageSlideScrollView.contentSize = CGSizeMake(
-    (screen.size.width * [residence.imagesArray count]), screen.size.height);
+    (screen.size.width * [array count]), screen.size.height);
 
   // Adjust the content offset depending on the residence detail current page
   CGPoint point = CGPointMake(

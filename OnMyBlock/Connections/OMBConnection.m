@@ -13,16 +13,22 @@ NSMutableArray *sharedConnectionList  = nil;
 NSString *const OnMyBlockAPI          = @"/api-v1";
 
 // Production server
-NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
+// NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
 // Staging server
 // NSString *const OnMyBlockAPIURL = @"http://ombrb.nodelist.com/api-v1";
 
 // Localhost
-// NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1"";
+// NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
+// Josselyn
+NSString *const OnMyBlockAPIURL = @"http://10.0.1.29:3000/api-v1";
+// iPhone hotspot
+// NSString *const OnMyBlockAPIURL = @"http://172.20.10.5:3000/api-v1";
 // Evonexus
 // NSString *const OnMyBlockAPIURL = @"http://172.17.1.23:3000/api-v1";
 // Home
 // NSString *const OnMyBlockAPIURL = @"http://192.168.1.72:3000/api-v1";
+// Morgan's house
+// NSString *const OnMyBlockAPIURL = @"http://192.168.2.136:3000/api-v1";
 
 @implementation OMBConnection
 
@@ -43,7 +49,7 @@ NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
   self = [super init];
   if (self) {
     _createdAt = [[NSDate date] timeIntervalSince1970];
-    _request   = object;
+    _request   = (NSMutableURLRequest *) object;
   }
   return self;
 }
@@ -102,14 +108,14 @@ didFailWithError: (NSError *) error
   NSURL *url = [NSURL URLWithString:
     [requestString stringByAddingPercentEscapesUsingEncoding:
       NSUTF8StringEncoding]];
-  NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL: url];
-  [urlRequest setTimeoutInterval: RequestTimeoutInterval];
-  _request = urlRequest;
+  _request = [NSMutableURLRequest requestWithURL: url];
 }
 
 - (void) start
 {
   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  // Set timeout
+  [_request setTimeoutInterval: RequestTimeoutInterval];
   container = [[NSMutableData alloc] init];
   internalConnection = [[NSURLConnection alloc] initWithRequest: _request
     delegate: self startImmediately: YES];

@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.1</string>
+	<string>1.0.4</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -25,16 +25,26 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb246041178762859</string>
+				<string>fb225582504266345</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Venmo</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>venmo1522</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0.1</string>
+	<string>1.0.4</string>
 	<key>FacebookAppID</key>
-	<string>246041178762859</string>
+	<string>225582504266345</string>
 	<key>FacebookDisplayName</key>
-	<string>OnMyBlock</string>
+	<string>OnMyBlock Dev</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>

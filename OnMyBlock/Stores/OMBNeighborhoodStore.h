@@ -20,6 +20,7 @@
 
 #pragma mark - Instance Methods
 
-- (NSArray *) sortedNeighborhoods;
+- (NSArray *) cities;
+- (NSArray *) sortedNeighborhoodsForCity: (NSString *) string;
 
 @end

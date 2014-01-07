@@ -8,22 +8,16 @@
 
 #import "OMBViewController.h"
 
+@class OMBSignUpView;
 @class TextFieldPadding;
 
 @interface OMBLoginViewController : OMBViewController
-<UIScrollViewDelegate, UITextFieldDelegate>
 {
-  UIActivityIndicatorView *activityIndicatorView;
-  TextFieldPadding *emailTextField;
-  UIButton *facebookButton;
-  UIBarButtonItem *loginBarButtonItem;
-  UIButton *loginButton;
-  TextFieldPadding *nameTextField;
-  UIView *orView;
-  TextFieldPadding *passwordTextField;
-  UIScrollView *scroll;
-  UIBarButtonItem *signUpBarButtonItem;
+  UIView *closeButtonView;
 }
+
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
+@property (nonatomic, strong) OMBSignUpView *signUpView;
 
 #pragma mark - Methods
 

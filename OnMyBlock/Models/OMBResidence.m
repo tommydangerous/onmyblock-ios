@@ -9,6 +9,8 @@
 #import "OMBResidence.h"
 
 #import "NSString+Extensions.h"
+#import "OMBResidenceGoogleStaticImageDownloader.h"
+#import "OMBResidenceImage.h"
 #import "OMBUser.h"
 #import "UIImage+Resize.h"
 
@@ -47,7 +49,7 @@
 {
   self = [super init];
   if (self) {
-    _images            = [NSMutableDictionary dictionary];
+    _images            = [NSMutableArray array];
     _lastImagePosition = 1000;
   }
   return self;
@@ -56,6 +58,22 @@
 #pragma mark - Methods
 
 #pragma mark Instance Methods
+
+- (void) addImage: (UIImage *) image atPosition: (int) position 
+withString: (NSString *) string
+{
+  // Check to see if an image with string already exists
+  NSPredicate *predicate = [NSPredicate predicateWithFormat:
+    @"%K == %@", @"absoluteString", string];
+  NSArray *array = [_images filteredArrayUsingPredicate: predicate];
+  if ([array count] == 0) {
+    OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
+    residenceImage.absoluteString     = string;
+    residenceImage.image              = image;
+    residenceImage.position           = position;
+    [_images addObject: residenceImage];
+  }
+}
 
 - (NSString *) availableOnString
 {
@@ -75,12 +93,35 @@
 - (UIImage *) coverPhoto
 {
   if ([_images count] > 0) {
-    return [[self imagesArray] objectAtIndex: 0];
+    OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex: 0];
+    return residenceImage.image;
   }
   return nil;
 }
 
 - (UIImage *) coverPhotoWithSize: (CGSize) size
+{
+  UIImage *img = [self coverPhoto];
+  CGFloat newHeight = size.height;
+  CGFloat newWidth  = img.size.width * (size.height / img.size.height);
+  if (newWidth < size.width) {
+    newHeight = newHeight * (size.width / newWidth);
+    newWidth  = size.width;
+  }
+  CGPoint point = CGPointZero;
+  // Center it vertically
+  if (newHeight > size.height) {
+    point.y = (newHeight - size.height) * -0.5;
+  }
+  // Center it horizontally
+  if (newWidth > size.width) {
+    point.x = (newWidth - size.width) * -0.5;
+  }
+  return [UIImage image: img size: CGSizeMake(newWidth, newHeight)
+    point: point];
+}
+
+- (UIImage *) coverPhotoWithSize1: (CGSize) size
 {
   UIImage *img = [self coverPhoto];
   float newHeight, newWidth;
@@ -118,24 +159,89 @@
     _address];
 }
 
+- (NSURL *) googleStaticMapImageURL
+{
+  NSString *base = @"https://maps.googleapis.com/maps/api/staticmap?";
+  NSString *center = [NSString stringWithFormat: 
+    @"%f,%f", _latitude, _longitude];
+  NSString *markers = [NSString stringWithFormat:
+    @"size:mid%%7Ccolor:0x1174d2%%7C%@", center];
+  NSString *zoom = @"14";
+  NSString *size = @"640x320";
+  NSString *sensor = @"false";
+  NSString *visualRefresh = @"true";
+  NSDictionary *params = @{
+    @"center":         center,
+    @"markers":        markers,
+    @"sensor":         sensor,
+    @"size":           size,
+    @"visual_refresh": visualRefresh,
+    @"zoom":           zoom
+  };
+  NSString *paramsString = @"";
+  for (NSString *key in [params allKeys]) {
+    paramsString = [paramsString stringByAppendingString: 
+      [NSString stringWithFormat: @"%@=%@&", key, [params objectForKey: key]]];
+  }
+  return [NSURL URLWithString: 
+    [NSString stringWithFormat: @"%@%@", base, paramsString]];
+}
+
+- (NSURL *) googleStaticStreetViewImageURL
+{
+  NSString *base = @"http://maps.googleapis.com/maps/api/streetview?";
+  NSString *location = [NSString stringWithFormat: 
+    @"%f,%f", _latitude, _longitude];
+  NSString *size = @"640x320";
+  NSString *sensor = @"false";
+  NSDictionary *params = @{
+    @"location": location,
+    @"sensor":   sensor,
+    @"size":     size
+  };
+  NSString *paramsString = @"";
+  for (NSString *key in [params allKeys]) {
+    paramsString = [paramsString stringByAppendingString: 
+      [NSString stringWithFormat: @"%@=%@&", key, [params objectForKey: key]]];
+  }
+  return [NSURL URLWithString: 
+    [NSString stringWithFormat: @"%@%@", base, paramsString]];
+}
+
 - (NSArray *) imagesArray
 {
   // keys are based on image position; e.g. 1-12
-  NSArray *keys = [_images allKeys];
-  keys = [keys sortedArrayUsingComparator: ^(id obj1, id obj2) {
-    int key1 = [(NSString *) obj1 intValue];
-    int key2 = [(NSString *) obj2 intValue];
-    if (key1 > key2)
-      return (NSComparisonResult) NSOrderedDescending;
-    if (key1 < key2)
-      return (NSComparisonResult) NSOrderedAscending;
-    return (NSComparisonResult) NSOrderedSame;
-  }];
-  NSMutableArray *array = [NSMutableArray array];
-  for (NSString *key in keys) {
-    [array addObject: [_images objectForKey: key]];
+  // NSArray *keys = [_images allKeys];
+  // keys = [keys sortedArrayUsingComparator: ^(id obj1, id obj2) {
+  //   int key1 = [(NSString *) obj1 intValue];
+  //   int key2 = [(NSString *) obj2 intValue];
+  //   if (key1 > key2)
+  //     return (NSComparisonResult) NSOrderedDescending;
+  //   if (key1 < key2)
+  //     return (NSComparisonResult) NSOrderedAscending;
+  //   return (NSComparisonResult) NSOrderedSame;
+  // }];
+  // NSMutableArray *array = [NSMutableArray array];
+  // for (NSString *key in keys) {
+  //   [array addObject: [_images objectForKey: key]];
+  // }
+  // return array;
+
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"position" 
+    ascending: YES];
+  return [_images sortedArrayUsingDescriptors: @[sort]];
+}
+
+- (UIImage *) imageAtPosition: (int) position
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat:
+    @"%K == %i", @"position", position];
+  NSArray *array = [_images filteredArrayUsingPredicate: predicate];
+  if ([array count] > 0) {
+    OMBResidenceImage *residenceImage = [array objectAtIndex: 0];
+    return residenceImage.image;
   }
-  return array;
+  return nil;
 }
 
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary
@@ -152,7 +258,10 @@
   //     lng: -117.07943,      // Longitude
   //     rt: 0                 // Rent
   //   }
-  _address   = [dictionary objectForKey: @"ad"];
+  if ([dictionary objectForKey: @"ad"] == [NSNull null])
+    _address = @"Address currently unavailable";
+  else
+    _address = [dictionary objectForKey: @"ad"];
   // Available on example value: October 23, 2013
   NSString *dateString        = [dictionary objectForKey: @"available_on"];
   NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
@@ -208,7 +317,9 @@
   dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
 
   // Address
-  if ([dictionary objectForKey: @"address"] != [NSNull null])
+  if ([dictionary objectForKey: @"address"] == [NSNull null])
+    _address = @"Address currently unavailable";
+  else
     _address = [dictionary objectForKey: @"address"];
   // Available on
   if ([dictionary objectForKey: @"available_on"] != [NSNull null])
