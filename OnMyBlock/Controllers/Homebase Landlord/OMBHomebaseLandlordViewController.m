@@ -544,8 +544,10 @@ viewForHeaderInSection: (NSInteger) section
   
 - (void) segmentButtonSelected: (UIButton *) button
 {
-  selectedSegmentIndex = button.tag;
-  [self changeTableView];
+  if (selectedSegmentIndex != button.tag) {
+    selectedSegmentIndex = button.tag;
+    [self changeTableView];
+  }
 }
 
 - (void) showInbox

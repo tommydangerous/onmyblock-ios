@@ -23,6 +23,7 @@
 #import "OMBUserImageDownloader.h"
 #import "OMBUserStore.h"
 #import "OMBViewControllerContainer.h"
+#import "UIImage+Resize.h"
 
 NSString *const OMBActivityIndicatorViewStartAnimatingNotification =
   @"OMBActivityIndicatorViewStartAnimatingNotification";
@@ -64,8 +65,9 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 {
   if (!(self = [super init])) return nil;
 
-  _favorites         = [NSMutableDictionary dictionary];
-  _renterApplication = [[OMBRenterApplication alloc] init];
+  _favorites           = [NSMutableDictionary dictionary];
+  _imageSizeDictionary = [NSMutableDictionary dictionary];
+  _renterApplication   = [[OMBRenterApplication alloc] init];
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(sessionStateChanged:)
@@ -214,6 +216,17 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 {
   return [NSString stringWithFormat: @"%@ %@",
     [_firstName capitalizedString], [_lastName capitalizedString]];
+}
+
+- (UIImage *) imageForSize: (CGFloat) size
+{
+  NSNumber *key = [NSNumber numberWithFloat: size];
+  UIImage *img = [_imageSizeDictionary objectForKey: key];
+  if (!img) {
+    img = [UIImage image: self.image size: CGSizeMake(size, size)];
+    [_imageSizeDictionary setObject: img forKey: key];
+  }
+  return img;
 }
 
 - (BOOL) loggedIn

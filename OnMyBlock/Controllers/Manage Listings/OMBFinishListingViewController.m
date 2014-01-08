@@ -46,7 +46,7 @@
 {
   [super loadView];
 
-  numberOfSteps = 7;
+  numberOfSteps = 6;
   numberOfStepsCompleted = 3;
 
   CGRect screen = [[UIScreen mainScreen] bounds];

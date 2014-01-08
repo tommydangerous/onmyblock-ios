@@ -9,7 +9,7 @@
 #import "OMBViewController.h"
 
 @interface OMBTableViewController : OMBViewController
-<UITableViewDataSource, UITableViewDelegate>
+<UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *table;
 

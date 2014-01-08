@@ -49,13 +49,50 @@
 {
   self = [super init];
   if (self) {
-    _images            = [NSMutableArray array];
-    _lastImagePosition = 1000;
+    _images              = [NSMutableArray array];
+    _imageSizeDictionary = [NSMutableDictionary dictionary];
+    _lastImagePosition   = 1000;
   }
   return self;
 }
 
 #pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (OMBResidence *) fakeResidence
+{
+  static OMBResidence *residence = nil;
+  if (!residence) {
+    residence = [[OMBResidence alloc] init];
+    residence.address = @"2546 Minas Morgul Way";
+    residence.availableOn = [[NSDate date] timeIntervalSince1970];
+    residence.bathrooms = 2.0f;
+    residence.bedrooms = 3.0f;
+    residence.city = @"Gondor";
+    residence.createdAt = [[NSDate date] timeIntervalSince1970];
+    residence.description = @"The best place to not suffer.";
+    residence.email = @"witch_king@gmail.com";
+    residence.landlordName = @"Nazgul Smith";
+    residence.latitude = -32;
+    residence.leaseMonths = 12;
+    residence.longitude = 113;
+    residence.phone = @"8581234567";
+    residence.rent = 1750.00;
+    residence.squareFeet = 900;
+    residence.state = @"CA";
+    residence.uid = 9999;
+    residence.updatedAt = [[NSDate date] timeIntervalSince1970];
+    residence.zip = @"92122";
+
+    OMBResidenceImage *image = [[OMBResidenceImage alloc] init];
+    image.absoluteString = @"fake_image.jpg";
+    image.image = [UIImage imageNamed: @"residence_fake.jpg"];
+    image.position = 1;
+    [residence.images addObject: image];
+  }
+  return residence;
+}
 
 #pragma mark Instance Methods
 

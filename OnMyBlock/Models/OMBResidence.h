@@ -35,9 +35,14 @@
 @property (nonatomic, strong) UIImage *coverPhotoForCell;
 @property (nonatomic, strong) NSURL *coverPhotoURL;
 @property (nonatomic, strong) NSMutableArray *images;
+@property (nonatomic, strong) NSMutableDictionary *imageSizeDictionary;
 @property (nonatomic) int lastImagePosition;
 
 #pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (OMBResidence *) fakeResidence;
 
 #pragma mark Instance Methods
 

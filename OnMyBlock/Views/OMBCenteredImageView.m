@@ -54,8 +54,15 @@
 - (void) setImage: (UIImage *) object
 {
   _image = object;
-  if (!_image)
+  if (!_image) {
     return;
+  }
+  // Don't do anything if the image size is the same
+  else if (height == _image.size.height && width == _image.size.width) {
+    _imageView.image = _image;
+    _imageView.frame = CGRectMake(0.0f, 0.0f, width, height);
+    return;
+  }
   CGFloat newHeight = height;
   CGFloat newWidth  = _image.size.width * (height / _image.size.height);
   if (newWidth < width) {

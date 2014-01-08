@@ -10,6 +10,7 @@
 
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
+#import "OMBAlertView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBCoapplicantCell.h"
 #import "OMBCosigner.h"
@@ -230,103 +231,21 @@
   // Profile table footer view
   _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
     _offerTableView.tableFooterView.frame];
-
-  // Faded background
-  fadedBackground = [UIView new];
-  fadedBackground.alpha = 0.0f;
-  fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.5f];
-  fadedBackground.frame = screen;
-  // [[[UIApplication sharedApplication] keyWindow] addSubview: fadedBackground];
-  // Alert
-  CGFloat alertHeight = screenHeight * 0.5f;
-  CGFloat alertWidth  = screenWidth * 0.8f;
-  alert = [[AMBlurView alloc] init];
-  alert.frame = CGRectMake((screenWidth - alertWidth) * 0.5, 
-    0.0f, alertWidth, 0.0f);
-  alert.layer.cornerRadius = 5.0f;
-  [fadedBackground addSubview: alert];
-  // Alert title
-  alertTitle = [UILabel new];
-  alertTitle.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 18];
-  alertTitle.frame = CGRectMake(padding, padding, 
-    alert.frame.size.width - (padding * 2), 27.0f);
-  alertTitle.text = @"Respond to Offer";
-  alertTitle.textAlignment = NSTextAlignmentCenter;
-  alertTitle.textColor = [UIColor textColor];
-  [alert addSubview: alertTitle];
-  // Alert message
-  alertMessage = [UILabel new];
-  alertMessage.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  alertMessage.numberOfLines = 0;
-  alertMessage.text = @"Edward would like to rent this place from January 1,"
-    @" 2014 through December 12, 2014 for $2,575 a month.";
-  CGRect alertMessageRect = [alertMessage.text boundingRectWithSize:
-    CGSizeMake(alertTitle.frame.size.width, 9999) font: alertMessage.font];
-  alertMessage.frame = CGRectMake(alertTitle.frame.origin.x,
-    alertTitle.frame.origin.y + alertTitle.frame.size.height + (padding * 0.5),
-      alertTitle.frame.size.width, alertMessageRect.size.height);
-  alertMessage.textAlignment = NSTextAlignmentCenter;
-  alertMessage.textColor = [UIColor textColor];
-  [alert addSubview: alertMessage];
-
-  // Alert buttons view
-  alertButtonsView = [UIView new];
-  alertButtonsView.frame = CGRectMake(0.0f, 
-    alertMessage.frame.origin.y + alertMessage.frame.size.height + padding,
-      alert.frame.size.width, 44.0f);
-  [alert addSubview: alertButtonsView];
-  UIView *alertButtonsViewTopBorder = [UIView new];
-  alertButtonsViewTopBorder.backgroundColor = [UIColor grayMedium];
-  alertButtonsViewTopBorder.frame = CGRectMake(0.0f, 0.0f, 
-    alertButtonsView.frame.size.width, 0.5f);
-  [alertButtonsView addSubview: alertButtonsViewTopBorder];
-  UIView *alertButtonsViewMiddleBorder = [UIView new];
-  alertButtonsViewMiddleBorder.backgroundColor = 
-    alertButtonsViewTopBorder.backgroundColor;
-  alertButtonsViewMiddleBorder.frame = CGRectMake(
-    (alertButtonsView.frame.size.width - 0.5f) * 0.5, 0.0f, 
-      0.5f, alertButtonsView.frame.size.height);
-  [alertButtonsView addSubview: alertButtonsViewMiddleBorder];
-
-  CGFloat alertButtonWidth = alertButtonsView.frame.size.width * 0.5f;
-  // Alert confirm
-  alertConfirm = [UIButton new];
-  alertConfirm.frame = CGRectMake(alertButtonWidth, 0.0f, alertButtonWidth,
-    alertButtonsView.frame.size.height);
-  alertConfirm.titleLabel.font = alertTitle.font;
-  [alertConfirm addTarget: self action: @selector(alertConfirmSelected)
-    forControlEvents: UIControlEventTouchUpInside];
-  [alertConfirm setTitle: @"Accept" forState: UIControlStateNormal];
-  [alertConfirm setTitleColor: [UIColor blue] forState: UIControlStateNormal];
-  [alertButtonsView addSubview: alertConfirm];
-  // Alert cancel
-  alertCancel = [UIButton new];
-  alertCancel.frame = CGRectMake(0.0f, 0.0f, alertButtonWidth,
-    alertButtonsView.frame.size.height);
-  alertCancel.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
-    size: 18];
-  [alertCancel addTarget: self action: @selector(alertCancelSelected)
-    forControlEvents: UIControlEventTouchUpInside];
-  [alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
-  [alertCancel setTitleColor: [UIColor blue] forState: UIControlStateNormal];
-  [alertButtonsView addSubview: alertCancel];
-
-  // Resize alert height
-  alertHeight = alertButtonsView.frame.origin.y + 
-    alertButtonsView.frame.size.height;
-  alert.frame = CGRectMake(alert.frame.origin.x, 
-    (screenHeight - alertHeight) * 0.5f, alert.frame.size.width, alertHeight);
-
   selectedSegmentIndex = 0;
+
+  // Alert view
+  alert = [[OMBAlertView alloc] init];
+  [alert.alertCancel addTarget: self action: @selector(alertCancelSelected)
+    forControlEvents: UIControlEventTouchUpInside];
+  [alert.alertConfirm addTarget: self action: @selector(alertConfirmSelected)
+    forControlEvents: UIControlEventTouchUpInside];
+
   [self changeTableView];
 }
 
 - (void) viewDidAppear: (BOOL) animated
 {
   [super viewDidAppear: animated];
-
-  _animator = [[UIDynamicAnimator alloc] initWithReferenceView: 
-    fadedBackground];
 }
 
 - (void) viewDidDisappear: (BOOL) animated
@@ -845,38 +764,7 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) alertCancelSelected
 {
-  [_animator removeBehavior: _snapBehavior];
-
-  alert.alpha = 0.9f;
-  alert.backgroundColor = [UIColor whiteColor];
-
-  // _gravityBehavior = 
-  //   [[UIGravityBehavior alloc] initWithItems: @[alert]];
-  // _gravityBehavior.gravityDirection = CGVectorMake(0, 10);
-  // [_animator addBehavior: _gravityBehavior];
- 
-  // _itemBehavior = 
-  //   [[UIDynamicItemBehavior alloc] initWithItems: @[alert]];
-  // CGFloat velocity = M_PI_2;
-  // if (arc4random_uniform(100) % 2) {
-  //   velocity *= -1;
-  // }
-  // [_itemBehavior addAngularVelocity: velocity forItem: alert];
-  // [_animator addBehavior: _itemBehavior];
-
-  [UIView animateWithDuration: 0.15f animations: ^{
-    CGRect rect = alert.frame;
-    rect.origin.y = fadedBackground.frame.size.height;
-    alert.frame = rect;
-  } completion: ^(BOOL finished) {
-    [UIView animateWithDuration: 0.25f delay: 0.0f 
-      options: UIViewAnimationOptionCurveLinear animations: ^{
-        fadedBackground.alpha = 0.0f;
-      } completion: ^(BOOL finished) {
-        [fadedBackground removeFromSuperview];
-      }
-    ];
-  }];
+  [alert hideAlert];
 
   accepted = NO;
   acceptedConfirmed = NO;
@@ -884,8 +772,8 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) alertConfirmSelected
 {
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  CGFloat padding = 20.0f;
+  // CGRect screen = [[UIScreen mainScreen] bounds];
+  // CGFloat padding = 20.0f;
 
   if (accepted && acceptedConfirmed) {
     [self.navigationController pushViewController:
@@ -895,48 +783,26 @@ viewForHeaderInSection: (NSInteger) section
   else {
     if (!accepted) {
       accepted = YES;
-      // Alert title
-      alertTitle.text = @"Are You Sure?";
-      // Alert message
-      alertMessage.text = @"Accepting Edward's offer will automatically "
-        @"decline all other offers.";
       // Alert buttons
-      [alertConfirm setTitle: @"Yes" forState: UIControlStateNormal];
-      [alertCancel setTitle: @"No" forState: UIControlStateNormal];
+      [alert.alertConfirm setTitle: @"Yes" forState: UIControlStateNormal];
+      [alert.alertCancel setTitle: @"No" forState: UIControlStateNormal];
+      // Alert message
+      alert.alertMessage.text = @"Accepting Edward's offer will automatically "
+        @"decline all other offers.";
+      // Alert title
+      alert.alertTitle.text = @"Are You Sure?";
     }
     else if (!acceptedConfirmed) {
       acceptedConfirmed = YES;
-      // Alert title
-      alertTitle.text = @"Offer Accepted";
+      // Alert buttons
+      [alert.alertConfirm setTitle: @"Setup" forState: UIControlStateNormal];
+      [alert.alertCancel setTitle: @"Ok" forState: UIControlStateNormal];
       // Alert message
-      alertMessage.text = @"Please set up a way to get paid.";
-      [alertConfirm setTitle: @"Setup" forState: UIControlStateNormal];
-      [alertCancel setTitle: @"Ok" forState: UIControlStateNormal];
+      alert.alertMessage.text = @"Please set up a way to get paid.";
+      // Alert title
+      alert.alertTitle.text = @"Offer Accepted";
     }
-    CGRect alertMessageRect = [alertMessage.text boundingRectWithSize:
-      CGSizeMake(alertTitle.frame.size.width, 9999) font: alertMessage.font];
-    alertMessage.frame = CGRectMake(alertTitle.frame.origin.x,
-      alertTitle.frame.origin.y + 
-      alertTitle.frame.size.height + (padding * 0.5),
-        alertTitle.frame.size.width, alertMessageRect.size.height);
-    // Alert buttons
-    alertButtonsView.frame = CGRectMake(0.0f, 
-      alertMessage.frame.origin.y + alertMessage.frame.size.height + padding,
-        alert.frame.size.width, 44.0f);
-    // Resize alert height
-    CGFloat alertHeight = alertButtonsView.frame.origin.y + 
-      alertButtonsView.frame.size.height;
-    alert.frame = CGRectMake(alert.frame.origin.x, 
-      (screen.size.height - alertHeight) * 0.5f, 
-        alert.frame.size.width, alertHeight);
-    [UIView animateWithDuration: 0.1f animations: ^{
-      alert.transform = CGAffineTransformMakeScale(1.05f, 1.05f);
-    } completion: ^(BOOL finished) {
-      [UIView animateWithDuration: 0.1f animations: ^{
-        alert.transform = CGAffineTransformIdentity;
-      }];
-    }];
-
+    [alert animateChangeOfContent];
   }
 }
 
@@ -995,66 +861,26 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) respond
 {
-  [_animator removeBehavior: _gravityBehavior];
-  [_animator removeBehavior: _itemBehavior];
-
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  CGFloat padding = 20.0f;
-
-  // Reset the alert view
-  alert.alpha = 1.0f;
-  alert.backgroundColor = [UIColor clearColor];
-  alert.transform = CGAffineTransformIdentity;
-  alert.frame = CGRectMake((screen.size.width - alert.frame.size.width) * 0.5,
-    screen.size.height, alert.frame.size.width, alert.frame.size.height);
-
-  // Re-add the faded background
-  [[[UIApplication sharedApplication] keyWindow] addSubview: fadedBackground];
-  [UIView animateWithDuration: 0.15f animations: ^{
-    fadedBackground.alpha = 1.0f;
-  } completion: ^(BOOL finished) {
-    [UIView animateWithDuration: 0.15f animations: ^{
-      CGRect rect = alert.frame;
-      rect.origin.y = (screen.size.height - alert.frame.size.height) * 0.5f;
-      alert.frame = rect;
-    }];
-    // Snap the button in the middle
-    // _snapBehavior = [[UISnapBehavior alloc] initWithItem: 
-    //   alert snapToPoint: [self appDelegate].window.center];
-    // // We decrease the damping so the view has a little less spring.
-    // _snapBehavior.damping = 0.8f;
-    // [_animator addBehavior: _snapBehavior];
-  }];
+  // Alert buttons
+  [alert.alertCancel setTitle: @"Decline" forState: UIControlStateNormal];
+  [alert.alertConfirm setTitle: @"Accept" forState: UIControlStateNormal];
 
   // Alert title
-  alertTitle.text = @"Respond to Offer";
+  alert.alertTitle.text = @"Respond to Offer";
   // Alert message
-  alertMessage.text = @"Edward would like to rent this place from January 1,"
-    @" 2014 through December 12, 2014 for $2,575 a month.";
-  CGRect alertMessageRect = [alertMessage.text boundingRectWithSize:
-    CGSizeMake(alertTitle.frame.size.width, 9999) font: alertMessage.font];
-  alertMessage.frame = CGRectMake(alertTitle.frame.origin.x,
-    alertTitle.frame.origin.y + alertTitle.frame.size.height + (padding * 0.5),
-      alertTitle.frame.size.width, alertMessageRect.size.height);
-  // Alert buttons
-  alertButtonsView.frame = CGRectMake(0.0f, 
-    alertMessage.frame.origin.y + alertMessage.frame.size.height + padding,
-      alert.frame.size.width, 44.0f);
-  // Resize alert height
-  CGFloat alertHeight = alertButtonsView.frame.origin.y + 
-    alertButtonsView.frame.size.height;
-  alert.frame = CGRectMake(alert.frame.origin.x, 
-    (screen.size.height - alertHeight) * 0.5f, 
-      alert.frame.size.width, alertHeight);
-  // Alert buttons
-  [alertConfirm setTitle: @"Accept" forState: UIControlStateNormal];
-  [alertCancel setTitle: @"Decline" forState: UIControlStateNormal];
+  alert.alertMessage.text =
+    @"Edward would like to rent this place from January 1,"
+      @" 2014 through December 12, 2014 for $2,575 a month.";
+  
+  [alert showAlert];
 }
 
 - (void) segmentButtonSelected: (UIButton *) button
 {
-  selectedSegmentIndex = button.tag;
-  [self changeTableView];
+  if (selectedSegmentIndex != button.tag) {
+    selectedSegmentIndex = button.tag;
+    [self changeTableView];
+  }
 }
 
 @end

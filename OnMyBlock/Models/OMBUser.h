@@ -38,6 +38,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 
 @property (nonatomic, strong) NSMutableDictionary *favorites;
 @property (nonatomic, strong) UIImage *image;
+@property (nonatomic, strong) NSMutableDictionary *imageSizeDictionary;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, strong) OMBRenterApplication *renterApplication;
 @property (nonatomic) int uid;
@@ -62,6 +63,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 (void (^) (NSError *error)) block;
 - (NSArray *) favoritesArray;
 - (NSString *) fullName;
+- (UIImage *) imageForSize: (CGFloat) size;
 - (BOOL) loggedIn;
 - (void) logout;
 - (NSString *) phoneString;

@@ -18,8 +18,8 @@
   if (!(self = [super initWithFrame: rect])) return nil;
 
   CGFloat imageSize = self.frame.size.width;
-  CGFloat nameLabelHeight = 22.0f;
-  CGFloat totalHeight = imageSize + nameLabelHeight;
+  CGFloat nameLabelHeight = 30.0f;
+  // CGFloat totalHeight = imageSize + nameLabelHeight;
 
   _imageView = [[OMBCenteredImageView alloc] init]; 
   _imageView.frame = CGRectMake(0.0f, 
@@ -28,7 +28,7 @@
   [self addSubview: _imageView];
 
   _nameLabel = [UILabel new];
-  _nameLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  _nameLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   _nameLabel.frame = CGRectMake(0.0f, 
     _imageView.frame.origin.y + _imageView.frame.size.height, 
       self.frame.size.width, nameLabelHeight);
@@ -37,6 +37,17 @@
   [self addSubview: _nameLabel];
 
   return self;
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) setupForAddRoommate
+{
+  _imageView.backgroundColor = [UIColor blueAlpha: 0.5f];
+  _imageView.image = [UIImage imageNamed: @"plus_icon.png"];
+  _nameLabel.text = @"Add Roomates";
 }
 
 @end

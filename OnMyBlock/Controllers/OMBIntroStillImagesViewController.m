@@ -455,7 +455,7 @@
 {
   _getStartedView.hidden     = NO;
   _signUpView.hidden         = NO;
-  _pageControl.numberOfPages = 6;
+  _pageControl.numberOfPages = 5;
   // 60.0f = height of page control
   _pageControl.frame = CGRectMake(0.0f, _scroll.frame.size.height - 60.0f,
     _scroll.frame.size.width, 60.0f);

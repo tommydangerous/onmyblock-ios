@@ -26,6 +26,7 @@
 #import "OMBMapFilterViewController.h"
 #import "OMBMapViewController.h"
 #import "OMBNavigationController.h"
+#import "OMBOfferAcceptedView.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBUserMenu.h"
 #import "OMBUser.h"
@@ -636,6 +637,15 @@ willDecelerate: (BOOL) decelerate
   menuIsVisible = NO;
 }
 
+- (void) hideOfferAcceptedView
+{
+  [UIView animateWithDuration: 0.25f animations: ^{
+    offerAcceptedView.alpha = 0.0f;
+  } completion: ^(BOOL finished) {
+    [offerAcceptedView removeFromSuperview];
+  }];
+}
+
 - (void) hideOrShowMenu
 {
   if (_detailView.frame.origin.x > menuOffsetXThreshold)
@@ -993,6 +1003,13 @@ willDecelerate: (BOOL) decelerate
   }
     
   menuIsVisible = YES;
+}
+
+- (void) showOfferAccepted
+{
+  offerAcceptedView = [[OMBOfferAcceptedView alloc] initWithOffer: nil];
+  [self.view addSubview: offerAcceptedView];
+  [offerAcceptedView show];
 }
 
 - (void) showRenterApplication

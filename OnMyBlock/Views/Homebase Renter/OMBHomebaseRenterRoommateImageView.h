@@ -12,7 +12,14 @@
 
 @interface OMBHomebaseRenterRoommateImageView : UIView
 
+@property (nonatomic, strong) UIButton *addRoommateButton;
 @property (nonatomic, strong) OMBCenteredImageView *imageView;
 @property (nonatomic, strong) UILabel *nameLabel;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) setupForAddRoommate;
 
 @end

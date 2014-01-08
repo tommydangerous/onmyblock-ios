@@ -8,7 +8,7 @@
 
 #import "OMBViewController.h"
 
-@class AMBlurView;
+@class OMBAlertView;
 @class OMBCenteredImageView;
 
 @interface OMBOfferInquiryViewController : OMBViewController
@@ -16,17 +16,11 @@
 {
   BOOL accepted;
   BOOL acceptedConfirmed;
-  AMBlurView *alert;
-  UIView *alertButtonsView;
-  UIButton *alertCancel;
-  UIButton *alertConfirm;
-  UILabel *alertMessage;
-  UILabel *alertTitle;
+  OMBAlertView *alert;
   UIView *backView;
   CGFloat backViewOffsetY;
   UIView *buttonsView;
   UIButton *contactButton;
-  UIView *fadedBackground;
   NSArray *legalQuestions;
   UIButton *offerButton;
   UIButton *profileButton;
@@ -37,11 +31,6 @@
 
   NSString *fakeAbout;
 }
-
-@property (nonatomic, strong) UIDynamicAnimator *animator;
-@property (nonatomic, strong) UIGravityBehavior *gravityBehavior;
-@property (nonatomic, strong) UIDynamicItemBehavior *itemBehavior;
-@property (nonatomic, strong) UISnapBehavior *snapBehavior;
 
 #pragma mark - Initializer
 

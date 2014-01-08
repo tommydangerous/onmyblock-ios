@@ -50,9 +50,9 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // Fake login
   [OMBUser fakeLogin];
   // [_container showHomebaseRenter];
-  [_container showIntroAnimatedDissolve: NO];
-  if ([[OMBUser currentUser] loggedIn])
-    [self hideIntro];
+  // [_container showIntroAnimatedDissolve: NO];
+  // if ([[OMBUser currentUser] loggedIn])
+  //   [self hideIntro];
 
   return YES;
 }

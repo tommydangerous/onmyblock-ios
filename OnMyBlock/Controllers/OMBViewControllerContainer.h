@@ -14,6 +14,7 @@
 @class OMBIntroStillImagesViewController;
 @class OMBLoginViewController;
 @class OMBNavigationController;
+@class OMBOfferAcceptedView;
 @class OMBRenterApplicationViewController;
 @class OMBUserMenu;
 
@@ -66,6 +67,7 @@
   UIView *backgroundView;
   DRNRealTimeBlurView *blurView;
   OMBExtendedHitAreaViewContainer *hitArea;
+  OMBOfferAcceptedView *offerAcceptedView;
 }
 
 @property (nonatomic, strong) OMBCenteredImageView *accountView;
@@ -118,6 +120,7 @@
 #pragma mark - Instance Methods
 
 - (void) hideMenuWithFactor: (float) factor;
+- (void) hideOfferAcceptedView;
 - (void) showAccount;
 - (void) showCreateListing;
 - (void) showDiscover;
@@ -133,6 +136,7 @@
 - (void) showLogin;
 - (void) showLogout;
 - (void) showManageListings;
+- (void) showOfferAccepted;
 - (void) showRenterApplication;
 - (void) showSearch;
 - (void) showSignUp;
