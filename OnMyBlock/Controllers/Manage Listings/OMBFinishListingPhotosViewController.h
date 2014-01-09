@@ -11,6 +11,7 @@
 #import "ELCImagePickerController.h"
 
 @class AMBlurView;
+@class OMBEditablePhotoView;
 
 @interface OMBFinishListingPhotosViewController : OMBViewController
 <ELCImagePickerControllerDelegate, UIActionSheetDelegate, 
@@ -23,12 +24,17 @@ UIScrollViewDelegate>
   int currentImageViewIndexSelected;
   UIBarButtonItem *doneBarButtonItem;
   UIBarButtonItem *editBarButtonItem;
-  NSMutableArray *images;
   NSMutableArray *imageViews;
   BOOL isEditing;
   OMBResidence *residence;
+  NSMutableArray *residenceImages;
   UIScrollView *scroll;
 }
+
+@property (nonatomic, strong) OMBEditablePhotoView *dragObject;
+@property (nonatomic, strong) IBOutlet UIView *dropTarget;
+@property (nonatomic, assign) CGPoint homePosition;
+@property (nonatomic, assign) CGPoint touchOffset;
 
 #pragma mark - Initializer
 
@@ -37,5 +43,8 @@ UIScrollViewDelegate>
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) repositionImageViewsFromIndex: (int) startingIndex
+toIndex: (int) endingIndex;
 
 @end

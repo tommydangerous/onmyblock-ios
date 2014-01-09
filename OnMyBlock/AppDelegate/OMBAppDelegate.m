@@ -49,7 +49,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   NSLog(@"APP DELEGATE SHOW INTRO!");
   // Fake login
   [OMBUser fakeLogin];
-  // [_container showHomebaseRenter];
+  // [_container showManageListings];
   // [_container showIntroAnimatedDissolve: NO];
   // if ([[OMBUser currentUser] loggedIn])
   //   [self hideIntro];

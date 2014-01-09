@@ -11,6 +11,7 @@
 #import "ELCImagePickerController.h"
 
 @class AMBlurView;
+@class OMBCenteredImageView;
 @class OMBGradientView;
 @class OMBResidence;
 
@@ -20,7 +21,7 @@
 {
   UIView *cameraView;
   CGFloat headerImageOffsetY;
-  UIImageView *headerImageView;
+  OMBCenteredImageView *headerImageView;
   OMBGradientView *headerImageViewGradient;
   int numberOfSteps;
   int numberOfStepsCompleted;

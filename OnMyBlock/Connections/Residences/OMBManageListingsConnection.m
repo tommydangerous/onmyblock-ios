@@ -1,16 +1,14 @@
 //
-//  OMBFavoritesListConnection.m
+//  OMBManageListingsConnection.m
 //  OnMyBlock
 //
-//  Created by Tommy DANGerous on 10/31/13.
-//  Copyright (c) 2013 OnMyBlock. All rights reserved.
+//  Created by Tommy DANGerous on 1/7/14.
+//  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import "OMBFavoritesListConnection.h"
+#import "OMBManageListingsConnection.h"
 
-#import "OMBUser.h"
-
-@implementation OMBFavoritesListConnection
+@implementation OMBManageListingsConnection
 
 #pragma mark - Initializer
 
@@ -19,7 +17,7 @@
   if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: 
-    @"%@/favorites?access_token=%@", 
+    @"%@/places/manage_listings/?access_token=%@", 
       OnMyBlockAPIURL, [OMBUser currentUser].accessToken];
   [self setRequestFromString: string];
 
@@ -34,7 +32,9 @@
 {
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
-  [[OMBUser currentUser] readFromFavoriteResidencesDictionary: json];
+
+  [[OMBUser currentUser] readFromResidencesDictionary: json];
+
   [super connectionDidFinishLoading: connection];
 }
 

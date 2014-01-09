@@ -9,12 +9,9 @@
 #import "OMBResidenceImageDownloader.h"
 
 #import "OMBResidence.h"
+#import "OMBResidenceImage.h"
 
 @implementation OMBResidenceImageDownloader
-
-@synthesize originalString = _originalString;
-@synthesize position       = _position;
-@synthesize residence      = _residence;
 
 #pragma mark - Initializer
 
@@ -33,6 +30,7 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
+  NSLog(@"OMBResidenceImageDownloader");
   UIImage *image = [[UIImage alloc] initWithData: activeDownload];
   // If image was downloaded and the position is not the first (cover photo)
   if (image) {
@@ -50,8 +48,15 @@
     // [_residence.images setObject: image
     //   forKey: [NSString stringWithFormat: @"%i", _position]];
 
-    [_residence addImage: image atPosition: _position 
-      withString: _originalString];
+    OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
+    residenceImage.absoluteString = _originalString;
+    residenceImage.image          = image;
+    residenceImage.position       = _position;
+    residenceImage.uid            = _residenceImageUID;
+
+    [_residence addResidenceImage: residenceImage];
+
+    NSLog(@"%i", residenceImage.uid);
   }
   [super connectionDidFinishLoading: connection];
 }

@@ -10,8 +10,4 @@
 
 @implementation OMBResidenceImage
 
-@synthesize absoluteString;
-@synthesize image;
-@synthesize position;
-
 @end

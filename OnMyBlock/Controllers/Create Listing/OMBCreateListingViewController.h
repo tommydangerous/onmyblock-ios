@@ -12,25 +12,29 @@
 
 @class OMBActivityView;
 @class OMBCreateListingPropertyTypeView;
+@class OMBResidence;
 @class TextFieldPadding;
 
 @interface OMBCreateListingViewController : OMBViewController
-<MKMapViewDelegate, UIScrollViewDelegate, UITableViewDataSource, 
-  UITableViewDelegate, UITextFieldDelegate>
+<CLLocationManagerDelegate, MKMapViewDelegate, UIScrollViewDelegate, 
+UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 {
   OMBActivityView *activityView;
   UIBarButtonItem *backBarButtonItem;
   UIBarButtonItem *cancelBarButtonItem;
+  CLLocationManager *locationManager;
   UIBarButtonItem *nextBarButtonItem;
-  UIBarButtonItem *saveBarButtonItem;
   UIView *progressBar;
   UILabel *questionLabel;
+  UIBarButtonItem *saveBarButtonItem;
   UILabel *stepLabel;
   int stepNumber;
+  NSTimer *typingTimer;
 
   // Step 1
   UITableView *propertyTypeTableView;
   // Step 2
+  UITableView *cityTableView;
   TextFieldPadding *cityTextField;
   UIButton *currentLocationButton;
   UIView *locationView;
@@ -40,5 +44,14 @@
 
   NSMutableDictionary *valuesDictionary;
 }
+
+@property (nonatomic, strong) NSMutableArray *citiesArray;
+@property (nonatomic, strong) OMBResidence *temporaryResidence;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) setCityTextFieldTextWithString: (NSString *) string;
 
 @end

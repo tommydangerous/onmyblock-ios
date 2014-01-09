@@ -13,5 +13,6 @@
 @property (nonatomic, strong) NSString *absoluteString;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic) int position;
+@property (nonatomic) int uid;
 
 @end

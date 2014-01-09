@@ -19,6 +19,7 @@
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
 #import "OMBPreviousRental.h"
+#import "OMBTemporaryResidence.h"
 #import "OMBUserFacebookAuthenticationConnection.h"
 #import "OMBUserImageDownloader.h"
 #import "OMBUserStore.h"
@@ -68,6 +69,7 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   _favorites           = [NSMutableDictionary dictionary];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _renterApplication   = [[OMBRenterApplication alloc] init];
+  _residences          = [NSMutableDictionary dictionary];
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(sessionStateChanged:)
@@ -95,7 +97,7 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 + (void) fakeLogin
 {
   [OMBUser currentUser].about = @"About me.";
-  [OMBUser currentUser].accessToken = @"xyz";
+  [OMBUser currentUser].accessToken = @"cea246ff2139e0fa5b17ae255e9a946d";
   [OMBUser currentUser].email = @"fake_user@gmail.com";
   [OMBUser currentUser].firstName = @"fake";
   [OMBUser currentUser].lastName = @"user";
@@ -114,7 +116,7 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   if (!user) {
     user = [[OMBUser alloc] init];
     user.about = @"I am a cool guy.";
-    user.accessToken = @"xyz";
+    user.accessToken = @"cea246ff2139e0fa5b17ae255e9a946d";
     user.email = @"edward_d@gmail.com";
     user.firstName = @"edward";
     user.lastName = @"david";
@@ -156,6 +158,12 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 - (void) addPreviousRental: (OMBPreviousRental *) previousRental
 {
   [_renterApplication addPreviousRental: previousRental];
+}
+
+- (void) addResidence: (OMBResidence *) residence
+{
+  [_residences setObject: residence
+    forKey: [NSNumber numberWithInt: residence.uid]];
 }
 
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence
@@ -355,27 +363,7 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   }
 }
 
-- (void) readFromLegalAnswerDictionary: (NSDictionary *) dictionary
-{
-  NSArray *array = [dictionary objectForKey: @"objects"];
-  for (NSDictionary *dict in array) {
-    OMBLegalAnswer *legalAnswer = [[OMBLegalAnswer alloc] init];
-    [legalAnswer readFromDictionary: dict];
-    [self addLegalAnswer: legalAnswer];
-  }
-}
-
-- (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary
-{
-  NSArray *array = [dictionary objectForKey: @"objects"];
-  for (NSDictionary *dict in array) {
-    OMBPreviousRental *previousRental = [[OMBPreviousRental alloc] init];
-    [previousRental readFromDictionary: dict];
-    [self addPreviousRental: previousRental];
-  }
-}
-
-- (void) readFromResidencesDictionary: (NSDictionary *) dictionary
+- (void) readFromFavoriteResidencesDictionary: (NSDictionary *) dictionary
 {
   // Sample JSON
   // {
@@ -434,6 +422,46 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   }
 }
 
+- (void) readFromLegalAnswerDictionary: (NSDictionary *) dictionary
+{
+  NSArray *array = [dictionary objectForKey: @"objects"];
+  for (NSDictionary *dict in array) {
+    OMBLegalAnswer *legalAnswer = [[OMBLegalAnswer alloc] init];
+    [legalAnswer readFromDictionary: dict];
+    [self addLegalAnswer: legalAnswer];
+  }
+}
+
+- (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary
+{
+  NSArray *array = [dictionary objectForKey: @"objects"];
+  for (NSDictionary *dict in array) {
+    OMBPreviousRental *previousRental = [[OMBPreviousRental alloc] init];
+    [previousRental readFromDictionary: dict];
+    [self addPreviousRental: previousRental];
+  }
+}
+
+- (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
+{
+  NSArray *array = [dictionary objectForKey: @"objects"];
+  for (NSDictionary *dict in array) {
+    NSString *className = [dict objectForKey: @"class_name"];
+    if ([className isEqualToString: @"residence"]) {
+      OMBResidence *residence = [[OMBResidence alloc] init];
+      [residence readFromResidenceDictionary: dict];
+      [[OMBResidenceStore sharedStore] addResidence: residence];
+      [self addResidence: residence];
+    }
+    else {
+      OMBTemporaryResidence *temporaryResidence = 
+        [[OMBTemporaryResidence alloc] init];
+      [temporaryResidence readFromResidenceDictionary: dict];
+      [self addResidence: temporaryResidence];
+    }
+  }
+}
+
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence
 {
   NSString *key = [NSString stringWithFormat: @"%i", residence.uid];
@@ -450,6 +478,14 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
         @"index": [NSNumber numberWithInt: index]
       }];
   }
+}
+
+- (NSArray *) residencesSortedWithKey: (NSString *) key 
+ascending: (BOOL) ascending
+{
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
+    ascending: ascending];
+  return [[_residences allValues] sortedArrayUsingDescriptors: @[sort]];
 }
 
 - (void) sessionStateChanged: (NSNotification *) notification

@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSString *originalString;
 @property (nonatomic) int position;
 @property (nonatomic, weak) OMBResidence *residence;
+@property (nonatomic) int residenceImageUID;
 
 #pragma mark - Initializer
 

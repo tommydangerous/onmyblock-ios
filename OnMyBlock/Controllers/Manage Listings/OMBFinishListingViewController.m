@@ -9,6 +9,7 @@
 #import "OMBFinishListingViewController.h"
 
 #import "AMBlurView.h"
+#import "OMBCenteredImageView.h"
 #import "OMBFinishListingAddressViewController.h"
 #import "OMBFinishListingAmenitiesViewController.h"
 #import "OMBFinishListingDescriptionViewController.h"
@@ -20,6 +21,9 @@
 #import "OMBMapViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
+#import "OMBResidenceImage.h"
+#import "OMBResidenceImagesConnection.h"
+#import "OMBResidenceUploadImageConnection.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
@@ -60,7 +64,7 @@
   } forState: UIControlStateNormal];
   self.navigationItem.rightBarButtonItem = previewBarButtonItem;
 
-  self.view.backgroundColor  = [UIColor clearColor];
+  self.view.backgroundColor = [UIColor clearColor];
   [self setupForTable];
   self.table.backgroundColor = [UIColor clearColor];
 
@@ -108,9 +112,7 @@
 
   // Background image
   headerImageOffsetY = padding;
-  headerImageView = [UIImageView new];
-  headerImageView.image =
-    [UIImage imageNamed: @"intro_still_image_slide_2_background.jpg"];  
+  headerImageView = [[OMBCenteredImageView alloc] init];
   headerImageView.frame = CGRectMake(0.0f, headerImageOffsetY,
     screen.size.width, headerImageHeight);
   [self.view insertSubview: headerImageView belowSubview: self.table];
@@ -186,6 +188,25 @@
 {
   [super viewWillAppear: animated];
 
+  // Download the residence's images
+  OMBResidenceImagesConnection *conn = 
+    [[OMBResidenceImagesConnection alloc] initWithResidence: residence];
+  conn.completionBlock = ^(NSError *error) {
+    // Add the cover photo
+    headerImageView.image = [residence coverPhoto];
+    // Update the Photos (X) count
+    [self reloadPhotosRow];
+  };
+  [conn start];
+
+  // Image
+  if ([residence coverPhoto])
+    headerImageView.image = [residence coverPhoto];
+  else
+    [headerImageView clearImage];
+
+  [self reloadPhotosRow];
+
   // for (int i = 0; i < numberOfSteps; i++) {
   //   AMBlurView *stepView = [stepViews objectAtIndex: i];
   //   if (i < numberOfStepsCompleted) {
@@ -208,8 +229,7 @@
 didFinishPickingMediaWithInfo: (NSArray *) info
 {
   for (NSDictionary *dict in info) {
-    // [images addObject: 
-    //   [dict objectForKey: UIImagePickerControllerOriginalImage]];
+    [self createResidenceImageWithDictionary: dict];
   }
   [self.navigationController pushViewController:
     [[OMBFinishListingPhotosViewController alloc] initWithResidence: residence]
@@ -269,8 +289,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 - (void) imagePickerController: (UIImagePickerController *) picker 
 didFinishPickingMediaWithInfo: (NSDictionary *) info
 {
-  // [images addObject: 
-  //   [info objectForKey: UIImagePickerControllerOriginalImage]];
+  [self createResidenceImageWithDictionary: info];
+
   [self.navigationController pushViewController:
     [[OMBFinishListingPhotosViewController alloc] initWithResidence: residence]
       animated: NO];
@@ -331,7 +351,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Photos
   if (indexPath.row == 0) {
     // cell.detailTextLabel.text = @"0/3";
-    string = @"Photos (5)";
+    string = @"Photos";
+    if ([residence.images count]) {
+      string = [string stringByAppendingString: 
+        [NSString stringWithFormat: @" (%i)", [residence.images count]]];
+    }
   }
   // Title
   else if (indexPath.row == 1) {
@@ -441,6 +465,35 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [actionSheet showInView: self.view];
 }
 
+- (void) createResidenceImageWithDictionary: (NSDictionary *) dictionary
+{
+  NSString *absoluteString = [NSString stringWithFormat: @"%f",
+    [[NSDate date] timeIntervalSince1970]];
+  UIImage *image = [dictionary objectForKey: 
+    UIImagePickerControllerOriginalImage];
+  int position = 0;
+  NSArray *array = [residence imagesArray];
+  if ([array count]) {
+    OMBResidenceImage *previousResidenceImage = [array objectAtIndex:
+      [array count] - 1];
+    position = previousResidenceImage.position + 1;
+  }
+
+  OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
+  residenceImage.absoluteString = absoluteString;
+  residenceImage.image    = image;
+  residenceImage.position = position;
+  residenceImage.uid      = -999 + arc4random_uniform(100);
+
+  [residence addResidenceImage: residenceImage];
+
+  // Upload image
+  OMBResidenceUploadImageConnection *conn = 
+    [[OMBResidenceUploadImageConnection alloc] initWithResidence: residence 
+      residenceImage: residenceImage];
+  [conn start];
+}
+
 - (void) preview
 {
   NSLog(@"PREVIEW");
@@ -452,6 +505,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) publishNow
 {
   NSLog(@"PUBLISH NOW");
+}
+
+- (void) reloadPhotosRow
+{
+  [self.table reloadRowsAtIndexPaths: 
+    @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
+      withRowAnimation: UITableViewRowAnimationNone];
 }
 
 @end

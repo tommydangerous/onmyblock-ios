@@ -42,6 +42,12 @@
 
 #pragma mark - Instance Methods
 
+- (void) clearImage
+{
+  _image = nil;
+  _imageView.image = nil;
+}
+
 - (void) setFrame: (CGRect) rect
 {
   [super setFrame: rect];

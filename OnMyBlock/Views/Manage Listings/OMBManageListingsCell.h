@@ -25,6 +25,7 @@
 
 #pragma mark - Instance Methods
 
+- (void) clearImage;
 - (void) loadResidenceData: (OMBResidence *) object;
 - (void) setStatusLabelText: (NSString *) string;
 

@@ -78,6 +78,7 @@
     residence.leaseMonths = 12;
     residence.longitude = 113;
     residence.phone = @"8581234567";
+    residence.propertyType = @"sublet";
     residence.rent = 1750.00;
     residence.squareFeet = 900;
     residence.state = @"CA";
@@ -108,6 +109,15 @@ withString: (NSString *) string
     residenceImage.absoluteString     = string;
     residenceImage.image              = image;
     residenceImage.position           = position;
+    [_images addObject: residenceImage];
+  }
+}
+
+- (void) addResidenceImage: (OMBResidenceImage *) residenceImage
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat:
+    @"%K == %i", @"uid", residenceImage.uid];
+  if ([[_images filteredArrayUsingPredicate: predicate] count] == 0) {
     [_images addObject: residenceImage];
   }
 }
@@ -281,6 +291,19 @@ withString: (NSString *) string
   return nil;
 }
 
+- (UIImage *) imageForSize: (CGFloat) size
+{
+  NSNumber *key = [NSNumber numberWithFloat: size];
+  UIImage *img = [_imageSizeDictionary objectForKey: key];
+  if (!img) {
+    if ([self coverPhoto]) {
+      img = [UIImage image: [self coverPhoto] size: CGSizeMake(size, size)];
+      return img;
+    }
+  }
+  return nil;
+}
+
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary
 {
   // Sample JSON
@@ -365,9 +388,15 @@ withString: (NSString *) string
   // Bathrooms
   if ([dictionary objectForKey: @"bathrooms"] != [NSNull null])
     _bathrooms = [[dictionary objectForKey: @"bathrooms"] floatValue];
+  if ([dictionary objectForKey: @"min_bathrooms"] != [NSNull null]) {
+    _bedrooms = [[dictionary objectForKey: @"min_bathrooms"] floatValue];
+  }
   // Bedrooms
   if ([dictionary objectForKey: @"bedrooms"] != [NSNull null])
     _bedrooms = [[dictionary objectForKey: @"bedrooms"] floatValue];
+  if ([dictionary objectForKey: @"min_bedrooms"] != [NSNull null]) {
+    _bedrooms = [[dictionary objectForKey: @"min_bedrooms"] floatValue];
+  }
   // City
   if ([dictionary objectForKey: @"city"] != [NSNull null])
     _city = [dictionary objectForKey: @"city"];
@@ -403,6 +432,10 @@ withString: (NSString *) string
   // Phone
   if ([dictionary objectForKey: @"phone"] != [NSNull null])
     _phone = [dictionary objectForKey: @"phone"];
+  // Property Type
+  if ([dictionary objectForKey: @"property_type"] != [NSNull null]) {
+    _propertyType = [dictionary objectForKey: @"property_type"];
+  }
   // Rent
   if ([dictionary objectForKey: @"rent"] != [NSNull null])
     _rent = [[dictionary objectForKey: @"rent"] floatValue];
@@ -419,6 +452,16 @@ withString: (NSString *) string
   // Zip
   if ([dictionary objectForKey: @"zip"] != [NSNull null])
     _zip = [dictionary objectForKey: @"zip"];
+}
+
+- (void) removeResidenceImage: (OMBResidenceImage *) residenceImage
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
+    @"position", residenceImage.position];
+  NSArray *array = [_images filteredArrayUsingPredicate: predicate];
+  if ([array count]) {
+    [_images removeObject: [array firstObject]];
+  }
 }
 
 - (NSString *) rentToCurrencyString

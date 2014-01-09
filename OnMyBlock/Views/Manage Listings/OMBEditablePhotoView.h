@@ -9,12 +9,20 @@
 #import "OMBCenteredImageView.h"
 
 @interface OMBEditablePhotoView : OMBCenteredImageView
+<UIGestureRecognizerDelegate>
 {
   UIView *backSlash;
   UIView *forwardSlash;
+  UILongPressGestureRecognizer *longPressRecognizer;
+  UIPanGestureRecognizer *moveRecognizer;
 }
 
+@property (nonatomic) int currentIndex;
+@property (nonatomic, weak) id delegate;
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UIView *deleteButtonView;
+@property (nonatomic) BOOL isEditing;
+@property (nonatomic) CGSize largeSize;
+@property (nonatomic) CGSize smallSize;
 
 @end

@@ -10,6 +10,11 @@
 
 #import "AMBlurView.h"
 #import "OMBEditablePhotoView.h"
+#import "OMBResidence.h"
+#import "OMBResidenceImage.h"
+#import "OMBResidenceImageDeleteConnection.h"
+#import "OMBResidenceImagesConnection.h"
+#import "OMBResidenceUploadImageConnection.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
@@ -23,11 +28,7 @@
 {
   if (!(self = [super init])) return nil;
 
-  images     = [NSMutableArray array];
-  imageViews = [NSMutableArray array];
   residence  = object;
-
-  [self createFakeImages];
 
   self.screenName = @"Photos";
   self.title      = @"Photos";
@@ -37,16 +38,75 @@
 
 #pragma mark - Override
 
+#pragma mark - Override UIResponder
+
+- (void) touchesBegan: (NSSet *) touches withEvent: (UIEvent *) event
+{
+  NSLog(@"TOUCHES BEGAN");
+  if ([touches count] == 1) {
+    // One finger
+    CGPoint touchPoint = [[touches anyObject] locationInView: scroll];
+    for (OMBEditablePhotoView *photoView in scroll.subviews) {
+      if ([photoView isKindOfClass: [OMBEditablePhotoView class]]) {
+        if (touchPoint.x > photoView.frame.origin.x &&
+          touchPoint.x < photoView.frame.origin.x + 
+          photoView.frame.size.width && 
+          touchPoint.y > photoView.frame.origin.y && 
+          touchPoint.y < photoView.frame.origin.y + 
+          photoView.frame.size.height) {
+
+          _dragObject = photoView;
+          _touchOffset = CGPointMake(touchPoint.x - photoView.frame.origin.x,
+            touchPoint.y - photoView.frame.origin.y);
+          _homePosition = CGPointMake(photoView.frame.origin.x,
+            photoView.frame.origin.y);
+          [scroll bringSubviewToFront: _dragObject];
+        }
+      }
+    }
+  }
+}
+
+- (void) touchesEnded: (NSSet *) touches withEvent: (UIEvent *) event
+{
+  CGPoint touchPoint = [[touches anyObject] locationInView: scroll];
+  if (touchPoint.x > _dropTarget.frame.origin.x &&
+    touchPoint.x < _dropTarget.frame.origin.x + _dropTarget.frame.size.width &&
+    touchPoint.y > _dropTarget.frame.origin.y &&
+    touchPoint.y < _dropTarget.frame.origin.y + _dropTarget.frame.size.height) {
+
+    _dropTarget.backgroundColor = _dragObject.backgroundColor;
+  } 
+  _dragObject.frame = CGRectMake(_homePosition.x, _homePosition.y,
+    _dragObject.frame.size.width, _dragObject.frame.size.height);
+}
+
+- (void) touchesMoved: (NSSet *) touches withEvent: (UIEvent *) event
+{
+  CGPoint touchPoint = [[touches anyObject] locationInView: scroll];
+  CGRect newDragObjectFrame = CGRectMake(touchPoint.x - _touchOffset.x,
+    touchPoint.y - _touchOffset.y, _dragObject.frame.size.width,
+      _dragObject.frame.size.height);
+  _dragObject.frame = newDragObjectFrame;
+}
+
 #pragma mark - Override UIViewController
 
 - (void) loadView
 {
   [super loadView];
 
+  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
   doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
     style: UIBarButtonItemStylePlain target: self action: @selector(done)];
+  [doneBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+  } forState: UIControlStateNormal];
   editBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Edit"
     style: UIBarButtonItemStylePlain target: self action: @selector(edit)];
+  [editBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+  } forState: UIControlStateNormal];
   self.navigationItem.rightBarButtonItem = editBarButtonItem;
 
   CGRect screen = [[UIScreen mainScreen] bounds];
@@ -100,20 +160,9 @@
 {
   [super viewWillAppear: animated];
 
-  [self updateTitle];
+  [self reloadPhotosAnimated: NO];
 
-  imageViews = [NSMutableArray array];
-  [scroll.subviews enumerateObjectsUsingBlock: 
-    ^(id obj, NSUInteger idx, BOOL *stop) {
-      if ([obj isKindOfClass: [OMBEditablePhotoView class]]) {
-        [(OMBEditablePhotoView *) obj removeFromSuperview];
-      }
-    }
-  ];
-  [self createViewsFromImages];
-  for (OMBEditablePhotoView *imageView in imageViews) {
-    [self positionImageView: imageView animated: NO];
-  }
+  [self updateTitle];
 }
 
 #pragma mark - Protocol
@@ -124,8 +173,7 @@
 didFinishPickingMediaWithInfo: (NSArray *) info
 {
   for (NSDictionary *dict in info) {
-    [images addObject: 
-      [dict objectForKey: UIImagePickerControllerOriginalImage]];
+    [self createResidenceImageWithDictionary: dict];
   }
   [picker dismissViewControllerAnimated: YES completion: nil];
 }
@@ -191,7 +239,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 - (void) imagePickerController: (UIImagePickerController *) picker 
 didFinishPickingMediaWithInfo: (NSDictionary *) info
 {
-  [images addObject: [info objectForKey: UIImagePickerControllerOriginalImage]];
+  [self createResidenceImageWithDictionary: info];
+
   [picker dismissViewControllerAnimated: YES completion: nil];
 }
 
@@ -221,15 +270,45 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     @"favorite_pink.png"
   ];
   for (NSString *string in imageNames) {
-    [images addObject: [UIImage imageNamed: string]];
+    [residenceImages addObject: [UIImage imageNamed: string]];
   }
+}
+
+- (void) createResidenceImageWithDictionary: (NSDictionary *) dictionary
+{
+  NSString *absoluteString = [NSString stringWithFormat: @"%f",
+    [[NSDate date] timeIntervalSince1970]];
+  UIImage *image = [dictionary objectForKey: 
+    UIImagePickerControllerOriginalImage];
+
+  int position = 0;
+  NSArray *array = [residence imagesArray];
+  if ([array count]) {
+    OMBResidenceImage *previousResidenceImage = [array objectAtIndex:
+      [array count] - 1];
+    position = previousResidenceImage.position + 1;
+  }
+
+  OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
+  residenceImage.absoluteString = absoluteString;
+  residenceImage.image    = image;
+  residenceImage.position = position;
+  residenceImage.uid      = -999 + arc4random_uniform(100);
+
+  [residence addResidenceImage: residenceImage];
+
+  // Upload image
+  OMBResidenceUploadImageConnection *conn = 
+    [[OMBResidenceUploadImageConnection alloc] initWithResidence: residence 
+      residenceImage: residenceImage];
+  [conn start];
 }
 
 - (void) createViewsFromImages
 {
-  for (UIImage *image in images) {
+  for (OMBResidenceImage *residenceImage in residenceImages) {
     OMBEditablePhotoView *imageView = [[OMBEditablePhotoView alloc] init];
-    imageView.image = image;
+    imageView.image = residenceImage.image;
     [imageView.deleteButton addTarget: self action: @selector(deleteImageView:)
       forControlEvents: UIControlEventTouchUpInside];
     [imageViews addObject: imageView];
@@ -244,17 +323,25 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     imageView.alpha = 0.0f;
     imageView.transform = CGAffineTransformMakeScale(0.5f, 0.5f);
   } completion: ^(BOOL finished) {
+
+    OMBResidenceImage *residenceImage = [residenceImages objectAtIndex: index];
+    // Delete it from the web server
+    OMBResidenceImageDeleteConnection *conn = 
+      [[OMBResidenceImageDeleteConnection alloc] initWithResidenceImage: 
+        residenceImage];
+    [conn start];
+    // Remove the residence image from the residences' images
+    [residence removeResidenceImage: residenceImage];
     // Remove the view from the scroll view
     [imageView removeFromSuperview];
     // Remove the view from the image views array
     [imageViews removeObjectAtIndex: index];
     // Remove the image from the images array
-    [images removeObjectAtIndex: index];
+    [residenceImages removeObjectAtIndex: index];
+
     [self updateTitle];
-    for (int i = index; i < [imageViews count]; i++) {
-      OMBEditablePhotoView *imageV = [imageViews objectAtIndex: i];
-      [self positionImageView: imageV animated: YES];
-    }
+
+    [self repositionImageViewsFromIndex: index toIndex: [imageViews count] - 1];
   }];
   currentImageViewIndexSelected = 0;
 }
@@ -274,18 +361,23 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
   // Stop wobble
   CGFloat duration = 0.25f;
   for (OMBEditablePhotoView *itemView in imageViews) {
+    [[itemView layer] removeAnimationForKey: @"transformRotationAnimation"];
     // Hide the delete button
     [UIView animateWithDuration: duration animations: ^{
+      itemView.deleteButton.hidden = YES;
       itemView.deleteButtonView.alpha = 0.0f;
+      itemView.isEditing = NO;
+      // itemView.transform = CGAffineTransformIdentity;
     }];
-    [UIView animateWithDuration: duration delay: 0.0
-      options: (UIViewAnimationOptionAllowUserInteraction | 
-        UIViewAnimationOptionBeginFromCurrentState | 
-          UIViewAnimationOptionCurveLinear)
-        animations: ^{
-          itemView.transform = CGAffineTransformIdentity;
-        }
-      completion: nil];
+    
+    // [UIView animateWithDuration: duration delay: 0.0
+    //   options: (UIViewAnimationOptionAllowUserInteraction | 
+    //     UIViewAnimationOptionBeginFromCurrentState | 
+    //       UIViewAnimationOptionCurveLinear)
+    //     animations: ^{
+    //       itemView.transform = CGAffineTransformIdentity;
+    //     }
+    //   completion: nil];
   }
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenHeight = screen.size.height;
@@ -322,10 +414,13 @@ animated: (BOOL) animated
   CGFloat imageWidth   = (screenWidth / maxColumns) - 
     ((spacing * 2) / maxColumns);
   int index = [imageViews indexOfObject: imageView];
+
+  CGSize largeSize = CGSizeMake(screenWidth, coverPhotoHeight);
+  CGSize smallSize = CGSizeMake(imageWidth, imageHeight);
   CGRect rect = CGRectZero;
   // Cover photo
   if (index == 0) {
-    rect = CGRectMake(0.0f, 0.0f, screenWidth, coverPhotoHeight);
+    rect = CGRectMake(0.0f, 0.0f, largeSize.width, largeSize.height);
   }
   // Every other photo
   else {
@@ -336,10 +431,16 @@ animated: (BOOL) animated
     int column = (index - 1) % 3;
     rect = CGRectMake((spacing + imageWidth) * column, 
       coverPhotoHeight + spacing + ((spacing + imageHeight) * row), 
-        imageWidth, imageHeight);
+        smallSize.width, smallSize.height);
   }
+  imageView.currentIndex = index;
+  imageView.delegate = self;
   imageView.deleteButton.tag = index;
   imageView.image = imageView.image;
+  // Needs to know these sizes for repositioning
+  imageView.largeSize = largeSize;
+  imageView.smallSize = smallSize;
+  // Add to the scroll view
   [scroll addSubview: imageView];
   CGFloat duration = 0.0f;
   if (animated)
@@ -357,9 +458,50 @@ animated: (BOOL) animated
   // The adding 1 to images count is for the cover photo
   CGSize newScrollContentSize = CGSizeMake(scroll.frame.size.width,
     coverPhotoHeight + ((spacing + imageHeight) * 
-      ([imageViews count] + 1) / maxColumns));
+      ([imageViews count] + 1) / maxColumns) + 
+      20.0f + addPhotoButtonView.frame.size.height + 20.0f);
   if (newScrollContentSize.height > scroll.contentSize.height)
     scroll.contentSize = newScrollContentSize;
+}
+
+- (void) reloadPhotosAnimated: (BOOL) animated
+{
+  residenceImages = [NSMutableArray arrayWithArray: [residence imagesArray]];
+
+  // Reset the image views array
+  imageViews = [NSMutableArray array];
+
+  // Remove all editable photo views from the scroll view
+  [scroll.subviews enumerateObjectsUsingBlock: 
+    ^(id obj, NSUInteger idx, BOOL *stop) {
+      if ([obj isKindOfClass: [OMBEditablePhotoView class]]) {
+        [(OMBEditablePhotoView *) obj removeFromSuperview];
+      }
+    }
+  ];
+  // Create editable photo view from the images array
+  [self createViewsFromImages];
+
+  // Add the editable photo view to the scroll view
+  // and position them
+  for (OMBEditablePhotoView *imageView in imageViews) {
+    [self positionImageView: imageView animated: animated];
+  }
+
+  if ([residenceImages count])
+    editBarButtonItem.enabled = YES;
+  else
+    editBarButtonItem.enabled = NO;
+}
+
+- (void) repositionImageViewsFromIndex: (int) startingIndex
+toIndex: (int) endingIndex
+{
+  for (int i = startingIndex; i < endingIndex + 1; i++) {
+    OMBEditablePhotoView *imageV = [imageViews objectAtIndex: i];
+    imageV.currentIndex = i;
+    [self positionImageView: imageV animated: YES];
+  }
 }
 
 - (void) startWobblingView: (OMBEditablePhotoView *) itemView
@@ -368,33 +510,55 @@ animated: (BOOL) animated
   CGFloat duration = 0.25f;
   // Show the delete button
   [UIView animateWithDuration: duration animations: ^{
+    itemView.deleteButton.hidden = NO;
     itemView.deleteButtonView.alpha = 1.0f;
+    itemView.isEditing = YES;
   }];
-  // Tilt it counter-clockwise
-  itemView.transform = CGAffineTransformRotate(
-    CGAffineTransformIdentity, DEGREES_TO_RADIANS(-2.5));
+
   CGFloat delay = 0.0f;
   if (index % 2)
     delay = 0.1f;
-  // Animate the wobbling
-  [UIView animateWithDuration: duration delay: delay
-    options: (UIViewAnimationOptionAllowUserInteraction | 
-      UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse)
-      animations: ^{
-        // Swing it clockwise, back the other direction
-        itemView.transform = CGAffineTransformRotate(
-          CGAffineTransformIdentity, DEGREES_TO_RADIANS(2.5));
-      }
-      completion: nil];
+  CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:
+    @"transform.rotation"];
+  animation.autoreverses = YES;
+  animation.beginTime    = delay;
+  animation.duration     = duration;
+  animation.fromValue = [NSNumber numberWithFloat: DEGREES_TO_RADIANS(1.0)];
+  animation.toValue = [NSNumber numberWithFloat: DEGREES_TO_RADIANS(-1.0)];
+  animation.repeatCount  = HUGE_VALF;
+
+  [[itemView layer] addAnimation: animation 
+    forKey: @"transformRotationAnimation"];
+
+  // // Tilt it counter-clockwise
+  // itemView.transform = CGAffineTransformRotate(
+  //   CGAffineTransformIdentity, DEGREES_TO_RADIANS(-2.5));
+  // // itemView.transform = CGAffineTransformRotate(
+  // //   itemView.transform, DEGREES_TO_RADIANS(-2.5));
+  // CGFloat delay = 0.0f;
+  // if (index % 2)
+  //   delay = 0.1f;
+  // // Animate the wobbling
+  // [UIView animateWithDuration: duration delay: delay
+  //   options: (UIViewAnimationOptionAllowUserInteraction | 
+  //     UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse)
+  //     animations: ^{
+  //       // Swing it clockwise, back the other direction
+  //       itemView.transform = CGAffineTransformRotate(
+  //         CGAffineTransformIdentity, DEGREES_TO_RADIANS(2.5));
+  //       // itemView.transform = CGAffineTransformRotate(itemView.transform,
+  //       //   DEGREES_TO_RADIANS(2.5));
+  //     }
+  //     completion: nil];
 }
 
 - (void) updateTitle
 {
   NSString *photosTitleString = @"Photos";
-  if ([images count] == 1)
+  if ([residenceImages count] == 1)
     photosTitleString = @"Photo";
-  if ([images count] > 0)
-    self.title = [NSString stringWithFormat: @"%i %@", [images count],
+  if ([residenceImages count] > 0)
+    self.title = [NSString stringWithFormat: @"%i %@", [residenceImages count],
       photosTitleString];
   else
     self.title = @"Photos";

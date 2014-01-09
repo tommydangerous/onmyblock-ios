@@ -41,6 +41,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 @property (nonatomic, strong) NSMutableDictionary *imageSizeDictionary;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, strong) OMBRenterApplication *renterApplication;
+@property (nonatomic, strong) NSMutableDictionary *residences;
 @property (nonatomic) int uid;
 
 #pragma mark - Methods
@@ -58,6 +59,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 - (void) addLegalAnswer: (OMBLegalAnswer *) object;
 - (void) addPreviousRental: (OMBPreviousRental *) previousRental;
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
+- (void) addResidence: (OMBResidence *) residence;
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence;
 - (void) downloadImageFromImageURLWithCompletion: 
 (void (^) (NSError *error)) block;
@@ -70,10 +72,13 @@ extern NSString *const OMBUserLoggedOutNotification;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) readFromEmploymentDictionary: (NSDictionary *) dictionary;
+- (void) readFromFavoriteResidencesDictionary: (NSDictionary *) dictionary;
 - (void) readFromLegalAnswerDictionary: (NSDictionary *) dictionary;
 - (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence;
+- (NSArray *) residencesSortedWithKey: (NSString *) key 
+ascending: (BOOL) ascending;
 - (NSString *) shortName;
 
 @end

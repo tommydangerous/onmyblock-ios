@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class OMBResidenceImage;
+
 @interface OMBResidence : NSObject
 
 // Web app properties
@@ -24,6 +26,7 @@
 @property (nonatomic) int leaseMonths;
 @property (nonatomic) float longitude;
 @property (nonatomic, strong) NSString *phone;
+@property (nonatomic, strong) NSString *propertyType;
 @property (nonatomic) float rent;
 @property (nonatomic) int squareFeet;
 @property (nonatomic, strong) NSString *state;
@@ -46,8 +49,9 @@
 
 #pragma mark Instance Methods
 
-- (void) addImage: (UIImage *) image atPosition: (int) position 
-withString: (NSString *) string;
+// - (void) addImage: (UIImage *) image atPosition: (int) position 
+// withString: (NSString *) string;
+- (void) addResidenceImage: (OMBResidenceImage *) residenceImage;
 - (NSString *) availableOnString;
 - (UIImage *) coverPhoto;
 - (UIImage *) coverPhotoWithSize: (CGSize) size;
@@ -57,8 +61,10 @@ withString: (NSString *) string;
 - (NSURL *) googleStaticStreetViewImageURL;
 - (NSArray *) imagesArray;
 - (UIImage *) imageAtPosition: (int) position;
+- (UIImage *) imageForSize: (CGFloat) size;
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidenceDictionary: (NSDictionary *) dictionary;
+- (void) removeResidenceImage: (OMBResidenceImage *) residenceImage;
 - (NSString *) rentToCurrencyString;
 
 @end

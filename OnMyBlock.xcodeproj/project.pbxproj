@@ -235,6 +235,13 @@
 		ABA080831868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */; };
 		ABA080861868E76200C7B851 /* OMBTextViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080851868E76200C7B851 /* OMBTextViewViewController.m */; };
 		ABA0808C1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA0808B1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m */; };
+		ABA4F207187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA4F206187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m */; };
+		ABA4F20A187CF02600D725D4 /* OMBGooglePlacesConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA4F209187CF02600D725D4 /* OMBGooglePlacesConnection.m */; };
+		ABA4F20E187D18CD00D725D4 /* OMBCreateListingConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA4F20D187D18CD00D725D4 /* OMBCreateListingConnection.m */; };
+		ABA4F211187D2D4700D725D4 /* OMBManageListingsConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA4F210187D2D4700D725D4 /* OMBManageListingsConnection.m */; };
+		ABA4F214187D422B00D725D4 /* OMBTemporaryResidence.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA4F213187D422B00D725D4 /* OMBTemporaryResidence.m */; };
+		ABA4F217187DDF8D00D725D4 /* OMBResidenceUploadImageConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA4F216187DDF8D00D725D4 /* OMBResidenceUploadImageConnection.m */; };
+		ABA4F21B187DF2CC00D725D4 /* OMBResidenceImageDeleteConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA4F21A187DF2CC00D725D4 /* OMBResidenceImageDeleteConnection.m */; };
 		ABA5B4101856873500F825E1 /* OMBPreviousRentalListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA5B40F1856873500F825E1 /* OMBPreviousRentalListConnection.m */; };
 		ABA5B4161856922600F825E1 /* OMBDeleteRenterApplicationSectionModelConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA5B4151856922600F825E1 /* OMBDeleteRenterApplicationSectionModelConnection.m */; };
 		ABA5B419185699CB00F825E1 /* OMBEmployment.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA5B418185699CB00F825E1 /* OMBEmployment.m */; };
@@ -825,6 +832,20 @@
 		ABA080851868E76200C7B851 /* OMBTextViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTextViewViewController.m; sourceTree = "<group>"; };
 		ABA0808A1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceAddPersonalNoteViewController.h; sourceTree = "<group>"; };
 		ABA0808B1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceAddPersonalNoteViewController.m; sourceTree = "<group>"; };
+		ABA4F205187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBGoogleMapsReverseGeocodingConnection.h; sourceTree = "<group>"; };
+		ABA4F206187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBGoogleMapsReverseGeocodingConnection.m; sourceTree = "<group>"; };
+		ABA4F208187CF02600D725D4 /* OMBGooglePlacesConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBGooglePlacesConnection.h; sourceTree = "<group>"; };
+		ABA4F209187CF02600D725D4 /* OMBGooglePlacesConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBGooglePlacesConnection.m; sourceTree = "<group>"; };
+		ABA4F20C187D18CD00D725D4 /* OMBCreateListingConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingConnection.h; sourceTree = "<group>"; };
+		ABA4F20D187D18CD00D725D4 /* OMBCreateListingConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingConnection.m; sourceTree = "<group>"; };
+		ABA4F20F187D2D4700D725D4 /* OMBManageListingsConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBManageListingsConnection.h; sourceTree = "<group>"; };
+		ABA4F210187D2D4700D725D4 /* OMBManageListingsConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBManageListingsConnection.m; sourceTree = "<group>"; };
+		ABA4F212187D422B00D725D4 /* OMBTemporaryResidence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTemporaryResidence.h; sourceTree = "<group>"; };
+		ABA4F213187D422B00D725D4 /* OMBTemporaryResidence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTemporaryResidence.m; sourceTree = "<group>"; };
+		ABA4F215187DDF8D00D725D4 /* OMBResidenceUploadImageConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceUploadImageConnection.h; sourceTree = "<group>"; };
+		ABA4F216187DDF8D00D725D4 /* OMBResidenceUploadImageConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceUploadImageConnection.m; sourceTree = "<group>"; };
+		ABA4F219187DF2CC00D725D4 /* OMBResidenceImageDeleteConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceImageDeleteConnection.h; sourceTree = "<group>"; };
+		ABA4F21A187DF2CC00D725D4 /* OMBResidenceImageDeleteConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceImageDeleteConnection.m; sourceTree = "<group>"; };
 		ABA5B40E1856873500F825E1 /* OMBPreviousRentalListConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPreviousRentalListConnection.h; sourceTree = "<group>"; };
 		ABA5B40F1856873500F825E1 /* OMBPreviousRentalListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPreviousRentalListConnection.m; sourceTree = "<group>"; };
 		ABA5B4141856922600F825E1 /* OMBDeleteRenterApplicationSectionModelConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBDeleteRenterApplicationSectionModelConnection.h; sourceTree = "<group>"; };
@@ -1634,6 +1655,8 @@
 				AB01ED3F18580B0700333390 /* OMBLegalAnswer.m */,
 				ABE28182186A416200A5D14E /* OMBMessage.h */,
 				ABE28183186A416200A5D14E /* OMBMessage.m */,
+				ABA4F212187D422B00D725D4 /* OMBTemporaryResidence.h */,
+				ABA4F213187D422B00D725D4 /* OMBTemporaryResidence.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1704,6 +1727,9 @@
 		AB9B264A1811CE5E00E6DAC4 /* Connections */ = {
 			isa = PBXGroup;
 			children = (
+				ABA4F218187DF2B500D725D4 /* Residence Image */,
+				ABA4F20B187D18BB00D725D4 /* Residences */,
+				ABA4F204187CF01600D725D4 /* Google */,
 				AB9B264B1811CE6D00E6DAC4 /* OMBConnection.h */,
 				AB9B264C1811CE6D00E6DAC4 /* OMBConnection.m */,
 				AB63D20F1821774000D63800 /* OMBContactResidenceLandlordConnection.h */,
@@ -1762,6 +1788,39 @@
 				ABABEBF418625DFA008B6768 /* OMBAuthenticationVenmoConnection.m */,
 			);
 			path = Connections;
+			sourceTree = "<group>";
+		};
+		ABA4F204187CF01600D725D4 /* Google */ = {
+			isa = PBXGroup;
+			children = (
+				ABA4F205187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.h */,
+				ABA4F206187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m */,
+				ABA4F208187CF02600D725D4 /* OMBGooglePlacesConnection.h */,
+				ABA4F209187CF02600D725D4 /* OMBGooglePlacesConnection.m */,
+			);
+			path = Google;
+			sourceTree = "<group>";
+		};
+		ABA4F20B187D18BB00D725D4 /* Residences */ = {
+			isa = PBXGroup;
+			children = (
+				ABA4F20C187D18CD00D725D4 /* OMBCreateListingConnection.h */,
+				ABA4F20D187D18CD00D725D4 /* OMBCreateListingConnection.m */,
+				ABA4F20F187D2D4700D725D4 /* OMBManageListingsConnection.h */,
+				ABA4F210187D2D4700D725D4 /* OMBManageListingsConnection.m */,
+				ABA4F215187DDF8D00D725D4 /* OMBResidenceUploadImageConnection.h */,
+				ABA4F216187DDF8D00D725D4 /* OMBResidenceUploadImageConnection.m */,
+			);
+			path = Residences;
+			sourceTree = "<group>";
+		};
+		ABA4F218187DF2B500D725D4 /* Residence Image */ = {
+			isa = PBXGroup;
+			children = (
+				ABA4F219187DF2CC00D725D4 /* OMBResidenceImageDeleteConnection.h */,
+				ABA4F21A187DF2CC00D725D4 /* OMBResidenceImageDeleteConnection.m */,
+			);
+			path = "Residence Image";
 			sourceTree = "<group>";
 		};
 		ABABEC461864D547008B6768 /* Discover */ = {
@@ -2550,9 +2609,11 @@
 				ABCB36BB187CAF97008A0EEF /* OMBHomebaseRenterAddRemoveRoommatesRoommateCell.m in Sources */,
 				AB0C36B218406779006DC3AD /* OMBStopwatchView.m in Sources */,
 				ABA5B4221857900F00F825E1 /* OMBWebViewController.m in Sources */,
+				ABA4F211187D2D4700D725D4 /* OMBManageListingsConnection.m in Sources */,
 				AB57EA1E186B7C3C001682DB /* OMBMessageDetailCollectionViewFlowLayout.m in Sources */,
 				AB9B26091811A74E00E6DAC4 /* OMBAnnotationView.m in Sources */,
 				AB9B26491811CB1300E6DAC4 /* UIImage+Resize.m in Sources */,
+				ABA4F217187DDF8D00D725D4 /* OMBResidenceUploadImageConnection.m in Sources */,
 				AB1C218118518FD600ED7C06 /* OMBCosignerListConnection.m in Sources */,
 				AB9B264D1811CE6D00E6DAC4 /* OMBConnection.m in Sources */,
 				ABBA58BB1875A49200E9BF4E /* OMBStandardLeaseViewController.m in Sources */,
@@ -2567,6 +2628,7 @@
 				AB034B151837D3DC00811074 /* OMBGradientView.m in Sources */,
 				AB8C8C1F1815969700A1B087 /* OMBResidenceStore.m in Sources */,
 				AB01ED5D185924C800333390 /* OMBSelectedPayoutMethodViewController.m in Sources */,
+				ABA4F21B187DF2CC00D725D4 /* OMBResidenceImageDeleteConnection.m in Sources */,
 				AB90129D18527824003153A2 /* OMBRenterApplicationAddModelViewController.m in Sources */,
 				AB19A0891860FF7300F84DE9 /* OMBLabel.m in Sources */,
 				ABF18BB41816CCDA002DD723 /* OMBNeighborhoodStore.m in Sources */,
@@ -2589,6 +2651,7 @@
 				AB01ED3A1857DB5300333390 /* OMBLegalQuestion.m in Sources */,
 				AB1C216F1851436200ED7C06 /* OMBRenterApplication.m in Sources */,
 				AB01ED371857D96800333390 /* OMBLegalQuestionStore.m in Sources */,
+				ABA4F207187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m in Sources */,
 				AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */,
 				AB8C8C251815A1CA00A1B087 /* OMBResidenceCoverPhotoURLConnection.m in Sources */,
 				ABBA58971870C59700E9BF4E /* ELCAssetTablePicker.m in Sources */,
@@ -2708,6 +2771,7 @@
 				AB6155A6184D99DF00A193C7 /* OMBCoApplicantsViewController.m in Sources */,
 				AB9B8C1F1819EECF0009199A /* OMBResidenceCollectionViewCell.m in Sources */,
 				AB1C217B18516D7F00ED7C06 /* NSString+PhoneNumber.m in Sources */,
+				ABA4F20E187D18CD00D725D4 /* OMBCreateListingConnection.m in Sources */,
 				ABB70076187B83C0005F0730 /* OMBHomebaseRenterNotificationCell.m in Sources */,
 				AB0C36AB1840652B006DC3AD /* OMBPaddleView.m in Sources */,
 				ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */,
@@ -2728,12 +2792,14 @@
 				AB9B26481811CB1300E6DAC4 /* UIColor+Extensions.m in Sources */,
 				ABB7006D187B6067005F0730 /* OMBHomebaseRenterRoommateImageView.m in Sources */,
 				AB44FBC118358DA400F07747 /* OMBResidencePartialView.m in Sources */,
+				ABA4F214187D422B00D725D4 /* OMBTemporaryResidence.m in Sources */,
 				ABDF174A1866396C004E2755 /* OMBResidenceBookItViewController.m in Sources */,
 				ABA5B42C1857B9E300F825E1 /* OMBEmploymentListConnection.m in Sources */,
 				ABB3C5821811789100DD91C9 /* OMBTabBarController.m in Sources */,
 				AB802EAA18109E5200E04D11 /* main.m in Sources */,
 				ABBA5871186EC0B400E9BF4E /* OMBFinishListingAmenityCell.m in Sources */,
 				AB01ED461858C84900333390 /* OMBLegalAnswerCreateOrUpdateConnection.m in Sources */,
+				ABA4F20A187CF02600D725D4 /* OMBGooglePlacesConnection.m in Sources */,
 				AB0269BD182293DC00E72F53 /* UIImage+NegativeImage.m in Sources */,
 				AB4F9D21181ABD160086D618 /* OMBResidenceImagesConnection.m in Sources */,
 				ABB06AE418453640009CBBEA /* OMBViewControllerContainer.m in Sources */,

@@ -46,6 +46,10 @@ didFailWithError: (NSError *) error;
 #pragma mark Instance Methods
 
 - (void) cancelConnection;
+- (void) setPostRequestWithString: (NSString *) string
+withParameters: (NSDictionary *) dictionary;
 - (void) setRequestFromString: (NSString *) requestString;
+- (void) setRequestWithString: (NSString *) string method: (NSString *) method
+parameters: (NSDictionary *) dictionary;
 
 @end

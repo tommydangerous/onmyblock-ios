@@ -9,6 +9,7 @@
 #import "OMBResidenceGoogleStaticImageDownloader.h"
 
 #import "OMBResidence.h"
+#import "OMBResidenceImage.h"
 
 @implementation OMBResidenceGoogleStaticImageDownloader
 
@@ -31,9 +32,13 @@
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
   UIImage *image = [[UIImage alloc] initWithData: activeDownload];
-  if (image)
-    [residence addImage: image atPosition: 1 
-      withString: [self.imageURL absoluteString]];
+  if (image) {
+    OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
+    residenceImage.absoluteString = [self.imageURL absoluteString];
+    residenceImage.image    = image;
+    residenceImage.position = 0;
+    residenceImage.uid      = -999 + arc4random_uniform(100);
+  }
   [super connectionDidFinishLoading: connection];
 }
 

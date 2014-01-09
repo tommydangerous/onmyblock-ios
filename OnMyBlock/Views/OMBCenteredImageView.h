@@ -21,6 +21,7 @@
 
 #pragma mark - Instance Methods
 
+- (void) clearImage;
 - (void) setImage: (UIImage *) object;
 
 @end

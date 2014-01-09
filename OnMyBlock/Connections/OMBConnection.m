@@ -13,14 +13,14 @@ NSMutableArray *sharedConnectionList  = nil;
 NSString *const OnMyBlockAPI          = @"/api-v1";
 
 // Production server
-// NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
+NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
 // Staging server
 // NSString *const OnMyBlockAPIURL = @"http://ombrb.nodelist.com/api-v1";
 
 // Localhost
 // NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
 // Josselyn
-NSString *const OnMyBlockAPIURL = @"http://10.0.1.29:3000/api-v1";
+// NSString *const OnMyBlockAPIURL = @"http://10.0.1.29:3000/api-v1";
 // iPhone hotspot
 // NSString *const OnMyBlockAPIURL = @"http://172.20.10.5:3000/api-v1";
 // Evonexus
@@ -103,12 +103,31 @@ didFailWithError: (NSError *) error
   [internalConnection cancel];
 }
 
+- (void) setPostRequestWithString: (NSString *) string
+withParameters: (NSDictionary *) dictionary
+{
+  [self setRequestWithString: string method: @"POST" parameters: dictionary];
+}
+
 - (void) setRequestFromString: (NSString *) requestString
 {
   NSURL *url = [NSURL URLWithString:
     [requestString stringByAddingPercentEscapesUsingEncoding:
       NSUTF8StringEncoding]];
   _request = [NSMutableURLRequest requestWithURL: url];
+}
+
+- (void) setRequestWithString: (NSString *) string method: (NSString *) method
+parameters: (NSDictionary *) dictionary
+{
+  NSURL *url = [NSURL URLWithString: string];
+  NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
+  NSData *json = [NSJSONSerialization dataWithJSONObject: dictionary
+    options: 0 error: nil];
+  [req addValue: @"application/json" forHTTPHeaderField: @"Content-Type"];
+  [req setHTTPBody: json];
+  [req setHTTPMethod: [method uppercaseString]];
+  _request = req;
 }
 
 - (void) start

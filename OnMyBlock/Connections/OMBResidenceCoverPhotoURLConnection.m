@@ -11,6 +11,7 @@
 #import "OMBResidence.h"
 #import "OMBResidenceCoverPhotoDownloader.h"
 #import "OMBResidenceGoogleStaticImageDownloader.h"
+#import "OMBTemporaryResidence.h"
 
 @implementation OMBResidenceCoverPhotoURLConnection
 
@@ -18,14 +19,21 @@
 
 - (id) initWithResidence: (OMBResidence *) object
 {
-  self = [super init];
-  if (self) {
-    residence = object;
-    // http://localhost:3000/places/141/cover_photo_url.json
-    NSString *string = [NSString stringWithFormat:
-      @"%@/places/%i/cover_photo_url", OnMyBlockAPIURL, residence.uid];
-    [self setRequestFromString: string];
+  if (!(self = [super init])) return nil;
+
+  residence = object;
+  
+  NSString *resource = @"places";
+  if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
+    resource = @"temporary_residences";
   }
+  NSString *string = [NSString stringWithFormat:
+    @"%@/%@/%i/cover_photo_url/?access_token=%@", 
+      OnMyBlockAPIURL, resource, residence.uid, 
+        [OMBUser currentUser].accessToken];
+
+  [self setRequestFromString: string];
+  
   return self;
 }
 
@@ -35,6 +43,8 @@
 {
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
+  NSLog(@"OMBResidenceCoverPhotoURLConnection");
+  NSLog(@"%@", json);
   NSString *originalString = [json objectForKey: @"image"];
   NSString *string         = [json objectForKey: @"image"];
   // If the cover photo URL is not empty.png
@@ -63,9 +73,11 @@
     
     downloader.originalString = originalString;
     downloader.position       = position;
+    downloader.residenceImageUID = [[json objectForKey: @"id"] intValue];
     [downloader startDownload];
   }
-  else {
+  // If residence is not a temporary residence
+  else if (![residence isKindOfClass: [OMBTemporaryResidence class]]) {
     // If the residence has no image, show the Google Static street view
     OMBResidenceGoogleStaticImageDownloader *downloader =
       [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:

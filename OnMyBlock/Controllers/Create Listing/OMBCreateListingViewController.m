@@ -9,10 +9,13 @@
 #import "OMBCreateListingViewController.h"
 
 #import "OMBActivityView.h"
+#import "OMBCreateListingConnection.h"
 #import "OMBCreateListingDetailCell.h"
 #import "OMBCreateListingPropertyTypeCell.h"
 #import "OMBExtendedHitAreaViewContainer.h"
 #import "OMBFinishListingViewController.h"
+#import "OMBGoogleMapsReverseGeocodingConnection.h"
+#import "OMBGooglePlacesConnection.h"
 #import "OMBNavigationController.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
@@ -26,6 +29,11 @@
 {
   if (!(self = [super init])) return nil;
 
+  locationManager                 = [[CLLocationManager alloc] init];
+  locationManager.delegate        = self;
+  locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+  locationManager.distanceFilter  = 50;
+
   self.screenName = @"Create Listing";
   self.title      = @"Step 1";
 
@@ -34,6 +42,7 @@
     forKey: @"bathrooms"];
   [valuesDictionary setObject: [NSNumber numberWithInt: 1] 
     forKey: @"bedrooms"];
+  [valuesDictionary setObject: @"" forKey: @"city"];
   [valuesDictionary setObject: [NSNumber numberWithInt: 6] 
     forKey: @"leaseMonths"];
   [valuesDictionary setObject: @"" forKey: @"propertyType"];
@@ -153,6 +162,8 @@
   cityTextField.returnKeyType = UIReturnKeyDone;
   cityTextField.rightViewMode = UITextFieldViewModeAlways;
   cityTextField.textColor = [UIColor textColor];
+  [cityTextField addTarget: self action: @selector(textFieldDidChange:)
+    forControlEvents: UIControlEventEditingChanged];
   [locationView addSubview: cityTextField];
   // Current location button
   currentLocationButton = [UIButton new];
@@ -160,6 +171,8 @@
     cityTextField.frame.size.height, cityTextField.frame.size.height);
   UIImage *currentLocationButtonImage = [UIImage image: [UIImage imageNamed: 
     @"gps_cursor_blue.png"] size: CGSizeMake(padding, padding)];
+  [currentLocationButton addTarget: self action: @selector(useCurrentLocation)
+    forControlEvents: UIControlEventTouchUpInside];
   [currentLocationButton setImage: currentLocationButtonImage 
     forState: UIControlStateNormal];
   cityTextField.rightView = currentLocationButton;
@@ -176,6 +189,20 @@
   map.showsPointsOfInterest = NO;
   map.zoomEnabled = NO;
   [locationView addSubview: map];
+
+  // City table view
+  cityTableView = [[UITableView alloc] initWithFrame: 
+    CGRectMake(map.frame.origin.x, map.frame.origin.y, 
+      map.frame.size.width, map.frame.size.height) 
+        style: UITableViewStylePlain];
+  cityTableView.alwaysBounceVertical = YES;
+  cityTableView.dataSource = self;
+  cityTableView.delegate = self;
+  cityTableView.hidden = YES;
+  cityTableView.separatorColor = [UIColor grayLight];
+  cityTableView.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
+  cityTableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
+  [locationView addSubview: cityTableView];
 
   // Step 3
   detailsTableView = [[UITableView alloc] initWithFrame: CGRectMake(
@@ -202,6 +229,28 @@
 
 #pragma mark - Protocol
 
+#pragma mark - Protocol CLLocationManagerDelegate
+
+- (void) locationManager: (CLLocationManager *) manager
+didFailWithError: (NSError *) error
+{
+  NSLog(@"Location manager did fail with error: %@", 
+    error.localizedDescription);
+}
+
+- (void) locationManager: (CLLocationManager *) manager
+didUpdateLocations: (NSArray *) locations
+{
+  CLLocationCoordinate2D coordinate;
+  if ([locations count]) {
+    for (CLLocation *location in locations) {
+      coordinate = location.coordinate;
+    }
+  }
+  [locationManager stopUpdatingLocation];
+  [self foundLocation: coordinate];
+}
+
 #pragma mark - Protocol UITableViewDataSource
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -214,6 +263,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault 
       reuseIdentifier: CellIdentifier];
   cell.selectionStyle = UITableViewCellSelectionStyleNone;
+  // Property type
   if (tableView == propertyTypeTableView) {
     static NSString *PropertyTypeCellIdentifier = @"PropertyTypeCellIdentifier";
     OMBCreateListingPropertyTypeCell *c = 
@@ -243,6 +293,22 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     c.propertyTypeLabel.text      = string;
     return c;
   }
+  // City
+  else if (tableView == cityTableView) {
+    static NSString *CityCellIdentifier = @"CityCellIdentifier";
+    UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
+      CityCellIdentifier];
+    if (!cell1)
+      cell1 = [[UITableViewCell alloc] initWithStyle: 
+        UITableViewCellStyleDefault reuseIdentifier: CityCellIdentifier];
+    cell1.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell1.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
+      size: 15];
+    cell1.textLabel.text = [_citiesArray objectAtIndex: indexPath.row];
+    cell1.textLabel.textColor = [UIColor textColor];
+    return cell1;
+  }
+  // Details
   else if (tableView == detailsTableView) {
     static NSString *DetailCellIdentifier = @"DetailCellIdentifier";
     OMBCreateListingDetailCell *c = 
@@ -271,7 +337,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     [c setFramesForSubviewsWithSize: CGSizeMake(tableView.frame.size.width,
       tableView.frame.size.height / 3.0f)];
     c.detailNameLabel.text = string;
-    c.valueLabel.text      = valueString;
+    c.minusButton.tag = indexPath.row;
+    c.plusButton.tag = indexPath.row;
+    c.valueLabel.text = valueString;
+    [c.minusButton addTarget: self action: @selector(minusButtonSelected:)
+      forControlEvents: UIControlEventTouchUpInside];
+    [c.plusButton addTarget: self action: @selector(plusButtonSelected:)
+      forControlEvents: UIControlEventTouchUpInside];
     return c;
   }
   return cell;
@@ -280,9 +352,15 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
+  // Property Type
   if (tableView == propertyTypeTableView) {
     return 3;
   }
+  // City
+  else if (tableView == cityTableView) {
+    return [_citiesArray count];
+  }
+  // Details
   else if (tableView == detailsTableView) {
     return 3;
   }
@@ -294,6 +372,7 @@ numberOfRowsInSection: (NSInteger) section
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  // Property Type
   if (tableView == propertyTypeTableView) {
     NSString *string = @"";
     if (indexPath.row == 0) {
@@ -308,15 +387,25 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     [valuesDictionary setObject: string forKey: @"propertyType"];
     [self next];
   }
+  // City
+  else if (tableView == cityTableView) {
+    cityTextField.text = [_citiesArray objectAtIndex: indexPath.row];
+    [self next];
+  }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  // Property Type
   if (tableView == propertyTypeTableView) {
     return tableView.frame.size.height / 3.0f;
   }
+  else if (tableView == cityTableView) {
+    return 44.0f;
+  }
+  // Details
   else if (tableView == detailsTableView) {
     return tableView.frame.size.height / 3.0f;
   }
@@ -412,6 +501,72 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     completion: nil];
 }
 
+- (void ) changeDetailValueAtIndex: (int) index plus: (BOOL) plus
+{
+  NSString *key = @"";
+  
+  // Bedrooms
+  if (index == 0) {
+    key = @"bedrooms";
+  }
+  // Bathrooms
+  else if (index == 1) {
+    key = @"bathrooms";
+  }
+  // Bedrooms
+  else if (index == 2) {
+    key = @"leaseMonths";
+  }
+  int value = [[valuesDictionary objectForKey: key] intValue];
+  if (plus) {
+    value += 1;
+  }
+  else {
+    value -= 1;
+  }
+  if (value < 0) {
+    value = 0;
+  }
+  [valuesDictionary setObject: [NSNumber numberWithInt: value]
+    forKey: key];
+  OMBCreateListingDetailCell *cell = (OMBCreateListingDetailCell *)
+    [detailsTableView cellForRowAtIndexPath: [NSIndexPath indexPathForRow: index
+      inSection: 0]];
+  cell.valueLabel.text = [NSString stringWithFormat: @"%i", value];
+}
+
+- (void) checkValidationForCity
+{
+  [valuesDictionary setObject: cityTextField.text forKey: @"city"];
+  if ([[[valuesDictionary objectForKey: @"city"] stripWhiteSpace] length]) {
+    nextBarButtonItem.enabled = YES;
+  }
+  else {
+    nextBarButtonItem.enabled = NO;
+  }
+}
+
+- (void) foundLocation: (CLLocationCoordinate2D) coordinate
+{
+  [self setMapViewRegion: coordinate withMiles: 5 animated: YES];
+  // Use Google Places API with coordinate as opposed to search text
+  // Search for places via Google
+  OMBGoogleMapsReverseGeocodingConnection *conn = 
+    [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithCoordinate:
+      coordinate];
+  conn.completionBlock = ^(NSError *error) {
+    cityTableView.hidden = YES;
+    [self checkValidationForCity];
+  };
+  conn.delegate = self;
+  [conn start];
+}
+
+- (void) minusButtonSelected: (UIButton *) button
+{
+  [self changeDetailValueAtIndex: button.tag plus: NO];
+}
+
 - (void) next
 {
   if (stepNumber < 2) {
@@ -426,7 +581,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     
     [self.navigationItem setLeftBarButtonItem: backBarButtonItem
       animated: YES];
-    if (stepNumber < 2)
+    if (stepNumber < 2) 
       [self.navigationItem setRightBarButtonItem: nextBarButtonItem
         animated: YES];
     else
@@ -455,6 +610,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         rect2.origin.x     = 0.0f;
         locationView.frame = rect2;
       };
+      [self useCurrentLocation];
+      [self checkValidationForCity];
     }
     // Step 2 to Step 3
     else if (stepNumber == 2) {
@@ -475,11 +632,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         rect3.origin.x         = 0.0f;
         detailsTableView.frame = rect3;
       };
+      [self checkValidationForCity];
     }
     [UIView animateWithDuration: 0.25f animations: animations 
       completion: completion];
   }
   [self.view endEditing: YES];
+}
+
+- (void) plusButtonSelected: (UIButton *) button
+{
+  [self changeDetailValueAtIndex: button.tag plus: YES];
 }
 
 - (void) save
@@ -494,12 +657,86 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [UIView animateWithDuration: 0.25f animations: ^{
     progressBar.frame = progressBarRect;
   } completion: ^(BOOL finished) {
-    [[self appDelegate].container.manageListingsNavigationController 
-      pushViewController:
-      [[OMBFinishListingViewController alloc] initWithResidence: nil] 
-        animated: NO];
-    [self cancel];
+    OMBCreateListingConnection *conn = 
+      [[OMBCreateListingConnection alloc] initWithDictionary: valuesDictionary];
+    conn.completionBlock = ^(NSError *error) {
+      if (error) {
+        [activityView stopSpinning];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+          @"Save failed" message: @"Please try again" 
+            delegate: nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
+        [alertView show];
+        stepNumber -= 1;
+        CGRect newRect = progressBar.frame;
+        newRect.size.width = screen.size.width * (stepNumber / 3.0f);
+        [UIView animateWithDuration: 0.25f animations: ^{
+          progressBar.frame = newRect;
+        }];
+      }
+      else {
+        [[self appDelegate].container.manageListingsNavigationController 
+          pushViewController:
+            [[OMBFinishListingViewController alloc] initWithResidence: 
+              _temporaryResidence] animated: NO];
+        [self cancel];
+      }
+    };
+    [conn start]; 
   }];
+}
+
+- (void) setCityTextFieldTextWithString: (NSString *) string
+{
+  cityTextField.text = string;
+}
+
+- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
+withMiles: (int) miles animated: (BOOL) animated
+{
+  // 1609 meters = 1 mile
+  int distanceInMiles = 1609 * miles;
+  MKCoordinateRegion region =
+    MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles, 
+      distanceInMiles);
+  [map setRegion: region animated: animated];
+}
+
+- (void) startGooglePlacesConnection
+{
+  // Search for places via Google
+  OMBGooglePlacesConnection *conn = 
+    [[OMBGooglePlacesConnection alloc] initWithString: cityTextField.text];
+  conn.completionBlock = ^(NSError *error) {
+    [cityTableView reloadData];
+  };
+  conn.delegate = self;
+  [conn start];
+}
+
+- (void) textFieldDidChange: (UITextField *) textField
+{
+  // City
+  if (textField == cityTextField) {
+    // Stop timer
+    [typingTimer invalidate];
+    // Start timer
+    if ([[textField.text stripWhiteSpace] length]) {
+      typingTimer = [NSTimer scheduledTimerWithTimeInterval: 0.25f target: self 
+        selector: @selector(startGooglePlacesConnection) userInfo: nil 
+          repeats: NO];
+      // Show city table view
+      cityTableView.hidden = NO;
+    }
+    else {
+      cityTableView.hidden = YES;
+    }
+    [self checkValidationForCity];
+  } 
+}
+
+- (void) useCurrentLocation
+{
+  [locationManager startUpdatingLocation];
 }
 
 @end

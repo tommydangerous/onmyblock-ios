@@ -11,6 +11,9 @@
 #import "AMBlurView.h"
 #import "OMBFinishListingViewController.h"
 #import "OMBManageListingsCell.h"
+#import "OMBManageListingsConnection.h"
+#import "OMBResidence.h"
+#import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -81,6 +84,18 @@
   [createListingView addSubview: createListingButton];
 }
 
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  OMBManageListingsConnection *conn = 
+    [[OMBManageListingsConnection alloc] init];
+  conn.completionBlock = ^(NSError *error) {
+    [self.table reloadData];
+  };
+  [conn start];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol UITableViewDataSource
@@ -94,23 +109,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!cell)
     cell = [[OMBManageListingsCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
-  [cell loadResidenceData: nil];
-  if (indexPath.row == 0) {
-    [cell setStatusLabelText: @"7d 12h"];
-    cell.statusLabel.textColor = [UIColor green];
-  }
-  else if (indexPath.row == 1) {
-    [cell setStatusLabelText: @"Unlisted"];
-    cell.statusLabel.textColor = [UIColor red];
-  }
-  else if (indexPath.row == 2) {
-    [cell setStatusLabelText: @"6 steps"]; 
-    cell.statusLabel.textColor = [UIColor blueDark];
-  }
-  else if (indexPath.row == 3) {
-    [cell setStatusLabelText: @"Inactive"];
-    cell.statusLabel.textColor = [UIColor grayMedium];
-  }
+  // [cell loadResidenceData: [[self listings] objectAtIndex: indexPath.row]];
   return cell;
 }
 
@@ -122,12 +121,20 @@ numberOfRowsInSection: (NSInteger) section
 
 #pragma mark - Protocol UITableViewDelegate
 
+- (void) tableView: (UITableView *) tableView 
+didEndDisplayingCell: (UITableViewCell *) cell 
+forRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  [(OMBManageListingsCell *) cell clearImage];
+}
+
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   [self.navigationController pushViewController:
-    [[OMBFinishListingViewController alloc] initWithResidence: nil]
-      animated: YES];
+    [[OMBFinishListingViewController alloc] initWithResidence:
+      [[self listings] objectAtIndex: indexPath.row]]
+        animated: YES];
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
@@ -135,6 +142,16 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   return [OMBManageListingsCell heightForCell];
+}
+
+- (void) tableView: (UITableView *) tableView 
+willDisplayCell: (UITableViewCell *) cell 
+forRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  if ([[self listings] count]) {
+    [(OMBManageListingsCell *) cell loadResidenceData: 
+      [[self listings] objectAtIndex: indexPath.row]];
+  }
 }
 
 #pragma mark - Methods
@@ -148,7 +165,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (NSArray *) listings
 {
-  return @[@"1", @"2", @"3", @"4"];
+  return @[[OMBResidence fakeResidence]];
+  return [[OMBUser currentUser] residencesSortedWithKey: @"createdAt"
+    ascending: NO];
 }
 
 @end

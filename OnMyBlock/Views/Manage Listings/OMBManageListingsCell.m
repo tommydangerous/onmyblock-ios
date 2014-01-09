@@ -10,6 +10,7 @@
 
 #import "OMBCenteredImageView.h"
 #import "OMBResidence.h"
+#import "OMBResidenceCoverPhotoURLConnection.h"
 #import "UIImage+Color.h"
 
 @implementation OMBManageListingsCell
@@ -30,6 +31,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat padding = 10.0f;
 
   centeredImageView = [[OMBCenteredImageView alloc] init];
+  centeredImageView.backgroundColor = [UIColor grayUltraLight];
   centeredImageView.frame = CGRectMake(0.0f, 0.0f, 
     screenWidth * 0.3f, [OMBManageListingsCell heightForCell]);
   [self.contentView addSubview: centeredImageView];
@@ -75,13 +77,44 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 #pragma mark - Instance Methods
 
+- (void) clearImage
+{
+  [centeredImageView clearImage];
+}
+
 - (void) loadResidenceData: (OMBResidence *) object
 {
   residence = object;
 
-  centeredImageView.image = [UIImage imageNamed: 
-    @"intro_still_image_slide_3_background.jpg"];
-  addressLabel.text = @"8550 Costa Verde Blvd";
+  // Image
+  UIImage *image = [residence imageForSize: centeredImageView.frame.size.width];
+  if (image) {
+    centeredImageView.image = image;
+  }
+  else {
+    OMBResidenceCoverPhotoURLConnection *conn = 
+      [[OMBResidenceCoverPhotoURLConnection alloc] initWithResidence: 
+        residence];
+    conn.completionBlock = ^(NSError *error) {
+      if ([residence coverPhoto]) {
+        centeredImageView.image = [residence coverPhoto];
+        [residence.imageSizeDictionary setObject: centeredImageView.image
+          forKey: [NSNumber numberWithFloat: 
+            centeredImageView.frame.size.width]];
+      }
+    };
+    [conn start];
+  }
+
+  // Address
+  if ([residence.address length]) {
+    addressLabel.text = residence.address;  
+  }
+  else {
+    addressLabel.text = [NSString stringWithFormat: @"%@ in %@",
+      [residence.propertyType capitalizedString], 
+        [residence.city capitalizedString]];
+  }
   CGRect addressRect = [addressLabel.text boundingRectWithSize:
     CGSizeMake(addressLabel.frame.size.width, 23.0f * 2) 
       font: addressLabel.font];
@@ -89,7 +122,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
     addressLabel.frame.origin.y, addressLabel.frame.size.width,
       addressRect.size.height);
 
-  propertyTypeLabel.text = @"Apartment";
+  // Property
+  propertyTypeLabel.text = residence.propertyType;
   CGRect propertyRect = [propertyTypeLabel.text boundingRectWithSize:
     CGSizeMake(addressLabel.frame.size.width, 
       propertyTypeLabel.frame.size.height) font: propertyTypeLabel.font];
