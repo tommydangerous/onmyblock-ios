@@ -10,7 +10,13 @@
 
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
+#import "OMBAnnotation.h"
+#import "OMBAnnotationView.h"
+#import "OMBResidenceUpdateConnection.h"
+#import "OMBGoogleMapsReverseGeocodingConnection.h"
+#import "OMBGooglePlacesConnection.h"
 #import "OMBLabelTextFieldCell.h"
+#import "OMBResidence.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
@@ -22,6 +28,11 @@
 - (id) initWithResidence: (OMBResidence *) object
 {
   if (!(self = [super initWithResidence: object])) return nil;
+
+  locationManager                 = [[CLLocationManager alloc] init];
+  locationManager.delegate        = self;
+  locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+  locationManager.distanceFilter  = 50;
 
   self.screenName = self.title = @"Location";
 
@@ -91,6 +102,8 @@
     addressTextField.frame.size.height, addressTextField.frame.size.height);
   UIImage *currentLocationButtonImage = [UIImage image: [UIImage imageNamed: 
     @"gps_cursor_blue.png"] size: CGSizeMake(padding, padding)];
+  [currentLocationButton addTarget: self action: @selector(useCurrentLocation)
+    forControlEvents: UIControlEventTouchUpInside];
   [currentLocationButton setImage: currentLocationButtonImage 
     forState: UIControlStateNormal];
   addressTextField.rightView = currentLocationButton;
@@ -138,7 +151,92 @@
   [addressTextField becomeFirstResponder];
 }
 
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  address = [residence.address capitalizedString];
+  city    = [residence.city capitalizedString];
+  state   = [residence.state capitalizedString];
+  unit    = residence.unit;
+  zip     = residence.zip;
+
+  OMBGoogleMapsReverseGeocodingConnection *conn;
+  if (residence.latitude && residence.longitude) {
+    conn = [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithCoordinate:
+      CLLocationCoordinate2DMake(residence.latitude, residence.longitude)];
+  }
+  else {
+    conn = [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithAddress:
+      [NSString stringWithFormat: @"%@, %@", city, state]];
+  }
+  conn.delegate = self;
+  [conn start];
+
+  if ([address length]) {
+    addressTextField.text = [NSString stringWithFormat: @"%@", address];
+    if ([city length])
+      addressTextField.text = [NSString stringWithFormat: @"%@, %@",
+        addressTextField.text, city];
+    if ([state length])
+      addressTextField.text = [NSString stringWithFormat: @"%@, %@",
+        addressTextField.text, state];
+    if ([zip length])
+      addressTextField.text = [NSString stringWithFormat: @"%@, %@",
+        addressTextField.text, zip];
+  }
+
+  // If all this info is already there, allow them to save
+  if (residence.address && residence.city && residence.state && residence.zip) {
+    saveBarButtonItem.enabled = YES;
+    [self.navigationItem setRightBarButtonItem: saveBarButtonItem animated: NO];
+  }
+}
+
 #pragma mark - Protocol
+
+#pragma mark - Protocol CLLocationManagerDelegate
+
+- (void) locationManager: (CLLocationManager *) manager
+didFailWithError: (NSError *) error
+{
+  NSLog(@"Location manager did fail with error: %@", 
+    error.localizedDescription);
+}
+
+- (void) locationManager: (CLLocationManager *) manager
+didUpdateLocations: (NSArray *) locations
+{
+  CLLocationCoordinate2D coordinate;
+  if ([locations count]) {
+    for (CLLocation *location in locations) {
+      coordinate = location.coordinate;
+    }
+  }
+  [locationManager stopUpdatingLocation];
+  [self foundLocation: coordinate];
+}
+
+#pragma mark - Protocol MKMapViewDelegate
+
+- (MKAnnotationView *) mapView: (MKMapView *) mapView
+viewForAnnotation: (id <MKAnnotation>) annotation
+{
+  // If the annotation is the user's location, show the default pulsing circle
+  if (annotation == mapView.userLocation)
+    return nil;
+
+  static NSString *ReuseIdentifier = @"AnnotationViewIdentifier";
+  OMBAnnotationView *annotationView = (OMBAnnotationView *)
+    [map dequeueReusableAnnotationViewWithIdentifier: ReuseIdentifier];
+  if (!annotationView) {
+    annotationView = 
+      [[OMBAnnotationView alloc] initWithAnnotation: annotation 
+        reuseIdentifier: ReuseIdentifier];
+  }
+  [annotationView loadAnnotation: annotation];
+  return annotationView;
+}
 
 #pragma mark - Protocol UITableViewDataSource
 
@@ -152,21 +250,25 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!cell)
     cell = [[UITableViewCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+  // Address
   if (tableView == addressTableView) {
-    cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
-      size: 15];
-    cell.textLabel.text = 
-      @"101 West Broadway, San Diego, CA, 92122, United States";
-    cell.textLabel.textColor = [UIColor textColor];
-    if (indexPath.row == 
+    if (indexPath.row < 
       [tableView numberOfRowsInSection: indexPath.section] - 1) {
 
+      NSDictionary *dict = [_addressArray objectAtIndex: indexPath.row];
+      cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
+        size: 15];
+      cell.textLabel.text = [dict objectForKey: @"formatted_address"];
+      cell.textLabel.textColor = [UIColor textColor];
+    }
+    else {
       cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
         size: 15];
       cell.textLabel.text = @"Use address form";
       cell.textLabel.textColor = [UIColor blue];
     }
   }
+  // Address form
   else if (tableView == textFieldTableView) {
     static NSString *TextFieldCellIdentifier = @"TextFieldCellIdentifier";
     OMBLabelTextFieldCell *c = [tableView dequeueReusableCellWithIdentifier:
@@ -175,6 +277,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       c = [[OMBLabelTextFieldCell alloc] initWithStyle: 
         UITableViewCellStyleDefault reuseIdentifier: TextFieldCellIdentifier];
     c.selectionStyle = UITableViewCellSelectionStyleNone;
+    c.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    c.textField.delegate = self;
+    c.textField.text = @"";
     // Top border
     UIView *topBorder = [c.contentView viewWithTag: 9998];
     if (topBorder)
@@ -199,23 +304,28 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     NSString *string = @"";
     if (indexPath.row == 0) {
+      c.textField.text = address;
       string = @"Address";
       [c.contentView addSubview: topBorder];
     }
     else if (indexPath.row == 1) {
+      c.textField.text = unit;
       string = @"Unit";
     }
     else if (indexPath.row == 2) {
+      c.textField.text = city;
       string = @"City";
     }
     else if (indexPath.row == 3) {
+      c.textField.text = state;
       string = @"State";
     }
     else if (indexPath.row == 4) {
+      c.textField.text = zip;
       string = @"Zip";
       [c.contentView addSubview: bottomBorder];
     }
-    c.textField.delegate = self;
+    
     c.textFieldLabel.text = string;
     [c setFramesUsingString: @"Address"];
     return c;
@@ -226,8 +336,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
+  // Address
   if (tableView == addressTableView) {
-    return 10;
+    return [_addressArray count] + 1;
   }
   else if (tableView == textFieldTableView) {
     return 5;
@@ -241,11 +352,14 @@ numberOfRowsInSection: (NSInteger) section
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (tableView == addressTableView) {
-    if (indexPath.row == 
+    if (indexPath.row < 
       [tableView numberOfRowsInSection: indexPath.section] - 1) {
 
-      [self showAddressForm];
+      NSString *formattedAddress = [[_addressArray objectAtIndex: 
+        indexPath.row] objectForKey: @"formatted_address"];
+      [self setAddressInfoFromString: formattedAddress];
     }
+    [self showAddressForm];
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
@@ -267,6 +381,56 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) foundLocation: (CLLocationCoordinate2D) coordinate
+{
+  [self setMapViewRegion: coordinate withMiles: 0.5f animated: YES];
+  // Use Google Places API with coordinate as opposed to search text
+  // Search for places via Google
+  OMBGoogleMapsReverseGeocodingConnection *conn = 
+    [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithCoordinate:
+      coordinate];
+  conn.completionBlock = ^(NSError *error) {
+    addressTextField.text = [[_addressArray firstObject] objectForKey:
+      @"formatted_address"];
+
+    // Enabled the save button
+    saveBarButtonItem.enabled = YES;
+    [self.navigationItem setRightBarButtonItem: saveBarButtonItem 
+      animated: YES];
+
+    // Set address from the formatted string
+    [self setAddressInfoFromString: addressTextField.text];
+
+    // Address
+    OMBLabelTextFieldCell *addressCell = (OMBLabelTextFieldCell *)
+      [textFieldTableView cellForRowAtIndexPath: 
+        [NSIndexPath indexPathForRow: 0 inSection: 0]];
+    addressCell.textField.text = address;
+    // City
+    OMBLabelTextFieldCell *cityCell = (OMBLabelTextFieldCell *)
+      [textFieldTableView cellForRowAtIndexPath: 
+        [NSIndexPath indexPathForRow: 2 inSection: 0]];
+    cityCell.textField.text = city;
+    // State
+    OMBLabelTextFieldCell *stateCell = (OMBLabelTextFieldCell *)
+      [textFieldTableView cellForRowAtIndexPath: 
+        [NSIndexPath indexPathForRow: 3 inSection: 0]];
+    stateCell.textField.text = state;
+    // Zip
+    OMBLabelTextFieldCell *zipCell = (OMBLabelTextFieldCell *)
+      [textFieldTableView cellForRowAtIndexPath: 
+        [NSIndexPath indexPathForRow: 4 inSection: 0]];
+    zipCell.textField.text = zip;
+  };
+  conn.delegate = self;
+  [conn start];
+
+  // Add annotation
+  OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
+  annotation.coordinate     = coordinate;
+  [map addAnnotation: annotation];
+}
 
 - (void) makeTableViewLarger: (NSNotification *) notification
 {
@@ -316,6 +480,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   ];
 }
 
+- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
+withMiles: (CGFloat) miles animated: (BOOL) animated
+{
+  // 1609 meters = 1 mile
+  int distanceInMiles = 1609 * miles;
+  MKCoordinateRegion region =
+    MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles, 
+      distanceInMiles);
+  [map setRegion: region animated: animated];
+}
+
 - (void) showAddressForm
 {
   // Animate the address text field view up
@@ -324,6 +499,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     rect.origin.y = -1 * rect.size.height;
     addressTextFieldView.frame = rect;
   }];
+
+  // Reload the address table so the values show up
+  [textFieldTableView reloadData];
+
   // Animate the text field table view up
   [UIView animateWithDuration: 0.25f animations: ^{
     textFieldTableView.hidden = NO;
@@ -341,17 +520,39 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }];
 }
 
+- (void) startGooglePlacesConnection
+{
+  // Search for places via Google
+  OMBGoogleMapsReverseGeocodingConnection *conn = 
+    [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithAddress: 
+      addressTextField.text];
+  conn.completionBlock = ^(NSError *error) {
+    [addressTableView reloadData];
+  };
+  conn.delegate = self;
+  [conn start];
+}
+
 - (void) textFieldDidChange: (UITextField *) textField
 {
-  NSLog(@"%@", textField.text);
   NSInteger length = [[textField.text stripWhiteSpace] length];
   if (length) {
+    saveBarButtonItem.enabled = NO;
     [self.navigationItem setRightBarButtonItem: saveBarButtonItem
       animated: YES];
     addressTextField.clearButtonMode = UITextFieldViewModeAlways;
     addressTextField.rightViewMode   = UITextFieldViewModeNever;
+    // Show address table view
     addressTableView.hidden = NO;
     map.hidden = YES;
+
+    // Stop timer
+    [typingTimer invalidate];
+    // Start timer
+    typingTimer = [NSTimer scheduledTimerWithTimeInterval: 0.5f target: self
+      selector: @selector(startGooglePlacesConnection) userInfo: nil 
+        repeats: NO];
+
   }
   else {
     [self.navigationItem setRightBarButtonItem: nil animated: YES];
@@ -364,7 +565,99 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) save
 {
-  [self.navigationController popViewControllerAnimated: YES];
+  // Address
+  OMBLabelTextFieldCell *addressCell = (OMBLabelTextFieldCell *)
+    [textFieldTableView cellForRowAtIndexPath: 
+      [NSIndexPath indexPathForRow: 0 inSection: 0]];
+  residence.address = addressCell.textField.text;
+  // Unit
+  OMBLabelTextFieldCell *unitCell = (OMBLabelTextFieldCell *)
+    [textFieldTableView cellForRowAtIndexPath: 
+      [NSIndexPath indexPathForRow: 1 inSection: 0]];
+  residence.unit = unitCell.textField.text;
+  // City
+  OMBLabelTextFieldCell *cityCell = (OMBLabelTextFieldCell *)
+    [textFieldTableView cellForRowAtIndexPath: 
+      [NSIndexPath indexPathForRow: 2 inSection: 0]];
+  residence.city = cityCell.textField.text;
+  // State
+  OMBLabelTextFieldCell *stateCell = (OMBLabelTextFieldCell *)
+    [textFieldTableView cellForRowAtIndexPath: 
+      [NSIndexPath indexPathForRow: 3 inSection: 0]];
+  residence.state = stateCell.textField.text;
+  // Zip
+  OMBLabelTextFieldCell *zipCell = (OMBLabelTextFieldCell *)
+    [textFieldTableView cellForRowAtIndexPath: 
+      [NSIndexPath indexPathForRow: 4 inSection: 0]];
+  residence.zip = zipCell.textField.text;
+
+  if (![residence.address length]) {
+    [addressCell.textField becomeFirstResponder];
+  }
+  else if (![residence.city length]) {
+    [cityCell.textField becomeFirstResponder];
+  }
+  else if (![residence.state length]) {
+    [stateCell.textField becomeFirstResponder];
+  }
+  else if (![residence.zip length]) {
+    [zipCell.textField becomeFirstResponder];
+  }
+  else {
+    OMBResidenceUpdateConnection *conn = 
+      [[OMBResidenceUpdateConnection alloc] initWithResidence: residence 
+        attributes: @[
+          @"address",
+          @"city",
+          @"state",
+          @"unit",
+          @"zip"
+        ]
+      ];
+    [conn start];
+    [self.navigationController popViewControllerAnimated: YES];
+  }
+}
+
+- (void) setAddressInfoFromString: (NSString *) string
+{
+  // Address
+  NSArray *words = [string componentsSeparatedByString: @","];
+  if ([words count] >= 1) {
+    address = [words objectAtIndex: 0];
+  }
+  if ([words count] >= 2) {
+    city = [words objectAtIndex: 1];
+  }
+  if ([words count] >= 3) {
+    NSString *stateZip = [words objectAtIndex: 2];
+    // State
+    NSRegularExpression *stateRegEx =
+      [NSRegularExpression regularExpressionWithPattern: @"([A-Za-z]+)"
+        options: 0 error: nil];
+    NSArray *stateMatches = [stateRegEx matchesInString: stateZip
+      options: 0 range: NSMakeRange(0, [stateZip length])];
+    if ([stateMatches count]) {
+      NSTextCheckingResult *stateResult = [stateMatches objectAtIndex: 0];
+      state = [stateZip substringWithRange: stateResult.range];
+    }
+
+    // Zip
+    NSRegularExpression *zipRegEx =
+      [NSRegularExpression regularExpressionWithPattern: @"([0-9-]+)"
+        options: 0 error: nil];
+    NSArray *zipMatches = [zipRegEx matchesInString: stateZip
+      options: 0 range: NSMakeRange(0, [stateZip length])];
+    if ([zipMatches count]) {
+      NSTextCheckingResult *zipResult = [zipMatches objectAtIndex: 0];
+      zip = [stateZip substringWithRange: zipResult.range];
+    }
+  }
+}
+
+- (void) useCurrentLocation
+{
+  [locationManager startUpdatingLocation];
 }
 
 @end

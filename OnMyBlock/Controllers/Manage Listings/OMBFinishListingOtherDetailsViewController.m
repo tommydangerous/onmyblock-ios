@@ -14,6 +14,8 @@
 #import "OMBHeaderTitleCell.h"
 #import "OMBLabelTextFieldCell.h"
 #import "OMBPickerViewCell.h"
+#import "OMBResidence.h"
+#import "OMBResidenceUpdateConnection.h"
 #import "OMBStandardLeaseViewController.h"
 
 float kKeyboardHeight = 216.0;
@@ -70,6 +72,31 @@ int kBottomBorderTag = 9999;
   [self.view addSubview: deleteActionSheet];
 }
 
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  [self.table reloadData];
+}
+
+- (void) viewWillDisappear: (BOOL) animated
+{
+  [super viewWillDisappear: animated];
+
+  OMBResidenceUpdateConnection *conn = 
+    [[OMBResidenceUpdateConnection alloc] initWithResidence: residence 
+      attributes: @[
+        @"bathrooms",
+        @"bedrooms",
+        @"leaseMonths",
+        @"moveInDate",
+        @"propertyType",
+        @"squareFeet"
+      ]
+    ];
+  [conn start];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol UIActionSheetDelegate
@@ -124,7 +151,9 @@ inComponent: (NSInteger) component
     NSString *string = @"";
     // Property Type
     if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
-      string = [[propertyTypeOptions objectAtIndex: row] capitalizedString];
+      NSString *propertyTypeString = [propertyTypeOptions objectAtIndex: row];
+      string = [propertyTypeString capitalizedString];
+      residence.propertyType = [propertyTypeString lowercaseString];
     }
     // Lease Type
     else if (selectedIndexPath.section == 1 && selectedIndexPath.row == 8) {
@@ -230,7 +259,15 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       amenitiesCell.backgroundColor = [UIColor whiteColor];
       amenitiesCell.detailTextLabel.font = [UIFont fontWithName:
         @"HelveticaNeue-Medium" size: 15];
-      amenitiesCell.detailTextLabel.text = @"5";
+
+      int numberOfAmenities = 0;
+      NSArray *amenities = [residence.amenities allValues];
+      for (NSNumber *number in amenities) {
+        numberOfAmenities += [number intValue];
+      }
+      amenitiesCell.detailTextLabel.text = [NSString stringWithFormat: @"%i",
+        numberOfAmenities];
+
       amenitiesCell.detailTextLabel.textColor = [UIColor blueDark];
       amenitiesCell.textLabel.text = @"Amenities";
       amenitiesCell.textLabel.font = [UIFont fontWithName: 
@@ -244,6 +281,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       [amenitiesCell.layer addSublayer: bottomBorder];
       return amenitiesCell;
     }
+    // Bedrooms, Bathrooms, Property Type, picker view, Square Footage
     else {
       static NSString *TextFieldCellIdentifier = @"TextFieldCellIdentifier";
       OMBLabelTextFieldCell *cell1 = 
@@ -252,25 +290,30 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: TextFieldCellIdentifier];
       cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell1.textField.placeholderColor = [UIColor grayLight];
+      cell1.textField.placeholder = @"required";
       cell1.textField.userInteractionEnabled = YES;
       NSString *string = @"";
       // Bedrooms
       if (indexPath.row == 2) {
         string = @"Bedrooms";
         cell1.textField.keyboardType = UIKeyboardTypeNumberPad;
-        cell1.textField.text = @"2";
+        cell1.textField.text = [NSString stringWithFormat: @"%0.0f",
+          residence.bedrooms];
       }
       // Bathrooms
       else if (indexPath.row == 3) {
         string = @"Bathrooms";
         cell1.textField.keyboardType = UIKeyboardTypeDecimalPad;
-        cell1.textField.text = @"1";
+        cell1.textField.text = [NSString stringWithFormat: @"%0.1f",
+          residence.bathrooms];
       }
       // Property type
       else if (indexPath.row == 4) {
         string = @"Property Type";
         cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
-        cell1.textField.text = @"Sublet";
+        cell1.textField.placeholder = @"optional";
+        cell1.textField.text = [residence.propertyType capitalizedString];
         cell1.textField.userInteractionEnabled = NO;
       }
       // Picker view
@@ -290,7 +333,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           pickerCell.pickerView.delegate   = self;
 
           // Select the correct property type
-          [pickerCell.pickerView selectRow: 1 inComponent: 0 animated: NO];
+          NSUInteger passingIndex = 
+            [propertyTypeOptions indexOfObjectPassingTest: 
+              ^BOOL (id obj, NSUInteger idx, BOOL *stop){
+                return [obj isEqualToString: 
+                  [residence.propertyType lowercaseString]];
+              }
+            ];
+          if (passingIndex == NSNotFound)
+            passingIndex = 0;
+          [pickerCell.pickerView selectRow: passingIndex 
+            inComponent: 0 animated: NO];
 
           return pickerCell;
         }
@@ -300,6 +353,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         string = @"Sq Footage";
         cell1.textField.keyboardType = UIKeyboardTypeNumberPad;
         cell1.textField.placeholder = @"optional";
+        if (residence.squareFeet)
+          cell1.textField.text = [NSString stringWithFormat: @"%i",
+            residence.squareFeet];
       }
       cell1.textField.delegate = self;
       cell1.textField.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
@@ -309,6 +365,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell1.textField.textAlignment = NSTextAlignmentRight;
       cell1.textField.textColor = [UIColor blueDark];
       cell1.textFieldLabel.text = string;
+      [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
+        forControlEvents: UIControlEventEditingChanged];
       [cell1 setFramesUsingString: @"Move-out Date"];
       return cell1;
     }
@@ -335,6 +393,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: TextFieldCellIdentifier];
       cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell1.textField.placeholder = @"";
       cell1.textField.userInteractionEnabled = YES;
       NSString *string = @"";
       // Move-in Date
@@ -343,6 +402,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell1.textField.placeholder = @"required";
         cell1.textField.userInteractionEnabled = NO;
+
+        if (residence.moveInDate) {
+          NSDateFormatter *dateFormatter = [NSDateFormatter new];
+          dateFormatter.dateFormat = @"MMMM d, yyyy";
+          cell1.textField.text = [dateFormatter stringFromDate:
+            [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]];
+        }
       }
       // Move-in Date picker
       else if (indexPath.row == 3) {
@@ -364,6 +430,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
             action: @selector(datePickerChanged:)
               forControlEvents: UIControlEventValueChanged];
           datePickerCell.datePicker.datePickerMode = UIDatePickerModeDate;
+
+          if (residence.moveInDate) {
+            [datePickerCell.datePicker setDate: 
+              [NSDate dateWithTimeIntervalSince1970: residence.moveInDate] 
+                animated: NO];
+          }
           return datePickerCell;
         }
       }
@@ -400,9 +472,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       // Month Lease
       else if (indexPath.row == 6) {
         string = @"Month Lease";
-        cell1.textField.indexPath = indexPath;
         cell1.textField.keyboardType = UIKeyboardTypeNumberPad;
-        cell1.textField.text = @"12";
+        cell1.textField.placeholder = @"required";
+        if (residence.leaseMonths)
+          cell1.textField.text = [NSString stringWithFormat: @"%i", 
+            residence.leaseMonths];
       }
       // Open House Dates
       else if (indexPath.row == 7) {
@@ -485,10 +559,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell1.textField.delegate = self;
       cell1.textField.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
         size: 15];
+      cell1.textField.indexPath = indexPath;
       cell1.textField.tag = indexPath.row;
       cell1.textField.textAlignment = NSTextAlignmentRight;
       cell1.textField.textColor = [UIColor blueDark];
       cell1.textFieldLabel.text = string;
+      [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
+        forControlEvents: UIControlEventEditingChanged];
       [cell1 setFramesUsingString: @"Move-out Date"];
       return cell1;
     }
@@ -681,6 +758,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
           return 0.0f;
         }
       }
+      // Move-out Date
+      // Hide the move-out date, we are not using it
+      else if (indexPath.row == 4) {
+        return 0.0f;
+      }
     }
     return 44.0f;
   }
@@ -734,6 +816,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *) 
     [self.table cellForRowAtIndexPath: selectedIndexPath];
   cell.textField.text = [dateFormatter stringFromDate: datePicker.date];
+  // Lease & Open House
+  if (selectedIndexPath.section == 1) {
+    // Move-in Date
+    if (selectedIndexPath.row == 2) {
+      residence.moveInDate = [datePicker.date timeIntervalSince1970];
+    }
+  }
 }
 
 - (void) deleteListing
@@ -788,6 +877,32 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   [self.table scrollToRowAtIndexPath: indexPath 
     atScrollPosition: UITableViewScrollPositionTop animated: YES];
+}
+
+- (void) textFieldDidChange: (TextFieldPadding *) textField
+{
+  // Listing Details
+  if (textField.indexPath.section == 0) {
+    // Bedrooms
+    if (textField.indexPath.row == 2) {
+      residence.bedrooms = [textField.text floatValue];
+    }
+    // Bathrooms
+    else if (textField.indexPath.row == 3) {
+      residence.bathrooms = [textField.text floatValue];
+    }
+    // Square Feet
+    else if (textField.indexPath.row == 6) {
+      residence.squareFeet = [textField.text intValue];
+    } 
+  }
+  // Lease & Open House
+  else if (textField.indexPath.section == 1) {
+    // Month Lease
+    if (textField.indexPath.row == 6) {
+      residence.leaseMonths = [textField.text intValue];
+    }
+  }
 }
 
 @end

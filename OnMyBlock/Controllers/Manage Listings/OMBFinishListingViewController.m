@@ -35,6 +35,7 @@
 {
   if (!(self = [super init])) return nil;
 
+  numberOfSteps = 6;
   residence = object;
 
   self.screenName = self.title = @"Finish Listing";
@@ -49,9 +50,6 @@
 - (void) loadView
 {
   [super loadView];
-
-  numberOfSteps = 6;
-  numberOfStepsCompleted = 3;
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat padding = 20.0f;
@@ -85,7 +83,6 @@
   [publishNowButton setBackgroundImage: 
     [UIImage imageWithColor: [UIColor blueHighlighted]] 
       forState: UIControlStateHighlighted];
-  [publishNowButton setTitle: @"6 More Steps" forState: UIControlStateNormal];
   [publishNowButton setTitleColor: [UIColor whiteColor] 
     forState: UIControlStateNormal];
   [publishNowView addSubview: publishNowButton];
@@ -205,7 +202,36 @@
   else
     [headerImageView clearImage];
 
-  [self reloadPhotosRow];
+  // Reload
+  // Photos
+  // [self reloadPhotosRow];
+  // Title
+  // [self reloadTitleRow];
+
+  [self.table reloadData];
+
+  // Calculate how many steps are left
+  int stepsRemaining = numberOfSteps;
+  if ([[residence imagesArray] count])
+    stepsRemaining -= 1;
+  if ([residence.title length])
+    stepsRemaining -= 1;
+  if ([residence.description length])
+    stepsRemaining -= 1;
+  if ([residence.address length] && [residence.city length] && 
+    [residence.state length] && [residence.zip length])
+    stepsRemaining -= 1;
+
+  NSString *publishNowButtonTitle = @"Publish Now";
+  if (stepsRemaining > 0) {
+    NSString *stepsString = @"Steps";
+    if (stepsRemaining == 1)
+      stepsString = @"Step";
+    publishNowButtonTitle = [NSString stringWithFormat: @"%i More %@",
+      stepsRemaining, stepsString];
+  }
+  [publishNowButton setTitle: publishNowButtonTitle 
+    forState: UIControlStateNormal];
 
   // for (int i = 0; i < numberOfSteps; i++) {
   //   AMBlurView *stepView = [stepViews objectAtIndex: i];
@@ -350,40 +376,52 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   NSString *string = @"";
   // Photos
   if (indexPath.row == 0) {
-    // cell.detailTextLabel.text = @"0/3";
     string = @"Photos";
     if ([residence.images count]) {
       string = [string stringByAppendingString: 
         [NSString stringWithFormat: @" (%i)", [residence.images count]]];
+
+      cell.textLabel.textColor = [UIColor textColor];
+      imageView.alpha = 1.0f;
+      imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
   }
   // Title
   else if (indexPath.row == 1) {
     string = @"Title";
+    if ([residence.title length]) {
+      string = residence.title;
+
+      cell.textLabel.textColor = [UIColor textColor];
+      imageView.alpha = 1.0f;
+      imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+    }
   }
   // Description
   else if (indexPath.row == 2) {
-    // cell.detailTextLabel.text = @"0/1";
-    cell.textLabel.textColor = [UIColor textColor];
     string = @"Description";
-    imageView.alpha = 1.0f;
-    imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+    if ([residence.description length]) {
+      cell.textLabel.textColor = [UIColor textColor];
+      imageView.alpha = 1.0f;
+      imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+    }
   }
   // Rent / Auction Details
   else if (indexPath.row == 3) {
-    // cell.detailTextLabel.text = @"2/5";
     string = @"Rent / Auction Details";
   }
   // Address
   else if (indexPath.row == 4) {
     string = @"Select Address";
-    // Checkmark
-    imageView.alpha = 1.0f;
-    imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+    if ([residence.address length]) {
+      string = [residence.address capitalizedString];
+      cell.textLabel.textColor = [UIColor textColor];
+      imageView.alpha = 1.0f;
+      imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+    }
   }  
   // Additional Details
   else if (indexPath.row == 5) {
-    // cell.detailTextLabel.text = @"4/6";
     string = @"Additional Details";
   }
   cell.textLabel.text = string;

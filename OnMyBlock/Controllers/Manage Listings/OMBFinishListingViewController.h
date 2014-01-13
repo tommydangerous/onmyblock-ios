@@ -24,7 +24,6 @@
   OMBCenteredImageView *headerImageView;
   OMBGradientView *headerImageViewGradient;
   int numberOfSteps;
-  int numberOfStepsCompleted;
   UIButton *publishNowButton;
   AMBlurView *publishNowView;
   OMBResidence *residence;

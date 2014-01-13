@@ -8,6 +8,8 @@
 
 #import "OMBFinishListingAmenitiesViewController.h"
 
+#import "OMBResidence.h"
+#import "OMBResidenceUpdateConnection.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBFinishListingAmenitiesViewController
@@ -19,28 +21,6 @@
   if (!(self = [super initWithResidence: object])) return nil;
 
   self.screenName = self.title = @"Amenities";
-
-  amenitiesArray = @[
-    @"air conditioning",
-    @"backyard",
-    @"central heating",
-    @"dishwasher",
-    @"fence",
-    @"front yard",
-    @"garbage disposal",
-    @"gym",
-    @"hard floors",
-    @"newly remodeled",
-    @"patio/balcony",
-    @"pool",
-    @"storage",
-    @"washer/dryer" 
-  ];
-
-  amenities = [NSMutableDictionary dictionary];
-  for (NSString *string in amenitiesArray) {
-    [amenities setObject: [NSNumber numberWithInt: 0] forKey: string];
-  }
 
   return self;
 }
@@ -54,6 +34,16 @@
   [super loadView];
 
   [self setupForTable];
+}
+
+- (void) viewWillDisappear: (BOOL) animated
+{
+  [super viewWillDisappear: animated];
+
+  OMBResidenceUpdateConnection *conn = 
+    [[OMBResidenceUpdateConnection alloc] initWithResidence: 
+      residence attributes: @[@"amenities", @"cats", @"dogs"]];
+  [conn start];
 }
 
 #pragma mark - Protocol
@@ -89,10 +79,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     imageView.tag   = 8888;
     [cell.contentView addSubview: imageView];
   }
+  // Amenities
   if (indexPath.section == 0) {
-    NSString *string = [amenitiesArray objectAtIndex: indexPath.row];
+    NSString *string = [[OMBResidence defaultListOfAmenities] objectAtIndex: 
+      indexPath.row];
     cell.textLabel.text = [string capitalizedString];
-    int value = [[amenities objectForKey: string] intValue];
+    int value = [[residence.amenities objectForKey: string] intValue];
     if (value) {
       cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
         size: 15];
@@ -108,17 +100,39 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       imageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
     }
   }
+  // Pets
   else if (indexPath.section == 1) {
     if (indexPath.row == 0) {
       cell.contentView.backgroundColor = tableView.backgroundColor;
       cell.textLabel.text  = @"";
       [imageView removeFromSuperview];
     }
-    else if (indexPath.row == 1) {
-      cell.textLabel.text = @"Dogs";
-    }
-    else if (indexPath.row == 2) {
-      cell.textLabel.text = @"Cats";
+    else {
+      BOOL value = NO;
+      if (indexPath.row == 1) {
+        cell.textLabel.text = @"Dogs";
+        if (residence.dogs)
+          value = YES;
+      }
+      else if (indexPath.row == 2) {
+        cell.textLabel.text = @"Cats";
+        if (residence.cats)
+          value = YES;
+      }
+      if (value) {
+        cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
+          size: 15];
+        cell.textLabel.textColor = [UIColor textColor];
+        imageView.alpha = 1.0f;
+        imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+      }
+      else {
+        cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
+          size: 15];
+        cell.textLabel.textColor = [UIColor grayMedium];
+        imageView.alpha = 0.2f;
+        imageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
+      }
     }
   }
   return cell;
@@ -129,7 +143,7 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Amenities
   if (section == 0)
-    return [amenitiesArray count];
+    return [[OMBResidence defaultListOfAmenities] count];
   // Pets
   else if (section == 1) {
     // 1 for the spacing
@@ -143,18 +157,34 @@ numberOfRowsInSection: (NSInteger) section
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  // Amenities
   if (indexPath.section == 0) {
-    NSString *string = [amenitiesArray objectAtIndex: indexPath.row];
-    int value = [[amenities objectForKey: string] intValue];
+    NSString *string = [[OMBResidence defaultListOfAmenities] objectAtIndex: 
+      indexPath.row];
+    int value = [[residence.amenities objectForKey: string] intValue];
+    int newValue = 0;
     if (value) {
-      [amenities setObject: [NSNumber numberWithInt: 0] forKey: string];
+      newValue = 0;
     }
     else {
-      [amenities setObject: [NSNumber numberWithInt: 1] forKey: string];
+      newValue = 1;
     }
-    [tableView reloadRowsAtIndexPaths: @[indexPath] withRowAnimation:
-      UITableViewRowAnimationNone];
+    [residence.amenities setObject: [NSNumber numberWithInt: newValue] 
+      forKey: string];
   }
+  // Pets
+  else if (indexPath.section == 1) {
+    // Dogs
+    if (indexPath.row == 1) {
+      residence.dogs = !residence.dogs;
+    }
+    // Cats
+    else if (indexPath.row == 2) {
+      residence.cats = !residence.cats;
+    }
+  }
+  [tableView reloadRowsAtIndexPaths: @[indexPath] withRowAnimation:
+    UITableViewRowAnimationNone];
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 

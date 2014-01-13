@@ -25,7 +25,7 @@
     [[UIPanGestureRecognizer alloc] initWithTarget: self 
       action: @selector(moveObject:)];
   // This gesture will eat any touch it recognizes if set to YES
-  // moveRecognizer.cancelsTouchesInView = YES;
+  moveRecognizer.cancelsTouchesInView = YES;
   moveRecognizer.delegate = self;
   [self addGestureRecognizer: moveRecognizer];
 
@@ -125,7 +125,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
     centerPoint.y > boundaries.origin.y + boundaries.size.height ||
     centerPoint.y < boundaries.origin.y) {
     // Calculate which grid it is in to find the new index
-    NSLog(@"OUT OF BOUNDARIES");
     CGFloat newColumn = centerPoint.x / _smallSize.width;
     CGFloat newRow    = (centerPoint.y - coverPhotoHeight) / _smallSize.height;
     // Moved into the boundaries of the cover photo
@@ -133,20 +132,16 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
       _currentIndex = 0;
     }
     else {
+      NSInteger maxIndex = [(OMBFinishListingPhotosViewController *) 
+        _delegate numberOfImageViews] - 1;
       _currentIndex = 1 + (int) newColumn + ((int) newRow * maxColumns);
-      NSLog(@"NEW COLUMN: %f, ROW: %f", newColumn, newRow);
+      if (_currentIndex > maxIndex) {
+        _currentIndex = maxIndex;
+      }
     }
-    if (_currentIndex > index) {
-      // Moved lower on the screen, higher position number
-
-    }
-    else {
-      // Moved higher up on the screen, lower position number
-
-    }
-    NSLog(@"CURRENT INDEX: %i", _currentIndex);
+    [(OMBFinishListingPhotosViewController *) 
+      _delegate rearrangeImageViewsWithImageView: self];
   }
-  NSLog(@"CENTER: %f, %f", centerPoint.x, centerPoint.y);
 }
 
 - (void) longPress: (UILongPressGestureRecognizer *) gestureRecognizer
@@ -213,13 +208,34 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
     gestureRecognizer.state == UIGestureRecognizerStateCancelled ||
     gestureRecognizer.state == UIGestureRecognizerStateFailed) {
 
-    CGPoint endPoint = self.frame.origin;
-    NSLog(@"ENDED: %f, %f", endPoint.x, endPoint.y);
-
-    [self checkCurrentPosition];
-    // [(OMBFinishListingPhotosViewController *) 
-    //   _delegate repositionImageViewsStartingAtIndex: 0]; 
+    // This is the cover photo, make it larger
+    if (_currentIndex == 0) {
+      [UIView animateWithDuration: 0.25f animations: ^{
+        self.frame = CGRectMake(0.0f, 0.0f,
+          _largeSize.width, _largeSize.height);
+      }];
+    }
+    else {
+      [self checkCurrentPosition];
+      [self resetToSmallSize];
+    }
   }
+}
+
+- (void) resetToSmallSize
+{
+  CGFloat spacing      = 3.0f;
+
+  int row    = (_currentIndex - 1) / 3;
+  int column = (_currentIndex - 1) % 3;
+  CGRect rect = CGRectMake((spacing + _smallSize.width) * column,
+    _largeSize.height + spacing + ((spacing + _smallSize.height) * row),
+      _smallSize.width, _smallSize.height);
+  [UIView animateWithDuration: 0.25f animations: ^{
+    self.frame = rect;
+    self.bounds = CGRectMake(self.bounds.origin.x, self.bounds.origin.x,
+      rect.size.width, rect.size.height);
+  }];
 }
 
 - (void) setDeleteButtonFrames

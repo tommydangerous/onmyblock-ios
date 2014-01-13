@@ -13,6 +13,7 @@
 #import "OMBResidence.h"
 #import "OMBResidenceImage.h"
 #import "OMBResidenceImageDeleteConnection.h"
+#import "OMBResidenceImageUpdateConnection.h"
 #import "OMBResidenceImagesConnection.h"
 #import "OMBResidenceUploadImageConnection.h"
 #import "UIColor+Extensions.h"
@@ -270,7 +271,8 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     @"favorite_pink.png"
   ];
   for (NSString *string in imageNames) {
-    [residenceImages addObject: [UIImage imageNamed: string]];
+    // Used for fake photos
+    // [residenceImages addObject: [UIImage imageNamed: string]];
   }
 }
 
@@ -306,9 +308,12 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 
 - (void) createViewsFromImages
 {
-  for (OMBResidenceImage *residenceImage in residenceImages) {
+  for (OMBResidenceImage *residenceImage in [residence imagesArray]) {
+    NSLog(@"RESIDENCE IMAGE POSITION: %i - %i", 
+      residenceImage.uid, residenceImage.position);
     OMBEditablePhotoView *imageView = [[OMBEditablePhotoView alloc] init];
     imageView.image = residenceImage.image;
+    imageView.residenceImage = residenceImage;
     [imageView.deleteButton addTarget: self action: @selector(deleteImageView:)
       forControlEvents: UIControlEventTouchUpInside];
     [imageViews addObject: imageView];
@@ -324,7 +329,8 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     imageView.transform = CGAffineTransformMakeScale(0.5f, 0.5f);
   } completion: ^(BOOL finished) {
 
-    OMBResidenceImage *residenceImage = [residenceImages objectAtIndex: index];
+    OMBResidenceImage *residenceImage = [[residence imagesArray] objectAtIndex: 
+      index];
     // Delete it from the web server
     OMBResidenceImageDeleteConnection *conn = 
       [[OMBResidenceImageDeleteConnection alloc] initWithResidenceImage: 
@@ -336,8 +342,6 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     [imageView removeFromSuperview];
     // Remove the view from the image views array
     [imageViews removeObjectAtIndex: index];
-    // Remove the image from the images array
-    [residenceImages removeObjectAtIndex: index];
 
     [self updateTitle];
 
@@ -367,9 +371,16 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
       itemView.deleteButton.hidden = YES;
       itemView.deleteButtonView.alpha = 0.0f;
       itemView.isEditing = NO;
+      [self positionImageView: itemView animated: YES];
       // itemView.transform = CGAffineTransformIdentity;
     }];
-    
+    itemView.residenceImage.position = [imageViews indexOfObject: itemView];
+    NSLog(@"%i: %i", itemView.residenceImage.uid, 
+      [imageViews indexOfObject: itemView]);
+    // Save the positions of the images
+    [[[OMBResidenceImageUpdateConnection alloc] initWithResidenceImage:
+      itemView.residenceImage] start];
+
     // [UIView animateWithDuration: duration delay: 0.0
     //   options: (UIViewAnimationOptionAllowUserInteraction | 
     //     UIViewAnimationOptionBeginFromCurrentState | 
@@ -401,9 +412,16 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
   }
 }
 
+- (NSInteger) numberOfImageViews
+{
+  return [imageViews count];
+}
+
 - (void) positionImageView: (OMBEditablePhotoView *) imageView 
 animated: (BOOL) animated
 {
+  int index = [imageViews indexOfObject: imageView];
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenHeight = screen.size.height;
   CGFloat screenWidth  = screen.size.width;
@@ -413,7 +431,6 @@ animated: (BOOL) animated
   CGFloat imageHeight  = screenHeight * 0.15f;
   CGFloat imageWidth   = (screenWidth / maxColumns) - 
     ((spacing * 2) / maxColumns);
-  int index = [imageViews indexOfObject: imageView];
 
   CGSize largeSize = CGSizeMake(screenWidth, coverPhotoHeight);
   CGSize smallSize = CGSizeMake(imageWidth, imageHeight);
@@ -464,10 +481,32 @@ animated: (BOOL) animated
     scroll.contentSize = newScrollContentSize;
 }
 
+- (void) rearrangeImageViewsWithImageView: (OMBEditablePhotoView *) imageView
+{
+  int oldIndex = [imageViews indexOfObject: imageView];
+  int newIndex = imageView.currentIndex;
+  
+  [imageViews removeObject: imageView];
+  [imageViews insertObject: imageView atIndex: newIndex];
+
+  // Moved lower on the screen, higher position numerically
+  if (newIndex > oldIndex) {
+    NSLog(@"%i > %i", newIndex, oldIndex);
+    [self repositionImageViewsFromIndex: oldIndex toIndex: newIndex - 1];
+  }
+  // Moved higher up on the screen, lower position numerically
+  else if (newIndex < oldIndex) {
+    NSLog(@"%i < %i", newIndex, oldIndex);
+    [self repositionImageViewsFromIndex: newIndex + 1 toIndex: oldIndex];
+  }
+  // Didn't move at all
+  else {
+
+  }
+}
+
 - (void) reloadPhotosAnimated: (BOOL) animated
 {
-  residenceImages = [NSMutableArray arrayWithArray: [residence imagesArray]];
-
   // Reset the image views array
   imageViews = [NSMutableArray array];
 
@@ -488,7 +527,7 @@ animated: (BOOL) animated
     [self positionImageView: imageView animated: animated];
   }
 
-  if ([residenceImages count])
+  if ([[residence imagesArray] count])
     editBarButtonItem.enabled = YES;
   else
     editBarButtonItem.enabled = NO;
@@ -554,11 +593,12 @@ toIndex: (int) endingIndex
 
 - (void) updateTitle
 {
+  int count = [[residence imagesArray] count];
   NSString *photosTitleString = @"Photos";
-  if ([residenceImages count] == 1)
+  if (count == 1)
     photosTitleString = @"Photo";
-  if ([residenceImages count] > 0)
-    self.title = [NSString stringWithFormat: @"%i %@", [residenceImages count],
+  if (count > 0)
+    self.title = [NSString stringWithFormat: @"%i %@", count, 
       photosTitleString];
   else
     self.title = @"Photos";

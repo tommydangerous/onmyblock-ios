@@ -8,6 +8,8 @@
 
 #import "OMBCenteredImageView.h"
 
+@class OMBResidenceImage;
+
 @interface OMBEditablePhotoView : OMBCenteredImageView
 <UIGestureRecognizerDelegate>
 {
@@ -22,6 +24,7 @@
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UIView *deleteButtonView;
 @property (nonatomic) BOOL isEditing;
+@property (nonatomic, weak) OMBResidenceImage *residenceImage;
 @property (nonatomic) CGSize largeSize;
 @property (nonatomic) CGSize smallSize;
 

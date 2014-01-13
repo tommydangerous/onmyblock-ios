@@ -12,7 +12,6 @@
   OMBFinishListingSectionViewController
 {
   NSMutableDictionary *amenities;
-  NSArray *amenitiesArray;
 }
 
 @end

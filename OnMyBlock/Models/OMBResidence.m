@@ -47,18 +47,43 @@
 
 - (id) init
 {
-  self = [super init];
-  if (self) {
-    _images              = [NSMutableArray array];
-    _imageSizeDictionary = [NSMutableDictionary dictionary];
-    _lastImagePosition   = 1000;
+  if (!(self = [super init])) return nil;
+
+  _amenities = [NSMutableDictionary dictionary];
+  for (NSString *string in [OMBResidence defaultListOfAmenities]) {
+    [_amenities setObject: [NSNumber numberWithInt: 0] forKey: string];
   }
+  
+  _images              = [NSMutableArray array];
+  _imageSizeDictionary = [NSMutableDictionary dictionary];
+  _lastImagePosition   = 1000;
+
   return self;
 }
 
 #pragma mark - Methods
 
 #pragma mark - Class Methods
+
++ (NSArray *) defaultListOfAmenities
+{
+  return @[
+    @"air conditioning",
+    @"backyard",
+    @"central heating",
+    @"dishwasher",
+    @"fence",
+    @"front yard",
+    @"garbage disposal",
+    @"gym",
+    @"hard floors",
+    @"newly remodeled",
+    @"patio/balcony",
+    @"pool",
+    @"storage",
+    @"washer/dryer" 
+  ];
+}
 
 + (OMBResidence *) fakeResidence
 {
@@ -82,6 +107,7 @@
     residence.rent = 1750.00;
     residence.squareFeet = 900;
     residence.state = @"CA";
+    residence.title = @"Best College Pad Ever";
     residence.uid = 9999;
     residence.updatedAt = [[NSDate date] timeIntervalSince1970];
     residence.zip = @"92122";
@@ -369,6 +395,7 @@ withString: (NSString *) string
   //   rent: 2505,
   //   sqft: 1466,
   //   state: "CA",
+  //   title: "Best place ever",
   //   updated_at: "2013-10-11 17:34:06 -0700",
   //   zip: "92111"
   // }
@@ -377,10 +404,18 @@ withString: (NSString *) string
   dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
 
   // Address
-  if ([dictionary objectForKey: @"address"] == [NSNull null])
-    _address = @"Address currently unavailable";
-  else
+  if ([dictionary objectForKey: @"address"] != [NSNull null])
     _address = [dictionary objectForKey: @"address"];
+  // Amenities
+  if ([dictionary objectForKey: @"amenities"] != [NSNull null]) {
+    NSArray *amenitiesArray = [[dictionary objectForKey: 
+      @"amenities"] componentsSeparatedByString: @","];
+    for (NSString *amenitiesString in amenitiesArray) {
+      if ([amenitiesString length])
+        [_amenities setObject: [NSNumber numberWithInt: 1] forKey:
+          [[amenitiesString stripWhiteSpace] lowercaseString]];
+    }
+  }
   // Available on
   if ([dictionary objectForKey: @"available_on"] != [NSNull null])
     _availableOn = [[dateFormatter dateFromString:
@@ -389,13 +424,20 @@ withString: (NSString *) string
   if ([dictionary objectForKey: @"bathrooms"] != [NSNull null])
     _bathrooms = [[dictionary objectForKey: @"bathrooms"] floatValue];
   if ([dictionary objectForKey: @"min_bathrooms"] != [NSNull null]) {
-    _bedrooms = [[dictionary objectForKey: @"min_bathrooms"] floatValue];
+    _bathrooms = [[dictionary objectForKey: @"min_bathrooms"] floatValue];
   }
   // Bedrooms
   if ([dictionary objectForKey: @"bedrooms"] != [NSNull null])
     _bedrooms = [[dictionary objectForKey: @"bedrooms"] floatValue];
   if ([dictionary objectForKey: @"min_bedrooms"] != [NSNull null]) {
     _bedrooms = [[dictionary objectForKey: @"min_bedrooms"] floatValue];
+  }
+  // Cats
+  if ([dictionary objectForKey: @"cats"] != [NSNull null]) {
+    if ([[dictionary objectForKey: @"cats"] intValue])
+      _cats = YES;
+    else
+      _cats = NO;
   }
   // City
   if ([dictionary objectForKey: @"city"] != [NSNull null])
@@ -407,6 +449,13 @@ withString: (NSString *) string
   // Description
   if ([dictionary objectForKey: @"description"] != [NSNull null])
     _description = [dictionary objectForKey: @"description"];
+  // Dogs
+  if ([dictionary objectForKey: @"dogs"] != [NSNull null]) {
+    if ([[dictionary objectForKey: @"dogs"] intValue])
+      _dogs = YES;
+    else
+      _dogs = NO;
+  }
   // Email
   if ([dictionary objectForKey: @"email"] != [NSNull null])
     _email = [dictionary objectForKey: @"email"];
@@ -429,6 +478,10 @@ withString: (NSString *) string
   // Longitude
   if ([dictionary objectForKey: @"longitude"] != [NSNull null])
     _longitude = [[dictionary objectForKey: @"longitude"] floatValue];
+  // Move-in Date
+  if ([dictionary objectForKey: @"move_in_date"] != [NSNull null])
+    _moveInDate = [[dateFormatter dateFromString:
+      [dictionary objectForKey: @"move_in_date"]] timeIntervalSince1970];
   // Phone
   if ([dictionary objectForKey: @"phone"] != [NSNull null])
     _phone = [dictionary objectForKey: @"phone"];
@@ -442,9 +495,17 @@ withString: (NSString *) string
   // Square feet
   if ([dictionary objectForKey: @"sqft"] != [NSNull null])
     _squareFeet = [[dictionary objectForKey: @"sqft"] intValue];
+  if ([dictionary objectForKey: @"min_sqft"] != [NSNull null])
+    _squareFeet = [[dictionary objectForKey: @"min_sqft"] intValue];
   // State
   if ([dictionary objectForKey: @"state"] != [NSNull null])
     _state = [dictionary objectForKey: @"state"];
+  // Title
+  if ([dictionary objectForKey: @"title"] != [NSNull null])
+    _title = [dictionary objectForKey: @"title"];
+  // Unit
+  if ([dictionary objectForKey: @"unit"] != [NSNull null])
+    _unit = [dictionary objectForKey: @"unit"];
   // Updated at
   if ([dictionary objectForKey: @"updated_at"] != [NSNull null])
     _updatedAt = [[dateFormatter dateFromString:

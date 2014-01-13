@@ -414,6 +414,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Protocol UITextFieldDelegate
 
+- (BOOL) textField: (UITextField *) textField 
+shouldChangeCharactersInRange: (NSRange) range 
+replacementString: (NSString *) string
+{
+  if (textField == cityTextField)
+    [self.navigationItem setRightBarButtonItem: nil animated: YES];
+  return YES;
+}
+
 - (BOOL) textFieldShouldReturn: (UITextField *) textField
 {
   [textField resignFirstResponder];
@@ -556,6 +565,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       coordinate];
   conn.completionBlock = ^(NSError *error) {
     cityTableView.hidden = YES;
+    [self.navigationItem setRightBarButtonItem: nextBarButtonItem 
+      animated: YES];
     [self checkValidationForCity];
   };
   conn.delegate = self;
@@ -581,10 +592,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     
     [self.navigationItem setLeftBarButtonItem: backBarButtonItem
       animated: YES];
-    if (stepNumber < 2) 
-      [self.navigationItem setRightBarButtonItem: nextBarButtonItem
-        animated: YES];
-    else
+    // Last step; details
+    if (stepNumber == 2) 
       [self.navigationItem setRightBarButtonItem: saveBarButtonItem
         animated: YES];
 
@@ -705,7 +714,8 @@ withMiles: (int) miles animated: (BOOL) animated
 {
   // Search for places via Google
   OMBGooglePlacesConnection *conn = 
-    [[OMBGooglePlacesConnection alloc] initWithString: cityTextField.text];
+    [[OMBGooglePlacesConnection alloc] initWithString: cityTextField.text
+      citiesOnly: YES];
   conn.completionBlock = ^(NSError *error) {
     [cityTableView reloadData];
   };
@@ -721,7 +731,7 @@ withMiles: (int) miles animated: (BOOL) animated
     [typingTimer invalidate];
     // Start timer
     if ([[textField.text stripWhiteSpace] length]) {
-      typingTimer = [NSTimer scheduledTimerWithTimeInterval: 0.25f target: self 
+      typingTimer = [NSTimer scheduledTimerWithTimeInterval: 0.5f target: self 
         selector: @selector(startGooglePlacesConnection) userInfo: nil 
           repeats: NO];
       // Show city table view

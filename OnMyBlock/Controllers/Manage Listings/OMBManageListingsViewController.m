@@ -165,7 +165,8 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (NSArray *) listings
 {
-  return @[[OMBResidence fakeResidence]];
+  // Use this for fake data
+  // return @[[OMBResidence fakeResidence]];
   return [[OMBUser currentUser] residencesSortedWithKey: @"createdAt"
     ascending: NO];
 }

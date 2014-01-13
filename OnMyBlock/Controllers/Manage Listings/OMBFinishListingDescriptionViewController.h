@@ -26,6 +26,7 @@
 
 #pragma mark - Instance Methods
 
+- (void) setTextForDescriptionView;
 - (void) updateCharacterCount;
 
 @end

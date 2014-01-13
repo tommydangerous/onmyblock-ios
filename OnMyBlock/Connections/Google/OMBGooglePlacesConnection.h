@@ -14,6 +14,6 @@
 
 #pragma mark - Initializer
 
-- (id) initWithString: (NSString *) string;
+- (id) initWithString: (NSString *) string citiesOnly: (BOOL) citiesOnly;
 
 @end

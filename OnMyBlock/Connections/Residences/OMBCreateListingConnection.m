@@ -8,6 +8,7 @@
 
 #import "OMBCreateListingConnection.h"
 
+#import "NSString+Extensions.h"
 #import "OMBTemporaryResidence.h"
 
 @implementation OMBCreateListingConnection
@@ -31,12 +32,12 @@
     state = [words objectAtIndex: 1];
   }
   NSDictionary *objectParams = @{
-    @"city": city,
+    @"city": [city stripWhiteSpace],
     @"lease_months":  [dictionary objectForKey: @"leaseMonths"],
     @"min_bathrooms": [dictionary objectForKey: @"bathrooms"],
     @"min_bedrooms":  [dictionary objectForKey: @"bedrooms"],
     @"property_type": [dictionary objectForKey: @"propertyType"],
-    @"state": state,
+    @"state": [state stripWhiteSpace],
   };
   NSDictionary *params = @{
     @"access_token":        [OMBUser currentUser].accessToken,
@@ -55,6 +56,9 @@
 {
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
+
+  NSLog(@"OMBCreateListingConnection\n%@", json);
+
   if ([[json objectForKey: @"success"] intValue] == 1) {
     OMBTemporaryResidence *temporaryResidence = 
       [[OMBTemporaryResidence alloc] init];

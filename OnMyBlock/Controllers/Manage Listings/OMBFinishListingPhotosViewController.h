@@ -27,7 +27,8 @@ UIScrollViewDelegate>
   NSMutableArray *imageViews;
   BOOL isEditing;
   OMBResidence *residence;
-  NSMutableArray *residenceImages;
+  // Used for fake photos
+  // NSMutableArray *residenceImages;
   UIScrollView *scroll;
 }
 
@@ -44,6 +45,8 @@ UIScrollViewDelegate>
 
 #pragma mark - Instance Methods
 
+- (NSInteger) numberOfImageViews;
+- (void) rearrangeImageViewsWithImageView: (OMBEditablePhotoView *) imageView;
 - (void) repositionImageViewsFromIndex: (int) startingIndex
 toIndex: (int) endingIndex;
 

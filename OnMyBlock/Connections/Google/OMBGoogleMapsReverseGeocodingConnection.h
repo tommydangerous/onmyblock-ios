@@ -14,6 +14,7 @@
 
 #pragma mark - Initializer
 
+- (id) initWithAddress: (NSString *) address;
 - (id) initWithCoordinate: (CLLocationCoordinate2D) coordinate;
 
 @end

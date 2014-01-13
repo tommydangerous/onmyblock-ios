@@ -10,6 +10,8 @@
 
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
+#import "OMBResidence.h"
+#import "OMBResidenceUpdateConnection.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBFinishListingDescriptionViewController
@@ -92,6 +94,10 @@
   [self updateCharacterCount];
 
   placeholderLabel.text = placeholderString;
+
+  [self setTextForDescriptionView];
+
+  [self textViewDidChange: descriptionTextView];
 }
 
 #pragma mark - Protocol
@@ -115,7 +121,43 @@
 
 #pragma mark - Instance Methods
 
+- (void) save
+{
+  if ([self wordsRemaining] < 0)
+    return;
+  
+  residence.description = descriptionTextView.text;
+
+  OMBResidenceUpdateConnection *conn = 
+    [[OMBResidenceUpdateConnection alloc] initWithResidence: residence 
+      attributes: @[@"description"]];
+  [conn start];
+
+  [self.navigationController popViewControllerAnimated: YES];
+}
+
+- (void) setTextForDescriptionView
+{
+  if ([residence.description length])
+    descriptionTextView.text = residence.description;
+}
+
 - (void) updateCharacterCount
+{
+  NSInteger number = [self wordsRemaining];
+
+  if ([[descriptionTextView.text stripWhiteSpace] length] == 0)
+    number = maxCharacters;
+  characterCountLabel.text = [NSString stringWithFormat: 
+    @"%i words left", number];
+
+  if (number < 0)
+    characterCountLabel.textColor = [UIColor red];
+  else
+    characterCountLabel.textColor = [UIColor grayMedium];
+}
+
+- (NSInteger) wordsRemaining
 {
   NSArray *words = 
     [descriptionTextView.text componentsSeparatedByCharactersInSet: 
@@ -126,11 +168,8 @@
       return [[word stripWhiteSpace] length] ? YES : NO;
     }]
   ];
-  int wordsRemaining = maxCharacters - [words count];
-  if ([[descriptionTextView.text stripWhiteSpace] length] == 0)
-    wordsRemaining = maxCharacters;
-  characterCountLabel.text = [NSString stringWithFormat: @"%i words left",
-    wordsRemaining];
+
+  return maxCharacters - [words count];
 }
 
 @end
