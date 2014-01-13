@@ -46,11 +46,14 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // If current session has a valid Facebook token
     [self openSession];
 
-  NSLog(@"APP DELEGATE SHOW INTRO!");
   // Fake login
-  // [OMBUser fakeLogin];
-  // [_container showManageListings];
-  [_container showIntroAnimatedDissolve: NO];
+  [OMBUser fakeLogin];
+  // Use this to show whatever view controller you are working on
+  [_container showManageListings];
+
+  // Normall, show the intro right away
+  NSLog(@"APP DELEGATE SHOW INTRO!"); // Reminder to show this
+  // [_container showIntroAnimatedDissolve: NO];
   // if ([[OMBUser currentUser] loggedIn])
   //   [self hideIntro];
 

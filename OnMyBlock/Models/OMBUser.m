@@ -97,7 +97,12 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 + (void) fakeLogin
 {
   [OMBUser currentUser].about = @"About me.";
-  [OMBUser currentUser].accessToken = @"cea246ff2139e0fa5b17ae255e9a946d";
+
+  // Development access token
+  // [OMBUser currentUser].accessToken = @"4869e582108a62253eefb2ec3df301a3";
+  // Staging access token
+  [OMBUser currentUser].accessToken = @"60721b1691403ed9037b52f8816e351e";
+
   [OMBUser currentUser].email = @"fake_user@gmail.com";
   [OMBUser currentUser].firstName = @"fake";
   [OMBUser currentUser].lastName = @"user";
