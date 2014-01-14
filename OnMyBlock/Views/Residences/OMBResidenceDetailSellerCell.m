@@ -9,6 +9,7 @@
 #import "OMBResidenceDetailSellerCell.h"
 
 #import "OMBCenteredImageView.h"
+#import "OMBUser.h"
 
 @implementation OMBResidenceDetailSellerCell
 
@@ -26,8 +27,6 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
   float padding = 20.0f;
 
-  self.titleLabel.text = @"Subletter: Gene Starwind";
-
   CGFloat imageSize = screeWidth * 0.3f;
 
   _sellerImageView = [[OMBCenteredImageView alloc] init];
@@ -36,7 +35,6 @@ reuseIdentifier: (NSString *)reuseIdentifier
     self.titleLabel.frame.origin.y + 
     self.titleLabel.frame.size.height + padding,
       imageSize, imageSize);
-  _sellerImageView.image = [UIImage imageNamed: @"tommy_d.png"];
   _sellerImageView.layer.cornerRadius = 
     _sellerImageView.frame.size.width * 0.5f;
   [self.contentView addSubview: _sellerImageView];
@@ -49,24 +47,6 @@ reuseIdentifier: (NSString *)reuseIdentifier
     _sellerImageView.frame.origin.y, 
       screeWidth - (aboutLabelOriginX + padding), 0.0f);
   _aboutLabel.numberOfLines = 0;
-
-  NSString *string = @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
-
-  NSMutableParagraphStyle *pStyle = [[NSMutableParagraphStyle alloc] init];
-  pStyle.maximumLineHeight = 23.0f;
-  pStyle.minimumLineHeight = 23.0f;
-  NSMutableAttributedString *aString = 
-    [[NSMutableAttributedString alloc] initWithString: string attributes: @{
-      NSParagraphStyleAttributeName: pStyle
-    }
-  ];
-  _aboutLabel.attributedText = aString;
-  CGRect rect = [_aboutLabel.attributedText boundingRectWithSize:
-    CGSizeMake(_aboutLabel.frame.size.width, _sellerImageView.frame.size.height)
-      options: NSStringDrawingUsesLineFragmentOrigin context: nil];
-  _aboutLabel.frame = CGRectMake(_aboutLabel.frame.origin.x,
-    _aboutLabel.frame.origin.y, _aboutLabel.frame.size.width,
-      rect.size.height);
   _aboutLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: _aboutLabel];
 
@@ -82,6 +62,38 @@ reuseIdentifier: (NSString *)reuseIdentifier
   CGRect screen = [[UIScreen mainScreen] bounds];
 
   return 44.0f + 20.0f + (screen.size.width * 0.3f) + 20.0f;
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) loadUserData: (OMBUser *) user
+{
+  // Name
+  self.titleLabel.text = [user fullName];
+
+  // Image
+  if (user.image) {
+    _sellerImageView.image = user.image;
+  }
+  else {
+    [user downloadImageFromImageURLWithCompletion: 
+      ^(NSError *error) {
+        _sellerImageView.image = user.image;
+      }
+    ];
+  }
+
+  // About
+  _aboutLabel.attributedText = [user.about attributedStringWithFont:
+    _aboutLabel.font lineHeight: 23.0f];
+  CGRect rect = [_aboutLabel.attributedText boundingRectWithSize:
+    CGSizeMake(_aboutLabel.frame.size.width, _sellerImageView.frame.size.height)
+      options: NSStringDrawingUsesLineFragmentOrigin context: nil];
+  _aboutLabel.frame = CGRectMake(_aboutLabel.frame.origin.x,
+    _aboutLabel.frame.origin.y, _aboutLabel.frame.size.width,
+      rect.size.height);
 }
 
 @end

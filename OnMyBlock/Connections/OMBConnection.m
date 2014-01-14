@@ -16,9 +16,9 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
 // NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
 // Staging server
 NSString *const OnMyBlockAPIURL = @"http://ombrb.nodelist.com/api-v1";
-
-// Localhost
+// Development server
 // NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
+
 // Josselyn
 // NSString *const OnMyBlockAPIURL = @"http://10.0.1.29:3000/api-v1";
 // iPhone hotspot

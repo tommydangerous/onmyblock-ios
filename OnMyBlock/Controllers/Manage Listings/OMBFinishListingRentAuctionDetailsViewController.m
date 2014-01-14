@@ -14,6 +14,8 @@
 #import "OMBFinishListingRentItNowPriceCell.h"
 #import "OMBFinishListingShowMoreCell.h"
 #import "OMBPickerViewCell.h"
+#import "OMBResidence.h"
+#import "OMBResidenceUpdateConnection.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 
@@ -28,11 +30,15 @@
   if (!(self = [super initWithResidence: object])) return nil;
 
   durationOptions = @[
+    [NSNumber numberWithInt: 3],
     [NSNumber numberWithInt: 5],
-    [NSNumber numberWithInt: 7],
-    [NSNumber numberWithInt: 14],
-    [NSNumber numberWithInt: 21]
+    [NSNumber numberWithInt: 7]
   ];
+
+  if (!residence.auctionDuration)
+    residence.auctionDuration = [[durationOptions firstObject] intValue];
+  if (!residence.auctionStartDate)
+    residence.auctionStartDate = [[NSDate date] timeIntervalSince1970];
 
   self.screenName = self.title = @"Rent / Auction Details";
 
@@ -150,6 +156,9 @@
   fixedRentalPriceTextField.leftPaddingX = leftView.frame.size.width;
   fixedRentalPriceTextField.rightPaddingX = padding;
   fixedRentalPriceTextField.textColor = [UIColor blueDark];
+  [fixedRentalPriceTextField addTarget: self 
+    action: @selector(textFieldDidChange:)
+      forControlEvents: UIControlEventEditingChanged];
   [fixedRentalPriceView addSubview: fixedRentalPriceTextField];
 
   fixedRentalPriceLabel = [UILabel new];
@@ -162,6 +171,40 @@
   fixedRentalPriceLabel.textAlignment = NSTextAlignmentCenter;
   fixedRentalPriceLabel.textColor = [UIColor grayMedium];
   [fixedRentalPriceView addSubview: fixedRentalPriceLabel];
+}
+
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  if (!residence.isAuction) {
+    segmentedControl.selectedSegmentIndex = 1;
+    [self segmentedControlChanged: segmentedControl];
+
+    if (residence.minRent)
+      fixedRentalPriceTextField.text = [NSString stringWithFormat: @"%.2f",
+        residence.minRent];
+  }
+}
+
+- (void) viewWillDisappear: (BOOL) animated
+{
+  [super viewWillDisappear: animated];
+
+  if (!residence.isAuction)
+    residence.rentItNowPrice = 0.0f;
+
+  OMBResidenceUpdateConnection *conn = 
+    [[OMBResidenceUpdateConnection alloc] initWithResidence: residence 
+      attributes: @[
+        @"auctionDuration",
+        @"auctionStartDate",
+        @"isAuction",
+        @"minRent",
+        @"rentItNowPrice"
+      ]
+    ];
+  [conn start];
 }
 
 #pragma mark - Protocol
@@ -184,7 +227,13 @@ numberOfRowsInComponent: (NSInteger) component
 - (void) pickerView: (UIPickerView *) pickerView didSelectRow: (NSInteger) row
 inComponent: (NSInteger) component
 {
+  NSNumber *number = [durationOptions objectAtIndex: row];
+  residence.auctionDuration = [number intValue];
 
+   UITableViewCell *cell = [auctionTableView cellForRowAtIndexPath:
+    [NSIndexPath indexPathForRow: 2 inSection: 0]];
+   cell.detailTextLabel.text = [NSString stringWithFormat: @"%i days",
+    residence.auctionDuration];
 }
 
 - (CGFloat) pickerView: (UIPickerView *) pickerView
@@ -250,8 +299,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell1)
         cell1 = [[OMBFinishListingAuctionStartPriceCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: CellIdentifier0];
-      cell1.textField.delegate = self;
-      cell1.textField.tag      = 0;
+      cell1.textField.delegate  = self;
+      cell1.textField.indexPath = indexPath;
+      if (residence.isAuction && residence.minRent)
+        cell1.textField.text = [NSString stringWithFormat: @"%.2f",
+          residence.minRent];
+      [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
+        forControlEvents: UIControlEventEditingChanged];
       return cell1;
     }
     // Rent it Now Price
@@ -263,8 +317,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell1)
         cell1 = [[OMBFinishListingRentItNowPriceCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: CellIdentifier1];
-      cell1.textField.delegate = self;
-      cell1.textField.tag      = 1;
+      cell1.textField.delegate  = self;
+      cell1.textField.indexPath = indexPath;
+      if (residence.isAuction && residence.rentItNowPrice)
+        cell1.textField.text = [NSString stringWithFormat: @"%.2f",
+          residence.rentItNowPrice];
+      [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
+        forControlEvents: UIControlEventEditingChanged];
       return cell1;
     }
     // Duration
@@ -278,7 +337,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell1.backgroundColor = [UIColor whiteColor];
       cell1.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
         size: 15];
-      cell1.detailTextLabel.text = @"7 days";
+      cell1.detailTextLabel.text = [NSString stringWithFormat: @"%i days",
+        residence.auctionDuration];
       cell1.detailTextLabel.textColor = [UIColor textColor];
       cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
       cell1.textLabel.font = cell1.detailTextLabel.font;
@@ -309,12 +369,23 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
             UITableViewCellStyleDefault reuseIdentifier: CellIdentifier3];
         cell1.pickerView.dataSource = self;
         cell1.pickerView.delegate   = self;
-        [cell1.pickerView selectRow: 1 inComponent: 0 animated: NO];
+
+        NSUInteger selectedRow = [durationOptions indexOfObjectPassingTest: 
+          ^BOOL (id obj, NSUInteger idx, BOOL *stop) {
+            return [(NSNumber *) obj intValue] == residence.auctionDuration;
+          }
+        ];
+        if (selectedRow == NSNotFound)
+          selectedRow = 0;
+        [cell1.pickerView selectRow: selectedRow inComponent: 0 animated: NO];
         return cell1;
       }
     }
     // Start Date
     else if (indexPath.row == 4) {
+      NSDateFormatter *dateFormatter = [NSDateFormatter new];
+      dateFormatter.dateFormat = @"MMMM d, yyyy";
+      
       static NSString *CellIdentifier4 = @"CellIdentifier4";
       UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
         CellIdentifier4];
@@ -324,7 +395,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell1.backgroundColor = [UIColor whiteColor];
       cell1.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
         size: 15];
-      cell1.detailTextLabel.text = @"Immediately";
+      // cell1.detailTextLabel.text = @"Immediately";
+      cell1.detailTextLabel.text = [dateFormatter stringFromDate:
+        [NSDate dateWithTimeIntervalSince1970: residence.auctionStartDate]];
       cell1.detailTextLabel.textColor = [UIColor textColor];
       cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
       cell1.textLabel.font = cell1.detailTextLabel.font;
@@ -356,6 +429,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
             UITableViewCellStyleDefault reuseIdentifier: CellIdentifier5];
         [cell1.datePicker addTarget: self action: @selector(datePickerChanged:)
           forControlEvents: UIControlEventValueChanged];
+        [cell1.datePicker setDate: 
+          [NSDate dateWithTimeIntervalSince1970: residence.auctionStartDate] 
+            animated: NO];
         return cell1;
       }
     }
@@ -584,10 +660,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   //   @[[NSIndexPath indexPathForRow: 0 inSection: 1]] 
   //     withRowAnimation: UITableViewRowAnimationFade];
 
-  // Scroll 
-  [auctionTableView scrollToRowAtIndexPath: 
-    [NSIndexPath indexPathForRow: textField.tag inSection: 0]
+  // Scroll
+  if ([textField isKindOfClass: [TextFieldPadding class]]) {
+    TextFieldPadding *tf = (TextFieldPadding *) textField;
+    [auctionTableView scrollToRowAtIndexPath: tf.indexPath
       atScrollPosition: UITableViewScrollPositionTop animated: YES];
+  }
 
   if (textField != fixedRentalPriceTextField) {
     [self.navigationItem setRightBarButtonItem: doneBarButtonItem];
@@ -615,6 +693,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     else {
       cell.detailTextLabel.text = dateSelectedString;
     }
+
+    residence.auctionStartDate = [datePicker.date timeIntervalSince1970];
   }
 }
 
@@ -700,6 +780,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     auctionTableView.hidden     = NO;
     fixedRentalPriceView.hidden = YES;
     [self.view endEditing: YES];
+
+    residence.isAuction = YES;
   }
   // Show Fixed Rental Price
   else if (control.selectedSegmentIndex == 1) {
@@ -707,6 +789,25 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     fixedRentalPriceView.hidden = NO;
     [fixedRentalPriceTextField becomeFirstResponder];
     [self.navigationItem setRightBarButtonItem: saveBarButtonItem];
+
+    residence.isAuction = NO;
+  }
+}
+
+- (void) textFieldDidChange: (TextFieldPadding *) textField
+{
+  if (textField == fixedRentalPriceTextField) {
+    residence.minRent = [textField.text floatValue];
+  }
+  else if (textField.indexPath.section == 0) {
+    // Min Rent
+    if (textField.indexPath.row == 0) {
+      residence.minRent = [textField.text floatValue];
+    }
+    // Rent it Now Price
+    else if (textField.indexPath.row == 1) {
+      residence.rentItNowPrice = [textField.text floatValue];
+    }
   }
 }
 

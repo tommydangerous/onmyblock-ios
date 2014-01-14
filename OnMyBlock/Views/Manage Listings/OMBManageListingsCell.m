@@ -108,7 +108,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   // Address
   if ([residence.address length]) {
-    addressLabel.text = residence.address;  
+    addressLabel.text = [residence.address capitalizedString];
   }
   else {
     addressLabel.text = [NSString stringWithFormat: @"%@ in %@",

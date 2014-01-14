@@ -18,29 +18,31 @@ reuseIdentifier: (NSString *)reuseIdentifier
   if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
     return nil;
 
+    self.titleLabel.text = @"Amenities";
+
+  return self;
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) loadAmenitiesData: (NSArray *) array
+{
+  if (amenities) {
+    return;
+  }
   CGRect screen = [[UIScreen mainScreen] bounds];
+  CGFloat screeWidth = screen.size.width;
+  CGFloat padding = 20.0f;
 
-  float screeWidth = screen.size.width;
+  amenities = array;
 
-  float padding = 20.0f;
-
-  _amenities = @[
-    @"gym",
-    @"pool",
-    @"air conditioning",
-    @"basketball",
-    @"bbq grill",
-    @"theater",
-    @"mall"
-  ];
-
-  self.titleLabel.text = @"Amenities";
-
-  for (NSString *string in _amenities) {
+  for (NSString *string in amenities) {
     CGFloat viewHeight = 23.0f;
     CGFloat viewWidth  = (screeWidth - (padding * 2)) * 0.5;
 
-    NSInteger index = [_amenities indexOfObject: string];
+    NSInteger index = [array indexOfObject: string];
     CGFloat originX = padding;
     // Left
     if (index % 2) {
@@ -74,9 +76,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
     bullet.layer.borderWidth  = 1.0f;
     bullet.layer.cornerRadius = bulletSize * 0.5f;
     [v addSubview: bullet];
-  }
-
-  return self;
+  } 
 }
 
 @end

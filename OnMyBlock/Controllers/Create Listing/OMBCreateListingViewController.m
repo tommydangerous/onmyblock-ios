@@ -17,6 +17,8 @@
 #import "OMBGoogleMapsReverseGeocodingConnection.h"
 #import "OMBGooglePlacesConnection.h"
 #import "OMBNavigationController.h"
+#import "OMBTemporaryResidence.h"
+#import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
@@ -33,6 +35,10 @@
   locationManager.delegate        = self;
   locationManager.desiredAccuracy = kCLLocationAccuracyBest;
   locationManager.distanceFilter  = 50;
+
+  // Create new temporary residence
+  _temporaryResidence = [[OMBTemporaryResidence alloc] init];
+  _temporaryResidence.user = [OMBUser currentUser];
 
   self.screenName = @"Create Listing";
   self.title      = @"Step 1";
@@ -667,7 +673,8 @@ replacementString: (NSString *) string
     progressBar.frame = progressBarRect;
   } completion: ^(BOOL finished) {
     OMBCreateListingConnection *conn = 
-      [[OMBCreateListingConnection alloc] initWithDictionary: valuesDictionary];
+      [[OMBCreateListingConnection alloc] initWithTemporaryResidence: 
+        _temporaryResidence dictionary: valuesDictionary];
     conn.completionBlock = ^(NSError *error) {
       if (error) {
         [activityView stopSpinning];

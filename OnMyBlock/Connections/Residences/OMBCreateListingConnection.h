@@ -8,10 +8,16 @@
 
 #import "OMBConnection.h"
 
+@class OMBTemporaryResidence;
+
 @interface OMBCreateListingConnection : OMBConnection
+{
+  OMBTemporaryResidence *temporaryResidence;
+}
 
 #pragma mark - Initializer
 
-- (id) initWithDictionary: (NSDictionary *) dictionary;
+- (id) initWithTemporaryResidence: (OMBTemporaryResidence *) object 
+dictionary: (NSDictionary *) dictionary;
 
 @end

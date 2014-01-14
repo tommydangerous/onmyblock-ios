@@ -9,6 +9,7 @@
 #import "OMBResidenceDetailConnection.h"
 
 #import "OMBResidence.h"
+#import "OMBTemporaryResidence.h"
 
 @implementation OMBResidenceDetailConnection
 
@@ -19,8 +20,19 @@
   if (!(self = [super init])) return nil;
 
   residence = object;
+
+  NSString *resource = @"places";
+  if ([object isKindOfClass: [OMBTemporaryResidence class]])
+    resource = @"temporary_residences";
+
   NSString *string = [NSString stringWithFormat: 
-    @"%@/places/%i/", OnMyBlockAPIURL, residence.uid];
+    @"%@/%@/%i", OnMyBlockAPIURL, resource, residence.uid];
+
+  if ([object isKindOfClass: [OMBTemporaryResidence class]])
+    string = [string stringByAppendingString: 
+      [NSString stringWithFormat: @"/?access_token=%@", 
+        [OMBUser currentUser].accessToken]];
+
   [self setRequestFromString: string];
 
   return self;
@@ -56,6 +68,9 @@
   // }
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
+
+  NSLog(@"OMBResidenceDetailConnection\n%@", json);
+  
   [residence readFromResidenceDictionary: json];
   [super connectionDidFinishLoading: connection];
 }

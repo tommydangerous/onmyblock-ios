@@ -8,13 +8,16 @@
 
 #import "OMBFinishListingOtherDetailsViewController.h"
 
+#import "OMBActivityView.h"
 #import "OMBDatePickerCell.h"
 #import "OMBFinishListingAmenitiesViewController.h"
-#import "OMBFinishListingOtherDetailsOpenHouseDatesViewController.h"
+#import "OMBFinishListingOpenHouseDatesViewController.h"
 #import "OMBHeaderTitleCell.h"
 #import "OMBLabelTextFieldCell.h"
 #import "OMBPickerViewCell.h"
 #import "OMBResidence.h"
+#import "OMBResidenceDeleteConnection.h"
+#import "OMBResidenceOpenHouseListConnection.h"
 #import "OMBResidenceUpdateConnection.h"
 #import "OMBStandardLeaseViewController.h"
 
@@ -33,8 +36,11 @@ int kBottomBorderTag = 9999;
 
   leaseTypeOptions = @[
     @"OMB Standard Lease",
-    @"Contact Me"
+    @"Custom"
   ];
+
+  if (!residence.leaseType || [residence.leaseType length] == 0)
+    residence.leaseType = [leaseTypeOptions firstObject];
 
   propertyTypeOptions = @[
     @"sublet",
@@ -76,6 +82,17 @@ int kBottomBorderTag = 9999;
 {
   [super viewWillAppear: animated];
 
+  // List Connection
+  OMBResidenceOpenHouseListConnection *conn = 
+    [[OMBResidenceOpenHouseListConnection alloc] initWithResidence:
+      residence];
+  conn.completionBlock = ^(NSError *error) {
+    [self.table reloadRowsAtIndexPaths: 
+      @[[NSIndexPath indexPathForRow: 7 inSection: 1]] 
+        withRowAnimation: UITableViewRowAnimationNone];
+  };
+  [conn start];
+
   [self.table reloadData];
 }
 
@@ -83,18 +100,21 @@ int kBottomBorderTag = 9999;
 {
   [super viewWillDisappear: animated];
 
-  OMBResidenceUpdateConnection *conn = 
-    [[OMBResidenceUpdateConnection alloc] initWithResidence: residence 
-      attributes: @[
-        @"bathrooms",
-        @"bedrooms",
-        @"leaseMonths",
-        @"moveInDate",
-        @"propertyType",
-        @"squareFeet"
-      ]
-    ];
-  [conn start];
+  if (residence) {
+    OMBResidenceUpdateConnection *conn = 
+      [[OMBResidenceUpdateConnection alloc] initWithResidence: residence 
+        attributes: @[
+          @"bathrooms",
+          @"bedrooms",
+          @"leaseMonths",
+          @"leaseType",
+          @"moveInDate",
+          @"propertyType",
+          @"squareFeet"
+        ]
+      ];
+    [conn start];
+  }
 }
 
 #pragma mark - Protocol
@@ -158,6 +178,7 @@ inComponent: (NSInteger) component
     // Lease Type
     else if (selectedIndexPath.section == 1 && selectedIndexPath.row == 8) {
       string = [leaseTypeOptions objectAtIndex: row];
+      residence.leaseType = string;
     }
     OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *) 
       [self.table cellForRowAtIndexPath: selectedIndexPath];
@@ -480,16 +501,38 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // Open House Dates
       else if (indexPath.row == 7) {
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.backgroundColor = [UIColor whiteColor];
-        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-        cell.textLabel.text = @"Open House Dates";
-        return cell;
+        static NSString *OpenHouseCellIdentifier = @"OpenHouseCellIdentifier";
+        UITableViewCell *openHouseCell = 
+          [tableView dequeueReusableCellWithIdentifier: 
+            OpenHouseCellIdentifier];
+        if (!openHouseCell)
+          openHouseCell = [[UITableViewCell alloc] initWithStyle: 
+            UITableViewCellStyleValue1 reuseIdentifier: 
+              OpenHouseCellIdentifier];
+        openHouseCell.accessoryType = 
+          UITableViewCellAccessoryDisclosureIndicator;
+        openHouseCell.backgroundColor = [UIColor whiteColor];
+        openHouseCell.detailTextLabel.font = [UIFont fontWithName:
+          @"HelveticaNeue-Medium" size: 15];
+        openHouseCell.detailTextLabel.text = [NSString stringWithFormat: @"%i",
+          [residence.openHouseDates count]];
+
+        openHouseCell.detailTextLabel.textColor = [UIColor blueDark];
+        openHouseCell.textLabel.text = @"Open House Dates";
+        openHouseCell.textLabel.font = [UIFont fontWithName: 
+          @"HelveticaNeue-Light" size: 15];
+        openHouseCell.textLabel.textColor = [UIColor textColor];
+
+        return openHouseCell;
       }
       // Lease Type
       else if (indexPath.row == 8) {
         string = @"Lease Type";
         cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
+        if (residence.leaseType)
+          cell1.textField.text = residence.leaseType;
+        else
+          cell1.textField.text = [leaseTypeOptions firstObject];
         cell1.textField.userInteractionEnabled = NO;
 
         // Bottom border
@@ -515,7 +558,20 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
                 PickerCellIdentifier];
           pickerCell.pickerView.dataSource = self;
           pickerCell.pickerView.delegate   = self;
-          [pickerCell.pickerView selectRow: 0 inComponent: 0 animated: NO];
+
+          NSInteger selectedRow = 0;
+          if (residence.leaseType) {
+            selectedRow = [leaseTypeOptions indexOfObjectPassingTest: 
+              ^BOOL (id obj, NSUInteger idx, BOOL *stop) {
+                return [[obj lowercaseString] isEqualToString: 
+                  [residence.leaseType lowercaseString]];
+              }
+            ];
+            if (selectedRow == NSNotFound)
+              selectedRow = 0;
+          }
+          [pickerCell.pickerView selectRow: selectedRow inComponent: 0 
+            animated: NO];
 
           // Bottom border
           // Use layer because after clicking the row, the view goes away
@@ -696,7 +752,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Open House Dates
     else if (indexPath.row == 7) {
       [self.navigationController pushViewController: 
-        [[OMBFinishListingOtherDetailsOpenHouseDatesViewController alloc]
+        [[OMBFinishListingOpenHouseDatesViewController alloc]
           initWithResidence: residence] animated: YES];
     }
     // OMB Standard Lease
@@ -827,8 +883,35 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) deleteListing
 {
-  NSLog(@"DELETE LISTING");
-  [self.navigationController popToRootViewControllerAnimated: NO];
+  OMBActivityView *activityView = [[OMBActivityView alloc] init];
+  [self.view addSubview: activityView];
+  [activityView startSpinning];
+
+  OMBResidenceDeleteConnection *conn = 
+    [[OMBResidenceDeleteConnection alloc] initWithResidence: residence];
+  conn.completionBlock = ^(NSError *error) {
+    OMBResidence *res = [[OMBUser currentUser].residences objectForKey:
+      [NSNumber numberWithInt: residence.uid]];
+    if (error || res) {
+      NSString *message = @"";
+      if (error) {
+        message = error.localizedDescription;
+      }
+      else {
+        message = @"Delete unsuccessful";
+      }
+      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Error" 
+        message: message delegate: nil cancelButtonTitle: @"Try again"
+          otherButtonTitles: nil];
+      [alertView show];
+    }
+    else {
+      residence = nil;
+      [self.navigationController popToRootViewControllerAnimated: NO];
+    }
+    [activityView stopSpinning];
+  };
+  [conn start];
 }
 
 - (void) done

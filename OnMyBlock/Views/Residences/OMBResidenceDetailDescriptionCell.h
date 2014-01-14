@@ -12,4 +12,10 @@
 
 @property (nonatomic, strong) UILabel *descriptionLabel;
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) loadData: (NSString *) string;
+
 @end

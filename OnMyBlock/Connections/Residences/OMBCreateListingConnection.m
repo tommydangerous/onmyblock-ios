@@ -15,9 +15,12 @@
 
 #pragma mark - Initializer
 
-- (id) initWithDictionary: (NSDictionary *) dictionary
+- (id) initWithTemporaryResidence: (OMBTemporaryResidence *) object 
+dictionary: (NSDictionary *) dictionary
 {
   if (!(self = [super init])) return nil;
+
+  temporaryResidence = object;
 
   NSString *string = [NSString stringWithFormat: 
     @"%@/temporary_residences/create_listing", OnMyBlockAPIURL];
@@ -60,8 +63,6 @@
   NSLog(@"OMBCreateListingConnection\n%@", json);
 
   if ([[json objectForKey: @"success"] intValue] == 1) {
-    OMBTemporaryResidence *temporaryResidence = 
-      [[OMBTemporaryResidence alloc] init];
     [temporaryResidence readFromResidenceDictionary: 
       [json objectForKey: @"object"]];
     [[OMBUser currentUser] addResidence: temporaryResidence];

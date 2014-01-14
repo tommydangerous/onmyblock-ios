@@ -99,18 +99,20 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   [OMBUser currentUser].about = @"About me.";
 
   // Development access token
-  // [OMBUser currentUser].accessToken = @"4869e582108a62253eefb2ec3df301a3";
+  [OMBUser currentUser].accessToken = @"4869e582108a62253eefb2ec3df301a3";
+  
   // Staging access token
-  [OMBUser currentUser].accessToken = @"60721b1691403ed9037b52f8816e351e";
+  // [OMBUser currentUser].accessToken = @"60721b1691403ed9037b52f8816e351e";
 
-  [OMBUser currentUser].email = @"fake_user@gmail.com";
+  [OMBUser currentUser].email     = @"fake_user@gmail.com";
   [OMBUser currentUser].firstName = @"fake";
-  [OMBUser currentUser].lastName = @"user";
-  [OMBUser currentUser].phone = @"4088581234";
-  [OMBUser currentUser].school = @"university of california - berkeley";
-  [OMBUser currentUser].image = [UIImage imageNamed: @"edward_d.jpg"];
-  [OMBUser currentUser].uid = 7777;
-  // Post notification
+  [OMBUser currentUser].lastName  = @"user";
+  [OMBUser currentUser].phone     = @"4088581234";
+  [OMBUser currentUser].school    = @"university of california - berkeley";
+  [OMBUser currentUser].image     = [UIImage imageNamed: @"edward_d.jpg"];
+  [OMBUser currentUser].uid       = 7777;
+
+  // Post notification for logging in
   [[NSNotificationCenter defaultCenter] postNotificationName: 
     OMBUserLoggedInNotification object: nil];
 }
@@ -119,16 +121,16 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 {
   static OMBUser *user = nil;
   if (!user) {
-    user = [[OMBUser alloc] init];
-    user.about = @"I am a cool guy.";
+    user             = [[OMBUser alloc] init];
+    user.about       = @"I am a cool guy.";
     user.accessToken = @"cea246ff2139e0fa5b17ae255e9a946d";
-    user.email = @"edward_d@gmail.com";
-    user.firstName = @"edward";
-    user.lastName = @"david";
-    user.phone = @"4088581234";
-    user.school = @"university of california - berkeley";
-    user.image = [UIImage imageNamed: @"edward_d.jpg"];
-    user.uid = 9999;
+    user.email       = @"edward_d@gmail.com";
+    user.firstName   = @"edward";
+    user.lastName    = @"david";
+    user.phone       = @"4088581234";
+    user.school      = @"university of california - berkeley";
+    user.image       = [UIImage imageNamed: @"edward_d.jpg"];
+    user.uid         = 9999;
   }
   return user;
 }
@@ -465,6 +467,11 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
       [self addResidence: temporaryResidence];
     }
   }
+}
+
+- (void) removeResidence: (OMBResidence *) residence
+{
+  [_residences removeObjectForKey: [NSNumber numberWithInt: residence.uid]];
 }
 
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence

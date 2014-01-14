@@ -9,39 +9,14 @@
 #import "OMBResidence.h"
 
 #import "NSString+Extensions.h"
+#import "OMBOpenHouse.h"
 #import "OMBResidenceGoogleStaticImageDownloader.h"
 #import "OMBResidenceImage.h"
 #import "OMBUser.h"
+#import "OMBUserStore.h"
 #import "UIImage+Resize.h"
 
 @implementation OMBResidence
-
-// Web app properties
-@synthesize address      = _address;
-@synthesize availableOn  = _availableOn;
-@synthesize bathrooms    = _bathrooms;
-@synthesize bedrooms     = _bedrooms;
-@synthesize city         = _city;
-@synthesize createdAt    = _createdAt;
-@synthesize description  = _description;
-@synthesize email        = _email;
-@synthesize landlordName = _landlordName;
-@synthesize latitude     = _latitude;
-@synthesize leaseMonths  = _leaseMonths;
-@synthesize longitude    = _longitude;
-@synthesize phone        = _phone;
-@synthesize rent         = _rent;
-@synthesize squareFeet   = _squareFeet;
-@synthesize state        = _state;
-@synthesize uid          = _uid;
-@synthesize updatedAt    = _updatedAt;
-@synthesize zip          = _zip;
-
-// iOS app properties
-@synthesize coverPhotoForCell = _coverPhotoForCell;
-@synthesize coverPhotoURL     = _coverPhotoImageURL;
-@synthesize images            = _images;
-@synthesize lastImagePosition = _lastImagePosition;
 
 #pragma mark - Initializer
 
@@ -57,6 +32,7 @@
   _images              = [NSMutableArray array];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _lastImagePosition   = 1000;
+  _openHouseDates      = [NSMutableArray array];
 
   return self;
 }
@@ -102,9 +78,9 @@
     residence.latitude = -32;
     residence.leaseMonths = 12;
     residence.longitude = 113;
+    residence.minRent = 1750.00;
     residence.phone = @"8581234567";
     residence.propertyType = @"sublet";
-    residence.rent = 1750.00;
     residence.squareFeet = 900;
     residence.state = @"CA";
     residence.title = @"Best College Pad Ever";
@@ -139,6 +115,14 @@ withString: (NSString *) string
   }
 }
 
+- (void) addOpenHouse: (OMBOpenHouse *) openHouse
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
+    @"uid", openHouse.uid];
+  if ([[_openHouseDates filteredArrayUsingPredicate: predicate] count] == 0)
+    [_openHouseDates addObject: openHouse];
+}
+
 - (void) addResidenceImage: (OMBResidenceImage *) residenceImage
 {
   NSPredicate *predicate = [NSPredicate predicateWithFormat:
@@ -146,6 +130,38 @@ withString: (NSString *) string
   if ([[_images filteredArrayUsingPredicate: predicate] count] == 0) {
     [_images addObject: residenceImage];
   }
+}
+
+- (NSArray *) availableAmenities
+{
+  NSMutableArray *array = [NSMutableArray array];
+  for (NSString *string in [_amenities allKeys]) {
+    NSNumber *number = [_amenities objectForKey: string];
+    if ([number intValue])
+      [array addObject: string];
+  }
+  // keys = [keys sortedArrayUsingComparator: ^(id obj1, id obj2) {
+  //   int key1 = [(NSString *) obj1 intValue];
+  //   int key2 = [(NSString *) obj2 intValue];
+  //   if (key1 > key2)
+  //     return (NSComparisonResult) NSOrderedDescending;
+  //   if (key1 < key2)
+  //     return (NSComparisonResult) NSOrderedAscending;
+  //   return (NSComparisonResult) NSOrderedSame;
+  // }];
+  // NSMutableArray *array = [NSMutableArray array];
+  // for (NSString *key in keys) {
+  //   [array addObject: [_images objectForKey: key]];
+  // }
+  // return array;
+
+  return (NSArray *) [array sortedArrayUsingComparator: ^(id obj1, id obj2) {
+    if (obj1 > obj2)
+      return (NSComparisonResult) NSOrderedDescending;
+    if (obj1 < obj2)
+      return (NSComparisonResult) NSOrderedAscending;
+    return (NSComparisonResult) NSOrderedSame;
+  }];
 }
 
 - (NSString *) availableOnString
@@ -330,6 +346,16 @@ withString: (NSString *) string
   return nil;
 }
 
+- (void) readFromOpenHouseDictionary: (NSDictionary *) dictionary
+{
+  NSArray *array = [dictionary objectForKey: @"objects"];
+  for (NSDictionary *dict in array) {
+    OMBOpenHouse *openHouse = [[OMBOpenHouse alloc] init];
+    [openHouse readFromDictionary: dict];
+    [self addOpenHouse: openHouse];
+  }
+}
+
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary
 {
   // Sample JSON
@@ -370,7 +396,7 @@ withString: (NSString *) string
     _leaseMonths = [[dictionary objectForKey: @"lease_months"] intValue];
   }
   _longitude = [[dictionary objectForKey: @"lng"] floatValue];
-  _rent      = [[dictionary objectForKey: @"rt"] floatValue];
+  _minRent   = [[dictionary objectForKey: @"rt"] floatValue];
   _uid       = [[dictionary objectForKey: @"id"] intValue];
 }
 
@@ -416,6 +442,14 @@ withString: (NSString *) string
           [[amenitiesString stripWhiteSpace] lowercaseString]];
     }
   }
+  // Auction Duration
+  if ([dictionary objectForKey: @"auction_duration"] != [NSNull null])
+    _auctionDuration = [[dictionary objectForKey: 
+      @"auction_duration"] intValue];
+  // Auction Start Date
+  if ([dictionary objectForKey: @"auction_start_date"] != [NSNull null])
+    _auctionStartDate = [[dateFormatter dateFromString:
+      [dictionary objectForKey: @"auction_start_date"]] timeIntervalSince1970];
   // Available on
   if ([dictionary objectForKey: @"available_on"] != [NSNull null])
     _availableOn = [[dateFormatter dateFromString:
@@ -462,6 +496,15 @@ withString: (NSString *) string
   // ID
   if ([dictionary objectForKey: @"id"] != [NSNull null])
     _uid = [[dictionary objectForKey: @"id"] intValue];
+  // Is Auction
+  if ([dictionary objectForKey: @"is_auction"] != [NSNull null]) {
+    if ([[dictionary objectForKey: @"is_auction"] intValue] == 1) {
+      _isAuction = YES;
+    }
+    else {
+      _isAuction = NO;
+    }
+  }
   // Landlord name
   if ([dictionary objectForKey: @"landlord_name"] != [NSNull null])
     _landlordName = [dictionary objectForKey: @"landlord_name"];
@@ -475,9 +518,15 @@ withString: (NSString *) string
   else {
     _leaseMonths = [[dictionary objectForKey: @"lease_months"] intValue];
   }
+  // Lease Type
+  if ([dictionary objectForKey: @"lease_type"] != [NSNull null])
+    _leaseType = [dictionary objectForKey: @"lease_type"];
   // Longitude
   if ([dictionary objectForKey: @"longitude"] != [NSNull null])
     _longitude = [[dictionary objectForKey: @"longitude"] floatValue];
+  // Min Rent
+  if ([dictionary objectForKey: @"min_rent"] != [NSNull null])
+    _minRent = [[dictionary objectForKey: @"min_rent"] floatValue];
   // Move-in Date
   if ([dictionary objectForKey: @"move_in_date"] != [NSNull null])
     _moveInDate = [[dateFormatter dateFromString:
@@ -489,9 +538,10 @@ withString: (NSString *) string
   if ([dictionary objectForKey: @"property_type"] != [NSNull null]) {
     _propertyType = [dictionary objectForKey: @"property_type"];
   }
-  // Rent
-  if ([dictionary objectForKey: @"rent"] != [NSNull null])
-    _rent = [[dictionary objectForKey: @"rent"] floatValue];
+  // Rent it Now Price
+  if ([dictionary objectForKey: @"rent_it_now_price"] != [NSNull null])
+    _rentItNowPrice = [[dictionary objectForKey: 
+      @"rent_it_now_price"] floatValue];
   // Square feet
   if ([dictionary objectForKey: @"sqft"] != [NSNull null])
     _squareFeet = [[dictionary objectForKey: @"sqft"] intValue];
@@ -510,6 +560,17 @@ withString: (NSString *) string
   if ([dictionary objectForKey: @"updated_at"] != [NSNull null])
     _updatedAt = [[dateFormatter dateFromString:
       [dictionary objectForKey: @"updated_at"]] timeIntervalSince1970];
+  // User
+  if ([dictionary objectForKey: @"user"] != [NSNull null]) {
+    NSDictionary *userDict = [dictionary objectForKey: @"user"];
+    int userUID = [[userDict objectForKey: @"id"] intValue];
+    OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
+    if (!user) {
+      user = [[OMBUser alloc] init];
+    }
+    [user readFromDictionary: userDict];
+    _user = user;
+  }
   // Zip
   if ([dictionary objectForKey: @"zip"] != [NSNull null])
     _zip = [dictionary objectForKey: @"zip"];
@@ -527,7 +588,14 @@ withString: (NSString *) string
 
 - (NSString *) rentToCurrencyString
 {
-  return [NSString numberToCurrencyString: (int) _rent];
+  return [NSString numberToCurrencyString: (int) _minRent];
+}
+
+- (NSArray *) sortedOpenHouseDates
+{
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"startDate"
+    ascending: YES];
+  return [_openHouseDates sortedArrayUsingDescriptors: @[sort]];
 }
 
 @end

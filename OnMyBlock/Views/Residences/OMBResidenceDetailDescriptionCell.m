@@ -34,28 +34,26 @@ reuseIdentifier: (NSString *)reuseIdentifier
     self.titleLabel.frame.size.height + padding, 
       screeWidth - (padding * 2), 0.0f);
   _descriptionLabel.numberOfLines = 0;
+  _descriptionLabel.textColor = [UIColor textColor];
+  [self.contentView addSubview: _descriptionLabel];
 
-  NSString *string = @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+  return self;
+}
 
-  NSMutableParagraphStyle *pStyle = [[NSMutableParagraphStyle alloc] init];
-  pStyle.maximumLineHeight = 23.0f;
-  pStyle.minimumLineHeight = 23.0f;
-  NSMutableAttributedString *aString = 
-    [[NSMutableAttributedString alloc] initWithString: string attributes: @{
-      NSParagraphStyleAttributeName: pStyle
-    }
-  ];
-  _descriptionLabel.attributedText = aString;
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) loadData: (NSString *) string
+{
+  _descriptionLabel.attributedText = [string attributedStringWithFont:
+    _descriptionLabel.font lineHeight: 23.0f];
   CGRect rect = [_descriptionLabel.attributedText boundingRectWithSize:
     CGSizeMake(_descriptionLabel.frame.size.width, 9999.0f)
       options: NSStringDrawingUsesLineFragmentOrigin context: nil];
   _descriptionLabel.frame = CGRectMake(_descriptionLabel.frame.origin.x,
     _descriptionLabel.frame.origin.y, _descriptionLabel.frame.size.width,
       rect.size.height);
-  _descriptionLabel.textColor = [UIColor textColor];
-  [self.contentView addSubview: _descriptionLabel];
-
-  return self;
 }
 
 @end

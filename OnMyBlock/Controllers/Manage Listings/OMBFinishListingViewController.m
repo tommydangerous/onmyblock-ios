@@ -9,6 +9,7 @@
 #import "OMBFinishListingViewController.h"
 
 #import "AMBlurView.h"
+#import "OMBActivityView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBFinishListingAddressViewController.h"
 #import "OMBFinishListingAmenitiesViewController.h"
@@ -23,6 +24,7 @@
 #import "OMBResidenceDetailViewController.h"
 #import "OMBResidenceImage.h"
 #import "OMBResidenceImagesConnection.h"
+#import "OMBResidencePublishConnection.h"
 #import "OMBResidenceUploadImageConnection.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -211,17 +213,7 @@
   [self.table reloadData];
 
   // Calculate how many steps are left
-  int stepsRemaining = numberOfSteps;
-  if ([[residence imagesArray] count])
-    stepsRemaining -= 1;
-  if ([residence.title length])
-    stepsRemaining -= 1;
-  if ([residence.description length])
-    stepsRemaining -= 1;
-  if ([residence.address length] && [residence.city length] && 
-    [residence.state length] && [residence.zip length])
-    stepsRemaining -= 1;
-
+  NSInteger stepsRemaining = [self stepsRemaining];
   NSString *publishNowButtonTitle = @"Publish Now";
   if (stepsRemaining > 0) {
     NSString *stepsString = @"Steps";
@@ -409,6 +401,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Rent / Auction Details
   else if (indexPath.row == 3) {
     string = @"Rent / Auction Details";
+    if (residence.minRent) {
+      cell.textLabel.textColor = [UIColor textColor];
+      imageView.alpha = 1.0f;
+      imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+    }
   }
   // Address
   else if (indexPath.row == 4) {
@@ -423,6 +420,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Additional Details
   else if (indexPath.row == 5) {
     string = @"Additional Details";
+    if (residence.moveInDate) {
+      cell.textLabel.textColor = [UIColor textColor];
+      imageView.alpha = 1.0f;
+      imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+    }
   }
   cell.textLabel.text = string;
   return cell;
@@ -542,7 +544,38 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) publishNow
 {
-  NSLog(@"PUBLISH NOW");
+  if ([self stepsRemaining]) {
+    NSString *stepsString = @"steps";
+    if ([self stepsRemaining] == 1)
+      stepsString = @"step";
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+      @"Almost Finished" message: [NSString stringWithFormat: 
+        @"%i more %@ to go.", [self stepsRemaining], stepsString] delegate: nil 
+          cancelButtonTitle: @"Continue" otherButtonTitles: nil];
+    [alertView show];
+  }
+  else {
+    OMBActivityView *activityView = [[OMBActivityView alloc] init];
+    [self.view addSubview: activityView];
+    [activityView startSpinning];
+
+    OMBResidencePublishConnection *conn = 
+      [[OMBResidencePublishConnection alloc] initWithResidence: residence];
+    conn.completionBlock = ^(NSError *error) {
+      if (error) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Error" 
+          message: error.localizedDescription delegate: nil 
+            cancelButtonTitle: @"Try again"
+              otherButtonTitles: nil];
+        [alertView show];
+      }
+      else {
+        [self.navigationController popViewControllerAnimated: YES];
+      }
+      [activityView stopSpinning];
+    };
+    [conn start];
+  }
 }
 
 - (void) reloadPhotosRow
@@ -550,6 +583,32 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table reloadRowsAtIndexPaths: 
     @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
       withRowAnimation: UITableViewRowAnimationNone];
+}
+
+- (NSInteger) stepsRemaining
+{
+  NSInteger stepsRemaining = numberOfSteps;
+  // Photos
+  if ([[residence imagesArray] count])
+    stepsRemaining -= 1;
+  // Title
+  if ([residence.title length])
+    stepsRemaining -= 1;
+  // Description
+  if ([residence.description length])
+    stepsRemaining -= 1;
+  // Rent / Auction Details
+  if (residence.minRent)
+    stepsRemaining -= 1;
+  // Address
+  if ([residence.address length] && [residence.city length] && 
+    [residence.state length] && [residence.zip length])
+    stepsRemaining -= 1;
+  // Additional Details
+  if (residence.moveInDate)
+    stepsRemaining -= 1;
+
+  return stepsRemaining;
 }
 
 @end

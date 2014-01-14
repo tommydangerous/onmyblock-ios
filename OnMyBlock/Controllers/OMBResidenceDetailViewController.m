@@ -406,6 +406,30 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell)
         cell = [[OMBResidenceDetailAddressCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: AddressCellIdentifier];
+      // Address
+      if ([residence.address length])
+        cell.addressLabel.text = [residence.address capitalizedString];
+      else
+        cell.addressLabel.text = [NSString stringWithFormat: @"%@, %@",
+          [residence.city capitalizedString], residence.state];
+      // Bed / Bath/ Lease Months
+      cell.bedBathLeaseMonthLabel.text = [NSString stringWithFormat:
+        @"%.0f bd  /  %.0f ba  /  %i mo lease", 
+          residence.bedrooms, residence.bathrooms, residence.leaseMonths];
+      // Property Type - Move in Date
+      NSString *availableDateString = @"immediately";
+      if (residence.moveInDate) {
+        if (residence.moveInDate > [[NSDate date] timeIntervalSince1970]) {
+          NSDateFormatter *dateFormatter = [NSDateFormatter new];
+          dateFormatter.dateFormat = @"MMM d, yy";
+          availableDateString = [NSString stringWithFormat: @"%@",
+            [dateFormatter stringFromDate: 
+              [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]]];
+        }
+      }
+      cell.propertyTypeLabel.text = [NSString stringWithFormat: 
+        @"%@ - available %@",
+          [residence.propertyType capitalizedString], availableDateString];
       return cell;
     }
   }
@@ -443,6 +467,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell)
         cell = [[OMBResidenceDetailAmenitiesCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: AmentiesCellIdentifier];
+      [cell loadAmenitiesData: [residence availableAmenities]];
       return cell;
     }
   }
@@ -458,6 +483,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBResidenceDetailDescriptionCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: 
             DescriptionCellIdentifier];
+      [cell loadData: residence.description];
       return cell;
     }
   }
@@ -471,6 +497,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell)
         cell = [[OMBResidenceDetailSellerCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: SellerCellIdentifier];
+      [cell loadUserData: residence.user];
       return cell;
     }
   }
@@ -556,8 +583,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return kResidenceDetailCellSpacingHeight;
     }
     else if (indexPath.row == 1) {
+      NSInteger count = [[residence availableAmenities] count];
+      NSInteger rows  = count * 0.5f;
+      if (count % 2) {
+        rows += 1;
+      }
       return kResidenceDetailCellSpacingHeight + 
-        padding + (23.0f * 4) + padding;
+        padding + (23.0f * rows) + padding;
     }
   }
 
@@ -567,7 +599,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return kResidenceDetailCellSpacingHeight;
     }
     else if (indexPath.row == 1) {
-      return 200.0f;
+      NSAttributedString *aString = 
+        [residence.description attributedStringWithFont: 
+          [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] 
+            lineHeight: 23.0f];
+      CGRect rect = [aString boundingRectWithSize:
+        CGSizeMake(tableView.frame.size.width - (padding * 2), 9999.0f)
+          options: NSStringDrawingUsesLineFragmentOrigin context: nil];
+      return kResidenceDetailCellSpacingHeight +
+        padding + rect.size.height + padding;
     }
   }
 

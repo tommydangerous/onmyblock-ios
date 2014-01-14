@@ -76,6 +76,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 - (void) readFromLegalAnswerDictionary: (NSDictionary *) dictionary;
 - (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
+- (void) removeResidence: (OMBResidence *) residence;
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence;
 - (NSArray *) residencesSortedWithKey: (NSString *) key 
 ascending: (BOOL) ascending;

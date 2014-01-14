@@ -9,7 +9,14 @@
 #import "OMBResidenceDetailCell.h"
 
 @interface OMBResidenceDetailAmenitiesCell : OMBResidenceDetailCell
+{
+  NSArray *amenities;
+}
 
-@property (nonatomic, strong) NSArray *amenities;
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) loadAmenitiesData: (NSArray *) array;
 
 @end

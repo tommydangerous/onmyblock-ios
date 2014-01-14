@@ -9,10 +9,17 @@
 #import "OMBResidenceDetailCell.h"
 
 @class OMBCenteredImageView;
+@class OMBUser;
 
 @interface OMBResidenceDetailSellerCell : OMBResidenceDetailCell
 
 @property (nonatomic, strong) UILabel *aboutLabel;
 @property (nonatomic, strong) OMBCenteredImageView *sellerImageView;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) loadUserData: (OMBUser *) user;
 
 @end

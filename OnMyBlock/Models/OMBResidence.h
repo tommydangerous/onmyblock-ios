@@ -8,12 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+@class OMBOpenHouse;
 @class OMBResidenceImage;
+@class OMBUser;
 
 @interface OMBResidence : NSObject
 
 // Web app properties
 @property (nonatomic, strong) NSString *address;
+@property (nonatomic) NSInteger auctionDuration;
+@property (nonatomic) NSTimeInterval auctionStartDate;
 @property (nonatomic) NSTimeInterval availableOn;
 @property (nonatomic) float bathrooms;
 @property (nonatomic) float bedrooms;
@@ -23,14 +27,18 @@
 @property (nonatomic, strong) NSString *description;
 @property (nonatomic) BOOL dogs;
 @property (nonatomic, strong) NSString *email;
+@property (nonatomic) BOOL isAuction;
 @property (nonatomic, strong) NSString *landlordName;
 @property (nonatomic) float latitude;
 @property (nonatomic) int leaseMonths;
+@property (nonatomic, strong) NSString *leaseType;
 @property (nonatomic) float longitude;
+@property (nonatomic) CGFloat minRent;
 @property (nonatomic) NSTimeInterval moveInDate;
 @property (nonatomic, strong) NSString *phone;
 @property (nonatomic, strong) NSString *propertyType;
-@property (nonatomic) float rent;
+// @property (nonatomic) float rent;
+@property (nonatomic) CGFloat rentItNowPrice;
 @property (nonatomic) int squareFeet;
 @property (nonatomic, strong) NSString *state;
 @property (nonatomic, strong) NSString *title;
@@ -46,6 +54,8 @@
 @property (nonatomic, strong) NSMutableArray *images;
 @property (nonatomic, strong) NSMutableDictionary *imageSizeDictionary;
 @property (nonatomic) int lastImagePosition;
+@property (nonatomic, strong) NSMutableArray *openHouseDates;
+@property (nonatomic, strong) OMBUser *user;
 
 #pragma mark - Methods
 
@@ -58,7 +68,9 @@
 
 // - (void) addImage: (UIImage *) image atPosition: (int) position 
 // withString: (NSString *) string;
+- (void) addOpenHouse: (OMBOpenHouse *) openHouse;
 - (void) addResidenceImage: (OMBResidenceImage *) residenceImage;
+- (NSArray *) availableAmenities;
 - (NSString *) availableOnString;
 - (UIImage *) coverPhoto;
 - (UIImage *) coverPhotoWithSize: (CGSize) size;
@@ -69,9 +81,11 @@
 - (NSArray *) imagesArray;
 - (UIImage *) imageAtPosition: (int) position;
 - (UIImage *) imageForSize: (CGFloat) size;
+- (void) readFromOpenHouseDictionary: (NSDictionary *) dictionary;
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidenceDictionary: (NSDictionary *) dictionary;
 - (void) removeResidenceImage: (OMBResidenceImage *) residenceImage;
 - (NSString *) rentToCurrencyString;
+- (NSArray *) sortedOpenHouseDates;
 
 @end

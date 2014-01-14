@@ -31,7 +31,6 @@ reuseIdentifier: (NSString *)reuseIdentifier
   _addressLabel.font  = [UIFont fontWithName: @"HelveticaNeue-Light" size: 22];
   _addressLabel.frame = CGRectMake(padding, padding * 0.8, 
     screeWidth - (padding * 2), 33.0f);
-  _addressLabel.text = @"275 Josselyn Lane";
   _addressLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: _addressLabel];
 
@@ -41,7 +40,6 @@ reuseIdentifier: (NSString *)reuseIdentifier
   _bedBathLeaseMonthLabel.frame = CGRectMake(_addressLabel.frame.origin.x,
     _addressLabel.frame.origin.y + _addressLabel.frame.size.height,
       _addressLabel.frame.size.width, 23.0f);
-  _bedBathLeaseMonthLabel.text = @"3 bd  /  2 ba  /  9 mo lease";
   _bedBathLeaseMonthLabel.textColor = _addressLabel.textColor;
   [self.contentView addSubview: _bedBathLeaseMonthLabel];
 
@@ -52,7 +50,6 @@ reuseIdentifier: (NSString *)reuseIdentifier
     _bedBathLeaseMonthLabel.frame.size.height,
       _bedBathLeaseMonthLabel.frame.size.width, 
         _bedBathLeaseMonthLabel.frame.size.height);
-  _propertyTypeLabel.text = @"Sublet - available immediately";
   _propertyTypeLabel.textColor = [UIColor grayMedium];
   [self.contentView addSubview: _propertyTypeLabel];
 

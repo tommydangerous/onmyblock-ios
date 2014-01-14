@@ -46,6 +46,18 @@ attributes: (NSArray *) attributes
       }
       value = [amenitiesStringArray componentsJoinedByString: @","];
     }
+    // Auction Duration
+    if ([key isEqualToString: @"auctionDuration"])
+      key = @"auction_duration";
+    // Auction Start Date
+    if ([key isEqualToString: @"auctionStartDate"]) {
+      key = @"auction_start_date";
+      if (object.auctionStartDate)
+        value = [dateFormatter stringFromDate: 
+          [NSDate dateWithTimeIntervalSince1970: object.auctionStartDate]];
+      else
+        value = @"";
+    }
     // Bathrooms
     if ([key isEqualToString: @"bathrooms"])
       key = @"min_bathrooms";
@@ -69,18 +81,38 @@ attributes: (NSArray *) attributes
       else
         value = @"false";
     }
+    // Is Auction
+    if ([key isEqualToString: @"isAuction"]) {
+      key = @"is_auction";
+      if (object.isAuction)
+        value = @"true";
+      else
+        value = @"false";
+    }
     // Lease Months
     if ([key isEqualToString: @"leaseMonths"])
       key = @"lease_months";
+    // Lease Type
+    if ([key isEqualToString: @"leaseType"])
+      key = @"lease_type";
+    // Min Rent
+    if ([key isEqualToString: @"minRent"])
+      key = @"min_rent";
     // Move-in Date
     if ([key isEqualToString: @"moveInDate"]) {
       key = @"move_in_date";
-      value = [dateFormatter stringFromDate: 
-        [NSDate dateWithTimeIntervalSince1970: object.moveInDate]];
+      if (object.moveInDate)
+        value = [dateFormatter stringFromDate: 
+          [NSDate dateWithTimeIntervalSince1970: object.moveInDate]];
+      else
+        value = @"";
     }
     // Property Type
     if ([key isEqualToString: @"propertyType"])
       key = @"property_type";
+    // Rent it Now Price
+    if ([key isEqualToString: @"rentItNowPrice"])
+      key = @"rent_it_now_price";
     // Square Feet
     if ([key isEqualToString: @"squareFeet"])
       key = @"min_sqft";

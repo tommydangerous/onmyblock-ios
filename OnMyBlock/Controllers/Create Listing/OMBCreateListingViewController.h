@@ -12,7 +12,7 @@
 
 @class OMBActivityView;
 @class OMBCreateListingPropertyTypeView;
-@class OMBResidence;
+@class OMBTemporaryResidence;
 @class TextFieldPadding;
 
 @interface OMBCreateListingViewController : OMBViewController
@@ -46,7 +46,7 @@ UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 }
 
 @property (nonatomic, strong) NSMutableArray *citiesArray;
-@property (nonatomic, strong) OMBResidence *temporaryResidence;
+@property (nonatomic, strong) OMBTemporaryResidence *temporaryResidence;
 
 #pragma mark - Methods
 
