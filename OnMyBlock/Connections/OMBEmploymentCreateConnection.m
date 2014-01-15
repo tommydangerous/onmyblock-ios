@@ -25,14 +25,22 @@
     OnMyBlockAPIURL];
   NSURL *url = [NSURL URLWithString: string];
   NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
+  NSString *endDateString = @"";
+  if (employment.endDate) {
+    endDateString = [NSString stringFromDateForJSON: 
+      [NSDate dateWithTimeIntervalSince1970: employment.endDate]];
+  }
+  NSString *startDateString = @"";
+  if (employment.startDate) {
+    startDateString = [NSString stringFromDateForJSON: 
+      [NSDate dateWithTimeIntervalSince1970: employment.startDate]]; 
+  }
   NSDictionary *objectParams = @{
     @"company_name":    employment.companyName,
     @"company_website": employment.companyWebsite,
-    @"end_date": [NSString stringFromDateForJSON: 
-      [NSDate dateWithTimeIntervalSince1970: employment.endDate]],
+    @"end_date":        endDateString,
     @"income":          [NSNumber numberWithFloat: employment.income],
-    @"start_date": [NSString stringFromDateForJSON: 
-      [NSDate dateWithTimeIntervalSince1970: employment.startDate]],
+    @"start_date":      startDateString,
     @"title":           employment.title
   };
   NSDictionary *params = @{

@@ -96,7 +96,8 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
 + (void) fakeLogin
 {
-  [OMBUser currentUser].about = @"About me.";
+  [OMBUser currentUser].about = @"About me? Well I like to do cool stuff. "
+    @"I love watching movies! One of my favorite movies is Equilibrium.";
 
   // Development access token
   [OMBUser currentUser].accessToken = @"4869e582108a62253eefb2ec3df301a3";
@@ -110,7 +111,10 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   [OMBUser currentUser].phone     = @"4088581234";
   [OMBUser currentUser].school    = @"university of california - berkeley";
   [OMBUser currentUser].image     = [UIImage imageNamed: @"edward_d.jpg"];
-  [OMBUser currentUser].uid       = 7777;
+  [OMBUser currentUser].uid       = 61;
+
+  [OMBUser currentUser].renterApplication.cats = YES;
+  [OMBUser currentUser].renterApplication.dogs = YES;
 
   // Post notification for logging in
   [[NSNotificationCenter defaultCenter] postNotificationName: 
@@ -229,8 +233,14 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
 - (NSString *) fullName
 {
-  return [NSString stringWithFormat: @"%@ %@",
-    [_firstName capitalizedString], [_lastName capitalizedString]];
+  NSString *nameString = @"";
+  if (_firstName && [_firstName length])
+    nameString = [nameString stringByAppendingString: 
+      [_firstName capitalizedString]];
+  if (_lastName && [_lastName length])
+    nameString = [nameString stringByAppendingString: 
+      [NSString stringWithFormat: @" %@", [_lastName capitalizedString]]];
+  return nameString;
 }
 
 - (UIImage *) imageForSize: (CGFloat) size
@@ -328,8 +338,9 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
     _about = @"";
   _accessToken = [dictionary objectForKey: @"access_token"];
   _email       = [dictionary objectForKey: @"email"];
-  _firstName   = [dictionary objectForKey: @"first_name"];
-  if (!_firstName)
+  if ([dictionary objectForKey: @"first_name"] != [NSNull null])
+    _firstName = [dictionary objectForKey: @"first_name"];
+  else
     _firstName = @"";
   NSString *string = [dictionary objectForKey: @"image_url"];
   // If URL is something like this //ombrb-prod.s3.amazonaws.com
@@ -342,8 +353,9 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
     string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
   }
   _imageURL    = [NSURL URLWithString: string];
-  _lastName    = [dictionary objectForKey: @"last_name"];
-  if (!_lastName)
+  if ([dictionary objectForKey: @"last_name"] != [NSNull null])
+    _lastName = [dictionary objectForKey: @"last_name"];
+  else
     _lastName = @"";
   _phone       = [dictionary objectForKey: @"phone"];
   if (!_phone)

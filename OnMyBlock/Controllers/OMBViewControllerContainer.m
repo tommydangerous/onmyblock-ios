@@ -25,6 +25,7 @@
 #import "OMBManageListingsViewController.h"
 #import "OMBMapFilterViewController.h"
 #import "OMBMapViewController.h"
+#import "OMBMyRenterApplicationViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOfferAcceptedView.h"
 #import "OMBRenterApplicationViewController.h"
@@ -813,6 +814,12 @@ willDecelerate: (BOOL) decelerate
       [_accountView setImage: image];
     }
   ];
+
+  // Create renter app navigation controller
+  _myRenterAppNavigationController =  
+    [[OMBNavigationController alloc] initWithRootViewController: 
+      [[OMBMyRenterApplicationViewController alloc] initWithUser:
+        [OMBUser currentUser]]];
 }
 
 - (void) showAccount
@@ -1003,6 +1010,12 @@ willDecelerate: (BOOL) decelerate
   }
     
   menuIsVisible = YES;
+}
+
+- (void) showMyRenterApp
+{
+  [self hideMenuWithFactor: 1.0f];
+  [self presentDetailViewController: _myRenterAppNavigationController];
 }
 
 - (void) showOfferAccepted

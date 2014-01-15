@@ -36,6 +36,7 @@
 
   // Buttons
   // Renter
+
   // Search
   _searchButton = [UIButton new];
   _searchButton.frame = CGRectMake(-1 * rect.size.width, 0.0f, rect.size.width, 
@@ -43,6 +44,7 @@
   [_searchButton addTarget: self action: @selector(showSearch)
     forControlEvents: UIControlEventTouchUpInside];
   [_searchButton setTitle: @"Search" forState: UIControlStateNormal];
+
   // Image view
   UIImageView *searchImageView = [[UIImageView alloc] init];
   searchImageView.frame = CGRectMake(leftPad, 
@@ -52,21 +54,39 @@
     [UIImage imageNamed: @"search_icon.png"] 
       size: searchImageView.frame.size];
   [_searchButton addSubview: searchImageView];
-  [_renterButtons addObject: _searchButton];
+  // [_renterButtons addObject: _searchButton];
 
   // Discover
   _discoverButton = [[UIButton alloc] init];
+  _discoverButton.frame = CGRectMake(-1 * rect.size.width, 0.0f, 
+    rect.size.width, 10.0f + 40.0f + 10.0f);
   [_discoverButton addTarget: self action: @selector(showDiscover)
     forControlEvents: UIControlEventTouchUpInside];
   [_discoverButton setTitle: @"Discover" forState: UIControlStateNormal];
   // Image view
   UIImageView *discoverImageView = [[UIImageView alloc] init];
-  discoverImageView.frame = searchImageView.frame;
+  discoverImageView.frame = CGRectMake(leftPad, 
+    ((_searchButton.frame.size.height - imageSize) * 0.5), 
+      imageSize, imageSize);
   discoverImageView.image = [UIImage image: 
     [UIImage imageNamed: @"discover_icon.png"] 
       size: discoverImageView.frame.size];
   [_discoverButton addSubview: discoverImageView];
   [_renterButtons addObject: _discoverButton];
+
+  // My Renter App
+  _myRenterAppButton = [[UIButton alloc] init];
+  [_myRenterAppButton addTarget: self action: @selector(showMyRenterApp)
+    forControlEvents: UIControlEventTouchUpInside];
+  [_myRenterAppButton setTitle: @"My Renter App" 
+    forState: UIControlStateNormal];
+  UIImageView *myRenterAppImageView = [[UIImageView alloc] init];
+  myRenterAppImageView.frame = discoverImageView.frame;
+  UIImage *myRenterAppImage = [UIImage imageNamed: @"user_icon_white.png"];
+  myRenterAppImageView.image = [UIImage image: myRenterAppImage
+    size: myRenterAppImageView.frame.size];
+  [_myRenterAppButton addSubview: myRenterAppImageView];
+  [_renterButtons addObject: _myRenterAppButton];
 
   // Homebase
   _renterHomebaseButton = [[UIButton alloc] init];
@@ -156,8 +176,9 @@
 
   NSArray *buttonsArray = @[
     // Renter
-    _searchButton,
+    // _searchButton,
     _discoverButton, 
+    _myRenterAppButton,
     _renterHomebaseButton,
     _favoritesButton,
     _inboxButton,
@@ -306,6 +327,11 @@
 - (void) showManageListings
 {
   [[self container] showManageListings];
+}
+
+- (void) showMyRenterApp
+{
+  [[self container] showMyRenterApp];
 }
 
 - (void) showSearch

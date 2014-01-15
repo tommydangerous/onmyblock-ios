@@ -139,7 +139,7 @@
       padding), _lastNameTextField.frame.size.width, 
         _lastNameTextField.frame.size.height);
   _emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
-  _emailTextField.placeholder = @"Email";
+  _emailTextField.placeholder = @"School email";
   [scroll addSubview: _emailTextField];
 
   // Password

@@ -19,6 +19,7 @@
 // Renter
 @property (nonatomic, strong) UIButton *searchButton;
 @property (nonatomic, strong) UIButton *discoverButton;
+@property (nonatomic, strong) UIButton *myRenterAppButton;
 @property (nonatomic, strong) UIButton *favoritesButton;
 @property (nonatomic, strong) UIButton *renterHomebaseButton;
 @property (nonatomic, strong) UIButton *inboxButton;

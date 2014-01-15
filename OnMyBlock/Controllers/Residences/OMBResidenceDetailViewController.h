@@ -19,6 +19,7 @@
   UITableViewDelegate, UITextViewDelegate>
 {
   UIActivityIndicatorView *activityIndicatorView;
+  NSTimer *countdownTimer;
   OMBResidence *residence;
 }
 

@@ -31,5 +31,7 @@
 - (void) loadData: (OMBLegalQuestion *) object 
 atIndexPath: (NSIndexPath *) indexPath;
 - (void) loadLegalAnswer: (OMBLegalAnswer *) object;
+- (void) loadQuestion: (OMBLegalQuestion *) question
+answer: (OMBLegalAnswer *) answer atIndexPath: (NSIndexPath *) indexPath;
 
 @end

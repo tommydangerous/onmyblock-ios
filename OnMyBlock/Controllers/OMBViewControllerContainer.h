@@ -95,6 +95,9 @@
   OMBNavigationController *mapFilterNavigationController;
 // Discover
 @property (nonatomic, strong) OMBNavigationController *mapNavigationController;
+// My Renter App
+@property (nonatomic, strong) 
+  OMBNavigationController *myRenterAppNavigationController;
 // Favorites
 @property (nonatomic, strong) 
   OMBNavigationController *favoritesNavigationController;
@@ -136,6 +139,7 @@
 - (void) showLogin;
 - (void) showLogout;
 - (void) showManageListings;
+- (void) showMyRenterApp;
 - (void) showOfferAccepted;
 - (void) showRenterApplication;
 - (void) showSearch;

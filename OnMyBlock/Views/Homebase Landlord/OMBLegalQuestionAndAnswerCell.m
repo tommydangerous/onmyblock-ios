@@ -37,6 +37,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   answerLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   answerLabel.frame = CGRectMake(padding , padding, 
     screen.size.width - (padding * 2), 22.0f);
+  // answerLabel.textAlignment = NSTextAlignmentRight;
   [self.contentView addSubview: answerLabel];
 
   return self;
@@ -95,6 +96,38 @@ atIndexPath: (NSIndexPath *) indexPath
 - (void) loadLegalAnswer: (OMBLegalAnswer *) object
 {
 
+}
+
+- (void) loadQuestion: (OMBLegalQuestion *) question
+answer: (OMBLegalAnswer *) answer atIndexPath: (NSIndexPath *) indexPath;
+{
+  _legalQuestion = question;
+
+  CGFloat padding = 20.0f;
+
+  NSString *text = [NSString stringWithFormat: @"%i. %@",
+    indexPath.row + 1, _legalQuestion.question];
+  questionLabel.text = text;
+  // Question label
+  CGRect rect1 = [questionLabel.text boundingRectWithSize:
+    CGSizeMake([OMBLegalQuestionAndAnswerCell widthForQuestionLabel], 9999)
+      font: questionLabel.font];
+  questionLabel.frame = CGRectMake(questionLabel.frame.origin.x,
+    questionLabel.frame.origin.y, questionLabel.frame.size.width,
+      rect1.size.height);
+
+  answerLabel.frame = CGRectMake(answerLabel.frame.origin.x,
+    questionLabel.frame.origin.y + 
+    questionLabel.frame.size.height + (padding * 0.5f),
+      answerLabel.frame.size.width, answerLabel.frame.size.height);
+  if (answer && answer.answer) {
+    answerLabel.text = @"Yes";
+    answerLabel.textColor = [UIColor green];
+  }
+  else {
+    answerLabel.text = @"No";
+    answerLabel.textColor = [UIColor red];
+  }
 }
 
 @end

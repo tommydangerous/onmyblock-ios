@@ -20,6 +20,20 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
   self.titleLabel.text = @"Map";
 
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGFloat screenWidth  = screen.size.width;
+  CGFloat padding      = 20.0f;
+
+  _mapView          = [[MKMapView alloc] init];
+  _mapView.frame    = CGRectMake(padding, 44.0f + padding,
+    screenWidth - (padding * 2), screenWidth * 0.5);
+  _mapView.mapType       = MKMapTypeStandard;
+  _mapView.rotateEnabled = NO;
+  _mapView.scrollEnabled = NO;
+  _mapView.showsPointsOfInterest = NO;
+  _mapView.zoomEnabled   = NO;
+  [self.contentView addSubview: _mapView];
+
   return self;
 }
 
@@ -36,16 +50,16 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 #pragma mark - Instance Methods
 
-- (void) setMapView: (MKMapView *) map
-{
-  [self.contentView.subviews enumerateObjectsUsingBlock:
-    ^(id obj, NSUInteger idx, BOOL *stop) {
-      if ([obj isKindOfClass: [MKMapView class]]) {
-        [(UIView *) obj removeFromSuperview];
-      }
-    }
-  ];
-  [self.contentView addSubview: map];
-}
+// - (void) setMapView: (MKMapView *) map
+// {
+//   [self.contentView.subviews enumerateObjectsUsingBlock:
+//     ^(id obj, NSUInteger idx, BOOL *stop) {
+//       if ([obj isKindOfClass: [MKMapView class]]) {
+//         [(UIView *) obj removeFromSuperview];
+//       }
+//     }
+//   ];
+//   [self.contentView addSubview: map];
+// }
 
 @end

@@ -168,6 +168,35 @@
     screenWidth, screenHeight);
   [_scroll addSubview: _signUpView];
 
+  CGFloat bottomViewHeight = 58.0f;
+  // Bottom view
+  bottomView = [UIView new];
+  bottomView.frame = CGRectMake(0.0f, screenHeight - bottomViewHeight,
+    screenWidth, bottomViewHeight);
+  [self.view addSubview: bottomView];
+  UIView *bottomViewBorder = [UIView new];
+  bottomViewBorder.frame = CGRectMake(0.0f, 0.0f, 
+    bottomView.frame.size.width, 1.0f);
+  bottomViewBorder.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.5f];
+  [bottomView addSubview: bottomViewBorder];
+
+  signUpButton = [UIButton new];
+  signUpButton.frame = CGRectMake(0.0f, 0.0f, 
+    bottomView.frame.size.width * 0.5f, bottomView.frame.size.height);
+  signUpButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
+    size: 17];
+  [signUpButton setTitle: @"Sign up" forState: UIControlStateNormal];
+  [bottomView addSubview: signUpButton];
+
+  loginButton = [UIButton new];
+  loginButton.frame = CGRectMake(
+    signUpButton.frame.origin.x + signUpButton.frame.size.width, 
+      signUpButton.frame.origin.y, signUpButton.frame.size.width,
+        signUpButton.frame.size.height);
+  loginButton.titleLabel.font = signUpButton.titleLabel.font;
+  [loginButton setTitle: @"Login" forState: UIControlStateNormal];
+  [bottomView addSubview: loginButton];
+
   // Page control
   _pageControl                   = [[DDPageControl alloc] init];
   _pageControl.indicatorDiameter = 10.0f;
@@ -176,8 +205,8 @@
   _pageControl.offColor          = [UIColor whiteColor];
   _pageControl.onColor           = [UIColor whiteColor];
   _pageControl.type = DDPageControlTypeOnFullOffEmpty;
-  _pageControl.frame = CGRectMake(0.0f, screenHeight - 60.0f, 
-    screenWidth, 60.0f);
+  _pageControl.frame = CGRectMake(0.0f, 
+    screenHeight - (60.0f + bottomView.frame.size.height), screenWidth, 60.0f);
   [_pageControl addTarget: self action: @selector(scrollToCurrentPage:)
     forControlEvents: UIControlEventValueChanged];
   [_scroll addSubview: _pageControl];
@@ -288,6 +317,12 @@
       (screen.size.width - (closeButtonView.frame.size.width + 10)) + x, 
         closeButtonView.frame.origin.y, 
           closeButtonView.frame.size.width, closeButtonView.frame.size.height);
+  }
+  // Fade the page control and bottom view
+  if (page < 99) {
+    percent = (x - (width * 3)) / width;
+    bottomView.alpha = 1 - percent;
+    _pageControl.alpha = 1 - percent;
   }
   // Get started view
   if (page >= 3 && page <= 4) {

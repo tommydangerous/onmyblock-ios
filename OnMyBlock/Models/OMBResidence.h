@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class OMBOffer;
 @class OMBOpenHouse;
 @class OMBResidenceImage;
 @class OMBUser;
@@ -54,6 +55,7 @@
 @property (nonatomic, strong) NSMutableArray *images;
 @property (nonatomic, strong) NSMutableDictionary *imageSizeDictionary;
 @property (nonatomic) int lastImagePosition;
+@property (nonatomic, strong) NSMutableArray *offers;
 @property (nonatomic, strong) NSMutableArray *openHouseDates;
 @property (nonatomic, strong) OMBUser *user;
 
@@ -68,6 +70,7 @@
 
 // - (void) addImage: (UIImage *) image atPosition: (int) position 
 // withString: (NSString *) string;
+- (void) addOffer: (OMBOffer *) offer;
 - (void) addOpenHouse: (OMBOpenHouse *) openHouse;
 - (void) addResidenceImage: (OMBResidenceImage *) residenceImage;
 - (NSArray *) availableAmenities;
@@ -81,11 +84,13 @@
 - (NSArray *) imagesArray;
 - (UIImage *) imageAtPosition: (int) position;
 - (UIImage *) imageForSize: (CGFloat) size;
+- (void) readFromOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromOpenHouseDictionary: (NSDictionary *) dictionary;
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidenceDictionary: (NSDictionary *) dictionary;
 - (void) removeResidenceImage: (OMBResidenceImage *) residenceImage;
 - (NSString *) rentToCurrencyString;
+- (NSArray *) sortedOffers;
 - (NSArray *) sortedOpenHouseDates;
 
 @end

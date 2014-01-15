@@ -14,6 +14,7 @@
 {
   UIButton *createListingButton;
   AMBlurView *createListingView;
+  NSMutableArray *imagesArray;
 }
 
 @end

@@ -55,7 +55,7 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
 
   self.screenName = [NSString stringWithFormat:
     @"Residence Detail View Controller - Residence ID: %i", residence.uid];
-  self.title = @"Current Offer: $4,500";
+  self.title = residence.title;
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(currentUserLogout) name: OMBUserLoggedOutNotification 
@@ -204,7 +204,6 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
     size: 15];
   _countDownTimerLabel.frame = CGRectMake(0.0f, 0.0f, 
     _bottomButtonView.frame.size.width, 23.0f);
-  _countDownTimerLabel.text = @"Time left in auction: 05:02:01:22";
   _countDownTimerLabel.textColor = [UIColor whiteColor];
   _countDownTimerLabel.textAlignment = NSTextAlignmentCenter;
   [_bottomButtonView addSubview: _countDownTimerLabel];
@@ -236,16 +235,16 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   [_bottomButtonView addSubview: _bookItButton];
 
   // Mini map
-  _miniMap          = [[MKMapView alloc] init];
-  _miniMap.delegate = self;
-  _miniMap.frame    = CGRectMake(padding, 
-    kResidenceDetailCellSpacingHeight + padding,
-      screenWidth - (padding * 2), screenWidth * 0.5);
-  _miniMap.mapType       = MKMapTypeStandard;
-  _miniMap.rotateEnabled = NO;
-  _miniMap.scrollEnabled = NO;
-  _miniMap.showsPointsOfInterest = NO;
-  _miniMap.zoomEnabled   = NO;
+  // _miniMap          = [[MKMapView alloc] init];
+  // _miniMap.delegate = self;
+  // _miniMap.frame    = CGRectMake(padding, 
+  //   kResidenceDetailCellSpacingHeight + padding,
+  //     screenWidth - (padding * 2), screenWidth * 0.5);
+  // _miniMap.mapType       = MKMapTypeStandard;
+  // _miniMap.rotateEnabled = NO;
+  // _miniMap.scrollEnabled = NO;
+  // _miniMap.showsPointsOfInterest = NO;
+  // _miniMap.zoomEnabled   = NO;
 
   // Table footer view
   _table.tableFooterView = [[UIView alloc] initWithFrame: 
@@ -292,27 +291,6 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
     [connection start];
     [activityIndicatorView startAnimating];
   }
-
-  // Mini map
-  // Set the region of the mini map
-  CGFloat distanceInMiles = 1609 * 0.5; // 1609 meters = 1 mile
-  CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
-    residence.latitude, residence.longitude);
-  MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(coordinate, 
-    distanceInMiles, distanceInMiles);
-  [_miniMap setRegion: region animated: NO];
-  // Add annotation
-  OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
-  annotation.coordinate     = coordinate;
-  [_miniMap addAnnotation: annotation];
-
-  // Fetch residence detail data
-  OMBResidenceDetailConnection *connection =
-    [[OMBResidenceDetailConnection alloc] initWithResidence: residence];
-  connection.completionBlock = ^(NSError *error) {
-    [self refreshResidenceData];
-  };
-  [connection start];
 }
 
 - (void) viewDidDisappear: (BOOL) animated
@@ -325,16 +303,27 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
+
   // Need to set this again because when the view disappears, 
   // the _table.delegate is set to nil
   if (!_table.delegate)
     _table.delegate = self;
+
+  // Fetch residence detail data
+  OMBResidenceDetailConnection *connection =
+    [[OMBResidenceDetailConnection alloc] initWithResidence: residence];
+  connection.completionBlock = ^(NSError *error) {
+    [self refreshResidenceData];
+  };
+  [connection start];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
 {
-  // [super viewWillDisappear: animated];
+  [super viewWillDisappear: animated];
+
   // _table.delegate = nil;
+  [countdownTimer invalidate];
 }
 
 #pragma mark - Protocol
@@ -508,10 +497,27 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *MapCellIdentifier = @"MapCellIdentifier";
       OMBResidenceDetailMapCell *cell = 
         [tableView dequeueReusableCellWithIdentifier: MapCellIdentifier];
-      if (!cell)
+      if (!cell) {
         cell = [[OMBResidenceDetailMapCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: MapCellIdentifier];
-      cell.mapView = _miniMap;
+        cell.mapView.delegate = self;
+
+        // Set the region of the mini map
+        CGFloat distanceInMiles = 1609 * 0.5; // 1609 meters = 1 mile
+        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+          residence.latitude, residence.longitude);
+        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(
+          coordinate, distanceInMiles, distanceInMiles);
+        [cell.mapView setRegion: region animated: NO];
+        // Add annotation
+        OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
+        annotation.coordinate     = coordinate;
+        [cell.mapView addAnnotation: annotation];
+      }
+      if ([residence.city length] && [residence.state length])
+        cell.titleLabel.text = [NSString stringWithFormat: @"%@, %@",
+          [[residence.city capitalizedString] stripWhiteSpace], 
+            [residence.state stripWhiteSpace]];
       return cell;
     }
   }
@@ -683,6 +689,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) refreshResidenceData
 {
+  [self.table reloadData];
+
+  [self timerFireMethod: nil];
+  countdownTimer = [NSTimer timerWithTimeInterval: 1 target: self
+    selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
+  // NSRunLoopCommonModes, mode used for tracking events
+  [[NSRunLoop currentRunLoop] addTimer: countdownTimer
+    forMode: NSRunLoopCommonModes];
 }
 
 - (void) resetImageViews
@@ -714,6 +728,53 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   [self presentViewController: _imageSlideViewController animated: YES
     completion: nil];
+}
+
+- (void) timerFireMethod: (NSTimer *) timer
+{
+  // Countdown timer
+  NSInteger secondsRemaining = 0;
+  if ([[NSDate date] timeIntervalSince1970] < residence.auctionStartDate) {
+    secondsRemaining = residence.auctionStartDate - 
+      [[NSDate date] timeIntervalSince1970];
+  }
+  else {
+    secondsRemaining = (residence.auctionStartDate + 
+      (residence.auctionDuration * 24 * 60 * 60)) -
+        [[NSDate date] timeIntervalSince1970];
+  }
+  NSInteger days = secondsRemaining / (60 * 60 * 24);
+  secondsRemaining -= days * 60 * 60 * 24;
+  NSString *daysString = [NSString stringWithFormat: @"%i", days];
+  if (days < 10)
+    daysString = [@"0" stringByAppendingString: daysString];
+  NSInteger hours = secondsRemaining / (60 * 60);
+  secondsRemaining -= hours * 60 * 60;
+  NSString *hoursString = [NSString stringWithFormat: @"%i", hours];
+  if (hours < 10)
+    hoursString = [@"0" stringByAppendingString: hoursString];
+  NSInteger minutes = secondsRemaining / 60;
+  secondsRemaining -= minutes * 60;
+  NSString *minutesString = [NSString stringWithFormat: @"%i", minutes];
+  if (minutes < 10)
+    minutesString = [@"0" stringByAppendingString: minutesString];
+  NSInteger seconds = secondsRemaining;
+  NSString *secondsString = [NSString stringWithFormat: @"%i", seconds];
+  if (seconds < 10)
+    secondsString = [@"0" stringByAppendingString: secondsString];
+
+  NSString *timeString = [NSString stringWithFormat: @"%@:%@:%@:%@",
+    daysString, hoursString, minutesString, secondsString];
+
+  // Auction hasn't started yet
+  if ([[NSDate date] timeIntervalSince1970] < residence.auctionStartDate) {
+    _countDownTimerLabel.text = [NSString stringWithFormat: 
+      @"Auction starts in: %@", timeString];
+  }
+  // Ongoing
+  else
+    _countDownTimerLabel.text = [NSString stringWithFormat: 
+      @"Time left in auction: %@", timeString];
 }
 
 @end

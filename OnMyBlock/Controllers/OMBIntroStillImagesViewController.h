@@ -17,7 +17,10 @@
 <UIScrollViewDelegate>
 {
   NSMutableArray *backgroundViewArray;
+  UIView *bottomView;
   UIView *closeButtonView;
+  UIButton *loginButton;
+  UIButton *signUpButton;
   NSArray *slides;
 }
 

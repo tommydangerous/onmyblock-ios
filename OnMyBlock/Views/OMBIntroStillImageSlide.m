@@ -48,33 +48,37 @@
 
   float padding = 20.0f;
 
+  CGFloat spacing = screenHeight * 0.05f;
+
+  _detailLabel = [[UILabel alloc] init];
+  _detailLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18.0f];
+  _detailLabel.frame = CGRectMake(0.0f, 
+    padding + spacing + ((screenHeight - 54) * 0.5), 
+      screenWidth, 27.0f * 2);
+  _detailLabel.numberOfLines = 0;
+  _detailLabel.textColor = [UIColor whiteColor];;
+  [self addSubview: _detailLabel];
+
   _titleLabel = [[UILabel alloc] init];
   _titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 36.0f];
-  _titleLabel.frame = CGRectMake(0.0f, padding + ((screenHeight - 54) * 0.5),
-    screenWidth, 54.0f);
+  _titleLabel.frame = CGRectMake(_detailLabel.frame.origin.x, 
+    _detailLabel.frame.origin.y - (54.0f + padding), 
+      _detailLabel.frame.size.width, 54.0f);
   _titleLabel.textColor = [UIColor whiteColor];
   _titleLabel.textAlignment = NSTextAlignmentCenter;
   [self addSubview: _titleLabel];
 
-  _detailLabel = [[UILabel alloc] init];
-  _detailLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18.0f];
-  _detailLabel.frame = CGRectMake(_titleLabel.frame.origin.x,
-    _titleLabel.frame.origin.y + _titleLabel.frame.size.height + padding,
-      _titleLabel.frame.size.width, 27.0f * 2);
-  _detailLabel.numberOfLines = 0;
-  _detailLabel.textColor = _titleLabel.textColor;
-  [self addSubview: _detailLabel];
-
   _secondDetailLabel = [[UILabel alloc] init];
   _secondDetailLabel.font = _detailLabel.font;
   _secondDetailLabel.frame = CGRectMake(_detailLabel.frame.origin.x,
-    _detailLabel.frame.origin.y + _detailLabel.frame.size.height + padding,
+    _detailLabel.frame.origin.y + _detailLabel.frame.size.height + 
+    (padding * 0.5f),
       _detailLabel.frame.size.width, 27.0f);
   _secondDetailLabel.textAlignment = _titleLabel.textAlignment;
   _secondDetailLabel.textColor = _detailLabel.textColor;
   [self addSubview: _secondDetailLabel];
 
-  float imageSize = screenHeight * 0.3;
+  CGFloat imageSize = screenHeight * 0.25;
   _imageView = [[UIImageView alloc] init];
   _imageView.frame = CGRectMake((screenWidth - imageSize) * 0.5,
     _titleLabel.frame.origin.y - (imageSize + padding), imageSize, imageSize);

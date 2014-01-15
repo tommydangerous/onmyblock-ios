@@ -9,6 +9,7 @@
 #import "OMBResidence.h"
 
 #import "NSString+Extensions.h"
+#import "OMBOffer.h"
 #import "OMBOpenHouse.h"
 #import "OMBResidenceGoogleStaticImageDownloader.h"
 #import "OMBResidenceImage.h"
@@ -32,6 +33,7 @@
   _images              = [NSMutableArray array];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _lastImagePosition   = 1000;
+  _offers              = [NSMutableArray array];
   _openHouseDates      = [NSMutableArray array];
 
   return self;
@@ -113,6 +115,14 @@ withString: (NSString *) string
     residenceImage.position           = position;
     [_images addObject: residenceImage];
   }
+}
+
+- (void) addOffer: (OMBOffer *) offer
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat:
+    @"%K == %i", @"uid", offer.uid];
+  if ([[_offers filteredArrayUsingPredicate: predicate] count] == 0)
+    [_offers addObject: offer];
 }
 
 - (void) addOpenHouse: (OMBOpenHouse *) openHouse
@@ -346,6 +356,16 @@ withString: (NSString *) string
   return nil;
 }
 
+- (void) readFromOffersDictionary: (NSDictionary *) dictionary
+{
+  NSArray *array = [dictionary objectForKey: @"objects"];
+  for (NSDictionary *dict in array) {
+    OMBOffer *offer = [[OMBOffer alloc] init];
+    [offer readFromDictionary: dict];
+    [self addOffer: offer];
+  }
+}
+
 - (void) readFromOpenHouseDictionary: (NSDictionary *) dictionary
 {
   NSArray *array = [dictionary objectForKey: @"objects"];
@@ -397,6 +417,10 @@ withString: (NSString *) string
   }
   _longitude = [[dictionary objectForKey: @"lng"] floatValue];
   _minRent   = [[dictionary objectForKey: @"rt"] floatValue];
+  if ([dictionary objectForKey: @"title"] != [NSNull null])
+    _title = [dictionary objectForKey: @"title"];
+  else
+    _title = @"";
   _uid       = [[dictionary objectForKey: @"id"] intValue];
 }
 
@@ -589,6 +613,13 @@ withString: (NSString *) string
 - (NSString *) rentToCurrencyString
 {
   return [NSString numberToCurrencyString: (int) _minRent];
+}
+
+- (NSArray *) sortedOffers
+{
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"createdAt"
+    ascending: YES];
+  return [_offers sortedArrayUsingDescriptors: @[sort]];
 }
 
 - (NSArray *) sortedOpenHouseDates

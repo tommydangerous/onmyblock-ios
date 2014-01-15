@@ -475,7 +475,7 @@ viewForHeaderInSection: (NSInteger) section
   // Activity
   if (tableView == _activityTableView) {
     if (section == 0) {
-      titleString = @"Offers & Inquiries";
+      titleString = @"Offers";
     }
     else if (section == 1) {
       titleString = @"Confirmed Tenants";
@@ -484,10 +484,10 @@ viewForHeaderInSection: (NSInteger) section
   // Payments
   else if (tableView == _paymentsTableView) {
     if (section == 0) {
-      titleString = @"Pending Payments";
+      titleString = @"Upcoming Payments";
     }
     else if (section == 1) {
-      titleString = @"Previous Payments";
+      titleString = @"Received Payments";
     }
     else if (section == 2) {
       titleString = @"Late Payments";

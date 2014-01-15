@@ -47,13 +47,13 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [self openSession];
 
   // Fake login
-  [OMBUser fakeLogin];
+  // [OMBUser fakeLogin];
   // Use this to show whatever view controller you are working on
-  [_container showManageListings];
+  // [_container showMyRenterApplication];
 
   // Normall, show the intro right away
   NSLog(@"APP DELEGATE SHOW INTRO!"); // Reminder to show this
-  // [_container showIntroAnimatedDissolve: NO];
+  [_container showIntroAnimatedDissolve: NO];
   // if ([[OMBUser currentUser] loggedIn])
   //   [self hideIntro];
 

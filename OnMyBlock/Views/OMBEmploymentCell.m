@@ -10,6 +10,7 @@
 
 #import "OMBEmployment.h"
 #import "OMBEmploymentListViewController.h"
+#import "OMBMyRenterApplicationViewController.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBEmploymentCell
@@ -186,9 +187,17 @@ reuseIdentifier: (NSString *)reuseIdentifier
 - (void) showCompanyWebsite
 {
   if (_employment) {
-    OMBEmploymentListViewController *vc = 
-      (OMBEmploymentListViewController *) _delegate;
-    [vc showCompanyWebsiteWebViewForEmployment: _employment];
+    id vc = nil;
+    if ([_delegate isKindOfClass: [OMBEmploymentListViewController class]]) {
+      vc = (OMBEmploymentListViewController *) _delegate;
+    }
+    else if ([_delegate isKindOfClass: 
+      [OMBMyRenterApplicationViewController class]]) {
+      
+      vc = (OMBMyRenterApplicationViewController *) _delegate;
+    }
+    if (vc)
+      [vc showCompanyWebsiteWebViewForEmployment: _employment];
   }
 }
 

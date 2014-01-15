@@ -36,7 +36,11 @@
 {
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
+
+  NSLog(@"OMBCosignerListConnection\n%@", json);
+
   [user readFromCosignerDictionary: json];
+
   [super connectionDidFinishLoading: connection];
 }
 
