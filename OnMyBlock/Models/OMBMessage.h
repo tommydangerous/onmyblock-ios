@@ -17,12 +17,16 @@
 @property (nonatomic, strong) OMBUser *recipient;
 @property (nonatomic, strong) OMBUser *sender;
 @property (nonatomic) int uid;
+@property (nonatomic) NSTimeInterval updatedAt;
 @property (nonatomic) BOOL viewed;
 
 @property (nonatomic) CGSize sizeForMessageCell;
 
 #pragma mark - Methods
 
+#pragma mark - Instance Methods
+
 - (void) calculateSizeForMessageCell;
+- (void) readFromDictionary: (NSDictionary *) dictionary;
 
 @end

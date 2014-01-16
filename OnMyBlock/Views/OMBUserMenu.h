@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSArray *currentButtons;
 @property (nonatomic, strong) NSMutableArray *renterButtons;
 @property (nonatomic, strong) NSMutableArray *sellerButtons;
+
 // Buttons
 @property (nonatomic, strong) UIButton *headerButton;
 // Renter
@@ -27,6 +28,11 @@
 @property (nonatomic, strong) UIButton *createListingButton;
 @property (nonatomic, strong) UIButton *manageListingsButton;
 @property (nonatomic, strong) UIButton *sellerHomebaseButton;
+
+// Notification badges
+@property (nonatomic, strong) UILabel *inboxNotificationBadge;
+@property (nonatomic, strong) UILabel *renterHomebaseNotificationBadge;
+@property (nonatomic, strong) UILabel *sellerHomebaseNotificationBadge;
 
 #pragma mark - Methods
 

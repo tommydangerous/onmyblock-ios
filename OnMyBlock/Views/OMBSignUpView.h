@@ -36,6 +36,6 @@
 - (void) showLogin;
 - (void) showSignUp;
 - (void) signUp;
-- (void) updateScrollContentSize;
+- (void) updateScrollContentSizeAnimated: (BOOL) animated;
 
 @end

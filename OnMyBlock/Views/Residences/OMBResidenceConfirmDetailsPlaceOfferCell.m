@@ -76,19 +76,31 @@ reuseIdentifier: (NSString *)reuseIdentifier
   _yourOfferTextField.paddingX = moneyLabel.frame.size.width;
 
   UILabel *info = [[UILabel alloc] init];
-  info.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  info.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
   info.frame = CGRectMake(yourOfferLabel.frame.origin.x,
     _yourOfferTextField.frame.origin.y + 
-    _yourOfferTextField.frame.size.height + padding,
-      screeWidth - (padding * 2), 22.0f);
+    _yourOfferTextField.frame.size.height + (padding * 0.5f),
+      screeWidth - (padding * 2), 15.0f);
   info.text = @"Your offer can be higher or lower.";
   info.textColor = [UIColor grayMedium];
   [self.contentView addSubview: info];
 
+  _nextStepButton = [UIButton new];
+  _nextStepButton.frame = CGRectMake(padding, 
+    info.frame.origin.y + info.frame.size.height + padding, 
+      screeWidth - (padding * 2), 44.0f);
+  _nextStepButton.layer.borderColor = [UIColor grayLight].CGColor;
+  _nextStepButton.layer.borderWidth = 1.0f;
+  _nextStepButton.layer.cornerRadius = _nextStepButton.frame.size.height * 0.5f;
+  [_nextStepButton setTitle: @"Next Step" forState: UIControlStateNormal];
+  [_nextStepButton setTitleColor: [UIColor grayLight] 
+    forState: UIControlStateNormal];
+  [self.contentView addSubview: _nextStepButton];
+
   CALayer *bottomBorder = [CALayer layer];
   bottomBorder.backgroundColor = [UIColor grayLight].CGColor;
   bottomBorder.frame = CGRectMake(0.0f, 
-    (info.frame.origin.y + info.frame.size.height + padding) - 0.5f,
+    [OMBResidenceConfirmDetailsPlaceOfferCell heightForCell] - 0.5f,
       screeWidth, 0.5f);
   [self.contentView.layer addSublayer: bottomBorder];
 
@@ -102,7 +114,23 @@ reuseIdentifier: (NSString *)reuseIdentifier
 + (CGFloat) heightForCell
 {
   CGFloat padding = 20.0f;
-  return padding + 36.0f + padding + 22.0f  + padding;
+  return padding + 36.0f + (padding * 0.5f) + 15.0f + padding + 44.0f + padding;
+}
+
+#pragma mark - Instance Methods
+
+- (void) disableNextStepButton
+{
+  _nextStepButton.layer.borderColor = [UIColor grayLight].CGColor;
+  [_nextStepButton setTitleColor: [UIColor grayLight] 
+    forState: UIControlStateNormal];
+}
+
+- (void) enableNextStepButton
+{
+  _nextStepButton.layer.borderColor = [UIColor blue].CGColor;
+  [_nextStepButton setTitleColor: [UIColor blue] 
+    forState: UIControlStateNormal];
 }
 
 @end

@@ -10,6 +10,8 @@
 
 #import "DRNRealTimeBlurView.h"
 #import "DDPageControl.h"
+#import "OMBActivityView.h"
+#import "OMBCloseButtonView.h"
 #import "OMBGetStartedView.h"
 #import "OMBIntroStillImageSlide.h"
 #import "OMBLoginViewController.h"
@@ -185,6 +187,8 @@
     bottomView.frame.size.width * 0.5f, bottomView.frame.size.height);
   signUpButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
     size: 17];
+  [signUpButton addTarget: self action: @selector(scrollToSignUp)
+    forControlEvents: UIControlEventTouchUpInside];
   [signUpButton setTitle: @"Sign up" forState: UIControlStateNormal];
   [bottomView addSubview: signUpButton];
 
@@ -194,6 +198,8 @@
       signUpButton.frame.origin.y, signUpButton.frame.size.width,
         signUpButton.frame.size.height);
   loginButton.titleLabel.font = signUpButton.titleLabel.font;
+  [loginButton addTarget: self action: @selector(showLogin)
+    forControlEvents: UIControlEventTouchUpInside];
   [loginButton setTitle: @"Login" forState: UIControlStateNormal];
   [bottomView addSubview: loginButton];
 
@@ -209,30 +215,30 @@
     screenHeight - (60.0f + bottomView.frame.size.height), screenWidth, 60.0f);
   [_pageControl addTarget: self action: @selector(scrollToCurrentPage:)
     forControlEvents: UIControlEventValueChanged];
-  [_scroll addSubview: _pageControl];
+  [self.view addSubview: _pageControl];
 
   // Close view
-  closeButtonView = [[UIView alloc] init];
-  float closeButtonViewHeight = 25;
-  float closeButtonViewWidth  = closeButtonViewHeight * 2;
+  skipButtonView = [[UIView alloc] init];
+  float skipButtonViewHeight = 25;
+  float skipButtonViewWidth  = skipButtonViewHeight * 2;
   CGRect closeRect = [@"Skip" boundingRectWithSize:
-    CGSizeMake(closeButtonViewWidth, closeButtonViewHeight)
+    CGSizeMake(skipButtonViewWidth, skipButtonViewHeight)
       options: NSStringDrawingUsesLineFragmentOrigin
         attributes: @{ NSFontAttributeName: 
         [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] } 
           context: nil];
-  closeButtonViewHeight = closeRect.size.height + 10;
-  closeButtonViewWidth  = closeRect.size.width + 20 + 10;
-  closeButtonView.frame = CGRectMake(
-    (screen.size.width - (closeButtonViewWidth + 10)), (20 + 10), 
-      closeButtonViewWidth, closeButtonViewHeight);
-  closeButtonView.layer.borderColor = [UIColor whiteColor].CGColor;
-  closeButtonView.layer.borderWidth = 1.0f;
-  closeButtonView.layer.cornerRadius = closeButtonView.frame.size.height * 0.5;
-  [_scroll addSubview: closeButtonView];
+  skipButtonViewHeight = closeRect.size.height + 10;
+  skipButtonViewWidth  = closeRect.size.width + 20 + 10;
+  skipButtonView.frame = CGRectMake(
+    (screen.size.width - (skipButtonViewWidth + 10)), (20 + 10), 
+      skipButtonViewWidth, skipButtonViewHeight);
+  skipButtonView.layer.borderColor = [UIColor whiteColor].CGColor;
+  skipButtonView.layer.borderWidth = 1.0f;
+  skipButtonView.layer.cornerRadius = skipButtonView.frame.size.height * 0.5;
+  [self.view addSubview: skipButtonView];
   UIButton *closeButton = [[UIButton alloc] init];
-  closeButton.frame = CGRectMake(0, 0, closeButtonView.frame.size.width,
-    closeButtonView.frame.size.height);
+  closeButton.frame = CGRectMake(0, 0, skipButtonView.frame.size.width,
+    skipButtonView.frame.size.height);
   closeButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
   [closeButton addTarget: self action: @selector(close)
@@ -242,26 +248,31 @@
     forState: UIControlStateNormal];
   [closeButton setTitleColor: [UIColor whiteColor] 
     forState: UIControlStateHighlighted];
-  [closeButtonView addSubview: closeButton];
+  [skipButtonView addSubview: closeButton];
+
+  // Close button view
+  CGFloat padding = 20.0f;
+  CGFloat closeButtonViewHeight = 20.0f;
+  CGFloat closeButtonViewWidth  = closeButtonViewHeight;
+  CGRect closeButtonRect = CGRectMake(
+    (screen.size.width - (closeButtonViewWidth + padding)), (20.0f + padding), 
+      closeButtonViewWidth, closeButtonViewHeight);
+  closeButtonView = [[OMBCloseButtonView alloc] initWithFrame: closeButtonRect
+    color: [UIColor grayMedium]];
+  [closeButtonView.closeButton addTarget: self action: @selector(close)
+    forControlEvents: UIControlEventTouchUpInside];
+  [_getStartedView addSubview: closeButtonView];
 
   // Activity indicator spinner
-  _activityIndicatorView = 
-    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
-      UIActivityIndicatorViewStyleWhiteLarge];
-  _activityIndicatorView.color = [UIColor grayDark];
-  CGRect activityFrame = _activityIndicatorView.frame;
-  activityFrame.origin.x = (self.view.frame.size.width - 
-    activityFrame.size.width) * 0.5;
-  activityFrame.origin.y = (self.view.frame.size.height - 
-    activityFrame.size.height) * 0.5;
-  _activityIndicatorView.frame = activityFrame;
-  [self.view addSubview: _activityIndicatorView];
+  _activityView = [[OMBActivityView alloc] init];
+  [self.view addSubview: _activityView];
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
 
+  [_activityView stopSpinning];
 }
 
 #pragma mark - Protocol
@@ -309,20 +320,20 @@
 
   // Scroll the close button view and the page control
   if (page <= 4) {
-    _pageControl.frame = CGRectMake(x, 
-      _pageControl.frame.origin.y, 
-        _pageControl.frame.size.width, _pageControl.frame.size.height);
+    // _pageControl.frame = CGRectMake(x, 
+    //   _pageControl.frame.origin.y, 
+    //     _pageControl.frame.size.width, _pageControl.frame.size.height);
 
-    closeButtonView.frame = CGRectMake(
-      (screen.size.width - (closeButtonView.frame.size.width + 10)) + x, 
-        closeButtonView.frame.origin.y, 
-          closeButtonView.frame.size.width, closeButtonView.frame.size.height);
+    // skipButtonView.frame = CGRectMake(
+    //   (screen.size.width - (skipButtonView.frame.size.width + 10)) + x, 
+    //     skipButtonView.frame.origin.y, 
+    //       skipButtonView.frame.size.width, skipButtonView.frame.size.height);
   }
-  // Fade the page control and bottom view
+  // Fade the page control and bottom view and skip button
   if (page < 99) {
     percent = (x - (width * 3)) / width;
-    bottomView.alpha = 1 - percent;
-    _pageControl.alpha = 1 - percent;
+    skipButtonView.alpha = bottomView.alpha = 
+      _pageControl.alpha = 1 - percent;
   }
   // Get started view
   if (page >= 3 && page <= 4) {
@@ -473,14 +484,22 @@
     CGPointMake((page * screen.size.width), 0) animated: YES];
 }
 
+- (void) scrollToSignUp
+{
+  [self scrollToPage: 5];
+}
+
 - (void) setupForLoggedInUser
 {
+  // Hide the bottom view
+  bottomView.hidden = YES;
   _getStartedView.hidden     = YES;
   _signUpView.hidden         = YES;
   _pageControl.numberOfPages = 4;
   // 60.0f = height of page control
-  _pageControl.frame = CGRectMake(0.0f, _scroll.frame.size.height - 60.0f,
-    _scroll.frame.size.width, 60.0f);
+  _pageControl.frame = CGRectMake(0.0f, 
+    _scroll.frame.size.height - (60.0f + bottomView.frame.size.height), 
+      _scroll.frame.size.width, 60.0f);
   _scroll.contentSize = CGSizeMake(
     (_scroll.frame.size.width * _pageControl.numberOfPages), 
       _scroll.frame.size.height);
@@ -488,12 +507,15 @@
 
 - (void) setupForLoggedOutUser
 {
+  // Hide the bottom view
+  bottomView.hidden = NO;
   _getStartedView.hidden     = NO;
   _signUpView.hidden         = NO;
   _pageControl.numberOfPages = 5;
   // 60.0f = height of page control
-  _pageControl.frame = CGRectMake(0.0f, _scroll.frame.size.height - 60.0f,
-    _scroll.frame.size.width, 60.0f);
+  _pageControl.frame = CGRectMake(0.0f, 
+    _scroll.frame.size.height - (60.0f + bottomView.frame.size.height), 
+      _scroll.frame.size.width, 60.0f);
   // Number of pages + 1 for the sign up view at the end of the intro
   _scroll.contentSize = CGSizeMake(
     (_scroll.frame.size.width * (_pageControl.numberOfPages + 1)), 

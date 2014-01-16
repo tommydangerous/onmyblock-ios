@@ -8,15 +8,17 @@
 
 #import "OMBViewController.h"
 
+@class OMBActivityView;
+@class OMBCloseButtonView;
 @class OMBSignUpView;
 @class TextFieldPadding;
 
 @interface OMBLoginViewController : OMBViewController
 {
-  UIView *closeButtonView;
+  OMBCloseButtonView *closeButtonView;
 }
 
-@property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
+@property (nonatomic, strong) OMBActivityView *activityView;
 @property (nonatomic, strong) OMBSignUpView *signUpView;
 
 #pragma mark - Methods

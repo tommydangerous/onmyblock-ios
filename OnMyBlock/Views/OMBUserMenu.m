@@ -8,6 +8,7 @@
 
 #import "OMBUserMenu.h"
 
+#import "NSString+Extensions.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
@@ -86,7 +87,7 @@
   myRenterAppImageView.image = [UIImage image: myRenterAppImage
     size: myRenterAppImageView.frame.size];
   [_myRenterAppButton addSubview: myRenterAppImageView];
-  [_renterButtons addObject: _myRenterAppButton];
+  // [_renterButtons addObject: _myRenterAppButton];
 
   // Homebase
   _renterHomebaseButton = [[UIButton alloc] init];
@@ -99,7 +100,10 @@
   homebaseImageView.image = [UIImage image: homebaseImage
     size: homebaseImageView.frame.size];
   [_renterHomebaseButton addSubview: homebaseImageView];
-  [_renterButtons addObject: _renterHomebaseButton];
+  // [_renterButtons addObject: _renterHomebaseButton];
+  // Notification badge
+  _renterHomebaseNotificationBadge = [UILabel new];
+  [_renterHomebaseButton addSubview: _renterHomebaseNotificationBadge];
 
   // Favorites
   _favoritesButton = [[UIButton alloc] init];
@@ -124,7 +128,10 @@
   inboxImageView.image = [UIImage image: [UIImage imageNamed: @"inbox_icon.png"]
     size: inboxImageView.frame.size];
   [_inboxButton addSubview: inboxImageView];
-  [_renterButtons addObject: _inboxButton]; 
+  [_renterButtons addObject: _inboxButton];
+  // Notification badge
+  _inboxNotificationBadge = [UILabel new];
+  [_inboxButton addSubview: _inboxNotificationBadge];
 
   // Seller
   // Create Listing
@@ -157,7 +164,10 @@
   sellerHomebaseImageView.image = [UIImage image: sellerHomebaseImage
     size: sellerHomebaseImageView.frame.size];
   [_sellerHomebaseButton addSubview: sellerHomebaseImageView];
-  [_sellerButtons addObject: _sellerHomebaseButton];
+  // [_sellerButtons addObject: _sellerHomebaseButton];
+  // Notification badge
+  _sellerHomebaseNotificationBadge = [UILabel new];
+  [_sellerHomebaseButton addSubview: _sellerHomebaseNotificationBadge];
 
   // Manage listing
   _manageListingsButton = [[UIButton alloc] init];
@@ -174,6 +184,7 @@
   [_manageListingsButton addSubview: manageListingImageView];
   [_sellerButtons addObject: _manageListingsButton];
 
+  // Set attributes for buttons
   NSArray *buttonsArray = @[
     // Renter
     // _searchButton,
@@ -196,6 +207,38 @@
     [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
     [button setTitleColor: [UIColor grayLight] 
       forState: UIControlStateHighlighted];
+  }
+
+  // Set attributes for notification badges
+  NSArray *badgeArray = @[
+    _inboxNotificationBadge,
+    _renterHomebaseNotificationBadge,
+    _sellerHomebaseNotificationBadge
+  ];
+  for (UILabel *label in badgeArray) {
+    label.backgroundColor = [UIColor pink];
+    label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
+    label.frame = CGRectMake(
+      discoverImageView.frame.origin.x - (20.0f * 0.5f), 
+        discoverImageView.frame.origin.y - (20.0f * 0.5f), 
+          20.0f, 20.0f);
+    label.layer.cornerRadius = label.frame.size.height * 0.5f;
+    int count = arc4random_uniform(20);
+    count += 1;
+    NSString *countString = [NSString stringWithFormat: @"%i", count];
+    label.text = countString;
+    if (count > 9) {
+      CGRect rect = [label.text boundingRectWithSize: CGSizeMake(99.0f,
+        label.frame.size.height) font: label.font];
+      CGRect newRect = label.frame;
+      CGFloat newWidth = rect.size.width;
+      if (newWidth < 20)
+        newWidth = 20.0f;
+      newRect.size.width = 1.0f + newWidth + 1.0f;
+      label.frame = newRect;
+    }
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor whiteColor];
   }
 
   return self;
@@ -253,7 +296,7 @@
 - (void) setHeaderInactive
 {
   [UIView animateWithDuration: 0.1 animations: ^{
-    [_headerButton setTitleColor: [UIColor colorWithWhite: 1.0f alpha: 0.3f]
+    [_headerButton setTitleColor: [UIColor colorWithWhite: 1.0f alpha: 0.5f]
       forState: UIControlStateNormal];
   }];
 }

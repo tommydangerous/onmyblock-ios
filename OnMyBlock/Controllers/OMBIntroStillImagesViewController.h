@@ -9,6 +9,8 @@
 #import "OMBViewController.h"
 
 @class DDPageControl;
+@class OMBActivityView;
+@class OMBCloseButtonView;
 @class OMBGetStartedView;
 @class OMBLoginViewController;
 @class OMBSignUpView;
@@ -18,14 +20,15 @@
 {
   NSMutableArray *backgroundViewArray;
   UIView *bottomView;
-  UIView *closeButtonView;
+  OMBCloseButtonView *closeButtonView;
   UIButton *loginButton;
   UIButton *signUpButton;
+  UIView *skipButtonView;
   NSArray *slides;
 }
 
 // Views that do not scroll
-@property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
+@property (nonatomic, strong) OMBActivityView *activityView;
 @property (nonatomic, strong) OMBGetStartedView *getStartedView;
 @property (nonatomic, strong) DDPageControl *pageControl;
 @property (nonatomic, strong) UIScrollView *scroll;

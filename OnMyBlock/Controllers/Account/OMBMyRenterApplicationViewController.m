@@ -108,8 +108,9 @@
   OMBCosignerListConnection *cosignerConn = 
     [[OMBCosignerListConnection alloc] initWithUser: user];
   cosignerConn.completionBlock = ^(NSError *error) {
-    [self.table reloadSections: [NSIndexSet indexSetWithIndex: 2]
-      withRowAnimation: UITableViewRowAnimationNone];
+    // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 2]
+    //   withRowAnimation: UITableViewRowAnimationNone];
+    [self.table reloadData];
   };
   [cosignerConn start];
 
@@ -117,8 +118,9 @@
   OMBPreviousRentalListConnection *rentalListConn = 
     [[OMBPreviousRentalListConnection alloc] initWithUser: user];
   rentalListConn.completionBlock = ^(NSError *error) {
-    [self.table reloadSections: [NSIndexSet indexSetWithIndex: 4]
-      withRowAnimation: UITableViewRowAnimationNone];
+    // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 4]
+    //   withRowAnimation: UITableViewRowAnimationNone];
+    [self.table reloadData];
   };
   [rentalListConn start];
 
@@ -126,8 +128,9 @@
   OMBEmploymentListConnection *employmentConn =
     [[OMBEmploymentListConnection alloc] initWithUser: user];
   employmentConn.completionBlock = ^(NSError *error) {
-    [self.table reloadSections: [NSIndexSet indexSetWithIndex: 5]
-      withRowAnimation: UITableViewRowAnimationNone];
+    // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 5]
+    //   withRowAnimation: UITableViewRowAnimationNone];
+    [self.table reloadData];
   };
   [employmentConn start];
 
@@ -140,12 +143,14 @@
       OMBLegalAnswerListConnection *connection =
         [[OMBLegalAnswerListConnection alloc] initWithUser: user];
       connection.completionBlock = ^(NSError *error) {
-        [self.table reloadSections: [NSIndexSet indexSetWithIndex: 6]
-          withRowAnimation: UITableViewRowAnimationNone];
+        // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 6]
+        //   withRowAnimation: UITableViewRowAnimationNone];
+        [self.table reloadData];
       };
       [connection start];
-      [self.table reloadSections: [NSIndexSet indexSetWithIndex: 6]
-        withRowAnimation: UITableViewRowAnimationNone];
+      // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 6]
+      //   withRowAnimation: UITableViewRowAnimationNone];
+      [self.table reloadData];
     }
   ];
 }

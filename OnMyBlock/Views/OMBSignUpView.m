@@ -8,6 +8,7 @@
 
 #import "OMBSignUpView.h"
 
+#import "OMBActivityView.h"
 #import "OMBAppDelegate.h"
 #import "OMBIntroStillImagesViewController.h"
 #import "OMBLoginConnection.h"
@@ -117,8 +118,23 @@
     (orView.frame.origin.y + orView.frame.size.height + padding),
       (screen.size.width - (padding * 2)), 
         _facebookButton.frame.size.height);
+  _firstNameTextField.placeholderColor = [UIColor grayLight];
   _firstNameTextField.placeholder = @"First name";
   [scroll addSubview: _firstNameTextField];
+  // Left image view
+  UIView *firstNameLeftView = [UIView new];
+  firstNameLeftView.frame = CGRectMake(0.0f, 0.0f, 
+    _firstNameTextField.frame.size.height, 
+      _firstNameTextField.frame.size.height);
+  _firstNameTextField.leftView = firstNameLeftView;
+  _firstNameTextField.leftViewMode = UITextFieldViewModeAlways;
+  UIImageView *firstNameImageView = [UIImageView new];
+  firstNameImageView.alpha = 0.3f;
+  firstNameImageView.frame = CGRectMake(15.0f, 15.0f, 
+    _firstNameTextField.frame.size.height - (15.0f * 2),
+      _firstNameTextField.frame.size.height - (15.0f * 2));
+  firstNameImageView.image = [UIImage imageNamed: @"user_icon.png"];
+  [firstNameLeftView addSubview: firstNameImageView];
 
   // Last name
   _lastNameTextField = [[TextFieldPadding alloc] init];
@@ -129,8 +145,19 @@
     _firstNameTextField.frame.size.height + padding),
       _firstNameTextField.frame.size.width, 
         _firstNameTextField.frame.size.height);
+  _lastNameTextField.placeholderColor = _firstNameTextField.placeholderColor;
   _lastNameTextField.placeholder = @"Last name";
   [scroll addSubview: _lastNameTextField];
+  // Left image view
+  UIView *lastNameLeftView = [UIView new];
+  lastNameLeftView.frame = firstNameLeftView.frame;
+  _lastNameTextField.leftView = lastNameLeftView;
+  _lastNameTextField.leftViewMode = _firstNameTextField.leftViewMode;
+  UIImageView *lastNameImageView = [UIImageView new];
+  lastNameImageView.alpha = firstNameImageView.alpha;
+  lastNameImageView.frame = firstNameImageView.frame;
+  lastNameImageView.image = [UIImage imageNamed: @"user_icon.png"];
+  [lastNameLeftView addSubview: lastNameImageView];
 
   // Email
   _emailTextField = [[TextFieldPadding alloc] init];
@@ -139,8 +166,19 @@
       padding), _lastNameTextField.frame.size.width, 
         _lastNameTextField.frame.size.height);
   _emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
+  _emailTextField.placeholderColor = _lastNameTextField.placeholderColor;
   _emailTextField.placeholder = @"School email";
   [scroll addSubview: _emailTextField];
+  // Left image view
+  UIView *emailLeftView = [UIView new];
+  emailLeftView.frame = firstNameLeftView.frame;
+  _emailTextField.leftView = emailLeftView;
+  _emailTextField.leftViewMode = _firstNameTextField.leftViewMode;
+  UIImageView *emailImageView = [UIImageView new];
+  emailImageView.alpha = firstNameImageView.alpha;
+  emailImageView.frame = firstNameImageView.frame;
+  emailImageView.image = [UIImage imageNamed: @"messages_icon_dark.png"];
+  [emailLeftView addSubview: emailImageView];
 
   // Password
   _passwordTextField = [[TextFieldPadding alloc] init];
@@ -148,9 +186,20 @@
     (_emailTextField.frame.origin.y + _emailTextField.frame.size.height + 
       padding), _emailTextField.frame.size.width, 
         _emailTextField.frame.size.height);
+  _passwordTextField.placeholderColor = _emailTextField.placeholderColor;
   _passwordTextField.placeholder = @"Password";
   _passwordTextField.secureTextEntry = YES;  
   [scroll addSubview: _passwordTextField];
+  // Left image view
+  UIView *passwordLeftView = [UIView new];
+  passwordLeftView.frame = firstNameLeftView.frame;
+  _passwordTextField.leftView = passwordLeftView;
+  _passwordTextField.leftViewMode = _firstNameTextField.leftViewMode;
+  UIImageView *passwordImageView = [UIImageView new];
+  passwordImageView.alpha = firstNameImageView.alpha;
+  passwordImageView.frame = firstNameImageView.frame;
+  passwordImageView.image = [UIImage imageNamed: @"password_icon.png"];
+  [passwordLeftView addSubview: passwordImageView];
 
   NSArray *array = @[
     _firstNameTextField,
@@ -168,11 +217,12 @@
     textField.layer.borderColor = [UIColor grayLight].CGColor;
     textField.layer.borderWidth = 1.0f;
     textField.layer.cornerRadius = _facebookButton.layer.cornerRadius;
-    textField.paddingX = padding; // * 0.5f;
+    textField.leftPaddingX = _facebookButton.frame.size.height;
     textField.paddingY = 0.0f; // * 0.5f;
     textField.placeholderColor = [UIColor grayLight];
     textField.placeholder = textField.placeholder;
     textField.returnKeyType = UIReturnKeyDone;
+    textField.rightPaddingX = padding;
     textField.textColor = [UIColor textColor];
   }
 
@@ -249,7 +299,7 @@
     forState: UIControlStateNormal];
   [scroll addSubview: loginSwitchButton];
 
-  [self updateScrollContentSize];
+  [self updateScrollContentSizeAnimated: NO];
 
   return self;
 }
@@ -341,7 +391,7 @@
   }
   [self endEditing: YES];
   [UIView animateWithDuration: 0.25 animations: ^{
-    [self updateScrollContentSize];
+    [self updateScrollContentSizeAnimated: YES];
   }];
 }
 
@@ -444,11 +494,18 @@
 
 - (void) showLogin
 {
-  [UIView animateWithDuration: 0.25 animations: ^{
+  // Scroll to top
+  // [scroll setContentOffset: CGPointZero animated: YES];
+
+  [UIView animateWithDuration: 0.25f animations: ^{
     loginSwitchButton.alpha  = 0.0;
     signUpSwitchButton.alpha = 1.0;
+    // Facebook button
     [_facebookButton setTitle: @"Login using Facebook" 
       forState: UIControlStateNormal];
+    // Email text field
+    _emailTextField.placeholder = @"Email";
+    // Login button
     [_loginButton setTitle: @"Login" forState: UIControlStateNormal];
   }];
   if (_firstNameTextField.alpha == 1) {
@@ -465,7 +522,7 @@
     loginSwitchRect.origin.y  = loginSwitchRect.origin.y + y;
     CGRect signUpSwitchRect   = signUpSwitchButton.frame;
     signUpSwitchRect.origin.y = signUpSwitchRect.origin.y + y;
-    [UIView animateWithDuration: 0.25 animations: ^{
+    [UIView animateWithDuration: 0.25f animations: ^{
       _firstNameTextField.alpha = 0.0;
       _lastNameTextField.alpha  = 0.0;
       _emailTextField.frame    = emailTextFieldFrame;
@@ -475,8 +532,8 @@
       signUpSwitchButton.frame = signUpSwitchRect;
     }];
   }
+  [self updateScrollContentSizeAnimated: YES];
   [self endEditing: YES];
-  [self updateScrollContentSize];
 }
 
 - (void) showSignUp
@@ -486,6 +543,8 @@
     signUpSwitchButton.alpha = 0.0;
     [_facebookButton setTitle: @"Sign up using Facebook" 
       forState: UIControlStateNormal];
+    // Email text field
+    _emailTextField.placeholder = @"School email";
     [_loginButton setTitle: @"Sign up" forState: UIControlStateNormal];
   }];
   if (_firstNameTextField.alpha == 0) {
@@ -513,7 +572,7 @@
     }];
   }
   [self endEditing: YES];
-  [self updateScrollContentSize];
+  [self updateScrollContentSizeAnimated: YES];
 }
 
 - (void) signUp
@@ -556,14 +615,12 @@
   OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
     [UIApplication sharedApplication].delegate;
   // Container -> login view controller spinner
-  [appDelegate.container.loginViewController.activityIndicatorView 
-    startAnimating];
+  [appDelegate.container.loginViewController.activityView startSpinning];
   // Container -> intro view controller spinner
-  [appDelegate.container.introViewController.activityIndicatorView 
-    startAnimating];
+  [appDelegate.container.introViewController.activityView startSpinning];
   // Container -> intro view controller -> login view controller spinner
-  [appDelegate.container.introViewController.loginViewController.activityIndicatorView startAnimating];
-  NSLog(@"START SPINNING");
+  [appDelegate.container.introViewController.loginViewController.activityView 
+    startSpinning];
 }
 
 - (void) stopSpinning
@@ -571,21 +628,24 @@
   OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
     [UIApplication sharedApplication].delegate;
   // Container -> login view controller spinner
-  [appDelegate.container.loginViewController.activityIndicatorView 
-    stopAnimating];
+  [appDelegate.container.loginViewController.activityView stopSpinning];
   // Container -> intro view controller spinner
-  [appDelegate.container.introViewController.activityIndicatorView 
-    stopAnimating];
+  [appDelegate.container.introViewController.activityView stopSpinning];
   // Container -> intro view controller -> login view controller spinner
-  [appDelegate.container.introViewController.loginViewController.activityIndicatorView stopAnimating];
-  NSLog(@"STOP SPINNING");
+  [appDelegate.container.introViewController.loginViewController.activityView 
+    stopSpinning];
 }
 
-- (void) updateScrollContentSize
+- (void) updateScrollContentSizeAnimated: (BOOL) animated
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
-  scroll.contentSize = CGSizeMake(screen.size.width, 
-    [self heightForScrollContentSize]);
+  CGFloat duration = 0.0f;
+  if (animated)
+    duration = 0.25f;
+  [UIView animateWithDuration: duration animations: ^{
+    scroll.contentSize = CGSizeMake(screen.size.width, 
+      [self heightForScrollContentSize]);
+  }];
 }
 
 @end

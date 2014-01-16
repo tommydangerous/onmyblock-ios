@@ -15,10 +15,14 @@
   OMBTableViewController
 <UIScrollViewDelegate, UITextFieldDelegate>
 {
+  CGFloat deposit;
+  CGFloat offer;
+
   UILabel *currentOfferLabel;
   BOOL hasOfferValue;
   UILabel *daysLabel;
   UILabel *hoursLabel;
+  BOOL isShowingPriceBreakdown;
   UILabel *minutesLabel;
   OMBResidence *residence;
   OMBCenteredImageView *residenceImageView;

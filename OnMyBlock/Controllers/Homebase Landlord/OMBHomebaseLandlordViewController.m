@@ -44,7 +44,7 @@
   [self setMenuBarButtonItem];
 
   self.navigationItem.rightBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithTitle: @"Inbox" 
+    [[UIBarButtonItem alloc] initWithTitle: @"(2) Inbox" 
       style: UIBarButtonItemStylePlain target: self 
         action: @selector(showInbox)];
 
@@ -258,8 +258,6 @@
     backViewRect.origin.y = backViewOffsetY - adjustment;
     backView.frame = backViewRect;
   }
-    
-  NSLog(@"%f", y);
 }
 
 #pragma mark - Protocol UITableViewDataSource

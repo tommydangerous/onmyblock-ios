@@ -356,6 +356,11 @@ withString: (NSString *) string
   return nil;
 }
 
+- (void) fetchOffersWithCompletion: (void (^) (NSError *error)) block
+{
+  NSLog(@"RESIDENCE FETCH OFFERS");
+}
+
 - (void) readFromOffersDictionary: (NSDictionary *) dictionary
 {
   NSArray *array = [dictionary objectForKey: @"objects"];
@@ -588,12 +593,18 @@ withString: (NSString *) string
   if ([dictionary objectForKey: @"user"] != [NSNull null]) {
     NSDictionary *userDict = [dictionary objectForKey: @"user"];
     int userUID = [[userDict objectForKey: @"id"] intValue];
-    OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
-    if (!user) {
-      user = [[OMBUser alloc] init];
+    
+    if (userUID == [OMBUser currentUser].uid) {
+      _user = [OMBUser currentUser];
     }
-    [user readFromDictionary: userDict];
-    _user = user;
+    else {
+      OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
+      if (!user) {
+        user = [[OMBUser alloc] init];
+      }
+      [user readFromDictionary: userDict];
+      _user = user;
+    }
   }
   // Zip
   if ([dictionary objectForKey: @"zip"] != [NSNull null])

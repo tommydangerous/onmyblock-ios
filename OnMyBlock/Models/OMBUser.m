@@ -15,6 +15,7 @@
 #import "OMBFavoriteResidence.h"
 #import "OMBIntroStillImagesViewController.h"
 #import "OMBLegalAnswer.h"
+#import "OMBMessage.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
@@ -68,6 +69,7 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
   _favorites           = [NSMutableDictionary dictionary];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
+  _messages            = [NSMutableDictionary dictionary];
   _renterApplication   = [[OMBRenterApplication alloc] init];
   _residences          = [NSMutableDictionary dictionary];
 
@@ -448,6 +450,31 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
     OMBLegalAnswer *legalAnswer = [[OMBLegalAnswer alloc] init];
     [legalAnswer readFromDictionary: dict];
     [self addLegalAnswer: legalAnswer];
+  }
+}
+
+- (void) readFromMessagesDictionary: (NSDictionary *) dictionary
+{
+  NSDictionary *userDict = [dictionary objectForKey: @"user"];
+  NSInteger userUID = [[userDict objectForKey: @"id"] intValue];
+  OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
+  if (!user) {
+    user = [[OMBUser alloc] init];
+    [user readFromDictionary: userDict];
+  }
+  NSMutableArray *array = [_messages objectForKey: 
+    [NSNumber numberWithInt: user.uid]];
+  if (!array) {
+    array = [NSMutableArray array];
+  }
+  for (NSDictionary *messageDict in [dictionary objectForKey: @"objects"]) {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
+      @"uid", [[messageDict objectForKey: @"id"] intValue]];
+    if ([[array filteredArrayUsingPredicate: predicate] count] == 0) {
+      OMBMessage *message = [[OMBMessage alloc] init];
+      [message readFromDictionary: messageDict];
+      [array addObject: message];
+    }
   }
 }
 

@@ -169,6 +169,7 @@
   _menuScroll = [[UIScrollView alloc] init];
   _menuScroll.alwaysBounceVertical = YES;
   _menuScroll.frame = CGRectMake(0, 0, menuWidth, screenHeight);
+  _menuScroll.scrollsToTop = NO;
   _menuScroll.showsVerticalScrollIndicator = NO;
   [self.view addSubview: _menuScroll];
   // Logged in
@@ -366,9 +367,6 @@
 
   [self adjustMenuScrollContent];
   [self addCurrentMenuButtonsToMenuScroll];
-
-  NSLog(@"CONTAINER SETUP FOR LOGGED IN USER");
-  // [self setupForLoggedInUser];
 }
 
 #pragma mark - Protocol

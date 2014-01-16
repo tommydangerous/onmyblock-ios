@@ -316,6 +316,9 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
     [self refreshResidenceData];
   };
   [connection start];
+
+  // Fetch the offers
+  [residence fetchOffersWithCompletion: nil];
 }
 
 - (void) viewWillDisappear: (BOOL) animated

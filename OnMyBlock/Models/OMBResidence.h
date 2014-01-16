@@ -79,6 +79,7 @@
 - (UIImage *) coverPhotoWithSize: (CGSize) size;
 - (NSString *) defaultContactMessage;
 - (NSString *) dictionaryKey;
+- (void) fetchOffersWithCompletion: (void (^) (NSError *error)) block;
 - (NSURL *) googleStaticMapImageURL;
 - (NSURL *) googleStaticStreetViewImageURL;
 - (NSArray *) imagesArray;

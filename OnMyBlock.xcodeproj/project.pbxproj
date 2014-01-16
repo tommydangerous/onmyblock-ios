@@ -444,6 +444,7 @@
 		ABE706811885F39B007A4E29 /* phone_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABE7067F1885F39B007A4E29 /* phone_icon_white@2x.png */; };
 		ABE7068418860DB4007A4E29 /* user_icon_white.png in Resources */ = {isa = PBXBuildFile; fileRef = ABE7068218860DB4007A4E29 /* user_icon_white.png */; };
 		ABE7068518860DB4007A4E29 /* user_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABE7068318860DB4007A4E29 /* user_icon_white@2x.png */; };
+		ABE706881886D59C007A4E29 /* OMBCloseButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE706871886D59C007A4E29 /* OMBCloseButtonView.m */; };
 		ABF18BA41816BC53002DD723 /* marker_circle_deselected.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA01816BC53002DD723 /* marker_circle_deselected.png */; };
 		ABF18BA51816BC53002DD723 /* marker_circle_deselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA11816BC53002DD723 /* marker_circle_deselected@2x.png */; };
 		ABF18BA61816BC53002DD723 /* marker_circle_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA21816BC53002DD723 /* marker_circle_selected.png */; };
@@ -1195,6 +1196,8 @@
 		ABE7067F1885F39B007A4E29 /* phone_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "phone_icon_white@2x.png"; sourceTree = "<group>"; };
 		ABE7068218860DB4007A4E29 /* user_icon_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_icon_white.png; sourceTree = "<group>"; };
 		ABE7068318860DB4007A4E29 /* user_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_icon_white@2x.png"; sourceTree = "<group>"; };
+		ABE706861886D59C007A4E29 /* OMBCloseButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCloseButtonView.h; sourceTree = "<group>"; };
+		ABE706871886D59C007A4E29 /* OMBCloseButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCloseButtonView.m; sourceTree = "<group>"; };
 		ABF18BA01816BC53002DD723 /* marker_circle_deselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = marker_circle_deselected.png; sourceTree = "<group>"; };
 		ABF18BA11816BC53002DD723 /* marker_circle_deselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker_circle_deselected@2x.png"; sourceTree = "<group>"; };
 		ABF18BA21816BC53002DD723 /* marker_circle_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = marker_circle_selected.png; sourceTree = "<group>"; };
@@ -1689,6 +1692,8 @@
 				ABCB36C3187CCFAB008A0EEF /* OMBScrollView.m */,
 				ABE7067B1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.h */,
 				ABE7067C1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.m */,
+				ABE706861886D59C007A4E29 /* OMBCloseButtonView.h */,
+				ABE706871886D59C007A4E29 /* OMBCloseButtonView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2879,6 +2884,7 @@
 				AB4ED2E0188462D8009AFB01 /* OMBFinishListingOpenHouseDateAddViewController.m in Sources */,
 				AB9B8C1F1819EECF0009199A /* OMBResidenceCollectionViewCell.m in Sources */,
 				AB1C217B18516D7F00ED7C06 /* NSString+PhoneNumber.m in Sources */,
+				ABE706881886D59C007A4E29 /* OMBCloseButtonView.m in Sources */,
 				ABA4F20E187D18CD00D725D4 /* OMBCreateListingConnection.m in Sources */,
 				ABB70076187B83C0005F0730 /* OMBHomebaseRenterNotificationCell.m in Sources */,
 				AB0C36AB1840652B006DC3AD /* OMBPaddleView.m in Sources */,

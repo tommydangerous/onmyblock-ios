@@ -47,15 +47,15 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [self openSession];
 
   // Fake login
-  // [OMBUser fakeLogin];
+  [OMBUser fakeLogin];
   // Use this to show whatever view controller you are working on
   // [_container showMyRenterApplication];
 
   // Normall, show the intro right away
   NSLog(@"APP DELEGATE SHOW INTRO!"); // Reminder to show this
   [_container showIntroAnimatedDissolve: NO];
-  // if ([[OMBUser currentUser] loggedIn])
-  //   [self hideIntro];
+  if ([[OMBUser currentUser] loggedIn])
+    [self hideIntro];
 
   return YES;
 }
@@ -110,6 +110,9 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
 
 - (void) applicationDidBecomeActive: (UIApplication *) application
 {
+  // Stop all the spinners
+  [[NSNotificationCenter defaultCenter] postNotificationName:
+    OMBActivityIndicatorViewStopAnimatingNotification object: nil];
 }
 
 - (void) applicationWillTerminate: (UIApplication *) application
