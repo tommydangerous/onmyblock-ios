@@ -8,13 +8,20 @@
 
 #import "OMBTableViewController.h"
 
+@class OMBActivityView;
 @class OMBMessageInputToolbar;
 
 @interface OMBMessageNewViewController : OMBTableViewController
 <UITextFieldDelegate, UITextViewDelegate>
 {
+  OMBActivityView *activityView;
   OMBMessageInputToolbar *bottomToolbar;
   UITextField *toTextField;
+  OMBUser *user;
 }
+
+#pragma mark - Initializer
+
+- (id) initWithUser: (OMBUser *) object;
 
 @end

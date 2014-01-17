@@ -103,18 +103,15 @@
     [[OMBRenterApplicationViewController alloc] init];
 
   // Renter
-  OMBMapViewController *mapViewController = [[OMBMapViewController alloc] init];
-  OMBMapFilterViewController *mapFilterViewController =
-    [[OMBMapFilterViewController alloc] init];
-  // mapFilterViewController.mapViewController = mapViewController;
   // Search
+  _mapFilterViewController = [[OMBMapFilterViewController alloc] init];
   _mapFilterNavigationController =
     [[OMBNavigationController alloc] initWithRootViewController:
-      mapFilterViewController];
+      _mapFilterViewController];
   // Discover
   _mapNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController: 
-      mapViewController];
+      [[OMBMapViewController alloc] init]];
   // Favorites
   _favoritesNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController:

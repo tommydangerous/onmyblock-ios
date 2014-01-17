@@ -11,6 +11,7 @@
 @interface OMBMapFilterButtonsCell : OMBTableViewCell
 
 @property (nonatomic, strong) NSMutableArray *buttons;
+@property (nonatomic, weak) id delegate;
 @property (nonatomic) int maxButtons;
 @property (nonatomic, strong) NSMutableDictionary *selectedButtons;
 
@@ -18,6 +19,7 @@
 
 #pragma mark - Instance Methods
 
+- (void) buttonSelected: (UIButton *) button;
 - (void) resetButtons;
 - (void) setupButtons;
 - (void) setupButtonTitles;

@@ -18,6 +18,8 @@
 #import "OMBGradientView.h"
 #import "OMBLoginViewController.h"
 #import "OMBMapViewController.h"
+#import "OMBMessageDetailViewController.h"
+#import "OMBMessageNewViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceBookItViewController.h"
 #import "OMBResidenceCell.h"
@@ -31,6 +33,7 @@
 #import "OMBResidenceDetailConnection.h"
 #import "OMBResidenceImagesConnection.h"
 #import "OMBResidenceImageSlideViewController.h"
+#import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
@@ -55,7 +58,11 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
 
   self.screenName = [NSString stringWithFormat:
     @"Residence Detail View Controller - Residence ID: %i", residence.uid];
-  self.title = residence.title;
+
+  if ([residence.title length])
+    self.title = residence.title;
+  else
+    self.title = [residence.address capitalizedString];
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(currentUserLogout) name: OMBUserLoggedOutNotification 
@@ -158,13 +165,22 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   _pageOfImagesLabel.textAlignment = NSTextAlignmentCenter;
   _pageOfImagesLabel.textColor = [UIColor whiteColor];
   [_imagesView addSubview: _pageOfImagesLabel];
+
   // Favorites Button
   _favoritesButton = [[UIButton alloc] init];
   _favoritesButton.frame = CGRectMake(5.0f, 5.0f, 40.0f, 40.0f);
-  [_favoritesButton setImage: [UIImage image: 
-    [UIImage imageNamed: @"favorite_outline_white.png"] 
-      size: CGSizeMake(40.0f, 40.0f)] forState: UIControlStateNormal];
+  [_favoritesButton addTarget: self action: @selector(favoritesButtonSelected)
+    forControlEvents: UIControlEventTouchUpInside];
   [_imagesView addSubview: _favoritesButton];
+  // When favorited
+  favoritedImage = [UIImage image: 
+    [UIImage imageNamed: @"favorite_filled_white.png"] 
+      size: _favoritesButton.frame.size];
+  // When not favorited
+  notFavoritedImage = [UIImage image: 
+    [UIImage imageNamed: @"favorite_outline_white.png"] 
+      size: _favoritesButton.frame.size];
+
   // Number of offers
   _numberOfOffersLabel = [[UILabel alloc] init];
   _numberOfOffersLabel.font = fontMedium18;
@@ -174,7 +190,8 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   _numberOfOffersLabel.text = @"5 offers";
   _numberOfOffersLabel.textAlignment = NSTextAlignmentRight;
   _numberOfOffersLabel.textColor = [UIColor whiteColor];
-  [_imagesView addSubview: _numberOfOffersLabel];
+  // [_imagesView addSubview: _numberOfOffersLabel];
+
   // Current offer
   _currentOfferLabel = [[UILabel alloc] init];
   _currentOfferLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
@@ -182,7 +199,6 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   _currentOfferLabel.frame = CGRectMake(_numberOfOffersLabel.frame.origin.x,
     _numberOfOffersLabel.frame.origin.y - 36.0f, 
       _numberOfOffersLabel.frame.size.width, 36.0f);
-  _currentOfferLabel.text = @"$4,500";
   _currentOfferLabel.textAlignment = _numberOfOffersLabel.textAlignment;
   _currentOfferLabel.textColor = _numberOfOffersLabel.textColor;
   [_imagesView addSubview: _currentOfferLabel];
@@ -194,9 +210,11 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   // 27 = count down timer label height
   // 58 = contact me / book it button height
   float bottomButtonViewHeight = 23.0f + 44.0f + 1.0f;
+  bottomButtonViewHeight = 44.0f;
   _bottomButtonView.frame = CGRectMake(0.0f, 
     screenHeight - bottomButtonViewHeight, screenWidth, bottomButtonViewHeight);
   [self.view addSubview: _bottomButtonView];
+
   // Count down timer
   _countDownTimerLabel = [[UILabel alloc] init];
   _countDownTimerLabel.backgroundColor = [UIColor greenAlpha: 0.8f];
@@ -206,19 +224,28 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
     _bottomButtonView.frame.size.width, 23.0f);
   _countDownTimerLabel.textColor = [UIColor whiteColor];
   _countDownTimerLabel.textAlignment = NSTextAlignmentCenter;
-  [_bottomButtonView addSubview: _countDownTimerLabel];
+  // [_bottomButtonView addSubview: _countDownTimerLabel];
+
   // Contact me button
   _contactMeButton = [[UIButton alloc] init];
   _contactMeButton.backgroundColor = [UIColor blueAlpha: 0.8f];
-  _contactMeButton.frame = CGRectMake(0.0f, 
-    _countDownTimerLabel.frame.origin.y + 
-    _countDownTimerLabel.frame.size.height + 1.0f, 
-      (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
+  // _contactMeButton.frame = CGRectMake(0.0f, 
+  //   _countDownTimerLabel.frame.origin.y + 
+  //   _countDownTimerLabel.frame.size.height + 1.0f, 
+  //     (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
+  _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
+    _bottomButtonView.frame.size.width, 44.0f);
   _contactMeButton.titleLabel.font = fontLight18;
+  [_contactMeButton addTarget: self action: @selector(contactMeButtonSelected)
+    forControlEvents: UIControlEventTouchUpInside];
+  [_contactMeButton setBackgroundImage: 
+    [UIImage imageWithColor: [UIColor blueHighlighted]]
+      forState: UIControlStateHighlighted];
   [_contactMeButton setTitle: @"Contact Me" forState: UIControlStateNormal];
   [_contactMeButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [_bottomButtonView addSubview: _contactMeButton];
+
   // Book it button
   _bookItButton = [[UIButton alloc] init];
   _bookItButton.backgroundColor = _contactMeButton.backgroundColor;
@@ -232,7 +259,7 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   [_bookItButton setTitle: @"Book It!" forState: UIControlStateNormal];
   [_bookItButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
-  [_bottomButtonView addSubview: _bookItButton];
+  // [_bottomButtonView addSubview: _bookItButton];
 
   // Mini map
   // _miniMap          = [[MKMapView alloc] init];
@@ -317,8 +344,12 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   };
   [connection start];
 
-  // Fetch the offers
-  [residence fetchOffersWithCompletion: nil];
+  _currentOfferLabel.text = [residence rentToCurrencyString];
+
+  [self adjustFavoriteButton];
+
+  // Fetch the offers (Do this in another phase, we aren't showing offers)
+  // [residence fetchOffersWithCompletion: nil];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -489,7 +520,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell)
         cell = [[OMBResidenceDetailSellerCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: SellerCellIdentifier];
-      [cell loadUserData: residence.user];
+      OMBUser *user = residence.user;
+      if (!user)
+        user = [OMBUser landlordUser];
+      [cell loadUserData: user];
       return cell;
     }
   }
@@ -582,6 +616,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // Offer activity
   else if (indexPath.section == 1) {
     if (indexPath.row == 0) {
+      return 0.0f;
       return kResidenceDetailCellSpacingHeight;
     }
   }
@@ -663,6 +698,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       _imagesScrollView.frame.size.height);
 }
 
+- (void) adjustFavoriteButton
+{
+  UIImage *image = notFavoritedImage;
+  // If logged in
+  if ([[OMBUser currentUser] loggedIn]) {
+    // If already favorited
+    if ([[OMBUser currentUser] alreadyFavoritedResidence: residence])
+      image = favoritedImage;
+  }
+  [_favoritesButton setImage: image forState: UIControlStateNormal];
+}
+
 - (void) adjustPageOfImagesLabelFrame
 {
   CGRect pageRect = [_pageOfImagesLabel.text boundingRectWithSize:
@@ -679,6 +726,27 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         _pageOfImagesLabel.frame.size.height);
 }
 
+- (void) contactMeButtonSelected
+{
+  if ([OMBUser currentUser].accessToken) {
+    // messageDetailViewController = 
+    //   [[OMBMessageDetailViewController alloc] initWithUser: residence.user];
+    // [self.navigationController pushViewController: 
+    //   messageDetailViewController
+    //     animated: YES];
+    OMBUser *user = residence.user;
+    if (!user)
+      user = [OMBUser landlordUser];
+    [self presentViewController: 
+      [[OMBNavigationController alloc] initWithRootViewController: 
+        [[OMBMessageNewViewController alloc] initWithUser: user]]
+          animated: YES completion: nil];
+  }
+  else {
+    [[self appDelegate].container showSignUp];
+  }
+}
+
 - (int) currentPageOfImages
 {
   return (1 + 
@@ -690,9 +758,55 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   NSLog(@"Residence Detail Current User Logout");
 }
 
+- (void) favoritesButtonSelected
+{
+  if ([[OMBUser currentUser] loggedIn]) {
+    if ([[OMBUser currentUser] alreadyFavoritedResidence: residence]) {
+      [[OMBUser currentUser] removeResidenceFromFavorite: residence];
+      [UIView animateWithDuration: 0.5f animations: ^{
+        [_favoritesButton setImage: notFavoritedImage
+          forState: UIControlStateNormal];
+      }];
+    }
+    else {
+      OMBFavoriteResidence *favoriteResidence = 
+        [[OMBFavoriteResidence alloc] init];
+      favoriteResidence.createdAt = [[NSDate date] timeIntervalSince1970];
+      favoriteResidence.residence = residence;
+      favoriteResidence.user      = [OMBUser currentUser];
+      [[OMBUser currentUser] addFavoriteResidence: favoriteResidence];
+      UIImageView *imageView = _favoritesButton.imageView;
+      [UIView animateWithDuration: 0.5f delay:0
+        options: UIViewAnimationOptionBeginFromCurrentState
+          animations: ^{
+            imageView.transform = CGAffineTransformMakeScale(0.7f, 0.7f);
+            [_favoritesButton setImage: favoritedImage
+              forState: UIControlStateNormal];
+          }
+          completion: ^(BOOL finished){
+            imageView.transform = CGAffineTransformIdentity;
+          }
+        ];
+    }
+    OMBFavoriteResidenceConnection *connection = 
+      [[OMBFavoriteResidenceConnection alloc] initWithResidence: residence];
+    [connection start];
+  }
+  else {
+    OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    [appDelegate showSignUp];
+  }
+}
+
 - (void) refreshResidenceData
 {
   [self.table reloadData];
+
+  if (residence.user) {
+    // Download the seller's image if it doesn't exist
+    if (!residence.user.image)
+      [residence.user downloadImageFromImageURLWithCompletion: nil];
+  }
 
   [self timerFireMethod: nil];
   countdownTimer = [NSTimer timerWithTimeInterval: 1 target: self
@@ -717,7 +831,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) shareButtonSelected
 {
-  NSLog(@"RESIDENCE DETAIL SHARE BUTTON SELECTED");
+  NSArray *dataToShare = @[[residence shareString]];
+  UIActivityViewController *activityViewController = 
+    [[UIActivityViewController alloc] initWithActivityItems: dataToShare
+      applicationActivities: nil];
+  [[self appDelegate].container presentViewController: activityViewController
+    animated: YES completion: nil];
+
 }
 
 - (void) showBookItNow

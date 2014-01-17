@@ -13,6 +13,7 @@
 @class OMBExtendedHitAreaViewContainer;
 @class OMBIntroStillImagesViewController;
 @class OMBLoginViewController;
+@class OMBMapFilterViewController;
 @class OMBNavigationController;
 @class OMBOfferAcceptedView;
 @class OMBRenterApplicationViewController;
@@ -93,6 +94,8 @@
 // Search
 @property (nonatomic, strong) 
   OMBNavigationController *mapFilterNavigationController;
+@property (nonatomic, strong)
+  OMBMapFilterViewController *mapFilterViewController;
 // Discover
 @property (nonatomic, strong) OMBNavigationController *mapNavigationController;
 // My Renter App

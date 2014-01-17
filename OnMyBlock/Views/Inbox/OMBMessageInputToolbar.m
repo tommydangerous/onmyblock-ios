@@ -34,7 +34,7 @@
     size: CGSizeMake(26.0f, 26.0f)];
   _cameraBarButtonItem = 
     [[UIBarButtonItem alloc] initWithImage: cameraIcon style:
-      UIBarButtonItemStylePlain target: self action: nil];
+      UIBarButtonItemStylePlain target: nil action: nil];
 
   // Text view
   _messageContentTextView = [[UITextView alloc] init];
@@ -55,7 +55,7 @@
   UIFont *sendFont = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   _sendBarButtonItem = 
     [[UIBarButtonItem alloc] initWithTitle: @"Send" 
-      style: UIBarButtonItemStylePlain target: self action: nil];
+      style: UIBarButtonItemStylePlain target: nil action: nil];
   [_sendBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: sendFont,
     NSForegroundColorAttributeName: [UIColor grayMedium]

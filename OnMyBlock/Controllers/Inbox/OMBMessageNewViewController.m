@@ -10,7 +10,10 @@
 
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
+#import "OMBActivityView.h"
+#import "OMBMessage.h"
 #import "OMBMessageCollectionViewCell.h"
+#import "OMBMessageCreateConnection.h"
 #import "OMBMessageInputToolbar.h"
 #import "UIColor+Extensions.h"
 
@@ -18,13 +21,20 @@
 
 #pragma mark - Initializer
 
-- (id) init
+- (id) initWithUser: (OMBUser *) object
 {
   if (!(self = [super init])) return nil;
+
+  user = object;
 
   self.screenName = self.title = @"New Message";
 
   return self;
+}
+
+- (id) init
+{
+  return [self initWithUser: nil];
 }
 
 #pragma mark - Override
@@ -87,19 +97,34 @@
   bottomToolbar.messageContentTextView.delegate = self;
   [self.view addSubview: bottomToolbar];
 
+  bottomToolbar.cameraBarButtonItem.action = @selector(addImage);
+  bottomToolbar.cameraBarButtonItem.target = self;
+  bottomToolbar.sendBarButtonItem.action   = @selector(send);
+  bottomToolbar.sendBarButtonItem.target   = self;
+
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(moveBottomToolbarUp:)
       name: UIKeyboardWillShowNotification object: nil];
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(moveBottomToolbarDown:)
       name: UIKeyboardWillHideNotification object: nil];
+
+  // Activty spinner
+  activityView = [[OMBActivityView alloc] init];
+  [self.view addSubview: activityView];
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
 
-  [toTextField becomeFirstResponder];
+  if (user) {
+    toTextField.text = [user fullName];
+    toTextField.userInteractionEnabled = NO;
+    [bottomToolbar.messageContentTextView becomeFirstResponder];
+  }
+  else
+    [toTextField becomeFirstResponder];
 }
 
 #pragma mark - Protocol
@@ -149,6 +174,11 @@
 
 #pragma mark - Instance Methods
 
+- (void) addImage
+{
+  NSLog(@"ADD IMAGE");
+}
+
 - (void) cancel
 {
   [self.navigationController dismissViewControllerAnimated: YES
@@ -186,6 +216,36 @@
     } 
     completion: nil
   ];
+}
+
+- (void) send
+{
+  [activityView startSpinning];
+
+  OMBMessage *message = [[OMBMessage alloc] init];
+  message.content   = bottomToolbar.messageContentTextView.text;
+  message.createdAt = [[NSDate date] timeIntervalSince1970];
+  message.recipient = user;
+  message.sender    = [OMBUser currentUser];
+  message.uid       = 9999 + arc4random_uniform(100);
+  message.updatedAt = [[NSDate date] timeIntervalSince1970];
+
+  OMBMessageCreateConnection *conn = 
+    [[OMBMessageCreateConnection alloc] initWithMessage: message];
+  conn.completionBlock = ^(NSError *error) {
+    [activityView stopSpinning];
+    if (error) {
+      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+        @"Message was not sent" message: @"Please try again" 
+          delegate: nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
+      [alertView show];
+    }
+    else {
+      [[OMBUser currentUser] addMessage: message];
+      [self cancel];
+    }
+  };
+  [conn start];
 }
 
 @end

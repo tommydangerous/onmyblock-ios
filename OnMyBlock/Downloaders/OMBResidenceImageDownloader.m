@@ -30,7 +30,6 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBResidenceImageDownloader");
   UIImage *image = [[UIImage alloc] initWithData: activeDownload];
   // If image was downloaded and the position is not the first (cover photo)
   if (image) {
@@ -55,8 +54,6 @@
     residenceImage.uid            = _residenceImageUID;
 
     [_residence addResidenceImage: residenceImage];
-
-    NSLog(@"%i", residenceImage.uid);
   }
   [super connectionDidFinishLoading: connection];
 }

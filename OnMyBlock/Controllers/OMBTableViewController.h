@@ -11,6 +11,9 @@
 @interface OMBTableViewController : OMBViewController
 <UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic) NSInteger currentPage;
+@property (nonatomic) BOOL fetching;
+@property (nonatomic) NSInteger maxPages;
 @property (nonatomic, strong) UITableView *table;
 
 #pragma mark - Methods

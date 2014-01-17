@@ -123,7 +123,7 @@
   offersAndTimeLabel.text = @"2 offers 13d 2h";
   offersAndTimeLabel.textAlignment = NSTextAlignmentRight;
   offersAndTimeLabel.textColor = addressLabel.textColor;
-  [infoView addSubview: offersAndTimeLabel];
+  // [infoView addSubview: offersAndTimeLabel];
 
   // Rent frame
   rentLabel.frame = CGRectMake((screen.size.width - rentLabelWidth), 

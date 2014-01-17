@@ -30,6 +30,8 @@ float kStandardHeight = 44.0f;
 {
   if (!(self = [super init])) return nil;
 
+  [self resetValuesDictionary];
+
   self.screenName = self.title = @"Filter";
   
   return self;
@@ -55,6 +57,10 @@ float kStandardHeight = 44.0f;
   searchBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @"Search" 
       style: UIBarButtonItemStylePlain target: self action: @selector(search)];
+  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
+  [searchBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+  } forState: UIControlStateNormal];
   self.navigationItem.rightBarButtonItem = searchBarButtonItem;
 
   CGRect screen = [[UIScreen mainScreen] bounds];
@@ -254,9 +260,13 @@ inComponent: (NSInteger) component
     forComponent: component];
   if (component == 0) {
     cell.minRentTextField.text = string;
+    [_valuesDictionary setObject: [NSNumber numberWithInt: 500 * row]
+      forKey: @"minRent"];
   }
   else if (component == 1) {
     cell.maxRentTextField.text = string;
+    [_valuesDictionary setObject: [NSNumber numberWithInt: 500 * row]
+      forKey: @"maxRent"];
   }
 }
 
@@ -378,6 +388,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell = [[OMBMapFilterBedroomsCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier: 
               BedroomsCellIdentifier];
+        cell.delegate = self;
         return cell;
       }
     }
@@ -473,6 +484,7 @@ numberOfRowsInSection: (NSInteger) section
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  // The normal table with all the rows of filter options
   if (tableView == self.table) {
     // Neighborhoods
     if (indexPath.section == 0 && indexPath.row == 1) {
@@ -516,7 +528,15 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     cell.neighborhoodTextField.text = string;
     [tableView deselectRowAtIndexPath: indexPath animated: YES];
     [tableView reloadData];
-    [self done]; 
+
+    if (selectedNeighborhood) {
+      [_valuesDictionary setObject: selectedNeighborhood 
+        forKey: @"neighborhood"];
+    }
+    else
+      [_valuesDictionary setObject: @"" forKey: @"neighborhood"];
+
+    [self done];
   }
 }
 
@@ -524,7 +544,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 heightForHeaderInSection: (NSInteger) section
 {
   if (tableView == neighborhoodTableView) {
-    return kStandardHeight;
+    return 13.0f * 2;
   }
   return 0.0f;
 }
@@ -556,9 +576,9 @@ viewForHeaderInSection: (NSInteger) section
     AMBlurView *blur = [[AMBlurView alloc] init];
     blur.blurTintColor = [UIColor grayLight];
     blur.frame = CGRectMake(0.0f, 0.0f, 
-      tableView.frame.size.width, kStandardHeight);
+      tableView.frame.size.width, 13.0f * 2);
     UILabel *label = [UILabel new];
-    label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+    label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 13];
     label.frame = blur.frame;
     label.text = [[[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: 
       section] capitalizedString];
@@ -576,6 +596,22 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) cancel
 {
+  _shouldSearch = NO;
+  if ([[_valuesDictionary objectForKey: @"bathrooms"] count] > 0)
+    _shouldSearch = YES;
+  else if ([[_valuesDictionary objectForKey: @"bedrooms"] count] > 0)
+    _shouldSearch = YES;
+  else if ([_valuesDictionary objectForKey: @"maxRent"] != [NSNull null])
+    _shouldSearch = YES;
+  else if ([_valuesDictionary objectForKey: @"minRent"] != [NSNull null])
+    _shouldSearch = YES;
+  else if ([_valuesDictionary objectForKey: @"neighborhood"] != [NSNull null])
+    _shouldSearch = YES;
+  else if ([[_valuesDictionary objectForKey: @"propertyType"] count] > 0)
+    _shouldSearch = YES;
+
+  [self resetValuesDictionary];
+
   [self dismissViewControllerWithCompletion: ^{
     // Neighborhood
     OMBMapFilterNeighborhoodCell *neighborhoodCell = 
@@ -673,8 +709,23 @@ viewForHeaderInSection: (NSInteger) section
   [self showSearchBarButtonItem];
 }
 
+- (void) resetValuesDictionary
+{
+  _valuesDictionary = [NSMutableDictionary dictionaryWithDictionary: 
+    @{
+      @"bathrooms":    [NSMutableArray array],
+      @"bedrooms":     [NSMutableArray array],
+      @"maxRent":      [NSNull null],
+      @"minRent":      [NSNull null],
+      @"neighborhood": [NSNull null],
+      @"propertyType": [NSMutableArray array]
+    }
+  ];
+}
+
 - (void) search
 {
+  _shouldSearch = YES;
   [self dismissViewControllerWithCompletion: nil];
 }
 

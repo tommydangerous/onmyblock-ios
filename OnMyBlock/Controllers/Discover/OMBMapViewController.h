@@ -21,20 +21,19 @@ extern float const PropertyInfoViewImageHeightPercentage;
 
 @interface OMBMapViewController : OMBViewController
 <CLLocationManagerDelegate, MKMapViewDelegate, 
-  UICollectionViewDataSource, UICollectionViewDelegate, 
   UIGestureRecognizerDelegate, UIScrollViewDelegate, UITableViewDataSource, 
   UITableViewDelegate>
 {
+  CLLocationCoordinate2D centerCoordinate;
   CGFloat currentDistanceOfScrolling;
   UIButton *currentLocationButton;
+  BOOL fetching;
   UILabel *filterLabel;
   UIView *filterView;
   BOOL isDraggingListView;
   BOOL isScrollingListViewDown;
   BOOL isShowingSortButtons;
   CLLocationManager *locationManager;
-  OMBNavigationController *mapFilterNavigationController;
-  OMBMapFilterViewController *mapFilterViewController;
   AMBlurView *navigationBarCover;
   CGFloat previousOffsetY;
   OMBPropertyInfoView *propertyInfoView;
@@ -51,11 +50,10 @@ extern float const PropertyInfoViewImageHeightPercentage;
   AMBlurView *sortView;
 }
 
-@property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) UICollectionViewLayout *collectionViewLayout;
 @property (nonatomic, strong) UITableView *listView;
 @property (nonatomic, strong) UIView *listViewContainer;
 @property (nonatomic, strong) OCMapView *mapView;
+@property (nonatomic) CGFloat radiusInMiles;
 
 #pragma mark - Methods
 
@@ -70,7 +68,6 @@ withTitle: (NSString *) title;
 - (void) removeAllAnnotations;
 - (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
 withMiles: (int) miles animated: (BOOL) animated;
-- (void) showMapFilterViewControllerAnimated: (BOOL) animated;
 - (void) switchToListView;
 - (void) updateFilterLabel;
 

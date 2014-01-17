@@ -19,6 +19,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 @class OMBEmployment;
 @class OMBFavoriteResidence;
 @class OMBLegalAnswer;
+@class OMBMessage;
 @class OMBPreviousRental;
 @class OMBRenterApplication;
 @class OMBResidence;
@@ -52,12 +53,14 @@ extern NSString *const OMBUserLoggedOutNotification;
 + (OMBUser *) currentUser;
 + (void) fakeLogin;
 + (OMBUser *) fakeUser;
++ (OMBUser *) landlordUser;
 
 #pragma mark - Instance Methods
 
 - (void) addCosigner: (OMBCosigner *) cosigner;
 - (void) addEmployment: (OMBEmployment *) employment;
 - (void) addLegalAnswer: (OMBLegalAnswer *) object;
+- (void) addMessage: (OMBMessage *) message;
 - (void) addPreviousRental: (OMBPreviousRental *) previousRental;
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
 - (void) addResidence: (OMBResidence *) residence;
@@ -65,10 +68,13 @@ extern NSString *const OMBUserLoggedOutNotification;
 - (void) downloadImageFromImageURLWithCompletion: 
 (void (^) (NSError *error)) block;
 - (NSArray *) favoritesArray;
+- (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
+delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (NSString *) fullName;
 - (UIImage *) imageForSize: (CGFloat) size;
 - (BOOL) loggedIn;
 - (void) logout;
+- (NSArray *) messagesWithUser: (OMBUser *) user;
 - (NSString *) phoneString;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;

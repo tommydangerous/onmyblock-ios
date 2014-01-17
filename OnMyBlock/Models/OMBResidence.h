@@ -91,6 +91,7 @@
 - (void) readFromResidenceDictionary: (NSDictionary *) dictionary;
 - (void) removeResidenceImage: (OMBResidenceImage *) residenceImage;
 - (NSString *) rentToCurrencyString;
+- (NSString *) shareString;
 - (NSArray *) sortedOffers;
 - (NSArray *) sortedOpenHouseDates;
 

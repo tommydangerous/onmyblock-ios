@@ -12,7 +12,17 @@
 
 @implementation OMBTableViewController
 
-@synthesize table = _table;
+#pragma mark - Initializer
+
+- (id) init
+{
+  if (!(self = [super init])) return nil;
+
+  self.currentPage = self.maxPages = 1;
+  self.fetching = NO;
+
+  return self;
+}
 
 #pragma mark - Override
 

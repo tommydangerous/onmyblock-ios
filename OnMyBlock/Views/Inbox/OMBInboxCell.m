@@ -55,6 +55,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   // Date time
   dateTimeLabel = [UILabel new];
   dateTimeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  dateTimeLabel.textAlignment = NSTextAlignmentRight;
   [self.contentView addSubview: dateTimeLabel];
 
   return self;
@@ -80,7 +81,18 @@ reuseIdentifier: (NSString *)reuseIdentifier
   CGFloat padding = 15.0f;
 
   // User image
-  userImageView.image = message.sender.image;
+  if (message.sender.image) {
+    userImageView.image = [message.sender imageForSize: 
+      userImageView.frame.size.width];
+  }
+  else {
+    [message.sender downloadImageFromImageURLWithCompletion: 
+      ^(NSError *error) {
+        userImageView.image = [message.sender imageForSize: 
+          userImageView.frame.size.width];
+      }
+    ];
+  }
 
   // Message content
   messageContentLabel.text = message.content;
@@ -92,7 +104,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   // Within a day
   if (message.createdAt > now - (secondsInADay * 1)) {
     // 4:31 pm
-    dateFormatter.dateFormat = @"h:mm a";
+    dateFormatter.dateFormat = @"h:mma";
   }
   // Within the week
   else if (message.createdAt > now - (secondsInADay * 7)) {
@@ -111,13 +123,13 @@ reuseIdentifier: (NSString *)reuseIdentifier
     [NSDate dateWithTimeIntervalSince1970: message.createdAt]];
   if (message.createdAt > now - (secondsInADay * 1))
     dateTimeLabel.text = [dateTimeLabel.text lowercaseString];
-  CGRect dateTimeRect = [dateTimeLabel.text boundingRectWithSize: 
-    CGSizeMake(screenWidth, 22.0f) font: dateTimeLabel.font];
+  // CGRect dateTimeRect = [dateTimeLabel.text boundingRectWithSize: 
+  //   CGSizeMake(screenWidth, 22.0f) font: dateTimeLabel.font];
   dateTimeLabel.frame = CGRectMake(
-    screenWidth - (dateTimeRect.size.width + padding), 
+    screenWidth - (100.0f + padding), 
       userNameLabel.frame.origin.y + 
-      ((userNameLabel.frame.size.height - dateTimeRect.size.height) * 0.5), 
-        dateTimeRect.size.width, dateTimeRect.size.height);
+      ((userNameLabel.frame.size.height - 20.0f) * 0.5), 
+        100.0f, 20.0f);
 
   // User name
   userNameLabel.text = [message.sender fullName];

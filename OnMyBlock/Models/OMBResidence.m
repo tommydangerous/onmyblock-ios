@@ -9,6 +9,7 @@
 #import "OMBResidence.h"
 
 #import "NSString+Extensions.h"
+#import "OMBConnection.h"
 #import "OMBOffer.h"
 #import "OMBOpenHouse.h"
 #import "OMBResidenceGoogleStaticImageDownloader.h"
@@ -624,6 +625,24 @@ withString: (NSString *) string
 - (NSString *) rentToCurrencyString
 {
   return [NSString numberToCurrencyString: (int) _minRent];
+}
+
+- (NSString *) shareString
+{
+  NSArray *array = [OnMyBlockAPIURL componentsSeparatedByString: OnMyBlockAPI];
+  NSString *string = [NSString stringWithFormat: @"%@/places/%i",
+    [array firstObject], self.uid];
+
+  NSString *bedsString = @"beds";
+  if (_bedrooms == 1)
+    bedsString = @"bed";
+  NSString *bathsString = @"baths";
+  if (_bathrooms == 1)
+    bathsString = @"bath";
+
+  return [NSString stringWithFormat: @"%.0f %@, %.0f %@ for only %@\n%@",
+    _bedrooms, bedsString, _bathrooms, bathsString, 
+      [self rentToCurrencyString], string];
 }
 
 - (NSArray *) sortedOffers

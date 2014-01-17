@@ -25,4 +25,7 @@
   OMBNeighborhood *selectedNeighborhood;
 }
 
+@property (nonatomic) BOOL shouldSearch;
+@property (nonatomic, strong) NSMutableDictionary *valuesDictionary;
+
 @end

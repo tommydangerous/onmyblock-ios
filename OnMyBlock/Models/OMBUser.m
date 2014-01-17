@@ -16,6 +16,7 @@
 #import "OMBIntroStillImagesViewController.h"
 #import "OMBLegalAnswer.h"
 #import "OMBMessage.h"
+#import "OMBMessageDetailConnection.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
@@ -141,6 +142,23 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   return user;
 }
 
++ (OMBUser *) landlordUser
+{
+  static OMBUser *user = nil;
+  if (!user) {
+    user             = [[OMBUser alloc] init];
+    user.about       = 
+      @"Please contact me if you are interested in this wonderful place.";
+    user.email       = @"info@onmyblock.com";
+    user.firstName   = @"landlord";
+    user.lastName    = @"";
+    user.phone       = @"6504555789";
+    user.image       = [UIImage imageNamed: @"user_icon_default.png"];
+    user.uid         = 99999;
+  }
+  return user;
+}
+
 #pragma mark - Instance Methods
 
 - (void) addCosigner: (OMBCosigner *) cosigner
@@ -166,6 +184,22 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 - (void) addLegalAnswer: (OMBLegalAnswer *) object
 {
   [_renterApplication addLegalAnswer: object];
+}
+
+- (void) addMessage: (OMBMessage *) message
+{
+  NSNumber *number = [NSNumber numberWithInt: message.recipient.uid];
+  NSMutableArray *array = [_messages objectForKey: number];
+  if (!array) {
+    array = [NSMutableArray array];
+  }
+  NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
+    @"uid", message.uid];
+  if ([[array filteredArrayUsingPredicate: predicate] count] == 0) {
+    [message calculateSizeForMessageCell];
+    [array addObject: message];
+  }
+  [_messages setObject: array forKey: number];
 }
 
 - (void) addPreviousRental: (OMBPreviousRental *) previousRental
@@ -233,6 +267,16 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   [[[OMBFavoritesListConnection alloc] init] start];
 }
 
+- (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
+delegate: (id) delegate completion: (void (^) (NSError *error)) block
+{
+  OMBMessageDetailConnection *conn = 
+    [[OMBMessageDetailConnection alloc] initWithPage: page withUser: user];
+  conn.completionBlock = block;
+  conn.delegate        = delegate;
+  [conn start];
+}
+
 - (NSString *) fullName
 {
   NSString *nameString = @"";
@@ -281,6 +325,11 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
     OMBUserLoggedOutNotification object: nil];
 }
 
+- (NSArray *) messagesWithUser: (OMBUser *) user
+{
+  return [_messages objectForKey: [NSNumber numberWithInt: user.uid]];
+}
+
 - (NSString *) phoneString
 {
   if (_phone && [_phone length] > 0) {
@@ -304,7 +353,6 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
       return [NSString stringWithFormat: @"(%@) %@-%@", 
         areaCodeString, phoneString1, phoneString2];
     }
-
   }
   return @"";
 }
@@ -344,7 +392,10 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
     _firstName = [dictionary objectForKey: @"first_name"];
   else
     _firstName = @"";
+
+  // Image URL
   NSString *string = [dictionary objectForKey: @"image_url"];
+  
   // If URL is something like this //ombrb-prod.s3.amazonaws.com
   if ([string hasPrefix: @"//"]) {
     string = [@"http:" stringByAppendingString: string];
@@ -352,9 +403,13 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   else if (![string hasPrefix: @"http"]) {
     NSString *baseURLString = [[OnMyBlockAPIURL componentsSeparatedByString: 
       OnMyBlockAPI] objectAtIndex: 0];
+    if ([string isEqualToString: @"default_user_image.png"]) {
+      string = [string stringByAppendingString: @"/"];
+    }
     string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
   }
-  _imageURL    = [NSURL URLWithString: string];
+  _imageURL = [NSURL URLWithString: string];
+
   if ([dictionary objectForKey: @"last_name"] != [NSNull null])
     _lastName = [dictionary objectForKey: @"last_name"];
   else
@@ -476,6 +531,7 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
       [array addObject: message];
     }
   }
+  [_messages setObject: array forKey: [NSNumber numberWithInt: user.uid]];
 }
 
 - (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary

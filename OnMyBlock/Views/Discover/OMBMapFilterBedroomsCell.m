@@ -8,6 +8,8 @@
 
 #import "OMBMapFilterBedroomsCell.h"
 
+#import "OMBMapFilterViewController.h"
+
 @implementation OMBMapFilterBedroomsCell
 
 #pragma mark - Initialize
@@ -29,6 +31,41 @@ reuseIdentifier: (NSString *)reuseIdentifier
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) buttonSelected: (UIButton *) button
+{
+  [super buttonSelected: button];
+
+  NSNumber *key = [NSNumber numberWithInt: button.tag];
+  NSNumber *number = [self.selectedButtons objectForKey: key];
+  BOOL selected = [number boolValue];
+
+  if (self.delegate && 
+    [self.delegate isKindOfClass: [OMBMapFilterViewController class]]) {
+
+    NSMutableArray *array = [[(OMBMapFilterViewController *) self.delegate 
+      valuesDictionary] objectForKey: @"bedrooms"];
+    if (selected) {
+      NSMutableArray *newArray = [NSMutableArray arrayWithArray: array];
+      [newArray addObject: [NSNumber numberWithInt: button.tag]];
+      [[(OMBMapFilterViewController *) self.delegate valuesDictionary] 
+        setObject: newArray forKey: @"bedrooms"];
+    }
+    else {
+      NSPredicate *predicate = [NSPredicate predicateWithBlock: 
+        ^BOOL (id evaluatedObject, NSDictionary *bindings) {
+          NSNumber *n = (NSNumber *) evaluatedObject;
+          return [n intValue] != 
+            [[NSNumber numberWithInt: button.tag] intValue];
+        }
+      ];
+      NSMutableArray *newArray = (NSMutableArray *) 
+        [array filteredArrayUsingPredicate: predicate];
+      [[(OMBMapFilterViewController *) self.delegate valuesDictionary] 
+        setObject: newArray forKey: @"bedrooms"];
+    }
+  }
+}
 
 - (void) setupButtonTitles
 {

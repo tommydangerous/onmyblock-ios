@@ -43,8 +43,6 @@
 {
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
-  NSLog(@"OMBResidenceCoverPhotoURLConnection");
-  NSLog(@"%@", json);
   NSString *originalString = [json objectForKey: @"image"];
   NSString *string         = [json objectForKey: @"image"];
   // If the cover photo URL is not empty.png

@@ -8,24 +8,36 @@
 
 #import "OMBViewController.h"
 
+@class OMBMessage;
 @class OMBMessageInputToolbar;
 
 @interface OMBMessageDetailViewController : OMBViewController
 <UICollectionViewDataSource, UICollectionViewDelegate, 
-  UICollectionViewDelegateFlowLayout, UITextViewDelegate>
+  UICollectionViewDelegateFlowLayout, UIScrollViewDelegate, UITextViewDelegate>
 {
   OMBMessageInputToolbar *bottomToolbar;
   UIBarButtonItem *contactBarButtonItem;
   UIToolbar *contactToolbar;
   UIBarButtonItem *doneBarButtonItem;
-  NSArray *messages;
+  BOOL isEditing;
+  CGPoint startingPoint;
   OMBUser *user;
 }
 
 @property (nonatomic, strong) UICollectionView *collection;
+@property (nonatomic) NSInteger currentPage;
+@property (nonatomic) BOOL fetching;
+@property (nonatomic) NSInteger maxPages;
+@property (nonatomic, strong) NSArray *messages;
 
 #pragma mark - Initializer
 
 - (id) initWithUser: (OMBUser *) object;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) send;
 
 @end

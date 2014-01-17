@@ -36,6 +36,12 @@
   if (image) {
     _user.image = image;
   }
+  else {
+    _user.image = [UIImage imageNamed: @"user_icon_default.png"];
+  }
+
+  // NSLog(@"OMBUserImageDownloader\n%@", self.imageURL);
+  
   [super connectionDidFinishLoading: connection];
 }
 

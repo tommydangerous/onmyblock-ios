@@ -11,6 +11,7 @@
 #import "OMBViewController.h"
 
 @class OMBGradientView;
+@class OMBMessageDetailViewController;
 @class OMBResidence;
 @class OMBResidenceImageSlideViewController;
 
@@ -20,6 +21,9 @@
 {
   UIActivityIndicatorView *activityIndicatorView;
   NSTimer *countdownTimer;
+  UIImage *favoritedImage;
+  OMBMessageDetailViewController *messageDetailViewController;
+  UIImage *notFavoritedImage;
   OMBResidence *residence;
 }
 

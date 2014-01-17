@@ -41,8 +41,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
 - (void) loadFavoriteResidenceData: (OMBFavoriteResidence *) object
 {
   [super loadResidenceData: object.residence];
-  userNameLabel.text = [NSString stringWithFormat: @"added by %@", 
-    [object.user shortName]];
+  // userNameLabel.text = [NSString stringWithFormat: @"added by %@", 
+  //   [object.user shortName]];
 }
 
 @end

@@ -60,9 +60,6 @@
     utc.name       = @"university towne center";
 
     _neighborhoods = @{
-      @"san jose": @{
-
-      },
       @"san diego": @{
         downtown.name:        downtown,
         hillcrest.name:       hillcrest,
