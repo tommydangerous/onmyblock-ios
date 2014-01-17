@@ -23,7 +23,7 @@
   if (!(self = [super initWithResidence: object])) return nil;
 
   maxCharacters     = 50;
-  placeholderString = @"Summarize your awesome listing";
+  placeholderString = @"A brief description of your awesome place.";
 
   self.screenName = self.title = @"Description";
 

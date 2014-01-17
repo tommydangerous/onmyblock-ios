@@ -819,6 +819,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       else if (indexPath.row == 4) {
         return 0.0f;
       }
+      // Open house dates
+      else if (indexPath.row == 7) {
+        return 0.0f;
+      }
     }
     return 44.0f;
   }

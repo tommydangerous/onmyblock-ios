@@ -407,6 +407,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell = [[OMBMapFilterBathroomsCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier: 
               BathroomsCellIdentifier];
+        cell.delegate = self;
         return cell;
       }
     }
@@ -546,6 +547,11 @@ heightForHeaderInSection: (NSInteger) section
   if (tableView == neighborhoodTableView) {
     return 13.0f * 2;
   }
+  else if (tableView == self.table) {
+    // Property Type
+    if (section == 4)
+      return 0.0f;
+  }
   return 0.0f;
 }
 
@@ -553,7 +559,11 @@ heightForHeaderInSection: (NSInteger) section
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGFloat standardHeight = 44.0f; 
-  if (tableView == self.table) {    
+  if (tableView == self.table) {
+    // Property Type
+    if (indexPath.section == 4)
+      return 0.0f;
+
     // Header labels
     if (indexPath.row == 0) {
       return standardHeight;
@@ -597,7 +607,7 @@ viewForHeaderInSection: (NSInteger) section
 - (void) cancel
 {
   _shouldSearch = NO;
-  if ([[_valuesDictionary objectForKey: @"bathrooms"] count] > 0)
+  if ([_valuesDictionary objectForKey: @"bathrooms"] != [NSNull null])
     _shouldSearch = YES;
   else if ([[_valuesDictionary objectForKey: @"bedrooms"] count] > 0)
     _shouldSearch = YES;
@@ -618,6 +628,8 @@ viewForHeaderInSection: (NSInteger) section
       (OMBMapFilterNeighborhoodCell *) [self.table cellForRowAtIndexPath: 
         [NSIndexPath indexPathForRow: 1 inSection: 0]];
     neighborhoodCell.neighborhoodTextField.text = @"";
+    selectedNeighborhood = nil;
+    [neighborhoodTableView reloadData];
     // Clear rent
     OMBMapFilterRentCell *rentCell = (OMBMapFilterRentCell *)
       [self.table cellForRowAtIndexPath:
@@ -713,7 +725,7 @@ viewForHeaderInSection: (NSInteger) section
 {
   _valuesDictionary = [NSMutableDictionary dictionaryWithDictionary: 
     @{
-      @"bathrooms":    [NSMutableArray array],
+      @"bathrooms":    [NSNull null],
       @"bedrooms":     [NSMutableArray array],
       @"maxRent":      [NSNull null],
       @"minRent":      [NSNull null],

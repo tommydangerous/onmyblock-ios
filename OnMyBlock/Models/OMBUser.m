@@ -9,6 +9,7 @@
 #import "OMBUser.h"
 
 #import "OMBAppDelegate.h"
+#import "OMBConversationMessageStore.h"
 #import "OMBCosigner.h"
 #import "OMBEmployment.h"
 #import "OMBFavoritesListConnection.h"
@@ -17,6 +18,7 @@
 #import "OMBLegalAnswer.h"
 #import "OMBMessage.h"
 #import "OMBMessageDetailConnection.h"
+#import "OMBMessagesUnviewedCountConnection.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
@@ -44,23 +46,12 @@ NSString *const OMBUserLoggedInNotification  = @"OMBUserLoggedInNotification";
 // User posts this after sending current user logout message to itself
 NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
+NSString *const OMBMessagesUnviewedCountNotification =
+  @"OMBMessagesUnviewedCountNotification";
+
+int kNotificationTimerInterval = 30;
+
 @implementation OMBUser
-
-@synthesize about               = _about;
-@synthesize accessToken         = _accessToken;
-@synthesize email               = _email;
-@synthesize facebookAccessToken = _facebookAccessToken;
-@synthesize facebookId          = _facebookId;
-@synthesize firstName           = _firstName;
-@synthesize lastName            = _lastName;
-@synthesize phone               = _phone;
-@synthesize school              = _school;
-@synthesize userType            = _userType;
-
-@synthesize favorites           = _favorites;
-@synthesize image               = _image;
-@synthesize imageURL            = _imageURL;
-@synthesize uid                 = _uid;
 
 #pragma mark - Initializer
 
@@ -72,14 +63,17 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _messages            = [NSMutableDictionary dictionary];
   _renterApplication   = [[OMBRenterApplication alloc] init];
-  _residences          = [NSMutableDictionary dictionary];
+  _residences          = [NSMutableDictionary dictionaryWithDictionary: @{
+    @"residences":          [NSMutableDictionary dictionary],
+    @"temporaryResidences": [NSMutableDictionary dictionary]
+  }];
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(sessionStateChanged:)
       name: FBSessionStateChangedNotification object: nil];
-  [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(logout)
-      name: OMBCurrentUserLogoutNotification object: nil];
+  // [[NSNotificationCenter defaultCenter] addObserver: self
+  //   selector: @selector(logout)
+  //     name: OMBCurrentUserLogoutNotification object: nil];
 
   return self;
 }
@@ -209,8 +203,21 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
 - (void) addResidence: (OMBResidence *) residence
 {
-  [_residences setObject: residence
-    forKey: [NSNumber numberWithInt: residence.uid]];
+  NSString *classString;
+  if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
+    classString = @"temporaryResidences";
+  }
+  else {
+    classString = @"residences";
+  }
+  NSMutableDictionary *dict = [_residences objectForKey: classString];
+  NSNumber *key = [NSNumber numberWithInt: residence.uid];
+  if ([dict objectForKey: key]) {
+    [[dict objectForKey: key] updateResidenceWithResidence: residence];
+  }
+  else {
+    [dict setObject: residence forKey: key];
+  }
 }
 
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence
@@ -277,6 +284,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [conn start];
 }
 
+- (void) fetchNotificationCounts: (NSTimer *) timer
+{
+  OMBMessagesUnviewedCountConnection *conn =
+    [[OMBMessagesUnviewedCountConnection alloc] init];
+  [conn start];
+}
+
 - (NSString *) fullName
 {
   NSString *nameString = @"";
@@ -309,18 +323,30 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (void) logout
 {
-  _accessToken         = nil;
-  _email               = nil;
-  _facebookAccessToken = nil;
-  _facebookId          = nil;
-  _firstName           = nil;
-  _image               = nil;
-  _imageURL            = nil;
-  _lastName            = nil;
-  _userType            = nil;
-  _uid                 = 0;
-  [_favorites removeAllObjects];
-  [_renterApplication removeAllObjects];
+  [OMBUser currentUser].about               = @"";
+  [OMBUser currentUser].accessToken         = @"";
+  [OMBUser currentUser].email               = @"";
+  [OMBUser currentUser].facebookAccessToken = @"";
+  [OMBUser currentUser].facebookId          = @"";
+  [OMBUser currentUser].firstName           = @"";
+  [OMBUser currentUser].lastName            = @"";
+  [OMBUser currentUser].phone               = @"";
+  [OMBUser currentUser].school              = @"";
+  [OMBUser currentUser].userType            = @"";
+
+  [[OMBUser currentUser].favorites removeAllObjects];
+  [OMBUser currentUser].image    = nil;
+  [[OMBUser currentUser].imageSizeDictionary removeAllObjects];
+  [OMBUser currentUser].imageURL = nil;
+  [[OMBUser currentUser].messages removeAllObjects];
+  [[OMBUser currentUser].notificationFetchTimer invalidate];
+  [[OMBUser currentUser].renterApplication removeAllObjects];
+  [[OMBUser currentUser].residences removeAllObjects];
+  [OMBUser currentUser].uid = 0;
+
+  // Clear conversations
+  [[OMBConversationMessageStore sharedStore].messages removeAllObjects];
+
   [[NSNotificationCenter defaultCenter] postNotificationName: 
     OMBUserLoggedOutNotification object: nil];
 }
@@ -386,7 +412,10 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   _about       = [dictionary objectForKey: @"about"];
   if (!_about)
     _about = @"";
-  _accessToken = [dictionary objectForKey: @"access_token"];
+  if ([dictionary objectForKey: @"access_token"])
+    _accessToken = [dictionary objectForKey: @"access_token"];
+  else
+    _accessToken = @"";
   _email       = [dictionary objectForKey: @"email"];
   if ([dictionary objectForKey: @"first_name"] != [NSNull null])
     _firstName = [dictionary objectForKey: @"first_name"];
@@ -427,6 +456,17 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
   // Add to the OMBUserStore
   [[OMBUserStore sharedStore] addUser: self];
+
+  // If this user instance is the current user using the app
+  if ([_accessToken length] > 0) {
+    _notificationFetchTimer = [NSTimer timerWithTimeInterval: 
+      kNotificationTimerInterval target: self
+        selector: @selector(fetchNotificationCounts:) userInfo: nil 
+          repeats: YES];
+    // NSRunLoopCommonModes, mode used for tracking events
+    [[NSRunLoop currentRunLoop] addTimer: _notificationFetchTimer
+      forMode: NSRunLoopCommonModes];
+  }
 }
 
 - (void) readFromEmploymentDictionary: (NSDictionary *) dictionary
@@ -552,13 +592,16 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     if ([className isEqualToString: @"residence"]) {
       OMBResidence *residence = [[OMBResidence alloc] init];
       [residence readFromResidenceDictionary: dict];
-      [[OMBResidenceStore sharedStore] addResidence: residence];
+
       [self addResidence: residence];
+
+      [[OMBResidenceStore sharedStore] addResidence: residence];
     }
     else {
       OMBTemporaryResidence *temporaryResidence = 
         [[OMBTemporaryResidence alloc] init];
       [temporaryResidence readFromResidenceDictionary: dict];
+
       [self addResidence: temporaryResidence];
     }
   }
@@ -566,7 +609,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (void) removeResidence: (OMBResidence *) residence
 {
-  [_residences removeObjectForKey: [NSNumber numberWithInt: residence.uid]];
+  NSString *classString;
+  if ([residence isKindOfClass: [OMBTemporaryResidence class]])
+    classString = @"temporaryResidences";
+  else
+    classString = @"residences";
+  NSMutableDictionary *dict = [_residences objectForKey: classString];
+  [dict removeObjectForKey: [NSNumber numberWithInt: residence.uid]];
 }
 
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence
@@ -592,7 +641,11 @@ ascending: (BOOL) ascending
 {
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
     ascending: ascending];
-  return [[_residences allValues] sortedArrayUsingDescriptors: @[sort]];
+  NSMutableArray *array = [NSMutableArray array];
+  for (NSDictionary *dict in [_residences allValues]) {
+    [array addObjectsFromArray: [dict allValues]];
+  }
+  return [array sortedArrayUsingDescriptors: @[sort]];
 }
 
 - (void) sessionStateChanged: (NSNotification *) notification

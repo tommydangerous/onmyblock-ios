@@ -145,7 +145,7 @@
 - (void) showMyRenterApp;
 - (void) showOfferAccepted;
 - (void) showRenterApplication;
-- (void) showSearch;
+- (void) showSearchAndSwitchToList: (BOOL) switchToList;
 - (void) showSignUp;
 - (void) showMenuWithFactor: (float) factor;
 

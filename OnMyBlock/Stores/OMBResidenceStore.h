@@ -29,6 +29,7 @@
 completion: (void (^)(NSError *error)) completion;
 - (NSArray *) propertiesFromAnnotations: (NSSet *) annotations 
 sortedBy: (NSString *) string ascending: (BOOL) ascending;
+- (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) readFromPropertiesDictionary: (NSDictionary *) dictionary;
 
 @end

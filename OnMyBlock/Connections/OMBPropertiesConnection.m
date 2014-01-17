@@ -19,7 +19,7 @@
   if (self) {
     // http://localhost:3000/properties.json?
     NSString *string = [NSString stringWithFormat:
-      @"%@/properties/?", OnMyBlockAPIURL];
+      @"%@/places/?", OnMyBlockAPIURL];
     // Add parameters to the end of string
     // e.g. bounds=[-117.0459,32.836,-117.2931,32.7687]
     for (NSString *key in [parameters allKeys]) {
@@ -54,7 +54,7 @@
   // ]
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
-  [[OMBResidenceStore sharedStore] readFromPropertiesDictionary: json];
+  [[OMBResidenceStore sharedStore] readFromDictionary: json];
   [super connectionDidFinishLoading: connection];
 }
 

@@ -111,7 +111,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!cell)
     cell = [[OMBManageListingsCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
-  // [cell loadResidenceData: [[self listings] objectAtIndex: indexPath.row]];
+  [cell loadResidenceData: [[self listings] objectAtIndex: indexPath.row]];
   return cell;
 }
 
@@ -127,7 +127,7 @@ numberOfRowsInSection: (NSInteger) section
 didEndDisplayingCell: (UITableViewCell *) cell 
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  [(OMBManageListingsCell *) cell clearImage];
+  // [(OMBManageListingsCell *) cell clearImage];
 }
 
 - (void) tableView: (UITableView *) tableView
@@ -150,10 +150,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 willDisplayCell: (UITableViewCell *) cell 
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  if ([[self listings] count]) {
-    [(OMBManageListingsCell *) cell loadResidenceData: 
-      [[self listings] objectAtIndex: indexPath.row]];
-  }
+  // if ([[self listings] count]) {
+  //   [(OMBManageListingsCell *) cell loadResidenceData: 
+  //     [[self listings] objectAtIndex: indexPath.row]];
+  // }
 }
 
 #pragma mark - Methods

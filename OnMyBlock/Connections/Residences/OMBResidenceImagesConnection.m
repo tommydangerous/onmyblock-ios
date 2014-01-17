@@ -55,8 +55,6 @@
   // }  
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
-  NSLog(@"OMBResidenceImagesConnection");
-  NSLog(@"%@", json);
   NSArray *array = (NSArray *) [json objectForKey: @"images"];
   if ([self.delegate isKindOfClass: [OMBResidenceDetailViewController class]]) {
     OMBResidenceDetailViewController *viewController = 

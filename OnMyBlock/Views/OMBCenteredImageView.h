@@ -22,6 +22,7 @@
 #pragma mark - Instance Methods
 
 - (void) clearImage;
+- (void) setFrame: (CGRect) rect redrawImage: (BOOL) redraw;
 - (void) setImage: (UIImage *) object;
 
 @end

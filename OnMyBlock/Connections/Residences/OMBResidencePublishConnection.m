@@ -54,6 +54,9 @@
       // [[OMBUser currentUser] addResidence: res];
       // [[OMBUser currentUser].residences removeAllObjects];
     }
+    else {
+      residence.inactive = NO;
+    }
     // Remove the temporary residence from the user's residence
 
     // Add the new residence to the user's residence

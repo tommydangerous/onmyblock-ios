@@ -659,8 +659,9 @@ willDecelerate: (BOOL) decelerate
 {
   // This is received by OMBUser and 
   // then OMBUser posts OMBUserLoggedOutNotification
-  [[NSNotificationCenter defaultCenter] postNotificationName:
-    OMBCurrentUserLogoutNotification object: nil];
+  // [[NSNotificationCenter defaultCenter] postNotificationName:
+  //   OMBCurrentUserLogoutNotification object: nil];
+  [[OMBUser currentUser] logout];
   // Remove the account view
   [_accountView removeFromSuperview];
   // Adjust the intro view
@@ -1028,12 +1029,18 @@ willDecelerate: (BOOL) decelerate
 
 - (void) showSearch
 {
+  [self showSearchAndSwitchToList: YES];
+}
+
+- (void) showSearchAndSwitchToList: (BOOL) switchToList
+{
   [self presentViewController: _mapFilterNavigationController
     animated: YES completion: ^{
       OMBMapViewController *mapViewController = (OMBMapViewController *)
         [_mapNavigationController.viewControllers firstObject];
       [_mapNavigationController popToRootViewControllerAnimated: NO];
-      [mapViewController switchToListView];
+      if (switchToList)
+        [mapViewController switchToListView];
       [self hideMenuWithFactor: 1.0f];
       [self presentDetailViewController: _mapNavigationController];
     }];

@@ -11,6 +11,7 @@
 #import "OMBCenteredImageView.h"
 #import "OMBResidence.h"
 #import "OMBResidenceCoverPhotoURLConnection.h"
+#import "OMBTemporaryResidence.h"
 #import "UIImage+Color.h"
 
 @implementation OMBManageListingsCell
@@ -49,7 +50,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat propertyTypeHeight = 20.0f;
   propertyTypeLabel = [UILabel new];
   propertyTypeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
-    size: 14];
+    size: 13];
   propertyTypeLabel.frame = CGRectMake(addressLabel.frame.origin.x,
     [OMBManageListingsCell heightForCell] - (propertyTypeHeight + padding),
       0.0f, propertyTypeHeight);
@@ -87,7 +88,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
   residence = object;
 
   // Image
-  UIImage *image = [residence imageForSize: centeredImageView.frame.size.width];
+  NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
+    centeredImageView.frame.size.width, centeredImageView.frame.size.height];
+  UIImage *image = [residence imageForSizeKey: sizeKey];
   if (image) {
     centeredImageView.image = image;
   }
@@ -99,16 +102,19 @@ reuseIdentifier: (NSString *) reuseIdentifier
       if ([residence coverPhoto]) {
         centeredImageView.image = [residence coverPhoto];
         [residence.imageSizeDictionary setObject: centeredImageView.image
-          forKey: [NSNumber numberWithFloat: 
-            centeredImageView.frame.size.width]];
+          forKey: sizeKey];
+        [self setStatusLabelText];
       }
     };
     [conn start];
   }
 
   // Address
-  if ([residence.address length]) {
-    addressLabel.text = [residence.address capitalizedString];
+  if ([residence.address length] || [residence.title length]) {
+    if ([residence.title length])
+      addressLabel.text = [residence.title capitalizedString];
+    else
+      addressLabel.text = [residence.address capitalizedString];
   }
   else {
     addressLabel.text = [NSString stringWithFormat: @"%@ in %@",
@@ -123,22 +129,54 @@ reuseIdentifier: (NSString *) reuseIdentifier
       addressRect.size.height);
 
   // Property
-  propertyTypeLabel.text = residence.propertyType;
+  propertyTypeLabel.text = [residence.propertyType capitalizedString];
+  // NSString *class = @"residence";
+  // if ([residence isKindOfClass: [OMBTemporaryResidence class]])
+  //   class = @"temporaryResidence";
+  // propertyTypeLabel.text = [NSString stringWithFormat: @"(%@)", class];
   CGRect propertyRect = [propertyTypeLabel.text boundingRectWithSize:
     CGSizeMake(addressLabel.frame.size.width, 
       propertyTypeLabel.frame.size.height) font: propertyTypeLabel.font];
   propertyTypeLabel.frame = CGRectMake(propertyTypeLabel.frame.origin.x,
     propertyTypeLabel.frame.origin.y,
       propertyRect.size.width, propertyTypeLabel.frame.size.height);
+
+  [self setStatusLabelText];
 }
 
-- (void) setStatusLabelText: (NSString *) string
+- (void) setStatusLabelText
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenWidth = screen.size.width;
   CGFloat padding = 10.0f;
 
-  _statusLabel.text = string;
+  NSString *statusString = @"";
+  if ([residence numberOfStepsLeft]) {
+    NSString *stepsString = @"steps";
+    if ([residence numberOfStepsLeft] == 1)
+      stepsString = @"step";
+    statusString = [NSString stringWithFormat: @"%i %@", 
+      [residence numberOfStepsLeft], stepsString];
+    _statusLabel.textColor = [UIColor blue];
+  }
+  else {
+    if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
+      statusString = @"Ready";
+      _statusLabel.textColor = [UIColor pink];
+    }
+    else {
+      if (residence.inactive) {
+        statusString = @"Unlisted";
+        _statusLabel.textColor = [UIColor redColor];
+      }
+      else {
+        statusString = @"Listed";
+        _statusLabel.textColor = [UIColor green];
+      }
+    }
+  }
+
+  _statusLabel.text = statusString;
   CGRect statusRect = [_statusLabel.text boundingRectWithSize: CGSizeMake(
     addressLabel.frame.size.width, _statusLabel.frame.size.height) 
       font: _statusLabel.font];

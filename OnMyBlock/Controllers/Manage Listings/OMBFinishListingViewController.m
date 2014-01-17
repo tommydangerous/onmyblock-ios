@@ -26,6 +26,8 @@
 #import "OMBResidenceImagesConnection.h"
 #import "OMBResidencePublishConnection.h"
 #import "OMBResidenceUploadImageConnection.h"
+#import "OMBResidenceUpdateConnection.h"
+#import "OMBTemporaryResidence.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
@@ -56,13 +58,18 @@
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat padding = 20.0f;
 
-  UIBarButtonItem *previewBarButtonItem = 
+  previewBarButtonItem = 
     [[UIBarButtonItem alloc] initWithTitle: @"Preview" 
       style: UIBarButtonItemStylePlain target: self action: @selector(preview)];
   [previewBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
   } forState: UIControlStateNormal];
-  self.navigationItem.rightBarButtonItem = previewBarButtonItem;
+  unlistBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithTitle: @"Unlist" 
+      style: UIBarButtonItemStylePlain target: self action: @selector(unlist)];
+  [unlistBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
+  } forState: UIControlStateNormal];
 
   self.view.backgroundColor = [UIColor clearColor];
   [self setupForTable];
@@ -149,6 +156,10 @@
   addPhotosLabel.textColor = [UIColor whiteColor];
   [cameraView addSubview: addPhotosLabel];
 
+
+    activityView = [[OMBActivityView alloc] init];
+    [self.view addSubview: activityView];
+
   // Steps Remaining view
   // stepsRemainingView = [[AMBlurView alloc] init];
   // stepsRemainingView.blurTintColor = [UIColor grayVeryLight];
@@ -192,7 +203,9 @@
     [[OMBResidenceImagesConnection alloc] initWithResidence: residence];
   conn.completionBlock = ^(NSError *error) {
     // Add the cover photo
-    headerImageView.image = [residence coverPhoto];
+    if (!headerImageView.image)
+      headerImageView.image = [residence coverPhoto];
+
     // Update the Photos (X) count
     [self reloadPhotosRow];
   };
@@ -213,17 +226,32 @@
   [self.table reloadData];
 
   // Calculate how many steps are left
-  NSInteger stepsRemaining = [self stepsRemaining];
   NSString *publishNowButtonTitle = @"Publish Now";
-  if (stepsRemaining > 0) {
-    NSString *stepsString = @"Steps";
-    if (stepsRemaining == 1)
-      stepsString = @"Step";
-    publishNowButtonTitle = [NSString stringWithFormat: @"%i More %@",
-      stepsRemaining, stepsString];
-  }
+  if ([residence numberOfStepsLeft] > 0)
+    publishNowButtonTitle = [residence statusString];
   [publishNowButton setTitle: publishNowButtonTitle 
     forState: UIControlStateNormal];
+
+  // If the residence is a temporary residence
+  if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
+    self.navigationItem.rightBarButtonItem = previewBarButtonItem;
+  }
+  // If a residence
+  else {
+    // If inactive
+    if (residence.inactive) {
+      self.navigationItem.rightBarButtonItem = previewBarButtonItem;
+    }
+    else {
+      self.navigationItem.rightBarButtonItem = unlistBarButtonItem;
+      publishNowView.hidden = YES;
+      // Table footer view
+      UIView *footerView = [UIView new];
+      footerView.frame = CGRectMake(0.0f, 0.0f, 
+        self.table.frame.size.width, 0.0f);
+      self.table.tableFooterView = footerView;
+    }
+  }
 
   // for (int i = 0; i < numberOfSteps; i++) {
   //   AMBlurView *stepView = [stepViews objectAtIndex: i];
@@ -324,7 +352,7 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
   // Adjust the header image view
   CGRect headerImageFrame = headerImageView.frame;  
   headerImageFrame.origin.y = headerImageOffsetY - adjustment;
-  headerImageView.frame = headerImageFrame;
+  [headerImageView setFrame: headerImageFrame redrawImage: NO];
   headerImageViewGradient.frame = headerImageFrame;
   // Adjust the camera view
   CGRect cameraViewRect = cameraView.frame;
@@ -400,7 +428,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Rent / Auction Details
   else if (indexPath.row == 3) {
-    string = @"Rent / Auction Details";
+    // string = @"Rent / Auction Details";
+    string = @"Rent Details";
     if (residence.minRent) {
       cell.textLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
@@ -544,19 +573,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) publishNow
 {
-  if ([self stepsRemaining]) {
+  NSInteger numberOfStepsLeft = [residence numberOfStepsLeft];
+  if (numberOfStepsLeft) {
     NSString *stepsString = @"steps";
-    if ([self stepsRemaining] == 1)
+    if (numberOfStepsLeft == 1)
       stepsString = @"step";
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
       @"Almost Finished" message: [NSString stringWithFormat: 
-        @"%i more %@ to go.", [self stepsRemaining], stepsString] delegate: nil 
+        @"%i more %@ to go.", numberOfStepsLeft, stepsString] delegate: nil 
           cancelButtonTitle: @"Continue" otherButtonTitles: nil];
     [alertView show];
   }
   else {
-    OMBActivityView *activityView = [[OMBActivityView alloc] init];
-    [self.view addSubview: activityView];
     [activityView startSpinning];
 
     OMBResidencePublishConnection *conn = 
@@ -585,30 +613,35 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       withRowAnimation: UITableViewRowAnimationNone];
 }
 
-- (NSInteger) stepsRemaining
+- (void) unlist
 {
-  NSInteger stepsRemaining = numberOfSteps;
-  // Photos
-  if ([[residence imagesArray] count])
-    stepsRemaining -= 1;
-  // Title
-  if ([residence.title length])
-    stepsRemaining -= 1;
-  // Description
-  if ([residence.description length])
-    stepsRemaining -= 1;
-  // Rent / Auction Details
-  if (residence.minRent)
-    stepsRemaining -= 1;
-  // Address
-  if ([residence.address length] && [residence.city length] && 
-    [residence.state length] && [residence.zip length])
-    stepsRemaining -= 1;
-  // Additional Details
-  if (residence.moveInDate)
-    stepsRemaining -= 1;
+  [activityView startSpinning];
 
-  return stepsRemaining;
+  residence.inactive = YES;
+  OMBResidenceUpdateConnection *conn = 
+    [[OMBResidenceUpdateConnection alloc] initWithResidence: residence
+      attributes: @[@"inactive"]];
+  conn.completionBlock = ^(NSError *error) {
+    if (error) {
+      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Error" 
+        message: @"Please try again" delegate: nil 
+          cancelButtonTitle: @"OK"
+            otherButtonTitles: nil];
+      [alertView show];
+    }
+    else {
+      [self.navigationItem setRightBarButtonItem: previewBarButtonItem
+        animated: YES];
+      publishNowView.hidden = NO;
+      // Table footer view
+      UIView *footerView = [UIView new];
+      footerView.frame = CGRectMake(0.0f, 0.0f, 
+        self.table.frame.size.width, publishNowView.frame.size.height);
+      self.table.tableFooterView = footerView;
+    }
+    [activityView stopSpinning];
+  };
+  [conn start];
 }
 
 @end

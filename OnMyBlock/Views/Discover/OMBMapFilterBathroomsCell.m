@@ -8,6 +8,8 @@
 
 #import "OMBMapFilterBathroomsCell.h"
 
+#import "OMBMapFilterViewController.h"
+
 @implementation OMBMapFilterBathroomsCell
 
 #pragma mark - Initialize
@@ -30,14 +32,33 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 #pragma mark - Instance Methods
 
+- (void) buttonSelected: (UIButton *) button
+{
+  [self resetButtons];
+
+  [super buttonSelected: button];
+
+  NSNumber *key = [NSNumber numberWithInt: button.tag];
+  NSNumber *number = [self.selectedButtons objectForKey: key];
+  BOOL selected = [number boolValue];
+  if (selected) {
+    [[(OMBMapFilterViewController *) self.delegate valuesDictionary] setObject:
+      [NSNumber numberWithInt: button.tag + 1] forKey: @"bathrooms"];
+  }
+  else {
+    [[(OMBMapFilterViewController *) self.delegate valuesDictionary] setObject:
+      [NSNull null] forKey: @"bathrooms"];
+  }
+}
+
 - (void) setupButtonTitles
 {
   for (int i = 0; i < self.maxButtons; i++) {
     UIButton *button = [self.buttons objectAtIndex: i];
-    NSString *string = [NSString stringWithFormat: @"%i", i + 1];
-    if (i == self.maxButtons - 1) {
-      string = [string stringByAppendingString: @"+"];
-    }
+    NSString *string = [NSString stringWithFormat: @"%i+", i + 1];
+    // if (i == self.maxButtons - 1) {
+    //   string = [string stringByAppendingString: @"+"];
+    // }
     [button setTitle: string forState: UIControlStateNormal];
   }
 }

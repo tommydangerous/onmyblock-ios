@@ -27,6 +27,6 @@
 
 - (void) clearImage;
 - (void) loadResidenceData: (OMBResidence *) object;
-- (void) setStatusLabelText: (NSString *) string;
+- (void) setStatusLabelText;
 
 @end

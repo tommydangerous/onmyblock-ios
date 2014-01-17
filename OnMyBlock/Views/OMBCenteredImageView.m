@@ -57,6 +57,15 @@
     [self setImage: _image];
 }
 
+- (void) setFrame: (CGRect) rect redrawImage: (BOOL) redraw
+{
+  [super setFrame: rect];
+  height = self.frame.size.height;
+  width  = self.frame.size.width;
+  if (redraw && _image)
+    [self setImage: _image];
+}
+
 - (void) setImage: (UIImage *) object
 {
   _image = object;

@@ -40,7 +40,8 @@
   if (!residence.auctionStartDate)
     residence.auctionStartDate = [[NSDate date] timeIntervalSince1970];
 
-  self.screenName = self.title = @"Rent / Auction Details";
+  // self.screenName = self.title = @"Rent / Auction Details";
+  self.screenName = self.title = @"Rent Details";
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(keyboardWillShow:)
@@ -79,8 +80,10 @@
   self.table            = nil;
 
   // Segmented control
+  // segmentedControl = [[UISegmentedControl alloc] initWithItems: 
+  //   @[@"Rental Auction", @"Fixed Rental Price"]];
   segmentedControl = [[UISegmentedControl alloc] initWithItems: 
-    @[@"Rental Auction", @"Fixed Rental Price"]];
+    @[@"Fixed Rental Price"]];
   segmentedControl.backgroundColor = [UIColor whiteColor];
   segmentedControl.frame = CGRectMake(padding, 20.0f + 44.0f + padding,
     screenWidth - (padding * 2), segmentedControl.frame.size.height);
@@ -177,14 +180,21 @@
 {
   [super viewWillAppear: animated];
 
-  if (!residence.isAuction) {
-    segmentedControl.selectedSegmentIndex = 1;
-    [self segmentedControlChanged: segmentedControl];
+  // residence.isAuction = NO;
 
-    if (residence.minRent)
-      fixedRentalPriceTextField.text = [NSString stringWithFormat: @"%.2f",
-        residence.minRent];
-  }
+  // if (!residence.isAuction) {
+  //   segmentedControl.selectedSegmentIndex = 1;
+  //   [self segmentedControlChanged: segmentedControl];
+
+  //   if (residence.minRent)
+  //     fixedRentalPriceTextField.text = [NSString stringWithFormat: @"%.2f",
+  //       residence.minRent];
+  // }
+  [self segmentedControlChanged: segmentedControl];
+
+  if (residence.minRent)
+    fixedRentalPriceTextField.text = [NSString stringWithFormat: @"%.2f",
+      residence.minRent];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -775,16 +785,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) segmentedControlChanged: (UISegmentedControl *) control
 {
-  // Show Rental Auction
-  if (control.selectedSegmentIndex == 0) {
-    auctionTableView.hidden     = NO;
-    fixedRentalPriceView.hidden = YES;
-    [self.view endEditing: YES];
-
-    residence.isAuction = YES;
-  }
   // Show Fixed Rental Price
-  else if (control.selectedSegmentIndex == 1) {
+  if (control.selectedSegmentIndex == 0) {
     auctionTableView.hidden     = YES;
     fixedRentalPriceView.hidden = NO;
     [fixedRentalPriceTextField becomeFirstResponder];
@@ -792,6 +794,24 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
     residence.isAuction = NO;
   }
+
+  // Show Rental Auction
+  // if (control.selectedSegmentIndex == 0) {
+  //   auctionTableView.hidden     = NO;
+  //   fixedRentalPriceView.hidden = YES;
+  //   [self.view endEditing: YES];
+
+  //   residence.isAuction = YES;
+  // }
+  // // Show Fixed Rental Price
+  // else if (control.selectedSegmentIndex == 1) {
+  //   auctionTableView.hidden     = YES;
+  //   fixedRentalPriceView.hidden = NO;
+  //   [fixedRentalPriceTextField becomeFirstResponder];
+  //   [self.navigationItem setRightBarButtonItem: saveBarButtonItem];
+
+  //   residence.isAuction = NO;
+  // }
 }
 
 - (void) textFieldDidChange: (TextFieldPadding *) textField

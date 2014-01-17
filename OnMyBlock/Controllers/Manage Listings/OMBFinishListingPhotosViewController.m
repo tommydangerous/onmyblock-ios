@@ -309,8 +309,6 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 - (void) createViewsFromImages
 {
   for (OMBResidenceImage *residenceImage in [residence imagesArray]) {
-    NSLog(@"RESIDENCE IMAGE POSITION: %i - %i", 
-      residenceImage.uid, residenceImage.position);
     OMBEditablePhotoView *imageView = [[OMBEditablePhotoView alloc] init];
     imageView.image = residenceImage.image;
     imageView.residenceImage = residenceImage;
@@ -375,8 +373,6 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
       // itemView.transform = CGAffineTransformIdentity;
     }];
     itemView.residenceImage.position = [imageViews indexOfObject: itemView];
-    NSLog(@"%i: %i", itemView.residenceImage.uid, 
-      [imageViews indexOfObject: itemView]);
     // Save the positions of the images
     [[[OMBResidenceImageUpdateConnection alloc] initWithResidenceImage:
       itemView.residenceImage] start];
@@ -401,6 +397,9 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
       coverPhotoHeight + ((spacing + imageHeight) * 
         ([imageViews count] + 1) / maxColumns));
   }];
+
+  // Clear the residences imageSizeDictionary
+  [residence.imageSizeDictionary removeAllObjects];
 }
 
 - (void) edit

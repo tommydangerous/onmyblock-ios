@@ -78,7 +78,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view     = [[UIView alloc] initWithFrame: screen];
-  CGFloat screeWidth = screen.size.width;
+  CGFloat screenHeight = screen.size.height;
+  CGFloat screenWidth = screen.size.width;
   CGFloat padding = 20.0f;
 
   // Navigation item
@@ -133,7 +134,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   sortLabel.text = @"Sort";
   sortLabel.textColor = [UIColor whiteColor];
   CGRect sortRect = [sortLabel.text boundingRectWithSize: 
-    CGSizeMake(screeWidth, sortLabel.frame.size.height) 
+    CGSizeMake(screenWidth, sortLabel.frame.size.height) 
       options: NSStringDrawingUsesLineFragmentOrigin
         attributes: @{ NSFontAttributeName: sortLabel.font }
           context: nil];
@@ -144,14 +145,14 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   sortSelectionLabel = [[UILabel alloc] init];
   sortSelectionLabel.font = sortLabel.font;
   sortSelectionLabel.frame = CGRectMake(0.0f, sortLabel.frame.origin.y, 
-    screeWidth, sortLabel.frame.size.height);
+    screenWidth, sortLabel.frame.size.height);
   sortSelectionLabel.textAlignment = NSTextAlignmentCenter;
   sortSelectionLabel.textColor = sortLabel.textColor;
   [sortView addSubview: sortSelectionLabel];
   // Sort arrow
   CGFloat sortArrowSize = sortLabel.frame.size.height - padding;
   sortArrow = [[UIImageView alloc] init];
-  sortArrow.frame = CGRectMake(screeWidth - (sortArrowSize + padding), 
+  sortArrow.frame = CGRectMake(screenWidth - (sortArrowSize + padding), 
     sortLabel.frame.origin.y + 
     ((sortLabel.frame.size.height - sortArrowSize) * 0.5), 
       sortArrowSize, sortArrowSize);
@@ -216,7 +217,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   _listView.frame                        = screen;
   _listView.separatorColor               = [UIColor clearColor];
   _listView.separatorStyle               = UITableViewCellSeparatorStyleNone;
-  _listView.showsVerticalScrollIndicator = NO;
+  // _listView.showsVerticalScrollIndicator = NO;
   // _listView.tableHeaderView = [[UIView alloc] initWithFrame: 
   //   CGRectMake(0.0f, 0.0f, _listView.frame.size.width, 44.0f)];
   [_listViewContainer insertSubview: _listView atIndex: 0];
@@ -238,19 +239,19 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // Filter
   // View
   filterView = [[UIView alloc] init];
-  filterView.backgroundColor = [UIColor grayDarkAlpha: 0.8];
-  filterView.frame = CGRectMake(0, (20 + 44), screen.size.width, 30);
+  filterView.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
+  filterView.frame = CGRectMake(0.0f, screenHeight - 20.0f, screenWidth, 20.0f);
   filterView.hidden = YES;
   [self.view addSubview: filterView];
   // Label
   filterLabel = [[UILabel alloc] init];
   filterLabel.backgroundColor = [UIColor clearColor];
-  filterLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  filterLabel.frame = CGRectMake(10, 0, (filterView.frame.size.width - 20),
-    filterView.frame.size.height);
+  filterLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
+  filterLabel.frame = CGRectMake(10.0f, 0.0f, 
+    filterView.frame.size.width - (10 * 2), filterView.frame.size.height);
   filterLabel.text = @"";
   filterLabel.textAlignment = NSTextAlignmentCenter;
-  filterLabel.textColor = [UIColor whiteColor];
+  filterLabel.textColor = [UIColor textColor];
   [filterView addSubview: filterLabel];
 
   // Current location button
@@ -281,6 +282,11 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     [[UITapGestureRecognizer alloc] initWithTarget:
       self action: @selector(showResidenceDetailViewController)];
   [propertyInfoView addGestureRecognizer: tap];
+
+  // Activity indicator view
+  // activityIndicatorView = 
+  //   [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
+  //     UIActivityIndicatorViewStyleWhite];
 }
 
 - (void) viewDidAppear: (BOOL) animated
@@ -341,8 +347,14 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       [self resetListViewResidences];
       [self fetchResidencesForList];
     }
+    else {
+      [self setMapViewRegion: centerCoordinate withMiles: 4 animated: NO];
+    }
     [self appDelegate].container.mapFilterViewController.shouldSearch = NO;
   }
+
+  // Check any filter values and display them
+  [self updateFilterLabel];
 }
 
 #pragma mark - Protocol
@@ -373,45 +385,27 @@ didUpdateLocations: (NSArray *) locations
   annotation.coordinate = coordinate;
   [_mapView addAnnotation: annotation];
   [_mapView removeAnnotation: annotation];
-  // [self addAnnotationAtCoordinate: coordinate];
-  // NSLog(@"Center: %f, %f", coordinate.latitude, coordinate.longitude);
 
   MKCoordinateRegion region = map.region;
   float maxLatitude, maxLongitude, minLatitude, minLongitude;
   // Northwest = maxLatitude, minLongitude
   maxLatitude  = region.center.latitude + (region.span.latitudeDelta / 2.0);
   minLongitude = region.center.longitude - (region.span.longitudeDelta / 2.0);
-  // NSLog(@"Northwest: %f, %f", maxLatitude, minLongitude);
-  // Southeat = minLatitude, maxLongitude
   minLatitude  = region.center.latitude - (region.span.latitudeDelta / 2.0);
-  maxLongitude = region.center.longitude + (region.span.longitudeDelta / 2.0);
-  // NSLog(@"Southeast: %f, %f", minLatitude, maxLongitude);
-
-  // Fetch properties with parameters
-  // NSString *bath = [NSString stringWithFormat: @"%@",
-  //   mapFilterViewController.bath ? mapFilterViewController.bath : @""];
-  // NSString *beds = 
-  //   [[mapFilterViewController.beds allValues] componentsJoinedByString: 
-  //     @","];
+  maxLongitude = region.center.longitude + (region.span.longitudeDelta / 2.0);  
   NSString *bounds = [NSString stringWithFormat: @"[%f,%f,%f,%f]",
     minLongitude, maxLatitude, maxLongitude, minLatitude];
-  // NSString *maxRent = [NSString stringWithFormat: @"%@",
-  //   mapFilterViewController.maxRent ? mapFilterViewController.maxRent : @""];
-  // NSString *minRent = [NSString stringWithFormat: @"%@",
-  //   mapFilterViewController.minRent ? mapFilterViewController.minRent : @""];
-  NSDictionary *parameters = @{
-    // @"ba":       bath,
-    // @"bd":       beds,
-    @"bounds":   bounds,
-    // @"max_rent": maxRent,
-    // @"min_rent": minRent
-  };
-  // parameters = [-116,32,-125,43]
-  [[OMBResidenceStore sharedStore] fetchPropertiesWithParameters: parameters
-    completion: ^(NSError *error) {
-      [self reloadTable];
+
+  NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary: 
+    @{
+      @"bounds": bounds
     }
   ];
+  if ([self mapFilterParameters] != nil)
+    [params addEntriesFromDictionary: [self mapFilterParameters]];
+
+  [[OMBResidenceStore sharedStore] fetchPropertiesWithParameters: params
+    completion: nil];
 
   [self deselectAnnotations];
   [self hidePropertyInfoView];
@@ -728,7 +722,7 @@ withTitle: (NSString *) title;
   // One degree of latitude is always approximately 111 kilometers (69 miles)
   // One degree of longitude is approximately 111 kilometers (69 miles)
 
-  _radiusInMiles += 2;
+  _radiusInMiles += 4;
 
   CGFloat maxLatitude, maxLongitude, minLatitude, minLongitude;
 
@@ -742,39 +736,13 @@ withTitle: (NSString *) title;
   minLatitude  = centerCoordinate.latitude - (degrees * 0.5f);
   maxLongitude = centerCoordinate.longitude + (degrees * 0.5f);
 
-  // Parameters
-  NSDictionary *dictionary = (NSDictionary *)
-    [self appDelegate].container.mapFilterViewController.valuesDictionary;
   // Bounds
   NSString *bounds = [NSString stringWithFormat: @"[%f,%f,%f,%f]",
     minLongitude, maxLatitude, maxLongitude, minLatitude];
-  // Min rent, max rent
-  NSNumber *minRent;
-  if ([dictionary objectForKey: @"minRent"] != [NSNull null])
-    minRent = [dictionary objectForKey: @"minRent"];
-  else
-    minRent = [NSNumber numberWithInt: 0];
-  NSNumber *maxRent;
-  if ([dictionary objectForKey: @"maxRent"] != [NSNull null])
-    maxRent = [dictionary objectForKey: @"maxRent"];
-  else
-    maxRent = [NSNumber numberWithInt: 99999];
-  if ([maxRent intValue] == 0 && [minRent intValue] == 0) {
-    maxRent = [NSNumber numberWithInt: 99999];
-  }
-  if ([maxRent intValue] < [minRent intValue]) {
-    NSNumber *tempMaxRent = maxRent;
-    NSNumber *tempMinRent = minRent;
-    maxRent = tempMinRent;
-    minRent = tempMaxRent;
-  }
-  NSDictionary *params = @{
-    @"bounds":   bounds,
-    @"bedrooms": [dictionary objectForKey: @"bedrooms"],
-    @"max_rent": maxRent,
-    @"min_rent": minRent
-  };
-  NSLog(@"%@", params);
+
+  NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:
+    [self mapFilterParameters]];
+  [params setObject: bounds forKey: @"bounds"];
 
   CGFloat currentCount = [[OMBResidenceListStore sharedStore].residences count];
   
@@ -878,6 +846,55 @@ withTitle: (NSString *) title;
   }
 }
 
+- (NSMutableDictionary *) mapFilterParameters
+{
+  // Parameters
+  NSDictionary *dictionary = (NSDictionary *)
+    [self appDelegate].container.mapFilterViewController.valuesDictionary;
+
+  if (!dictionary)
+    return nil;
+
+  // Bathrooms
+  id bathrooms = [dictionary objectForKey: @"bathrooms"];
+  if (bathrooms == [NSNull null])
+    bathrooms = @"";
+
+  // Bedrooms
+  NSString *bedrooms = [[dictionary objectForKey: 
+    @"bedrooms"] componentsJoinedByString: @","];
+
+  // Min rent, max rent
+  NSNumber *minRent;
+  if ([dictionary objectForKey: @"minRent"] != [NSNull null])
+    minRent = [dictionary objectForKey: @"minRent"];
+  else
+    minRent = [NSNumber numberWithInt: 0];
+  NSNumber *maxRent;
+  if ([dictionary objectForKey: @"maxRent"] != [NSNull null])
+    maxRent = [dictionary objectForKey: @"maxRent"];
+  else
+    maxRent = [NSNumber numberWithInt: 99999];
+  if ([maxRent intValue] == 0 && [minRent intValue] == 0) {
+    maxRent = [NSNumber numberWithInt: 99999];
+  }
+  if ([maxRent intValue] < [minRent intValue]) {
+    NSNumber *tempMaxRent = maxRent;
+    NSNumber *tempMinRent = minRent;
+    maxRent = tempMinRent;
+    minRent = tempMaxRent;
+  }
+
+  NSMutableDictionary *params = (NSMutableDictionary *) @{
+    @"bathrooms": bathrooms,
+    @"bedrooms":  bedrooms,
+    @"max_rent":  maxRent,
+    @"min_rent":  minRent
+  };
+
+  return params;
+}
+
 - (void) mapViewTapped
 {
   [self deselectAnnotations];
@@ -940,7 +957,7 @@ withMiles: (int) miles animated: (BOOL) animated
 
 - (void) showSearch
 {
-  [[self appDelegate].container showSearch];
+  [[self appDelegate].container showSearchAndSwitchToList: NO];
 }
 
 - (void) showNavigationBarAndSortView
@@ -1152,68 +1169,89 @@ withMiles: (int) miles animated: (BOOL) animated
 
 - (void) updateFilterLabel
 {
-  // filterLabel.text = @"";
-  // NSMutableArray *strings = [NSMutableArray array];
+  NSDictionary *dictionary = 
+    [self appDelegate].container.mapFilterViewController.valuesDictionary;
 
-  // // Rent
-  // NSString *maxRentString = @"";
-  // NSString *minRentString = @"";
-  // NSString *rentString    = @"";
-  // if (mapFilterViewController.maxRent)
-  //   maxRentString = [NSString numberToCurrencyString: 
-  //     [mapFilterViewController.maxRent intValue]];
-  // if (mapFilterViewController.minRent)
-  //   minRentString = [NSString numberToCurrencyString: 
-  //     [mapFilterViewController.minRent intValue]];
-  // // $1,234 - $5,678
-  // if ([maxRentString length] > 0 && [minRentString length] > 0)
-  //   rentString = [NSString stringWithFormat: @"%@ - %@", 
-  //     minRentString, maxRentString];
-  // // Below $5,678
-  // else if ([maxRentString length] > 0 && [minRentString length] == 0)
-  //   rentString = [NSString stringWithFormat: @"Below %@", maxRentString];
-  // // Above $1,234
-  // else if ([maxRentString length] == 0 && [minRentString length] > 0)
-  //   rentString = [NSString stringWithFormat: @"Above %@", minRentString];
-  // if ([rentString length] > 0)
-  //   [strings addObject: rentString];
+  filterLabel.text = @"";
+  NSMutableArray *strings = [NSMutableArray array];
 
-  // // Beds
-  // NSString *bedString = @"";
-  // NSString *lastBed   = @"";
-  // for (NSString *bed in mapFilterViewController.bedsArray) {
-  //   if ([[mapFilterViewController.beds objectForKey: bed] length] > 0) {
-  //     if ([lastBed length] > 0)
-  //       bedString = [bedString stringByAppendingString: @", "];
-  //     bedString = [bedString stringByAppendingString: bed];
-  //     lastBed = bed;
-  //   }
-  // }
-  // if ([lastBed length] > 0) {
-  //   if ([lastBed isEqualToString: @"Studio"])
-  //     lastBed = @"";
-  //   else if ([lastBed isEqualToString: @"1"])
-  //     lastBed = @" bed";
-  //   else
-  //     lastBed = @" beds";
-  // }
-  // bedString = [bedString stringByAppendingString: lastBed];
-  // if ([bedString length] > 0)
-  //   [strings addObject: bedString];
+  // Rent
+  id maxRent = [dictionary objectForKey: @"maxRent"];
+  id minRent = [dictionary objectForKey: @"minRent"];
+  NSString *maxRentString = @"";
+  NSString *minRentString = @"";
+  NSString *rentString    = @"";
+  // Max rent
+  if (maxRent != [NSNull null])
+    maxRentString = [NSString numberToCurrencyString: [maxRent intValue]];
+  // Min rent
+  if (minRent != [NSNull null])
+    minRentString = [NSString numberToCurrencyString: [minRent intValue]];
 
-  // // Bath
-  // if (mapFilterViewController.bath)
-  //   [strings addObject: [NSString stringWithFormat: @"%@+ baths", 
-  //     mapFilterViewController.bath]];
+  // $1,234 - $5,678
+  if (maxRent != [NSNull null] && [maxRent intValue] > 0 && 
+    minRent != [NSNull null] && [minRent intValue] > 0)
+    rentString = [NSString stringWithFormat: @"%@ - %@", 
+      minRentString, maxRentString];
+  // Below $5,678
+  else if ((maxRent != [NSNull null] && [maxRent intValue] > 0) &&
+    (minRent == [NSNull null] || [minRent intValue] == 0))
+    rentString = [NSString stringWithFormat: @"Below %@", maxRentString];
+  // Above $1,234
+  else if ((minRent != [NSNull null] && [minRent intValue] > 0) &&
+    (maxRent == [NSNull null] || [maxRent intValue] == 0))
+    rentString = [NSString stringWithFormat: @"Above %@", minRentString];
+  if ([rentString length] > 0)
+    [strings addObject: rentString];
 
-  // // Put everything together
-  // if ([strings count] > 0)
-  //   filterLabel.text = [strings componentsJoinedByString: @", "];
-  // // Figure out if the filter label needs to be hidden or not
-  // if ([filterLabel.text length] > 0)
-  //   filterView.hidden = NO;
-  // else
-  //   filterView.hidden = YES;
+  // Bedrooms
+  NSString *bedString = @"";
+  NSString *lastBed   = @"";
+  NSArray *bedroomsArray = 
+    [[dictionary objectForKey: @"bedrooms"] sortedArrayUsingComparator: 
+      ^(id obj1, id obj2) {
+        if ([obj1 intValue] > [obj2 intValue])
+          return (NSComparisonResult) NSOrderedDescending;
+        if ([obj1 intValue] < [obj2 intValue])
+          return (NSComparisonResult) NSOrderedAscending;
+        return (NSComparisonResult) NSOrderedSame;
+      }
+    ];
+  for (NSNumber *number in bedroomsArray) {
+    // Only add the comma if there is a string started already
+    if ([lastBed length] > 0)
+      bedString = [bedString stringByAppendingString: @", "];
+    NSString *s = [number stringValue];
+    if ([number intValue] == 0)
+      s = @"Studio";
+    bedString = [bedString stringByAppendingString: s];
+    lastBed   = s;
+  }
+  if ([lastBed length] > 0) {
+    if ([lastBed isEqualToString: @"Studio"])
+      lastBed = @"";
+    else if ([lastBed isEqualToString: @"1"])
+      lastBed = @" bed";
+    else
+      lastBed = @" beds";
+  }
+  bedString = [bedString stringByAppendingString: lastBed];
+  if ([bedString length] > 0)
+    [strings addObject: bedString];
+
+  // Bathrooms
+  if ([dictionary objectForKey: @"bathrooms"] != [NSNull null])
+    [strings addObject: [NSString stringWithFormat: @"%i+ baths", 
+      [[dictionary objectForKey: @"bathrooms"] intValue]]];
+
+  // Put everything together
+  if ([strings count] > 0)
+    filterLabel.text = [strings componentsJoinedByString: @", "];
+  // Figure out if the filter label needs to be hidden or not
+  if ([filterLabel.text length] > 0)
+    filterView.hidden = NO;
+  else
+    filterView.hidden = YES;
 }
 
 - (void) zoomClusterAtAnnotation: (OCAnnotation *) cluster

@@ -9,6 +9,7 @@
 #import "OMBUserMenu.h"
 
 #import "NSString+Extensions.h"
+#import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
@@ -18,6 +19,10 @@
 - (id) initWithFrame: (CGRect) rect
 {
   if (!(self = [super initWithFrame: rect])) return nil;
+
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(updateMessagesUnviewedCount:) 
+      name: OMBMessagesUnviewedCountNotification object: nil];
 
   _renterButtons = [NSMutableArray array];
   _sellerButtons = [NSMutableArray array];
@@ -55,12 +60,12 @@
     [UIImage imageNamed: @"search_icon.png"] 
       size: searchImageView.frame.size];
   [_searchButton addSubview: searchImageView];
-  // [_renterButtons addObject: _searchButton];
+  [_renterButtons addObject: _searchButton];
 
   // Discover
   _discoverButton = [[UIButton alloc] init];
-  _discoverButton.frame = CGRectMake(-1 * rect.size.width, 0.0f, 
-    rect.size.width, 10.0f + 40.0f + 10.0f);
+  // _discoverButton.frame = CGRectMake(-1 * rect.size.width, 0.0f, 
+  //   rect.size.width, 10.0f + 40.0f + 10.0f);
   [_discoverButton addTarget: self action: @selector(showDiscover)
     forControlEvents: UIControlEventTouchUpInside];
   [_discoverButton setTitle: @"Discover" forState: UIControlStateNormal];
@@ -187,7 +192,7 @@
   // Set attributes for buttons
   NSArray *buttonsArray = @[
     // Renter
-    // _searchButton,
+    _searchButton,
     _discoverButton, 
     _myRenterAppButton,
     _renterHomebaseButton,
@@ -222,21 +227,8 @@
       discoverImageView.frame.origin.x - (20.0f * 0.5f), 
         discoverImageView.frame.origin.y - (20.0f * 0.5f), 
           20.0f, 20.0f);
+    label.hidden = YES;
     label.layer.cornerRadius = label.frame.size.height * 0.5f;
-    int count = arc4random_uniform(20);
-    count += 1;
-    NSString *countString = [NSString stringWithFormat: @"%i", count];
-    label.text = countString;
-    if (count > 9) {
-      CGRect rect = [label.text boundingRectWithSize: CGSizeMake(99.0f,
-        label.frame.size.height) font: label.font];
-      CGRect newRect = label.frame;
-      CGFloat newWidth = rect.size.width;
-      if (newWidth < 20)
-        newWidth = 20.0f;
-      newRect.size.width = 1.0f + newWidth + 1.0f;
-      label.frame = newRect;
-    }
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor whiteColor];
   }
@@ -379,7 +371,37 @@
 
 - (void) showSearch
 {
-  [[self container] showSearch];
+  [[self container] showSearchAndSwitchToList: YES];
+}
+
+- (void) updateNotificationBadgeLabel: (UILabel *) label 
+withNumber: (NSNumber *) number
+{
+  label.layer.cornerRadius = label.frame.size.height * 0.5f;
+  int count = [number intValue];
+  if (count == 0)
+    label.hidden = YES;
+  else
+    label.hidden = NO;
+  NSString *countString = [NSString stringWithFormat: @"%i", count];
+  label.text = countString;
+  if (count > 9) {
+    CGRect rect = [label.text boundingRectWithSize: CGSizeMake(99.0f,
+      label.frame.size.height) font: label.font];
+    CGRect newRect = label.frame;
+    CGFloat newWidth = rect.size.width;
+    if (newWidth < 20)
+      newWidth = 20.0f;
+    newRect.size.width = 1.0f + newWidth + 1.0f;
+    label.frame = newRect;
+  }
+}
+
+- (void) updateMessagesUnviewedCount: (NSNotification *) notification
+{
+  NSNumber *count = [[notification userInfo] objectForKey: @"count"];
+  [self updateNotificationBadgeLabel: _inboxNotificationBadge
+    withNumber: count];
 }
 
 @end

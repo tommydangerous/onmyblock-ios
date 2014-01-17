@@ -11,6 +11,7 @@
 #import "ELCImagePickerController.h"
 
 @class AMBlurView;
+@class OMBActivityView;
 @class OMBCenteredImageView;
 @class OMBGradientView;
 @class OMBResidence;
@@ -19,16 +20,19 @@
 <ELCImagePickerControllerDelegate, UIActionSheetDelegate, 
   UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
+  OMBActivityView *activityView;
   UIView *cameraView;
   CGFloat headerImageOffsetY;
   OMBCenteredImageView *headerImageView;
   OMBGradientView *headerImageViewGradient;
   int numberOfSteps;
+  UIBarButtonItem *previewBarButtonItem;
   UIButton *publishNowButton;
   AMBlurView *publishNowView;
   OMBResidence *residence;
   AMBlurView *stepsRemainingView;
   NSMutableArray *stepViews;
+  UIBarButtonItem *unlistBarButtonItem;
 }
 
 #pragma mark - Initializer

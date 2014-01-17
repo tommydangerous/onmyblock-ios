@@ -28,6 +28,7 @@
 @property (nonatomic, strong) NSString *description;
 @property (nonatomic) BOOL dogs;
 @property (nonatomic, strong) NSString *email;
+@property (nonatomic) BOOL inactive;
 @property (nonatomic) BOOL isAuction;
 @property (nonatomic, strong) NSString *landlordName;
 @property (nonatomic) float latitude;
@@ -65,6 +66,7 @@
 
 + (NSArray *) defaultListOfAmenities;
 + (OMBResidence *) fakeResidence;
++ (NSInteger) numberOfSteps;
 
 #pragma mark Instance Methods
 
@@ -84,7 +86,8 @@
 - (NSURL *) googleStaticStreetViewImageURL;
 - (NSArray *) imagesArray;
 - (UIImage *) imageAtPosition: (int) position;
-- (UIImage *) imageForSize: (CGFloat) size;
+- (UIImage *) imageForSizeKey: (NSString *) string;
+- (NSInteger) numberOfStepsLeft;
 - (void) readFromOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromOpenHouseDictionary: (NSDictionary *) dictionary;
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary;
@@ -94,5 +97,7 @@
 - (NSString *) shareString;
 - (NSArray *) sortedOffers;
 - (NSArray *) sortedOpenHouseDates;
+- (NSString *) statusString;
+- (void) updateResidenceWithResidence: (OMBResidence *) residence;
 
 @end

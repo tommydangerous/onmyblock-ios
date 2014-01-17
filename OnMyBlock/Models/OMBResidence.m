@@ -100,6 +100,11 @@
   return residence;
 }
 
++ (NSInteger) numberOfSteps
+{
+  return 6;
+}
+
 #pragma mark Instance Methods
 
 - (void) addImage: (UIImage *) image atPosition: (int) position 
@@ -136,6 +141,7 @@ withString: (NSString *) string
 
 - (void) addResidenceImage: (OMBResidenceImage *) residenceImage
 {
+  
   NSPredicate *predicate = [NSPredicate predicateWithFormat:
     @"%K == %i", @"uid", residenceImage.uid];
   if ([[_images filteredArrayUsingPredicate: predicate] count] == 0) {
@@ -344,22 +350,51 @@ withString: (NSString *) string
   return nil;
 }
 
-- (UIImage *) imageForSize: (CGFloat) size
+- (UIImage *) imageForSizeKey: (NSString *) string
 {
-  NSNumber *key = [NSNumber numberWithFloat: size];
-  UIImage *img = [_imageSizeDictionary objectForKey: key];
-  if (!img) {
-    if ([self coverPhoto]) {
-      img = [UIImage image: [self coverPhoto] size: CGSizeMake(size, size)];
-      return img;
+  UIImage *image = [_imageSizeDictionary objectForKey: string];
+  if (!image) {
+    NSArray *words = [string componentsSeparatedByString: @","];
+    if ([words count] >= 2) {
+      NSInteger width  = [[words objectAtIndex: 0] floatValue];
+      NSInteger height = [[words objectAtIndex: 1] floatValue];
+      if ([self coverPhoto]) {
+        image = [UIImage image: [self coverPhoto] 
+          size: CGSizeMake(width, height)];
+      }
     }
   }
-  return nil;
+  return image;
 }
 
 - (void) fetchOffersWithCompletion: (void (^) (NSError *error)) block
 {
   NSLog(@"RESIDENCE FETCH OFFERS");
+}
+
+- (NSInteger) numberOfStepsLeft
+{
+  NSInteger stepsRemaining = [OMBResidence numberOfSteps];
+  // Photos
+  if ([_images count])
+    stepsRemaining -= 1;
+  // Title
+  if ([_title length])
+    stepsRemaining -= 1;
+  // Description
+  if ([_description length])
+    stepsRemaining -= 1;
+  // Rent / Auction Details
+  if (_minRent)
+    stepsRemaining -= 1;
+  // Address
+  if ([_address length] && [_city length] && [_state length] && [_zip length])
+    stepsRemaining -= 1;
+  // Additional Details
+  if (_moveInDate)
+    stepsRemaining -= 1;
+
+  return stepsRemaining;  
 }
 
 - (void) readFromOffersDictionary: (NSDictionary *) dictionary
@@ -526,6 +561,18 @@ withString: (NSString *) string
   // ID
   if ([dictionary objectForKey: @"id"] != [NSNull null])
     _uid = [[dictionary objectForKey: @"id"] intValue];
+  if  ([dictionary objectForKey: @"inactive"] != [NSNull null]) {
+    if ([[dictionary objectForKey: @"inactive"] intValue]) {
+      _inactive = YES;
+    }
+    else {
+      _inactive = NO;
+    }
+  }
+  else {
+    _inactive = NO;
+  }
+
   // Is Auction
   if ([dictionary objectForKey: @"is_auction"] != [NSNull null]) {
     if ([[dictionary objectForKey: @"is_auction"] intValue] == 1) {
@@ -657,6 +704,53 @@ withString: (NSString *) string
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"startDate"
     ascending: YES];
   return [_openHouseDates sortedArrayUsingDescriptors: @[sort]];
+}
+
+- (NSString *) statusString
+{
+  NSInteger stepsRemaining = [self numberOfStepsLeft];
+  if (stepsRemaining > 0) {
+    NSString *stepsString = @"Steps";
+    if (stepsRemaining == 1)
+      stepsString = @"Step";
+    return [NSString stringWithFormat: @"%i More %@",
+      stepsRemaining, stepsString];
+  }
+  return @"Ready to Publish";
+}
+
+- (void) updateResidenceWithResidence: (OMBResidence *) residence
+{
+  _address = residence.address;
+  _auctionDuration = residence.auctionDuration;
+  _auctionStartDate = residence.auctionStartDate;
+  _availableOn = residence.availableOn;
+  _bathrooms = residence.bathrooms;
+  _bedrooms = residence.bedrooms;
+  _cats = residence.cats;
+  _city = residence.city;
+  _createdAt = residence.createdAt;
+  _description = residence.description;
+  _dogs = residence.dogs;
+  _email = residence.email;
+  _isAuction = residence.isAuction;
+  _landlordName = residence.landlordName;
+  _latitude = residence.latitude;
+  _leaseMonths = residence.leaseMonths;
+  _leaseType = residence.leaseType;
+  _longitude = residence.longitude;
+  _minRent = residence.minRent;
+  _moveInDate = residence.moveInDate;
+  _phone = residence.phone;
+  _propertyType = residence.propertyType;
+  _rentItNowPrice = residence.squareFeet;
+  _squareFeet = residence.squareFeet;
+  _state = residence.state;
+  _title = residence.title;
+  _uid = residence.uid;
+  _unit = residence.unit;
+  _updatedAt = residence.updatedAt;
+  _zip = residence.zip;
 }
 
 @end

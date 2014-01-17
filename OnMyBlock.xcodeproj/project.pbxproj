@@ -453,6 +453,7 @@
 		ABE7069D188863B3007A4E29 /* OMBMessageCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE7069C188863B3007A4E29 /* OMBMessageCreateConnection.m */; };
 		ABE706A018889713007A4E29 /* OMBResidenceListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE7069F18889713007A4E29 /* OMBResidenceListConnection.m */; };
 		ABE706A3188899DA007A4E29 /* OMBResidenceListStore.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE706A2188899DA007A4E29 /* OMBResidenceListStore.m */; };
+		ABE706A61889984D007A4E29 /* OMBMessagesUnviewedCountConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE706A51889984D007A4E29 /* OMBMessagesUnviewedCountConnection.m */; };
 		ABF18BA41816BC53002DD723 /* marker_circle_deselected.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA01816BC53002DD723 /* marker_circle_deselected.png */; };
 		ABF18BA51816BC53002DD723 /* marker_circle_deselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA11816BC53002DD723 /* marker_circle_deselected@2x.png */; };
 		ABF18BA61816BC53002DD723 /* marker_circle_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF18BA21816BC53002DD723 /* marker_circle_selected.png */; };
@@ -1220,6 +1221,8 @@
 		ABE7069F18889713007A4E29 /* OMBResidenceListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceListConnection.m; sourceTree = "<group>"; };
 		ABE706A1188899DA007A4E29 /* OMBResidenceListStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceListStore.h; sourceTree = "<group>"; };
 		ABE706A2188899DA007A4E29 /* OMBResidenceListStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceListStore.m; sourceTree = "<group>"; };
+		ABE706A41889984D007A4E29 /* OMBMessagesUnviewedCountConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMessagesUnviewedCountConnection.h; sourceTree = "<group>"; };
+		ABE706A51889984D007A4E29 /* OMBMessagesUnviewedCountConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMessagesUnviewedCountConnection.m; sourceTree = "<group>"; };
 		ABF18BA01816BC53002DD723 /* marker_circle_deselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = marker_circle_deselected.png; sourceTree = "<group>"; };
 		ABF18BA11816BC53002DD723 /* marker_circle_deselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker_circle_deselected@2x.png"; sourceTree = "<group>"; };
 		ABF18BA21816BC53002DD723 /* marker_circle_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = marker_circle_selected.png; sourceTree = "<group>"; };
@@ -2454,6 +2457,8 @@
 				ABE7069518882C46007A4E29 /* OMBMessageDetailConnection.m */,
 				ABE7069B188863B3007A4E29 /* OMBMessageCreateConnection.h */,
 				ABE7069C188863B3007A4E29 /* OMBMessageCreateConnection.m */,
+				ABE706A41889984D007A4E29 /* OMBMessagesUnviewedCountConnection.h */,
+				ABE706A51889984D007A4E29 /* OMBMessagesUnviewedCountConnection.m */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -2851,6 +2856,7 @@
 				ABE7067D1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.m in Sources */,
 				ABA5B4161856922600F825E1 /* OMBDeleteRenterApplicationSectionModelConnection.m in Sources */,
 				AB6155D5184FEA2E00A193C7 /* OMBUserUploadImageConnection.m in Sources */,
+				ABE706A61889984D007A4E29 /* OMBMessagesUnviewedCountConnection.m in Sources */,
 				AB0269B51822147C00E72F53 /* UIImage+BoxBlur.m in Sources */,
 				AB70CB71186CBAA30083DF4C /* OMBPrivacyPolicyStore.m in Sources */,
 				ABE2816C186950D400A5D14E /* OMBUserStore.m in Sources */,

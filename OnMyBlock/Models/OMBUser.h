@@ -12,6 +12,7 @@ extern NSString *const OMBActivityIndicatorViewStartAnimatingNotification;
 extern NSString *const OMBActivityIndicatorViewStopAnimatingNotification;
 extern NSString *const OMBCurrentUserChangedFavorite;
 extern NSString *const OMBCurrentUserLogoutNotification;
+extern NSString *const OMBMessagesUnviewedCountNotification;
 extern NSString *const OMBUserLoggedInNotification;
 extern NSString *const OMBUserLoggedOutNotification;
 
@@ -42,6 +43,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 @property (nonatomic, strong) NSMutableDictionary *imageSizeDictionary;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, strong) NSMutableDictionary *messages;
+@property (nonatomic, strong) NSTimer *notificationFetchTimer;
 @property (nonatomic, strong) OMBRenterApplication *renterApplication;
 @property (nonatomic, strong) NSMutableDictionary *residences;
 @property (nonatomic) int uid;

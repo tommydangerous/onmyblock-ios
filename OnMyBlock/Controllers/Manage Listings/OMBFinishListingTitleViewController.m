@@ -21,7 +21,7 @@
   if (!(self = [super initWithResidence: object])) return nil;
 
   maxCharacters     = 35;
-  placeholderString = @"Give your listing a descriptive title";
+  placeholderString = @"e.g. A roomy, 3 bed apartment near campus";
 
   self.screenName = self.title = @"Title";
 

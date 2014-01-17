@@ -24,6 +24,7 @@ extern float const PropertyInfoViewImageHeightPercentage;
   UIGestureRecognizerDelegate, UIScrollViewDelegate, UITableViewDataSource, 
   UITableViewDelegate>
 {
+  UIActivityIndicatorView *activityIndicatorView;
   CLLocationCoordinate2D centerCoordinate;
   CGFloat currentDistanceOfScrolling;
   UIButton *currentLocationButton;
