@@ -33,9 +33,6 @@
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
 
-  NSLog(@"OMBManageListingsConnection");
-  NSLog(@"%@", json);
-
   [[OMBUser currentUser] readFromResidencesDictionary: json];
 
   [super connectionDidFinishLoading: connection];

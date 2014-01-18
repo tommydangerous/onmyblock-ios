@@ -286,15 +286,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       string = @"Sublet";
     }
     else if (indexPath.row == 1) {
-      image  = [UIImage imageNamed: @"house_icon.png"];
+      image  = [UIImage imageNamed: @"house_icon_2.png"];
       string = @"House";
     }
     else if (indexPath.row == 2) {
-      image  = [UIImage imageNamed: @"apartment_icon.png"];
+      image  = [UIImage imageNamed: @"apartment_icon_2.png"];
       string = @"Apartment";
     }
     [c setFramesForSubviewsWithSize: CGSizeMake(tableView.frame.size.width,
       tableView.frame.size.height / 3.0f)];
+    c.propertyTypeImageView.alpha = 0.5f;
     c.propertyTypeImageView.image = image;
     c.propertyTypeLabel.text      = string;
     return c;

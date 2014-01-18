@@ -32,6 +32,8 @@
       OnMyBlockAPIURL, resource, residence.uid, 
         [OMBUser currentUser].accessToken];
 
+  NSLog(@"%@", string);
+
   [self setRequestFromString: string];
   
   return self;
@@ -45,8 +47,9 @@
     options: 0 error: nil];
   NSString *originalString = [json objectForKey: @"image"];
   NSString *string         = [json objectForKey: @"image"];
+
   // If the cover photo URL is not empty.png
-  if ([string rangeOfString: @"empty"].location == NSNotFound) {
+  if (json && [string rangeOfString: @"empty"].location == NSNotFound) {
     // If URL is something like this //ombrb-prod.s3.amazonaws.com
     if ([string hasPrefix: @"//"]) {
       string = [@"http:" stringByAppendingString: string];

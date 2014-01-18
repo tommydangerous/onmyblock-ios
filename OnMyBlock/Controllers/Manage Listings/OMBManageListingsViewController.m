@@ -96,6 +96,8 @@
   [conn start];
 
   imagesArray = [NSMutableArray array];
+
+  [self.table reloadData];
 }
 
 #pragma mark - Protocol

@@ -38,6 +38,7 @@
     residenceImage.image    = image;
     residenceImage.position = 0;
     residenceImage.uid      = -999 + arc4random_uniform(100);
+    [residence addResidenceImage: residenceImage];
   }
   [super connectionDidFinishLoading: connection];
 }

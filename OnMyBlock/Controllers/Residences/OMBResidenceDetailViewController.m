@@ -33,6 +33,7 @@
 #import "OMBResidenceDetailConnection.h"
 #import "OMBResidenceImagesConnection.h"
 #import "OMBResidenceImageSlideViewController.h"
+#import "OMBTemporaryResidence.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -348,6 +349,11 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
 
   [self adjustFavoriteButton];
 
+  if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
+    _favoritesButton.hidden = YES;
+    [self.navigationItem setRightBarButtonItem: nil animated: NO];
+  }
+
   // Fetch the offers (Do this in another phase, we aren't showing offers)
   // [residence fetchOffersWithCompletion: nil];
 }
@@ -521,7 +527,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBResidenceDetailSellerCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: SellerCellIdentifier];
       OMBUser *user = residence.user;
-      if (!user)
+      if (!user || [user.firstName length] == 0)
         user = [OMBUser landlordUser];
       [cell loadUserData: user];
       return cell;
@@ -735,7 +741,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     //   messageDetailViewController
     //     animated: YES];
     OMBUser *user = residence.user;
-    if (!user)
+    if (!user || [user.firstName length] == 0)
       user = [OMBUser landlordUser];
     [self presentViewController: 
       [[OMBNavigationController alloc] initWithRootViewController: 

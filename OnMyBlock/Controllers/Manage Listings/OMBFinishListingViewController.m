@@ -30,6 +30,7 @@
 #import "OMBTemporaryResidence.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
+#import "UIImage+Resize.h"
 
 @implementation OMBFinishListingViewController
 
@@ -295,6 +296,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   UIImagePickerController *cameraImagePicker =
     [[UIImagePickerController alloc] init];
+  cameraImagePicker.allowsEditing = YES;
   cameraImagePicker.delegate = self;
 
   // Select multiple images
@@ -326,7 +328,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   // Choose existing
   else if (buttonIndex == 1) {
     [self presentViewController: libraryImagePicker animated: YES
-        completion: nil];
+      completion: nil];
   }
 }
 
@@ -548,9 +550,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     position = previousResidenceImage.position + 1;
   }
 
+  CGSize newSize = CGSizeMake(640.0f, 640.0f);
+  image = [UIImage image: image size: newSize];
+  UIGraphicsBeginImageContext(newSize);
+  [image drawInRect:CGRectMake(0.0f , 0.0f, newSize.width, newSize.height)];
+  UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+
   OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
   residenceImage.absoluteString = absoluteString;
-  residenceImage.image    = image;
+  residenceImage.image    = newImage;
   residenceImage.position = position;
   residenceImage.uid      = -999 + arc4random_uniform(100);
 
@@ -565,7 +574,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) preview
 {
-  NSLog(@"PREVIEW");
   [self.navigationController pushViewController:
     [[OMBResidenceDetailViewController alloc] initWithResidence: residence]
       animated: YES];

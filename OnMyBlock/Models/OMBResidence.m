@@ -641,18 +641,12 @@ withString: (NSString *) string
   if ([dictionary objectForKey: @"user"] != [NSNull null]) {
     NSDictionary *userDict = [dictionary objectForKey: @"user"];
     int userUID = [[userDict objectForKey: @"id"] intValue];
-    
-    if (userUID == [OMBUser currentUser].uid) {
-      _user = [OMBUser currentUser];
-    }
-    else {
-      OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
-      if (!user) {
-        user = [[OMBUser alloc] init];
-      }
+    OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
+    if (!user) {
+      user = [[OMBUser alloc] init];
       [user readFromDictionary: userDict];
-      _user = user;
     }
+    _user = user;
   }
   // Zip
   if ([dictionary objectForKey: @"zip"] != [NSNull null])

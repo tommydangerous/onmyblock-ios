@@ -194,7 +194,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
     // self.frame = CGRectMake(newPoint.x, newPoint.y, self.frame.size.width,
     //   self.frame.size.height);
 
-    NSLog(@"%f, %f", translation.x, translation.y);
+    // NSLog(@"%f, %f", translation.x, translation.y);
 
     // Redraw the screen
     // [self setNeedsDisplay];

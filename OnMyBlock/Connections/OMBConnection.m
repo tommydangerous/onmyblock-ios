@@ -72,7 +72,7 @@ didReceiveData: (NSData *) data
   NSMutableArray *connectionsToRemove = [NSMutableArray array];
   for (OMBConnection *conn in sharedConnectionList) {
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    if (now - conn.createdAt > 5) {
+    if (now - conn.createdAt > [conn.request timeoutInterval]) {
       [conn cancelConnection];
       [connectionsToRemove addObject: conn];
     }
@@ -92,6 +92,7 @@ didFailWithError: (NSError *) error
     _completionBlock(error);
   [sharedConnectionList removeObject: self];
   [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+  NSLog(@"%@", error.localizedDescription);
 }
 
 #pragma mark - Methods

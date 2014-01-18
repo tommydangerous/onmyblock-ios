@@ -91,7 +91,7 @@ int kBottomBorderTag = 9999;
       @[[NSIndexPath indexPathForRow: 7 inSection: 1]] 
         withRowAnimation: UITableViewRowAnimationNone];
   };
-  [conn start];
+  // [conn start];
 
   [self.table reloadData];
 }

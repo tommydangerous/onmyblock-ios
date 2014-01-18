@@ -11,6 +11,8 @@
 #import <VenmoAppSwitch/Venmo.h>
 
 extern NSString *const FBSessionStateChangedNotification;
+extern NSString *const OMBUserDefaults;
+extern NSString *const OMBUserDefaultsViewedIntro;
 
 @class OMBViewControllerContainer;
 

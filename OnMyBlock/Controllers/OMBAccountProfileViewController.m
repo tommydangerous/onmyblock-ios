@@ -16,6 +16,7 @@
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
+#import "UIImage+Resize.h"
 
 @implementation OMBAccountProfileViewController
 
@@ -280,7 +281,16 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
   UIImage *image = [info objectForKey: UIImagePickerControllerEditedImage];
   if (!image)
     image = [info objectForKey: UIImagePickerControllerOriginalImage];
-  [OMBUser currentUser].image = image;
+
+  CGSize newSize = CGSizeMake(640.0f, 640.0f);
+  image = [UIImage image: image size: newSize];
+  UIGraphicsBeginImageContext(newSize);
+  [image drawInRect:CGRectMake(0.0f , 0.0f, newSize.width, newSize.height)];
+  UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+
+  [OMBUser currentUser].image = newImage;
+  
   // NSString *encoded = [Base64 encode: imageData];
   OMBUserUploadImageConnection *connection = 
     [[OMBUserUploadImageConnection alloc] init];

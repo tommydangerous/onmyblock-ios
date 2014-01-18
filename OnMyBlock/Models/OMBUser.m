@@ -141,14 +141,14 @@ int kNotificationTimerInterval = 30;
   static OMBUser *user = nil;
   if (!user) {
     user             = [[OMBUser alloc] init];
-    user.about       = 
-      @"Please contact me if you are interested in this wonderful place.";
+    user.about       = @"Please contact me if you are "
+      @"interested in this wonderful place.";
     user.email       = @"info@onmyblock.com";
-    user.firstName   = @"landlord";
-    user.lastName    = @"";
+    user.firstName   = @"land";
+    user.lastName    = @"lord";
     user.phone       = @"6504555789";
     user.image       = [UIImage imageNamed: @"user_icon_default.png"];
-    user.uid         = 99999;
+    user.uid         = 31;
   }
   return user;
 }
@@ -341,7 +341,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [[OMBUser currentUser].messages removeAllObjects];
   [[OMBUser currentUser].notificationFetchTimer invalidate];
   [[OMBUser currentUser].renterApplication removeAllObjects];
-  [[OMBUser currentUser].residences removeAllObjects];
+
+  // Clear residences
+  for (NSString *key in [[OMBUser currentUser].residences allKeys]) {
+    NSMutableDictionary *dict = [[OMBUser currentUser].residences objectForKey:
+      key];
+    [dict removeAllObjects];
+  }
+  
   [OMBUser currentUser].uid = 0;
 
   // Clear conversations

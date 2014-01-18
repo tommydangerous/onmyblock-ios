@@ -18,6 +18,7 @@
 #import "OMBResidenceUploadImageConnection.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
+#import "UIImage+Resize.h"
 
 #define DEGREES_TO_RADIANS(x) (M_PI * x / 180.0)
 
@@ -191,6 +192,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   UIImagePickerController *cameraImagePicker =
     [[UIImagePickerController alloc] init];
+  cameraImagePicker.allowsEditing = YES;
   cameraImagePicker.delegate = self;
 
   // Select multiple images
@@ -291,9 +293,16 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     position = previousResidenceImage.position + 1;
   }
 
+  CGSize newSize = CGSizeMake(640.0f, 640.0f);
+  image = [UIImage image: image size: newSize];
+  UIGraphicsBeginImageContext(newSize);
+  [image drawInRect:CGRectMake(0.0f , 0.0f, newSize.width, newSize.height)];
+  UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+
   OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
   residenceImage.absoluteString = absoluteString;
-  residenceImage.image    = image;
+  residenceImage.image    = newImage;
   residenceImage.position = position;
   residenceImage.uid      = -999 + arc4random_uniform(100);
 

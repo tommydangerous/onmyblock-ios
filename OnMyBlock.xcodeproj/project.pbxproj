@@ -201,6 +201,10 @@
 		AB802EB918109E5200E04D11 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB802EA118109E5200E04D11 /* UIKit.framework */; };
 		AB802EC118109E5200E04D11 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AB802EBF18109E5200E04D11 /* InfoPlist.strings */; };
 		AB802EC318109E5200E04D11 /* OnMyBlockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AB802EC218109E5200E04D11 /* OnMyBlockTests.m */; };
+		AB80343E1889B06100C5B889 /* apartment_icon_2.png in Resources */ = {isa = PBXBuildFile; fileRef = AB80343A1889B06100C5B889 /* apartment_icon_2.png */; };
+		AB80343F1889B06100C5B889 /* apartment_icon_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB80343B1889B06100C5B889 /* apartment_icon_2@2x.png */; };
+		AB8034401889B06100C5B889 /* house_icon_2.png in Resources */ = {isa = PBXBuildFile; fileRef = AB80343C1889B06100C5B889 /* house_icon_2.png */; };
+		AB8034411889B06100C5B889 /* house_icon_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB80343D1889B06100C5B889 /* house_icon_2@2x.png */; };
 		AB8B793E186DEF13005AB552 /* OMBCreateListingDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B793D186DEF13005AB552 /* OMBCreateListingDetailCell.m */; };
 		AB8B7941186DFA8A005AB552 /* OMBActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B7940186DFA8A005AB552 /* OMBActivityView.m */; };
 		AB8B7944186E0091005AB552 /* OMBFinishListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B7943186E0091005AB552 /* OMBFinishListingViewController.m */; };
@@ -802,6 +806,10 @@
 		AB802EBE18109E5200E04D11 /* OnMyBlockTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OnMyBlockTests-Info.plist"; sourceTree = "<group>"; };
 		AB802EC018109E5200E04D11 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AB802EC218109E5200E04D11 /* OnMyBlockTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OnMyBlockTests.m; sourceTree = "<group>"; };
+		AB80343A1889B06100C5B889 /* apartment_icon_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apartment_icon_2.png; sourceTree = "<group>"; };
+		AB80343B1889B06100C5B889 /* apartment_icon_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "apartment_icon_2@2x.png"; sourceTree = "<group>"; };
+		AB80343C1889B06100C5B889 /* house_icon_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = house_icon_2.png; sourceTree = "<group>"; };
+		AB80343D1889B06100C5B889 /* house_icon_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "house_icon_2@2x.png"; sourceTree = "<group>"; };
 		AB8B793C186DEF13005AB552 /* OMBCreateListingDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailCell.h; sourceTree = "<group>"; };
 		AB8B793D186DEF13005AB552 /* OMBCreateListingDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailCell.m; sourceTree = "<group>"; };
 		AB8B793F186DFA8A005AB552 /* OMBActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBActivityView.h; sourceTree = "<group>"; };
@@ -2006,6 +2014,10 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				AB80343A1889B06100C5B889 /* apartment_icon_2.png */,
+				AB80343B1889B06100C5B889 /* apartment_icon_2@2x.png */,
+				AB80343C1889B06100C5B889 /* house_icon_2.png */,
+				AB80343D1889B06100C5B889 /* house_icon_2@2x.png */,
 				ABE7069018882165007A4E29 /* user_icon_default.png */,
 				ABE7069118882165007A4E29 /* user_icon_default@2x.png */,
 				ABB06B011847240F009CBBEA /* account_icon.png */,
@@ -2580,6 +2592,7 @@
 				AB01ED571859166E00333390 /* venmo_icon@2x.png in Resources */,
 				ABF8ECA9182D6C6B0080B1E2 /* intro_contact_view_background.jpg in Resources */,
 				AB6155C7184EE74E00A193C7 /* camera_icon.png in Resources */,
+				AB80343F1889B06100C5B889 /* apartment_icon_2@2x.png in Resources */,
 				AB70CB8C186D0A240083DF4C /* house_icon@2x.png in Resources */,
 				ABABEC401863F952008B6768 /* messages_icon_white.png in Resources */,
 				ABB06AF7184720D9009CBBEA /* my_bids_icon.png in Resources */,
@@ -2626,6 +2639,7 @@
 				ABF18BA51816BC53002DD723 /* marker_circle_deselected@2x.png in Resources */,
 				ABAF228E18526C2B0041BF60 /* slash_icon.png in Resources */,
 				ABABEC3F1863F952008B6768 /* messages_icon_dark@2x.png in Resources */,
+				AB8034401889B06100C5B889 /* house_icon_2.png in Resources */,
 				ABABEC411863F952008B6768 /* messages_icon_white@2x.png in Resources */,
 				ABF8ECA4182D54040080B1E2 /* email_icon_white.png in Resources */,
 				ABB06B0F1847E439009CBBEA /* how_it_works_icon.png in Resources */,
@@ -2638,9 +2652,11 @@
 				AB1D4A85182C3D4900FF4F23 /* logo.png in Resources */,
 				ABB06AF8184720D9009CBBEA /* my_bids_icon@2x.png in Resources */,
 				ABF8EC9E182D43F60080B1E2 /* map_background.png in Resources */,
+				AB80343E1889B06100C5B889 /* apartment_icon_2.png in Resources */,
 				ABB06AF418471EBE009CBBEA /* my_auctions_icon@2x.png in Resources */,
 				ABC00B3118374A1C0092364A /* gps_cursor@2x.png in Resources */,
 				AB756AC2185A25E3001AF572 /* intro_still_image_slide_4_background@2x.jpg in Resources */,
+				AB8034411889B06100C5B889 /* house_icon_2@2x.png in Resources */,
 				ABB70015187A130F005F0730 /* user_icon.png in Resources */,
 				ABE7069218882165007A4E29 /* user_icon_default.png in Resources */,
 				AB63D21D1821B5E400D63800 /* password_icon@2x.png in Resources */,

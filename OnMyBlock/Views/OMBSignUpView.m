@@ -161,6 +161,7 @@
 
   // Email
   _emailTextField = [[TextFieldPadding alloc] init];
+  _emailTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
   _emailTextField.frame = CGRectMake(_lastNameTextField.frame.origin.x,
     (_lastNameTextField.frame.origin.y + _lastNameTextField.frame.size.height + 
       padding), _lastNameTextField.frame.size.width, 

@@ -44,4 +44,21 @@
   return self;
 }
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) start
+{
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  // Set timeout
+  [self.request setTimeoutInterval: 60];
+  container = [[NSMutableData alloc] init];
+  internalConnection = [[NSURLConnection alloc] initWithRequest: self.request
+    delegate: self startImmediately: YES];
+  if (!sharedConnectionList)
+    sharedConnectionList = [NSMutableArray array];
+  [sharedConnectionList addObject: self];
+}
+
 @end

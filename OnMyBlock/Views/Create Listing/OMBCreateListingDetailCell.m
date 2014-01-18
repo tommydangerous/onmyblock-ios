@@ -65,6 +65,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
     ((padding * 0.5) + detailHeight + padding);
   _detailNameLabel.frame = CGRectMake(0.0f, 0.0f, size.width, detailHeight);
 
+  if (valueHeight > 58.0f)
+    valueHeight = 58.0f;
+
   _valueLabel.frame = CGRectMake(padding + valueHeight, 
     _detailNameLabel.frame.origin.y + 
     _detailNameLabel.frame.size.height + (padding * 0.5),

@@ -20,6 +20,9 @@
 NSString *const FBSessionStateChangedNotification = 
   @"com.onmyblock.Login:FBSessionStateChangedNotification";
 
+NSString *const OMBUserDefaults = @"OMBUserDefaults";
+NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
+
 @implementation OMBAppDelegate
 
 @synthesize container = _container;
@@ -29,7 +32,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
   // [self setupTracking];
 
-  // [self testFlightTakeOff];
+  [self testFlightTakeOff];
     
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
@@ -51,11 +54,19 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // Use this to show whatever view controller you are working on
   // [_container showManageListings];
 
-  // Normall, show the intro right away
-  NSLog(@"APP DELEGATE SHOW INTRO!"); // Reminder to show this
-  [_container showIntroAnimatedDissolve: NO];
-  if ([[OMBUser currentUser] loggedIn])
-    [self hideIntro];
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  id viewedIntro = [defaults objectForKey: OMBUserDefaultsViewedIntro];
+  if (!viewedIntro) {
+    [defaults setObject: [NSNumber numberWithBool: NO] 
+      forKey: OMBUserDefaultsViewedIntro];
+  }
+  NSNumber *number = [defaults objectForKey: OMBUserDefaultsViewedIntro];
+  if (![number boolValue]) {
+    [_container showIntroAnimatedDissolve: NO];
+    [[NSUserDefaults standardUserDefaults] setObject:
+      [NSNumber numberWithBool: YES] forKey: OMBUserDefaultsViewedIntro];
+  }
+  [defaults synchronize];
 
   return YES;
 }
