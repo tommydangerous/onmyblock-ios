@@ -64,7 +64,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
   dateTimeLabel.text = @"3d";
 
   CGFloat imageSize = objectImageView.frame.size.width;
-  objectImageView.image = [[OMBUser fakeUser] imageForSize: imageSize];
+  objectImageView.image = [[OMBUser fakeUser] imageForSizeKey: 
+    [NSString stringWithFormat: @"%f,%f", imageSize, imageSize]];
 
   CGFloat lineHeight = 22.0f;
   UIFont *boldFont = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];

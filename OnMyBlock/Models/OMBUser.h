@@ -23,6 +23,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 @class OMBLegalAnswer;
 @class OMBMessage;
 @class OMBNeighborhood;
+@class OMBOffer;
 @class OMBPreviousRental;
 @class OMBRenterApplication;
 @class OMBResidence;
@@ -47,6 +48,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, strong) NSMutableDictionary *messages;
 @property (nonatomic, strong) NSTimer *notificationFetchTimer;
+@property (nonatomic, strong) NSMutableDictionary *receivedOffers;
 @property (nonatomic, strong) OMBRenterApplication *renterApplication;
 @property (nonatomic, strong) NSMutableDictionary *residences;
 @property (nonatomic) int uid;
@@ -67,6 +69,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 - (void) addLegalAnswer: (OMBLegalAnswer *) object;
 - (void) addMessage: (OMBMessage *) message;
 - (void) addPreviousRental: (OMBPreviousRental *) previousRental;
+- (void) addReceivedOffer: (OMBOffer *) offer;
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
 - (void) addResidence: (OMBResidence *) residence;
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence;
@@ -76,7 +79,8 @@ extern NSString *const OMBUserLoggedOutNotification;
 - (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (NSString *) fullName;
-- (UIImage *) imageForSize: (CGFloat) size;
+- (UIImage *) imageForSize: (CGSize) size;
+- (UIImage *) imageForSizeKey: (NSString *) string;
 - (BOOL) loggedIn;
 - (void) logout;
 - (NSArray *) messagesWithUser: (OMBUser *) user;
@@ -88,11 +92,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromLegalAnswerDictionary: (NSDictionary *) dictionary;
 - (void) readFromMessagesDictionary: (NSDictionary *) dictionary;
 - (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary;
+- (void) readFromReceivedOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
 - (void) removeResidence: (OMBResidence *) residence;
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence;
 - (NSArray *) residencesSortedWithKey: (NSString *) key 
 ascending: (BOOL) ascending;
 - (NSString *) shortName;
+- (NSArray *) sortedReceivedOffersWithKey: (NSString *) key 
+ascending: (BOOL) ascending;
 
 @end

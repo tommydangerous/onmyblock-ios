@@ -15,6 +15,7 @@
   UIView *backView;
   CGFloat backViewOffsetY;
   UIView *buttonsView;
+  UIBarButtonItem *inboxBarButtonItem;
   UIButton *paymentsButton;
   int selectedSegmentIndex;
   UIView *welcomeView;

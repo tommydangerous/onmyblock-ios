@@ -100,8 +100,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell = [[OMBImageOneLabelCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
   cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-  [cell setImage: [[OMBUser fakeUser] imageForSize: 38.0f] 
-    text: [[OMBUser fakeUser] fullName]];
+  CGSize size = CGSizeMake(38.0f, 38.0f);
+  [cell setImage: [[OMBUser fakeUser] imageForSizeKey: 
+    [NSString stringWithFormat: @"%f, %f", size.width, size.height]]
+      text: [[OMBUser fakeUser] fullName]];
   return cell;
 }
 

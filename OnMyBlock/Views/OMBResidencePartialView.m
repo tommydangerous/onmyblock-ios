@@ -339,7 +339,7 @@
   // bedBathLabel.frame = bedBathLabelFrame;
 
   // Title or address
-  if ([[_residence.title stripWhiteSpace] length])
+  if ([_residence validTitle])
     addressLabel.text = _residence.title;
   else
     addressLabel.text = [_residence.address capitalizedString];

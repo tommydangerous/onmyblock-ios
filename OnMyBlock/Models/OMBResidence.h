@@ -81,11 +81,13 @@
 - (UIImage *) coverPhotoWithSize: (CGSize) size;
 - (NSString *) defaultContactMessage;
 - (NSString *) dictionaryKey;
+- (void) downloadCoverPhotoWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchOffersWithCompletion: (void (^) (NSError *error)) block;
 - (NSURL *) googleStaticMapImageURL;
 - (NSURL *) googleStaticStreetViewImageURL;
 - (NSArray *) imagesArray;
 - (UIImage *) imageAtPosition: (int) position;
+- (UIImage *) imageForSize: (CGSize) size;
 - (UIImage *) imageForSizeKey: (NSString *) string;
 - (NSInteger) numberOfStepsLeft;
 - (void) readFromOffersDictionary: (NSDictionary *) dictionary;
@@ -99,5 +101,6 @@
 - (NSArray *) sortedOpenHouseDates;
 - (NSString *) statusString;
 - (void) updateResidenceWithResidence: (OMBResidence *) residence;
+- (BOOL) validTitle;
 
 @end

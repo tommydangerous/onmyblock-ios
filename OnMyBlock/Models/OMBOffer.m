@@ -8,10 +8,26 @@
 
 #import "OMBOffer.h"
 
+#import "OMBResidence.h"
 #import "OMBUser.h"
 #import "OMBUserStore.h"
 
 @implementation OMBOffer
+
+#pragma mark - Initializer
+
+- (id) init
+{
+  if (!(self = [super init])) return nil;
+
+  _accepted  = NO;
+  _amount    = 0.0f;
+  _confirmed = NO;
+  _declined  = NO;
+  _rejected  = NO;
+
+  return self;
+}
 
 #pragma mark - Methods
 
@@ -63,15 +79,27 @@
     _declined = YES;
   else
     _declined = NO;
+
+  // Landlord user
+
   // Rejected
   if ([[dictionary objectForKey: @"rejected"] intValue])
     _rejected = YES;
   else
     _rejected = NO;
+  // Residence
+  if ([dictionary objectForKey: @"residence"] != [NSNull null]) {
+    OMBResidence *res = [[OMBResidence alloc] init];
+    [res readFromResidenceDictionary: [dictionary objectForKey: @"residence"]];
+    _residence = res;
+  }
   // Updated at
   if ([dictionary objectForKey: @"updated_at"] != [NSNull null])
     _updatedAt = [[dateFormatter dateFromString:
       [dictionary objectForKey: @"updated_at"]] timeIntervalSince1970];
+  // UID
+  if ([[dictionary objectForKey: @"id"] intValue])
+    _uid = [[dictionary objectForKey: @"id"] intValue];
   // User
   if ([dictionary objectForKey: @"user"] != [NSNull null]) {
     NSDictionary *userDict = [dictionary objectForKey: @"user"];
@@ -82,7 +110,7 @@
     }
     [user readFromDictionary: userDict];
     _user = user;
-  } 
+  }
 }
 
 @end

@@ -9,6 +9,7 @@
 #import "OMBTableViewCell.h"
 
 @class OMBCenteredImageView;
+@class OMBOffer;
 
 @interface OMBHomebaseLandlordOfferCell : OMBTableViewCell
 {
@@ -20,12 +21,15 @@
   OMBCenteredImageView *userImageView;
 }
 
+@property (nonatomic, strong) OMBOffer *offer;
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
 - (void) adjustFrames;
 - (void) loadConfirmedTenantData;
+- (void) loadOffer: (OMBOffer *) object;
 - (void) loadOfferData;
 
 @end

@@ -22,9 +22,11 @@
 #import "OMBLegalQuestionStore.h"
 #import "OMBMessageDetailViewController.h"
 #import "OMBMessageStore.h"
+#import "OMBOffer.h"
 #import "OMBOfferInquiryResidenceCell.h"
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBPreviousRentalCell.h"
+#import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -33,14 +35,15 @@
 
 #pragma mark - Initializer
 
-- (id) initWithOffer: (NSString *) object
+- (id) initWithOffer: (OMBOffer *) object
 {
   if (!(self = [super init])) return nil;
 
-  self.screenName = @"Offer Inquiry";
-  self.title      = @"Edward's Offer";
+  offer = object;
 
-  fakeAbout = @"Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.";
+  self.screenName = @"Offer Inquiry";
+  self.title = [NSString stringWithFormat: @"%@'s Offer", 
+    [offer.user.firstName capitalizedString]];
 
   return self;
 }
@@ -267,8 +270,9 @@
     }
   ];
 
-  [respondButton setTitle: @"Respond to Edward's Offer"
-    forState: UIControlStateNormal];
+  [respondButton setTitle: 
+    [NSString stringWithFormat: @"Respond to %@", self.title]
+      forState: UIControlStateNormal];
 }
 
 #pragma mark - Protocol
@@ -360,21 +364,25 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell1 = [[OMBOfferInquiryResidenceCell alloc] initWithStyle: 
           UITableViewCellStyleDefault
             reuseIdentifier: ResidenceCellIdentifier];
-      [cell1 loadResidenceData];
+      [cell1 loadResidence: offer.residence];
       return cell1;
     }
     // Offer
     else if (indexPath.row == 1) {
       cell.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
         size: 27];
-      cell.detailTextLabel.text = @"$2,400";
+      cell.detailTextLabel.text = [NSString numberToCurrencyString: 
+        (int) offer.amount];
       cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
         size: 27];
       cell.textLabel.text = @"Offer";
     }
     // Move-in Date
     else if (indexPath.row == 2) {
-      cell.detailTextLabel.text = @"March 2, 2014";
+      NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+      dateFormatter.dateFormat = @"MMMM d, yyyy";
+      cell.detailTextLabel.text = [dateFormatter stringFromDate:
+        [NSDate dateWithTimeIntervalSince1970: offer.residence.moveInDate]];
       cell.textLabel.text = @"Move-in Date";
     }
     // Move-out Date
@@ -562,7 +570,12 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Offer
   if (tableView == _offerTableView) {
-    return 4;
+    // Residence
+    // Offer
+    // Move-in Date
+    // Move-out Date
+    return 3;
+    // return 4;
   }
   // Profile
   else if (tableView == _profileTableView) {
@@ -610,8 +623,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Residence
     if (indexPath.row == 0) {
       [self.navigationController pushViewController: 
-        [[OMBResidenceDetailViewController alloc] initWithResidence: nil] 
-          animated: YES];
+        [[OMBResidenceDetailViewController alloc] initWithResidence: 
+          offer.residence] animated: YES];
     }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];

@@ -235,7 +235,9 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   //   _countDownTimerLabel.frame.size.height + 1.0f, 
   //     (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
   _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
-    _bottomButtonView.frame.size.width, 44.0f);
+    (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
+  // _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
+  //   _bottomButtonView.frame.size.width, 44.0f);
   _contactMeButton.titleLabel.font = fontLight18;
   [_contactMeButton addTarget: self action: @selector(contactMeButtonSelected)
     forControlEvents: UIControlEventTouchUpInside];
@@ -260,7 +262,7 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   [_bookItButton setTitle: @"Book It!" forState: UIControlStateNormal];
   [_bookItButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
-  // [_bottomButtonView addSubview: _bookItButton];
+  [_bottomButtonView addSubview: _bookItButton];
 
   // Mini map
   // _miniMap          = [[MKMapView alloc] init];
@@ -273,10 +275,6 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   // _miniMap.scrollEnabled = NO;
   // _miniMap.showsPointsOfInterest = NO;
   // _miniMap.zoomEnabled   = NO;
-
-  // Table footer view
-  _table.tableFooterView = [[UIView alloc] initWithFrame: 
-    CGRectMake(0.0f, 0.0f, screenWidth, _bottomButtonView.frame.size.height)];
 }
 
 - (void) viewDidAppear: (BOOL) animated
@@ -356,6 +354,15 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
 
   // Fetch the offers (Do this in another phase, we aren't showing offers)
   // [residence fetchOffersWithCompletion: nil];
+
+  // Table footer view
+  CGFloat footerHeight = _bottomButtonView.frame.size.height;
+  if (residence.user.uid == [OMBUser currentUser].uid) {
+    footerHeight = 0.0f;
+    _bottomButtonView.hidden = YES;
+  }
+  _table.tableFooterView = [[UIView alloc] initWithFrame: 
+    CGRectMake(0.0f, 0.0f, _table.frame.size.width, footerHeight)];
 }
 
 - (void) viewWillDisappear: (BOOL) animated

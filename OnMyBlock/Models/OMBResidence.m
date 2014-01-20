@@ -12,6 +12,7 @@
 #import "OMBConnection.h"
 #import "OMBOffer.h"
 #import "OMBOpenHouse.h"
+#import "OMBResidenceCoverPhotoURLConnection.h"
 #import "OMBResidenceGoogleStaticImageDownloader.h"
 #import "OMBResidenceImage.h"
 #import "OMBUser.h"
@@ -265,6 +266,14 @@ withString: (NSString *) string
     _address];
 }
 
+- (void) downloadCoverPhotoWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBResidenceCoverPhotoURLConnection *conn = 
+    [[OMBResidenceCoverPhotoURLConnection alloc] initWithResidence: self];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (NSURL *) googleStaticMapImageURL
 {
   NSString *base = @"https://maps.googleapis.com/maps/api/staticmap?";
@@ -350,6 +359,12 @@ withString: (NSString *) string
   return nil;
 }
 
+- (UIImage *) imageForSize: (CGSize) size
+{
+  return [self imageForSizeKey: [NSString stringWithFormat: @"%f,%f",
+    size.width, size.height]];
+}
+
 - (UIImage *) imageForSizeKey: (NSString *) string
 {
   UIImage *image = [_imageSizeDictionary objectForKey: string];
@@ -359,6 +374,10 @@ withString: (NSString *) string
       NSInteger width  = [[words objectAtIndex: 0] floatValue];
       NSInteger height = [[words objectAtIndex: 1] floatValue];
       if ([self coverPhoto]) {
+        // Leave it up to the object that uses this to set the image
+        // into the dictionary; e.g. the OMBMangeListingsCell 
+        // resizes this image in it's OMBCenteredImageView then sets 
+        // the object for key in the imagesSizedictionary
         image = [UIImage image: [self coverPhoto] 
           size: CGSizeMake(width, height)];
       }
@@ -745,6 +764,24 @@ withString: (NSString *) string
   _unit = residence.unit;
   _updatedAt = residence.updatedAt;
   _zip = residence.zip;
+}
+
+- (BOOL) validTitle
+{
+  if ([[_title stripWhiteSpace] length]) {
+    NSRegularExpression *regex = 
+      [NSRegularExpression regularExpressionWithPattern: @"(detached|other)" 
+        options: 0 error: nil];
+    NSArray *matches = [regex matchesInString: [_title lowercaseString] 
+      options: 0 range: NSMakeRange(0, [_title length])];
+    for (NSTextCheckingResult *result in matches) {
+      if (result.range.location == 0) {
+        return NO;
+      }
+    }
+    return YES;
+  }
+  return NO;
 }
 
 @end

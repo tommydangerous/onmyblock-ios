@@ -32,7 +32,7 @@
       OnMyBlockAPIURL, resource, residence.uid, 
         [OMBUser currentUser].accessToken];
 
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
   
   return self;
 }

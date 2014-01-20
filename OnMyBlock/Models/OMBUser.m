@@ -19,6 +19,7 @@
 #import "OMBMessage.h"
 #import "OMBMessageDetailConnection.h"
 #import "OMBMessagesUnviewedCountConnection.h"
+#import "OMBOffer.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
@@ -74,6 +75,7 @@ int kNotificationTimerInterval = 30;
   _favorites           = [NSMutableDictionary dictionary];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _messages            = [NSMutableDictionary dictionary];
+  _receivedOffers      = [NSMutableDictionary dictionary];
   _renterApplication   = [[OMBRenterApplication alloc] init];
   _residences          = [NSMutableDictionary dictionaryWithDictionary: @{
     @"residences":          [NSMutableDictionary dictionary],
@@ -202,6 +204,13 @@ int kNotificationTimerInterval = 30;
   [_messages setObject: array forKey: number];
 }
 
+- (void) addReceivedOffer: (OMBOffer *) offer
+{
+  NSNumber *key = [NSNumber numberWithInt: offer.uid];
+  if (![_receivedOffers objectForKey: key])
+    [_receivedOffers setObject: offer forKey: key];
+}
+
 - (void) addPreviousRental: (OMBPreviousRental *) previousRental
 {
   [_renterApplication addPreviousRental: previousRental];
@@ -309,13 +318,28 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   return nameString;
 }
 
-- (UIImage *) imageForSize: (CGFloat) size
+- (UIImage *) imageForSize: (CGSize) size
 {
-  NSNumber *key = [NSNumber numberWithFloat: size];
-  UIImage *img = [_imageSizeDictionary objectForKey: key];
+  return [self imageForSizeKey: [NSString stringWithFormat: @"%f,%f", 
+    size.width, size.height]];
+}
+
+- (UIImage *) imageForSizeKey: (NSString *) string
+{
+  UIImage *img = [_imageSizeDictionary objectForKey: string];
   if (!img) {
-    img = [UIImage image: self.image size: CGSizeMake(size, size)];
-    [_imageSizeDictionary setObject: img forKey: key];
+    NSArray *words = [string componentsSeparatedByString: @","];
+    if ([words count] >= 2) {
+      NSInteger width  = [[words objectAtIndex: 0] floatValue];
+      NSInteger height = [[words objectAtIndex: 1] floatValue];
+      // Leave it up to the object that uses this to set the image
+      // into the dictionary; e.g. the OMBMangeListingsCell 
+      // resizes this image in it's OMBCenteredImageView then sets 
+      // the object for key in the imagesSizedictionary
+      img = [UIImage image: self.image size: CGSizeMake(width, height)];
+      if (width == height)
+        [_imageSizeDictionary setObject: img forKey: string];
+    }
   }
   return img;
 }
@@ -346,6 +370,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [OMBUser currentUser].imageURL = nil;
   [[OMBUser currentUser].messages removeAllObjects];
   [[OMBUser currentUser].notificationFetchTimer invalidate];
+  [[OMBUser currentUser].receivedOffers removeAllObjects];
   [[OMBUser currentUser].renterApplication removeAllObjects];
 
   // Clear residences
@@ -597,6 +622,20 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   }
 }
 
+- (void) readFromReceivedOffersDictionary: (NSDictionary *) dictionary
+{
+  NSArray *array = [dictionary objectForKey: @"objects"];
+  for (NSDictionary *dict in array) {
+    NSInteger objectUID = [[dict objectForKey: @"id"] intValue];
+    if (![_receivedOffers objectForKey: [NSNumber numberWithInt: objectUID]]) {
+      OMBOffer *offer = [[OMBOffer alloc] init];
+      [offer readFromDictionary: dict];
+      offer.landlordUser = [OMBUser currentUser];
+      [self addReceivedOffer: offer];
+    }
+  }
+}
+
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
 {
   NSArray *array = [dictionary objectForKey: @"objects"];
@@ -695,6 +734,14 @@ ascending: (BOOL) ascending
   return [NSString stringWithFormat: @"%@ %@.",
     [self.firstName capitalizedString], 
       [[self.lastName substringToIndex: 1] capitalizedString]];
+}
+
+- (NSArray *) sortedReceivedOffersWithKey: (NSString *) key 
+ascending: (BOOL) ascending
+{
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
+    ascending: ascending];
+  return [[_receivedOffers allValues] sortedArrayUsingDescriptors: @[sort]];
 }
 
 @end

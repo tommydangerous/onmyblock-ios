@@ -9,21 +9,21 @@
 #import "OMBTableViewController.h"
 
 @class OMBCenteredImageView;
+@class OMBOffer;
 @class OMBResidence;
 
 @interface OMBResidenceBookItConfirmDetailsViewController : 
   OMBTableViewController
-<UIScrollViewDelegate, UITextFieldDelegate>
+<UIAlertViewDelegate, UIScrollViewDelegate, UITextFieldDelegate>
 {
-  CGFloat deposit;
-  CGFloat offer;
-
   UILabel *currentOfferLabel;
+  CGFloat deposit;
   BOOL hasOfferValue;
   UILabel *daysLabel;
   UILabel *hoursLabel;
   BOOL isShowingPriceBreakdown;
   UILabel *minutesLabel;
+  OMBOffer *offer;
   OMBResidence *residence;
   OMBCenteredImageView *residenceImageView;
   UIBarButtonItem *reviewBarButton;

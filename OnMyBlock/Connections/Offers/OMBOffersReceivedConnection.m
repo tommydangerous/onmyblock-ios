@@ -1,14 +1,14 @@
 //
-//  OMBManageListingsConnection.m
+//  OMBOffersReceivedConnection.m
 //  OnMyBlock
 //
-//  Created by Tommy DANGerous on 1/7/14.
+//  Created by Tommy DANGerous on 1/20/14.
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import "OMBManageListingsConnection.h"
+#import "OMBOffersReceivedConnection.h"
 
-@implementation OMBManageListingsConnection
+@implementation OMBOffersReceivedConnection
 
 #pragma mark - Initializer
 
@@ -17,7 +17,7 @@
   if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: 
-    @"%@/places/manage_listings/?access_token=%@", 
+    @"%@/offers/received/?access_token=%@", 
       OnMyBlockAPIURL, [OMBUser currentUser].accessToken];
   [self setRequestWithString: string];
 
@@ -30,10 +30,7 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
-
-  [[OMBUser currentUser] readFromResidencesDictionary: json];
+  [[OMBUser currentUser] readFromReceivedOffersDictionary: [self json]];
 
   [super connectionDidFinishLoading: connection];
 }

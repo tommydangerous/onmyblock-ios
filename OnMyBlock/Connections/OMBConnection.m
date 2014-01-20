@@ -15,6 +15,8 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
 // Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
 #if __ENVIRONMENT__ == 1
   // Development server
+  // NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
+  // Josselyn
   NSString *const OnMyBlockAPIURL = @"http://10.0.1.29:3000/api-v1";
 #elif __ENVIRONMENT__ == 2
   // Staging server
@@ -24,8 +26,6 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
   NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
 #endif
 
-// Josselyn
-// NSString *const OnMyBlockAPIURL = @"http://10.0.1.29:3000/api-v1";
 // Home
 // NSString *const OnMyBlockAPIURL = @"http://192.168.1.72:3000/api-v1";
 
@@ -113,13 +113,36 @@ didFailWithError: (NSError *) error
   [internalConnection cancel];
 }
 
+- (NSDictionary *) json
+{
+  if (!jsonDictionary)
+    jsonDictionary = [NSJSONSerialization JSONObjectWithData: container
+      options: 0 error: nil];
+  return jsonDictionary;
+}
+
+- (NSDictionary *) objectDictionary
+{
+  return [[self json] objectForKey: @"object"];
+}
+
+- (NSDictionary *) objectsDictionary
+{
+  return [[self json] objectForKey: @"objects"];
+}
+
+- (NSInteger) objectUID
+{
+  return [[[self objectDictionary] objectForKey: @"id"] intValue];
+}
+
 - (void) setPostRequestWithString: (NSString *) string
 withParameters: (NSDictionary *) dictionary
 {
   [self setRequestWithString: string method: @"POST" parameters: dictionary];
 }
 
-- (void) setRequestFromString: (NSString *) requestString
+- (void) setRequestWithString: (NSString *) requestString
 {
   NSURL *url = [NSURL URLWithString:
     [requestString stringByAddingPercentEscapesUsingEncoding:
@@ -157,6 +180,16 @@ parameters: (NSDictionary *) dictionary
   if (!sharedConnectionList)
     sharedConnectionList = [NSMutableArray array];
   [sharedConnectionList addObject: self];
+}
+
+- (BOOL) successful
+{
+  if ([[self json] objectForKey: @"success"] != [NSNull null]) {
+    if ([[[self json] objectForKey: @"success"] intValue]) {
+      return YES;
+    }
+  }
+  return NO;
 }
 
 @end

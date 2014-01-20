@@ -10,6 +10,7 @@
 
 @class OMBAlertView;
 @class OMBCenteredImageView;
+@class OMBOffer;
 
 @interface OMBOfferInquiryViewController : OMBViewController
 <UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
@@ -22,6 +23,7 @@
   UIView *buttonsView;
   UIButton *contactButton;
   NSArray *legalQuestions;
+  OMBOffer *offer;
   UIButton *offerButton;
   UIButton *profileButton;
   UIButton *respondButton;
@@ -34,7 +36,7 @@
 
 #pragma mark - Initializer
 
-- (id) initWithOffer: (NSString *) object;
+- (id) initWithOffer: (OMBOffer *) object;
 
 // Tables
 @property (nonatomic, strong) UITableView *offerTableView;

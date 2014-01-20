@@ -10,6 +10,9 @@
 
 #import "NSString+Extensions.h"
 #import "OMBCenteredImageView.h"
+#import "OMBOffer.h"
+#import "OMBResidence.h"
+#import "OMBUser.h"
 
 @implementation OMBHomebaseLandlordOfferCell
 
@@ -32,41 +35,39 @@ reuseIdentifier: (NSString *) reuseIdentifier
   userImageView.layer.cornerRadius = imageSize * 0.5f;
   [self.contentView addSubview: userImageView];
 
+  CGFloat width = screenWidth - (userImageView.frame.origin.x +
+    userImageView.frame.size.width + padding + padding);
   // Time
   timeLabel = [UILabel new];
   timeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
-  CGRect timeLabelRect = [timeLabel.text boundingRectWithSize: 
-    CGSizeMake(screenWidth, 15.0f) font: timeLabel.font];
-  timeLabel.frame = CGRectMake(
-    screenWidth - (timeLabelRect.size.width + padding), padding,
-      timeLabelRect.size.width, 15.0f);
-  timeLabel.textColor = [UIColor grayMedium];
+  timeLabel.frame = CGRectMake(userImageView.frame.origin.x + 
+    userImageView.frame.size.width + padding, padding, width, 15.0f);
+  timeLabel.textAlignment = NSTextAlignmentRight;
   [self.contentView addSubview: timeLabel];
   
   // Name
   nameLabel = [UILabel new];
   nameLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
-  CGFloat nameLabelOriginX = userImageView.frame.origin.x + 
-    userImageView.frame.size.width + padding;
-  nameLabel.frame = CGRectMake(nameLabelOriginX, padding, 
-    screenWidth - 
-    (nameLabelOriginX + padding + timeLabel.frame.size.width + padding), 
-      22.0f);
+  nameLabel.frame = CGRectMake(timeLabel.frame.origin.x, 
+    timeLabel.frame.origin.y, timeLabel.frame.size.width, 22.0f);
   nameLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: nameLabel];
 
   // Type
   typeLabel = [UILabel new];
   typeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  typeLabel.frame = CGRectMake(nameLabel.frame.origin.x, 
-    nameLabel.frame.origin.y + nameLabel.frame.size.height, 
-      screenWidth - (nameLabelOriginX + padding), 22.0f);
+  typeLabel.frame = CGRectMake(nameLabel.frame.origin.x,
+    nameLabel.frame.origin.y + nameLabel.frame.size.height,
+      nameLabel.frame.size.width, nameLabel.frame.size.height);
   typeLabel.textColor = [UIColor grayMedium];
   [self.contentView addSubview: typeLabel];
 
   // Rent
   rentLabel = [UILabel new];
   rentLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  rentLabel.frame = CGRectMake(typeLabel.frame.origin.x,
+    typeLabel.frame.origin.y + typeLabel.frame.size.height,
+      typeLabel.frame.size.width, typeLabel.frame.size.height);
   rentLabel.textColor = [UIColor pink];
   [self.contentView addSubview: rentLabel];
 
@@ -144,6 +145,55 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // Address
   addressLabel.text = @"275 Sand Hill Rd";
   [self adjustFrames];
+}
+
+- (void) loadOffer: (OMBOffer *) object
+{
+  _offer = object;
+
+  // Image
+  if (_offer.user.image) {
+    userImageView.image = [_offer.user imageForSize: userImageView.frame.size];
+  }
+  else {
+    [_offer.user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+      userImageView.image = [_offer.user imageForSize: 
+        userImageView.frame.size];
+    }];
+    userImageView.image = [UIImage imageNamed: @"user_icon.png"];
+  }
+  // Time
+  timeLabel.text = [NSString timeAgoInShortFormatWithTimeInterval:
+    _offer.createdAt];
+  timeLabel.textColor = [UIColor grayMedium];
+  // Name
+  nameLabel.text = [_offer.user fullName];
+  // Type / Tenants
+  typeLabel.text = @"response required";
+  // Rent and address
+  NSMutableAttributedString *rentAttributedString = 
+    [[NSMutableAttributedString alloc] initWithString: 
+      [NSString numberToCurrencyString: (int) _offer.amount] attributes: @{
+        NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Medium" 
+          size: 15],
+        NSForegroundColorAttributeName: [UIColor pink]
+      }
+    ];
+  if ([_offer.residence.address length]) {
+    NSMutableAttributedString *addressAttributedString = 
+      [[NSMutableAttributedString alloc] initWithString: 
+        _offer.residence.address attributes: @{
+          NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
+            size: 15],
+          NSForegroundColorAttributeName: [UIColor textColor]
+        }
+      ];
+    NSMutableAttributedString *spacesString = 
+      [[NSMutableAttributedString alloc] initWithString: @"   "];
+    [rentAttributedString appendAttributedString: spacesString];
+    [rentAttributedString appendAttributedString: addressAttributedString];
+  }
+  rentLabel.attributedText = rentAttributedString;
 }
 
 - (void) loadOfferData

@@ -29,7 +29,7 @@
     @"%@/%@/%i/open_houses/?access_token=%@",
       OnMyBlockAPIURL, resource, residence.uid, 
         [OMBUser currentUser].accessToken];
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
 
   return self;
 }

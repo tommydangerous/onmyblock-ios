@@ -8,12 +8,14 @@
 
 #import "OMBImageThreeLabelCell.h"
 
+@class OMBResidence;
+
 @interface OMBOfferInquiryResidenceCell : OMBImageThreeLabelCell
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
-- (void) loadResidenceData;
+- (void) loadResidence: (OMBResidence *) object;
 
 @end
