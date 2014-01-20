@@ -15,7 +15,6 @@
 @interface OMBResidenceCell : UITableViewCell
 
 @property (nonatomic, weak) OMBConnection *connection;
-@property (nonatomic, weak) UIImageView *imageView;
 @property (nonatomic, weak) OMBResidence *residence;
 @property (nonatomic, strong) OMBResidencePartialView *residencePartialView;
 

@@ -15,14 +15,24 @@
 #import "OMBGradientView.h"
 #import "OMBMapViewController.h"
 #import "OMBResidence.h"
-#import "OMBResidenceCoverPhotoURLConnection.h"
+//#import "OMBResidenceCoverPhotoURLConnection.h"
+#import "OMBResidenceImagesConnection.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
+#import "OMBFilmstripImageCell.h"
+#import "OMBResidenceImage.h"
+
+@interface OMBResidencePartialView () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+
+@property (nonatomic, strong) NSArray *imagesArray;
+@property (nonatomic, strong) UICollectionView *imagesFilmstrip;
+
+@end
 
 @implementation OMBResidencePartialView
 
-@synthesize imageView = _imageView;
+//@synthesize imageView = _imageView;
 @synthesize residence = _residence;
 
 #pragma mark - Initializer
@@ -40,13 +50,7 @@
     blue: (0/255.0) alpha: 1.0];
   self.frame = CGRectMake(0, 0, screen.size.width, imageHeight);
 
-  // Image view
-  _imageView                 = [[UIImageView alloc] init];
-  _imageView.backgroundColor = [UIColor clearColor];
-  _imageView.clipsToBounds   = YES;
-  _imageView.contentMode     = UIViewContentModeTopLeft;
-  _imageView.frame = CGRectMake(0, 0, screen.size.width, imageHeight);
-  [self addSubview: _imageView];
+	[self resetFilmstrip];
 
   // Add to favorites button
   float buttonDimension = 40;
@@ -56,7 +60,7 @@
     [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.5],
       [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.0]];
   addToFavoritesButtonView.frame = CGRectMake(0, 0, 
-    _imageView.frame.size.width, (buttonDimension + (buttonMargin * 2)));
+    screen.size.width, (buttonDimension + (buttonMargin * 2)));
   [self addSubview: addToFavoritesButtonView];
 
   addToFavoritesButton                 = [[UIButton alloc] init];
@@ -145,7 +149,7 @@
   CGRect activityFrame = activityIndicatorView.frame;
   activityFrame.origin.x = (screen.size.width - 
     activityFrame.size.width) / 2.0;
-  activityFrame.origin.y = (_imageView.frame.size.height - 
+  activityFrame.origin.y = (imageHeight -
     activityFrame.size.height) / 2.0;
   activityIndicatorView.frame = activityFrame;
   [self addSubview: activityIndicatorView];
@@ -164,6 +168,26 @@
 {
   // Must dealloc or notifications get sent to zombies
   [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
+- (void) resetFilmstrip
+{
+	[_imagesFilmstrip removeFromSuperview];
+	UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*)_imagesFilmstrip.collectionViewLayout;
+	if (!layout)
+	{
+		layout = [UICollectionViewFlowLayout new];
+		layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+		layout.itemSize = self.bounds.size;
+		layout.minimumLineSpacing = 0.0;
+	}
+	_imagesFilmstrip = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
+	[_imagesFilmstrip registerClass:[OMBFilmstripImageCell class] forCellWithReuseIdentifier:[OMBFilmstripImageCell reuseID]];
+	_imagesFilmstrip.backgroundColor = [UIColor orangeColor];
+	_imagesFilmstrip.dataSource = self;
+	_imagesFilmstrip.delegate = self;
+	_imagesFilmstrip.pagingEnabled = YES;
+	[self insertSubview:_imagesFilmstrip atIndex:0];
 }
 
 #pragma mark - Methods
@@ -226,26 +250,22 @@
   }
 }
 
-- (void) loadImageAnimated: (BOOL) animated
-{
-  if (animated) {
-    _imageView.alpha = 0.0f;
-    [UIView animateWithDuration: 0.15f animations: ^{
-      _imageView.image = _residence.coverPhotoForCell;
-      _imageView.alpha = 1.0f;
-    }];
-  }
-  else {
-    _imageView.image = _residence.coverPhotoForCell;
-  }
-}
+//- (void) loadImageAnimated: (BOOL) animated
+//{
+//  if (animated) {
+//    _imageView.alpha = 0.0f;
+//    [UIView animateWithDuration: 0.15f animations: ^{
+//      _imageView.image = _residence.coverPhotoForCell;
+//      _imageView.alpha = 1.0f;
+//    }];
+//  }
+//  else {
+//    _imageView.image = _residence.coverPhotoForCell;
+//  }
+//}
 
 - (void) loadResidenceData: (OMBResidence *) object
 {
-  CGRect screen     = [[UIScreen mainScreen] bounds];
-  float imageHeight = 
-    screen.size.height * PropertyInfoViewImageHeightPercentage;
-
   _residence = object;
 
   // Bedrooms
@@ -277,31 +297,21 @@
   // Bedrooms / Bathrooms
   bedBathLabel.text = [NSString stringWithFormat: @"%@ / %@", beds, baths];
 
-  // Image
-  if (_residence.coverPhotoForCell) {
-    [self loadImageAnimated: NO];
-  }
-  else {
-    // _imageView.image = nil;
-    // Get _residence cover photo url
-    OMBResidenceCoverPhotoURLConnection *connection = 
-      [[OMBResidenceCoverPhotoURLConnection alloc] initWithResidence: 
-        _residence];
-    connection.completionBlock = ^(NSError *error) {
-      // Resize and set the image to the residence's cover photo for cell
-      _residence.coverPhotoForCell = [_residence coverPhotoWithSize: 
-        CGSizeMake(screen.size.width, imageHeight)];
-      // Animate the image
-      // Need this or else it flickers and loads it twice
-      if (!_imageView.image)
-        [self loadImageAnimated: YES];
-      [activityIndicatorView stopAnimating];
-    };
-    [connection start];
-    [activityIndicatorView startAnimating];
-  }
 
-  // Rent
+	if (!_imagesArray.count) {
+		OMBResidenceImagesConnection *connection =
+		[[OMBResidenceImagesConnection alloc] initWithResidence:_residence];
+		connection.completionBlock = ^(NSError *error) {
+			[activityIndicatorView stopAnimating];
+			_imagesArray = [_residence imagesArray];
+			[_imagesFilmstrip reloadData];
+		};
+		connection.delegate = self;
+		[connection start];
+		[activityIndicatorView startAnimating];
+	}
+
+	// Rent
   rentLabel.text = [NSString stringWithFormat: @"%@", 
     [_residence rentToCurrencyString]];
 
@@ -337,4 +347,28 @@
   // Add to favorites button image
   [self adjustFavoriteButton];
 }
+
+
+- (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+	return _imagesArray.count;
+}
+
+- (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+	OMBFilmstripImageCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[OMBFilmstripImageCell reuseID]
+																			forIndexPath:indexPath];
+	OMBResidenceImage *residenceImage = _imagesArray[indexPath.row];
+	cell.image.image = residenceImage.image;
+	cell.backgroundColor = [UIColor greenColor];
+	return cell;
+}
+
+- (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (self.selected)
+		self.selected(self.residence, indexPath.row);
+}
+
+
 @end

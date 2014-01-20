@@ -26,7 +26,7 @@
   UILabel *rentLabel;
 }
 
-@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, copy) void(^selected)(OMBResidence *residence, NSInteger imageIndex);
 @property (nonatomic, weak) OMBResidence *residence;
 
 #pragma mark - Methods
@@ -34,5 +34,7 @@
 #pragma mark Instance Methods
 
 - (void) loadResidenceData: (OMBResidence *) object;
+
+- (void) resetFilmstrip;
 
 @end

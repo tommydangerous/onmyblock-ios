@@ -12,7 +12,6 @@
 
 @implementation OMBPropertyInfoView
 
-@synthesize imageView = _imageView;
 @synthesize residence = _residence;
 @synthesize residencePartialView = _residencePartialView;
 
@@ -22,13 +21,15 @@
 {
   if (!(self = [super init])) return nil;
 
+	
   _residencePartialView = [[OMBResidencePartialView alloc] init];
-  _imageView = _residencePartialView.imageView;
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.frame = CGRectMake(_residencePartialView.frame.origin.x,
     screen.size.height, _residencePartialView.frame.size.width,
       _residencePartialView.frame.size.height);
+	
+	
   [self addSubview: _residencePartialView];
 
   return self;

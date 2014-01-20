@@ -26,7 +26,6 @@ reuseIdentifier: (NSString *) reuseIdentifier
     return nil;
 
   _residencePartialView = [[OMBResidencePartialView alloc] init];
-  _imageView = _residencePartialView.imageView;
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.contentView.frame = CGRectMake(_residencePartialView.frame.origin.x,
@@ -46,7 +45,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
 {
   [super prepareForReuse];
 
-  _residencePartialView.imageView.image = nil;
+
+	[_residencePartialView resetFilmstrip];
   if (_connection)
     [_connection cancelConnection];
 }

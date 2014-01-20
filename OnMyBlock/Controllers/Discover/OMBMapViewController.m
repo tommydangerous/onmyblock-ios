@@ -615,6 +615,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!cell) {
     cell = [[OMBResidenceCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+	  __weak OMBMapViewController *weakSelf = self;
+	  cell.residencePartialView.selected = ^(OMBResidence *residence, NSInteger __unused imageIndex){
+		  [weakSelf.navigationController pushViewController:
+		  [[OMBResidenceDetailViewController alloc] initWithResidence:
+			residence] animated: YES];
+	  };
   }
   return cell;
 }
@@ -645,22 +651,22 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
   // }
 }
 
-- (void) tableView: (UITableView *) tableView
-didSelectRowAtIndexPath: (NSIndexPath *) indexPath
-{
-  // OMBResidence *residence = [[self propertiesSortedBy: @"" 
-  //   ascending: NO] objectAtIndex: indexPath.row];
-
-  if (tableView == _listView && 
-    [[self residencesForList] count] > indexPath.row) {
-
-    OMBResidence *residence = [[self residencesForList] objectAtIndex: 
-      indexPath.row];
-    [self.navigationController pushViewController:
-      [[OMBResidenceDetailViewController alloc] initWithResidence: 
-        residence] animated: YES];
-  }
-}
+//- (void) tableView: (UITableView *) tableView
+//didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+//{
+//  // OMBResidence *residence = [[self propertiesSortedBy: @"" 
+//  //   ascending: NO] objectAtIndex: indexPath.row];
+//
+//  if (tableView == _listView && 
+//    [[self residencesForList] count] > indexPath.row) {
+//
+//    OMBResidence *residence = [[self residencesForList] objectAtIndex: 
+//      indexPath.row];
+//    [self.navigationController pushViewController:
+//      [[OMBResidenceDetailViewController alloc] initWithResidence: 
+//        residence] animated: YES];
+//  }
+//}
 
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
@@ -843,7 +849,7 @@ withTitle: (NSString *) title;
     [UIView animateWithDuration: 0.15 delay: 0 
       options: UIViewAnimationOptionCurveLinear
         animations: animations completion: ^(BOOL finished) {
-          propertyInfoView.imageView.image = nil;
+			[propertyInfoView.residencePartialView resetFilmstrip];
         }];
   }
 }

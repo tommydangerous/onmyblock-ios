@@ -13,7 +13,6 @@
 
 @interface OMBPropertyInfoView : UIView
 
-@property (nonatomic, weak) UIImageView *imageView;
 @property (nonatomic, weak) OMBResidence *residence;
 @property (nonatomic, strong) OMBResidencePartialView *residencePartialView;
 
