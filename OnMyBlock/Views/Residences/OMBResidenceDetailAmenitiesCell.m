@@ -29,9 +29,14 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 - (void) loadAmenitiesData: (NSArray *) array
 {
-  if (amenities) {
-    return;
-  }
+  [self.contentView.subviews enumerateObjectsUsingBlock: 
+    ^(id obj, NSUInteger idx, BOOL *stop) {
+      UIView *v = (UIView *) obj;
+      if (v.tag == 1111)
+        [(UIView *) obj removeFromSuperview];
+    }
+  ];
+  
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screeWidth = screen.size.width;
   CGFloat padding = 20.0f;
@@ -58,6 +63,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
     UIView *v = [[UIView alloc] init];
     v.frame = CGRectMake(originX, originY, viewWidth, viewHeight);
+    v.tag   = 1111;
     [self.contentView addSubview: v];
 
     UILabel *label = [[UILabel alloc] init];

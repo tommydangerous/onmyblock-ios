@@ -8,6 +8,7 @@
 
 #import "OMBResidencePartialView.h"
 
+#import "NSString+Extensions.h"
 #import "OMBAppDelegate.h"
 #import "OMBFavoriteResidence.h"
 #import "OMBFavoriteResidenceConnection.h"
@@ -30,7 +31,9 @@
 {
   if (!(self = [super init])) return nil;
 
-  CGRect screen     = [[UIScreen mainScreen] bounds];
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGFloat screenWidth = screen.size.width;
+
   float imageHeight = 
     screen.size.height * PropertyInfoViewImageHeightPercentage;
   self.backgroundColor = [UIColor colorWithRed: (0/255.0) green: (0/255.0)
@@ -91,24 +94,28 @@
   // Rent
   rentLabel = [[UILabel alloc] init];
   rentLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 27];
+  rentLabel.textAlignment = NSTextAlignmentRight;
   rentLabel.textColor = [UIColor whiteColor];
   [infoView addSubview: rentLabel];
 
   // Bedrooms / Bathrooms
   bedBathLabel = [[UILabel alloc] init];
   bedBathLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
-  bedBathLabel.frame = CGRectMake(10, marginTop * 2, 
-    rentLabelHeight, bedBathLabelHeight);
+  bedBathLabel.frame = CGRectMake(10.0f, marginTop * 2, 
+    screenWidth - (10 * 2), bedBathLabelHeight);
   bedBathLabel.textColor = rentLabel.textColor;
   [infoView addSubview: bedBathLabel];
 
   // Address
   addressLabel = [[UILabel alloc] init];
   addressLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  // addressLabel.frame = CGRectMake(bedBathLabel.frame.origin.x, 
+  //   bedBathLabel.frame.origin.y + bedBathLabel.frame.size.height, 
+  //     (screen.size.width - (bedBathLabel.frame.origin.x * 3)) * 0.5, 
+  //       bedBathLabelHeight);
   addressLabel.frame = CGRectMake(bedBathLabel.frame.origin.x, 
     bedBathLabel.frame.origin.y + bedBathLabel.frame.size.height, 
-      (screen.size.width - (bedBathLabel.frame.origin.x * 3)) * 0.5, 
-        bedBathLabelHeight);
+      bedBathLabel.frame.size.width, bedBathLabelHeight);
   addressLabel.textColor = rentLabel.textColor;
   [infoView addSubview: addressLabel];
 
@@ -221,12 +228,15 @@
 
 - (void) loadImageAnimated: (BOOL) animated
 {
-  _imageView.image = _residence.coverPhotoForCell;
   if (animated) {
     _imageView.alpha = 0.0f;
-    [UIView animateWithDuration: 0.25f animations: ^{
+    [UIView animateWithDuration: 0.15f animations: ^{
+      _imageView.image = _residence.coverPhotoForCell;
       _imageView.alpha = 1.0f;
     }];
+  }
+  else {
+    _imageView.image = _residence.coverPhotoForCell;
   }
 }
 
@@ -272,14 +282,19 @@
     [self loadImageAnimated: NO];
   }
   else {
+    // _imageView.image = nil;
     // Get _residence cover photo url
     OMBResidenceCoverPhotoURLConnection *connection = 
       [[OMBResidenceCoverPhotoURLConnection alloc] initWithResidence: 
         _residence];
     connection.completionBlock = ^(NSError *error) {
+      // Resize and set the image to the residence's cover photo for cell
       _residence.coverPhotoForCell = [_residence coverPhotoWithSize: 
         CGSizeMake(screen.size.width, imageHeight)];
-      [self loadImageAnimated: YES];
+      // Animate the image
+      // Need this or else it flickers and loads it twice
+      if (!_imageView.image)
+        [self loadImageAnimated: YES];
       [activityIndicatorView stopAnimating];
     };
     [connection start];
@@ -290,31 +305,34 @@
   rentLabel.text = [NSString stringWithFormat: @"%@", 
     [_residence rentToCurrencyString]];
 
-  CGRect rentLabelFrame = rentLabel.frame;
-  CGRect rentRect = [rentLabel.text boundingRectWithSize:
-    CGSizeMake(((screen.size.width / 2.0) - 30), rentLabel.frame.size.height)
-      options: NSStringDrawingUsesLineFragmentOrigin 
-        attributes: @{NSFontAttributeName: rentLabel.font} 
-          context: nil];
-  rentLabelFrame.origin.x = screen.size.width - (rentRect.size.width + 10);
-  rentLabelFrame.size.width = rentRect.size.width;
-  rentLabel.frame = rentLabelFrame;
+  // CGRect rentLabelFrame = rentLabel.frame;
+  // CGRect rentRect = [rentLabel.text boundingRectWithSize:
+  //   CGSizeMake(((screen.size.width / 2.0) - 30), rentLabel.frame.size.height)
+  //     options: NSStringDrawingUsesLineFragmentOrigin 
+  //       attributes: @{NSFontAttributeName: rentLabel.font} 
+  //         context: nil];
+  // rentLabelFrame.origin.x = screen.size.width - (rentRect.size.width + 10);
+  // rentLabelFrame.size.width = rentRect.size.width;
+  // rentLabel.frame = rentLabelFrame;
 
   // Bed bath
-  CGRect bedBathLabelFrame = bedBathLabel.frame;
-  CGRect bedBathRect = [bedBathLabel.text boundingRectWithSize:
-      CGSizeMake((screen.size.width - 
-        (20 + rentLabel.frame.size.width + 20 + 10 + 
-          arrowImageView.frame.size.width + 10)), 
-        bedBathLabel.frame.size.height)
-          options: NSStringDrawingUsesLineFragmentOrigin 
-            attributes: @{NSFontAttributeName: bedBathLabel.font} 
-              context: nil];
-  bedBathLabelFrame.size.width = bedBathRect.size.width;
-  bedBathLabel.frame = bedBathLabelFrame;
+  // CGRect bedBathLabelFrame = bedBathLabel.frame;
+  // CGRect bedBathRect = [bedBathLabel.text boundingRectWithSize:
+  //     CGSizeMake((screen.size.width - 
+  //       (20 + rentLabel.frame.size.width + 20 + 10 + 
+  //         arrowImageView.frame.size.width + 10)), 
+  //       bedBathLabel.frame.size.height)
+  //         options: NSStringDrawingUsesLineFragmentOrigin 
+  //           attributes: @{NSFontAttributeName: bedBathLabel.font} 
+  //             context: nil];
+  // bedBathLabelFrame.size.width = bedBathRect.size.width;
+  // bedBathLabel.frame = bedBathLabelFrame;
 
-  // Address
-  addressLabel.text = [_residence.address capitalizedString];
+  // Title or address
+  if ([[_residence.title stripWhiteSpace] length])
+    addressLabel.text = _residence.title;
+  else
+    addressLabel.text = [_residence.address capitalizedString];
 
   // Add to favorites button image
   [self adjustFavoriteButton];

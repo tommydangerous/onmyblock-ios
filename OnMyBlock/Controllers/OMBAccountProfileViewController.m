@@ -282,14 +282,10 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
   if (!image)
     image = [info objectForKey: UIImagePickerControllerOriginalImage];
 
-  CGSize newSize = CGSizeMake(640.0f, 640.0f);
-  image = [UIImage image: image size: newSize];
-  UIGraphicsBeginImageContext(newSize);
-  [image drawInRect:CGRectMake(0.0f , 0.0f, newSize.width, newSize.height)];
-  UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
-  UIGraphicsEndImageContext();
+  CGSize newSize = CGSizeMake(640.0f, 320.0f);
+  image = [UIImage image: image proportionatelySized: newSize];
 
-  [OMBUser currentUser].image = newImage;
+  [OMBUser currentUser].image = image;
   
   // NSString *encoded = [Base64 encode: imageData];
   OMBUserUploadImageConnection *connection = 

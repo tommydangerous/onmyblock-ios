@@ -8,6 +8,7 @@
 
 #import "OMBResidenceCell.h"
 
+#import "OMBConnection.h"
 #import "OMBResidencePartialView.h"
 
 @implementation OMBResidenceCell
@@ -35,6 +36,19 @@ reuseIdentifier: (NSString *) reuseIdentifier
   [self.contentView addSubview: _residencePartialView];
 
   return self;
+}
+
+#pragma mark - Override
+
+#pragma mark - Override UITableViewCell
+
+- (void) prepareForReuse
+{
+  [super prepareForReuse];
+
+  _residencePartialView.imageView.image = nil;
+  if (_connection)
+    [_connection cancelConnection];
 }
 
 #pragma mark - Methods

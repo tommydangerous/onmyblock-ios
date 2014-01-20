@@ -88,6 +88,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
   residence = object;
 
   // Image
+  if (![residence coverPhoto])
+    [self clearImage];
   NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
     centeredImageView.frame.size.width, centeredImageView.frame.size.height];
   UIImage *image = [residence imageForSizeKey: sizeKey];

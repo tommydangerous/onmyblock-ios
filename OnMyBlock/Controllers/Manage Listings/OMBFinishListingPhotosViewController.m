@@ -99,8 +99,8 @@
   [super loadView];
 
   UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
-  doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
-    style: UIBarButtonItemStylePlain target: self action: @selector(done)];
+  doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Save"
+    style: UIBarButtonItemStylePlain target: self action: @selector(save)];
   [doneBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: boldFont
   } forState: UIControlStateNormal];
@@ -253,7 +253,7 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 
 - (void) addPhoto
 {
-  [self done];
+  [self doneAndSave: NO];
   [addPhotoActionSheet showInView: self.view];
 }
 
@@ -293,16 +293,12 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     position = previousResidenceImage.position + 1;
   }
 
-  CGSize newSize = CGSizeMake(640.0f, 640.0f);
-  image = [UIImage image: image size: newSize];
-  UIGraphicsBeginImageContext(newSize);
-  [image drawInRect:CGRectMake(0.0f , 0.0f, newSize.width, newSize.height)];
-  UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
-  UIGraphicsEndImageContext();
+  CGSize newSize = CGSizeMake(640.0f, 320.0f);
+  image = [UIImage image: image proportionatelySized: newSize];
 
   OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
   residenceImage.absoluteString = absoluteString;
-  residenceImage.image    = newImage;
+  residenceImage.image    = image;
   residenceImage.position = position;
   residenceImage.uid      = -999 + arc4random_uniform(100);
 
@@ -366,7 +362,7 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
   [alertView show];
 }
 
-- (void) done
+- (void) doneAndSave: (BOOL) save
 {
   [self.navigationItem setRightBarButtonItem: editBarButtonItem animated: YES];
   // Stop wobble
@@ -382,9 +378,12 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
       // itemView.transform = CGAffineTransformIdentity;
     }];
     itemView.residenceImage.position = [imageViews indexOfObject: itemView];
-    // Save the positions of the images
-    [[[OMBResidenceImageUpdateConnection alloc] initWithResidenceImage:
-      itemView.residenceImage] start];
+
+    if (save) {
+      // Save the positions of the images
+      [[[OMBResidenceImageUpdateConnection alloc] initWithResidenceImage:
+        itemView.residenceImage] start];
+    }
 
     // [UIView animateWithDuration: duration delay: 0.0
     //   options: (UIViewAnimationOptionAllowUserInteraction | 
@@ -549,6 +548,11 @@ toIndex: (int) endingIndex
     imageV.currentIndex = i;
     [self positionImageView: imageV animated: YES];
   }
+}
+
+- (void) save
+{
+  [self doneAndSave: YES];
 }
 
 - (void) startWobblingView: (OMBEditablePhotoView *) itemView

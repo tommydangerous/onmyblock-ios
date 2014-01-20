@@ -632,8 +632,17 @@ numberOfRowsInSection: (NSInteger) section
 didEndDisplayingCell: (UITableViewCell *) cell 
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  OMBResidenceCell *c = (OMBResidenceCell *) cell;
-  c.imageView.image   = nil;
+  // if (tableView == _listView) {
+  //   if ([[self residencesForList] count] > indexPath.row) {
+  //     OMBResidence *residence = [[self residencesForList] objectAtIndex: 
+  //       indexPath.row];
+  //     if (!residence.coverPhotoForCell) {
+  //       OMBResidenceCell *c = (OMBResidenceCell *) cell;
+  //       c.imageView.image   = nil;
+  //       NSLog(@"DID END DISPLAY: %i", residence.uid);
+  //     }
+  //   }
+  // }
 }
 
 - (void) tableView: (UITableView *) tableView
@@ -641,11 +650,16 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // OMBResidence *residence = [[self propertiesSortedBy: @"" 
   //   ascending: NO] objectAtIndex: indexPath.row];
-  OMBResidence *residence = [[self residencesForList] objectAtIndex: 
-    indexPath.row];
-  [self.navigationController pushViewController:
-    [[OMBResidenceDetailViewController alloc] initWithResidence: 
-      residence] animated: YES];
+
+  if (tableView == _listView && 
+    [[self residencesForList] count] > indexPath.row) {
+
+    OMBResidence *residence = [[self residencesForList] objectAtIndex: 
+      indexPath.row];
+    [self.navigationController pushViewController:
+      [[OMBResidenceDetailViewController alloc] initWithResidence: 
+        residence] animated: YES];
+  }
 }
 
 - (CGFloat) tableView: (UITableView *) tableView
@@ -750,11 +764,15 @@ withTitle: (NSString *) title;
     completion: ^(NSError *error) {
       [self reloadTable];
       fetching = NO;
-
-      CGFloat newCount = [[OMBResidenceListStore sharedStore].residences count];
-      if (newCount == currentCount || 
-        _listView.contentSize.height <= _listView.frame.size.height)
-        [self fetchResidencesForList];
+      // Stop fetching residences after 100 mile radius
+      if (_radiusInMiles < 100) {
+        CGFloat newCount = 
+          [[OMBResidenceListStore sharedStore].residences count];
+        // If the count never changed
+        if (newCount == currentCount || 
+          _listView.contentSize.height <= _listView.frame.size.height)
+          [self fetchResidencesForList];
+      }
     }
   ];
 }
@@ -787,7 +805,6 @@ withTitle: (NSString *) title;
   UINavigationBar *bar = self.navigationController.navigationBar;
   [UIView animateWithDuration: 0.25 animations: ^{
     CGFloat contentOffsetY = sortView.frame.origin.y + 44.0f;
-    NSLog(@"%f", contentOffsetY);
     bar.alpha = 0.0f;
     bar.frame = CGRectMake(bar.frame.origin.x, 20.0f - bar.frame.size.height,
       bar.frame.size.width, bar.frame.size.height);

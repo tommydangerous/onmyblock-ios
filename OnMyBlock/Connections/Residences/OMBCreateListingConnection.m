@@ -35,12 +35,12 @@ dictionary: (NSDictionary *) dictionary
     state = [words objectAtIndex: 1];
   }
   NSDictionary *objectParams = @{
-    @"city": [city stripWhiteSpace],
+    @"city":          [city stripWhiteSpace],
     @"lease_months":  [dictionary objectForKey: @"leaseMonths"],
     @"min_bathrooms": [dictionary objectForKey: @"bathrooms"],
     @"min_bedrooms":  [dictionary objectForKey: @"bedrooms"],
     @"property_type": [dictionary objectForKey: @"propertyType"],
-    @"state": [state stripWhiteSpace],
+    @"state":         [state stripWhiteSpace],
   };
   NSDictionary *params = @{
     @"access_token":        [OMBUser currentUser].accessToken,

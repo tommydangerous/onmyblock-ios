@@ -11,6 +11,9 @@
 @class OMBResidence;
 
 @interface OMBResidenceUpdateConnection : OMBConnection
+{
+  OMBResidence *residence;
+}
 
 #pragma mark - Initializer
 

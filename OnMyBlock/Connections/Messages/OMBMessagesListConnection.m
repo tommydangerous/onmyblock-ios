@@ -36,7 +36,7 @@
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
 
-  NSLog(@"OMBMessagesListConnection\n%@", json);
+  // NSLog(@"OMBMessagesListConnection\n%@", json);
 
   OMBInboxViewController *vc = (OMBInboxViewController *) self.delegate;
   vc.maxPages = [[json objectForKey: @"pages"] intValue];

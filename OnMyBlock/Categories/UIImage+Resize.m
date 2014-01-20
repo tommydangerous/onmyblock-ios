@@ -14,23 +14,25 @@
 
 + (UIImage *) image: (UIImage *) image proportionatelySized: (CGSize) size
 {
-  float newHeight, newWidth;
-  if (image.size.width < image.size.height) {
-    newHeight = size.height;
-    newWidth  = (newHeight / image.size.height) * image.size.width;
+  CGFloat newHeight = 0.0f;
+  CGFloat newWidth  = 0.0f;
+  CGPoint point     = CGPointZero;
+  if (image.size.height > image.size.width) {
+    CGFloat ratio = size.width / image.size.width;
+    newHeight = image.size.height * ratio;
+    newWidth  = size.width;
+    // if (newHeight > size.height)
+    //   point.y = (newHeight - size.height) * -0.5f;
+    // else if (size.height > newHeight)
+    //   point.y = (size.height - newHeight) * 0.5f;
   }
   else {
-    newWidth  = size.width;
-    newHeight = (newWidth / image.size.width) * image.size.height;
+    CGFloat ratio = size.height / image.size.height;
+    newHeight = size.height;
+    newWidth  = image.size.width * ratio;
+    // point.x = (newWidth - size.width) * -0.5f;
   }
-  CGPoint point = CGPointMake(0, 0);
-  // Center it horizontally
-  if (newWidth > size.width)
-    point.x = (newWidth - size.width) / -2.0;
-  // Center it vertically
-  if (newHeight > size.height)
-    point.y = (newHeight - size.height) / -2.0;
-  return [UIImage image: image size: CGSizeMake(newWidth, newHeight) 
+  return [UIImage image: image size: CGSizeMake(newWidth, newHeight)
     point: point];
 }
 

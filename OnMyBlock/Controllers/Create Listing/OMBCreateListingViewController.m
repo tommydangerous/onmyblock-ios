@@ -8,6 +8,7 @@
 
 #import "OMBCreateListingViewController.h"
 
+#import "AMBlurView.h"
 #import "OMBActivityView.h"
 #import "OMBCreateListingConnection.h"
 #import "OMBCreateListingDetailCell.h"
@@ -21,6 +22,7 @@
 #import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 
 @implementation OMBCreateListingViewController
@@ -207,7 +209,6 @@
   cityTableView.hidden = YES;
   cityTableView.separatorColor = [UIColor grayLight];
   cityTableView.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
-  cityTableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
   [locationView addSubview: cityTableView];
 
   // Step 3
@@ -224,6 +225,32 @@
   // Activty spinner
   activityView = [[OMBActivityView alloc] init];
   [self.view addSubview: activityView];
+
+  // Next
+  nextView = [[AMBlurView alloc] init];
+  nextView.blurTintColor = [UIColor blue];
+  nextView.frame = CGRectMake(0.0f, screen.size.height,
+    screenWidth, 44.0f);
+  [self.view addSubview: nextView];
+  // Button
+  nextButton = [UIButton new];
+  nextButton.frame = CGRectMake(0.0f, 0.0f, nextView.frame.size.width,
+    nextView.frame.size.height);
+  nextButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
+    size: 18];
+  [nextButton addTarget: self action: @selector(next)
+    forControlEvents: UIControlEventTouchUpInside];
+  [nextButton setBackgroundImage: 
+    [UIImage imageWithColor: [UIColor blueHighlighted]] 
+      forState: UIControlStateHighlighted];
+  [nextButton setTitle: @"Next" forState: UIControlStateNormal];
+  [nextButton setTitleColor: [UIColor whiteColor] 
+    forState: UIControlStateNormal];
+  [nextView addSubview: nextButton];
+
+  // City table view footer
+  cityTableView.tableFooterView = [[UIView alloc] initWithFrame:
+    CGRectMake(0.0f, 0.0f, screenWidth, nextView.frame.size.height)];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -397,6 +424,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   // City
   else if (tableView == cityTableView) {
     cityTextField.text = [_citiesArray objectAtIndex: indexPath.row];
+    [valuesDictionary setObject: cityTextField.text forKey: @"city"];
     [self next];
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
@@ -414,7 +442,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Details
   else if (tableView == detailsTableView) {
-    return tableView.frame.size.height / 3.0f;
+    return (tableView.frame.size.height - nextView.frame.size.height) / 3.0f;
   }
   return 0.0f;
 }
@@ -455,13 +483,16 @@ replacementString: (NSString *) string
     if (stepNumber == 0) {
       [self.navigationItem setLeftBarButtonItem: cancelBarButtonItem
         animated: YES];
-      [self.navigationItem setRightBarButtonItem: nil animated: YES];
+      // [self.navigationItem setRightBarButtonItem: nil animated: YES];
+      [self showNextButton: NO];
     }
     else {
       [self.navigationItem setLeftBarButtonItem: backBarButtonItem
         animated: YES];
-      [self.navigationItem setRightBarButtonItem: nextBarButtonItem
-        animated: YES];
+      // [self.navigationItem setRightBarButtonItem: nextBarButtonItem
+      //   animated: YES];
+      [nextButton setTitle: @"Next" forState: UIControlStateNormal];
+      [self showNextButton: YES];
     }
 
     void (^animations) (void) = ^(void) {};
@@ -553,12 +584,13 @@ replacementString: (NSString *) string
 
 - (void) checkValidationForCity
 {
-  [valuesDictionary setObject: cityTextField.text forKey: @"city"];
   if ([[[valuesDictionary objectForKey: @"city"] stripWhiteSpace] length]) {
-    nextBarButtonItem.enabled = YES;
+    // nextBarButtonItem.enabled = YES;
+    [self showNextButton: YES];
   }
   else {
-    nextBarButtonItem.enabled = NO;
+    // nextBarButtonItem.enabled = NO;
+    [self showNextButton: NO];
   }
 }
 
@@ -572,8 +604,9 @@ replacementString: (NSString *) string
       coordinate];
   conn.completionBlock = ^(NSError *error) {
     cityTableView.hidden = YES;
-    [self.navigationItem setRightBarButtonItem: nextBarButtonItem 
-      animated: YES];
+    // [self.navigationItem setRightBarButtonItem: nextBarButtonItem 
+    //   animated: YES];
+    [valuesDictionary setObject: cityTextField.text forKey: @"city"];
     [self checkValidationForCity];
   };
   conn.delegate = self;
@@ -600,9 +633,16 @@ replacementString: (NSString *) string
     [self.navigationItem setLeftBarButtonItem: backBarButtonItem
       animated: YES];
     // Last step; details
-    if (stepNumber == 2) 
-      [self.navigationItem setRightBarButtonItem: saveBarButtonItem
-        animated: YES];
+    if (stepNumber == 2) {
+      [nextButton setTitle: @"Save" forState: UIControlStateNormal];
+      // Turn into save
+
+      // [self.navigationItem setRightBarButtonItem: saveBarButtonItem
+      //   animated: YES];
+    }
+    else {
+      [nextButton setTitle: @"Next" forState: UIControlStateNormal];
+    }
 
     void (^animations) (void) = ^(void) {};
     void (^completion) (BOOL finished) = ^(BOOL finished) {};
@@ -653,6 +693,11 @@ replacementString: (NSString *) string
     [UIView animateWithDuration: 0.25f animations: animations 
       completion: completion];
   }
+  // Save
+  else {
+    stepNumber += 1;
+    [self save];
+  }
   [self.view endEditing: YES];
 }
 
@@ -663,9 +708,9 @@ replacementString: (NSString *) string
 
 - (void) save
 {
+  // This view controller is presented modally
+  // [[self appDelegate].container startSpinning];
   [activityView startSpinning];
-
-  stepNumber += 1;
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGRect progressBarRect = progressBar.frame;
@@ -677,12 +722,19 @@ replacementString: (NSString *) string
       [[OMBCreateListingConnection alloc] initWithTemporaryResidence: 
         _temporaryResidence dictionary: valuesDictionary];
     conn.completionBlock = ^(NSError *error) {
-      if (error) {
-        [activityView stopSpinning];
+      if (_temporaryResidence.uid && !error) {
+        [[self appDelegate].container.manageListingsNavigationController 
+          pushViewController:
+            [[OMBFinishListingViewController alloc] initWithResidence: 
+              _temporaryResidence] animated: NO];
+        [self cancel];
+      }
+      else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
           @"Save failed" message: @"Please try again" 
             delegate: nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
         [alertView show];
+
         stepNumber -= 1;
         CGRect newRect = progressBar.frame;
         newRect.size.width = screen.size.width * (stepNumber / 3.0f);
@@ -690,13 +742,8 @@ replacementString: (NSString *) string
           progressBar.frame = newRect;
         }];
       }
-      else {
-        [[self appDelegate].container.manageListingsNavigationController 
-          pushViewController:
-            [[OMBFinishListingViewController alloc] initWithResidence: 
-              _temporaryResidence] animated: NO];
-        [self cancel];
-      }
+      [activityView stopSpinning];
+      // [[self appDelegate].container stopSpinning];
     };
     [conn start]; 
   }];
@@ -716,6 +763,19 @@ withMiles: (int) miles animated: (BOOL) animated
     MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles, 
       distanceInMiles);
   [map setRegion: region animated: animated];
+}
+
+- (void) showNextButton: (BOOL) show
+{
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGFloat originY = screen.size.height;
+  if (show)
+    originY -= nextView.frame.size.height;
+  [UIView animateWithDuration: 0.25f animations: ^{
+    CGRect nextRect   = nextView.frame;
+    nextRect.origin.y = originY;
+    nextView.frame    = nextRect;
+  }];
 }
 
 - (void) startGooglePlacesConnection
@@ -748,6 +808,7 @@ withMiles: (int) miles animated: (BOOL) animated
     else {
       cityTableView.hidden = YES;
     }
+    [valuesDictionary setObject: @"" forKey: @"city"];
     [self checkValidationForCity];
   } 
 }

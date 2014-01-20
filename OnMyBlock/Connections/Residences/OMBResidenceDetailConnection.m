@@ -69,7 +69,7 @@
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
 
-  NSLog(@"OMBResidenceDetailConnection\n%@", json);
+  // NSLog(@"OMBResidenceDetailConnection\n%@", json);
   
   [residence readFromResidenceDictionary: json];
   [super connectionDidFinishLoading: connection];

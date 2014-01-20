@@ -375,8 +375,11 @@
       [[OMBLoginConnection alloc] initWithParameters: dictionary];
     connection.completionBlock = ^(NSError *error) {
       // User logged in
-      if ([OMBUser currentUser].accessToken)
+      if ([[OMBUser currentUser].accessToken length] && 
+        [OMBUser currentUser].uid) {
+        
         [self clearTextFieldText];
+      }
       // User failed to login
       else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
@@ -593,8 +596,11 @@
       [[OMBSignUpConnection alloc] initWithParameters: dictionary];
     connection.completionBlock = ^(NSError *error) {
       // User signed up
-      if ([OMBUser currentUser].accessToken)
-        [self clearTextFieldText];      
+      if ([[OMBUser currentUser].accessToken length] && 
+        [OMBUser currentUser].uid) {
+
+        [self clearTextFieldText];
+      }
       // User failed to sign up
       else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
@@ -615,6 +621,7 @@
 {
   OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
     [UIApplication sharedApplication].delegate;
+  // [appDelegate.container startSpinning];
   // Container -> login view controller spinner
   [appDelegate.container.loginViewController.activityView startSpinning];
   // Container -> intro view controller spinner
@@ -628,6 +635,7 @@
 {
   OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
     [UIApplication sharedApplication].delegate;
+  // [appDelegate.container stopSpinning];
   // Container -> login view controller spinner
   [appDelegate.container.loginViewController.activityView stopSpinning];
   // Container -> intro view controller spinner

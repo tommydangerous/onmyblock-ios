@@ -15,6 +15,7 @@
 #import "OMBMessageCollectionViewCell.h"
 #import "OMBMessageCreateConnection.h"
 #import "OMBMessageInputToolbar.h"
+#import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBMessageNewViewController
@@ -220,6 +221,9 @@
 
 - (void) send
 {
+  // Use an activity view within the view controller if
+  // view controller presented modally
+  // [[self appDelegate].container startSpinning];
   [activityView startSpinning];
 
   OMBMessage *message = [[OMBMessage alloc] init];
@@ -233,6 +237,7 @@
   OMBMessageCreateConnection *conn = 
     [[OMBMessageCreateConnection alloc] initWithMessage: message];
   conn.completionBlock = ^(NSError *error) {
+    // [[self appDelegate].container stopSpinning];
     [activityView stopSpinning];
     if (error) {
       UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 

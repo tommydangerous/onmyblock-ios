@@ -49,6 +49,9 @@
 {
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
+
+  NSLog(@"OMBSignUpConnection%@", json);
+  
   if ([[json objectForKey: @"success"] intValue]) {
     [[OMBUser currentUser] readFromDictionary: json];
     [[NSNotificationCenter defaultCenter] postNotificationName: 

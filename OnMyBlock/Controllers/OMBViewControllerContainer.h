@@ -9,6 +9,7 @@
 #import "OMBViewController.h"
 
 @class DRNRealTimeBlurView;
+@class OMBActivityView;
 @class OMBCenteredImageView;
 @class OMBExtendedHitAreaViewContainer;
 @class OMBIntroStillImagesViewController;
@@ -64,6 +65,7 @@
   UITapGestureRecognizer *tapGesture;
 
   // Views
+  OMBActivityView *activityView;
   UIImageView *backgroundImageView;
   UIView *backgroundView;
   DRNRealTimeBlurView *blurView;
@@ -148,5 +150,7 @@
 - (void) showSearchAndSwitchToList: (BOOL) switchToList;
 - (void) showSignUp;
 - (void) showMenuWithFactor: (float) factor;
+- (void) startSpinning;
+- (void) stopSpinning;
 
 @end

@@ -32,8 +32,6 @@
       OnMyBlockAPIURL, resource, residence.uid, 
         [OMBUser currentUser].accessToken];
 
-  NSLog(@"%@", string);
-
   [self setRequestFromString: string];
   
   return self;

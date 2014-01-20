@@ -11,6 +11,7 @@
 #import "DDPageControl.h"
 #import "DRNRealTimeBlurView.h"
 #import "OMBAccountViewController.h"
+#import "OMBActivityView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBCreateListingViewController.h"
 #import "OMBExtendedHitAreaViewContainer.h"
@@ -352,6 +353,10 @@
   [_accountView addSubview: accountButton];
   _accountView.transform = CGAffineTransformMakeScale(0, 0);
 
+  // Activity view
+  activityView = [[OMBActivityView alloc] init];
+  [_detailView addSubview: activityView];
+
   [self presentDetailViewController: _mapNavigationController];
   // [self presentDetailViewController: _accountNavigationController];
 
@@ -685,7 +690,8 @@ willDecelerate: (BOOL) decelerate
 
   viewController.view.frame = [self frameForDetailViewController];
 
-  [_detailView addSubview: viewController.view];
+  // [_detailView addSubview: viewController.view];
+  [_detailView insertSubview: viewController.view belowSubview: activityView];
   _currentDetailViewController = viewController;
 
   [viewController didMoveToParentViewController: self];
@@ -1050,6 +1056,16 @@ willDecelerate: (BOOL) decelerate
 {
   [_loginViewController showSignUp];
   [self presentLoginViewController];
+}
+
+- (void) startSpinning
+{
+  [activityView startSpinning];
+}
+
+- (void) stopSpinning
+{
+  [activityView stopSpinning];
 }
 
 - (void) tappedDetailView: (UITapGestureRecognizer *) gesture

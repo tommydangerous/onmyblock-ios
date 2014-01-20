@@ -16,6 +16,7 @@
 #import "OMBIntroStillImageSlide.h"
 #import "OMBLoginViewController.h"
 #import "OMBSignUpView.h"
+#import "OMBViewControllerContainer.h"
 #import "ILTranslucentView.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
@@ -272,6 +273,7 @@
 {
   [super viewWillAppear: animated];
 
+  // [[self appDelegate].container stopSpinning];
   [_activityView stopSpinning];
 }
 

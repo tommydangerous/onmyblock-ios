@@ -12,23 +12,22 @@ NSTimeInterval RequestTimeoutInterval = 10;
 NSMutableArray *sharedConnectionList  = nil;
 NSString *const OnMyBlockAPI          = @"/api-v1";
 
-// Production server
-// NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
-// Staging server
-NSString *const OnMyBlockAPIURL = @"http://ombrb.nodelist.com/api-v1";
-// Development server
-// NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
+// Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
+#if __ENVIRONMENT__ == 1
+  // Development server
+  NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
+#elif __ENVIRONMENT__ == 2
+  // Staging server
+  NSString *const OnMyBlockAPIURL = @"http://ombrb.nodelist.com/api-v1";
+#elif __ENVIRONMENT__ == 3
+  // Production server
+  NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
+#endif
 
 // Josselyn
 // NSString *const OnMyBlockAPIURL = @"http://10.0.1.29:3000/api-v1";
-// iPhone hotspot
-// NSString *const OnMyBlockAPIURL = @"http://172.20.10.5:3000/api-v1";
-// Evonexus
-// NSString *const OnMyBlockAPIURL = @"http://172.17.1.23:3000/api-v1";
 // Home
 // NSString *const OnMyBlockAPIURL = @"http://192.168.1.72:3000/api-v1";
-// Morgan's house
-// NSString *const OnMyBlockAPIURL = @"http://192.168.2.136:3000/api-v1";
 
 @implementation OMBConnection
 
@@ -81,6 +80,16 @@ didReceiveData: (NSData *) data
     [sharedConnectionList removeObject: conn];
   if (sharedConnectionList.count == 0)
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
+- (void) connection: (NSURLConnection *) connection 
+didSendBodyData: (NSInteger) bytesWritten 
+totalBytesWritten: (NSInteger) totalBytesWritten 
+totalBytesExpectedToWrite: (NSInteger) totalBytesExpectedToWrite
+{
+  CGFloat x = (CGFloat) totalBytesWritten;
+  CGFloat y = (CGFloat) totalBytesExpectedToWrite;
+  NSLog(@"%@: %f", [_request URL].absoluteString, x / y);
 }
 
 #pragma mark - Protocol NSURLConnectionDelegate
@@ -138,7 +147,13 @@ parameters: (NSDictionary *) dictionary
   [_request setTimeoutInterval: RequestTimeoutInterval];
   container = [[NSMutableData alloc] init];
   internalConnection = [[NSURLConnection alloc] initWithRequest: _request
-    delegate: self startImmediately: YES];
+    delegate: self startImmediately: NO];
+  // During scrolling, the run loop is UITrackingRunLoopMode
+  // By default, NSURLConnection schedules itself in NSDefaultRunLoopMode
+  // Schedule the connection in the common modes, e.g. UITrackingRunLoopMode
+  [internalConnection scheduleInRunLoop: [NSRunLoop currentRunLoop]
+    forMode: NSRunLoopCommonModes];
+  [internalConnection start];
   if (!sharedConnectionList)
     sharedConnectionList = [NSMutableArray array];
   [sharedConnectionList addObject: self];

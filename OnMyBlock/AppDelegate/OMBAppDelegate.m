@@ -19,7 +19,6 @@
 
 NSString *const FBSessionStateChangedNotification = 
   @"com.onmyblock.Login:FBSessionStateChangedNotification";
-
 NSString *const OMBUserDefaults = @"OMBUserDefaults";
 NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
 
@@ -62,7 +61,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   }
   NSNumber *number = [defaults objectForKey: OMBUserDefaultsViewedIntro];
   if (![number boolValue]) {
-    [_container showIntroAnimatedDissolve: NO];
+    if (![[OMBUser currentUser] loggedIn])
+      [_container showIntroAnimatedDissolve: NO];
     [[NSUserDefaults standardUserDefaults] setObject:
       [NSNumber numberWithBool: YES] forKey: OMBUserDefaultsViewedIntro];
   }
@@ -76,35 +76,37 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
 {
   // Delegate method to call the Facebook session object 
   // that handles the incoming URL
+  // [[NSNotificationCenter defaultCenter] postNotificationName:
+  //   OMBActivityIndicatorViewStartAnimatingNotification object: nil];
   return [FBSession.activeSession handleOpenURL: url];
 
   // Venmo App Switch
-  NSLog(@"openURL: %@", url);
-  return [_venmoClient openURL: url completionHandler:
-    ^(VenmoTransaction *transaction, NSError *error) {
-      if (transaction) {
-        NSString *success = (transaction.success ? @"Success" : @"Failure");
-        NSString *title = [@"Transaction " stringByAppendingString: success];
-        NSString *message = [@"payment_id: " stringByAppendingFormat:
-          @"%@. %@ %@ %@ (%@) $%@ %@",
-           transaction.transactionID,
-           transaction.fromUserID,
-           transaction.typeStringPast,
-           transaction.toUserHandle,
-           transaction.toUserID,
-           transaction.amountString,
-           transaction.note];
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title 
-          message: message delegate: nil cancelButtonTitle: @"OK"
-            otherButtonTitles: nil];
-        [alertView show];
-      }
-      // Error
-      else {
-        NSLog(@"transaction error code: %i", error.code);
-      }
-    }
-  ];
+  // NSLog(@"openURL: %@", url);
+  // return [_venmoClient openURL: url completionHandler:
+  //   ^(VenmoTransaction *transaction, NSError *error) {
+  //     if (transaction) {
+  //       NSString *success = (transaction.success ? @"Success" : @"Failure");
+  //       NSString *title = [@"Transaction " stringByAppendingString: success];
+  //       NSString *message = [@"payment_id: " stringByAppendingFormat:
+  //         @"%@. %@ %@ %@ (%@) $%@ %@",
+  //          transaction.transactionID,
+  //          transaction.fromUserID,
+  //          transaction.typeStringPast,
+  //          transaction.toUserHandle,
+  //          transaction.toUserID,
+  //          transaction.amountString,
+  //          transaction.note];
+  //       UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title 
+  //         message: message delegate: nil cancelButtonTitle: @"OK"
+  //           otherButtonTitles: nil];
+  //       [alertView show];
+  //     }
+  //     // Error
+  //     else {
+  //       NSLog(@"transaction error code: %i", error.code);
+  //     }
+  //   }
+  // ];
 }
 
 - (void) applicationWillResignActive: (UIApplication *) application

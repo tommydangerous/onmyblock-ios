@@ -30,6 +30,12 @@ float kStandardHeight = 44.0f;
 {
   if (!(self = [super init])) return nil;
 
+  // Location manager
+  locationManager                 = [[CLLocationManager alloc] init];
+  locationManager.delegate        = self;
+  locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+  locationManager.distanceFilter  = 50;
+
   [self resetValuesDictionary];
 
   self.screenName = self.title = @"Filter";
@@ -233,6 +239,25 @@ float kStandardHeight = 44.0f;
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol CLLocationManagerDelegate
+
+- (void) locationManager: (CLLocationManager *) manager
+didFailWithError: (NSError *) error
+{
+  NSLog(@"Location manager did fail with error: %@", 
+    error.localizedDescription);
+  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+    @"Could not locate" message: error.localizedDescription delegate: nil 
+      cancelButtonTitle: @"OK" otherButtonTitles: nil];
+  [alertView show];
+}
+
+- (void) locationManager: (CLLocationManager *) manager
+didUpdateLocations: (NSArray *) locations
+{
+  [self foundLocations: locations];
+}
 
 #pragma mark - Protocol UIPickerViewDataSource
 
@@ -699,6 +724,20 @@ viewForHeaderInSection: (NSInteger) section
   [self hidePickerView];
 }
 
+- (void) foundLocations: (NSArray *) locations
+{
+  CLLocationCoordinate2D coordinate;
+  if ([locations count]) {
+    for (CLLocation *location in locations) {
+      coordinate = location.coordinate;
+    }
+    OMBNeighborhood *neighborhood = [[OMBNeighborhood alloc] init];
+    neighborhood.coordinate = coordinate;
+    [_valuesDictionary setObject: neighborhood forKey: @"neighborhood"];
+  }
+  [locationManager stopUpdatingLocation];
+}
+
 - (void) hideNeighborhoodTableViewContainer
 {
   CGRect rect = neighborhoodTableViewContainer.frame;
@@ -787,6 +826,9 @@ viewForHeaderInSection: (NSInteger) section
       [NSIndexPath indexPathForRow: 1 inSection: 0]];
   neighborhoodCell.neighborhoodTextField.text = @"Current Location";
   [self hideNeighborhoodTableViewContainer];
+  selectedNeighborhood = nil;
+  [neighborhoodTableView reloadData];
+  [locationManager startUpdatingLocation];
 }
 
 @end

@@ -10,6 +10,7 @@
 
 #import "OMBViewController.h"
 
+@class AMBlurView;
 @class OMBActivityView;
 @class OMBCreateListingPropertyTypeView;
 @class OMBTemporaryResidence;
@@ -24,6 +25,8 @@ UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
   UIBarButtonItem *cancelBarButtonItem;
   CLLocationManager *locationManager;
   UIBarButtonItem *nextBarButtonItem;
+  UIButton *nextButton;
+  AMBlurView *nextView;
   UIView *progressBar;
   UILabel *questionLabel;
   UIBarButtonItem *saveBarButtonItem;

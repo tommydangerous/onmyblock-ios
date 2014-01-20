@@ -11,12 +11,14 @@
 @class OMBNeighborhood;
 
 @interface OMBMapFilterViewController : OMBTableViewController
-<UIPickerViewDataSource, UIPickerViewDelegate, UIScrollViewDelegate>
+<CLLocationManagerDelegate, UIPickerViewDataSource, UIPickerViewDelegate,
+  UIScrollViewDelegate>
 {
   UIButton *currentLocationButton;
   UIBarButtonItem *doneBarButtonItem;
   UIView *fadedBackground;
   BOOL isEditing;
+  CLLocationManager *locationManager;
   UITableView *neighborhoodTableView;
   UIView *neighborhoodTableViewContainer;
   UIPickerView *rentPickerView;

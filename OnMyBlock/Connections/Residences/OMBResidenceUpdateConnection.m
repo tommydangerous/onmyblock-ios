@@ -20,6 +20,8 @@ attributes: (NSArray *) attributes
 {
   if (!(self = [super init])) return nil;
 
+  residence = object;
+
   NSString *resource    = @"places";
   NSString *resourceKey = @"residence";
   if ([object isKindOfClass: [OMBTemporaryResidence class]]) {
@@ -138,6 +140,13 @@ attributes: (NSArray *) attributes
     options: 0 error: nil];
 
   NSLog(@"OMBResidenceUpdateConnection\n%@", json);
+
+  NSDictionary *objectDict = [json objectForKey: @"object"];
+  NSInteger inactive = [[objectDict objectForKey: @"inactive"] intValue];
+  if (inactive == 0)
+    residence.inactive = NO;
+  else
+    residence.inactive = YES;
 
   [super connectionDidFinishLoading: connection];
 }

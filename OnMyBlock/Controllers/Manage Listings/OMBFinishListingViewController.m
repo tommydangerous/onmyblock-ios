@@ -28,6 +28,7 @@
 #import "OMBResidenceUploadImageConnection.h"
 #import "OMBResidenceUpdateConnection.h"
 #import "OMBTemporaryResidence.h"
+#import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
@@ -71,6 +72,7 @@
   [unlistBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
   } forState: UIControlStateNormal];
+  self.navigationItem.rightBarButtonItem = previewBarButtonItem;
 
   self.view.backgroundColor = [UIColor clearColor];
   [self setupForTable];
@@ -96,6 +98,25 @@
   [publishNowButton setTitleColor: [UIColor whiteColor] 
     forState: UIControlStateNormal];
   [publishNowView addSubview: publishNowButton];
+
+  // Unlist view
+  unlistView = [[AMBlurView alloc] init];
+  unlistView.blurTintColor = [UIColor grayVeryLight];
+  unlistView.frame = publishNowView.frame;
+  [self.view addSubview: unlistView];
+  // Unlist button
+  unlistButton = [UIButton new];
+  unlistButton.frame = publishNowButton.frame;
+  unlistButton.titleLabel.font = publishNowButton.titleLabel.font;
+  [unlistButton addTarget: self action: @selector(unlist)
+    forControlEvents: UIControlEventTouchUpInside];
+  [unlistButton setBackgroundImage: 
+    [UIImage imageWithColor: [UIColor grayUltraLight]] 
+      forState: UIControlStateHighlighted];
+  [unlistButton setTitle: @"Unlist" forState: UIControlStateNormal];
+  [unlistButton setTitleColor: [UIColor grayMedium] 
+    forState: UIControlStateNormal];
+  [unlistView addSubview: unlistButton];
 
   CGFloat visibleImageHeight = screen.size.height * 
     PropertyInfoViewImageHeightPercentage;
@@ -157,9 +178,8 @@
   addPhotosLabel.textColor = [UIColor whiteColor];
   [cameraView addSubview: addPhotosLabel];
 
-
-    activityView = [[OMBActivityView alloc] init];
-    [self.view addSubview: activityView];
+  activityView = [[OMBActivityView alloc] init];
+  [self.view addSubview: activityView];
 
   // Steps Remaining view
   // stepsRemainingView = [[AMBlurView alloc] init];
@@ -235,22 +255,28 @@
 
   // If the residence is a temporary residence
   if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
-    self.navigationItem.rightBarButtonItem = previewBarButtonItem;
+    // self.navigationItem.rightBarButtonItem = previewBarButtonItem;
+    publishNowView.hidden = NO;
+    unlistView.hidden     = YES;
   }
   // If a residence
   else {
-    // If inactive
+    // If unlisted
     if (residence.inactive) {
-      self.navigationItem.rightBarButtonItem = previewBarButtonItem;
+      // self.navigationItem.rightBarButtonItem = previewBarButtonItem;
+      publishNowView.hidden = NO;
+      unlistView.hidden     = YES;
     }
+    // If listed
     else {
-      self.navigationItem.rightBarButtonItem = unlistBarButtonItem;
+      // self.navigationItem.rightBarButtonItem = unlistBarButtonItem;
       publishNowView.hidden = YES;
-      // Table footer view
-      UIView *footerView = [UIView new];
-      footerView.frame = CGRectMake(0.0f, 0.0f, 
-        self.table.frame.size.width, 0.0f);
-      self.table.tableFooterView = footerView;
+      unlistView.hidden     = NO;
+      // // Table footer view
+      // UIView *footerView = [UIView new];
+      // footerView.frame = CGRectMake(0.0f, 0.0f, 
+      //   self.table.frame.size.width, 0.0f);
+      // self.table.tableFooterView = footerView;
     }
   }
 
@@ -550,16 +576,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     position = previousResidenceImage.position + 1;
   }
 
-  CGSize newSize = CGSizeMake(640.0f, 640.0f);
-  image = [UIImage image: image size: newSize];
-  UIGraphicsBeginImageContext(newSize);
-  [image drawInRect:CGRectMake(0.0f , 0.0f, newSize.width, newSize.height)];
-  UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
-  UIGraphicsEndImageContext();
+  CGSize newSize = CGSizeMake(640.0f, 320.0f);
+  image = [UIImage image: image proportionatelySized: newSize];
 
   OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
   residenceImage.absoluteString = absoluteString;
-  residenceImage.image    = newImage;
+  residenceImage.image    = image;
   residenceImage.position = position;
   residenceImage.uid      = -999 + arc4random_uniform(100);
 
@@ -593,7 +615,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [alertView show];
   }
   else {
-    [activityView startSpinning];
+    [[self appDelegate].container startSpinning];
+    // [activityView startSpinning];
 
     OMBResidencePublishConnection *conn = 
       [[OMBResidencePublishConnection alloc] initWithResidence: residence];
@@ -606,9 +629,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         [alertView show];
       }
       else {
-        [self.navigationController popViewControllerAnimated: YES];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+          @"Congratulations" message: @"Your place has been published." 
+          delegate: nil 
+            cancelButtonTitle: @"OK"
+              otherButtonTitles: nil];
+        [alertView show];
+        // [self.navigationController popViewControllerAnimated: YES];
+        publishNowView.hidden = YES;
+        unlistView.hidden     = NO;
       }
-      [activityView stopSpinning];
+      [[self appDelegate].container stopSpinning];
+      // [activityView stopSpinning];
     };
     [conn start];
   }
@@ -623,31 +655,35 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) unlist
 {
-  [activityView startSpinning];
+  [[self appDelegate].container startSpinning];
+  // [activityView startSpinning];
 
   residence.inactive = YES;
+
   OMBResidenceUpdateConnection *conn = 
     [[OMBResidenceUpdateConnection alloc] initWithResidence: residence
       attributes: @[@"inactive"]];
   conn.completionBlock = ^(NSError *error) {
-    if (error) {
+    if (residence.inactive) {
+      // [self.navigationItem setRightBarButtonItem: previewBarButtonItem
+      //   animated: YES];
+      publishNowView.hidden = NO;
+      unlistView.hidden     = YES;
+      // Table footer view
+      // UIView *footerView = [UIView new];
+      // footerView.frame = CGRectMake(0.0f, 0.0f, 
+      //   self.table.frame.size.width, publishNowView.frame.size.height);
+      // self.table.tableFooterView = footerView;
+    }
+    else {
       UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Error" 
         message: @"Please try again" delegate: nil 
           cancelButtonTitle: @"OK"
             otherButtonTitles: nil];
       [alertView show];
     }
-    else {
-      [self.navigationItem setRightBarButtonItem: previewBarButtonItem
-        animated: YES];
-      publishNowView.hidden = NO;
-      // Table footer view
-      UIView *footerView = [UIView new];
-      footerView.frame = CGRectMake(0.0f, 0.0f, 
-        self.table.frame.size.width, publishNowView.frame.size.height);
-      self.table.tableFooterView = footerView;
-    }
-    [activityView stopSpinning];
+    [[self appDelegate].container stopSpinning];
+    // [activityView stopSpinning];
   };
   [conn start];
 }

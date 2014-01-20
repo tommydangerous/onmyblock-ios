@@ -8,10 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+@class OMBCurvedLineView;
+
 @interface OMBActivityView : UIView
 {
   UIActivityIndicatorView *activityIndicatorView;
+  UIView *circle;
+  OMBCurvedLineView *line;
+  UIView *spinner;
+  UIView *spinnerView;
 }
+
+#pragma mark - Initializer
+
+- (id) initWithAppleSpinner;
 
 #pragma mark - Methods
 

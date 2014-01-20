@@ -16,6 +16,7 @@
 #import "OMBSignUpConnection.h"
 #import "OMBSignUpView.h"
 #import "OMBUser.h"
+#import "OMBViewControllerContainer.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -76,6 +77,7 @@
   [_signUpView resetOriginX];
   [_signUpView updateScrollContentSizeAnimated: NO];
 
+  // [[self appDelegate].container stopSpinning];
   [_activityView stopSpinning];
 }
 

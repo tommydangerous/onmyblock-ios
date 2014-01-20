@@ -49,6 +49,18 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 NSString *const OMBMessagesUnviewedCountNotification =
   @"OMBMessagesUnviewedCountNotification";
 
+// Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
+#if __ENVIRONMENT__ == 1
+  // Development server
+  NSString *const OMBFakeUserAccessToken = @"cea246ff2139e0fa5b17ae255e9a946d";
+#elif __ENVIRONMENT__ == 2
+  // Staging server
+  NSString *const OMBFakeUserAccessToken = @"60721b1691403ed9037b52f8816e351e";
+#elif __ENVIRONMENT__ == 3
+  // Production server
+  NSString *const OMBFakeUserAccessToken = @"";
+#endif
+
 int kNotificationTimerInterval = 30;
 
 @implementation OMBUser
@@ -95,13 +107,7 @@ int kNotificationTimerInterval = 30;
 {
   [OMBUser currentUser].about = @"About me? Well I like to do cool stuff. "
     @"I love watching movies! One of my favorite movies is Equilibrium.";
-
-  // Development access token
-  [OMBUser currentUser].accessToken = @"4869e582108a62253eefb2ec3df301a3";
-  
-  // Staging access token
-  // [OMBUser currentUser].accessToken = @"60721b1691403ed9037b52f8816e351e";
-
+  [OMBUser currentUser].accessToken = OMBFakeUserAccessToken;
   [OMBUser currentUser].email     = @"fake_user@gmail.com";
   [OMBUser currentUser].firstName = @"fake";
   [OMBUser currentUser].lastName  = @"user";

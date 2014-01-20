@@ -583,12 +583,14 @@ numberOfRowsInSection: (NSInteger) section
 
   // Amenities
   else if (section == 2) {
-    return 2; // 2 is for the spacing above
+    if ([[residence availableAmenities] count])
+      return 2; // 2 is for the spacing above
   }
 
   // Description
   else if (section == 3) {
-    return 2;
+    if ([[residence.description stripWhiteSpace] length])
+      return 2;
   }
 
   // Seller
@@ -814,12 +816,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [residence.user downloadImageFromImageURLWithCompletion: nil];
   }
 
-  [self timerFireMethod: nil];
-  countdownTimer = [NSTimer timerWithTimeInterval: 1 target: self
-    selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
-  // NSRunLoopCommonModes, mode used for tracking events
-  [[NSRunLoop currentRunLoop] addTimer: countdownTimer
-    forMode: NSRunLoopCommonModes];
+  // [self timerFireMethod: nil];
+  // countdownTimer = [NSTimer timerWithTimeInterval: 1 target: self
+  //   selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
+  // // NSRunLoopCommonModes, mode used for tracking events
+  // [[NSRunLoop currentRunLoop] addTimer: countdownTimer
+  //   forMode: NSRunLoopCommonModes];
 }
 
 - (void) resetImageViews

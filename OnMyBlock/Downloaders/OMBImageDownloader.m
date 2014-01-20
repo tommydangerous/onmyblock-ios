@@ -56,7 +56,10 @@ didFailWithError: (NSError *) error
   activeDownload  = [NSMutableData data];
   imageConnection = [[NSURLConnection alloc] initWithRequest:
     [NSURLRequest requestWithURL: _imageURL] delegate: self
-      startImmediately: YES];
+      startImmediately: NO];
+  [imageConnection scheduleInRunLoop: [NSRunLoop currentRunLoop]
+    forMode: NSRunLoopCommonModes];
+  [imageConnection start];
 }
 
 @end

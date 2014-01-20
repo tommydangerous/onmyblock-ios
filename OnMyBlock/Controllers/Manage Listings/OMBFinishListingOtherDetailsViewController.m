@@ -20,6 +20,7 @@
 #import "OMBResidenceOpenHouseListConnection.h"
 #import "OMBResidenceUpdateConnection.h"
 #import "OMBStandardLeaseViewController.h"
+#import "OMBViewControllerContainer.h"
 
 float kKeyboardHeight = 216.0;
 
@@ -887,9 +888,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) deleteListing
 {
-  OMBActivityView *activityView = [[OMBActivityView alloc] init];
-  [self.view addSubview: activityView];
-  [activityView startSpinning];
+  [[self appDelegate].container startSpinning];
+  // OMBActivityView *activityView = [[OMBActivityView alloc] init];
+  // [self.view addSubview: activityView];
+  // [activityView startSpinning];
 
   OMBResidenceDeleteConnection *conn = 
     [[OMBResidenceDeleteConnection alloc] initWithResidence: residence];
@@ -913,7 +915,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       residence = nil;
       [self.navigationController popToRootViewControllerAnimated: NO];
     }
-    [activityView stopSpinning];
+    [[self appDelegate].container stopSpinning];
+    // [activityView stopSpinning];
   };
   [conn start];
 }

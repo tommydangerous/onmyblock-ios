@@ -14,6 +14,7 @@
 #import "OMBOpenHouse.h"
 #import "OMBOpenHouseCreateConnection.h"
 #import "OMBResidence.h"
+#import "OMBViewControllerContainer.h"
 #import "TextFieldPadding.h"
 
 @implementation OMBFinishListingOpenHouseDateAddViewController
@@ -267,9 +268,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) save
 {
-  OMBActivityView *activityView = [[OMBActivityView alloc] init];
-  [self.view addSubview: activityView];
-  [activityView startSpinning];
+  [[self appDelegate].container startSpinning];
+  // OMBActivityView *activityView = [[OMBActivityView alloc] init];
+  // [self.view addSubview: activityView];
+  // [activityView startSpinning];
 
   OMBOpenHouseCreateConnection *conn = 
     [[OMBOpenHouseCreateConnection alloc] initWithResidence: residence
@@ -286,7 +288,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [residence addOpenHouse: openHouse];
       [self cancel];
     }
-    [activityView stopSpinning];
+    [[self appDelegate].container stopSpinning];
+    // [activityView stopSpinning];
   };
   [conn start];
 }

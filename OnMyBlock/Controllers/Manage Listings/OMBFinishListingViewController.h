@@ -33,6 +33,8 @@
   AMBlurView *stepsRemainingView;
   NSMutableArray *stepViews;
   UIBarButtonItem *unlistBarButtonItem;
+  UIButton *unlistButton;
+  AMBlurView *unlistView;
 }
 
 #pragma mark - Initializer
