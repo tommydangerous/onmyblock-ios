@@ -55,6 +55,7 @@ withParameters: (NSDictionary *) dictionary;
 - (void) setRequestWithString: (NSString *) string method: (NSString *) method
 parameters: (NSDictionary *) dictionary;
 - (NSDictionary *) objectDictionary;
+- (NSDictionary *) objectsDictionary;
 - (BOOL) successful;
 
 @end

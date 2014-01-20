@@ -21,6 +21,7 @@
 @property (nonatomic) BOOL rejected;
 @property (nonatomic) NSTimeInterval updatedAt;
 
+@property (nonatomic, strong) OMBUser *landlordUser;
 @property (nonatomic, strong) OMBResidence *residence;
 @property (nonatomic) NSInteger uid;
 @property (nonatomic, strong) OMBUser *user;

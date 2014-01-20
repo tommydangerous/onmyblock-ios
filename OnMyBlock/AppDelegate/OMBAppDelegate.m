@@ -49,9 +49,9 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [self openSession];
 
   // Fake login
-  // [OMBUser fakeLogin];
+  [OMBUser fakeLogin];
   // Use this to show whatever view controller you are working on
-  // [_container showHomebaseLandlord];
+  [_container showHomebaseLandlord];
 
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   id viewedIntro = [defaults objectForKey: OMBUserDefaultsViewedIntro];

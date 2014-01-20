@@ -38,6 +38,100 @@
   return [dateFormatter stringFromDate: date];
 }
 
++ (NSString *) timeAgoInShortFormatWithTimeInterval: (NSTimeInterval) interval
+{
+  // Date time
+  NSDateFormatter *dateFormatter = [NSDateFormatter new];
+  NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+  CGFloat secondsInADay = 60 * 60 * 24;
+  // Within a day
+  if (interval > now - (secondsInADay * 1)) {
+    // 4:31 pm
+    dateFormatter.dateFormat = @"h:mm a";
+
+    // 5h, 5m, or 5s
+    NSInteger secondsElapsed = [[NSDate date] timeIntervalSince1970] - interval;
+    NSInteger hours = secondsElapsed / (60 * 60);
+    secondsElapsed -= hours * 60 * 60;
+    if (hours) {
+      NSString *hoursString = [NSString stringWithFormat: @"%ih", hours];
+      return hoursString;
+    }
+    else {
+      NSInteger minutes = secondsElapsed / 60;
+      secondsElapsed -= minutes * 60;
+      if (minutes) {
+        NSString *minutesString = [NSString stringWithFormat: @"%im", minutes];
+        return minutesString;
+      }
+      else {
+        NSInteger seconds = secondsElapsed;
+        NSString *secondsString = [NSString stringWithFormat: @"%is", seconds];
+        return secondsString;
+      }
+    }
+  }
+  // Within the week
+  else if (interval > now - (secondsInADay * 7)) {
+    // Sun
+    dateFormatter.dateFormat = @"EEE";
+  }
+  else if (interval > now - (secondsInADay * 365)) {
+    // Jan 4
+    dateFormatter.dateFormat = @"MMM d";
+  }
+  else {
+    // 11/04/13
+    dateFormatter.dateFormat = @"M/d/yy";
+  }
+  NSString *string = [dateFormatter stringFromDate: 
+    [NSDate dateWithTimeIntervalSince1970: interval]];
+  if (interval > now - (secondsInADay * 1)) {
+    string = [string lowercaseString];
+  }
+  return string;
+}
+
++ (NSString *) timeRemainingShortFormatWithInterval: (NSTimeInterval) interval
+{
+  NSInteger secondsElapsed = interval - [[NSDate date] timeIntervalSince1970];
+
+  NSString *string = @"";
+  if (secondsElapsed > 0) {
+    // Days
+    NSInteger days = secondsElapsed / (60 * 60 * 24);
+    secondsElapsed -= days * 60 * 60 * 24;
+    NSString *daysString = [NSString stringWithFormat: @"%id", days];
+    // Hours
+    NSInteger hours = secondsElapsed / (60 * 60);
+    secondsElapsed -= hours * 60 * 60;
+    NSString *hoursString = [NSString stringWithFormat: @"%ih", hours];
+    // Minutes
+    NSInteger minutes = secondsElapsed / 60;
+    secondsElapsed -= minutes * 60;
+    NSString *minutesString = [NSString stringWithFormat: @"%im", minutes];
+    // Seconds
+    NSString *secondsString = [NSString stringWithFormat: @"%is", 
+      secondsElapsed];
+    if (days) {
+      string = [NSString stringWithFormat: @"%@ %@",
+        daysString, hoursString];
+    }
+    else if (hours) {
+      string = [NSString stringWithFormat: @"%@ %@",
+        hoursString, minutesString];
+    }
+    else if (minutes) {
+      string = [NSString stringWithFormat: @"%@ %@", minutesString, 
+        secondsString];
+    }
+    else {
+      string = [NSString stringWithFormat: @"%@", secondsString];
+    }
+  }
+  return string;
+}
+
 #pragma mark - Instance Methods
 
 - (NSAttributedString *) attributedStringWithFont: (UIFont *) font

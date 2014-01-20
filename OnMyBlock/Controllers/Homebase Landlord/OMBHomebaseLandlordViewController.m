@@ -17,6 +17,7 @@
 #import "OMBHomebaseLandlordPaymentCell.h"
 #import "OMBInboxViewController.h"
 #import "OMBOfferInquiryViewController.h"
+#import "OMBOffersReceivedConnection.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBHomebaseLandlordViewController
@@ -156,6 +157,9 @@
       (backView.frame.origin.y + backView.frame.size.height) -
       (tableViewOriginY + backViewOffsetY));
   _activityTableView.tableHeaderView = activityTableViewHeader;
+  // Footer view
+  _activityTableView.tableFooterView = [[UIView alloc] initWithFrame:
+    CGRectZero];
 
   // Payments table view
   _paymentsTableView = [[UITableView alloc] initWithFrame: tableViewFrame
@@ -216,6 +220,20 @@
   //   [NSIndexPath indexPathForRow: 0 inSection: 0]];
 }
 
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  OMBOffersReceivedConnection *conn = 
+    [[OMBOffersReceivedConnection alloc] init];
+  conn.completionBlock = ^(NSError *error) {
+    [_activityTableView reloadData];
+  };
+  [conn start];
+
+  [_activityTableView reloadData];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol UIScrollViewDelegate
@@ -269,15 +287,16 @@
   if (tableView == _activityTableView) {
     // Inquiries
     // Confirmed Tenants
-    // return 2;
     return 1;
+    // return 2;
   }
   // Payments
   else if (tableView == _paymentsTableView) {
     // Pending Payments
     // Previous Payments
     // Late Payments
-    return 3;
+    return 0;
+    // return 3;
   }
   return 0;
 }
@@ -295,15 +314,23 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (tableView == _activityTableView) {
     // Offers & Inquiries
     if (indexPath.section == 0) {
-      static NSString *OfferCellIdentifier = @"OfferCellIdentifier";
-      OMBHomebaseLandlordOfferCell *cell1 = 
-        [tableView dequeueReusableCellWithIdentifier:
-          OfferCellIdentifier];
-      if (!cell1)
-        cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault reuseIdentifier: OfferCellIdentifier];
-      [cell1 loadOfferData];
-      return cell1;
+      // Blank space
+      if (indexPath.row == 0) {
+        cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+          0.0f, 0.0f);
+      }
+      else {
+        static NSString *OfferCellIdentifier = @"OfferCellIdentifier";
+        OMBHomebaseLandlordOfferCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
+            OfferCellIdentifier];
+        if (!cell1)
+          cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: OfferCellIdentifier];
+        [cell1 loadOffer: 
+          [[self receivedOffers] objectAtIndex: indexPath.row - 1]];
+        return cell1;
+      }
     }
     // Confirmed Tenants
     else if (indexPath.section == 1) {
@@ -358,9 +385,10 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Activity
   if (tableView == _activityTableView) {
-    // Offers & Inquiries
+    // Offers
     if (section == 0) {
-      return 5;
+      // First row is blank so that the table view isn't see through
+      return 1 + [[[OMBUser currentUser].receivedOffers allValues] count];
     }
     // Confirmed Tenants
     else if (section == 1) {
@@ -393,9 +421,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   if (tableView == _activityTableView) {
     // Offers & Inquiries
     if (indexPath.section == 0) {
-      [self.navigationController pushViewController:
-        [[OMBOfferInquiryViewController alloc] initWithOffer: nil]
-          animated: YES];
+      if (indexPath.row > 0) {
+        OMBOffer *offer = [[self receivedOffers] objectAtIndex: 
+          indexPath.row - 1];
+        [self.navigationController pushViewController:
+          [[OMBOfferInquiryViewController alloc] initWithOffer: offer]
+            animated: YES];
+      }
     }
     // Confirmed Tenants
     else if (indexPath.section == 1) {
@@ -431,7 +463,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   if (tableView == _activityTableView) {
     // Offers & Inquiries
     if (indexPath.section == 0) {
-      return [OMBHomebaseLandlordOfferCell heightForCell];
+      // Blank space
+      if (indexPath.row == 0) {
+        if ([[[OMBUser currentUser].receivedOffers allValues] count] == 0) {
+          return tableView.frame.size.height - 
+            tableView.tableHeaderView.frame.size.height;
+        }
+      }
+      else {
+        return [OMBHomebaseLandlordOfferCell heightForCell];
+      }
     }
     // Confirmed Tenants
     else if (indexPath.section == 1) {
@@ -540,6 +581,12 @@ viewForHeaderInSection: (NSInteger) section
         _paymentsTableView.contentOffset.x, threshold);
     }
   }
+}
+
+- (NSArray *) receivedOffers
+{
+  return [[OMBUser currentUser] sortedReceivedOffersWithKey: @"createdAt"
+    ascending: NO];
 }
   
 - (void) segmentButtonSelected: (UIButton *) button

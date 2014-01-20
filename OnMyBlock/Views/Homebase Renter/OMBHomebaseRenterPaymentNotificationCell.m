@@ -64,7 +64,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
 - (void) loadData
 {
   CGFloat imageSize = objectImageView.frame.size.width;
-  objectImageView.image = [[OMBUser fakeUser] imageForSize: imageSize];
+  NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
+    imageSize, imageSize];
+  objectImageView.image = [[OMBUser fakeUser] imageForSizeKey: sizeKey];
 }
 
 - (void) setupForRoommate

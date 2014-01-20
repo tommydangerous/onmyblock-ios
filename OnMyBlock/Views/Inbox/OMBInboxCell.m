@@ -81,15 +81,15 @@ reuseIdentifier: (NSString *)reuseIdentifier
   CGFloat padding = 15.0f;
 
   // User image
+  NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
+    userImageView.frame.size.width, userImageView.frame.size.height];
   if (message.sender.image) {
-    userImageView.image = [message.sender imageForSize: 
-      userImageView.frame.size.width];
+    userImageView.image = [message.sender imageForSizeKey: sizeKey];
   }
   else {
     [message.sender downloadImageFromImageURLWithCompletion: 
       ^(NSError *error) {
-        userImageView.image = [message.sender imageForSize: 
-          userImageView.frame.size.width];
+        userImageView.image = [message.sender imageForSizeKey: sizeKey];
       }
     ];
   }
@@ -104,7 +104,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   // Within a day
   if (message.createdAt > now - (secondsInADay * 1)) {
     // 4:31 pm
-    dateFormatter.dateFormat = @"h:mma";
+    dateFormatter.dateFormat = @"h:mm a";
   }
   // Within the week
   else if (message.createdAt > now - (secondsInADay * 7)) {

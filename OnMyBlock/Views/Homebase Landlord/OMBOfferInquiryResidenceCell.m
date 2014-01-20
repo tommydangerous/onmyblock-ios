@@ -8,6 +8,8 @@
 
 #import "OMBOfferInquiryResidenceCell.h"
 
+#import "OMBResidence.h"
+
 @implementation OMBOfferInquiryResidenceCell
 
 #pragma mark - Initializer
@@ -27,12 +29,28 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 #pragma mark - Instance Methods
 
-- (void) loadResidenceData
+- (void) loadResidence: (OMBResidence *) object
 {
-  objectImageView.image = [UIImage imageNamed: @"residence_fake.jpg"];
-  topLabel.text    = @"4312 Mordor Road";
-  middleLabel.text = @"San Diego, CA";
-  bottomLabel.text = @"2d 5h remaining";
+  // Image
+  if ([object coverPhoto]) {
+    objectImageView.image = [object imageForSize: objectImageView.frame.size];
+  }
+  else {
+    [object downloadCoverPhotoWithCompletion: ^(NSError *error) {
+      objectImageView.image = [object coverPhoto];
+      [object.imageSizeDictionary setObject: objectImageView.image
+        forKey: [NSString stringWithFormat: @"%f,%f", 
+          objectImageView.frame.size.width, objectImageView.frame.size.height]];
+    }];
+  }
+  // Address
+  topLabel.text = [object.address capitalizedString];
+  // City, state
+  middleLabel.text = [NSString stringWithFormat: @"%@, %@", 
+    [object.city capitalizedString], object.state];
+
+  // This is for how much time is remaining in the auction
+  // bottomLabel.text = @"2d 5h remaining";
 }
 
 @end

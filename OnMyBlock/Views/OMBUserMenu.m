@@ -169,7 +169,7 @@
   sellerHomebaseImageView.image = [UIImage image: sellerHomebaseImage
     size: sellerHomebaseImageView.frame.size];
   [_sellerHomebaseButton addSubview: sellerHomebaseImageView];
-  // [_sellerButtons addObject: _sellerHomebaseButton];
+  [_sellerButtons addObject: _sellerHomebaseButton];
   // Notification badge
   _sellerHomebaseNotificationBadge = [UILabel new];
   [_sellerHomebaseButton addSubview: _sellerHomebaseNotificationBadge];

@@ -46,7 +46,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat imageSize = objectImageView.frame.size.width;
 
   if (arc4random_uniform(100) % 2) {
-    objectImageView.image = [[OMBUser fakeUser] imageForSize: imageSize];
+    NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
+      imageSize, imageSize];
+    objectImageView.image = [[OMBUser fakeUser] imageForSizeKey: sizeKey];
     topLabel.text = [[OMBUser fakeUser] fullName];
   }
   else {
