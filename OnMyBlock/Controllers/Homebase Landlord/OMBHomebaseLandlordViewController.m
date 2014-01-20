@@ -43,10 +43,11 @@
 
   [self setMenuBarButtonItem];
 
-  self.navigationItem.rightBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithTitle: @"(2) Inbox" 
+  inboxBarButtonItem =
+    [[UIBarButtonItem alloc] initWithTitle: @"Inbox" 
       style: UIBarButtonItemStylePlain target: self 
         action: @selector(showInbox)];
+  self.navigationItem.rightBarButtonItem = inboxBarButtonItem;
 
   selectedSegmentIndex = 0;
 
@@ -268,7 +269,8 @@
   if (tableView == _activityTableView) {
     // Inquiries
     // Confirmed Tenants
-    return 2;
+    // return 2;
+    return 1;
   }
   // Payments
   else if (tableView == _paymentsTableView) {

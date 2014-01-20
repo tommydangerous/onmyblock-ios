@@ -19,7 +19,7 @@
   NSString *string = [NSString stringWithFormat: 
     @"%@/messages/unviewed_count/?access_token=%@",
       OnMyBlockAPIURL, [OMBUser currentUser].accessToken];
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
 
   return self;
 }

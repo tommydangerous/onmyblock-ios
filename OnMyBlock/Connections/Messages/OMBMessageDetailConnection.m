@@ -27,7 +27,7 @@
     user.uid,
     page, 
     [OMBUser currentUser].accessToken];
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
 
   return self;
 }

@@ -24,7 +24,7 @@
       @"address=%@&sensor=true", address];
 
   NSLog(@"STRING: %@", string);
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
 
   return self;
 }
@@ -36,7 +36,7 @@
   NSString *string = [NSString stringWithFormat: 
     @"http://maps.googleapis.com/maps/api/geocode/json?" 
       @"latlng=%f,%f&sensor=true", coordinate.latitude, coordinate.longitude];
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
 
   return self;
 }

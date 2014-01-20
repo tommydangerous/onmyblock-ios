@@ -22,7 +22,7 @@
 
   NSString *string = [NSString stringWithFormat: 
     @"%@/places/%i/show_similar/", OnMyBlockAPIURL, residence.uid];
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
 
   return self;
 }

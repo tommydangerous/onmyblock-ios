@@ -19,6 +19,7 @@ extern NSString *const OnMyBlockAPIURL;
 {
   NSMutableData *container;
   NSURLConnection *internalConnection;
+  NSDictionary *jsonDictionary;
 }
 
 @property (nonatomic, copy) void (^completionBlock) (NSError *error);
@@ -46,10 +47,14 @@ didFailWithError: (NSError *) error;
 #pragma mark Instance Methods
 
 - (void) cancelConnection;
+- (NSDictionary *) json;
+- (NSInteger) objectUID;
 - (void) setPostRequestWithString: (NSString *) string
 withParameters: (NSDictionary *) dictionary;
-- (void) setRequestFromString: (NSString *) requestString;
+- (void) setRequestWithString: (NSString *) requestString;
 - (void) setRequestWithString: (NSString *) string method: (NSString *) method
 parameters: (NSDictionary *) dictionary;
+- (NSDictionary *) objectDictionary;
+- (BOOL) successful;
 
 @end

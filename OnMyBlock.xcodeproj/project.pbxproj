@@ -266,6 +266,7 @@
 		AB9D611B188CEFDE00C9AC64 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9D610E188CEFDE00C9AC64 /* UIImageView+WebCache.m */; };
 		AB9D611E188CF12F00C9AC64 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9D611D188CF12F00C9AC64 /* NSData+ImageContentType.m */; };
 		AB9D6121188D73F000C9AC64 /* OMBCurvedLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9D6120188D73F000C9AC64 /* OMBCurvedLineView.m */; };
+		AB9D6125188D934000C9AC64 /* OMBOfferCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9D6124188D934000C9AC64 /* OMBOfferCreateConnection.m */; };
 		ABA080831868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */; };
 		ABA080861868E76200C7B851 /* OMBTextViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080851868E76200C7B851 /* OMBTextViewViewController.m */; };
 		ABA0808C1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA0808B1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m */; };
@@ -938,6 +939,8 @@
 		AB9D611D188CF12F00C9AC64 /* NSData+ImageContentType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ImageContentType.m"; sourceTree = "<group>"; };
 		AB9D611F188D73F000C9AC64 /* OMBCurvedLineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCurvedLineView.h; sourceTree = "<group>"; };
 		AB9D6120188D73F000C9AC64 /* OMBCurvedLineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCurvedLineView.m; sourceTree = "<group>"; };
+		AB9D6123188D934000C9AC64 /* OMBOfferCreateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBOfferCreateConnection.h; sourceTree = "<group>"; };
+		AB9D6124188D934000C9AC64 /* OMBOfferCreateConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBOfferCreateConnection.m; sourceTree = "<group>"; };
 		ABA080811868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceConfirmDetailsBuyerCell.h; sourceTree = "<group>"; };
 		ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceConfirmDetailsBuyerCell.m; sourceTree = "<group>"; };
 		ABA080841868E76200C7B851 /* OMBTextViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTextViewViewController.h; sourceTree = "<group>"; };
@@ -1891,6 +1894,7 @@
 		AB9B264A1811CE5E00E6DAC4 /* Connections */ = {
 			isa = PBXGroup;
 			children = (
+				AB9D6122188D932100C9AC64 /* Offers */,
 				ABE7068918879F27007A4E29 /* Messages */,
 				AB4ED2E118847772009AFB01 /* Open Houses */,
 				ABA4F218187DF2B500D725D4 /* Residence Image */,
@@ -1982,6 +1986,15 @@
 				AB9D610E188CEFDE00C9AC64 /* UIImageView+WebCache.m */,
 			);
 			path = SDWebImage;
+			sourceTree = "<group>";
+		};
+		AB9D6122188D932100C9AC64 /* Offers */ = {
+			isa = PBXGroup;
+			children = (
+				AB9D6123188D934000C9AC64 /* OMBOfferCreateConnection.h */,
+				AB9D6124188D934000C9AC64 /* OMBOfferCreateConnection.m */,
+			);
+			path = Offers;
 			sourceTree = "<group>";
 		};
 		ABA4F204187CF01600D725D4 /* Google */ = {
@@ -3073,6 +3086,7 @@
 				AB9D6114188CEFDE00C9AC64 /* SDWebImageDownloaderOperation.m in Sources */,
 				ABB06ADE18446773009CBBEA /* OMBGetStartedView.m in Sources */,
 				ABBA58BE1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m in Sources */,
+				AB9D6125188D934000C9AC64 /* OMBOfferCreateConnection.m in Sources */,
 				ABAF2288185264BB0041BF60 /* OMBRenterApplicationUpdateConnection.m in Sources */,
 				AB9B26481811CB1300E6DAC4 /* UIColor+Extensions.m in Sources */,
 				ABB7006D187B6067005F0730 /* OMBHomebaseRenterRoommateImageView.m in Sources */,

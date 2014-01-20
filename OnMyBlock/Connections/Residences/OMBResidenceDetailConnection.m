@@ -33,7 +33,7 @@
       [NSString stringWithFormat: @"/?access_token=%@", 
         [OMBUser currentUser].accessToken]];
 
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
 
   return self;
 }

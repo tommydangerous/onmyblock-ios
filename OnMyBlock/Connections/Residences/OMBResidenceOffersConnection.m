@@ -23,7 +23,7 @@
   NSString *string = [NSString stringWithFormat: 
     @"%@/places/%i/offers/?access_token=%@", 
       OnMyBlockAPIURL, residence.uid, [OMBUser currentUser].accessToken];
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
 
   return self;
 }

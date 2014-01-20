@@ -747,4 +747,22 @@ withString: (NSString *) string
   _zip = residence.zip;
 }
 
+- (BOOL) validTitle
+{
+  if ([[_title stripWhiteSpace] length]) {
+    NSRegularExpression *regex = 
+      [NSRegularExpression regularExpressionWithPattern: @"(detached|other)" 
+        options: 0 error: nil];
+    NSArray *matches = [regex matchesInString: [_title lowercaseString] 
+      options: 0 range: NSMakeRange(0, [_title length])];
+    for (NSTextCheckingResult *result in matches) {
+      if (result.range.location == 0) {
+        return NO;
+      }
+    }
+    return YES;
+  }
+  return NO;
+}
+
 @end

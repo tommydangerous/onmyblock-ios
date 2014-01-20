@@ -27,7 +27,7 @@
       @"%@=%@&", key, [dictionary objectForKey: key]];
     string = [string stringByAppendingString: param];
   }
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
 
   return self;
 }

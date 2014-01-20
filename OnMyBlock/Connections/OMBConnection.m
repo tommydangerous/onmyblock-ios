@@ -113,13 +113,31 @@ didFailWithError: (NSError *) error
   [internalConnection cancel];
 }
 
+- (NSDictionary *) json
+{
+  if (!jsonDictionary)
+    jsonDictionary = [NSJSONSerialization JSONObjectWithData: container
+      options: 0 error: nil];
+  return jsonDictionary;
+}
+
+- (NSDictionary *) objectDictionary
+{
+  return [[self json] objectForKey: @"object"];
+}
+
+- (NSInteger) objectUID
+{
+  return [[[self objectDictionary] objectForKey: @"id"] intValue];
+}
+
 - (void) setPostRequestWithString: (NSString *) string
 withParameters: (NSDictionary *) dictionary
 {
   [self setRequestWithString: string method: @"POST" parameters: dictionary];
 }
 
-- (void) setRequestFromString: (NSString *) requestString
+- (void) setRequestWithString: (NSString *) requestString
 {
   NSURL *url = [NSURL URLWithString:
     [requestString stringByAddingPercentEscapesUsingEncoding:
@@ -157,6 +175,16 @@ parameters: (NSDictionary *) dictionary
   if (!sharedConnectionList)
     sharedConnectionList = [NSMutableArray array];
   [sharedConnectionList addObject: self];
+}
+
+- (BOOL) successful
+{
+  if ([[self json] objectForKey: @"success"] != [NSNull null]) {
+    if ([[[self json] objectForKey: @"success"] intValue]) {
+      return YES;
+    }
+  }
+  return NO;
 }
 
 @end

@@ -21,7 +21,7 @@
   NSString *string = [NSString stringWithFormat: 
     @"%@/legal_questions/?access_token=%@",
       OnMyBlockAPIURL, [OMBUser currentUser].accessToken];
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
 
   return self;
 }

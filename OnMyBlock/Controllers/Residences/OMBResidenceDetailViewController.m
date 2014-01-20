@@ -235,7 +235,9 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   //   _countDownTimerLabel.frame.size.height + 1.0f, 
   //     (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
   _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
-    _bottomButtonView.frame.size.width, 44.0f);
+    (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
+  // _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
+  //   _bottomButtonView.frame.size.width, 44.0f);
   _contactMeButton.titleLabel.font = fontLight18;
   [_contactMeButton addTarget: self action: @selector(contactMeButtonSelected)
     forControlEvents: UIControlEventTouchUpInside];
@@ -260,7 +262,7 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   [_bookItButton setTitle: @"Book It!" forState: UIControlStateNormal];
   [_bookItButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
-  // [_bottomButtonView addSubview: _bookItButton];
+  [_bottomButtonView addSubview: _bookItButton];
 
   // Mini map
   // _miniMap          = [[MKMapView alloc] init];

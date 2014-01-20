@@ -99,5 +99,6 @@
 - (NSArray *) sortedOpenHouseDates;
 - (NSString *) statusString;
 - (void) updateResidenceWithResidence: (OMBResidence *) residence;
+- (BOOL) validTitle;
 
 @end

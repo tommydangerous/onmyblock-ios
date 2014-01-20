@@ -10,6 +10,8 @@
 
 #import "DRNRealTimeBlurView.h"
 #import "OMBCenteredImageView.h"
+#import "OMBOffer.h"
+#import "OMBOfferCreateConnection.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceAddPersonalNoteViewController.h"
@@ -18,6 +20,7 @@
 #import "OMBResidenceConfirmDetailsPlaceOfferCell.h"
 #import "OMBResidenceLeaseAgreementViewController.h"
 #import "OMBResidenceMonthlyPaymentScheduleViewController.h"
+#import "OMBViewControllerContainer.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -30,10 +33,10 @@
 {
   if (!(self = [super init])) return nil;
 
-  deposit = 1000;
-  offer   = 0;
-
+  deposit   = 1000;
   residence = object;
+  offer     = [[OMBOffer alloc] init];
+  offer.residence = residence;
 
   self.screenName = self.title = @"Confirm Details";
 
@@ -163,6 +166,16 @@
 
 #pragma mark - Protocol
 
+#pragma mark - Protocol UIAlertViewDelegate
+
+- (void) alertView: (UIAlertView *) alertView 
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  [self.navigationController popViewControllerAnimated: YES];
+}
+
+#pragma mark - Protocol UIScrollViewDelegate
+
 - (void) scrollViewWillBeginDragging: (UIScrollView *) scrollView
 {
   if (hasOfferValue) {
@@ -219,7 +232,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Move in and move out dates
-  else if (indexPath.section == 1) {    
+  else if (indexPath.section == 1) {
     if (indexPath.row == 1) {
       static NSString *DateIdentifier = @"DateIdentifier";
       OMBResidenceConfirmDetailsDatesCell *cell =
@@ -246,7 +259,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       else if (indexPath.row == 2) {
         emptyCell.detailTextLabel.text = [NSString numberToCurrencyString:
-          offer];
+          offer.amount];
         emptyCell.textLabel.text = @"1st Month's Rent";
       }
     }
@@ -254,7 +267,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       emptyCell.backgroundColor = [UIColor whiteColor];
       emptyCell.detailTextLabel.font = 
         [UIFont fontWithName: @"HelveticaNeue-Medium" size: 27];
-      CGFloat total = deposit + offer;
+      CGFloat total = deposit + offer.amount;
       emptyCell.detailTextLabel.text = [NSString numberToCurrencyString:
         total];
       emptyCell.detailTextLabel.textColor = [UIColor blueDark];
@@ -580,17 +593,39 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) submitOffer
 {
-  NSLog(@"SUBMIT OFFER");
+  OMBOfferCreateConnection *conn = 
+    [[OMBOfferCreateConnection alloc] initWithOffer: offer];
+  conn.completionBlock = ^(NSError *error) {
+    UIAlertView *alertView;
+    if (offer.uid && !error) {
+      alertView = [[UIAlertView alloc] initWithTitle: @"Offer submitted!"
+        message: @"You will receive a response in your homebase" delegate: self 
+          cancelButtonTitle: @"OK" otherButtonTitles: nil];
+    }
+    else {
+      NSString *message = @"Offer was not submitted, please try again.";
+      if (error)
+        message = error.localizedDescription;
+      alertView = [[UIAlertView alloc] initWithTitle: 
+        @"Please try again" message: message delegate: nil 
+          cancelButtonTitle: @"Try again"
+            otherButtonTitles: nil];
+    }
+    [alertView show];
+    [[self appDelegate].container stopSpinning];
+  };
+  [conn start];
+  [[self appDelegate].container startSpinning]; 
 }
 
 - (void) textFieldDidChange: (TextFieldPadding *) textField
 {
-  offer = [textField.text floatValue];
+  offer.amount = [textField.text floatValue];
   OMBResidenceConfirmDetailsPlaceOfferCell *cell = 
     (OMBResidenceConfirmDetailsPlaceOfferCell *)
       [self.table cellForRowAtIndexPath: 
         [NSIndexPath indexPathForRow: 0 inSection: 0]];
-  if (offer > 0) {
+  if (offer.amount > 0) {
     [cell enableNextStepButton];
   }
   else {

@@ -22,7 +22,7 @@
   NSString *string = [NSString stringWithFormat:
     @"%@/messages/?page=%i&access_token=%@",
       OnMyBlockAPIURL, page, [OMBUser currentUser].accessToken];
-  [self setRequestFromString: string];
+  [self setRequestWithString: string];
 
   return self;
 }

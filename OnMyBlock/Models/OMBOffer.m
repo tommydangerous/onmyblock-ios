@@ -13,6 +13,21 @@
 
 @implementation OMBOffer
 
+#pragma mark - Initializer
+
+- (id) init
+{
+  if (!(self = [super init])) return nil;
+
+  _accepted  = NO;
+  _amount    = 0.0f;
+  _confirmed = NO;
+  _declined  = NO;
+  _rejected  = NO;
+
+  return self;
+}
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
@@ -68,6 +83,8 @@
     _rejected = YES;
   else
     _rejected = NO;
+  // Residence
+
   // Updated at
   if ([dictionary objectForKey: @"updated_at"] != [NSNull null])
     _updatedAt = [[dateFormatter dateFromString:

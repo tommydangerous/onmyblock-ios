@@ -31,7 +31,7 @@
     @"key=%@",
     string, @"true", types, @"AIzaSyA6HO4l5aN8Cpkvp_oe6QbZVuvivvObs7E"];
 
-  [self setRequestFromString: urlString];
+  [self setRequestWithString: urlString];
 
   return self;
 }
