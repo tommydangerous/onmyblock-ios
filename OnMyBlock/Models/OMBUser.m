@@ -20,6 +20,7 @@
 #import "OMBMessageDetailConnection.h"
 #import "OMBMessagesUnviewedCountConnection.h"
 #import "OMBOffer.h"
+#import "OMBOfferUpdateConnection.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
@@ -163,6 +164,19 @@ int kNotificationTimerInterval = 30;
 
 #pragma mark - Instance Methods
 
+- (void) acceptOffer: (OMBOffer *) offer 
+withCompletion: (void (^) (NSError *error)) block
+{
+  offer.accepted = YES;
+  offer.declined = NO;
+  // Offer update connection
+  OMBOfferUpdateConnection *conn = 
+    [[OMBOfferUpdateConnection alloc] initWithOffer: offer 
+      attributes: @[@"accepted", @"declined"]];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (void) addCosigner: (OMBCosigner *) cosigner
 {
   [_renterApplication addCosigner: cosigner];
@@ -265,6 +279,18 @@ int kNotificationTimerInterval = 30;
   };
   [connection start];
   NSLog(@"Authenticate with server");
+}
+
+- (void) declineOffer: (OMBOffer *) offer
+withCompletion: (void (^) (NSError *error)) block
+{
+  offer.accepted = NO;
+  offer.declined = YES;
+  OMBOfferUpdateConnection *conn = 
+    [[OMBOfferUpdateConnection alloc] initWithOffer: offer 
+      attributes: @[@"accepted", @"declined"]];
+  conn.completionBlock = block;
+  [conn start];
 }
 
 - (void) downloadImageFromImageURLWithCompletion: 
@@ -659,6 +685,22 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   }
 }
 
+- (void) removeAllReceivedOffersWithOffer: (OMBOffer *) offer
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
+    @"residence.uid", offer.residence.uid];
+  NSArray *array = [[_receivedOffers allValues] filteredArrayUsingPredicate: 
+    predicate];
+  for (OMBOffer *o in array) {
+    [_receivedOffers removeObjectForKey: [NSNumber numberWithInt: o.uid]];
+  }
+}
+
+- (void) removeReceivedOffer: (OMBOffer *) offer
+{
+  [_receivedOffers removeObjectForKey: [NSNumber numberWithInt: offer.uid]];
+}
+
 - (void) removeResidence: (OMBResidence *) residence
 {
   NSString *classString;
@@ -684,7 +726,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     [[NSNotificationCenter defaultCenter] postNotificationName:
       OMBCurrentUserChangedFavorite object: nil userInfo: @{
         @"index": [NSNumber numberWithInt: index]
-      }];
+      }
+    ];
   }
 }
 

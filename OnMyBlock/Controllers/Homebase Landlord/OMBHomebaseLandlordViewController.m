@@ -298,7 +298,7 @@
     // Pending Payments
     // Previous Payments
     // Late Payments
-    return 0;
+    return 1;
     // return 3;
   }
   return 0;
@@ -352,17 +352,24 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (tableView == _paymentsTableView) {
     // Pending Payments
     if (indexPath.section == 0) {
-      static NSString *PendingPaymentCellIdentifier = 
-        @"PendingPaymentCellIdentifier";
-      OMBHomebaseLandlordPaymentCell *cell1 = 
-        [tableView dequeueReusableCellWithIdentifier:
-          PendingPaymentCellIdentifier];
-      if (!cell1)
-        cell1 = [[OMBHomebaseLandlordPaymentCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault reuseIdentifier: 
+      // Blank space
+      if (indexPath.row == 0) {
+        cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+          0.0f, 0.0f);
+      }
+      else {
+        static NSString *PendingPaymentCellIdentifier = 
+          @"PendingPaymentCellIdentifier";
+        OMBHomebaseLandlordPaymentCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
             PendingPaymentCellIdentifier];
-      [cell1 loadPendingPaymentData];
-      return cell1;
+        if (!cell1)
+          cell1 = [[OMBHomebaseLandlordPaymentCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: 
+              PendingPaymentCellIdentifier];
+        [cell1 loadPendingPaymentData];
+        return cell1;
+      }
     }
     // Previous Payments
     else if (indexPath.section == 1) {
@@ -402,7 +409,9 @@ numberOfRowsInSection: (NSInteger) section
   else if (tableView == _paymentsTableView) {
     // Pending Payments
     if (section == 0) {
-      return 2;
+      // First row is blank so that the table view isn't see through
+      return 1 + 0;
+      // return 2;
     }
     // Previous Payments
     else if (section == 1) {
@@ -470,7 +479,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       if (indexPath.row == 0) {
         if ([[[OMBUser currentUser].receivedOffers allValues] count] == 0) {
           return tableView.frame.size.height - 
-            tableView.tableHeaderView.frame.size.height;
+            (tableView.tableHeaderView.frame.size.height + (13.0f * 2));
         }
       }
       else {
@@ -486,7 +495,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (tableView == _paymentsTableView) {
     // Pending Payments
     if (indexPath.section == 0) {
-      return [OMBHomebaseLandlordPaymentCell heightForCell];
+      // Blank space
+      if (indexPath.row == 0) {
+        if ([[[OMBUser currentUser].receivedOffers allValues] count] == 0) {
+          return tableView.frame.size.height - 
+            (tableView.tableHeaderView.frame.size.height + (13.0f * 2));
+        }
+      }
+      else {
+        return [OMBHomebaseLandlordPaymentCell heightForCell];
+      }
     }
     // Previous Payments
     else if (indexPath.section == 1) {
@@ -559,7 +577,7 @@ viewForHeaderInSection: (NSInteger) section
     CGFloat threshold = ((backView.frame.size.height - backViewOffsetY) - 
       (padding + buttonsView.frame.size.height + padding));
     // If the activity table view content size height is less than it's frame
-    if (_activityTableView.contentSize.height <
+    if (_activityTableView.contentSize.height <=
       _activityTableView.frame.size.height) {
 
       [_paymentsTableView setContentOffset: CGPointZero animated: YES];
@@ -584,7 +602,7 @@ viewForHeaderInSection: (NSInteger) section
     CGFloat threshold = ((backView.frame.size.height - backViewOffsetY) - 
       (padding + buttonsView.frame.size.height + padding));
     // If the payments table view content size height is less that it's frame
-    if (_paymentsTableView.contentSize.height < 
+    if (_paymentsTableView.contentSize.height <= 
       _paymentsTableView.frame.size.height) {
 
       [_activityTableView setContentOffset: CGPointZero animated: YES];

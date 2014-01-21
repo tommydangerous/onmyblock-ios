@@ -64,6 +64,8 @@ extern NSString *const OMBUserLoggedOutNotification;
 
 #pragma mark - Instance Methods
 
+- (void) acceptOffer: (OMBOffer *) offer 
+withCompletion: (void (^) (NSError *error)) block;
 - (void) addCosigner: (OMBCosigner *) cosigner;
 - (void) addEmployment: (OMBEmployment *) employment;
 - (void) addLegalAnswer: (OMBLegalAnswer *) object;
@@ -73,6 +75,8 @@ extern NSString *const OMBUserLoggedOutNotification;
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
 - (void) addResidence: (OMBResidence *) residence;
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence;
+- (void) declineOffer: (OMBOffer *) offer
+withCompletion: (void (^) (NSError *error)) block;
 - (void) downloadImageFromImageURLWithCompletion: 
 (void (^) (NSError *error)) block;
 - (NSArray *) favoritesArray;
@@ -94,6 +98,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary;
 - (void) readFromReceivedOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
+- (void) removeAllReceivedOffersWithOffer: (OMBOffer *) offer;
+- (void) removeReceivedOffer: (OMBOffer *) offer;
 - (void) removeResidence: (OMBResidence *) residence;
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence;
 - (NSArray *) residencesSortedWithKey: (NSString *) key 
