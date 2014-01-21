@@ -24,7 +24,6 @@
 #import "OMBMessageStore.h"
 #import "OMBOffer.h"
 #import "OMBOfferInquiryResidenceCell.h"
-#import "OMBOfferUpdateConnection.h"
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBPreviousRentalCell.h"
 #import "OMBResidence.h"
@@ -795,29 +794,27 @@ viewForHeaderInSection: (NSInteger) section
   [alert hideAlert];
 
   if (!accepted && !acceptedConfirmed) {
-    offer.accepted = NO;
-    offer.declined = YES;
-    OMBOfferUpdateConnection *conn = 
-      [[OMBOfferUpdateConnection alloc] initWithOffer: offer 
-        attributes: @[@"declined"]];
-    conn.completionBlock = ^(NSError *error) {
-      if (offer.declined && !error) {
-        #warning Remove offer from current user's receivedOffers
-        [self.navigationController popViewControllerAnimated: YES];
+    [[OMBUser currentUser] declineOffer: offer 
+      withCompletion: ^(NSError *error) {
+        if (offer.declined && !error) {
+          // Remove the offer from the user's received offers
+          [[OMBUser currentUser] removeReceivedOffer: offer];
+
+          [self.navigationController popViewControllerAnimated: YES];
+        }
+        else {
+          NSString *message = @"Please try again.";
+          if (error)
+            message = error.localizedDescription;
+          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+            @"Unsuccessful" message: message delegate: nil 
+              cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+          [alertView show];
+        }
+        [[self appDelegate].container stopSpinning];
       }
-      else {
-        NSString *message = @"Please try again.";
-        if (error)
-          message = error.localizedDescription;
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-          @"Unsuccessful" message: message delegate: nil 
-            cancelButtonTitle: @"Try again" otherButtonTitles: nil];
-        [alertView show];
-      }
-      [[self appDelegate].container stopSpinning];
-    };
+    ];
     [[self appDelegate].container startSpinning];
-    [conn start];
   }
 
   accepted          = NO;
@@ -848,38 +845,50 @@ viewForHeaderInSection: (NSInteger) section
       alert.alertTitle.text = @"Are You Sure?";
     }
     else if (!acceptedConfirmed) {
-      offer.accepted = YES;
-      offer.declined = NO;
-      // Offer update connection
-      OMBOfferUpdateConnection *conn = 
-        [[OMBOfferUpdateConnection alloc] initWithOffer: offer 
-          attributes: @[@"accepted"]];
-      conn.completionBlock = ^(NSError *error) {
-        if (offer.accepted && !error) {
-          acceptedConfirmed = YES;
-          // Alert buttons
-          [alert.alertConfirm setTitle: @"Setup" 
-            forState: UIControlStateNormal];
-          [alert.alertCancel setTitle: @"Ok" forState: UIControlStateNormal];
-          // Alert message
-          alert.alertMessage.text = @"Please set up your payout method.";
-          // Alert title
-          alert.alertTitle.text = @"Offer Accepted!";
-          #warning Remove offer from current user's receivedOffers
+      [[OMBUser currentUser] acceptOffer: offer 
+        withCompletion: ^(NSError *error) {
+          if (offer.accepted && !error) {
+            acceptedConfirmed = YES;
+            // Alert buttons
+            [alert.alertConfirm setTitle: @"Setup" 
+              forState: UIControlStateNormal];
+            [alert.alertCancel setTitle: @"Ok" forState: UIControlStateNormal];
+            // Alert message
+            alert.alertMessage.text = @"Please set up your payout method.";
+            // Alert title
+            alert.alertTitle.text = @"Offer Accepted!";
+            
+            // Decline all other offers from the user's received offers
+            // for the offers that are related to the same residence
+            [[OMBUser currentUser] removeAllReceivedOffersWithOffer: offer];
+
+            // Hide the respond button at the bottom 
+            // and change the height of the table footer views
+            [UIView animateWithDuration: 0.25f animations: ^{
+              respondView.alpha = 0.0f;
+              _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
+                CGRectZero];
+              _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
+                CGRectZero];
+              [_offerTableView beginUpdates];
+              [_offerTableView endUpdates];
+              [_profileTableView beginUpdates];
+              [_profileTableView endUpdates];
+            }];
+          }
+          else {
+            NSString *message = @"Please try again.";
+            if (error)
+              message = error.localizedDescription;
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+              @"Unsuccessful" message: message delegate: nil 
+                cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+            [alertView show];
+          }
+          [[self appDelegate].container stopSpinning];
         }
-        else {
-          NSString *message = @"Please try again.";
-          if (error)
-            message = error.localizedDescription;
-          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-            @"Unsuccessful" message: message delegate: nil 
-              cancelButtonTitle: @"Try again" otherButtonTitles: nil];
-          [alertView show];
-        }
-        [[self appDelegate].container stopSpinning];
-      };
+      ];
       [[self appDelegate].container startSpinning];
-      [conn start];
     }
     [alert animateChangeOfContent];
   }
@@ -888,7 +897,11 @@ viewForHeaderInSection: (NSInteger) section
 - (void) changeTableView
 {
   CGFloat padding = 20.0f;
+  CGFloat threshold = backView.frame.size.height -
+    (padding + buttonsView.frame.size.height + padding);
   if (selectedSegmentIndex == 0) {
+    previouslySelectedIndex = 0;
+
     offerButton.backgroundColor   = [UIColor colorWithWhite: 1.0f alpha: 0.5f];
     profileButton.backgroundColor = [UIColor clearColor];
     contactButton.backgroundColor = [UIColor clearColor];
@@ -896,11 +909,13 @@ viewForHeaderInSection: (NSInteger) section
     _offerTableView.hidden   = NO;
     _profileTableView.hidden = YES;
 
-    // Change the content offset of activity table view 
-    // if payments table view is not scrolled pass the threshold
-    CGFloat threshold = backView.frame.size.height - 
-      (padding + buttonsView.frame.size.height + padding);
-    if (_profileTableView.contentOffset.y < threshold) {
+    // If the offer table view content size height minus the
+    // respond view's height is less than the offer table's height
+    if (_offerTableView.contentSize.height - respondView.frame.size.height <=
+      _offerTableView.frame.size.height) {
+      [_profileTableView setContentOffset: CGPointZero animated: YES];
+    }
+    else if (_profileTableView.contentOffset.y < threshold) {
       _offerTableView.contentOffset = _profileTableView.contentOffset;
     }
     // If activity table view content offset is less than threshold
@@ -908,9 +923,10 @@ viewForHeaderInSection: (NSInteger) section
       _offerTableView.contentOffset = CGPointMake(
         _offerTableView.contentOffset.x, threshold);
     }
-    previouslySelectedIndex = 0;
   }
-  else if (selectedSegmentIndex == 1) {  
+  else if (selectedSegmentIndex == 1) {
+    previouslySelectedIndex = 1;
+
     offerButton.backgroundColor   = [UIColor clearColor];
     profileButton.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.5f];
     contactButton.backgroundColor = [UIColor clearColor];
@@ -918,11 +934,14 @@ viewForHeaderInSection: (NSInteger) section
     _offerTableView.hidden   = YES;
     _profileTableView.hidden = NO;
 
-    // Change the content offset of payments table view 
-    // if activity table view is not scrolled pass the threshold
-    CGFloat threshold = backView.frame.size.height -
-      (padding + buttonsView.frame.size.height + padding);
-    if (_offerTableView.contentOffset.y < threshold) {
+    // If the profile table view content size height minus the
+    // respond view's height is less than the profile table's height
+    if (_profileTableView.contentSize.height - respondView.frame.size.height <= 
+      _profileTableView.frame.size.height) {
+
+      [_offerTableView setContentOffset: CGPointZero animated: YES];
+    }
+    else if (_offerTableView.contentOffset.y < threshold) {
       _profileTableView.contentOffset = _offerTableView.contentOffset;
     }
     // If payments table view content offset is less than threshold
@@ -930,7 +949,6 @@ viewForHeaderInSection: (NSInteger) section
       _profileTableView.contentOffset = CGPointMake(
         _profileTableView.contentOffset.x, threshold);
     }
-    previouslySelectedIndex = 1;
   }
   else if (selectedSegmentIndex == 2) {
     [self.navigationController pushViewController: 
