@@ -10,6 +10,7 @@
 		6758E2E2187B966D004031D7 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB026BC11822B23B00E72F53 /* FacebookSDK.framework */; };
 		6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */; };
 		67E94814188DB97D007703FC /* OMBFilmstripImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */; };
+		67E9481E188DF726007703FC /* OMBMapFilterDateAvailableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */; };
 		AB01ED341857D67F00333390 /* OMBLegalQuestionListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED331857D67F00333390 /* OMBLegalQuestionListConnection.m */; };
 		AB01ED371857D96800333390 /* OMBLegalQuestionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED361857D96800333390 /* OMBLegalQuestionStore.m */; };
 		AB01ED3A1857DB5300333390 /* OMBLegalQuestion.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED391857DB5300333390 /* OMBLegalQuestion.m */; };
@@ -516,6 +517,8 @@
 /* Begin PBXFileReference section */
 		67E94812188DB97D007703FC /* OMBFilmstripImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFilmstripImageCell.h; sourceTree = "<group>"; };
 		67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFilmstripImageCell.m; sourceTree = "<group>"; };
+		67E9481C188DF726007703FC /* OMBMapFilterDateAvailableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterDateAvailableCell.h; sourceTree = "<group>"; };
+		67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterDateAvailableCell.m; sourceTree = "<group>"; };
 		AB01ED321857D67F00333390 /* OMBLegalQuestionListConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLegalQuestionListConnection.h; sourceTree = "<group>"; };
 		AB01ED331857D67F00333390 /* OMBLegalQuestionListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBLegalQuestionListConnection.m; sourceTree = "<group>"; };
 		AB01ED351857D96800333390 /* OMBLegalQuestionStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLegalQuestionStore.h; sourceTree = "<group>"; };
@@ -2092,6 +2095,8 @@
 				ABBA58C01875F7BB00E9BF4E /* OMBMapFilterButtonsCell.m */,
 				ABBA58C21875F9C200E9BF4E /* OMBMapFilterPropertyTypeCell.h */,
 				ABBA58C31875F9C200E9BF4E /* OMBMapFilterPropertyTypeCell.m */,
+				67E9481C188DF726007703FC /* OMBMapFilterDateAvailableCell.h */,
+				67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */,
 			);
 			path = Discover;
 			sourceTree = "<group>";
@@ -2922,6 +2927,7 @@
 				ABE2816918694AED00A5D14E /* OMBFavoriteResidenceCell.m in Sources */,
 				AB57EA24186C7662001682DB /* OMBMessageNewViewController.m in Sources */,
 				AB9D6119188CEFDE00C9AC64 /* UIImage+MultiFormat.m in Sources */,
+				67E9481E188DF726007703FC /* OMBMapFilterDateAvailableCell.m in Sources */,
 				ABCB36C1187CC229008A0EEF /* OMBHomebaseRenterAddRoommateFromEmailViewController.m in Sources */,
 				AB9D611B188CEFDE00C9AC64 /* UIImageView+WebCache.m in Sources */,
 				AB1C217E18518C8000ED7C06 /* OMBCosignerCreateConnection.m in Sources */,

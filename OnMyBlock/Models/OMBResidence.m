@@ -200,32 +200,39 @@ withString: (NSString *) string
 - (UIImage *) coverPhoto
 {
   if ([_images count] > 0) {
-    OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex: 0];
+    OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex:0];
     return residenceImage.image;
   }
   return nil;
 }
 
-- (UIImage *) coverPhotoWithSize: (CGSize) size
+- (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size
 {
-  UIImage *img = [self coverPhoto];
-  CGFloat newHeight = size.height;
-  CGFloat newWidth  = img.size.width * (size.height / img.size.height);
-  if (newWidth < size.width) {
-    newHeight = newHeight * (size.width / newWidth);
-    newWidth  = size.width;
-  }
-  CGPoint point = CGPointZero;
-  // Center it vertically
-  if (newHeight > size.height) {
-    point.y = (newHeight - size.height) * -0.5;
-  }
-  // Center it horizontally
-  if (newWidth > size.width) {
-    point.x = (newWidth - size.width) * -0.5;
-  }
-  return [UIImage image: img size: CGSizeMake(newWidth, newHeight)
-    point: point];
+	if ([_images count] > index)
+	{
+		OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex:index];
+		UIImage *img = residenceImage.image;
+		
+	  CGFloat newHeight = size.height;
+	  CGFloat newWidth  = img.size.width * (size.height / img.size.height);
+	  if (newWidth < size.width) {
+		newHeight = newHeight * (size.width / newWidth);
+		newWidth  = size.width;
+	  }
+	  CGPoint point = CGPointZero;
+	  // Center it vertically
+	  if (newHeight > size.height) {
+		point.y = (newHeight - size.height) * -0.5;
+	  }
+	  // Center it horizontally
+	  if (newWidth > size.width) {
+		point.x = (newWidth - size.width) * -0.5;
+	  }
+	  return [UIImage image: img size: CGSizeMake(newWidth, newHeight)
+		point: point];
+	}
+	
+	return nil;
 }
 
 - (UIImage *) coverPhotoWithSize1: (CGSize) size

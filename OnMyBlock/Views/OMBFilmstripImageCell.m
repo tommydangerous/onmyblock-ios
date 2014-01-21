@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
 		_image = [[UIImageView alloc] initWithFrame:self.bounds];
-//		_image.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+		_image.contentMode = UIViewContentModeTop;
 		[self addSubview:_image];
     }
     return self;

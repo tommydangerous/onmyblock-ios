@@ -15,6 +15,7 @@
 #import "OMBMapFilterNeighborhoodCell.h"
 #import "OMBMapFilterPropertyTypeCell.h"
 #import "OMBMapFilterRentCell.h"
+#import "OMBMapFilterDateAvailableCell.h"
 #import "OMBNeighborhood.h"
 #import "OMBNeighborhoodStore.h"
 #import "TextFieldPadding.h"
@@ -175,51 +176,52 @@ float kStandardHeight = 44.0f;
   [neighborhoodTableViewContainer addSubview: neighborhoodTableView];
 
   // Rent picker view container
-  rentPickerViewContainer = [UIView new];
-  [self.view addSubview: rentPickerViewContainer];
+  pickerViewContainer = [UIView new];
+  [self.view addSubview: pickerViewContainer];
 
   // Header for rent picker view with cancel and done button
-  AMBlurView *rentPickerViewHeader = [[AMBlurView alloc] init];
-  rentPickerViewHeader.blurTintColor = [UIColor blueLight];
-  rentPickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
+  AMBlurView *pickerViewHeader = [[AMBlurView alloc] init];
+  pickerViewHeader.blurTintColor = [UIColor blueLight];
+  pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
     self.view.frame.size.width, kStandardHeight);
-  [rentPickerViewContainer addSubview: rentPickerViewHeader];
+	[pickerViewContainer addSubview:pickerViewHeader];
+	
   // Header label
-  UILabel *rentPickerViewHeaderLabel = [UILabel new];
-  rentPickerViewHeaderLabel.font = headerLabel.font;
-  rentPickerViewHeaderLabel.frame = rentPickerViewHeader.frame;
-  rentPickerViewHeaderLabel.text = @"Rent Range";
-  rentPickerViewHeaderLabel.textAlignment = headerLabel.textAlignment;
-  rentPickerViewHeaderLabel.textColor = headerLabel.textColor;
-  [rentPickerViewHeader addSubview: rentPickerViewHeaderLabel];
+  pickerViewHeaderLabel = [UILabel new];
+  pickerViewHeaderLabel.font = headerLabel.font;
+  pickerViewHeaderLabel.frame = pickerViewHeader.frame;
+  pickerViewHeaderLabel.text = @"";
+  pickerViewHeaderLabel.textAlignment = headerLabel.textAlignment;
+  pickerViewHeaderLabel.textColor = headerLabel.textColor;
+  [pickerViewHeader addSubview: pickerViewHeaderLabel];
   // Cancel button
   UIButton *rentCancelButton = [UIButton new];
   rentCancelButton.titleLabel.font = neighborhoodCancelButton.titleLabel.font;
   rentCancelButton.frame = neighborhoodCancelButton.frame;
   [rentCancelButton addTarget: self
-    action: @selector(cancelSelectRent) 
+    action: @selector(cancelPicker)
       forControlEvents: UIControlEventTouchUpInside];
   [rentCancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
   [rentCancelButton setTitleColor: [UIColor blueDark] 
     forState: UIControlStateNormal];
-  [rentPickerViewHeader addSubview: rentCancelButton];
+  [pickerViewHeader addSubview: rentCancelButton];
   // Done button
   UIButton *rentDoneButton = [UIButton new];
   rentDoneButton.titleLabel.font = rentCancelButton.titleLabel.font;
   CGRect rentDoneButtonRect = [@"Done" boundingRectWithSize:
-    CGSizeMake(rentPickerViewHeader.frame.size.width, 
-      rentPickerViewHeader.frame.size.height)
+    CGSizeMake(pickerViewHeader.frame.size.width,
+      pickerViewHeader.frame.size.height)
         font: rentDoneButton.titleLabel.font];
-  rentDoneButton.frame = CGRectMake(rentPickerViewHeader.frame.size.width - 
+  rentDoneButton.frame = CGRectMake(pickerViewHeader.frame.size.width -
     (padding + rentDoneButtonRect.size.width), 0.0f,
-      rentDoneButtonRect.size.width, rentPickerViewHeader.frame.size.height);
+      rentDoneButtonRect.size.width, pickerViewHeader.frame.size.height);
   [rentDoneButton addTarget: self 
     action: @selector(hidePickerView) 
       forControlEvents: UIControlEventTouchUpInside];
   [rentDoneButton setTitle: @"Done" forState: UIControlStateNormal];
   [rentDoneButton setTitleColor: [UIColor blueDark] 
     forState: UIControlStateNormal];
-  [rentPickerViewHeader addSubview: rentDoneButton];
+  [pickerViewHeader addSubview: rentDoneButton];
 
   // Rent scroller
   rentPickerView = [[UIPickerView alloc] init];
@@ -227,14 +229,20 @@ float kStandardHeight = 44.0f;
   rentPickerView.dataSource = self;
   rentPickerView.delegate   = self;
   rentPickerView.frame = CGRectMake(0.0f, 
-    rentPickerViewHeader.frame.origin.y + 
-    rentPickerViewHeader.frame.size.height, 
+    pickerViewHeader.frame.origin.y +
+    pickerViewHeader.frame.size.height,
       rentPickerView.frame.size.width, rentPickerView.frame.size.height);
-  [rentPickerViewContainer addSubview: rentPickerView];
   
-  rentPickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
+	// Date Available scroller
+	availabilityPickerView = [[UIPickerView alloc] init];
+	availabilityPickerView.backgroundColor = [UIColor whiteColor];
+	availabilityPickerView.dataSource = self;
+	availabilityPickerView.delegate = self;
+	availabilityPickerView.frame = rentPickerView.frame;
+	
+  pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
     rentPickerView.frame.size.width, 
-      rentPickerViewHeader.frame.size.height + 
+      pickerViewHeader.frame.size.height +
       rentPickerView.frame.size.height);
 }
 
@@ -263,14 +271,31 @@ didUpdateLocations: (NSArray *) locations
 
 - (NSInteger) numberOfComponentsInPickerView: (UIPickerView *) pickerView
 {
-  return 2;
+	if (pickerView == rentPickerView)
+	{
+		return 2;
+	}
+	else if (pickerView == availabilityPickerView)
+	{
+		return 1;
+	}
+	return 0;
 }
 
 - (NSInteger) pickerView: (UIPickerView *) pickerView 
 numberOfRowsInComponent: (NSInteger) component
 {
-  // Any, 500, ... 9,500+
-  return 10000 / 500;
+	if (pickerView == rentPickerView)
+	{
+		// Any, 500, ... 9,500+
+		return 10000 / 500;
+	}
+	else if (pickerView == availabilityPickerView)
+	{
+		// Immediately, Fall, Spring, Winter, Summer
+		return 5;
+	}
+	return 0;
 }
 
 #pragma mark - Protocol UIPickerViewDelegate
@@ -278,21 +303,35 @@ numberOfRowsInComponent: (NSInteger) component
 - (void) pickerView: (UIPickerView *) pickerView didSelectRow: (NSInteger) row 
 inComponent: (NSInteger) component
 {
-  OMBMapFilterRentCell *cell = (OMBMapFilterRentCell *) 
-    [self.table cellForRowAtIndexPath: 
-      [NSIndexPath indexPathForRow: 1 inSection: 1]];
-  NSString *string = [self pickerView: pickerView titleForRow: row
-    forComponent: component];
-  if (component == 0) {
-    cell.minRentTextField.text = string;
-    [_valuesDictionary setObject: [NSNumber numberWithInt: 500 * row]
-      forKey: @"minRent"];
-  }
-  else if (component == 1) {
-    cell.maxRentTextField.text = string;
-    [_valuesDictionary setObject: [NSNumber numberWithInt: 500 * row]
-      forKey: @"maxRent"];
-  }
+	if (pickerView == rentPickerView)
+	{
+		OMBMapFilterRentCell *cell = (OMBMapFilterRentCell *)
+		[self.table cellForRowAtIndexPath:
+		 [NSIndexPath indexPathForRow: 1 inSection: 1]];
+		NSString *string = [self pickerView: pickerView titleForRow: row
+							   forComponent: component];
+		if (component == 0) {
+			cell.minRentTextField.text = string;
+			[_valuesDictionary setObject: [NSNumber numberWithInt: 500 * row]
+								  forKey: @"minRent"];
+		}
+		else if (component == 1) {
+			cell.maxRentTextField.text = string;
+			[_valuesDictionary setObject: [NSNumber numberWithInt: 500 * row]
+								  forKey: @"maxRent"];
+		}
+	}
+	else if (pickerView == availabilityPickerView)
+	{
+		OMBMapFilterDateAvailableCell *cell = (OMBMapFilterDateAvailableCell *)
+		[self.table cellForRowAtIndexPath:
+		 [NSIndexPath indexPathForRow:1 inSection: 5]];
+		NSString *string = [self pickerView: pickerView titleForRow: row
+							   forComponent: component];
+		cell.dateAvailable.text = string;
+		[_valuesDictionary setObject:string
+							  forKey:@"dateAvailable"];
+	}
 }
 
 - (CGFloat) pickerView: (UIPickerView *) pickerView 
@@ -301,23 +340,51 @@ rowHeightForComponent: (NSInteger) component
   return 44.0f;
 }
 
-- (NSString *) pickerView: (UIPickerView *) pickerView 
-titleForRow: (NSInteger) row forComponent: (NSInteger) component
+- (NSString *) pickerView: (UIPickerView *) pickerView
+			  titleForRow: (NSInteger) row
+			 forComponent: (NSInteger) component
 {
-  if (row == 0) {
-    return @"Any";
-  }
-  NSString *string = [NSString numberToCurrencyString: 500 * row];
-  if (row == [pickerView numberOfRowsInComponent: component] - 1) {
-    string = [string stringByAppendingString: @"+"];
-  }
-  return string;
+	if (pickerView == rentPickerView)
+	{
+		if (row == 0) {
+			return @"Any";
+		}
+		NSString *string = [NSString numberToCurrencyString: 500 * row];
+		if (row == [pickerView numberOfRowsInComponent: component] - 1) {
+			string = [string stringByAppendingString: @"+"];
+		}
+		return string;
+	}
+	else if (pickerView == availabilityPickerView)
+	{
+		switch (row)
+		{
+			case 0: return @"Immediately";
+			case 1: return @"Winter '14 (Jan - Mar)";
+			case 2: return @"Spring '14 (Apr - June)";
+			case 3: return @"Summer '14 (July - Sept)";
+			case 4: return @"Fall '14 (Oct - Dec)";
+			default: break;
+		}
+	}
+	
+  return nil;
 }
+
+
 
 - (CGFloat) pickerView: (UIPickerView *) pickerView 
 widthForComponent: (NSInteger) component
 {
-  return [OMBMapFilterRentCell widthForTextField];
+	if (pickerView == rentPickerView)
+	{
+		return [OMBMapFilterRentCell widthForTextField];
+	}
+	else if (pickerView == availabilityPickerView)
+	{
+		return pickerView.bounds.size.width - 40.0f;
+	}
+	return 0;
 }
 
 #pragma mark - Protocol UIScrollViewDelegate
@@ -338,8 +405,9 @@ widthForComponent: (NSInteger) component
   // Bedrooms
   // Bathrooms
   // Property Type
+	// DateAvailable
   if (tableView == self.table) {
-    return 5;
+    return 6;
   }
   else if (tableView == neighborhoodTableView) {
     return [[[OMBNeighborhoodStore sharedStore] cities] count];
@@ -454,6 +522,24 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         return cell;
       }
     }
+	  // Date Available
+	else if (indexPath.section == 5) {
+		if (indexPath.row == 0) {
+			headerCell.textLabel.text = @"Date Available";
+		}
+		else if (indexPath.row == 1) {
+			static NSString *PropertyTypeCellIdentifier =
+			@"DateAvailableCellIdentifier";
+			OMBMapFilterDateAvailableCell *cell =
+			[tableView dequeueReusableCellWithIdentifier:
+			 PropertyTypeCellIdentifier];
+			if (!cell)
+				cell = [[OMBMapFilterDateAvailableCell alloc] initWithStyle:
+						UITableViewCellStyleDefault reuseIdentifier:
+						PropertyTypeCellIdentifier];
+			return cell;
+		}
+	}
     return headerCell;
   }
   // Neighborhood slide up selection
@@ -526,8 +612,15 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         [NSIndexPath indexPathForRow: 0 inSection: indexPath.section] 
           atScrollPosition: UITableViewScrollPositionTop animated: YES];
       [self hideNeighborhoodTableViewContainer];
-      [self showPickerView];
+		[self showPickerView:rentPickerView];
     }
+	else if (indexPath.section == 5 && indexPath.row == 1) {
+		[self.table scrollToRowAtIndexPath:
+		 [NSIndexPath indexPathForRow: 0 inSection: indexPath.section]
+						  atScrollPosition: UITableViewScrollPositionTop animated: YES];
+		[self hideNeighborhoodTableViewContainer];
+		[self showPickerView:availabilityPickerView];
+	}
   }
   // Neighborhood table view
   else if (tableView == neighborhoodTableView) {
@@ -556,7 +649,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     [tableView reloadData];
 
     if (selectedNeighborhood) {
-      [_valuesDictionary setObject: selectedNeighborhood 
+      [_valuesDictionary setObject: selectedNeighborhood
         forKey: @"neighborhood"];
     }
     else
@@ -644,6 +737,8 @@ viewForHeaderInSection: (NSInteger) section
     _shouldSearch = YES;
   else if ([[_valuesDictionary objectForKey: @"propertyType"] count] > 0)
     _shouldSearch = YES;
+	else if ([_valuesDictionary objectForKey:@"dateAvailable"] != [NSNull null])
+		_shouldSearch = YES;
 
   [self resetValuesDictionary];
 
@@ -678,6 +773,10 @@ viewForHeaderInSection: (NSInteger) section
         [self.table cellForRowAtIndexPath: 
           [NSIndexPath indexPathForRow: 1 inSection: 4]];
     [propertyTypeCell resetButtons];
+	  // Date Available
+	  OMBMapFilterDateAvailableCell *dateAvailableCell = (OMBMapFilterDateAvailableCell *)[self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:5]];
+	  dateAvailableCell.dateAvailable.text = @"";
+	  [availabilityPickerView selectRow: 0 inComponent: 0 animated: NO];
   }];
 }
 
@@ -692,14 +791,26 @@ viewForHeaderInSection: (NSInteger) section
   [self hideNeighborhoodTableViewContainer];
 }
 
-- (void) cancelSelectRent
+- (void) cancelPicker
 {
-  OMBMapFilterRentCell *cell = (OMBMapFilterRentCell *) 
-    [self.table cellForRowAtIndexPath: 
-      [NSIndexPath indexPathForRow: 1 inSection: 1]];
-  cell.minRentTextField.text = cell.maxRentTextField.text = @"";
-  [rentPickerView selectRow: 0 inComponent: 0 animated: YES];
-  [rentPickerView selectRow: 0 inComponent: 1 animated: YES];
+	if ([rentPickerView superview])
+	{
+		OMBMapFilterRentCell *cell = (OMBMapFilterRentCell *)
+		[self.table cellForRowAtIndexPath:
+		 [NSIndexPath indexPathForRow: 1 inSection: 1]];
+		cell.minRentTextField.text = cell.maxRentTextField.text = @"";
+		[rentPickerView selectRow: 0 inComponent: 0 animated: YES];
+		[rentPickerView selectRow: 0 inComponent: 1 animated: YES];
+	}
+	else if ([availabilityPickerView superview])
+	{
+		OMBMapFilterDateAvailableCell *cell = (OMBMapFilterDateAvailableCell *)
+		[self.table cellForRowAtIndexPath:
+		 [NSIndexPath indexPathForRow: 1 inSection: 5]];
+		cell.dateAvailable.text = @"";
+		[availabilityPickerView selectRow:0 inComponent:0 animated:YES];
+	}
+	
   [self hidePickerView];
 }
 
@@ -751,11 +862,11 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) hidePickerView
 {
-  CGRect rect = rentPickerViewContainer.frame;
+  CGRect rect = pickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 0.0f;
-    rentPickerViewContainer.frame = rect;
+    pickerViewContainer.frame = rect;
   }];
   [self showSearchBarButtonItem];
 }
@@ -769,7 +880,8 @@ viewForHeaderInSection: (NSInteger) section
       @"maxRent":      [NSNull null],
       @"minRent":      [NSNull null],
       @"neighborhood": [NSNull null],
-      @"propertyType": [NSMutableArray array]
+      @"propertyType": [NSMutableArray array],
+	  @"dateAvailable":[NSNull null]
     }
   ];
 }
@@ -797,17 +909,33 @@ viewForHeaderInSection: (NSInteger) section
   // [self showDoneBarButtonItem];
 }
 
-- (void) showPickerView
+- (void) showPickerView:(UIPickerView *)pickerView
 {
-  CGRect rect = rentPickerViewContainer.frame;
+	if (rentPickerView == pickerView)
+	{
+		pickerViewHeaderLabel.text = @"Rent Range";
+		
+		[availabilityPickerView removeFromSuperview];
+		[pickerViewContainer addSubview:rentPickerView];
+	}
+	else if (availabilityPickerView == pickerView)
+	{
+		pickerViewHeaderLabel.text = @"Date Available";
+		
+		[rentPickerView removeFromSuperview];
+		[pickerViewContainer addSubview:availabilityPickerView];
+	}
+	
+  CGRect rect = pickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height -
-    rentPickerViewContainer.frame.size.height;
+    pickerViewContainer.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 1.0f;
-    rentPickerViewContainer.frame = rect;
+    pickerViewContainer.frame = rect;
   }];
-  // [self showDoneBarButtonItem];
 }
+
+
 
 - (void) showSearchBarButtonItem
 {

@@ -9,7 +9,7 @@
 #import "OMBTableViewController.h"
 
 @class OMBNeighborhood;
-
+@class AMBlurView;
 @interface OMBMapFilterViewController : OMBTableViewController
 <CLLocationManagerDelegate, UIPickerViewDataSource, UIPickerViewDelegate,
   UIScrollViewDelegate>
@@ -21,8 +21,10 @@
   CLLocationManager *locationManager;
   UITableView *neighborhoodTableView;
   UIView *neighborhoodTableViewContainer;
-  UIPickerView *rentPickerView;
-  UIView *rentPickerViewContainer;
+	UILabel *pickerViewHeaderLabel;
+	UIPickerView *rentPickerView;
+	UIPickerView *availabilityPickerView;
+  UIView *pickerViewContainer;
   UIBarButtonItem *searchBarButtonItem;
   OMBNeighborhood *selectedNeighborhood;
 }

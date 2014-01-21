@@ -78,7 +78,7 @@
 - (NSArray *) availableAmenities;
 - (NSString *) availableOnString;
 - (UIImage *) coverPhoto;
-- (UIImage *) coverPhotoWithSize: (CGSize) size;
+- (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size;
 - (NSString *) defaultContactMessage;
 - (NSString *) dictionaryKey;
 - (void) downloadCoverPhotoWithCompletion: (void (^) (NSError *error)) block;

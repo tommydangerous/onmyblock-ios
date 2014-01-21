@@ -25,14 +25,12 @@
 
 @interface OMBResidencePartialView () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
-@property (nonatomic, strong) NSArray *imagesArray;
 @property (nonatomic, strong) UICollectionView *imagesFilmstrip;
 
 @end
 
 @implementation OMBResidencePartialView
 
-//@synthesize imageView = _imageView;
 @synthesize residence = _residence;
 
 #pragma mark - Initializer
@@ -173,20 +171,18 @@
 - (void) resetFilmstrip
 {
 	[_imagesFilmstrip removeFromSuperview];
-	UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*)_imagesFilmstrip.collectionViewLayout;
-	if (!layout)
-	{
-		layout = [UICollectionViewFlowLayout new];
-		layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-		layout.itemSize = self.bounds.size;
-		layout.minimumLineSpacing = 0.0;
-	}
+
+	UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
+	layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+	layout.itemSize = self.bounds.size;
+	layout.minimumLineSpacing = 0.0;
+
 	_imagesFilmstrip = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
 	[_imagesFilmstrip registerClass:[OMBFilmstripImageCell class] forCellWithReuseIdentifier:[OMBFilmstripImageCell reuseID]];
-	_imagesFilmstrip.backgroundColor = [UIColor orangeColor];
 	_imagesFilmstrip.dataSource = self;
 	_imagesFilmstrip.delegate = self;
 	_imagesFilmstrip.pagingEnabled = YES;
+	_imagesFilmstrip.bounces = NO;
 	[self insertSubview:_imagesFilmstrip atIndex:0];
 }
 
@@ -298,17 +294,19 @@
   bedBathLabel.text = [NSString stringWithFormat: @"%@ / %@", beds, baths];
 
 
-	if (!_imagesArray.count) {
+	if (![_residence imagesArray].count) {
 		OMBResidenceImagesConnection *connection =
 		[[OMBResidenceImagesConnection alloc] initWithResidence:_residence];
 		connection.completionBlock = ^(NSError *error) {
 			[activityIndicatorView stopAnimating];
-			_imagesArray = [_residence imagesArray];
 			[_imagesFilmstrip reloadData];
 		};
 		connection.delegate = self;
 		[connection start];
 		[activityIndicatorView startAnimating];
+	}
+	else {
+		[_imagesFilmstrip reloadData];
 	}
 
 	// Rent
@@ -351,16 +349,14 @@
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-	return _imagesArray.count;
+	return [_residence imagesArray].count;
 }
 
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
 	OMBFilmstripImageCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[OMBFilmstripImageCell reuseID]
 																			forIndexPath:indexPath];
-	OMBResidenceImage *residenceImage = _imagesArray[indexPath.row];
-	cell.image.image = residenceImage.image;
-	cell.backgroundColor = [UIColor greenColor];
+	cell.image.image = [_residence photoAtIndex:indexPath.row withSize:self.bounds.size];
 	return cell;
 }
 

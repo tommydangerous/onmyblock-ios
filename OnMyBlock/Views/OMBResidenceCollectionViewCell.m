@@ -125,7 +125,7 @@
       [[OMBResidenceCoverPhotoURLConnection alloc] initWithResidence: 
         residence];
     connection.completionBlock = ^(NSError *error) {
-      residence.coverPhotoForCell = [residence coverPhotoWithSize: 
+      residence.coverPhotoForCell = [residence photoAtIndex:0 withSize:
         CGSizeMake(self.imageView.frame.size.width, 
           self.imageView.frame.size.height)];
       self.imageView.image = residence.coverPhotoForCell;
