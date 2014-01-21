@@ -19,6 +19,7 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
+#import "CustomLoading.h"
 
 #define DEGREES_TO_RADIANS(x) (M_PI * x / 180.0)
 
@@ -29,7 +30,9 @@
 - (id) initWithResidence: (OMBResidence *) object
 {
   if (!(self = [super init])) return nil;
-
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self  selector:@selector(progressConnection:) name:@"progressConnection" object:nil];
+    
   residence  = object;
 
   self.screenName = @"Photos";
@@ -97,7 +100,10 @@
 - (void) loadView
 {
   [super loadView];
-
+    
+  // reload CustomLoading
+  [[CustomLoading getInstance] clearInstance];
+    
   UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
   doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Save"
     style: UIBarButtonItemStylePlain target: self action: @selector(save)];
@@ -156,6 +162,7 @@
     delegate: self cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil 
       otherButtonTitles: @"Take Photo", @"Choose Existing", nil];
   [self.view addSubview: addPhotoActionSheet];
+    
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -163,8 +170,9 @@
   [super viewWillAppear: animated];
 
   [self reloadPhotosAnimated: NO];
-
+    
   [self updateTitle];
+    
 }
 
 #pragma mark - Protocol
@@ -251,6 +259,26 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 
 #pragma mark - Instance Methods
 
+// receive notification
+- (void)progressConnection:(NSNotification *)notification{
+    
+    //NSLog(@"progressConnection : %@", [notification object]);
+    float value = ([[notification object] floatValue]);
+    
+    CustomLoading *custom = [CustomLoading getInstance];
+    editBarButtonItem.enabled = NO;
+    
+    if(value == 1.0){
+        //NSLog(@"equal...");
+        [custom stopAnimatingWithView:self.view];
+        editBarButtonItem.enabled = YES;
+    }else{
+        //NSLog(@"less...");
+        [custom startAnimatingWithProgress:(int)(value * 25) withView:self.view];
+    }
+    
+}
+
 - (void) addPhoto
 {
   [self doneAndSave: NO];
@@ -280,6 +308,7 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 
 - (void) createResidenceImageWithDictionary: (NSDictionary *) dictionary
 {
+    
   NSString *absoluteString = [NSString stringWithFormat: @"%f",
     [[NSDate date] timeIntervalSince1970]];
   UIImage *image = [dictionary objectForKey: 
