@@ -178,6 +178,9 @@
   UIView *paymentTableViewHeader = [UIView new];
   paymentTableViewHeader.frame = activityTableViewHeader.frame;
   _paymentsTableView.tableHeaderView = paymentTableViewHeader;
+  // Footer view
+  _paymentsTableView.tableFooterView = [[UIView alloc] initWithFrame:
+    CGRectZero];
 
   // Welcome view
   welcomeView = [UIView new];
@@ -277,6 +280,7 @@
     backViewRect.origin.y = backViewOffsetY - adjustment;
     backView.frame = backViewRect;
   }
+  NSLog(@"%f", y);
 }
 
 #pragma mark - Protocol UITableViewDataSource
@@ -545,6 +549,7 @@ viewForHeaderInSection: (NSInteger) section
 - (void) changeTableView
 {
   CGFloat padding = 20.0f;
+  // Activity Feed
   if (selectedSegmentIndex == 0) {
     activityButton.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.5f];
     _activityTableView.hidden = NO;
@@ -554,7 +559,13 @@ viewForHeaderInSection: (NSInteger) section
     // if payments table view is not scrolled pass the threshold
     CGFloat threshold = ((backView.frame.size.height - backViewOffsetY) - 
       (padding + buttonsView.frame.size.height + padding));
-    if (_paymentsTableView.contentOffset.y < threshold) {
+    // If the activity table view content size height is less than it's frame
+    if (_activityTableView.contentSize.height <
+      _activityTableView.frame.size.height) {
+
+      [_paymentsTableView setContentOffset: CGPointZero animated: YES];
+    }
+    else if (_paymentsTableView.contentOffset.y < threshold) {
       _activityTableView.contentOffset = _paymentsTableView.contentOffset;
     }
     // If activity table view content offset is less than threshold
@@ -563,6 +574,7 @@ viewForHeaderInSection: (NSInteger) section
         _activityTableView.contentOffset.x, threshold);
     }
   }
+  // Rental Payments
   else if (selectedSegmentIndex == 1) {
     activityButton.backgroundColor = [UIColor clearColor];
     _activityTableView.hidden = YES;
@@ -572,7 +584,13 @@ viewForHeaderInSection: (NSInteger) section
     // if activity table view is not scrolled pass the threshold
     CGFloat threshold = ((backView.frame.size.height - backViewOffsetY) - 
       (padding + buttonsView.frame.size.height + padding));
-    if (_activityTableView.contentOffset.y < threshold) {
+    // If the payments table view content size height is less that it's frame
+    if (_paymentsTableView.contentSize.height < 
+      _paymentsTableView.frame.size.height) {
+
+      [_activityTableView setContentOffset: CGPointZero animated: YES];
+    }
+    else if (_activityTableView.contentOffset.y < threshold) {
       _paymentsTableView.contentOffset = _activityTableView.contentOffset;
     }
     // If payments table view content offset is less than threshold

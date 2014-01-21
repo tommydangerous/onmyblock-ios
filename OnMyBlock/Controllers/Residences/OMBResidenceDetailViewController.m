@@ -357,7 +357,9 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
 
   // Table footer view
   CGFloat footerHeight = _bottomButtonView.frame.size.height;
+  // If this residence belongs to the current user
   if (residence.user.uid == [OMBUser currentUser].uid) {
+    // Hide the table footer view and buttons at the bottom
     footerHeight = 0.0f;
     _bottomButtonView.hidden = YES;
   }
