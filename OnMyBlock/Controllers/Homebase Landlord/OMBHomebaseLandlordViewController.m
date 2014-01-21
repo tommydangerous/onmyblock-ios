@@ -280,7 +280,6 @@
     backViewRect.origin.y = backViewOffsetY - adjustment;
     backView.frame = backViewRect;
   }
-  NSLog(@"%f", y);
 }
 
 #pragma mark - Protocol UITableViewDataSource

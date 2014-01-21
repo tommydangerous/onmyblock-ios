@@ -24,10 +24,12 @@
 #import "OMBMessageStore.h"
 #import "OMBOffer.h"
 #import "OMBOfferInquiryResidenceCell.h"
+#import "OMBOfferUpdateConnection.h"
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBPreviousRentalCell.h"
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
+#import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
@@ -792,7 +794,33 @@ viewForHeaderInSection: (NSInteger) section
 {
   [alert hideAlert];
 
-  accepted = NO;
+  if (!accepted && !acceptedConfirmed) {
+    offer.accepted = NO;
+    offer.declined = YES;
+    OMBOfferUpdateConnection *conn = 
+      [[OMBOfferUpdateConnection alloc] initWithOffer: offer 
+        attributes: @[@"declined"]];
+    conn.completionBlock = ^(NSError *error) {
+      if (offer.declined && !error) {
+        #warning Remove offer from current user's receivedOffers
+        [self.navigationController popViewControllerAnimated: YES];
+      }
+      else {
+        NSString *message = @"Please try again.";
+        if (error)
+          message = error.localizedDescription;
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+          @"Unsuccessful" message: message delegate: nil 
+            cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+        [alertView show];
+      }
+      [[self appDelegate].container stopSpinning];
+    };
+    [[self appDelegate].container startSpinning];
+    [conn start];
+  }
+
+  accepted          = NO;
   acceptedConfirmed = NO;
 }
 
@@ -820,14 +848,38 @@ viewForHeaderInSection: (NSInteger) section
       alert.alertTitle.text = @"Are You Sure?";
     }
     else if (!acceptedConfirmed) {
-      acceptedConfirmed = YES;
-      // Alert buttons
-      [alert.alertConfirm setTitle: @"Setup" forState: UIControlStateNormal];
-      [alert.alertCancel setTitle: @"Ok" forState: UIControlStateNormal];
-      // Alert message
-      alert.alertMessage.text = @"Please set up your payout method.";
-      // Alert title
-      alert.alertTitle.text = @"Offer Accepted!";
+      offer.accepted = YES;
+      offer.declined = NO;
+      // Offer update connection
+      OMBOfferUpdateConnection *conn = 
+        [[OMBOfferUpdateConnection alloc] initWithOffer: offer 
+          attributes: @[@"accepted"]];
+      conn.completionBlock = ^(NSError *error) {
+        if (offer.accepted && !error) {
+          acceptedConfirmed = YES;
+          // Alert buttons
+          [alert.alertConfirm setTitle: @"Setup" 
+            forState: UIControlStateNormal];
+          [alert.alertCancel setTitle: @"Ok" forState: UIControlStateNormal];
+          // Alert message
+          alert.alertMessage.text = @"Please set up your payout method.";
+          // Alert title
+          alert.alertTitle.text = @"Offer Accepted!";
+          #warning Remove offer from current user's receivedOffers
+        }
+        else {
+          NSString *message = @"Please try again.";
+          if (error)
+            message = error.localizedDescription;
+          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+            @"Unsuccessful" message: message delegate: nil 
+              cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+          [alertView show];
+        }
+        [[self appDelegate].container stopSpinning];
+      };
+      [[self appDelegate].container startSpinning];
+      [conn start];
     }
     [alert animateChangeOfContent];
   }

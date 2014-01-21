@@ -269,6 +269,7 @@
 		AB9D6121188D73F000C9AC64 /* OMBCurvedLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9D6120188D73F000C9AC64 /* OMBCurvedLineView.m */; };
 		AB9D6125188D934000C9AC64 /* OMBOfferCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9D6124188D934000C9AC64 /* OMBOfferCreateConnection.m */; };
 		AB9D6128188DB9F000C9AC64 /* OMBOffersReceivedConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9D6127188DB9F000C9AC64 /* OMBOffersReceivedConnection.m */; };
+		AB9D612B188E00B900C9AC64 /* OMBOfferUpdateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9D612A188E00B900C9AC64 /* OMBOfferUpdateConnection.m */; };
 		ABA080831868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */; };
 		ABA080861868E76200C7B851 /* OMBTextViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080851868E76200C7B851 /* OMBTextViewViewController.m */; };
 		ABA0808C1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA0808B1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m */; };
@@ -947,6 +948,8 @@
 		AB9D6124188D934000C9AC64 /* OMBOfferCreateConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBOfferCreateConnection.m; sourceTree = "<group>"; };
 		AB9D6126188DB9F000C9AC64 /* OMBOffersReceivedConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBOffersReceivedConnection.h; sourceTree = "<group>"; };
 		AB9D6127188DB9F000C9AC64 /* OMBOffersReceivedConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBOffersReceivedConnection.m; sourceTree = "<group>"; };
+		AB9D6129188E00B900C9AC64 /* OMBOfferUpdateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBOfferUpdateConnection.h; sourceTree = "<group>"; };
+		AB9D612A188E00B900C9AC64 /* OMBOfferUpdateConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBOfferUpdateConnection.m; sourceTree = "<group>"; };
 		ABA080811868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceConfirmDetailsBuyerCell.h; sourceTree = "<group>"; };
 		ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceConfirmDetailsBuyerCell.m; sourceTree = "<group>"; };
 		ABA080841868E76200C7B851 /* OMBTextViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTextViewViewController.h; sourceTree = "<group>"; };
@@ -2003,6 +2006,8 @@
 				AB9D6124188D934000C9AC64 /* OMBOfferCreateConnection.m */,
 				AB9D6126188DB9F000C9AC64 /* OMBOffersReceivedConnection.h */,
 				AB9D6127188DB9F000C9AC64 /* OMBOffersReceivedConnection.m */,
+				AB9D6129188E00B900C9AC64 /* OMBOfferUpdateConnection.h */,
+				AB9D612A188E00B900C9AC64 /* OMBOfferUpdateConnection.m */,
 			);
 			path = Offers;
 			sourceTree = "<group>";
@@ -2935,6 +2940,7 @@
 				ABE28184186A416200A5D14E /* OMBMessage.m in Sources */,
 				AB4ED2D4188222C8009AFB01 /* OMBResidenceImageUpdateConnection.m in Sources */,
 				AB9545731848E6C1000513BE /* OMBTableViewController.m in Sources */,
+				AB9D612B188E00B900C9AC64 /* OMBOfferUpdateConnection.m in Sources */,
 				ABB70080187BD5C4005F0730 /* OMBHomebaseRenterRentDepositInfoViewController.m in Sources */,
 				AB9B26391811B7ED00E6DAC4 /* OCAlgorithms.m in Sources */,
 				AB01ED3A1857DB5300333390 /* OMBLegalQuestion.m in Sources */,
