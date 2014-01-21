@@ -8,6 +8,7 @@
 
 #import "OMBHomebaseRenterTopPriorityCell.h"
 
+#import "OMBOffer.h"
 #import "OMBResidence.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
@@ -30,9 +31,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   dateTimeLabel = [UILabel new];
   dateTimeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
-  dateTimeLabel.frame = CGRectMake(
-    screen.size.width - ((padding * 2) + padding),
-      topLabel.frame.origin.y, padding * 2, topLabel.frame.size.height);
+  dateTimeLabel.frame = CGRectMake(topLabel.frame.origin.x,
+    topLabel.frame.origin.y, topLabel.frame.size.width, 
+      topLabel.frame.size.height);
   dateTimeLabel.textAlignment = NSTextAlignmentRight;
   dateTimeLabel.textColor = [UIColor grayMedium];
   [self.contentView addSubview: dateTimeLabel];
@@ -67,7 +68,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   _yesButton.titleLabel.font = _noButton.titleLabel.font;
   [_yesButton setBackgroundImage: [UIImage imageWithColor: [UIColor green]]
     forState: UIControlStateHighlighted];
-  [_yesButton setTitle: @"Confirm Rent & Deposit"
+  [_yesButton setTitle: @"Confirm Payment" // @"Confirm Rent & Deposit"
     forState: UIControlStateNormal];
   [_yesButton setTitleColor: [UIColor green] forState: UIControlStateNormal];
   [_yesButton setTitleColor: [UIColor whiteColor] 
@@ -89,23 +90,39 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 #pragma mark - Instance Methods
 
-- (void) loadData
+- (void) loadOffer: (OMBOffer *) offer
 {
-  dateTimeLabel.text = @"5m";
-
-  CGFloat imageSize = objectImageView.frame.size.width;
-  UIImage *image = 
-    [[OMBResidence fakeResidence].imageSizeDictionary objectForKey: 
-      [NSNumber numberWithFloat: imageSize]];
-  if (!image) {
-    image = [UIImage image: [OMBResidence fakeResidence].coverPhoto 
-      size: CGSizeMake(imageSize, imageSize)];
-    [[OMBResidence fakeResidence].imageSizeDictionary setObject: image 
-      forKey: [NSNumber numberWithFloat: imageSize]];
+  // Date accepted
+  dateTimeLabel.text = [NSString timeAgoInShortFormatWithTimeInterval:
+    offer.acceptedDate];
+  // Image
+  CGSize size = objectImageView.frame.size;
+  NSString *sizeKey = [NSString stringWithFormat: @"%f,%f", 
+    size.width, size.height];
+  void (^completionBlock) (NSError *error) = ^(NSError *error) {
+    objectImageView.image = [offer.residence coverPhoto];
+    [offer.residence.imageSizeDictionary setObject: objectImageView.image
+      forKey: sizeKey];
+  };
+  if ([offer.residence coverPhoto]) {
+    UIImage *image = [offer.residence imageForSize: size];
+    if (!image) {
+      completionBlock(nil);
+    }
+    else {
+      objectImageView.image = image;
+    }
   }
-  objectImageView.image = image;
-  topLabel.text = @"Offer accepted: $1,575";
-  middleLabel.text = @"2756 Costa Verde Blvd";
+  else {
+    [offer.residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
+      completionBlock(error);
+    }];
+  }
+  // Offer accepted
+  topLabel.text = [NSString stringWithFormat: @"Offer accepted: %@",
+    [NSString numberToCurrencyString: (int) offer.amount]];
+  // Address
+  middleLabel.text = [offer.residence.address capitalizedString];
 }
 
 @end

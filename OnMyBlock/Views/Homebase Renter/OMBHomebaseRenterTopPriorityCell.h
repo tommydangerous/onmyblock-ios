@@ -8,6 +8,8 @@
 
 #import "OMBImageTwoLabelCell.h"
 
+@class OMBOffer;
+
 @interface OMBHomebaseRenterTopPriorityCell : OMBImageTwoLabelCell
 {
   UILabel *dateTimeLabel;
@@ -20,6 +22,6 @@
 
 #pragma mark - Instance Methods
 
-- (void) loadData;
+- (void) loadOffer: (OMBOffer *) offer;
 
 @end

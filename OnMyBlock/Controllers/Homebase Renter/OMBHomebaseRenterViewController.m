@@ -19,7 +19,9 @@
 #import "OMBHomebaseRenterRentDepositInfoViewController.h"
 #import "OMBHomebaseRenterRoommateImageView.h"
 #import "OMBHomebaseRenterTopPriorityCell.h"
+#import "OMBOffer.h"
 #import "OMBScrollView.h"
+#import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBHomebaseRenterViewController
@@ -100,8 +102,6 @@
     (backView.frame.size.width - imageSize) * 0.5f, 
       backViewOffsetY, imageSize, backView.frame.size.height - 
       (standardHeight + padding));
-  imagesScrollView.contentSize = CGSizeMake(imageSize * (1 + 2), 
-    imagesScrollView.frame.size.height);
   imagesScrollView.pagingEnabled = YES;
   imagesScrollView.showsHorizontalScrollIndicator = NO;
   [self.view addSubview: imagesScrollView];
@@ -119,26 +119,6 @@
     backView.frame.size.width, backView.frame.size.height);
 
   imageViewArray = [NSMutableArray array];
-
-  for (int i = 0; i < 3; i++) {
-    CGRect rect = CGRectMake(imageSize * i, 0.0f, imageSize, 
-      imagesScrollView.frame.size.height);
-    OMBHomebaseRenterRoommateImageView *imageView = 
-      [[OMBHomebaseRenterRoommateImageView alloc] initWithFrame: rect];
-    if (i == 2) {
-      [imageView setupForAddRoommate];
-      }
-    else if (i % 2) {
-      imageView.imageView.image = [UIImage imageNamed: @"tommy_d.png"];
-      imageView.nameLabel.text = @"Tommy";
-    }
-    else {
-      imageView.imageView.image = [UIImage imageNamed: @"edward_d.jpg"];
-      imageView.nameLabel.text = @"Edward";
-    }
-    [imageViewArray addObject: imageView];
-    [imagesScrollView addSubview: imageView];
-  }
 
   // Buttons
   buttonsView = [UIView new];
@@ -212,6 +192,9 @@
       tableViewOriginY));
   activityTableViewHeader.scrollView = imagesScrollView;
   _activityTableView.tableHeaderView = activityTableViewHeader;
+  // Footer view
+  _activityTableView.tableFooterView = [[UIView alloc] initWithFrame: 
+    CGRectZero];
 
   // Payments table view
   _paymentsTableView = [[UITableView alloc] initWithFrame: tableViewFrame
@@ -232,6 +215,9 @@
   paymentTableViewHeader.frame = activityTableViewHeader.frame;
   paymentTableViewHeader.scrollView = imagesScrollView;
   _paymentsTableView.tableHeaderView = paymentTableViewHeader;
+  // Footer view
+  _paymentsTableView.tableFooterView = [[UIView alloc] initWithFrame: 
+    CGRectZero];
 
   alert = [[OMBAlertView alloc] init];
 
@@ -257,11 +243,60 @@
 {
   [super viewWillAppear: animated];
 
-  [imagesScrollView setContentOffset: 
-    CGPointMake(imagesScrollView.frame.size.width, 0.0f) animated: NO];
-
   // [self showRentDepositInfo];
   // [self showAddRemoveRoommates];
+
+  [imageViewArray removeAllObjects];
+  [imagesScrollView.subviews enumerateObjectsUsingBlock: 
+    ^(id obj, NSUInteger idx, BOOL *stop) {
+      UIView *v = (UIView *) obj;
+      if (v.tag == 9999)
+        [v removeFromSuperview];
+    }
+  ];
+
+  CGFloat imageSize = backView.frame.size.width / 3.0f;
+  for (int i = 0; i < 1; i++) {
+    CGRect rect = CGRectMake(imageSize * i, 0.0f, imageSize, 
+      imagesScrollView.frame.size.height);
+    OMBHomebaseRenterRoommateImageView *imageView = 
+      [[OMBHomebaseRenterRoommateImageView alloc] initWithFrame: rect];
+    imageView.tag = 9999;
+    // if (i == 2) {
+    //   [imageView setupForAddRoommate];
+    // }
+    // else if (i % 2) {
+    //   imageView.imageView.image = [UIImage imageNamed: @"tommy_d.png"];
+    //   imageView.nameLabel.text = @"Tommy";
+    // }
+    // else {
+    //   imageView.imageView.image = [UIImage imageNamed: @"edward_d.jpg"];
+    //   imageView.nameLabel.text = @"Edward";
+    // }
+    if ([OMBUser currentUser].image) {
+      imageView.imageView.image = [OMBUser currentUser].image;
+    }
+    else {
+      [[OMBUser currentUser] downloadImageFromImageURLWithCompletion: 
+        ^(NSError *error) {
+          imageView.imageView.image = [OMBUser currentUser].image;
+        }
+      ];
+    }
+    [imageViewArray addObject: imageView];
+    [imagesScrollView addSubview: imageView];
+  }
+
+  imagesScrollView.contentSize = CGSizeMake(imageSize * (1 + 0), 
+    imagesScrollView.frame.size.height);
+  [imagesScrollView setContentOffset: CGPointZero animated: NO];
+  // [imagesScrollView setContentOffset: 
+  //   CGPointMake(imagesScrollView.frame.size.width, 0.0f) animated: NO];
+
+  // Fetch accepted offers
+  [[OMBUser currentUser] fetchAcceptedOffersWithCompletion: ^(NSError *error) {
+    [_activityTableView reloadData];
+  }];
 }
 
 #pragma mark - Protocol
@@ -378,7 +413,8 @@
   if (tableView == _activityTableView) {
     // Top Priority
     // Recent Activity
-    return 2;
+    return 1;
+    // return 2;
   }
   // Payments
   else if (tableView == _paymentsTableView) {
@@ -401,18 +437,30 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (tableView == _activityTableView) {
     // Top Priority
     if (indexPath.section == 0) {
-      static NSString *TopPriorityCellIdentifier = @"TopPriorityCellIdentifier";
-      OMBHomebaseRenterTopPriorityCell *cell1 = 
-        [tableView dequeueReusableCellWithIdentifier:
-          TopPriorityCellIdentifier];
-      if (!cell1)
-        cell1 = [[OMBHomebaseRenterTopPriorityCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault reuseIdentifier: 
+      // Blank space
+      if (indexPath.row == 0) {
+        cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+          0.0f, 0.0f);
+      }
+      else {
+        static NSString *TopPriorityCellIdentifier = 
+          @"TopPriorityCellIdentifier";
+        OMBHomebaseRenterTopPriorityCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
             TopPriorityCellIdentifier];
-      [cell1 loadData];
-      [cell1.yesButton addTarget: self action: @selector(showRentDepositInfo)
-        forControlEvents: UIControlEventTouchUpInside];
-      return cell1;
+        if (!cell1)
+          cell1 = [[OMBHomebaseRenterTopPriorityCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: 
+              TopPriorityCellIdentifier];
+        OMBOffer *offer = [[self offers] objectAtIndex: indexPath.row - 1];
+        cell1.noButton.tag = cell1.yesButton.tag = offer.uid;
+        [cell1.noButton addTarget: self action: @selector(rejectOffer:)
+          forControlEvents: UIControlEventTouchUpInside];
+        [cell1.yesButton addTarget: self action: @selector(confirmOffer:)
+          forControlEvents: UIControlEventTouchUpInside];
+        [cell1 loadOffer: offer];
+        return cell1;
+      }
     }
     // Recent Activity
     else if (indexPath.section == 1) {
@@ -465,18 +513,22 @@ numberOfRowsInSection: (NSInteger) section
   if (tableView == _activityTableView) {
     // Top Priority
     if (section == 0) {
-      return 2;
+      // Blank space
+      return 1 + [[[OMBUser currentUser].acceptedOffers allValues] count];
+      // return 2;
     }
     // Recent Activity
     else if (section == 1) {
-      return 10;
+      return 0;
+      // return 10;
     }
   }
   // Payments
   else if (tableView == _paymentsTableView) {
     // Top Priority
     if (section == 0) {
-      return 15;
+      return 0;
+      // return 15;
     }
   }
   return 0;
@@ -503,7 +555,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   if (tableView == _activityTableView) {
     // Top Priority
     if (indexPath.section == 0) {
-      return [OMBHomebaseRenterTopPriorityCell heightForCell];
+      // Blank space
+      if (indexPath.row == 0) {
+        if ([[[OMBUser currentUser].acceptedOffers allValues] count] == 0) {
+          return tableView.frame.size.height - 
+            (tableView.tableHeaderView.frame.size.height + (13.0f * 2));
+        }
+      }
+      else {
+        return [OMBHomebaseRenterTopPriorityCell heightForCell];
+      }
     }
     // Recent Activity
     else if (indexPath.section == 1) {
@@ -561,6 +622,72 @@ viewForHeaderInSection: (NSInteger) section
 
 #pragma mark - Instance Methods
 
+- (void) confirmOffer: (NSInteger) index
+{
+
+}
+
+- (void) rejectOfferCancel
+{
+  [alert hideAlert];
+}
+
+- (void) rejectOfferConfirm
+{
+  if (!selectedOffer)
+    return;
+  // NSInteger index = [[self offers] indexOfObject: selectedOffer];
+  [[OMBUser currentUser] rejectOffer: selectedOffer 
+    withCompletion: ^(NSError *error) {
+      if (!selectedOffer.confirmed && selectedOffer.rejected) {
+        // [_activityTableView beginUpdates];
+        // // +1 to account for the blank space
+        // [_activityTableView deleteRowsAtIndexPaths: 
+        //   @[[NSIndexPath indexPathForRow: index + 1 inSection: 0]] 
+        //     withRowAnimation: UITableViewRowAnimationFade];
+        // Remove the offer from the user's accepted offers
+        [[OMBUser currentUser] removeOffer: selectedOffer 
+          type: OMBUserOfferTypeAccepted];
+        [_activityTableView reloadData];
+        // [_activityTableView endUpdates];
+        [_activityTableView reloadRowsAtIndexPaths:
+          @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
+            withRowAnimation: UITableViewRowAnimationFade];
+        selectedOffer = nil;
+      }
+      else {
+        NSString *message = @"Please try again.";
+        if (error)
+          message = error.localizedDescription;
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+          @"Unsuccessful" message: message delegate: nil 
+            cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+        [alertView show];
+      }
+      [[self appDelegate].container stopSpinning];
+    }
+  ];
+  // [[self appDelegate].container startSpinning];
+  [alert hideAlert];
+}
+
+- (void) rejectOffer: (UIButton *) button
+{
+  selectedOffer = [[OMBUser currentUser].acceptedOffers objectForKey:
+    [NSNumber numberWithInt: button.tag]];
+  if (!selectedOffer)
+    return;
+  alert.alertTitle.text   = @"Decline Offer";
+  alert.alertMessage.text = @"Are you sure?";
+  [alert.alertCancel addTarget: self action: @selector(rejectOfferCancel)
+      forControlEvents: UIControlEventTouchUpInside];
+  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
+  [alert.alertConfirm addTarget: self action: @selector(rejectOfferConfirm)
+    forControlEvents: UIControlEventTouchUpInside];
+  [alert.alertConfirm setTitle: @"Yes" forState: UIControlStateNormal];
+  [alert showAlert];
+}
+
 - (void) editRentalPayments
 {
   OMBHomebaseRenterRentDepositInfoViewController *vc = 
@@ -600,12 +727,19 @@ viewForHeaderInSection: (NSInteger) section
 
   if (selectedSegmentIndex == 0) {
     activityButton.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.3f];
-    _activityTableView.hidden = NO;
     paymentsButton.backgroundColor = [UIColor clearColor];
+
+    _activityTableView.hidden = NO;
     _paymentsTableView.hidden = YES;
+
+    if (_activityTableView.contentSize.height <=
+      _activityTableView.frame.size.height) {
+
+      [_paymentsTableView setContentOffset: CGPointZero animated: YES];
+    }
     // Change the content offset of activity table view 
     // if payments table view is not scrolled pass the threshold
-    if (_paymentsTableView.contentOffset.y < threshold) {
+    else if (_paymentsTableView.contentOffset.y < threshold) {
       _activityTableView.contentOffset = _paymentsTableView.contentOffset;
     }
     // If activity table view content offset is less than threshold
@@ -617,12 +751,19 @@ viewForHeaderInSection: (NSInteger) section
   }
   else if (selectedSegmentIndex == 1) {
     activityButton.backgroundColor = [UIColor clearColor];
-    _activityTableView.hidden = YES;
     paymentsButton.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.3f];
+
+    _activityTableView.hidden = YES;
     _paymentsTableView.hidden = NO;
+
+    if (_paymentsTableView.contentSize.height <= 
+      _paymentsTableView.frame.size.height) {
+
+      [_activityTableView setContentOffset: CGPointZero animated: YES];
+    }
     // Change the content offset of activity table view 
     // if payments table view is not scrolled pass the threshold
-    if (_activityTableView.contentOffset.y < threshold) {
+    else if (_activityTableView.contentOffset.y < threshold) {
       _paymentsTableView.contentOffset = _activityTableView.contentOffset;
     }
     // If payments table view content offset is less than threshold
@@ -633,6 +774,12 @@ viewForHeaderInSection: (NSInteger) section
     [self.navigationItem setRightBarButtonItem: editBarButtonItem 
       animated: YES];
   }
+}
+
+- (NSArray *) offers
+{
+  return [[OMBUser currentUser] sortedOffersType: OMBUserOfferTypeAccepted 
+    withKey: @"acceptedDate" ascending: NO];
 }
 
 - (void) paymentAlertCancel
@@ -660,6 +807,28 @@ viewForHeaderInSection: (NSInteger) section
   }
 }
 
+- (void) scrollTableViewIfBelowThreshold: (UITableView *) tableView
+{
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGFloat threshold = screen.size.height - tableView.frame.origin.y;
+  if (tableView == _activityTableView) {
+    NSLog(@"%f", _activityTableView.contentSize.height);
+    NSLog(@"%f", _activityTableView.tableHeaderView.frame.size.height);
+    CGFloat height = _activityTableView.contentSize.height - 
+      _activityTableView.tableHeaderView.frame.size.height;
+    NSLog(@"%f", threshold);
+    NSLog(@"%f", height);
+    if (height < threshold) {
+      CGFloat difference = threshold - height;
+      if (difference < 0)
+        difference = 0.0f;
+      CGPoint point = CGPointMake(0.0f, 
+        _activityTableView.contentOffset.y - difference);
+      [_activityTableView setContentOffset: point animated: YES];
+    }
+  }
+}
+
 - (void) segmentButtonSelected: (UIButton *) button
 {
   if (selectedSegmentIndex != button.tag) {
@@ -675,7 +844,7 @@ viewForHeaderInSection: (NSInteger) section
       animated: YES];
 }
 
-- (void) showRentDepositInfo
+- (void) showRentDepositInfo: (NSInteger) index
 {
   OMBHomebaseRenterRentDepositInfoViewController *vc = 
     [[OMBHomebaseRenterRentDepositInfoViewController alloc] init];

@@ -20,6 +20,7 @@
 #import "OMBMessageDetailConnection.h"
 #import "OMBMessagesUnviewedCountConnection.h"
 #import "OMBOffer.h"
+#import "OMBOffersAcceptedConnection.h"
 #import "OMBOfferUpdateConnection.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
@@ -73,6 +74,7 @@ int kNotificationTimerInterval = 30;
 {
   if (!(self = [super init])) return nil;
 
+  _acceptedOffers      = [NSMutableDictionary dictionary];
   _favorites           = [NSMutableDictionary dictionary];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _messages            = [NSMutableDictionary dictionary];
@@ -175,6 +177,13 @@ withCompletion: (void (^) (NSError *error)) block
       attributes: @[@"accepted", @"declined"]];
   conn.completionBlock = block;
   [conn start];
+}
+
+- (void) addAcceptedOffer: (OMBOffer *) offer
+{
+  NSNumber *key = [NSNumber numberWithInt: offer.uid];
+  if (![_acceptedOffers objectForKey: key])
+    [_acceptedOffers setObject: offer forKey: key];
 }
 
 - (void) addCosigner: (OMBCosigner *) cosigner
@@ -310,6 +319,14 @@ withCompletion: (void (^) (NSError *error)) block
   return [favoriteResidences sortedArrayUsingDescriptors: @[sort]];
 }
 
+- (void) fetchAcceptedOffersWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBOffersAcceptedConnection *conn = 
+    [[OMBOffersAcceptedConnection alloc] init];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (void) fetchFavorites
 {
   [[[OMBFavoritesListConnection alloc] init] start];
@@ -390,6 +407,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [OMBUser currentUser].school              = @"";
   [OMBUser currentUser].userType            = @"";
 
+  [[OMBUser currentUser].acceptedOffers removeAllObjects];
   [[OMBUser currentUser].favorites removeAllObjects];
   [OMBUser currentUser].image    = nil;
   [[OMBUser currentUser].imageSizeDictionary removeAllObjects];
@@ -445,6 +463,19 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     }
   }
   return @"";
+}
+
+- (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary
+{
+  NSArray *array = [dictionary objectForKey: @"objects"];
+  for (NSDictionary *dict in array) {
+    NSInteger objectUID = [[dict objectForKey: @"id"] intValue];
+    if (![_acceptedOffers objectForKey: [NSNumber numberWithInt: objectUID]]) {
+      OMBOffer *offer = [[OMBOffer alloc] init];
+      [offer readFromDictionary: dict];
+      [self addAcceptedOffer: offer];
+    }
+  }
 }
 
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary
@@ -685,6 +716,18 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   }
 }
 
+- (void) rejectOffer: (OMBOffer *) offer 
+withCompletion: (void (^) (NSError *error)) block
+{
+  offer.confirmed = NO;
+  offer.rejected  = YES;
+  OMBOfferUpdateConnection *conn = 
+    [[OMBOfferUpdateConnection alloc] initWithOffer: offer
+      attributes: @[@"confirmed", @"rejected"]];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (void) removeAllReceivedOffersWithOffer: (OMBOffer *) offer
 {
   NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
@@ -694,6 +737,15 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   for (OMBOffer *o in array) {
     [_receivedOffers removeObjectForKey: [NSNumber numberWithInt: o.uid]];
   }
+}
+
+- (void) removeOffer: (OMBOffer *) offer type: (OMBUserOfferType) type
+{
+  NSNumber *key = [NSNumber numberWithInt: offer.uid];
+  if (type == OMBUserOfferTypeAccepted)
+    [_acceptedOffers removeObjectForKey: key];
+  else if (type == OMBUserOfferTypeReceived)
+    [_receivedOffers removeObjectForKey: key];
 }
 
 - (void) removeReceivedOffer: (OMBOffer *) offer
@@ -779,12 +831,17 @@ ascending: (BOOL) ascending
       [[self.lastName substringToIndex: 1] capitalizedString]];
 }
 
-- (NSArray *) sortedReceivedOffersWithKey: (NSString *) key 
-ascending: (BOOL) ascending
+- (NSArray *) sortedOffersType: (OMBUserOfferType) type 
+withKey: (NSString *) key ascending: (BOOL) ascending
 {
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
     ascending: ascending];
-  return [[_receivedOffers allValues] sortedArrayUsingDescriptors: @[sort]];
+  NSArray *array;
+  if (type == OMBUserOfferTypeAccepted)
+    array = [_acceptedOffers allValues];
+  else if (type == OMBUserOfferTypeReceived)
+    array = [_receivedOffers allValues];
+  return [array sortedArrayUsingDescriptors: @[sort]];
 }
 
 @end

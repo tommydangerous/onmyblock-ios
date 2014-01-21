@@ -331,7 +331,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle: 
             UITableViewCellStyleDefault reuseIdentifier: OfferCellIdentifier];
         [cell1 loadOffer: 
-          [[self receivedOffers] objectAtIndex: indexPath.row - 1]];
+          [[self offers] objectAtIndex: indexPath.row - 1]];
         return cell1;
       }
     }
@@ -434,7 +434,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Offers & Inquiries
     if (indexPath.section == 0) {
       if (indexPath.row > 0) {
-        OMBOffer *offer = [[self receivedOffers] objectAtIndex: 
+        OMBOffer *offer = [[self offers] objectAtIndex: 
           indexPath.row - 1];
         [self.navigationController pushViewController:
           [[OMBOfferInquiryViewController alloc] initWithOffer: offer]
@@ -618,10 +618,10 @@ viewForHeaderInSection: (NSInteger) section
   }
 }
 
-- (NSArray *) receivedOffers
+- (NSArray *) offers
 {
-  return [[OMBUser currentUser] sortedReceivedOffersWithKey: @"createdAt"
-    ascending: NO];
+  return [[OMBUser currentUser] sortedOffersType: OMBUserOfferTypeReceived
+    withKey: @"createdAt" ascending: NO];
 }
   
 - (void) segmentButtonSelected: (UIButton *) button

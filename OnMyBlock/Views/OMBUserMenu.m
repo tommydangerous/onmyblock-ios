@@ -105,7 +105,7 @@
   homebaseImageView.image = [UIImage image: homebaseImage
     size: homebaseImageView.frame.size];
   [_renterHomebaseButton addSubview: homebaseImageView];
-  // [_renterButtons addObject: _renterHomebaseButton];
+  [_renterButtons addObject: _renterHomebaseButton];
   // Notification badge
   _renterHomebaseNotificationBadge = [UILabel new];
   [_renterHomebaseButton addSubview: _renterHomebaseNotificationBadge];
