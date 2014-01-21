@@ -25,13 +25,12 @@
   NSArray *legalQuestions;
   OMBOffer *offer;
   UIButton *offerButton;
+  int previouslySelectedIndex;
   UIButton *profileButton;
   UIButton *respondButton;
   UIView *respondView;
   int selectedSegmentIndex;
   OMBCenteredImageView *userImageView;
-
-  NSString *fakeAbout;
 }
 
 #pragma mark - Initializer

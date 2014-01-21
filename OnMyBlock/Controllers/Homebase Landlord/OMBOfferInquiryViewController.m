@@ -24,10 +24,12 @@
 #import "OMBMessageStore.h"
 #import "OMBOffer.h"
 #import "OMBOfferInquiryResidenceCell.h"
+#import "OMBOfferUpdateConnection.h"
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBPreviousRentalCell.h"
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
+#import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
@@ -78,7 +80,6 @@
     [[OMBCenteredImageView alloc] init];
   userImageView.frame = CGRectMake(0.0f, 0.0f, backView.frame.size.width,
     backView.frame.size.height);  
-  userImageView.image = [UIImage imageNamed: @"edward_d.jpg"];
   [backView addSubview: userImageView];
 
   OMBGradientView *gradient = [[OMBGradientView alloc] init];
@@ -234,7 +235,7 @@
   // Profile table footer view
   _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
     _offerTableView.tableFooterView.frame];
-  selectedSegmentIndex = 0;
+  previouslySelectedIndex = selectedSegmentIndex = 0;
 
   // Alert view
   alert = [[OMBAlertView alloc] init];
@@ -261,18 +262,30 @@
   [super viewWillAppear: animated];
 
   // Fetch questions
-  [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
-    ^(NSError *error) {
-      legalQuestions = 
-        [[OMBLegalQuestionStore sharedStore] questionsSortedByQuestion];
-      [_profileTableView reloadSections: [NSIndexSet indexSetWithIndex: 6]
-        withRowAnimation: UITableViewRowAnimationFade];
-    }
-  ];
+  // [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
+  //   ^(NSError *error) {
+  //     legalQuestions = 
+  //       [[OMBLegalQuestionStore sharedStore] questionsSortedByQuestion];
+  //     [_profileTableView reloadSections: [NSIndexSet indexSetWithIndex: 6]
+  //       withRowAnimation: UITableViewRowAnimationFade];
+  //   }
+  // ];
+
+  // Fetch offer's user's renter application info
 
   [respondButton setTitle: 
     [NSString stringWithFormat: @"Respond to %@", self.title]
       forState: UIControlStateNormal];
+
+  // User image view
+  if (offer.user.image) {
+    userImageView.image = offer.user.image;
+  }
+  else {
+    [offer.user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+      userImageView.image = offer.user.image;   
+    }];
+  }
 }
 
 #pragma mark - Protocol
@@ -328,7 +341,8 @@
     // Rental history
     // Work history
     // Legal stuff
-    return 7;
+    return 1;
+    // return 7;
   }
   return 0;
 }
@@ -405,18 +419,18 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
             UITableViewCellStyleSubtitle reuseIdentifier: NameCellIdentifier];
         cell1.detailTextLabel.font = 
           [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-        cell1.detailTextLabel.text = @"University of California - Berkeley";
+        cell1.detailTextLabel.text = offer.user.school;
         cell1.detailTextLabel.textColor = [UIColor grayMedium];
         cell1.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
           size: 18];
-        cell1.textLabel.text = @"Edward Drake";
+        cell1.textLabel.text = [offer.user fullName];
         cell1.textLabel.textColor = [UIColor blueDark];
         return cell1;
       }
       // About
       else if (indexPath.row == 1) {
         cell.textLabel.attributedText = 
-          [fakeAbout attributedStringWithFont: cell.textLabel.font 
+          [offer.user.about attributedStringWithFont: cell.textLabel.font 
             lineHeight: 22.0f];
         cell.textLabel.numberOfLines = 0;
       }
@@ -585,25 +599,25 @@ numberOfRowsInSection: (NSInteger) section
     }
     // Co-signers
     else if (section == 1) {
-      return 3;
+      return 0;
     }
     // Co-applicants
     else if (section == 2) {
-      return 2;
+      return 0;
     }
     // Pets
     else if (section == 3) {
-      return 2;
+      return 0;
     }
     // Rental History
     else if (section == 4) {
-      return 2;
+      return 0;
     }
     // Work History
     else if (section == 5) {
       // View Linkedin Profile
       // Previous Employment
-      return 1 + 3;
+      return 1 + 0;
     }
     // Legal Stuff
     else if (section == 6) {
@@ -676,9 +690,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // About
       else if (indexPath.row == 1) {
-        NSAttributedString *aString = [fakeAbout attributedStringWithFont: 
-          [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] 
-            lineHeight: 22.0f];
+        NSAttributedString *aString = 
+          [offer.user.about attributedStringWithFont: 
+            [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] 
+              lineHeight: 22.0f];
         CGRect rect = [aString boundingRectWithSize: 
           CGSizeMake(tableView.frame.size.width - (padding * 2), 9999) 
             options: NSStringDrawingUsesLineFragmentOrigin context: nil];
@@ -779,7 +794,33 @@ viewForHeaderInSection: (NSInteger) section
 {
   [alert hideAlert];
 
-  accepted = NO;
+  if (!accepted && !acceptedConfirmed) {
+    offer.accepted = NO;
+    offer.declined = YES;
+    OMBOfferUpdateConnection *conn = 
+      [[OMBOfferUpdateConnection alloc] initWithOffer: offer 
+        attributes: @[@"declined"]];
+    conn.completionBlock = ^(NSError *error) {
+      if (offer.declined && !error) {
+        #warning Remove offer from current user's receivedOffers
+        [self.navigationController popViewControllerAnimated: YES];
+      }
+      else {
+        NSString *message = @"Please try again.";
+        if (error)
+          message = error.localizedDescription;
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+          @"Unsuccessful" message: message delegate: nil 
+            cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+        [alertView show];
+      }
+      [[self appDelegate].container stopSpinning];
+    };
+    [[self appDelegate].container startSpinning];
+    [conn start];
+  }
+
+  accepted          = NO;
   acceptedConfirmed = NO;
 }
 
@@ -800,20 +841,45 @@ viewForHeaderInSection: (NSInteger) section
       [alert.alertConfirm setTitle: @"Yes" forState: UIControlStateNormal];
       [alert.alertCancel setTitle: @"No" forState: UIControlStateNormal];
       // Alert message
-      alert.alertMessage.text = @"Accepting Edward's offer will automatically "
-        @"decline all other offers.";
+      alert.alertMessage.text = [NSString stringWithFormat: 
+        @"Accepting %@'s offer will automatically decline all other offers.",
+          [offer.user.firstName capitalizedString]];
       // Alert title
       alert.alertTitle.text = @"Are You Sure?";
     }
     else if (!acceptedConfirmed) {
-      acceptedConfirmed = YES;
-      // Alert buttons
-      [alert.alertConfirm setTitle: @"Setup" forState: UIControlStateNormal];
-      [alert.alertCancel setTitle: @"Ok" forState: UIControlStateNormal];
-      // Alert message
-      alert.alertMessage.text = @"Please set up a way to get paid.";
-      // Alert title
-      alert.alertTitle.text = @"Offer Accepted";
+      offer.accepted = YES;
+      offer.declined = NO;
+      // Offer update connection
+      OMBOfferUpdateConnection *conn = 
+        [[OMBOfferUpdateConnection alloc] initWithOffer: offer 
+          attributes: @[@"accepted"]];
+      conn.completionBlock = ^(NSError *error) {
+        if (offer.accepted && !error) {
+          acceptedConfirmed = YES;
+          // Alert buttons
+          [alert.alertConfirm setTitle: @"Setup" 
+            forState: UIControlStateNormal];
+          [alert.alertCancel setTitle: @"Ok" forState: UIControlStateNormal];
+          // Alert message
+          alert.alertMessage.text = @"Please set up your payout method.";
+          // Alert title
+          alert.alertTitle.text = @"Offer Accepted!";
+          #warning Remove offer from current user's receivedOffers
+        }
+        else {
+          NSString *message = @"Please try again.";
+          if (error)
+            message = error.localizedDescription;
+          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+            @"Unsuccessful" message: message delegate: nil 
+              cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+          [alertView show];
+        }
+        [[self appDelegate].container stopSpinning];
+      };
+      [[self appDelegate].container startSpinning];
+      [conn start];
     }
     [alert animateChangeOfContent];
   }
@@ -842,6 +908,7 @@ viewForHeaderInSection: (NSInteger) section
       _offerTableView.contentOffset = CGPointMake(
         _offerTableView.contentOffset.x, threshold);
     }
+    previouslySelectedIndex = 0;
   }
   else if (selectedSegmentIndex == 1) {  
     offerButton.backgroundColor   = [UIColor clearColor];
@@ -863,12 +930,14 @@ viewForHeaderInSection: (NSInteger) section
       _profileTableView.contentOffset = CGPointMake(
         _profileTableView.contentOffset.x, threshold);
     }
+    previouslySelectedIndex = 1;
   }
   else if (selectedSegmentIndex == 2) {
-    [[OMBMessageStore sharedStore] createFakeMessages];
     [self.navigationController pushViewController: 
-      [[OMBMessageDetailViewController alloc] initWithUser: [OMBUser fakeUser]]
+      [[OMBMessageDetailViewController alloc] initWithUser: offer.user]
         animated: YES];
+    selectedSegmentIndex = previouslySelectedIndex;
+    [self changeTableView];
   }
 }
 
@@ -881,9 +950,10 @@ viewForHeaderInSection: (NSInteger) section
   // Alert title
   alert.alertTitle.text = @"Respond to Offer";
   // Alert message
-  alert.alertMessage.text =
-    @"Edward would like to rent this place from January 1,"
-      @" 2014 through December 12, 2014 for $2,575 a month.";
+  alert.alertMessage.text = [NSString stringWithFormat: 
+    @"%@ would like to rent this place for %@ a month", 
+      [offer.user.firstName capitalizedString], 
+        [NSString numberToCurrencyString: (int) offer.amount]];
   
   [alert showAlert];
 }
