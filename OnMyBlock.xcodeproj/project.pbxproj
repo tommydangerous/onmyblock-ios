@@ -533,6 +533,8 @@
 		ABF8ECB5182D81060080B1E2 /* review_pink.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF8ECB3182D81060080B1E2 /* review_pink.png */; };
 		ABF8ECB6182D81060080B1E2 /* review_pink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABF8ECB4182D81060080B1E2 /* review_pink@2x.png */; };
 		ABF8ECB9182D84170080B1E2 /* OMBSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF8ECB8182D84170080B1E2 /* OMBSignUpView.m */; };
+		DE05FF20188F3743003AB752 /* intro_still_image_slide_5_background.png in Resources */ = {isa = PBXBuildFile; fileRef = DE05FF1E188F3743003AB752 /* intro_still_image_slide_5_background.png */; };
+		DE05FF21188F3743003AB752 /* intro_still_image_slide_5_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE05FF1F188F3743003AB752 /* intro_still_image_slide_5_background@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1386,6 +1388,8 @@
 		ABF8ECB4182D81060080B1E2 /* review_pink@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "review_pink@2x.png"; sourceTree = "<group>"; };
 		ABF8ECB7182D84170080B1E2 /* OMBSignUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSignUpView.h; sourceTree = "<group>"; };
 		ABF8ECB8182D84170080B1E2 /* OMBSignUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSignUpView.m; sourceTree = "<group>"; };
+		DE05FF1E188F3743003AB752 /* intro_still_image_slide_5_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intro_still_image_slide_5_background.png; sourceTree = "<group>"; };
+		DE05FF1F188F3743003AB752 /* intro_still_image_slide_5_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "intro_still_image_slide_5_background@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2241,6 +2245,8 @@
 			isa = PBXGroup;
 			children = (
 				A685EF96188F2A9E0074E336 /* Progress Indicator Frames */,
+				DE05FF1E188F3743003AB752 /* intro_still_image_slide_5_background.png */,
+				DE05FF1F188F3743003AB752 /* intro_still_image_slide_5_background@2x.png */,
 				AB80343A1889B06100C5B889 /* apartment_icon_2.png */,
 				AB80343B1889B06100C5B889 /* apartment_icon_2@2x.png */,
 				AB80343C1889B06100C5B889 /* house_icon_2.png */,
@@ -2751,7 +2757,7 @@
 				ORGANIZATIONNAME = OnMyBlock;
 				TargetAttributes = {
 					AB802E9918109E5200E04D11 = {
-						DevelopmentTeam = 4PZFNY43X2;
+						DevelopmentTeam = L6WEK9SB93;
 					};
 					AB802EB418109E5200E04D11 = {
 						TestTargetID = AB802E9918109E5200E04D11;
@@ -2833,6 +2839,7 @@
 				AB01ED561859166E00333390 /* venmo_icon.png in Resources */,
 				ABBA589C1870C59700E9BF4E /* Overlay.png in Resources */,
 				AB1D4A86182C3D4900FF4F23 /* logo@2x.png in Resources */,
+				DE05FF20188F3743003AB752 /* intro_still_image_slide_5_background.png in Resources */,
 				ABF8ECB6182D81060080B1E2 /* review_pink@2x.png in Resources */,
 				ABBA5873186EC7D100E9BF4E /* checkmark_outline_filled@2x.png in Resources */,
 				ABBB18D518243C3300211499 /* favorite_outline@2x.png in Resources */,
@@ -2942,6 +2949,7 @@
 				AB8C8C16181579EE00A1B087 /* placeholder_property.png in Resources */,
 				ABF18BA61816BC53002DD723 /* marker_circle_selected.png in Resources */,
 				AB5B49C71832CBF200ED96DC /* intro_search_image@2x.png in Resources */,
+				DE05FF21188F3743003AB752 /* intro_still_image_slide_5_background@2x.png in Resources */,
 				AB802EB018109E5200E04D11 /* Images.xcassets in Resources */,
 				AB8C8C331815CF2A00A1B087 /* arrow_right@2x.png in Resources */,
 				ABB70024187AE62C005F0730 /* linkedin_icon@2x.png in Resources */,
@@ -3357,7 +3365,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3375,6 +3384,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -3397,7 +3407,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -3408,6 +3419,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -3419,8 +3431,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Tommy Dang (ETDM478EZ7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tommy Dang (ETDM478EZ7)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
@@ -3440,7 +3452,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "C3C1CD90-6191-4D07-A720-54C885774697";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3451,8 +3463,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: On My Block LLC (4PZFNY43X2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: On My Block LLC (4PZFNY43X2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
@@ -3472,7 +3484,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5C39C05F-4189-4AD9-B047-5AEF21EF4115";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

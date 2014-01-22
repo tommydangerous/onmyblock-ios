@@ -31,7 +31,15 @@
   CGFloat padding = 20.0f;
 
   self.frame = screen;
-
+    
+  // background
+  UIImageView *backgroundView = [[UIImageView alloc] init];
+  backgroundView.frame        = screen;
+  UIImage *image = [UIImage imageNamed: @"intro_still_image_slide_5_background.png"];
+  backgroundView.image = [UIImage image:image size:CGSizeMake(screen.size.width, screen.size.height)];
+    
+    [self addSubview: backgroundView];
+    
   UILabel *label1 = [[UILabel alloc] init];
   label1.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 22];
   // 33 + 40 = height of label1 plus the height of the page control
