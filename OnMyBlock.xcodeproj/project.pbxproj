@@ -535,6 +535,8 @@
 		ABF8ECB9182D84170080B1E2 /* OMBSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF8ECB8182D84170080B1E2 /* OMBSignUpView.m */; };
 		DE05FF20188F3743003AB752 /* intro_still_image_slide_5_background.png in Resources */ = {isa = PBXBuildFile; fileRef = DE05FF1E188F3743003AB752 /* intro_still_image_slide_5_background.png */; };
 		DE05FF21188F3743003AB752 /* intro_still_image_slide_5_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE05FF1F188F3743003AB752 /* intro_still_image_slide_5_background@2x.png */; };
+		DE90243C188F525000F22E74 /* LogoIntro.png in Resources */ = {isa = PBXBuildFile; fileRef = DE90243A188F525000F22E74 /* LogoIntro.png */; };
+		DE90243D188F525000F22E74 /* LogoIntro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE90243B188F525000F22E74 /* LogoIntro@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1390,6 +1392,8 @@
 		ABF8ECB8182D84170080B1E2 /* OMBSignUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSignUpView.m; sourceTree = "<group>"; };
 		DE05FF1E188F3743003AB752 /* intro_still_image_slide_5_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intro_still_image_slide_5_background.png; sourceTree = "<group>"; };
 		DE05FF1F188F3743003AB752 /* intro_still_image_slide_5_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "intro_still_image_slide_5_background@2x.png"; sourceTree = "<group>"; };
+		DE90243A188F525000F22E74 /* LogoIntro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LogoIntro.png; sourceTree = "<group>"; };
+		DE90243B188F525000F22E74 /* LogoIntro@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LogoIntro@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2245,6 +2249,8 @@
 			isa = PBXGroup;
 			children = (
 				A685EF96188F2A9E0074E336 /* Progress Indicator Frames */,
+				DE90243A188F525000F22E74 /* LogoIntro.png */,
+				DE90243B188F525000F22E74 /* LogoIntro@2x.png */,
 				DE05FF1E188F3743003AB752 /* intro_still_image_slide_5_background.png */,
 				DE05FF1F188F3743003AB752 /* intro_still_image_slide_5_background@2x.png */,
 				AB80343A1889B06100C5B889 /* apartment_icon_2.png */,
@@ -2817,6 +2823,7 @@
 				ABE28189186A486E00A5D14E /* edward_d@2x.jpg in Resources */,
 				A685EFCC188F2AEE0074E336 /* 25.png in Resources */,
 				A685EFBF188F2AEE0074E336 /* 12.png in Resources */,
+				DE90243C188F525000F22E74 /* LogoIntro.png in Resources */,
 				AB5B49CB1832CDC900ED96DC /* intro_map_faded@2x.png in Resources */,
 				A685EFCD188F2AEE0074E336 /* backgroundLoading.png in Resources */,
 				ABC00B3018374A1C0092364A /* gps_cursor.png in Resources */,
@@ -2947,6 +2954,7 @@
 				ABB7001F187A171D005F0730 /* landlord_icon.png in Resources */,
 				AB02806C1843D0910081B30F /* house_image@2x.png in Resources */,
 				AB8C8C16181579EE00A1B087 /* placeholder_property.png in Resources */,
+				DE90243D188F525000F22E74 /* LogoIntro@2x.png in Resources */,
 				ABF18BA61816BC53002DD723 /* marker_circle_selected.png in Resources */,
 				AB5B49C71832CBF200ED96DC /* intro_search_image@2x.png in Resources */,
 				DE05FF21188F3743003AB752 /* intro_still_image_slide_5_background@2x.png in Resources */,

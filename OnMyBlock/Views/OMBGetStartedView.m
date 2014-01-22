@@ -19,6 +19,8 @@
 @implementation OMBGetStartedView
 
 @synthesize getStartedButton = _getStartedButton;
+@synthesize ombIcon = _ombIcon;
+@synthesize landlordButton = _landlordButton;
 
 - (id) init
 {
@@ -41,28 +43,26 @@
     [self addSubview: backgroundView];
     
   UILabel *label1 = [[UILabel alloc] init];
-  label1.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 22];
+  label1.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 16];
   // 33 + 40 = height of label1 plus the height of the page control
   label1.frame = CGRectMake(0, ((screenHeight - (33 + 40)) * 0.5) - padding,
-    screenWidth, 33);
-  label1.text = @"Built for college students";
+    screenWidth, 65);
+  label1.text = @"Find and rent the best college houses, apartments, and sublets.";
   label1.textAlignment = NSTextAlignmentCenter;
-  label1.textColor = [UIColor textColor];
+  label1.textColor = [UIColor whiteColor];
+  label1.lineBreakMode = NSLineBreakByWordWrapping;
+    label1.numberOfLines = 2;
   [self addSubview: label1];
 
   UILabel *onmyblock = [[UILabel alloc] init];
   onmyblock.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 36];
   onmyblock.frame = CGRectMake(label1.frame.origin.x, 
-    (label1.frame.origin.y - (54 + 20)), screenWidth, 54);
+    (label1.frame.origin.y - (44)), screenWidth, 54);
   NSMutableAttributedString *onmyString = 
-    [[NSMutableAttributedString alloc] initWithString: @"OnMy" attributes: @{
-      NSForegroundColorAttributeName: [UIColor textColor]
+    [[NSMutableAttributedString alloc] initWithString: @"ONMYBLOCK" attributes: @{
+      NSForegroundColorAttributeName: [UIColor whiteColor]
     }];
-  NSAttributedString *blockString = [[NSAttributedString alloc] initWithString: 
-    @"Block" attributes: @{
-      NSForegroundColorAttributeName: [UIColor blue]
-    }];
-  [onmyString appendAttributedString: blockString];
+  
   onmyblock.attributedText = onmyString;
   onmyblock.textAlignment = NSTextAlignmentCenter;
   [self addSubview: onmyblock];
@@ -73,7 +73,7 @@
   _facebookButton.backgroundColor = [UIColor facebookBlue];
   _facebookButton.clipsToBounds = YES;
   _facebookButton.frame = CGRectMake(screenWidth, 
-      label1.frame.origin.y + label1.frame.size.height + (padding * 2), 
+      label1.frame.origin.y + label1.frame.size.height + 10,
         getStartedButtonWidth, padding + 18 + padding);
   _facebookButton.layer.cornerRadius = 5.0f;
   _facebookButton.titleLabel.font = 
@@ -105,7 +105,7 @@
     (_facebookButton.frame.origin.y + 
     _facebookButton.frame.size.height + padding), 
       _facebookButton.frame.size.width, _facebookButton.frame.size.height);
-  _getStartedButton.layer.borderColor = [UIColor textColor].CGColor;
+  _getStartedButton.layer.borderColor = [UIColor whiteColor].CGColor;
   _getStartedButton.layer.borderWidth = 1.0f;
   _getStartedButton.layer.cornerRadius = _facebookButton.layer.cornerRadius;
   _getStartedButton.titleLabel.font = _facebookButton.titleLabel.font;
@@ -119,13 +119,14 @@
     forControlEvents: UIControlEventTouchUpInside];
   [_getStartedButton setTitle: @"Sign up with email" 
     forState: UIControlStateNormal];
-  [_getStartedButton setTitleColor: [UIColor textColor] 
+    [_getStartedButton setTitleColor: [UIColor darkGrayColor]
     forState: UIControlStateNormal];
   [self addSubview: _getStartedButton];
   CGFloat emailImageSize = 
     _getStartedButton.frame.size.height - (padding * 1.5);
   _getStartedButton.titleEdgeInsets = UIEdgeInsetsMake(0.0f,
     emailImageSize, 0.0f, 0.0f);
+    _getStartedButton.backgroundColor = [UIColor colorWithRed:238 green:238 blue:238 alpha:1.0];
   UIImageView *emailImageView = [[UIImageView alloc] init];
   emailImageView.frame = CGRectMake(padding, 
     (_getStartedButton.frame.size.height - emailImageSize) * 0.5, 
@@ -157,6 +158,31 @@
     forControlEvents: UIControlEventTouchUpInside];
   [login setAttributedTitle: alreadyString forState: UIControlStateNormal];
   // [self addSubview: login];
+    
+  //OMB Icon Image View
+  _ombIcon = [[UIImageView alloc] init];
+  _ombIcon.frame = CGRectMake(label1.frame.origin.x,
+                                           (label1.frame.origin.y - (170)), screenWidth, 131);
+    _ombIcon.contentMode = UIViewContentModeCenter;
+    _ombIcon.image = [UIImage imageNamed:@"LogoIntro.png"];
+  [self addSubview:_ombIcon];
+    
+    
+  //Landlord Button
+    _landlordButton = [[UIButton alloc] init];
+    _landlordButton.frame = CGRectMake((self.frame.size.width-180)/2,
+                                       (self.frame.size.height - (50)), 180, 40);
+    _landlordButton.backgroundColor = [UIColor clearColor];
+    _landlordButton.titleLabel.font =
+    [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+    _landlordButton.clipsToBounds = YES;
+    _landlordButton.layer.cornerRadius = 15.0f;
+    _landlordButton.layer.masksToBounds = YES;
+    _landlordButton.layer.borderColor = [UIColor whiteColor].CGColor;
+    _landlordButton.layer.borderWidth = 1.0f;
+    [_landlordButton setTitle:@"Landlord Sign-up" forState:UIControlStateNormal];
+ 
+    [self addSubview:_landlordButton];
 
   return self;
 }
