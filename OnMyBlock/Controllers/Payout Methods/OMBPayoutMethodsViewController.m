@@ -8,6 +8,8 @@
 
 #import "OMBPayoutMethodsViewController.h"
 
+#import "OMBPayoutMethod.h"
+#import "OMBPayoutMethodListCell.h"
 #import "OMBSelectPayoutMethodViewController.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -33,6 +35,16 @@
 {
   [super loadView];
 
+  [self setupForTable];
+
+  addBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Add"
+    style: UIBarButtonItemStylePlain target: self action: @selector(add)];
+  [addBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
+  } forState: UIControlStateNormal];
+  cancelBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
+    style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   float screenHeight = screen.size.height;
   float screenWidth = screen.size.width;
@@ -40,6 +52,7 @@
   noPayoutMethodsView = [[UIView alloc] init];
   noPayoutMethodsView.frame = CGRectMake(0.0f, 0.0f, screenWidth,
     screenHeight);
+  noPayoutMethodsView.hidden = YES;
   [self.view addSubview: noPayoutMethodsView];
 
   float padding = 20.0f;
@@ -82,7 +95,7 @@
   selectPayoutMethodButton.frame = CGRectMake(label2.frame.origin.x,
     label2.frame.origin.y + label2.frame.size.height + (padding * 2),
       label2.frame.size.width, padding + 18.0f + padding);
-  selectPayoutMethodButton.layer.cornerRadius = 2.0f;
+  selectPayoutMethodButton.layer.cornerRadius = 5.0f;
   selectPayoutMethodButton.titleLabel.font = [UIFont fontWithName: 
     @"HelveticaNeue-Light" size: 18];
   [selectPayoutMethodButton addTarget: self 
@@ -100,14 +113,89 @@
   [noPayoutMethodsView addSubview: selectPayoutMethodButton];
 }
 
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  [[OMBUser currentUser] fetchPayoutMethodsWithCompletion: ^(NSError *error) {
+    if ([[OMBUser currentUser].payoutMethods count]) {
+      noPayoutMethodsView.hidden = YES;
+      [self.navigationItem setRightBarButtonItem: addBarButtonItem
+        animated: YES];
+
+      [self.table reloadData];
+    }
+    else
+      noPayoutMethodsView.hidden = NO;
+  }];
+}
+
+#pragma mark - Protocol
+
+#pragma mark - Protocol UITableViewDataSource
+
+- (UITableViewCell *) tableView: (UITableView *) tableView
+cellForRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  static NSString *CellIdentifier = @"CellIdentifier";
+  OMBPayoutMethodListCell *cell = [tableView dequeueReusableCellWithIdentifier:
+    CellIdentifier];
+  if (!cell)
+    cell = [[OMBPayoutMethodListCell alloc] initWithStyle: 
+      UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+  OMBPayoutMethod *payoutMethod = [[self payoutMethods] objectAtIndex: 
+    indexPath.row];
+  [cell loadPayoutMethod: payoutMethod];
+  return cell;
+}
+
+- (NSInteger) tableView: (UITableView *) tableView
+numberOfRowsInSection: (NSInteger) section
+{
+  return [[OMBUser currentUser].payoutMethods count];
+}
+
+#pragma mark - Protocol UITableViewDelegate
+
+- (CGFloat) tableView: (UITableView *) tableView
+heightForRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  return [OMBPayoutMethodListCell heightForCell];
+}
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) add
+{
+  [self selectPayoutMethod];
+}
+
+- (void) cancel
+{
+  [self.navigationController dismissViewControllerAnimated: YES
+    completion: ^{
+      [self.navigationController popToRootViewControllerAnimated: YES];
+    }
+  ];
+}
+
+- (NSArray *) payoutMethods
+{
+  return [[OMBUser currentUser] sortedPayoutMethodsWithKey: @"createdAt"
+    ascending: NO];
+}
 
 - (void) selectPayoutMethod
 {
   [self.navigationController pushViewController:
     [[OMBSelectPayoutMethodViewController alloc] init] animated: YES];
+}
+
+- (void) showCancelBarButtonItem
+{
+  self.navigationItem.leftBarButtonItem = cancelBarButtonItem;
 }
 
 @end

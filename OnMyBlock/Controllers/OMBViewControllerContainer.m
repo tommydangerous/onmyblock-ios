@@ -29,6 +29,7 @@
 #import "OMBMyRenterApplicationViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOfferAcceptedView.h"
+#import "OMBPayoutMethodsViewController.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBUserMenu.h"
 #import "OMBUser.h"
@@ -99,6 +100,11 @@
   _introViewController = [[OMBIntroStillImagesViewController alloc] init];
   // Login
   _loginViewController = [[OMBLoginViewController alloc] init];
+  // Payout Methods
+  _payoutMethodsViewController = [[OMBPayoutMethodsViewController alloc] init];
+  _payoutMethodsNavigationController = 
+    [[OMBNavigationController alloc] initWithRootViewController: 
+      _payoutMethodsViewController];
   // Renter Application
   _renterApplicationViewController = 
     [[OMBRenterApplicationViewController alloc] init];
@@ -1025,6 +1031,13 @@ willDecelerate: (BOOL) decelerate
   offerAcceptedView = [[OMBOfferAcceptedView alloc] initWithOffer: nil];
   [self.view addSubview: offerAcceptedView];
   [offerAcceptedView show];
+}
+
+- (void) showPayoutMethods
+{
+  [_payoutMethodsViewController showCancelBarButtonItem];
+  [self presentViewController: _payoutMethodsNavigationController
+    animated: YES completion: nil];
 }
 
 - (void) showRenterApplication

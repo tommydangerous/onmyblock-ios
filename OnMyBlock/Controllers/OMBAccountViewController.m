@@ -136,8 +136,7 @@ numberOfRowsInSection: (NSInteger) section
 {
   // The 1 is for the spacing
   if (section == 0) {
-    // return 1 + 3;
-    return 1 + 1;
+    return 1 + 3;
   }
   else if (section == 1) {
     return 1 + 3;
@@ -203,6 +202,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  if (indexPath.section == 0) {
+    if (indexPath.row == 1) {
+      return 0.0f;
+    }
+  }
   return 44.0f;
 }
 

@@ -9,6 +9,7 @@
 #import "OMBUser.h"
 
 #import "OMBAppDelegate.h"
+#import "OMBAuthenticationVenmoConnection.h"
 #import "OMBConversationMessageStore.h"
 #import "OMBCosigner.h"
 #import "OMBEmployment.h"
@@ -23,6 +24,8 @@
 #import "OMBOfferDecisionConnection.h"
 #import "OMBOffersAcceptedConnection.h"
 #import "OMBOffersReceivedConnection.h"
+#import "OMBPayoutMethod.h"
+#import "OMBPayoutMethodListConnection.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
@@ -79,6 +82,7 @@ int kNotificationTimerInterval = 30;
   _favorites           = [NSMutableDictionary dictionary];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _messages            = [NSMutableDictionary dictionary];
+  _payoutMethods       = [NSMutableDictionary dictionary];
   _receivedOffers      = [NSMutableDictionary dictionary];
   _renterApplication   = [[OMBRenterApplication alloc] init];
   _residences          = [NSMutableDictionary dictionaryWithDictionary: @{
@@ -225,6 +229,13 @@ withCompletion: (void (^) (NSError *error)) block
   [_messages setObject: array forKey: number];
 }
 
+- (void) addPayoutMethod: (OMBPayoutMethod *) object
+{
+  NSNumber *key = [NSNumber numberWithInt: object.uid];
+  if (![_payoutMethods objectForKey: key])
+    [_payoutMethods setObject: object forKey: key];
+}
+
 - (void) addReceivedOffer: (OMBOffer *) offer
 {
   NSNumber *key = [NSNumber numberWithInt: offer.uid];
@@ -262,6 +273,16 @@ withCompletion: (void (^) (NSError *error)) block
     residence.uid]])
     return YES;
   return NO;
+}
+
+- (void) authenticateVenmoWithCode: (NSString *) code 
+depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
+{
+  OMBAuthenticationVenmoConnection *conn = 
+    [[OMBAuthenticationVenmoConnection alloc] initWithCode: code
+      depositMethod: deposit];
+  conn.completionBlock = block;
+  [conn start];
 }
 
 - (void) authenticateWithServer: (void (^) (NSError *error)) block
@@ -329,6 +350,14 @@ withCompletion: (void (^) (NSError *error)) block
 {
   OMBOffersAcceptedConnection *conn = 
     [[OMBOffersAcceptedConnection alloc] init];
+  conn.completionBlock = block;
+  [conn start];
+}
+
+- (void) fetchPayoutMethodsWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBPayoutMethodListConnection *conn =
+    [[OMBPayoutMethodListConnection alloc] init];
   conn.completionBlock = block;
   [conn start];
 }
@@ -428,6 +457,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [OMBUser currentUser].imageURL = nil;
   [[OMBUser currentUser].messages removeAllObjects];
   [[OMBUser currentUser].notificationFetchTimer invalidate];
+  [[OMBUser currentUser].payoutMethods removeAllObjects];
   [[OMBUser currentUser].receivedOffers removeAllObjects];
   [[OMBUser currentUser].renterApplication removeAllObjects];
 
@@ -477,6 +507,26 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     }
   }
   return @"";
+}
+
+- (OMBPayoutMethod *) primaryDepositPayoutMethod
+{
+  NSPredicate *predicate = 
+    [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
+      @"deposit", [NSNumber numberWithBool: YES], 
+        @"primary", [NSNumber numberWithBool: YES]];
+  return [[[_payoutMethods allValues] filteredArrayUsingPredicate: 
+    predicate] firstObject];
+}
+
+- (OMBPayoutMethod *) primaryPaymentPayoutMethod
+{
+  NSPredicate *predicate = 
+    [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
+      @"deposit", [NSNumber numberWithBool: NO], 
+        @"primary", [NSNumber numberWithBool: YES]];
+  return [[[_payoutMethods allValues] filteredArrayUsingPredicate: 
+    predicate] firstObject];
 }
 
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary
@@ -699,6 +749,34 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [_messages setObject: array forKey: [NSNumber numberWithInt: user.uid]];
 }
 
+- (void) readFromPayoutMethodsDictionary: (NSDictionary *) dictionary
+{
+  NSMutableSet *newSet = [NSMutableSet set];
+  for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
+    NSInteger payoutMethodUID = [[dict objectForKey: @"id"] intValue];
+    OMBPayoutMethod *payoutMethod = [_payoutMethods objectForKey:
+      [NSNumber numberWithInt: payoutMethodUID]];
+    if (!payoutMethod) {
+      payoutMethod = [[OMBPayoutMethod alloc] init];
+      [payoutMethod readFromDictionary: dict];
+      [self addPayoutMethod: payoutMethod];
+    }
+    else {
+      [payoutMethod readFromDictionary: dict];
+    }
+
+    [newSet addObject: [NSNumber numberWithInt: payoutMethod.uid]];
+  }
+
+  // Remove the offers that are no longer suppose to be there
+  NSMutableSet *oldSet = [NSMutableSet setWithArray:
+    [[_payoutMethods allValues] valueForKey: @"uid"]];
+  [oldSet minusSet: newSet];
+  for (NSNumber *number in [oldSet allObjects]) {
+    [_payoutMethods removeObjectForKey: number];
+  }
+}
+
 - (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary
 {
   NSArray *array = [dictionary objectForKey: @"objects"];
@@ -885,6 +963,14 @@ withKey: (NSString *) key ascending: (BOOL) ascending
   else if (type == OMBUserOfferTypeReceived)
     array = [_receivedOffers allValues];
   return [array sortedArrayUsingDescriptors: @[sort]];
+}
+
+- (NSArray *) sortedPayoutMethodsWithKey: (NSString *) key
+ascending: (BOOL) ascending
+{
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
+    ascending: ascending];
+  return [[_payoutMethods allValues] sortedArrayUsingDescriptors: @[sort]];
 }
 
 @end

@@ -48,16 +48,11 @@
 		AB01ED4018580B0700333390 /* OMBLegalAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED3F18580B0700333390 /* OMBLegalAnswer.m */; };
 		AB01ED4318582A7A00333390 /* OMBLegalAnswerListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED4218582A7A00333390 /* OMBLegalAnswerListConnection.m */; };
 		AB01ED461858C84900333390 /* OMBLegalAnswerCreateOrUpdateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED451858C84900333390 /* OMBLegalAnswerCreateOrUpdateConnection.m */; };
-		AB01ED491858F2F100333390 /* OMBPayoutMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED481858F2F100333390 /* OMBPayoutMethodsViewController.m */; };
-		AB01ED4F185905AB00333390 /* OMBSelectPayoutMethodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED4E185905AB00333390 /* OMBSelectPayoutMethodViewController.m */; };
 		AB01ED52185914DD00333390 /* paypal_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = AB01ED50185914DD00333390 /* paypal_icon.png */; };
 		AB01ED53185914DD00333390 /* paypal_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB01ED51185914DD00333390 /* paypal_icon@2x.png */; };
 		AB01ED561859166E00333390 /* venmo_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = AB01ED541859166E00333390 /* venmo_icon.png */; };
 		AB01ED571859166E00333390 /* venmo_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB01ED551859166E00333390 /* venmo_icon@2x.png */; };
 		AB01ED5A18591B3600333390 /* OMBPayoutMethodCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED5918591B3600333390 /* OMBPayoutMethodCell.m */; };
-		AB01ED5D185924C800333390 /* OMBSelectedPayoutMethodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED5C185924C800333390 /* OMBSelectedPayoutMethodViewController.m */; };
-		AB01ED601859288100333390 /* OMBPayoutMethodVenmoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED5F1859288100333390 /* OMBPayoutMethodVenmoViewController.m */; };
-		AB01ED631859417500333390 /* OMBPayoutMethodPayPalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED621859417500333390 /* OMBPayoutMethodPayPalViewController.m */; };
 		AB01ED691859653800333390 /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB01ED651859653800333390 /* libPayPalMobile.a */; };
 		AB01ED6B185966AC00333390 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AB01ED6A185966AC00333390 /* libxml2.dylib */; };
 		AB01ED6D185966B500333390 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB01ED6C185966B500333390 /* AVFoundation.framework */; };
@@ -494,6 +489,15 @@
 		ABE2818D186A8E6500A5D14E /* contact_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABE2818B186A8E6500A5D14E /* contact_icon@2x.png */; };
 		ABE28190186A998100A5D14E /* phone_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = ABE2818E186A998100A5D14E /* phone_icon.png */; };
 		ABE28191186A998100A5D14E /* phone_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABE2818F186A998100A5D14E /* phone_icon@2x.png */; };
+		ABE4FBDF18902B140009D643 /* OMBPayoutMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FBDE18902B140009D643 /* OMBPayoutMethod.m */; };
+		ABE4FBE218902D6A0009D643 /* NSDateFormatter+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FBE118902D6A0009D643 /* NSDateFormatter+JSON.m */; };
+		ABE4FBE618902EF60009D643 /* OMBPayoutMethodListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FBE518902EF60009D643 /* OMBPayoutMethodListConnection.m */; };
+		ABE4FBEA189034C40009D643 /* OMBPayoutMethodListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FBE9189034C40009D643 /* OMBPayoutMethodListCell.m */; };
+		ABE4FBF6189045E40009D643 /* OMBPayoutMethodPayPalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FBED189045E40009D643 /* OMBPayoutMethodPayPalViewController.m */; };
+		ABE4FBF7189045E40009D643 /* OMBPayoutMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FBEF189045E40009D643 /* OMBPayoutMethodsViewController.m */; };
+		ABE4FBF8189045E40009D643 /* OMBPayoutMethodVenmoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FBF1189045E40009D643 /* OMBPayoutMethodVenmoViewController.m */; };
+		ABE4FBF9189045E40009D643 /* OMBSelectedPayoutMethodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FBF3189045E40009D643 /* OMBSelectedPayoutMethodViewController.m */; };
+		ABE4FBFA189045E40009D643 /* OMBSelectPayoutMethodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FBF5189045E40009D643 /* OMBSelectPayoutMethodViewController.m */; };
 		ABE7067D1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE7067C1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.m */; };
 		ABE706801885F39B007A4E29 /* phone_icon_white.png in Resources */ = {isa = PBXBuildFile; fileRef = ABE7067E1885F39B007A4E29 /* phone_icon_white.png */; };
 		ABE706811885F39B007A4E29 /* phone_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABE7067F1885F39B007A4E29 /* phone_icon_white@2x.png */; };
@@ -596,22 +600,12 @@
 		AB01ED4218582A7A00333390 /* OMBLegalAnswerListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBLegalAnswerListConnection.m; sourceTree = "<group>"; };
 		AB01ED441858C84900333390 /* OMBLegalAnswerCreateOrUpdateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLegalAnswerCreateOrUpdateConnection.h; sourceTree = "<group>"; };
 		AB01ED451858C84900333390 /* OMBLegalAnswerCreateOrUpdateConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBLegalAnswerCreateOrUpdateConnection.m; sourceTree = "<group>"; };
-		AB01ED471858F2F100333390 /* OMBPayoutMethodsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodsViewController.h; sourceTree = "<group>"; };
-		AB01ED481858F2F100333390 /* OMBPayoutMethodsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodsViewController.m; sourceTree = "<group>"; };
-		AB01ED4D185905AB00333390 /* OMBSelectPayoutMethodViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSelectPayoutMethodViewController.h; sourceTree = "<group>"; };
-		AB01ED4E185905AB00333390 /* OMBSelectPayoutMethodViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSelectPayoutMethodViewController.m; sourceTree = "<group>"; };
 		AB01ED50185914DD00333390 /* paypal_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = paypal_icon.png; sourceTree = "<group>"; };
 		AB01ED51185914DD00333390 /* paypal_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "paypal_icon@2x.png"; sourceTree = "<group>"; };
 		AB01ED541859166E00333390 /* venmo_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = venmo_icon.png; sourceTree = "<group>"; };
 		AB01ED551859166E00333390 /* venmo_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "venmo_icon@2x.png"; sourceTree = "<group>"; };
 		AB01ED5818591B3500333390 /* OMBPayoutMethodCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodCell.h; sourceTree = "<group>"; };
 		AB01ED5918591B3600333390 /* OMBPayoutMethodCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodCell.m; sourceTree = "<group>"; };
-		AB01ED5B185924C700333390 /* OMBSelectedPayoutMethodViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSelectedPayoutMethodViewController.h; sourceTree = "<group>"; };
-		AB01ED5C185924C800333390 /* OMBSelectedPayoutMethodViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSelectedPayoutMethodViewController.m; sourceTree = "<group>"; };
-		AB01ED5E1859288100333390 /* OMBPayoutMethodVenmoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodVenmoViewController.h; sourceTree = "<group>"; };
-		AB01ED5F1859288100333390 /* OMBPayoutMethodVenmoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodVenmoViewController.m; sourceTree = "<group>"; };
-		AB01ED611859417500333390 /* OMBPayoutMethodPayPalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodPayPalViewController.h; sourceTree = "<group>"; };
-		AB01ED621859417500333390 /* OMBPayoutMethodPayPalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodPayPalViewController.m; sourceTree = "<group>"; };
 		AB01ED651859653800333390 /* libPayPalMobile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPayPalMobile.a; sourceTree = "<group>"; };
 		AB01ED661859653800333390 /* PayPalMobile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalMobile.h; sourceTree = "<group>"; };
 		AB01ED671859653800333390 /* PayPalPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalPayment.h; sourceTree = "<group>"; };
@@ -1332,6 +1326,24 @@
 		ABE2818B186A8E6500A5D14E /* contact_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact_icon@2x.png"; sourceTree = "<group>"; };
 		ABE2818E186A998100A5D14E /* phone_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phone_icon.png; sourceTree = "<group>"; };
 		ABE2818F186A998100A5D14E /* phone_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "phone_icon@2x.png"; sourceTree = "<group>"; };
+		ABE4FBDD18902B140009D643 /* OMBPayoutMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethod.h; sourceTree = "<group>"; };
+		ABE4FBDE18902B140009D643 /* OMBPayoutMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethod.m; sourceTree = "<group>"; };
+		ABE4FBE018902D6A0009D643 /* NSDateFormatter+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+JSON.h"; sourceTree = "<group>"; };
+		ABE4FBE118902D6A0009D643 /* NSDateFormatter+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+JSON.m"; sourceTree = "<group>"; };
+		ABE4FBE418902EF60009D643 /* OMBPayoutMethodListConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodListConnection.h; sourceTree = "<group>"; };
+		ABE4FBE518902EF60009D643 /* OMBPayoutMethodListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodListConnection.m; sourceTree = "<group>"; };
+		ABE4FBE8189034C40009D643 /* OMBPayoutMethodListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodListCell.h; sourceTree = "<group>"; };
+		ABE4FBE9189034C40009D643 /* OMBPayoutMethodListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodListCell.m; sourceTree = "<group>"; };
+		ABE4FBEC189045E40009D643 /* OMBPayoutMethodPayPalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodPayPalViewController.h; sourceTree = "<group>"; };
+		ABE4FBED189045E40009D643 /* OMBPayoutMethodPayPalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodPayPalViewController.m; sourceTree = "<group>"; };
+		ABE4FBEE189045E40009D643 /* OMBPayoutMethodsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodsViewController.h; sourceTree = "<group>"; };
+		ABE4FBEF189045E40009D643 /* OMBPayoutMethodsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodsViewController.m; sourceTree = "<group>"; };
+		ABE4FBF0189045E40009D643 /* OMBPayoutMethodVenmoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodVenmoViewController.h; sourceTree = "<group>"; };
+		ABE4FBF1189045E40009D643 /* OMBPayoutMethodVenmoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodVenmoViewController.m; sourceTree = "<group>"; };
+		ABE4FBF2189045E40009D643 /* OMBSelectedPayoutMethodViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSelectedPayoutMethodViewController.h; sourceTree = "<group>"; };
+		ABE4FBF3189045E40009D643 /* OMBSelectedPayoutMethodViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSelectedPayoutMethodViewController.m; sourceTree = "<group>"; };
+		ABE4FBF4189045E40009D643 /* OMBSelectPayoutMethodViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSelectPayoutMethodViewController.h; sourceTree = "<group>"; };
+		ABE4FBF5189045E40009D643 /* OMBSelectPayoutMethodViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSelectPayoutMethodViewController.m; sourceTree = "<group>"; };
 		ABE7067B1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMyRenterApplicationEmailPhoneCell.h; sourceTree = "<group>"; };
 		ABE7067C1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMyRenterApplicationEmailPhoneCell.m; sourceTree = "<group>"; };
 		ABE7067E1885F39B007A4E29 /* phone_icon_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phone_icon_white.png; sourceTree = "<group>"; };
@@ -1786,6 +1798,7 @@
 		AB9B26031811A49200E6DAC4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				ABE4FBE7189034A50009D643 /* Payout Methods */,
 				AB70CB81186CEC840083DF4C /* Create Listing */,
 				AB95456B1848DAC0000513BE /* DDPageControl.h */,
 				AB95456C1848DAC0000513BE /* DDPageControl.m */,
@@ -1945,6 +1958,8 @@
 				AB4ED2D918845DEF009AFB01 /* OMBOpenHouse.m */,
 				AB131F321885DA1F0057D769 /* OMBOffer.h */,
 				AB131F331885DA1F0057D769 /* OMBOffer.m */,
+				ABE4FBDD18902B140009D643 /* OMBPayoutMethod.h */,
+				ABE4FBDE18902B140009D643 /* OMBPayoutMethod.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2012,6 +2027,8 @@
 				AB6155DB1850DB3600A193C7 /* UIImage+FixOrientation.m */,
 				AB1C217918516D7F00ED7C06 /* NSString+PhoneNumber.h */,
 				AB1C217A18516D7F00ED7C06 /* NSString+PhoneNumber.m */,
+				ABE4FBE018902D6A0009D643 /* NSDateFormatter+JSON.h */,
+				ABE4FBE118902D6A0009D643 /* NSDateFormatter+JSON.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -2019,6 +2036,7 @@
 		AB9B264A1811CE5E00E6DAC4 /* Connections */ = {
 			isa = PBXGroup;
 			children = (
+				ABE4FBE318902ED70009D643 /* Payout Methods */,
 				AB9D6122188D932100C9AC64 /* Offers */,
 				ABE7068918879F27007A4E29 /* Messages */,
 				AB4ED2E118847772009AFB01 /* Open Houses */,
@@ -2417,6 +2435,7 @@
 		ABB3C5711811775300DD91C9 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				ABE4FBEB189045E40009D643 /* Payout Methods */,
 				ABB7005D187B58C0005F0730 /* Homebase Landlord */,
 				ABB70064187B58C0005F0730 /* Homebase Renter */,
 				AB70CB77186CD1E00083DF4C /* Manage Listings */,
@@ -2455,10 +2474,6 @@
 				AB4F9D1D181AAAED0086D618 /* OMBMenuViewController.m */,
 				ABB3C583181178AE00DD91C9 /* OMBNavigationController.h */,
 				ABB3C584181178AE00DD91C9 /* OMBNavigationController.m */,
-				AB01ED471858F2F100333390 /* OMBPayoutMethodsViewController.h */,
-				AB01ED481858F2F100333390 /* OMBPayoutMethodsViewController.m */,
-				AB01ED5E1859288100333390 /* OMBPayoutMethodVenmoViewController.h */,
-				AB01ED5F1859288100333390 /* OMBPayoutMethodVenmoViewController.m */,
 				AB6155B3184D9A2F00A193C7 /* OMBPetsViewController.h */,
 				AB6155B4184D9A2F00A193C7 /* OMBPetsViewController.m */,
 				AB90129818527753003153A2 /* OMBPreviousRentalAddViewController.h */,
@@ -2471,10 +2486,6 @@
 				AB1C216B1851417800ED7C06 /* OMBRenterApplicationSectionViewController.m */,
 				AB954588184A8559000513BE /* OMBRenterApplicationViewController.h */,
 				AB954589184A8559000513BE /* OMBRenterApplicationViewController.m */,
-				AB01ED5B185924C700333390 /* OMBSelectedPayoutMethodViewController.h */,
-				AB01ED5C185924C800333390 /* OMBSelectedPayoutMethodViewController.m */,
-				AB01ED4D185905AB00333390 /* OMBSelectPayoutMethodViewController.h */,
-				AB01ED4E185905AB00333390 /* OMBSelectPayoutMethodViewController.m */,
 				ABB3C5801811789100DD91C9 /* OMBTabBarController.h */,
 				ABB3C5811811789100DD91C9 /* OMBTabBarController.m */,
 				AB9545711848E6C1000513BE /* OMBTableViewController.h */,
@@ -2485,8 +2496,6 @@
 				ABB06AE318453640009CBBEA /* OMBViewControllerContainer.m */,
 				ABA5B4201857900F00F825E1 /* OMBWebViewController.h */,
 				ABA5B4211857900F00F825E1 /* OMBWebViewController.m */,
-				AB01ED611859417500333390 /* OMBPayoutMethodPayPalViewController.h */,
-				AB01ED621859417500333390 /* OMBPayoutMethodPayPalViewController.m */,
 				AB756AAB185A16D0001AF572 /* OMBIntroStillImagesViewController.h */,
 				AB756AAC185A16D0001AF572 /* OMBIntroStillImagesViewController.m */,
 				ABA080841868E76200C7B851 /* OMBTextViewViewController.h */,
@@ -2690,6 +2699,41 @@
 				ABE2817B186A187E00A5D14E /* TestFlight.h */,
 			);
 			path = TestFlightSDK2.1.3;
+			sourceTree = "<group>";
+		};
+		ABE4FBE318902ED70009D643 /* Payout Methods */ = {
+			isa = PBXGroup;
+			children = (
+				ABE4FBE418902EF60009D643 /* OMBPayoutMethodListConnection.h */,
+				ABE4FBE518902EF60009D643 /* OMBPayoutMethodListConnection.m */,
+			);
+			path = "Payout Methods";
+			sourceTree = "<group>";
+		};
+		ABE4FBE7189034A50009D643 /* Payout Methods */ = {
+			isa = PBXGroup;
+			children = (
+				ABE4FBE8189034C40009D643 /* OMBPayoutMethodListCell.h */,
+				ABE4FBE9189034C40009D643 /* OMBPayoutMethodListCell.m */,
+			);
+			path = "Payout Methods";
+			sourceTree = "<group>";
+		};
+		ABE4FBEB189045E40009D643 /* Payout Methods */ = {
+			isa = PBXGroup;
+			children = (
+				ABE4FBEC189045E40009D643 /* OMBPayoutMethodPayPalViewController.h */,
+				ABE4FBED189045E40009D643 /* OMBPayoutMethodPayPalViewController.m */,
+				ABE4FBEE189045E40009D643 /* OMBPayoutMethodsViewController.h */,
+				ABE4FBEF189045E40009D643 /* OMBPayoutMethodsViewController.m */,
+				ABE4FBF0189045E40009D643 /* OMBPayoutMethodVenmoViewController.h */,
+				ABE4FBF1189045E40009D643 /* OMBPayoutMethodVenmoViewController.m */,
+				ABE4FBF2189045E40009D643 /* OMBSelectedPayoutMethodViewController.h */,
+				ABE4FBF3189045E40009D643 /* OMBSelectedPayoutMethodViewController.m */,
+				ABE4FBF4189045E40009D643 /* OMBSelectPayoutMethodViewController.h */,
+				ABE4FBF5189045E40009D643 /* OMBSelectPayoutMethodViewController.m */,
+			);
+			path = "Payout Methods";
 			sourceTree = "<group>";
 		};
 		ABE7068918879F27007A4E29 /* Messages */ = {
@@ -3057,11 +3101,11 @@
 				AB9012A018528A55003153A2 /* OMBPreviousRentalCell.m in Sources */,
 				AB9D611E188CF12F00C9AC64 /* NSData+ImageContentType.m in Sources */,
 				AB0C36B818407590006DC3AD /* OMBTriangleView.m in Sources */,
+				ABE4FBF6189045E40009D643 /* OMBPayoutMethodPayPalViewController.m in Sources */,
 				AB9D6112188CEFDE00C9AC64 /* SDWebImageDecoder.m in Sources */,
 				AB034B151837D3DC00811074 /* OMBGradientView.m in Sources */,
 				AB4ED3021884C738009AFB01 /* OMBResidencePublishConnection.m in Sources */,
 				AB8C8C1F1815969700A1B087 /* OMBResidenceStore.m in Sources */,
-				AB01ED5D185924C800333390 /* OMBSelectedPayoutMethodViewController.m in Sources */,
 				ABA4F21B187DF2CC00D725D4 /* OMBResidenceImageDeleteConnection.m in Sources */,
 				AB4ED2FE1884AD9F009AFB01 /* OMBResidenceImagesConnection.m in Sources */,
 				AB9D610F188CEFDE00C9AC64 /* MKAnnotationView+WebCache.m in Sources */,
@@ -3069,6 +3113,7 @@
 				AB19A0891860FF7300F84DE9 /* OMBLabel.m in Sources */,
 				AB9D6115188CEFDE00C9AC64 /* SDWebImageManager.m in Sources */,
 				ABF18BB41816CCDA002DD723 /* OMBNeighborhoodStore.m in Sources */,
+				ABE4FBDF18902B140009D643 /* OMBPayoutMethod.m in Sources */,
 				AB6155CB184F86F600A193C7 /* OMBUserMenu.m in Sources */,
 				AB9B26501811CE8E00E6DAC4 /* OMBPropertiesConnection.m in Sources */,
 				ABF8ECA1182D504E0080B1E2 /* OMBIntroContactView.m in Sources */,
@@ -3083,6 +3128,7 @@
 				ABBA58981870C59700E9BF4E /* ELCImagePickerController.m in Sources */,
 				ABB70079187BA9B9005F0730 /* OMBHomebaseRenterPaymentNotificationCell.m in Sources */,
 				ABBA58CB18761D2F00E9BF4E /* OMBFinishListingOtherDetailsOpenHouseDatesViewController.m in Sources */,
+				ABE4FBF7189045E40009D643 /* OMBPayoutMethodsViewController.m in Sources */,
 				ABB70083187C54C5005F0730 /* OMBRentDepositInfoCell.m in Sources */,
 				ABBA5866186E2A9100E9BF4E /* OMBFinishListingSectionViewController.m in Sources */,
 				AB4ED2FC1884AD9F009AFB01 /* OMBResidenceCoverPhotoURLConnection.m in Sources */,
@@ -3150,16 +3196,17 @@
 				ABBA586E186EBF5E00E9BF4E /* OMBFinishListingAmenitiesViewController.m in Sources */,
 				ABABEC351863C239008B6768 /* ILTranslucentView.m in Sources */,
 				ABA080861868E76200C7B851 /* OMBTextViewViewController.m in Sources */,
+				ABE4FBFA189045E40009D643 /* OMBSelectPayoutMethodViewController.m in Sources */,
 				AB57EA2A186CA065001682DB /* OMBTermsOfServiceStore.m in Sources */,
 				AB9B26271811AF7B00E6DAC4 /* OMBAnnotationStore.m in Sources */,
 				AB01ED4018580B0700333390 /* OMBLegalAnswer.m in Sources */,
 				ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */,
 				ABBA58A01870D92000E9BF4E /* OMBFinishListingRentAuctionDetailsViewController.m in Sources */,
+				ABE4FBEA189034C40009D643 /* OMBPayoutMethodListCell.m in Sources */,
 				AB4ED2FD1884AD9F009AFB01 /* OMBResidenceDetailConnection.m in Sources */,
 				AB63D2171821ABF500D63800 /* OMBLoginViewController.m in Sources */,
 				ABDF174D18663AE8004E2755 /* OMBResidenceBookItCell.m in Sources */,
 				AB8C8C131815784B00A1B087 /* OMBImageDownloader.m in Sources */,
-				AB01ED631859417500333390 /* OMBPayoutMethodPayPalViewController.m in Sources */,
 				AB1C216C1851417800ED7C06 /* OMBRenterApplicationSectionViewController.m in Sources */,
 				AB4F9D1E181AAAED0086D618 /* OMBMenuViewController.m in Sources */,
 				ABE706A018889713007A4E29 /* OMBResidenceListConnection.m in Sources */,
@@ -3196,11 +3243,11 @@
 				AB8B794B186E17FC005AB552 /* OMBLabelTextFieldCell.m in Sources */,
 				ABB70068187B58C0005F0730 /* OMBHomebaseLandlordViewController.m in Sources */,
 				AB9D6118188CEFDE00C9AC64 /* UIImage+GIF.m in Sources */,
+				ABE4FBE218902D6A0009D643 /* NSDateFormatter+JSON.m in Sources */,
 				AB8B7947186E155F005AB552 /* OMBFinishListingOtherDetailsViewController.m in Sources */,
 				ABB7005C187B58AA005F0730 /* OMBOfferInquiryResidenceCell.m in Sources */,
 				AB0C36B5184074A8006DC3AD /* OMBHouseGraphicView.m in Sources */,
 				AB9545761848FB58000513BE /* OMBAccountProfileViewController.m in Sources */,
-				AB01ED601859288100333390 /* OMBPayoutMethodVenmoViewController.m in Sources */,
 				ABB3C57F1811781C00DD91C9 /* MFSideMenuContainerViewController.m in Sources */,
 				AB6155B5184D9A2F00A193C7 /* OMBPetsViewController.m in Sources */,
 				ABDF17591868C67A004E2755 /* OMBResidenceMonthlyPaymentScheduleViewController.m in Sources */,
@@ -3221,7 +3268,6 @@
 				AB4ED2DA18845DEF009AFB01 /* OMBOpenHouse.m in Sources */,
 				AB5B49D51833C9A400ED96DC /* OMBResidenceGoogleStaticImageDownloader.m in Sources */,
 				ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */,
-				AB01ED491858F2F100333390 /* OMBPayoutMethodsViewController.m in Sources */,
 				AB8B7941186DFA8A005AB552 /* OMBActivityView.m in Sources */,
 				ABE7069D188863B3007A4E29 /* OMBMessageCreateConnection.m in Sources */,
 				ABBA58A31870DC7300E9BF4E /* OMBFinishListingAuctionStartPriceCell.m in Sources */,
@@ -3234,6 +3280,7 @@
 				AB9B8C1F1819EECF0009199A /* OMBResidenceCollectionViewCell.m in Sources */,
 				AB1C217B18516D7F00ED7C06 /* NSString+PhoneNumber.m in Sources */,
 				ABE706881886D59C007A4E29 /* OMBCloseButtonView.m in Sources */,
+				ABE4FBF9189045E40009D643 /* OMBSelectedPayoutMethodViewController.m in Sources */,
 				ABA4F20E187D18CD00D725D4 /* OMBCreateListingConnection.m in Sources */,
 				ABE7068F1887A81F007A4E29 /* OMBConversationMessageStore.m in Sources */,
 				ABB70076187B83C0005F0730 /* OMBHomebaseRenterNotificationCell.m in Sources */,
@@ -3270,7 +3317,9 @@
 				ABA4F20A187CF02600D725D4 /* OMBGooglePlacesConnection.m in Sources */,
 				AB0269BD182293DC00E72F53 /* UIImage+NegativeImage.m in Sources */,
 				ABB06AE418453640009CBBEA /* OMBViewControllerContainer.m in Sources */,
+				ABE4FBF8189045E40009D643 /* OMBPayoutMethodVenmoViewController.m in Sources */,
 				ABA5B419185699CB00F825E1 /* OMBEmployment.m in Sources */,
+				ABE4FBE618902EF60009D643 /* OMBPayoutMethodListConnection.m in Sources */,
 				AB19A08F1861240400F84DE9 /* OMBResidenceDetailActivityCell.m in Sources */,
 				A685EF95188F27E40074E336 /* CustomLoading.m in Sources */,
 				AB0280641843B2160081B30F /* OMBIntroAuctionView.m in Sources */,
@@ -3297,7 +3346,6 @@
 				AB63D2111821774000D63800 /* OMBContactResidenceLandlordConnection.m in Sources */,
 				ABBA5869186E2B7700E9BF4E /* OMBFinishListingAddressViewController.m in Sources */,
 				AB026BD61822F30A00E72F53 /* OMBFavoritesListConnection.m in Sources */,
-				AB01ED4F185905AB00333390 /* OMBSelectPayoutMethodViewController.m in Sources */,
 				AB6155B2184D9A2100A193C7 /* OMBLegalViewController.m in Sources */,
 				ABDF17561868AABB004E2755 /* OMBResidenceConfirmDetailsDatesCell.m in Sources */,
 				AB70CB7A186CD1E00083DF4C /* OMBManageListingsViewController.m in Sources */,

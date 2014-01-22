@@ -8,7 +8,9 @@
 
 #import "OMBPayoutMethodPayPalViewController.h"
 
+#import "OMBNavigationController.h"
 #import "OMBPayPalVerifyMobilePaymentConnection.h"
+#import "OMBWebViewController.h"
 
 @implementation OMBPayoutMethodPayPalViewController
 
@@ -51,6 +53,23 @@
 
 #pragma mark - Protocol
 
+#pragma mark - Protocol UIActionSheetDelegate
+
+- (void) actionSheet: (UIActionSheet *) actionSheet 
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  if (buttonIndex == 0 || buttonIndex == 1) {
+    // Deposit
+    if (buttonIndex == 0) {
+      
+    }
+    // Payment
+    else if (buttonIndex == 1) {
+
+    }
+  }
+}
+
 #pragma mark - Protocol PayPalPaymentDelegate
 
 - (void) payPalPaymentDidComplete: (PayPalPayment *) completedPayment
@@ -79,6 +98,18 @@
   // The payment was canceled; dismiss the PayPalPaymentViewController.
   [self dismissViewControllerAnimated: YES completion: nil];
   NSLog(@"PAYPAL PAYMENT DID CANCEL");
+}
+
+#pragma mark - Protocol UIWebViewDelegate
+
+- (void) webViewDidFinishLoad: (UIWebView *) webView
+{
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
+- (void) webViewDidStartLoad: (UIWebView *) webView
+{
+  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 }
 
 #pragma mark - Methods
@@ -135,6 +166,22 @@
     completion: nil];
 
   NSLog(@"CONNECT BUTTON SELECTED");
+}
+
+- (void) signUpButtonSelected
+{
+  NSString *string = @"http://paypal.com/signup";
+  NSURL *url = [NSURL URLWithString: 
+    [string stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding]];
+  NSURLRequest *request = [NSURLRequest requestWithURL: url];
+  webViewController = [[OMBWebViewController alloc] init];
+  webViewController.webView.delegate = self;
+  webViewController.title = @"PayPal Sign Up";
+  [webViewController.webView loadRequest: request];
+  [webViewController showCloseBarButtonItem];
+  [self presentViewController: 
+    [[OMBNavigationController alloc] initWithRootViewController: 
+      webViewController] animated: YES completion: nil];
 }
 
 - (void) verifyCompletedPayment: (PayPalPayment *) completedPayment
