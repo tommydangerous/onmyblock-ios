@@ -253,17 +253,16 @@
 
   // Close button view
   CGFloat padding = 20.0f;
-  CGFloat closeButtonViewHeight = 20.0f;
-  CGFloat closeButtonViewWidth  = closeButtonViewHeight;
+  CGFloat closeButtonViewHeight = 23.0f;
   CGRect closeButtonRect = CGRectMake(
-    (screen.size.width - (closeButtonViewWidth + padding)), (20.0f + padding), 
-      closeButtonViewWidth, closeButtonViewHeight);
-  closeButtonView = [[OMBCloseButtonView alloc] initWithFrame: closeButtonRect
-    color: [UIColor grayMedium]];
-  [closeButtonView.closeButton addTarget: self action: @selector(close)
-    forControlEvents: UIControlEventTouchUpInside];
-  [_getStartedView addSubview: closeButtonView];
-
+    (screen.size.width - (closeButtonViewHeight + padding)), (20.0f + padding),
+      closeButtonViewHeight, closeButtonViewHeight);
+  UIButton *closeButtonStarted = [[UIButton alloc] initWithFrame:closeButtonRect];
+  [closeButtonStarted setBackgroundImage:[UIImage imageNamed:@"close_white.png"] forState:UIControlStateNormal];
+  [closeButtonStarted addTarget: self action: @selector(close)
+               forControlEvents:UIControlEventTouchUpInside];
+  [_getStartedView addSubview: closeButtonStarted];
+  
   // Activity indicator spinner
   _activityView = [[OMBActivityView alloc] init];
   [self.view addSubview: _activityView];
