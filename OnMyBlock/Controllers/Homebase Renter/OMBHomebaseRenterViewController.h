@@ -9,6 +9,7 @@
 #import "OMBViewController.h"
 
 @class OMBAlertView;
+@class OMBOffer;
 @class OMBScrollView;
 
 @interface OMBHomebaseRenterViewController : OMBViewController
@@ -25,6 +26,7 @@
   NSMutableArray *imageViewArray;
   UIView *middleDivider; // For the buttons view
   UIButton *paymentsButton;
+  OMBOffer *selectedOffer;
   int selectedSegmentIndex;
   UITapGestureRecognizer *tapGesture;
 }

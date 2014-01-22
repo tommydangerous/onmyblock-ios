@@ -30,6 +30,5 @@
 - (void) adjustFrames;
 - (void) loadConfirmedTenantData;
 - (void) loadOffer: (OMBOffer *) object;
-- (void) loadOfferData;
 
 @end

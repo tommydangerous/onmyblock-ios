@@ -24,6 +24,7 @@
   _amount    = 0.0f;
   _confirmed = NO;
   _declined  = NO;
+  _onHold    = NO;
   _rejected  = NO;
 
   return self;
@@ -60,12 +61,18 @@
 
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
   dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
-
+  // Accepted
   if ([[dictionary objectForKey: @"accepted"] intValue])
     _accepted = YES;
   else
     _accepted = NO;
+  // Accepted date
+  if ([dictionary objectForKey: @"accepted_date"] != [NSNull null])
+    _acceptedDate = [[dateFormatter dateFromString:
+      [dictionary objectForKey: @"accepted_date"]] timeIntervalSince1970];
+  // Amount
   _amount = [[dictionary objectForKey: @"amount"] floatValue];
+  // Confirmed
   if ([[dictionary objectForKey: @"confirmed"] intValue])
     _confirmed = YES;
   else
@@ -79,9 +86,22 @@
     _declined = YES;
   else
     _declined = NO;
-
   // Landlord user
-
+  if ([dictionary objectForKey: @"landlord_user"] != [NSNull null]) {
+    NSDictionary *userDict = [dictionary objectForKey: @"landlord_user"];
+    int userUID = [[userDict objectForKey: @"id"] intValue];
+    OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
+    if (!user) {
+      user = [[OMBUser alloc] init];
+    }
+    [user readFromDictionary: userDict];
+    _landlordUser = user;
+  }
+  // On hold
+  if ([[dictionary objectForKey: @"on_hold"] intValue])
+    _onHold = YES;
+  else
+    _onHold = NO;
   // Rejected
   if ([[dictionary objectForKey: @"rejected"] intValue])
     _rejected = YES;

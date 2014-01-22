@@ -31,7 +31,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
   // [self setupTracking];
 
-  [self testFlightTakeOff];
+  // [self testFlightTakeOff];
     
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
@@ -51,7 +51,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // Fake login
   [OMBUser fakeLogin];
   // Use this to show whatever view controller you are working on
-  [_container showHomebaseLandlord];
+  [_container showHomebaseRenter];
 
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   id viewedIntro = [defaults objectForKey: OMBUserDefaultsViewedIntro];

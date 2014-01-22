@@ -55,7 +55,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   // Type
   typeLabel = [UILabel new];
-  typeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  typeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
   typeLabel.frame = CGRectMake(nameLabel.frame.origin.x,
     nameLabel.frame.origin.y + nameLabel.frame.size.height,
       nameLabel.frame.size.width, nameLabel.frame.size.height);
@@ -73,7 +73,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   // Address
   addressLabel = [UILabel new];
-  addressLabel.font = typeLabel.font;
+  addressLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
   addressLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: addressLabel];
 
@@ -169,7 +169,14 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // Name
   nameLabel.text = [_offer.user fullName];
   // Type / Tenants
-  typeLabel.text = @"response required";
+  if (_offer.accepted) {
+    typeLabel.text      = @"waiting on student";
+    typeLabel.textColor = [UIColor grayMedium];
+  }
+  else {
+    typeLabel.text      = @"response required";
+    typeLabel.textColor = [UIColor red];
+  }
   // Rent and address
   NSMutableAttributedString *rentAttributedString = 
     [[NSMutableAttributedString alloc] initWithString: 
@@ -194,24 +201,6 @@ reuseIdentifier: (NSString *) reuseIdentifier
     [rentAttributedString appendAttributedString: addressAttributedString];
   }
   rentLabel.attributedText = rentAttributedString;
-}
-
-- (void) loadOfferData
-{
-  // Image
-  userImageView.image = [UIImage imageNamed: @"tommy_d.png"];
-  // Time
-  timeLabel.text = @"6d";
-  timeLabel.textColor = [UIColor grayMedium];
-  // Name
-  nameLabel.text = @"Tommy Dang";
-  // Type / Tenants
-  typeLabel.text = @"response required";
-  // Rent
-  rentLabel.text = @"$2,750";
-  // Address
-  addressLabel.text = @"4654 Costa Verde Blvd";
-  [self adjustFrames];
 }
 
 @end

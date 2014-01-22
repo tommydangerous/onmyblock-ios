@@ -40,7 +40,11 @@
 
 + (NSString *) timeAgoInShortFormatWithTimeInterval: (NSTimeInterval) interval
 {
-  // Date time
+  // 5h
+  // Sun
+  // Jan 4
+  // 11/4/13
+
   NSDateFormatter *dateFormatter = [NSDateFormatter new];
   NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
   CGFloat secondsInADay = 60 * 60 * 24;
@@ -94,6 +98,9 @@
 
 + (NSString *) timeRemainingShortFormatWithInterval: (NSTimeInterval) interval
 {
+  // 5d 2h
+  // 2h 3m
+  // 3m 12s
   NSInteger secondsElapsed = interval - [[NSDate date] timeIntervalSince1970];
 
   NSString *string = @"";

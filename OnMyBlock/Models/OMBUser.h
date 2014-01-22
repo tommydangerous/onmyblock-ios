@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+typedef enum {
+  OMBUserOfferTypeAccepted,
+  OMBUserOfferTypeReceived
+} OMBUserOfferType;
+
 extern NSString *const OMBActivityIndicatorViewStartAnimatingNotification;
 extern NSString *const OMBActivityIndicatorViewStopAnimatingNotification;
 extern NSString *const OMBCurrentUserChangedFavorite;
@@ -41,6 +46,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 @property (nonatomic, strong) NSString *school;
 @property (nonatomic, strong) NSString *userType;
 
+@property (nonatomic, strong) NSMutableDictionary *acceptedOffers;
 @property (nonatomic, strong) OMBNeighborhood *currentLocation;
 @property (nonatomic, strong) NSMutableDictionary *favorites;
 @property (nonatomic, strong) UIImage *image;
@@ -75,11 +81,15 @@ withCompletion: (void (^) (NSError *error)) block;
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
 - (void) addResidence: (OMBResidence *) residence;
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence;
+- (void) confirmOffer: (OMBOffer *) offer
+withCompletion: (void (^) (NSError *error)) block;
 - (void) declineOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
 - (void) downloadImageFromImageURLWithCompletion: 
 (void (^) (NSError *error)) block;
 - (NSArray *) favoritesArray;
+- (void) fetchAcceptedOffersWithCompletion: (void (^) (NSError *error)) block;
+- (void) fetchReceivedOffersWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (NSString *) fullName;
@@ -89,6 +99,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) logout;
 - (NSArray *) messagesWithUser: (OMBUser *) user;
 - (NSString *) phoneString;
+- (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) readFromEmploymentDictionary: (NSDictionary *) dictionary;
@@ -98,14 +109,17 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary;
 - (void) readFromReceivedOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
+- (void) rejectOffer: (OMBOffer *) offer 
+withCompletion: (void (^) (NSError *error)) block;
 - (void) removeAllReceivedOffersWithOffer: (OMBOffer *) offer;
+- (void) removeOffer: (OMBOffer *) offer type: (OMBUserOfferType) type;
 - (void) removeReceivedOffer: (OMBOffer *) offer;
 - (void) removeResidence: (OMBResidence *) residence;
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence;
 - (NSArray *) residencesSortedWithKey: (NSString *) key 
 ascending: (BOOL) ascending;
 - (NSString *) shortName;
-- (NSArray *) sortedReceivedOffersWithKey: (NSString *) key 
-ascending: (BOOL) ascending;
+- (NSArray *) sortedOffersType: (OMBUserOfferType) type 
+withKey: (NSString *) key ascending: (BOOL) ascending;
 
 @end

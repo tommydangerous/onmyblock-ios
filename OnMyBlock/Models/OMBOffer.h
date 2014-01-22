@@ -14,10 +14,12 @@
 @interface OMBOffer : NSObject
 
 @property (nonatomic) BOOL accepted;
+@property (nonatomic) NSTimeInterval acceptedDate;
 @property (nonatomic) CGFloat amount;
 @property (nonatomic) BOOL confirmed;
 @property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic) BOOL declined;
+@property (nonatomic) BOOL onHold;
 @property (nonatomic) BOOL rejected;
 @property (nonatomic) NSTimeInterval updatedAt;
 
