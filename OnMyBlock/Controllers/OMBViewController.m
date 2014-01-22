@@ -65,6 +65,13 @@
   self.navigationItem.titleView = label;
 }
 
+- (void) viewWillDisappear: (BOOL) animated
+{
+  [super viewWillDisappear: animated];
+
+  [[self appDelegate].container stopSpinning];
+}
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods

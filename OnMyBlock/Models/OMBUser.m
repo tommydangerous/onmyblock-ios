@@ -20,8 +20,9 @@
 #import "OMBMessageDetailConnection.h"
 #import "OMBMessagesUnviewedCountConnection.h"
 #import "OMBOffer.h"
+#import "OMBOfferDecisionConnection.h"
 #import "OMBOffersAcceptedConnection.h"
-#import "OMBOfferUpdateConnection.h"
+#import "OMBOffersReceivedConnection.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
@@ -169,12 +170,9 @@ int kNotificationTimerInterval = 30;
 - (void) acceptOffer: (OMBOffer *) offer 
 withCompletion: (void (^) (NSError *error)) block
 {
-  offer.accepted = YES;
-  offer.declined = NO;
-  // Offer update connection
-  OMBOfferUpdateConnection *conn = 
-    [[OMBOfferUpdateConnection alloc] initWithOffer: offer 
-      attributes: @[@"accepted", @"declined"]];
+  OMBOfferDecisionConnection *conn =
+    [[OMBOfferDecisionConnection alloc] initWithOffer: offer
+      decision: OMBOfferDecisionConnectionTypeAccept];
   conn.completionBlock = block;
   [conn start];
 }
@@ -290,14 +288,22 @@ withCompletion: (void (^) (NSError *error)) block
   NSLog(@"Authenticate with server");
 }
 
+- (void) confirmOffer: (OMBOffer *) offer
+withCompletion: (void (^) (NSError *error)) block
+{
+  OMBOfferDecisionConnection *conn =
+    [[OMBOfferDecisionConnection alloc] initWithOffer: offer
+      decision: OMBOfferDecisionConnectionTypeConfirm];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (void) declineOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block
 {
-  offer.accepted = NO;
-  offer.declined = YES;
-  OMBOfferUpdateConnection *conn = 
-    [[OMBOfferUpdateConnection alloc] initWithOffer: offer 
-      attributes: @[@"accepted", @"declined"]];
+  OMBOfferDecisionConnection *conn =
+    [[OMBOfferDecisionConnection alloc] initWithOffer: offer
+      decision: OMBOfferDecisionConnectionTypeDecline];
   conn.completionBlock = block;
   [conn start];
 }
@@ -323,6 +329,14 @@ withCompletion: (void (^) (NSError *error)) block
 {
   OMBOffersAcceptedConnection *conn = 
     [[OMBOffersAcceptedConnection alloc] init];
+  conn.completionBlock = block;
+  [conn start];
+}
+
+- (void) fetchReceivedOffersWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBOffersReceivedConnection *conn =
+    [[OMBOffersReceivedConnection alloc] init];
   conn.completionBlock = block;
   [conn start];
 }
@@ -467,14 +481,21 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary
 {
-  NSArray *array = [dictionary objectForKey: @"objects"];
-  for (NSDictionary *dict in array) {
-    NSInteger objectUID = [[dict objectForKey: @"id"] intValue];
-    if (![_acceptedOffers objectForKey: [NSNumber numberWithInt: objectUID]]) {
-      OMBOffer *offer = [[OMBOffer alloc] init];
-      [offer readFromDictionary: dict];
-      [self addAcceptedOffer: offer];
-    }
+  NSMutableSet *newSet = [NSMutableSet set];
+  for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
+    OMBOffer *offer = [[OMBOffer alloc] init];
+    [offer readFromDictionary: dict];
+    [self addAcceptedOffer: offer];
+
+    [newSet addObject: [NSNumber numberWithInt: offer.uid]];
+  }
+
+  // Remove the offers that are no longer suppose to be there
+  NSMutableSet *oldSet = [NSMutableSet setWithArray:
+    [[_acceptedOffers allValues] valueForKey: @"uid"]];
+  [oldSet minusSet: newSet];
+  for (NSNumber *number in [oldSet allObjects]) {
+    [_acceptedOffers removeObjectForKey: number];
   }
 }
 
@@ -504,22 +525,28 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   //   success:     1,
   //   user_type:  user_type
   // }
-  _about       = [dictionary objectForKey: @"about"];
+  NSInteger userUID = [[dictionary objectForKey: @"id"] intValue];
+  if (![OMBUser currentUser].uid || [OMBUser currentUser].uid != userUID) {
+    if ([dictionary objectForKey: @"access_token"])
+      _accessToken = [dictionary objectForKey: @"access_token"];
+    else
+      _accessToken = @"";
+    _uid = userUID;
+  }
+
+  // About
+  _about = [dictionary objectForKey: @"about"];
   if (!_about)
     _about = @"";
-  if ([dictionary objectForKey: @"access_token"])
-    _accessToken = [dictionary objectForKey: @"access_token"];
-  else
-    _accessToken = @"";
-  _email       = [dictionary objectForKey: @"email"];
+  // Email
+  _email = [dictionary objectForKey: @"email"];
+  // First name
   if ([dictionary objectForKey: @"first_name"] != [NSNull null])
     _firstName = [dictionary objectForKey: @"first_name"];
   else
     _firstName = @"";
-
   // Image URL
   NSString *string = [dictionary objectForKey: @"image_url"];
-  
   // If URL is something like this //ombrb-prod.s3.amazonaws.com
   if ([string hasPrefix: @"//"]) {
     string = [@"http:" stringByAppendingString: string];
@@ -533,19 +560,22 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
   }
   _imageURL = [NSURL URLWithString: string];
-
+  // Last name
   if ([dictionary objectForKey: @"last_name"] != [NSNull null])
     _lastName = [dictionary objectForKey: @"last_name"];
   else
     _lastName = @"";
-  _phone       = [dictionary objectForKey: @"phone"];
+  // Phone
+  _phone = [dictionary objectForKey: @"phone"];
   if (!_phone)
     _phone = @"";
-  _school      = [dictionary objectForKey: @"school"];
+  _school = [dictionary objectForKey: @"school"];
+  // Scrool
   if (!_school)
     _school = @"";
-  _userType    = [dictionary objectForKey: @"user_type"];
-  _uid         = [[dictionary objectForKey: @"id"] intValue];
+  // User type
+  _userType = [dictionary objectForKey: @"user_type"];
+  // Renter application
   [_renterApplication readFromDictionary: 
     [dictionary objectForKey: @"renter_application"]];
 
@@ -681,15 +711,29 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (void) readFromReceivedOffersDictionary: (NSDictionary *) dictionary
 {
-  NSArray *array = [dictionary objectForKey: @"objects"];
-  for (NSDictionary *dict in array) {
-    NSInteger objectUID = [[dict objectForKey: @"id"] intValue];
-    if (![_receivedOffers objectForKey: [NSNumber numberWithInt: objectUID]]) {
-      OMBOffer *offer = [[OMBOffer alloc] init];
+  NSMutableSet *newSet = [NSMutableSet set];
+  for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
+    NSInteger offerUID = [[dict objectForKey: @"id"] intValue];
+    OMBOffer *offer = [_receivedOffers objectForKey: 
+      [NSNumber numberWithInt: offerUID]];
+    if (!offer) {
+      offer = [[OMBOffer alloc] init];
       [offer readFromDictionary: dict];
-      offer.landlordUser = [OMBUser currentUser];
       [self addReceivedOffer: offer];
     }
+    else {
+      [offer readFromDictionary: dict];
+    }
+
+    [newSet addObject: [NSNumber numberWithInt: offer.uid]];
+  }
+
+  // Remove the offers that are no longer suppose to be there
+  NSMutableSet *oldSet = [NSMutableSet setWithArray:
+    [[_receivedOffers allValues] valueForKey: @"uid"]];
+  [oldSet minusSet: newSet];
+  for (NSNumber *number in [oldSet allObjects]) {
+    [_receivedOffers removeObjectForKey: number];
   }
 }
 
@@ -719,11 +763,9 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 - (void) rejectOffer: (OMBOffer *) offer 
 withCompletion: (void (^) (NSError *error)) block
 {
-  offer.confirmed = NO;
-  offer.rejected  = YES;
-  OMBOfferUpdateConnection *conn = 
-    [[OMBOfferUpdateConnection alloc] initWithOffer: offer
-      attributes: @[@"confirmed", @"rejected"]];
+  OMBOfferDecisionConnection *conn =
+    [[OMBOfferDecisionConnection alloc] initWithOffer: offer
+      decision: OMBOfferDecisionConnectionTypeReject];
   conn.completionBlock = block;
   [conn start];
 }
@@ -735,7 +777,8 @@ withCompletion: (void (^) (NSError *error)) block
   NSArray *array = [[_receivedOffers allValues] filteredArrayUsingPredicate: 
     predicate];
   for (OMBOffer *o in array) {
-    [_receivedOffers removeObjectForKey: [NSNumber numberWithInt: o.uid]];
+    if (o.uid != offer.uid)
+      [_receivedOffers removeObjectForKey: [NSNumber numberWithInt: o.uid]];
   }
 }
 

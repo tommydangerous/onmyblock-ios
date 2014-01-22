@@ -24,6 +24,7 @@
   _amount    = 0.0f;
   _confirmed = NO;
   _declined  = NO;
+  _onHold    = NO;
   _rejected  = NO;
 
   return self;
@@ -96,6 +97,11 @@
     [user readFromDictionary: userDict];
     _landlordUser = user;
   }
+  // On hold
+  if ([[dictionary objectForKey: @"on_hold"] intValue])
+    _onHold = YES;
+  else
+    _onHold = NO;
   // Rejected
   if ([[dictionary objectForKey: @"rejected"] intValue])
     _rejected = YES;

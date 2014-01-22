@@ -17,7 +17,6 @@
 #import "OMBHomebaseLandlordPaymentCell.h"
 #import "OMBInboxViewController.h"
 #import "OMBOfferInquiryViewController.h"
-#import "OMBOffersReceivedConnection.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBHomebaseLandlordViewController
@@ -227,12 +226,10 @@
 {
   [super viewWillAppear: animated];
 
-  OMBOffersReceivedConnection *conn = 
-    [[OMBOffersReceivedConnection alloc] init];
-  conn.completionBlock = ^(NSError *error) {
+  // Fetch received offers
+  [[OMBUser currentUser] fetchReceivedOffersWithCompletion: ^(NSError *error) {
     [_activityTableView reloadData];
-  };
-  [conn start];
+  }];
 
   [_activityTableView reloadData];
 }

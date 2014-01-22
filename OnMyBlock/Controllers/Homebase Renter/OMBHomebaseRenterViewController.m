@@ -275,6 +275,8 @@
     // }
     if ([OMBUser currentUser].image) {
       imageView.imageView.image = [OMBUser currentUser].image;
+      imageView.nameLabel.text  = 
+        [[OMBUser currentUser].firstName capitalizedString];
     }
     else {
       [[OMBUser currentUser] downloadImageFromImageURLWithCompletion: 
@@ -622,81 +624,6 @@ viewForHeaderInSection: (NSInteger) section
 
 #pragma mark - Instance Methods
 
-- (void) confirmOffer: (NSInteger) index
-{
-
-}
-
-- (void) rejectOfferCancel
-{
-  [alert hideAlert];
-}
-
-- (void) rejectOfferConfirm
-{
-  if (!selectedOffer)
-    return;
-  // NSInteger index = [[self offers] indexOfObject: selectedOffer];
-  [[OMBUser currentUser] rejectOffer: selectedOffer 
-    withCompletion: ^(NSError *error) {
-      if (!selectedOffer.confirmed && selectedOffer.rejected) {
-        // [_activityTableView beginUpdates];
-        // // +1 to account for the blank space
-        // [_activityTableView deleteRowsAtIndexPaths: 
-        //   @[[NSIndexPath indexPathForRow: index + 1 inSection: 0]] 
-        //     withRowAnimation: UITableViewRowAnimationFade];
-        // Remove the offer from the user's accepted offers
-        [[OMBUser currentUser] removeOffer: selectedOffer 
-          type: OMBUserOfferTypeAccepted];
-        [_activityTableView reloadData];
-        // [_activityTableView endUpdates];
-        [_activityTableView reloadRowsAtIndexPaths:
-          @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
-            withRowAnimation: UITableViewRowAnimationFade];
-        selectedOffer = nil;
-      }
-      else {
-        NSString *message = @"Please try again.";
-        if (error)
-          message = error.localizedDescription;
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-          @"Unsuccessful" message: message delegate: nil 
-            cancelButtonTitle: @"Try again" otherButtonTitles: nil];
-        [alertView show];
-      }
-      [[self appDelegate].container stopSpinning];
-    }
-  ];
-  // [[self appDelegate].container startSpinning];
-  [alert hideAlert];
-}
-
-- (void) rejectOffer: (UIButton *) button
-{
-  selectedOffer = [[OMBUser currentUser].acceptedOffers objectForKey:
-    [NSNumber numberWithInt: button.tag]];
-  if (!selectedOffer)
-    return;
-  alert.alertTitle.text   = @"Decline Offer";
-  alert.alertMessage.text = @"Are you sure?";
-  [alert.alertCancel addTarget: self action: @selector(rejectOfferCancel)
-      forControlEvents: UIControlEventTouchUpInside];
-  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
-  [alert.alertConfirm addTarget: self action: @selector(rejectOfferConfirm)
-    forControlEvents: UIControlEventTouchUpInside];
-  [alert.alertConfirm setTitle: @"Yes" forState: UIControlStateNormal];
-  [alert showAlert];
-}
-
-- (void) editRentalPayments
-{
-  OMBHomebaseRenterRentDepositInfoViewController *vc = 
-    [[OMBHomebaseRenterRentDepositInfoViewController alloc] init];
-  vc.delegate = self;
-  [vc setupForEditRentalPayments];
-  [self.navigationController pushViewController: vc animated: YES];
-}
-
 - (void) changeTableView
 {
   // CGRect screen = [[UIScreen mainScreen] bounds];
@@ -771,9 +698,68 @@ viewForHeaderInSection: (NSInteger) section
       _paymentsTableView.contentOffset = CGPointMake(
         _paymentsTableView.contentOffset.x, threshold);
     }
-    [self.navigationItem setRightBarButtonItem: editBarButtonItem 
-      animated: YES];
+
+    // Show edit button to edit rental payments
+    // [self.navigationItem setRightBarButtonItem: editBarButtonItem 
+    //   animated: YES];
   }
+}
+
+- (void) confirmOffer: (UIButton *) button
+{
+  selectedOffer = [[OMBUser currentUser].acceptedOffers objectForKey:
+    [NSNumber numberWithInt: button.tag]];
+  if (!selectedOffer)
+    return;
+  alert.alertTitle.text   = @"Confirm Payment";
+  alert.alertMessage.text = [NSString stringWithFormat:
+    @"You will be charged %@ within 24 hours and guaranteed this place.", 
+      [NSString numberToCurrencyString: selectedOffer.amount]];
+  [alert.alertCancel addTarget: self action: @selector(hideAlert)
+    forControlEvents: UIControlEventTouchUpInside];
+  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
+  [alert.alertConfirm addTarget: self action: @selector(setupPayment)
+    forControlEvents: UIControlEventTouchUpInside];
+  [alert.alertConfirm setTitle: @"Confirm" forState: UIControlStateNormal];
+  [alert showAlert];
+}
+
+- (void) confirmOfferConfirm
+{
+  if (!selectedOffer)
+    return;
+  [[OMBUser currentUser] confirmOffer: selectedOffer withCompletion:
+    ^(NSError *error) {
+      if (selectedOffer.confirmed && !error) {
+        [alert hideAlert];
+      }
+      else {
+        NSString *message = @"Please try again.";
+        if (error)
+          message = error.localizedDescription;
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+          @"Unsuccessful" message: message delegate: nil 
+            cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+        [alertView show];
+      }
+      [[self appDelegate].container stopSpinning];
+    }
+  ];
+  [[self appDelegate].container startSpinning];
+}
+
+- (void) editRentalPayments
+{
+  OMBHomebaseRenterRentDepositInfoViewController *vc = 
+    [[OMBHomebaseRenterRentDepositInfoViewController alloc] init];
+  vc.delegate = self;
+  [vc setupForEditRentalPayments];
+  [self.navigationController pushViewController: vc animated: YES];
+}
+
+- (void) hideAlert
+{
+  [alert hideAlert];
 }
 
 - (NSArray *) offers
@@ -807,6 +793,66 @@ viewForHeaderInSection: (NSInteger) section
   }
 }
 
+- (void) rejectOfferConfirm
+{
+  if (!selectedOffer)
+    return;
+  // NSInteger index = [[self offers] indexOfObject: selectedOffer];
+  [[OMBUser currentUser] rejectOffer: selectedOffer 
+    withCompletion: ^(NSError *error) {
+      // If offer is rejected and no error
+      if (selectedOffer.rejected && !error) {
+        // [_activityTableView beginUpdates];
+        // // +1 to account for the blank space
+        // [_activityTableView deleteRowsAtIndexPaths: 
+        //   @[[NSIndexPath indexPathForRow: index + 1 inSection: 0]] 
+        //     withRowAnimation: UITableViewRowAnimationFade];
+
+        // Remove the offer from the user's accepted offers
+        [[OMBUser currentUser] removeOffer: selectedOffer 
+          type: OMBUserOfferTypeAccepted];
+
+        // [_activityTableView endUpdates];
+        [_activityTableView reloadData];
+
+        [_activityTableView reloadRowsAtIndexPaths:
+          @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
+            withRowAnimation: UITableViewRowAnimationFade];
+        selectedOffer = nil;
+      }
+      else {
+        NSString *message = @"Please try again.";
+        if (error)
+          message = error.localizedDescription;
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+          @"Unsuccessful" message: message delegate: nil 
+            cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+        [alertView show];
+      }
+      [[self appDelegate].container stopSpinning];
+    }
+  ];
+  [[self appDelegate].container startSpinning];
+  [alert hideAlert];
+}
+
+- (void) rejectOffer: (UIButton *) button
+{
+  selectedOffer = [[OMBUser currentUser].acceptedOffers objectForKey:
+    [NSNumber numberWithInt: button.tag]];
+  if (!selectedOffer)
+    return;
+  alert.alertTitle.text   = @"Decline Offer";
+  alert.alertMessage.text = @"Are you sure?";
+  [alert.alertCancel addTarget: self action: @selector(hideAlert)
+    forControlEvents: UIControlEventTouchUpInside];
+  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
+  [alert.alertConfirm addTarget: self action: @selector(rejectOfferConfirm)
+    forControlEvents: UIControlEventTouchUpInside];
+  [alert.alertConfirm setTitle: @"Yes" forState: UIControlStateNormal];
+  [alert showAlert];
+}
+
 - (void) scrollTableViewIfBelowThreshold: (UITableView *) tableView
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
@@ -837,6 +883,23 @@ viewForHeaderInSection: (NSInteger) section
   }
 }
 
+- (void) setupPayment
+{
+  alert.alertTitle.text = @"Setup Payment";
+  alert.alertMessage.text = 
+    @"Please set up a payment method to complete your confirmation.";
+
+  [alert.alertCancel addTarget: self action: @selector(hideAlert)
+    forControlEvents: UIControlEventTouchUpInside];
+  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
+
+  [alert.alertConfirm addTarget: self action: @selector(showSetupPayment)
+    forControlEvents: UIControlEventTouchUpInside];
+  [alert.alertConfirm setTitle: @"Setup" forState: UIControlStateNormal];
+
+  [alert animateChangeOfContent];
+}
+
 - (void) showAddRemoveRoommates
 {
   [self.navigationController pushViewController: 
@@ -850,6 +913,11 @@ viewForHeaderInSection: (NSInteger) section
     [[OMBHomebaseRenterRentDepositInfoViewController alloc] init];
   vc.delegate = self;
   [self.navigationController pushViewController: vc animated: YES];
+}
+
+- (void) showSetupPayment
+{
+  
 }
 
 - (void) switchToPaymentsTableView

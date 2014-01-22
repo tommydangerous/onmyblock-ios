@@ -31,7 +31,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
   // [self setupTracking];
 
-  [self testFlightTakeOff];
+  // [self testFlightTakeOff];
     
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];

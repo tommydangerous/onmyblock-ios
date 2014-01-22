@@ -260,6 +260,30 @@
 {
   [super viewWillAppear: animated];
 
+  // If accepted
+  if (offer.accepted) {
+    respondView.alpha = 0.0f;
+    _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
+      CGRectZero];
+    _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
+      CGRectZero];
+  }
+  else {
+    [respondButton setTitle: 
+      [NSString stringWithFormat: @"Respond to %@", self.title]
+        forState: UIControlStateNormal];
+  }
+
+  // User image view
+  if (offer.user.image) {
+    userImageView.image = offer.user.image;
+  }
+  else {
+    [offer.user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+      userImageView.image = offer.user.image;   
+    }];
+  }
+
   // Fetch questions
   // [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
   //   ^(NSError *error) {
@@ -271,20 +295,6 @@
   // ];
 
   // Fetch offer's user's renter application info
-
-  [respondButton setTitle: 
-    [NSString stringWithFormat: @"Respond to %@", self.title]
-      forState: UIControlStateNormal];
-
-  // User image view
-  if (offer.user.image) {
-    userImageView.image = offer.user.image;
-  }
-  else {
-    [offer.user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
-      userImageView.image = offer.user.image;   
-    }];
-  }
 }
 
 #pragma mark - Protocol
@@ -847,6 +857,7 @@ viewForHeaderInSection: (NSInteger) section
     else if (!acceptedConfirmed) {
       [[OMBUser currentUser] acceptOffer: offer 
         withCompletion: ^(NSError *error) {
+          // If offer is accepted and no error
           if (offer.accepted && !error) {
             acceptedConfirmed = YES;
             // Alert buttons

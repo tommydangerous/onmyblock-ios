@@ -81,12 +81,15 @@ withCompletion: (void (^) (NSError *error)) block;
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
 - (void) addResidence: (OMBResidence *) residence;
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence;
+- (void) confirmOffer: (OMBOffer *) offer
+withCompletion: (void (^) (NSError *error)) block;
 - (void) declineOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
 - (void) downloadImageFromImageURLWithCompletion: 
 (void (^) (NSError *error)) block;
 - (NSArray *) favoritesArray;
 - (void) fetchAcceptedOffersWithCompletion: (void (^) (NSError *error)) block;
+- (void) fetchReceivedOffersWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (NSString *) fullName;
