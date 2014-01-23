@@ -266,7 +266,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Header title
     else if (indexPath.row == 1) {
-      headerTitleCell.titleLabel.text = @"Lease Details”";
+      headerTitleCell.titleLabel.text = @"Lease Details";
       return headerTitleCell;
     }
     else {

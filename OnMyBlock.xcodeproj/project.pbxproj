@@ -202,7 +202,6 @@
 		AB70CB6E186CB9400083DF4C /* OMBTermsOfServiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB6C186CB9400083DF4C /* OMBTermsOfServiceViewController.m */; };
 		AB70CB71186CBAA30083DF4C /* OMBPrivacyPolicyStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB70186CBAA30083DF4C /* OMBPrivacyPolicyStore.m */; };
 		AB70CB7A186CD1E00083DF4C /* OMBManageListingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB79186CD1E00083DF4C /* OMBManageListingsViewController.m */; };
-		AB70CB7D186CD8490083DF4C /* OMBCreateListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB7C186CD8490083DF4C /* OMBCreateListingViewController.m */; };
 		AB70CB8B186D0A240083DF4C /* apartment_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB70CB88186D0A240083DF4C /* apartment_icon@2x.png */; };
 		AB70CB8C186D0A240083DF4C /* house_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB70CB89186D0A240083DF4C /* house_icon@2x.png */; };
 		AB70CB8D186D0A240083DF4C /* sublet_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB70CB8A186D0A240083DF4C /* sublet_icon@2x.png */; };
@@ -537,6 +536,7 @@
 		DE05FF21188F3743003AB752 /* intro_still_image_slide_5_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE05FF1F188F3743003AB752 /* intro_still_image_slide_5_background@2x.png */; };
 		DE93158718916D1800111CF6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE93158618916D1800111CF6 /* FacebookSDK.framework */; };
 		DE93158D18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */; };
+		DE93158F1891E05800111CF6 /* OMBCreateListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */; };
 		DE96E4A2189019390081D69F /* sign_up_email.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A1189019390081D69F /* sign_up_email.png */; };
 		DE96E4A4189019400081D69F /* sign_up_email@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A3189019400081D69F /* sign_up_email@2x.png */; };
 		DE96E4A7189019450081D69F /* sign_up_fb.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A5189019450081D69F /* sign_up_fb.png */; };
@@ -870,7 +870,6 @@
 		AB70CB78186CD1E00083DF4C /* OMBManageListingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBManageListingsViewController.h; sourceTree = "<group>"; };
 		AB70CB79186CD1E00083DF4C /* OMBManageListingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBManageListingsViewController.m; sourceTree = "<group>"; };
 		AB70CB7B186CD8490083DF4C /* OMBCreateListingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingViewController.h; sourceTree = "<group>"; };
-		AB70CB7C186CD8490083DF4C /* OMBCreateListingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingViewController.m; sourceTree = "<group>"; };
 		AB70CB88186D0A240083DF4C /* apartment_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "apartment_icon@2x.png"; sourceTree = "<group>"; };
 		AB70CB89186D0A240083DF4C /* house_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "house_icon@2x.png"; sourceTree = "<group>"; };
 		AB70CB8A186D0A240083DF4C /* sublet_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sublet_icon@2x.png"; sourceTree = "<group>"; };
@@ -1410,6 +1409,7 @@
 		DE93158618916D1800111CF6 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		DE93158B18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailLeaseCell.h; sourceTree = "<group>"; };
 		DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailLeaseCell.m; sourceTree = "<group>"; };
+		DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingViewController.m; sourceTree = "<group>"; };
 		DE96E4A1189019390081D69F /* sign_up_email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sign_up_email.png; sourceTree = "<group>"; };
 		DE96E4A3189019400081D69F /* sign_up_email@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sign_up_email@2x.png"; sourceTree = "<group>"; };
 		DE96E4A5189019450081D69F /* sign_up_fb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sign_up_fb.png; sourceTree = "<group>"; };
@@ -1625,7 +1625,7 @@
 			isa = PBXGroup;
 			children = (
 				AB70CB7B186CD8490083DF4C /* OMBCreateListingViewController.h */,
-				AB70CB7C186CD8490083DF4C /* OMBCreateListingViewController.m */,
+				DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */,
 			);
 			path = "Create Listing";
 			sourceTree = "<group>";
@@ -3233,6 +3233,7 @@
 				ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */,
 				ABBA58A01870D92000E9BF4E /* OMBFinishListingRentAuctionDetailsViewController.m in Sources */,
 				AB4ED2FD1884AD9F009AFB01 /* OMBResidenceDetailConnection.m in Sources */,
+				DE93158F1891E05800111CF6 /* OMBCreateListingViewController.m in Sources */,
 				AB63D2171821ABF500D63800 /* OMBLoginViewController.m in Sources */,
 				ABDF174D18663AE8004E2755 /* OMBResidenceBookItCell.m in Sources */,
 				AB8C8C131815784B00A1B087 /* OMBImageDownloader.m in Sources */,
@@ -3258,7 +3259,6 @@
 				ABE7069618882C46007A4E29 /* OMBMessageDetailConnection.m in Sources */,
 				ABAF2281185249FC0041BF60 /* OMBRenterApplicationPetCell.m in Sources */,
 				AB6155A9184D99F100A193C7 /* OMBCosignersListViewController.m in Sources */,
-				AB70CB7D186CD8490083DF4C /* OMBCreateListingViewController.m in Sources */,
 				AB4ED2F318848FEF009AFB01 /* OMBResidenceDeleteConnection.m in Sources */,
 				ABBA58B21871E5EF00E9BF4E /* OMBFinishListingTitleViewController.m in Sources */,
 				ABABEBF518625DFA008B6768 /* OMBAuthenticationVenmoConnection.m in Sources */,

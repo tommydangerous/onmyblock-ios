@@ -569,7 +569,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 	if (pickerView == lengthLeasePickerView)
 	{
 		// Months
-		return 25;
+		return 13;
 	}
 	return 0;
 }
@@ -844,7 +844,7 @@ replacementString: (NSString *) string
       animated: YES];
     // Last step; details
     if (stepNumber == 2) {
-      [nextButton setTitle: @"Save" forState: UIControlStateNormal];
+      [nextButton setTitle: @"Next" forState: UIControlStateNormal];
       // Turn into save
 
       // [self.navigationItem setRightBarButtonItem: saveBarButtonItem
