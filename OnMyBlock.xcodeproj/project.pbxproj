@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6758E2E2187B966D004031D7 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB026BC11822B23B00E72F53 /* FacebookSDK.framework */; };
 		6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */; };
 		67E94814188DB97D007703FC /* OMBFilmstripImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */; };
 		67E9481E188DF726007703FC /* OMBMapFilterDateAvailableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */; };
@@ -536,6 +535,8 @@
 		ABF8ECB9182D84170080B1E2 /* OMBSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF8ECB8182D84170080B1E2 /* OMBSignUpView.m */; };
 		DE05FF20188F3743003AB752 /* intro_still_image_slide_5_background.png in Resources */ = {isa = PBXBuildFile; fileRef = DE05FF1E188F3743003AB752 /* intro_still_image_slide_5_background.png */; };
 		DE05FF21188F3743003AB752 /* intro_still_image_slide_5_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE05FF1F188F3743003AB752 /* intro_still_image_slide_5_background@2x.png */; };
+		DE93158718916D1800111CF6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE93158618916D1800111CF6 /* FacebookSDK.framework */; };
+		DE93158D18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */; };
 		DE96E4A2189019390081D69F /* sign_up_email.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A1189019390081D69F /* sign_up_email.png */; };
 		DE96E4A4189019400081D69F /* sign_up_email@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A3189019400081D69F /* sign_up_email@2x.png */; };
 		DE96E4A7189019450081D69F /* sign_up_fb.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A5189019450081D69F /* sign_up_fb.png */; };
@@ -656,7 +657,6 @@
 		AB0269D51822A12600E72F53 /* AMBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMBlurView.m; sourceTree = "<group>"; };
 		AB0269D71822A97A00E72F53 /* logout_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logout_icon.png; sourceTree = "<group>"; };
 		AB0269D81822A97A00E72F53 /* logout_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout_icon@2x.png"; sourceTree = "<group>"; };
-		AB026BC11822B23B00E72F53 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		AB026BC31822B4DB00E72F53 /* facebook_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook_icon.png; sourceTree = "<group>"; };
 		AB026BC41822B4DB00E72F53 /* facebook_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon@2x.png"; sourceTree = "<group>"; };
 		AB026BC71822BE1200E72F53 /* OMBUserFacebookAuthenticationConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBUserFacebookAuthenticationConnection.h; sourceTree = "<group>"; };
@@ -1407,6 +1407,9 @@
 		ABF8ECB8182D84170080B1E2 /* OMBSignUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSignUpView.m; sourceTree = "<group>"; };
 		DE05FF1E188F3743003AB752 /* intro_still_image_slide_5_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intro_still_image_slide_5_background.png; sourceTree = "<group>"; };
 		DE05FF1F188F3743003AB752 /* intro_still_image_slide_5_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "intro_still_image_slide_5_background@2x.png"; sourceTree = "<group>"; };
+		DE93158618916D1800111CF6 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
+		DE93158B18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailLeaseCell.h; sourceTree = "<group>"; };
+		DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailLeaseCell.m; sourceTree = "<group>"; };
 		DE96E4A1189019390081D69F /* sign_up_email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sign_up_email.png; sourceTree = "<group>"; };
 		DE96E4A3189019400081D69F /* sign_up_email@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sign_up_email@2x.png"; sourceTree = "<group>"; };
 		DE96E4A5189019450081D69F /* sign_up_fb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sign_up_fb.png; sourceTree = "<group>"; };
@@ -1429,7 +1432,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */,
-				6758E2E2187B966D004031D7 /* FacebookSDK.framework in Frameworks */,
 				AB01ED6D185966B500333390 /* AVFoundation.framework in Frameworks */,
 				ABB022D3182490D700F98544 /* CoreData.framework in Frameworks */,
 				AB802EA018109E5200E04D11 /* CoreGraphics.framework in Frameworks */,
@@ -1449,6 +1451,7 @@
 				ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */,
 				ABB022C718248D9800F98544 /* SystemConfiguration.framework in Frameworks */,
 				AB802EA218109E5200E04D11 /* UIKit.framework in Frameworks */,
+				DE93158718916D1800111CF6 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1669,6 +1672,8 @@
 				AB70CB8F186D353E0083DF4C /* OMBCreateListingPropertyTypeCell.m */,
 				AB8B793C186DEF13005AB552 /* OMBCreateListingDetailCell.h */,
 				AB8B793D186DEF13005AB552 /* OMBCreateListingDetailCell.m */,
+				DE93158B18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.h */,
+				DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */,
 			);
 			path = "Create Listing";
 			sourceTree = "<group>";
@@ -1707,6 +1712,7 @@
 		AB802E9C18109E5200E04D11 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DE93158618916D1800111CF6 /* FacebookSDK.framework */,
 				ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */,
 				AB01ED70185966C800333390 /* MessageUI.framework */,
 				AB01ED6E185966BD00333390 /* CFNetwork.framework */,
@@ -1721,7 +1727,6 @@
 				AB802E9F18109E5200E04D11 /* CoreGraphics.framework */,
 				AB0269B8182292F500E72F53 /* CoreImage.framework */,
 				ABB3C58818117C2200DD91C9 /* CoreLocation.framework */,
-				AB026BC11822B23B00E72F53 /* FacebookSDK.framework */,
 				AB802E9D18109E5200E04D11 /* Foundation.framework */,
 				ABB3C58618117C1C00DD91C9 /* MapKit.framework */,
 				ABC48E791812397300F01D8D /* QuartzCore.framework */,
@@ -3239,6 +3244,7 @@
 				AB9D6113188CEFDE00C9AC64 /* SDWebImageDownloader.m in Sources */,
 				ABCB36C4187CCFAB008A0EEF /* OMBScrollView.m in Sources */,
 				ABB7005A187B58AA005F0730 /* OMBHomebaseLandlordPaymentCell.m in Sources */,
+				DE93158D18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m in Sources */,
 				ABF8ECAC182D78280080B1E2 /* OMBIntroFavoritesView.m in Sources */,
 				AB8B7944186E0091005AB552 /* OMBFinishListingViewController.m in Sources */,
 				ABBA58B818737DDD00E9BF4E /* OMBHeaderTitleCell.m in Sources */,
@@ -3501,12 +3507,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
 					"$(SRCROOT)/",
+					/Users/GFTecla/Documents/FacebookSDK,
+					/Users/GFTecla/Documents/SDK/FacebookSDK,
+					"/Users/GFTecla/Documents/onmyblock-ios/FacebookSDK",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OnMyBlock/OnMyBlock-Prefix.pch";
@@ -3522,7 +3531,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3533,12 +3542,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
 					"$(SRCROOT)/",
+					/Users/GFTecla/Documents/FacebookSDK,
+					/Users/GFTecla/Documents/SDK/FacebookSDK,
+					"/Users/GFTecla/Documents/onmyblock-ios/FacebookSDK",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OnMyBlock/OnMyBlock-Prefix.pch";
@@ -3554,7 +3566,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
