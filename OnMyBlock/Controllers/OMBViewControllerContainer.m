@@ -361,7 +361,7 @@
 
   // Activity view
   activityView = [[OMBActivityView alloc] init];
-  [_detailView addSubview: activityView];
+  // [_detailView addSubview: activityView];
 
   [self presentDetailViewController: _mapNavigationController];
   // [self presentDetailViewController: _accountNavigationController];
@@ -696,8 +696,9 @@ willDecelerate: (BOOL) decelerate
 
   viewController.view.frame = [self frameForDetailViewController];
 
-  // [_detailView addSubview: viewController.view];
-  [_detailView insertSubview: viewController.view belowSubview: activityView];
+  [_detailView addSubview: viewController.view];
+  // [_detailView insertSubview: viewController.view belowSubview: 
+  //   activityView];
   _currentDetailViewController = viewController;
 
   [viewController didMoveToParentViewController: self];
@@ -1073,11 +1074,13 @@ willDecelerate: (BOOL) decelerate
 
 - (void) startSpinning
 {
+  [[[UIApplication sharedApplication] keyWindow] addSubview: activityView];
   [activityView startSpinning];
 }
 
 - (void) stopSpinning
 {
+  [activityView removeFromSuperview];
   [activityView stopSpinning];
 }
 

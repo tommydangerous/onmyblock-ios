@@ -10,8 +10,12 @@
 
 @interface OMBFilmstripImageCell : UICollectionViewCell
 
-@property (nonatomic, strong) UIImageView *image;
+@property (nonatomic, strong) UIImageView *imageView;
 
-+ (NSString *)reuseID;
+#pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (NSString *) reuseID;
 
 @end

@@ -52,33 +52,16 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // PayPal, Venmo
   NSString *payoutType = [object.payoutType lowercaseString];
   if ([payoutType isEqualToString: @"paypal"]) {
-    [self setUpForPaypalPrimary: object.primary];
+    [self setUpForPaypal: object primary: object.primary];
   }
   else if ([payoutType isEqualToString: @"venmo"]) {
-    [self setUpForVenmoPrimary: object.primary];
+    [self setUpForVenmo: object primary: object.primary];
   }
 
-  // Middle label
-  NSString *string;
-  if (object.deposit) {
-    string = @"Deposit method";
-  }
-  else {
-    string = @"Payment method";
-  }
-  if (object.primary) {
-    middleLabel.textColor = [UIColor textColor];
-    string = [string stringByAppendingString: @" - Primary"];
-    topLabel.textColor = [UIColor textColor];
-  }
-  else {
-    middleLabel.textColor = [UIColor grayMedium];
-    topLabel.textColor = [UIColor grayMedium];
-  }
-  middleLabel.text = string;
+  middleLabel.text = [object.email lowercaseString];
 }
 
-- (void) setUpForPaypalPrimary: (BOOL) primary
+- (void) setUpForPaypal: (OMBPayoutMethod *) object primary: (BOOL) primary
 {
   topLabel.text = @"PayPal";
   if (primary) {
@@ -88,9 +71,10 @@ reuseIdentifier: (NSString *) reuseIdentifier
     imageHolder.backgroundColor = [UIColor grayMedium];
   }
   objectImageView.image = [UIImage imageNamed: @"paypal_icon.png"];
+  [self setUpTypeAndPrimary: object];
 }
 
-- (void) setUpForVenmoPrimary: (BOOL) primary
+- (void) setUpForVenmo: (OMBPayoutMethod *) object primary: (BOOL) primary
 {
   topLabel.text = @"Venmo";
   if (primary) {
@@ -100,6 +84,49 @@ reuseIdentifier: (NSString *) reuseIdentifier
     imageHolder.backgroundColor = [UIColor grayMedium];
   }
   objectImageView.image = [UIImage imageNamed: @"venmo_icon.png"];
+  [self setUpTypeAndPrimary: object];
+}
+
+- (void) setUpTypeAndPrimary: (OMBPayoutMethod *) object
+{
+  NSString *string;
+  if (object.deposit) {
+    string = @"   Deposit";
+  }
+  else {
+    string = @"   Payment";
+  }
+  UIColor *color;
+  if (object.primary) {
+    string = [string stringByAppendingString: @" - Primary"];
+    color = [UIColor textColor];
+    middleLabel.textColor = [UIColor textColor];
+  }
+  else {
+    color = [UIColor grayMedium];
+    middleLabel.textColor = [UIColor grayMedium];
+  }
+  NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+  style.maximumLineHeight = style.minimumLineHeight = 15.0f;
+  NSMutableAttributedString *string1 = 
+    [[NSMutableAttributedString alloc] initWithString: topLabel.text 
+      attributes: @{
+        NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Medium" 
+          size: 15],
+        NSForegroundColorAttributeName: color
+      }
+    ];
+  NSMutableAttributedString *string2 = 
+    [[NSMutableAttributedString alloc] initWithString: string 
+      attributes: @{
+        NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
+          size: 13],
+        NSForegroundColorAttributeName: [UIColor grayMedium],
+        NSParagraphStyleAttributeName: style
+      }
+    ];
+  [string1 appendAttributedString: string2];
+  topLabel.attributedText = string1;
 }
 
 @end

@@ -92,7 +92,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
     [self clearImage];
   NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
     centeredImageView.frame.size.width, centeredImageView.frame.size.height];
-  UIImage *image = [residence imageForSizeKey: sizeKey];
+  UIImage *image = [residence coverPhotoForSizeKey: sizeKey];
   if (image) {
     centeredImageView.image = image;
   }
@@ -103,7 +103,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
     conn.completionBlock = ^(NSError *error) {
       if ([residence coverPhoto]) {
         centeredImageView.image = [residence coverPhoto];
-        [residence.imageSizeDictionary setObject: centeredImageView.image
+        [residence.coverPhotoSizeDictionary setObject: centeredImageView.image
           forKey: sizeKey];
         [self setStatusLabelText];
       }

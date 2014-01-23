@@ -12,6 +12,8 @@
 @class OMBResidence;
 
 @interface OMBResidencePartialView : UIView
+<UICollectionViewDataSource, UICollectionViewDelegate, 
+  UICollectionViewDelegateFlowLayout>
 {
   UIActivityIndicatorView *activityIndicatorView;
   UILabel *addressLabel;
@@ -26,15 +28,16 @@
   UILabel *rentLabel;
 }
 
-@property (nonatomic, copy) void(^selected)(OMBResidence *residence, NSInteger imageIndex);
+@property (nonatomic, strong) UICollectionView *imagesFilmstrip;
 @property (nonatomic, weak) OMBResidence *residence;
+@property (nonatomic, copy) 
+  void (^selected) (OMBResidence *residence, NSInteger imageIndex);
 
 #pragma mark - Methods
 
 #pragma mark Instance Methods
 
 - (void) loadResidenceData: (OMBResidence *) object;
-
 - (void) resetFilmstrip;
 
 @end

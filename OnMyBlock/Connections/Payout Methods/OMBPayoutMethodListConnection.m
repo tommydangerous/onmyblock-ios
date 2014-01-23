@@ -30,7 +30,7 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBPayoutMethodListConnection\n%@", [self json]);
+  // NSLog(@"OMBPayoutMethodListConnection\n%@", [self json]);
 
   [[OMBUser currentUser] readFromPayoutMethodsDictionary: [self json]];
 

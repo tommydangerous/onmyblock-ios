@@ -53,9 +53,13 @@
       _deposit = NO;
   }
 
-  // PayPal Email
-  if ([dictionary objectForKey: @"paypal_email"] != [NSNull null])
-    _paypalEmail = [dictionary objectForKey: @"paypal_email"];
+  // Email
+  if ([dictionary objectForKey: @"email"] != [NSNull null])
+    _email = [dictionary objectForKey: @"email"];
+
+  // Payout Type
+  if ([dictionary objectForKey: @"payout_type"] != [NSNull null])
+    _payoutType = [dictionary objectForKey: @"payout_type"];
 
   // Primary
   if ([dictionary objectForKey: @"primary"] != [NSNull null]) {
@@ -65,9 +69,13 @@
       _primary = NO;
   }
 
-  // Payout Type
-  if ([dictionary objectForKey: @"payout_type"] != [NSNull null])
-    _payoutType = [dictionary objectForKey: @"payout_type"];
+  // Provider ID
+  if ([dictionary objectForKey: @"provider_id"] != [NSNull null])
+    _providerID = [[dictionary objectForKey: @"provider_id"] intValue];
+
+  // UID
+  if ([dictionary objectForKey: @"id"] != [NSNull null])
+    _uid = [[dictionary objectForKey: @"id"] intValue];
 
   // Updated at
   if ([dictionary objectForKey: @"updated_at"] != [NSNull null])

@@ -94,10 +94,16 @@
 
 - (void) showAlertViewWithError: (NSError *) error
 {
-  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Error"
-    message: error.localizedDescription delegate: nil
-      cancelButtonTitle: @"Try again" otherButtonTitles: nil];
-  [alertView show]; 
+  NSString *message = @"Please try again.";
+  NSString *title   = @"Unsuccessful";
+  if (error) {
+    message = error.localizedDescription;
+    title   = @"Error";
+  }
+  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title
+    message: message delegate: nil cancelButtonTitle: @"Try again" 
+      otherButtonTitles: nil];
+  [alertView show];
 }
 
 - (void) showContainer

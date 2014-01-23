@@ -85,10 +85,14 @@ withCompletion: (void (^) (NSError *error)) block;
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence;
 - (void) authenticateVenmoWithCode: (NSString *) code 
 depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block;
+- (void) changeOtherSamePrimaryPayoutMethods: (OMBPayoutMethod *) payoutMethod;
 - (void) confirmOffer: (OMBOffer *) offer
+withCompletion: (void (^) (NSError *error)) block;
+- (void) createPayoutMethodWithDictionary: (NSDictionary *) dictionary
 withCompletion: (void (^) (NSError *error)) block;
 - (void) declineOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
+- (NSArray *) depositPayoutMethods;
 - (void) downloadImageFromImageURLWithCompletion: 
 (void (^) (NSError *error)) block;
 - (NSArray *) favoritesArray;
@@ -103,6 +107,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (BOOL) loggedIn;
 - (void) logout;
 - (NSArray *) messagesWithUser: (OMBUser *) user;
+- (NSArray *) paymentPayoutMethods;
 - (NSString *) phoneString;
 - (OMBPayoutMethod *) primaryDepositPayoutMethod;
 - (OMBPayoutMethod *) primaryPaymentPayoutMethod;

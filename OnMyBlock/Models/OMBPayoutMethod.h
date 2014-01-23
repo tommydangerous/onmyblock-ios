@@ -13,9 +13,10 @@
 @property (nonatomic) BOOL active;
 @property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic) BOOL deposit;
-@property (nonatomic, strong) NSString *paypalEmail;
-@property (nonatomic) BOOL primary;
+@property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *payoutType;
+@property (nonatomic) BOOL primary;
+@property (nonatomic) NSInteger providerID;
 @property (nonatomic) NSTimeInterval updatedAt;
 
 @property (nonatomic) NSInteger uid;

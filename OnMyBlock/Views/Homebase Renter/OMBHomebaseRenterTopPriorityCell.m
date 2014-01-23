@@ -101,11 +101,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
     size.width, size.height];
   void (^completionBlock) (NSError *error) = ^(NSError *error) {
     objectImageView.image = [offer.residence coverPhoto];
-    [offer.residence.imageSizeDictionary setObject: objectImageView.image
+    [offer.residence.coverPhotoSizeDictionary setObject: objectImageView.image
       forKey: sizeKey];
   };
   if ([offer.residence coverPhoto]) {
-    UIImage *image = [offer.residence imageForSize: size];
+    UIImage *image = [offer.residence coverPhotoForSize: size];
     if (!image) {
       completionBlock(nil);
     }

@@ -32,6 +32,7 @@
     [_amenities setObject: [NSNumber numberWithInt: 0] forKey: string];
   }
   
+  _coverPhotoSizeDictionary = [NSMutableDictionary dictionary];
   _images              = [NSMutableArray array];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _lastImagePosition   = 1000;
@@ -124,6 +125,19 @@ withString: (NSString *) string
   }
 }
 
+- (void) addImageWithResidenceImage: (OMBResidenceImage *) residenceImage
+toImageSizeDictionaryWithSize: (CGSize) size
+{
+  NSNumber *key = [NSNumber numberWithInt: residenceImage.uid];
+  NSMutableDictionary *dict = [_imageSizeDictionary objectForKey: key];
+  if (!dict) {
+    dict = [NSMutableDictionary dictionary];
+    [_imageSizeDictionary setObject: dict forKey: key];
+  }
+  [dict setObject: residenceImage.image forKey: 
+    [NSString stringWithFormat: @"%f,%f", size.width, size.height]];
+}
+
 - (void) addOffer: (OMBOffer *) offer
 {
   NSPredicate *predicate = [NSPredicate predicateWithFormat:
@@ -200,39 +214,40 @@ withString: (NSString *) string
 - (UIImage *) coverPhoto
 {
   if ([_images count] > 0) {
-    OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex:0];
+    OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex: 0];
     return residenceImage.image;
   }
   return nil;
 }
 
-- (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size
+
+- (UIImage *) coverPhotoForSize: (CGSize) size
 {
-	if ([_images count] > index)
-	{
-		OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex:index];
-		UIImage *img = residenceImage.image;
-		
-	  CGFloat newHeight = size.height;
-	  CGFloat newWidth  = img.size.width * (size.height / img.size.height);
-	  if (newWidth < size.width) {
-		newHeight = newHeight * (size.width / newWidth);
-		newWidth  = size.width;
-	  }
-	  CGPoint point = CGPointZero;
-	  // Center it vertically
-	  if (newHeight > size.height) {
-		point.y = (newHeight - size.height) * -0.5;
-	  }
-	  // Center it horizontally
-	  if (newWidth > size.width) {
-		point.x = (newWidth - size.width) * -0.5;
-	  }
-	  return [UIImage image: img size: CGSizeMake(newWidth, newHeight)
-		point: point];
-	}
-	
-	return nil;
+  // This is used for the cover photo
+  return [self coverPhotoForSizeKey: [NSString stringWithFormat: @"%f,%f",
+    size.width, size.height]];
+}
+
+- (UIImage *) coverPhotoForSizeKey: (NSString *) string
+{
+  // This is used for the cover photo
+  UIImage *image = [_coverPhotoSizeDictionary objectForKey: string];
+  if (!image) {
+    NSArray *words = [string componentsSeparatedByString: @","];
+    if ([words count] >= 2) {
+      NSInteger width  = [[words objectAtIndex: 0] floatValue];
+      NSInteger height = [[words objectAtIndex: 1] floatValue];
+      if ([self coverPhoto]) {
+        // Leave it up to the object that uses this to set the image
+        // into the dictionary; e.g. the OMBMangeListingsCell 
+        // resizes this image in it's OMBCenteredImageView then sets 
+        // the object for key in the imagesSizedictionary
+        image = [UIImage image: [self coverPhoto] 
+          size: CGSizeMake(width, height)];
+      }
+    }
+  }
+  return image;
 }
 
 - (UIImage *) coverPhotoWithSize1: (CGSize) size
@@ -256,15 +271,6 @@ withString: (NSString *) string
     point.y = (newHeight - size.height) / -2.0;
   return [UIImage image: img size: CGSizeMake(newWidth, newHeight) 
     point: point];
-}
-
-- (NSString *) defaultContactMessage
-{
-  if ([OMBUser currentUser].accessToken)
-    return [NSString stringWithFormat: @"Hello\n\nI found your listing for %@ using OnMyBlock.\nI am interested in this place and would love to schedule a viewing.\nYou can reach me at %@\n\nThank you.", 
-      _address, [OMBUser currentUser].email];
-  else
-    return [NSString stringWithFormat: @"Hello\n\nI found your listing for %@ using OnMyBlock.\nI am interested in this place and would love to schedule a viewing.\nYou can reach me at ...\n\nThank you.", _address];
 }
 
 - (NSString *) dictionaryKey
@@ -366,28 +372,33 @@ withString: (NSString *) string
   return nil;
 }
 
-- (UIImage *) imageForSize: (CGSize) size
+- (UIImage *) imageForSize: (CGSize) size 
+forResidenceImage: (OMBResidenceImage *) residenceImage
 {
   return [self imageForSizeKey: [NSString stringWithFormat: @"%f,%f",
-    size.width, size.height]];
+    size.width, size.height] forResidenceImage: residenceImage];
 }
-
-- (UIImage *) imageForSizeKey: (NSString *) string
+- (UIImage *) imageForSizeKey: (NSString *) string 
+forResidenceImage: (OMBResidenceImage *) residenceImage
 {
-  UIImage *image = [_imageSizeDictionary objectForKey: string];
+  NSNumber *key = [NSNumber numberWithInt: residenceImage.uid];
+  NSMutableDictionary *dict = [_imageSizeDictionary objectForKey: key];
+  if (!dict) {
+    dict = [NSMutableDictionary dictionary];
+    [_imageSizeDictionary setObject: dict forKey: key];
+  }
+  UIImage *image = [dict objectForKey: string];
   if (!image) {
     NSArray *words = [string componentsSeparatedByString: @","];
     if ([words count] >= 2) {
       NSInteger width  = [[words objectAtIndex: 0] floatValue];
       NSInteger height = [[words objectAtIndex: 1] floatValue];
-      if ([self coverPhoto]) {
-        // Leave it up to the object that uses this to set the image
-        // into the dictionary; e.g. the OMBMangeListingsCell 
-        // resizes this image in it's OMBCenteredImageView then sets 
-        // the object for key in the imagesSizedictionary
-        image = [UIImage image: [self coverPhoto] 
-          size: CGSizeMake(width, height)];
-      }
+      // Leave it up to the object that uses this to set the image
+      // into the dictionary; e.g. the OMBMangeListingsCell 
+      // resizes this image in it's OMBCenteredImageView then sets 
+      // the object for key in the imagesSizedictionary
+      image = [UIImage image: residenceImage.image 
+        size: CGSizeMake(width, height)];
     }
   }
   return image;
@@ -421,6 +432,35 @@ withString: (NSString *) string
     stepsRemaining -= 1;
 
   return stepsRemaining;  
+}
+
+- (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size
+{
+  if ([_images count] > index)
+  {
+    OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex:index];
+    UIImage *img = residenceImage.image;
+    
+    CGFloat newHeight = size.height;
+    CGFloat newWidth  = img.size.width * (size.height / img.size.height);
+    if (newWidth < size.width) {
+    newHeight = newHeight * (size.width / newWidth);
+    newWidth  = size.width;
+    }
+    CGPoint point = CGPointZero;
+    // Center it vertically
+    if (newHeight > size.height) {
+    point.y = (newHeight - size.height) * -0.5;
+    }
+    // Center it horizontally
+    if (newWidth > size.width) {
+    point.x = (newWidth - size.width) * -0.5;
+    }
+    return [UIImage image: img size: CGSizeMake(newWidth, newHeight)
+    point: point];
+  }
+  
+  return nil;
 }
 
 - (void) readFromOffersDictionary: (NSDictionary *) dictionary

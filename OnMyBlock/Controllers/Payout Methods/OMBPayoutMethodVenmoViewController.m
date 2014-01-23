@@ -101,10 +101,11 @@ navigationType: (UIWebViewNavigationType) navigationType
             [webViewController close];
             OMBPayoutMethod *payoutMethod = 
               [[OMBUser currentUser] primaryPaymentPayoutMethod];
+            if (!payoutMethod)
+              payoutMethod = [[OMBUser currentUser] primaryDepositPayoutMethod];
             if (payoutMethod && 
               [[payoutMethod.payoutType lowercaseString] isEqualToString: 
                 @"venmo"]) {
-
               [self.navigationController popToRootViewControllerAnimated: YES];
             }
           }

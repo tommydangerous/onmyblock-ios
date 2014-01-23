@@ -33,12 +33,13 @@ reuseIdentifier: (NSString *) reuseIdentifier
 {
   // Image
   if ([object coverPhoto]) {
-    objectImageView.image = [object imageForSize: objectImageView.frame.size];
+    objectImageView.image = [object coverPhotoForSize: 
+      objectImageView.frame.size];
   }
   else {
     [object downloadCoverPhotoWithCompletion: ^(NSError *error) {
       objectImageView.image = [object coverPhoto];
-      [object.imageSizeDictionary setObject: objectImageView.image
+      [object.coverPhotoSizeDictionary setObject: objectImageView.image
         forKey: [NSString stringWithFormat: @"%f,%f", 
           objectImageView.frame.size.width, objectImageView.frame.size.height]];
     }];

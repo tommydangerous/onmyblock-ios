@@ -25,6 +25,7 @@
 #import "OMBOffersAcceptedConnection.h"
 #import "OMBOffersReceivedConnection.h"
 #import "OMBPayoutMethod.h"
+#import "OMBPayoutMethodCreateConnection.h"
 #import "OMBPayoutMethodListConnection.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
@@ -309,12 +310,36 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
   NSLog(@"Authenticate with server");
 }
 
+- (void) changeOtherSamePrimaryPayoutMethods: (OMBPayoutMethod *) payoutMethod
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat: 
+    @"%K == %@ && %K == %@ && %K != %i", 
+      @"deposit", [NSNumber numberWithBool: payoutMethod.deposit], 
+        @"primary", [NSNumber numberWithBool: payoutMethod.primary], 
+          @"uid", payoutMethod.uid];
+  for (OMBPayoutMethod *object in
+    [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate]) {
+
+    object.primary = NO;
+  }
+}
+
 - (void) confirmOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block
 {
   OMBOfferDecisionConnection *conn =
     [[OMBOfferDecisionConnection alloc] initWithOffer: offer
       decision: OMBOfferDecisionConnectionTypeConfirm];
+  conn.completionBlock = block;
+  [conn start];
+}
+
+- (void) createPayoutMethodWithDictionary: (NSDictionary *) dictionary
+withCompletion: (void (^) (NSError *error)) block
+{
+  OMBPayoutMethodCreateConnection *conn = 
+    [[OMBPayoutMethodCreateConnection alloc] initWithDictionary:
+      dictionary];
   conn.completionBlock = block;
   [conn start];
 }
@@ -327,6 +352,15 @@ withCompletion: (void (^) (NSError *error)) block
       decision: OMBOfferDecisionConnectionTypeDecline];
   conn.completionBlock = block;
   [conn start];
+}
+
+- (NSArray *) depositPayoutMethods
+{
+  NSPredicate *predicate = 
+    [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
+      @"deposit", [NSNumber numberWithBool: YES], 
+        @"primary", [NSNumber numberWithBool: YES]];
+  return [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate];
 }
 
 - (void) downloadImageFromImageURLWithCompletion: 
@@ -482,6 +516,15 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   return [_messages objectForKey: [NSNumber numberWithInt: user.uid]];
 }
 
+- (NSArray *) paymentPayoutMethods
+{
+  NSPredicate *predicate = 
+    [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
+      @"deposit", [NSNumber numberWithBool: NO], 
+        @"primary", [NSNumber numberWithBool: YES]];
+  return [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate];
+}
+
 - (NSString *) phoneString
 {
   if (_phone && [_phone length] > 0) {
@@ -511,22 +554,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (OMBPayoutMethod *) primaryDepositPayoutMethod
 {
-  NSPredicate *predicate = 
-    [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
-      @"deposit", [NSNumber numberWithBool: YES], 
-        @"primary", [NSNumber numberWithBool: YES]];
-  return [[[_payoutMethods allValues] filteredArrayUsingPredicate: 
-    predicate] firstObject];
+  
+  return [[self depositPayoutMethods] firstObject];
 }
 
 - (OMBPayoutMethod *) primaryPaymentPayoutMethod
 {
-  NSPredicate *predicate = 
-    [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
-      @"deposit", [NSNumber numberWithBool: NO], 
-        @"primary", [NSNumber numberWithBool: YES]];
-  return [[[_payoutMethods allValues] filteredArrayUsingPredicate: 
-    predicate] firstObject];
+  return [[self paymentPayoutMethods] firstObject];
 }
 
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary

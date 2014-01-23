@@ -9,6 +9,7 @@
 #import "OMBPayoutMethodsViewController.h"
 
 #import "OMBPayoutMethod.h"
+#import "OMBPayoutMethodEditViewController.h"
 #import "OMBPayoutMethodListCell.h"
 #import "OMBSelectPayoutMethodViewController.h"
 #import "UIColor+Extensions.h"
@@ -42,7 +43,7 @@
   [addBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
   } forState: UIControlStateNormal];
-  cancelBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
+  cancelBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Close"
     style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
 
   CGRect screen = [[UIScreen mainScreen] bounds];
@@ -122,11 +123,10 @@
       noPayoutMethodsView.hidden = YES;
       [self.navigationItem setRightBarButtonItem: addBarButtonItem
         animated: YES];
-
-      [self.table reloadData];
     }
     else
       noPayoutMethodsView.hidden = NO;
+    [self.table reloadData];
   }];
 }
 
@@ -161,6 +161,15 @@ numberOfRowsInSection: (NSInteger) section
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   return [OMBPayoutMethodListCell heightForCell];
+}
+
+- (void) tableView: (UITableView *) tableView
+didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  [self.navigationController pushViewController:
+    [[OMBPayoutMethodEditViewController alloc] initWithPayoutMethod: 
+      [[self payoutMethods] objectAtIndex: indexPath.row]] animated: YES];
+  [self.table deselectRowAtIndexPath: indexPath animated: YES];
 }
 
 #pragma mark - Methods
