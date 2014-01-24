@@ -50,7 +50,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 
   #warning Change This!!!
   // Fake login
-  // [OMBUser fakeLogin];
+  [OMBUser fakeLogin];
   // Use this to show whatever view controller you are working on
   // [_container showHomebaseRenter];
 

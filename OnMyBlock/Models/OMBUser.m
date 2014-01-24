@@ -60,8 +60,13 @@ NSString *const OMBMessagesUnviewedCountNotification =
 // Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
 #if __ENVIRONMENT__ == 1
   // Development server
-  #warning Change This!!!
-  NSString *const OMBFakeUserAccessToken = @"6591173fc1a1f1ac409c0efb3a0a05b1";// @"cea246ff2139e0fa5b17ae255e9a946d";
+  // #warning Change This!!!
+  // Landlord (Fake User)
+  NSString *const OMBFakeUserAccessToken = 
+    @"cea246ff2139e0fa5b17ae255e9a946d";
+  // Student
+  // NSString *const OMBFakeUserAccessToken = 
+  //   @"6591173fc1a1f1ac409c0efb3a0a05b1";
 #elif __ENVIRONMENT__ == 2
   // Staging server
   NSString *const OMBFakeUserAccessToken = @"60721b1691403ed9037b52f8816e351e";
