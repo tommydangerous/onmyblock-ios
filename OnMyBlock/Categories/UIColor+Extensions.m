@@ -190,7 +190,7 @@
 
 + (UIColor *) venmoBlue
 {
-  return [UIColor colorWithRed: 82/255.0 green: 145/255.0 blue: 203/255.0
+  return [UIColor colorWithRed: 61/255.0 green: 149/255.0 blue: 206/255.0
     alpha: 1.0f];
 }
 

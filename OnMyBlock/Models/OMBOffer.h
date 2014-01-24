@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class OMBPayoutTransaction;
 @class OMBResidence;
 @class OMBUser;
 
@@ -24,6 +25,7 @@
 @property (nonatomic) NSTimeInterval updatedAt;
 
 @property (nonatomic, strong) OMBUser *landlordUser;
+@property (nonatomic, strong) OMBPayoutTransaction *payoutTransaction;
 @property (nonatomic, strong) OMBResidence *residence;
 @property (nonatomic) NSInteger uid;
 @property (nonatomic, strong) OMBUser *user;

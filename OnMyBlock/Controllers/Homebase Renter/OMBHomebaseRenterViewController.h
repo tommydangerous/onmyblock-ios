@@ -8,12 +8,15 @@
 
 #import "OMBViewController.h"
 
+#import "PayPalMobile.h"
+
 @class OMBAlertView;
 @class OMBOffer;
 @class OMBScrollView;
 
 @interface OMBHomebaseRenterViewController : OMBViewController
-<UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
+<PayPalPaymentDelegate, UIScrollViewDelegate, UITableViewDataSource, 
+  UITableViewDelegate>
 {
   UIButton *activityButton;
   UIButton *addRemoveRoommatesButton;
@@ -21,6 +24,8 @@
   UIView *backView;
   CGFloat backViewOffsetY;
   UIView *buttonsView;
+  BOOL cameFromSettingUpPayoutMethods;
+  BOOL charging;
   UIBarButtonItem *editBarButtonItem;
   OMBScrollView *imagesScrollView;
   NSMutableArray *imageViewArray;

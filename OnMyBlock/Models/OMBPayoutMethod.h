@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+typedef enum {
+  OMBPayoutMethodPayoutTypePayPal,
+  OMBPayoutMethodPayoutTypeVenmo
+} OMBPayoutMethodPayoutType;
+
 @interface OMBPayoutMethod : NSObject
 
 @property (nonatomic) BOOL active;
@@ -26,5 +31,6 @@
 #pragma mark - Instance Methods
 
 - (void) readFromDictionary: (NSDictionary *) dictionary;
+- (OMBPayoutMethodPayoutType) type;
 
 @end

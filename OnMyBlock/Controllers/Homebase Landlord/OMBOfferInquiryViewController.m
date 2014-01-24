@@ -238,10 +238,10 @@
 
   // Alert view
   alert = [[OMBAlertView alloc] init];
-  [alert.alertCancel addTarget: self action: @selector(alertCancelSelected)
-    forControlEvents: UIControlEventTouchUpInside];
-  [alert.alertConfirm addTarget: self action: @selector(alertConfirmSelected)
-    forControlEvents: UIControlEventTouchUpInside];
+  [alert addTarget: self action: @selector(alertCancelSelected)
+    forButton: alert.alertCancel];
+  [alert addTarget: self action: @selector(alertConfirmSelected)
+    forButton: alert.alertConfirm];
 
   [self changeTableView];
 }
@@ -282,6 +282,19 @@
     [offer.user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
       userImageView.image = offer.user.image;   
     }];
+  }
+
+  // After setting up a payout method
+  if (cameFromSettingUpPayoutMethods) {
+    accepted          = NO;
+    acceptedConfirmed = NO;
+
+    alert.hidden = NO;
+    [self alertConfirmSelected];
+    [UIView animateWithDuration: 0.25f animations: ^{
+      alert.alpha = 1.0f;
+    }];
+    cameFromSettingUpPayoutMethods = NO;
   }
 
   // Fetch questions
@@ -829,24 +842,34 @@ viewForHeaderInSection: (NSInteger) section
 
   accepted          = NO;
   acceptedConfirmed = NO;
+
+  [alert addTarget: self action: @selector(alertCancelSelected)
+    forButton: alert.alertCancel];
+  [alert addTarget: self action: @selector(alertConfirmSelected)
+    forButton: alert.alertConfirm];
 }
 
 - (void) alertConfirmSelected
 {
-  // CGRect screen = [[UIScreen mainScreen] bounds];
-  // CGFloat padding = 20.0f;
+  [alert showBothButtons];
 
+  // User added a payout method already and accepted; last step
   if (accepted && acceptedConfirmed) {
     [self.navigationController pushViewController:
       [[OMBPayoutMethodsViewController alloc] init] animated: YES];
     [self alertCancelSelected];
   }
+  // Steps before
   else {
+    // Step 1
     if (!accepted) {
       accepted = YES;
+
       // Alert buttons
       [alert.alertConfirm setTitle: @"Yes" forState: UIControlStateNormal];
       [alert.alertCancel setTitle: @"No" forState: UIControlStateNormal];
+      [alert addTarget: self action: @selector(alertConfirmSelected)
+        forButton: alert.alertConfirm];
       // Alert message
       alert.alertMessage.text = [NSString stringWithFormat: 
         @"Accepting %@'s offer will automatically decline all other offers.",
@@ -854,52 +877,66 @@ viewForHeaderInSection: (NSInteger) section
       // Alert title
       alert.alertTitle.text = @"Are You Sure?";
     }
+    // Step 2
     else if (!acceptedConfirmed) {
-      [[OMBUser currentUser] acceptOffer: offer 
-        withCompletion: ^(NSError *error) {
-          // If offer is accepted and no error
-          if (offer.accepted && !error) {
-            acceptedConfirmed = YES;
-            // Alert buttons
-            [alert.alertConfirm setTitle: @"Setup" 
-              forState: UIControlStateNormal];
-            [alert.alertCancel setTitle: @"Ok" forState: UIControlStateNormal];
-            // Alert message
-            alert.alertMessage.text = @"Please set up your payout method.";
-            // Alert title
-            alert.alertTitle.text = @"Offer Accepted!";
-            
-            // Decline all other offers from the user's received offers
-            // for the offers that are related to the same residence
-            [[OMBUser currentUser] removeAllReceivedOffersWithOffer: offer];
+      // If user has
+      if ([[OMBUser currentUser] primaryDepositPayoutMethod]) {
+        [[OMBUser currentUser] acceptOffer: offer 
+          withCompletion: ^(NSError *error) {
+            // If offer is accepted and no error
+            if (offer.accepted && !error) {
+              acceptedConfirmed = YES;
+              
+              [alert addTarget: self action: @selector(alertCancelSelected)
+                forButton: alert.alertCancel];
+              [alert onlyShowOneButton: alert.alertCancel];
+              // Alert buttons
+              [alert.alertCancel setTitle: @"Ok" forState: 
+                UIControlStateNormal];
+              // Alert message
+              alert.alertMessage.text = @"Once the student confirms, "
+                @"you'll receive money within 24 hours.";
+              // Alert title
+              alert.alertTitle.text = @"Offer Accepted!";
+              
+              // Decline all other offers from the user's received offers
+              // for the offers that are related to the same residence
+              [[OMBUser currentUser] removeAllReceivedOffersWithOffer: offer];
 
-            // Hide the respond button at the bottom 
-            // and change the height of the table footer views
-            [UIView animateWithDuration: 0.25f animations: ^{
-              respondView.alpha = 0.0f;
-              _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
-                CGRectZero];
-              _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
-                CGRectZero];
-              [_offerTableView beginUpdates];
-              [_offerTableView endUpdates];
-              [_profileTableView beginUpdates];
-              [_profileTableView endUpdates];
-            }];
+              // Hide the respond button at the bottom 
+              // and change the height of the table footer views
+              [UIView animateWithDuration: 0.25f animations: ^{
+                respondView.alpha = 0.0f;
+                _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
+                  CGRectZero];
+                _profileTableView.tableFooterView = 
+                  [[UIView alloc] initWithFrame: CGRectZero];
+                [_offerTableView beginUpdates];
+                [_offerTableView endUpdates];
+                [_profileTableView beginUpdates];
+                [_profileTableView endUpdates];
+              }];
+            }
+            else {
+              [self showAlertViewWithError: error];
+            }
+            [[self appDelegate].container stopSpinning];
           }
-          else {
-            NSString *message = @"Please try again.";
-            if (error)
-              message = error.localizedDescription;
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-              @"Unsuccessful" message: message delegate: nil 
-                cancelButtonTitle: @"Try again" otherButtonTitles: nil];
-            [alertView show];
-          }
-          [[self appDelegate].container stopSpinning];
-        }
-      ];
-      [[self appDelegate].container startSpinning];
+        ];
+        [[self appDelegate].container startSpinning];
+      }
+      // If user has not set up a primary deposit payout method
+      else {
+        // Alert buttons
+        [alert.alertConfirm setTitle: @"Setup" forState: UIControlStateNormal];
+        [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
+        [alert addTarget: self action: @selector(showPayoutMethods)
+          forButton: alert.alertConfirm];
+        // Alert message
+        alert.alertMessage.text = @"Please add at least one way to get paid.";
+        // Alert title
+        alert.alertTitle.text = @"Payout Method Required";
+      }
     }
     [alert animateChangeOfContent];
   }
@@ -993,6 +1030,18 @@ viewForHeaderInSection: (NSInteger) section
     selectedSegmentIndex = button.tag;
     [self changeTableView];
   }
+}
+
+- (void) showPayoutMethods
+{
+  [UIView animateWithDuration: 0.25f animations: ^{
+    alert.alpha = 0.0f;
+  } completion: ^(BOOL finished) {
+    if (finished)
+      alert.hidden = YES;
+  }];
+  cameFromSettingUpPayoutMethods = YES;
+  [[self appDelegate].container showPayoutMethods];
 }
 
 @end

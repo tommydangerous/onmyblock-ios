@@ -83,4 +83,12 @@
       [dictionary objectForKey: @"updated_at"]] timeIntervalSince1970];
 }
 
+- (OMBPayoutMethodPayoutType) type
+{
+  if ([[_payoutType lowercaseString] isEqualToString: @"paypal"]) {
+    return OMBPayoutMethodPayoutTypePayPal;
+  }
+  return OMBPayoutMethodPayoutTypeVenmo;
+}
+
 @end

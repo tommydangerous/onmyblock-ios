@@ -8,6 +8,7 @@
 
 #import "OMBPayoutMethodEditViewController.h"
 
+#import "OMBLabelTextFieldCell.h"
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutMethodUpdateConnection.h"
 #import "OMBViewControllerContainer.h"
@@ -129,8 +130,26 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       forControlEvents: UIControlEventValueChanged];
     [switchButton addTarget: self action: @selector(changeDeposit:)
       forControlEvents: UIControlEventValueChanged];
+  }
+  // Email
+  else if (indexPath.row == 2) {
+    static NSString *LabelCellIdentifier = @"LabelCellIdentifier";
+    OMBLabelTextFieldCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
+      LabelCellIdentifier];
+    if (!cell1) {
+      cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle: 
+        UITableViewCellStyleDefault reuseIdentifier: LabelCellIdentifier];
+    }
+    cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell1.textField.text = [payoutMethod.email lowercaseString];
+    cell1.textField.textAlignment = NSTextAlignmentRight;
+    cell1.textField.textColor = [UIColor grayMedium];
+    cell1.textField.userInteractionEnabled = NO;
+    cell1.textFieldLabel.text = @"Email";
+    [cell1 setFramesUsingString: @"Email"];
     [bottomBorder removeFromSuperview];
-    [cell.contentView addSubview: bottomBorder];
+    [cell1.contentView addSubview: bottomBorder];
+    return cell1;
   }
   return cell;
 }
@@ -140,7 +159,8 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Primary
   // Deposit
-  return 2;
+  // Email
+  return 3;
 }
 
 #pragma mark - Protocol UITableViewDelegate

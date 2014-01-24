@@ -78,7 +78,8 @@
   alertButtonsViewTopBorder.frame = CGRectMake(0.0f, 0.0f, 
     alertButtonsView.frame.size.width, 0.5f);
   [alertButtonsView addSubview: alertButtonsViewTopBorder];
-  UIView *alertButtonsViewMiddleBorder = [UIView new];
+  // Middle border
+  alertButtonsViewMiddleBorder = [UIView new];
   alertButtonsViewMiddleBorder.backgroundColor = 
     alertButtonsViewTopBorder.backgroundColor;
   alertButtonsViewMiddleBorder.frame = CGRectMake(
@@ -112,6 +113,15 @@
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) addTarget: (id) target action: (SEL) action 
+forButton: (UIButton *) button
+{
+  [button removeTarget: target action: nil 
+    forControlEvents: UIControlEventTouchUpInside];
+  [button addTarget: target action: action 
+    forControlEvents: UIControlEventTouchUpInside];
+}
 
 - (void) animateChangeOfContent
 {
@@ -169,6 +179,17 @@
     } completion: ^(BOOL finished) {
     }
   ];
+}
+
+- (void) onlyShowOneButton: (UIButton *) button
+{
+  if (button == _alertCancel)
+    _alertConfirm.hidden = YES;
+  else if (button == _alertConfirm)
+    _alertCancel.hidden = YES;
+  alertButtonsViewMiddleBorder.hidden = YES;
+  button.frame = CGRectMake(0.0f, 0.0f, alertButtonsView.frame.size.width,
+    button.frame.size.height);
 }
 
 - (void) resizeFrames
@@ -279,6 +300,18 @@
       }];
     }];
   }];
+}
+
+- (void) showBothButtons
+{
+  _alertConfirm.hidden = NO;
+  _alertCancel.hidden  = NO;
+  alertButtonsViewMiddleBorder.hidden = NO;
+  _alertCancel.frame = CGRectMake(0.0f, 0.0f,
+    alertButtonsView.frame.size.width * 0.5f, _alertCancel.frame.size.height);
+  _alertConfirm.frame = CGRectMake(_alertCancel.frame.size.width,
+    _alertCancel.frame.origin.y, _alertCancel.frame.size.width,
+      _alertCancel.frame.size.height);
 }
 
 @end

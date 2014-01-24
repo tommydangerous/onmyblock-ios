@@ -501,6 +501,7 @@
 		ABE4FBFD18907E820009D643 /* OMBPayoutMethodCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FBFC18907E820009D643 /* OMBPayoutMethodCreateConnection.m */; };
 		ABE4FC0018909C6E0009D643 /* OMBPayoutMethodEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FBFF18909C6E0009D643 /* OMBPayoutMethodEditViewController.m */; };
 		ABE4FC031890A3180009D643 /* OMBPayoutMethodUpdateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE4FC021890A3180009D643 /* OMBPayoutMethodUpdateConnection.m */; };
+		ABE679AF1891C30300A494FB /* OMBPayoutTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE679AE1891C30300A494FB /* OMBPayoutTransaction.m */; };
 		ABE7067D1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE7067C1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.m */; };
 		ABE706801885F39B007A4E29 /* phone_icon_white.png in Resources */ = {isa = PBXBuildFile; fileRef = ABE7067E1885F39B007A4E29 /* phone_icon_white.png */; };
 		ABE706811885F39B007A4E29 /* phone_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABE7067F1885F39B007A4E29 /* phone_icon_white@2x.png */; };
@@ -1353,6 +1354,8 @@
 		ABE4FBFF18909C6E0009D643 /* OMBPayoutMethodEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodEditViewController.m; sourceTree = "<group>"; };
 		ABE4FC011890A3180009D643 /* OMBPayoutMethodUpdateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodUpdateConnection.h; sourceTree = "<group>"; };
 		ABE4FC021890A3180009D643 /* OMBPayoutMethodUpdateConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodUpdateConnection.m; sourceTree = "<group>"; };
+		ABE679AD1891C30300A494FB /* OMBPayoutTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutTransaction.h; sourceTree = "<group>"; };
+		ABE679AE1891C30300A494FB /* OMBPayoutTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutTransaction.m; sourceTree = "<group>"; };
 		ABE7067B1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMyRenterApplicationEmailPhoneCell.h; sourceTree = "<group>"; };
 		ABE7067C1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMyRenterApplicationEmailPhoneCell.m; sourceTree = "<group>"; };
 		ABE7067E1885F39B007A4E29 /* phone_icon_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phone_icon_white.png; sourceTree = "<group>"; };
@@ -1969,6 +1972,8 @@
 				AB131F331885DA1F0057D769 /* OMBOffer.m */,
 				ABE4FBDD18902B140009D643 /* OMBPayoutMethod.h */,
 				ABE4FBDE18902B140009D643 /* OMBPayoutMethod.m */,
+				ABE679AD1891C30300A494FB /* OMBPayoutTransaction.h */,
+				ABE679AE1891C30300A494FB /* OMBPayoutTransaction.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3223,6 +3228,7 @@
 				AB63D2171821ABF500D63800 /* OMBLoginViewController.m in Sources */,
 				ABDF174D18663AE8004E2755 /* OMBResidenceBookItCell.m in Sources */,
 				AB8C8C131815784B00A1B087 /* OMBImageDownloader.m in Sources */,
+				ABE679AF1891C30300A494FB /* OMBPayoutTransaction.m in Sources */,
 				AB1C216C1851417800ED7C06 /* OMBRenterApplicationSectionViewController.m in Sources */,
 				AB4F9D1E181AAAED0086D618 /* OMBMenuViewController.m in Sources */,
 				ABE706A018889713007A4E29 /* OMBResidenceListConnection.m in Sources */,

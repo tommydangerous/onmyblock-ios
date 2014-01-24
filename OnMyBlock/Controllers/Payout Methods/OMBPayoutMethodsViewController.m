@@ -118,14 +118,22 @@
 {
   [super viewWillAppear: animated];
 
+  // Fetch payout methods
   [[OMBUser currentUser] fetchPayoutMethodsWithCompletion: ^(NSError *error) {
     if ([[OMBUser currentUser].payoutMethods count]) {
-      noPayoutMethodsView.hidden = YES;
+      [UIView animateWithDuration: 0.25f animations: ^{
+        noPayoutMethodsView.alpha = 0.0f;  
+      } completion: ^(BOOL finished) {
+        if (finished)
+          noPayoutMethodsView.hidden = YES;
+      }];
       [self.navigationItem setRightBarButtonItem: addBarButtonItem
         animated: YES];
     }
-    else
+    else {
+      noPayoutMethodsView.alpha = 1.0f;
       noPayoutMethodsView.hidden = NO;
+    }
     [self.table reloadData];
   }];
 }

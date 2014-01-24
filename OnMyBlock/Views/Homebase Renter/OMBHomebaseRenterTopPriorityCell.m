@@ -101,8 +101,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
     size.width, size.height];
   void (^completionBlock) (NSError *error) = ^(NSError *error) {
     objectImageView.image = [offer.residence coverPhoto];
-    [offer.residence.coverPhotoSizeDictionary setObject: objectImageView.image
-      forKey: sizeKey];
+    if (objectImageView.image)
+      [offer.residence.coverPhotoSizeDictionary setObject: 
+        objectImageView.image forKey: sizeKey];
   };
   if ([offer.residence coverPhoto]) {
     UIImage *image = [offer.residence coverPhotoForSize: size];

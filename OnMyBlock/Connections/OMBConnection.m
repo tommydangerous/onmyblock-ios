@@ -15,9 +15,11 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
 // Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
 #if __ENVIRONMENT__ == 1
   // Development server
-  NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
+  // NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
+  // Home
+  // NSString *const OnMyBlockAPIURL = @"http://192.168.1.72:3000/api-v1";
   // Josselyn
-  // NSString *const OnMyBlockAPIURL = @"http://10.0.1.33:3000/api-v1";
+  NSString *const OnMyBlockAPIURL = @"http://10.0.1.33:3000/api-v1";
   // Hotspot
   // NSString *const OnMyBlockAPIURL = @"http://172.20.10.5:3000/api-v1";
 #elif __ENVIRONMENT__ == 2
@@ -27,9 +29,6 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
   // Production server
   NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
 #endif
-
-// Home
-// NSString *const OnMyBlockAPIURL = @"http://192.168.1.72:3000/api-v1";
 
 @implementation OMBConnection
 
@@ -173,7 +172,10 @@ parameters: (NSDictionary *) dictionary
 {
   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
   // Set timeout
-  [_request setTimeoutInterval: RequestTimeoutInterval];
+  if (timeoutInterval)
+    [_request setTimeoutInterval: timeoutInterval];
+  else
+    [_request setTimeoutInterval: RequestTimeoutInterval];
   container = [[NSMutableData alloc] init];
   internalConnection = [[NSURLConnection alloc] initWithRequest: _request
     delegate: self startImmediately: NO];

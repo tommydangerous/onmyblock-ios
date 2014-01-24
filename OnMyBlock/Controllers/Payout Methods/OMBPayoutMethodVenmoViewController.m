@@ -11,6 +11,7 @@
 #import "NSString+Extensions.h"
 #import "OMBNavigationController.h"
 #import "OMBPayoutMethod.h"
+#import "OMBPayoutMethodsViewController.h"
 #import "OMBWebViewController.h"
 
 @implementation OMBPayoutMethodVenmoViewController
@@ -106,7 +107,19 @@ navigationType: (UIWebViewNavigationType) navigationType
             if (payoutMethod && 
               [[payoutMethod.payoutType lowercaseString] isEqualToString: 
                 @"venmo"]) {
-              [self.navigationController popToRootViewControllerAnimated: YES];
+              // Only pop to the root view controller
+              // if this was presented modally (via OMBViewControllerContainer)
+              NSArray *array = self.navigationController.viewControllers;
+              if ([[array firstObject] isKindOfClass: 
+                [OMBPayoutMethodsViewController class]] || [array count] < 2) {
+
+                [self.navigationController popToRootViewControllerAnimated: 
+                  YES];
+              }
+              else {
+                [self.navigationController popToViewController: 
+                  [array objectAtIndex: 1] animated: YES];
+              }
             }
           }
         }

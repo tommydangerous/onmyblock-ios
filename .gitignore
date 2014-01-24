@@ -1,2 +1,5 @@
 OnMyBlock.xcodeproj/project.xcworkspace/xcuserdata
 OnMyBlock.xcodeproj/xcuserdata
+# Ignore configuration files
+/.env*
+!/.env.example

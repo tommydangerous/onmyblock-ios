@@ -60,7 +60,8 @@ NSString *const OMBMessagesUnviewedCountNotification =
 // Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
 #if __ENVIRONMENT__ == 1
   // Development server
-  NSString *const OMBFakeUserAccessToken = @"cea246ff2139e0fa5b17ae255e9a946d";
+  #warning Change This!!!
+  NSString *const OMBFakeUserAccessToken = @"6591173fc1a1f1ac409c0efb3a0a05b1";// @"cea246ff2139e0fa5b17ae255e9a946d";
 #elif __ENVIRONMENT__ == 2
   // Staging server
   NSString *const OMBFakeUserAccessToken = @"60721b1691403ed9037b52f8816e351e";
@@ -69,7 +70,7 @@ NSString *const OMBMessagesUnviewedCountNotification =
   NSString *const OMBFakeUserAccessToken = @"";
 #endif
 
-int kNotificationTimerInterval = 30;
+int kNotificationTimerInterval = 60;
 
 @implementation OMBUser
 
@@ -91,14 +92,20 @@ int kNotificationTimerInterval = 30;
     @"temporaryResidences": [NSMutableDictionary dictionary]
   }];
 
-  [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(sessionStateChanged:)
-      name: FBSessionStateChangedNotification object: nil];
   // [[NSNotificationCenter defaultCenter] addObserver: self
   //   selector: @selector(logout)
   //     name: OMBCurrentUserLogoutNotification object: nil];
 
   return self;
+}
+
+#pragma mark - Override
+
+#pragma mark - Override NSObject
+
+- (void) dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 #pragma mark - Methods
@@ -110,6 +117,13 @@ int kNotificationTimerInterval = 30;
   static OMBUser *user = nil;
   if (!user) {
     user = [[OMBUser alloc] init];
+    [[NSNotificationCenter defaultCenter] addObserver: user
+      selector: @selector(sessionStateChanged:)
+        name: FBSessionStateChangedNotification object: nil];
+    // Fetch favorites, fetch payout methods
+    [[NSNotificationCenter defaultCenter] addObserver: user
+      selector: @selector(performInitialLoginSetup)
+        name: OMBUserLoggedInNotification object: nil];
   }
   return user;
 }
@@ -292,8 +306,6 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
     [[OMBUserFacebookAuthenticationConnection alloc] initWithUser: self];
   connection.completionBlock = ^(NSError *error) {
     if ([[OMBUser currentUser] loggedIn]) {
-      // Load the user's favorites
-      [self fetchFavorites];
       // Post notification
       [[NSNotificationCenter defaultCenter] postNotificationName: 
         OMBUserLoggedInNotification object: nil];
@@ -489,10 +501,15 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [OMBUser currentUser].image    = nil;
   [[OMBUser currentUser].imageSizeDictionary removeAllObjects];
   [OMBUser currentUser].imageURL = nil;
+  // Messages
   [[OMBUser currentUser].messages removeAllObjects];
+  // Notification
   [[OMBUser currentUser].notificationFetchTimer invalidate];
+  // Payout methods
   [[OMBUser currentUser].payoutMethods removeAllObjects];
+  // Received offers
   [[OMBUser currentUser].receivedOffers removeAllObjects];
+  // Renter application
   [[OMBUser currentUser].renterApplication removeAllObjects];
 
   // Clear residences
@@ -523,6 +540,23 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
       @"deposit", [NSNumber numberWithBool: NO], 
         @"primary", [NSNumber numberWithBool: YES]];
   return [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate];
+}
+
+- (void) performInitialLoginSetup
+{
+  // Load the user's favorites
+  [self fetchFavorites];
+  // Load the user's payout methods
+  [self fetchPayoutMethodsWithCompletion: nil];
+
+  // Timer for fetching notifications
+  _notificationFetchTimer = [NSTimer timerWithTimeInterval: 
+    kNotificationTimerInterval target: self
+      selector: @selector(fetchNotificationCounts:) userInfo: nil 
+        repeats: YES];
+  // NSRunLoopCommonModes, mode used for tracking events
+  [[NSRunLoop currentRunLoop] addTimer: _notificationFetchTimer
+    forMode: NSRunLoopCommonModes];
 }
 
 - (NSString *) phoneString
@@ -567,9 +601,17 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
   NSMutableSet *newSet = [NSMutableSet set];
   for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
-    OMBOffer *offer = [[OMBOffer alloc] init];
-    [offer readFromDictionary: dict];
-    [self addAcceptedOffer: offer];
+    NSInteger offerUID = [[dict objectForKey: @"id"] intValue];
+    OMBOffer *offer = [_acceptedOffers objectForKey: 
+      [NSNumber numberWithInt: offerUID]];
+    if (!offer) {
+      offer = [[OMBOffer alloc] init];
+      [offer readFromDictionary: dict];
+      [self addAcceptedOffer: offer];
+    }
+    else {
+      [offer readFromDictionary: dict];
+    }
 
     [newSet addObject: [NSNumber numberWithInt: offer.uid]];
   }
@@ -665,17 +707,6 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
   // Add to the OMBUserStore
   [[OMBUserStore sharedStore] addUser: self];
-
-  // If this user instance is the current user using the app
-  if ([_accessToken length] > 0) {
-    _notificationFetchTimer = [NSTimer timerWithTimeInterval: 
-      kNotificationTimerInterval target: self
-        selector: @selector(fetchNotificationCounts:) userInfo: nil 
-          repeats: YES];
-    // NSRunLoopCommonModes, mode used for tracking events
-    [[NSRunLoop currentRunLoop] addTimer: _notificationFetchTimer
-      forMode: NSRunLoopCommonModes];
-  }
 }
 
 - (void) readFromEmploymentDictionary: (NSDictionary *) dictionary
