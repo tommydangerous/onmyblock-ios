@@ -23,6 +23,9 @@
 #import "OMBFilmstripImageCell.h"
 #import "OMBResidenceImage.h"
 
+NSString *const OMBEmptyResidencePartialViewCell = 
+  @"OMBEmptyResidencePartialViewCell";
+
 @implementation OMBResidencePartialView
 
 @synthesize residence = _residence;
@@ -169,15 +172,27 @@
 - (NSInteger) collectionView: (UICollectionView *) collectionView 
 numberOfItemsInSection: (NSInteger) section
 {
-  return [_residence imagesArray].count;
+  if ([_residence imagesArray].count)
+    return [_residence imagesArray].count;
+  return 1;
 }
 
 - (UICollectionViewCell *) collectionView:(UICollectionView *) collectionView 
 cellForItemAtIndexPath: (NSIndexPath *) indexPath
 {
-  OMBFilmstripImageCell *cell = 
-    [collectionView dequeueReusableCellWithReuseIdentifier:
-      [OMBFilmstripImageCell reuseID] forIndexPath: indexPath];
+  if ([_residence imagesArray].count) {
+    OMBFilmstripImageCell *cell = 
+      [collectionView dequeueReusableCellWithReuseIdentifier:
+        [OMBFilmstripImageCell reuseID] forIndexPath: indexPath];
+    // Don't resize images or else it hurts performance
+    OMBResidenceImage *residenceImage = 
+      [[_residence imagesArray] objectAtIndex: indexPath.row];
+    cell.imageView.image = residenceImage.image;
+    return cell;
+  }
+  return [collectionView dequeueReusableCellWithReuseIdentifier:
+    OMBEmptyResidencePartialViewCell forIndexPath: indexPath];
+
   // #warning UIImage resize is hurting performance
   // UIImage *image = [_residence imageForSize: cell.imageView.bounds.size
   //   forResidenceImage: residenceImage];
@@ -188,13 +203,6 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
   //   [_residence addImageWithResidenceImage: residenceImage
   //     toImageSizeDictionaryWithSize: cell.imageView.bounds.size];
   // }
-
-  // Don't resize images or else it hurts performance
-  OMBResidenceImage *residenceImage = [[_residence imagesArray] objectAtIndex: 
-    indexPath.row];
-  cell.imageView.image = residenceImage.image;
-  
-  return cell;
 }
 
 #pragma mark - Protocol UICollectionViewDelegate
@@ -205,7 +213,6 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   if (self.selected)
     self.selected(self.residence, indexPath.row);
 }
-
 
 #pragma mark - Methods
 
@@ -314,7 +321,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   // Bedrooms / Bathrooms
   bedBathLabel.text = [NSString stringWithFormat: @"%@ / %@", beds, baths];
 
-
+  // Images
 	if (![_residence imagesArray].count) {
 		OMBResidenceImagesConnection *connection =
 		  [[OMBResidenceImagesConnection alloc] initWithResidence: 
@@ -382,6 +389,9 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   [_imagesFilmstrip registerClass: 
     [OMBFilmstripImageCell class] forCellWithReuseIdentifier:
       [OMBFilmstripImageCell reuseID]];
+  [_imagesFilmstrip registerClass:
+    [UICollectionViewCell class] forCellWithReuseIdentifier:
+      OMBEmptyResidencePartialViewCell];
   _imagesFilmstrip.alwaysBounceHorizontal = YES;
   _imagesFilmstrip.bounces = YES;
   _imagesFilmstrip.dataSource = self;

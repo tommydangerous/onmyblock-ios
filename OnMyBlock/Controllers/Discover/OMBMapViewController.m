@@ -652,22 +652,22 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
   // }
 }
 
-//- (void) tableView: (UITableView *) tableView
-//didSelectRowAtIndexPath: (NSIndexPath *) indexPath
-//{
+// - (void) tableView: (UITableView *) tableView
+// didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+// {
 //  // OMBResidence *residence = [[self propertiesSortedBy: @"" 
 //  //   ascending: NO] objectAtIndex: indexPath.row];
-//
+
 //  if (tableView == _listView && 
-//    [[self residencesForList] count] > indexPath.row) {
-//
-//    OMBResidence *residence = [[self residencesForList] objectAtIndex: 
-//      indexPath.row];
-//    [self.navigationController pushViewController:
-//      [[OMBResidenceDetailViewController alloc] initWithResidence: 
-//        residence] animated: YES];
-//  }
-//}
+//     [[self residencesForList] count] > indexPath.row) {
+
+//     OMBResidence *residence = [[self residencesForList] objectAtIndex: 
+//       indexPath.row];
+//     [self.navigationController pushViewController:
+//       [[OMBResidenceDetailViewController alloc] initWithResidence: 
+//         residence] animated: YES];
+//   }
+// }
 
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
@@ -925,8 +925,6 @@ withTitle: (NSString *) title;
     @"min_rent":  minRent,
     @"move_in_date": moveInDateString
   };
-
-  NSLog(@"%@", params);
 
   return params;
 }

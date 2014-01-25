@@ -15,6 +15,7 @@
 #import "OMBResidence.h"
 #import "OMBResidenceCell.h"
 #import "OMBResidenceDetailViewController.h"
+#import "OMBResidencePartialView.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
 
@@ -80,6 +81,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell = [[OMBFavoriteResidenceCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
   }
+  __weak OMBFavoritesListViewController *weakSelf = self;
+  cell.residencePartialView.selected = 
+    ^(OMBResidence *residence, NSInteger __unused imageIndex) {
+      [weakSelf.navigationController pushViewController:
+        [[OMBResidenceDetailViewController alloc] initWithResidence: 
+          residence] animated: YES];
+  };
   return cell;
 }
 
@@ -95,19 +103,19 @@ numberOfRowsInSection: (NSInteger) section
 didEndDisplayingCell: (UITableViewCell *) cell 
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  OMBFavoriteResidenceCell *c = (OMBFavoriteResidenceCell *) cell;
-  c.imageView.image = nil;
+  // OMBFavoriteResidenceCell *c = (OMBFavoriteResidenceCell *) cell;
+  // c.imageView.image = nil;
 }
 
-- (void) tableView: (UITableView *) tableView
-didSelectRowAtIndexPath: (NSIndexPath *) indexPath
-{
-  OMBFavoriteResidence *favorite = 
-    [[[OMBUser currentUser] favoritesArray] objectAtIndex: indexPath.row];
-  [self.navigationController pushViewController:
-    [[OMBResidenceDetailViewController alloc] initWithResidence: 
-      favorite.residence] animated: YES];
-}
+// - (void) tableView: (UITableView *) tableView
+// didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+// {
+//   OMBFavoriteResidence *favorite = 
+//     [[[OMBUser currentUser] favoritesArray] objectAtIndex: indexPath.row];
+//   [self.navigationController pushViewController:
+//     [[OMBResidenceDetailViewController alloc] initWithResidence: 
+//       favorite.residence] animated: YES];
+// }
 
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath

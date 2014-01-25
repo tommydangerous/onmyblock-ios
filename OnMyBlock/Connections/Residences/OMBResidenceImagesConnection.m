@@ -9,6 +9,7 @@
 #import "OMBResidenceImagesConnection.h"
 
 #import "OMBCenteredImageView.h"
+#import "OMBResidenceGoogleStaticImageDownloader.h"
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
 #import "OMBResidenceGoogleStaticImageDownloader.h"
@@ -184,7 +185,19 @@
       downloader.residenceImageUID = [[dict objectForKey: @"id"] intValue];
       [downloader startDownload];
     }
-    self.completionBlock = nil;
+    if ([array count] == 0) {
+      // If the residence has no image, show the Google Static street view
+      OMBResidenceGoogleStaticImageDownloader *downloader =
+        [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:
+          residence url: [residence googleStaticStreetViewImageURL]];
+      downloader.completionBlock = ^(NSError *error) {
+        [super connectionDidFinishLoading: connection];
+      };
+      [downloader startDownload];
+    }
+    else {
+      self.completionBlock = nil;
+    }
   }
   [super connectionDidFinishLoading: connection];
 }
