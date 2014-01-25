@@ -537,6 +537,7 @@
 		DE93158718916D1800111CF6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE93158618916D1800111CF6 /* FacebookSDK.framework */; };
 		DE93158D18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */; };
 		DE93158F1891E05800111CF6 /* OMBCreateListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */; };
+		DE939CF918933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE939CF818933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m */; };
 		DE96E4A2189019390081D69F /* sign_up_email.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A1189019390081D69F /* sign_up_email.png */; };
 		DE96E4A4189019400081D69F /* sign_up_email@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A3189019400081D69F /* sign_up_email@2x.png */; };
 		DE96E4A7189019450081D69F /* sign_up_fb.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A5189019450081D69F /* sign_up_fb.png */; };
@@ -1410,6 +1411,8 @@
 		DE93158B18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailLeaseCell.h; sourceTree = "<group>"; };
 		DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailLeaseCell.m; sourceTree = "<group>"; };
 		DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingViewController.m; sourceTree = "<group>"; };
+		DE939CF718933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingLeaseDetailsViewController.h; sourceTree = "<group>"; };
+		DE939CF818933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFinishListingLeaseDetailsViewController.m; sourceTree = "<group>"; };
 		DE96E4A1189019390081D69F /* sign_up_email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sign_up_email.png; sourceTree = "<group>"; };
 		DE96E4A3189019400081D69F /* sign_up_email@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sign_up_email@2x.png"; sourceTree = "<group>"; };
 		DE96E4A5189019450081D69F /* sign_up_fb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sign_up_fb.png; sourceTree = "<group>"; };
@@ -1637,8 +1640,6 @@
 				AB70CB79186CD1E00083DF4C /* OMBManageListingsViewController.m */,
 				AB8B7942186E0091005AB552 /* OMBFinishListingViewController.h */,
 				AB8B7943186E0091005AB552 /* OMBFinishListingViewController.m */,
-				AB8B7945186E155F005AB552 /* OMBFinishListingOtherDetailsViewController.h */,
-				AB8B7946186E155F005AB552 /* OMBFinishListingOtherDetailsViewController.m */,
 				ABBA5864186E2A9100E9BF4E /* OMBFinishListingSectionViewController.h */,
 				ABBA5865186E2A9100E9BF4E /* OMBFinishListingSectionViewController.m */,
 				ABBA5867186E2B7700E9BF4E /* OMBFinishListingAddressViewController.h */,
@@ -1647,6 +1648,10 @@
 				ABBA586D186EBF5E00E9BF4E /* OMBFinishListingAmenitiesViewController.m */,
 				ABBA5874186F2E5E00E9BF4E /* OMBFinishListingDescriptionViewController.h */,
 				ABBA5875186F2E5E00E9BF4E /* OMBFinishListingDescriptionViewController.m */,
+				DE939CF718933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.h */,
+				DE939CF818933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m */,
+				AB8B7945186E155F005AB552 /* OMBFinishListingOtherDetailsViewController.h */,
+				AB8B7946186E155F005AB552 /* OMBFinishListingOtherDetailsViewController.m */,
 				ABBA5877186F7D2800E9BF4E /* OMBFinishListingPhotosViewController.h */,
 				ABBA5878186F7D2800E9BF4E /* OMBFinishListingPhotosViewController.m */,
 				ABBA589E1870D92000E9BF4E /* OMBFinishListingRentAuctionDetailsViewController.h */,
@@ -3260,6 +3265,7 @@
 				ABAF2281185249FC0041BF60 /* OMBRenterApplicationPetCell.m in Sources */,
 				AB6155A9184D99F100A193C7 /* OMBCosignersListViewController.m in Sources */,
 				AB4ED2F318848FEF009AFB01 /* OMBResidenceDeleteConnection.m in Sources */,
+				DE939CF918933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m in Sources */,
 				ABBA58B21871E5EF00E9BF4E /* OMBFinishListingTitleViewController.m in Sources */,
 				ABABEBF518625DFA008B6768 /* OMBAuthenticationVenmoConnection.m in Sources */,
 				AB02807F1843F2C30081B30F /* OMBBedroomView.m in Sources */,
