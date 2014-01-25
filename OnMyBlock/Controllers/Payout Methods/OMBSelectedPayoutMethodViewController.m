@@ -81,10 +81,10 @@
     detailLabelView.frame.origin.y + 
     detailLabelView.frame.size.height + (padding * 2),
       _nameLabel.frame.size.width, padding + 18.0f + padding);
-  _connectButton.layer.cornerRadius = 2.0f;
+  _connectButton.layer.cornerRadius = 5.0f;
   _connectButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 18];
-  [_connectButton addTarget: self action: @selector(connectButtonSelected)
+  [_connectButton addTarget: self action: @selector(showActionSheet)
     forControlEvents: UIControlEventTouchUpInside];
   [_connectButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
@@ -106,6 +106,11 @@
   [_signUpButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [self.view addSubview: _signUpButton];
+
+  sheet = [[UIActionSheet alloc] initWithTitle: @"What type of method is this?"
+    delegate: self cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil 
+      otherButtonTitles: @"Deposit method", @"Payment method", nil];
+  [self.view addSubview: sheet];
 }
 
 #pragma mark - Methods
@@ -115,6 +120,11 @@
 - (void) connectButtonSelected
 {
   // Subclasses implement this
+}
+
+- (void) showActionSheet
+{
+  [sheet showInView: self.view];
 }
 
 - (void) signUpButtonSelected

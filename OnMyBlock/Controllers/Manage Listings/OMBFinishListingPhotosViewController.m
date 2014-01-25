@@ -435,8 +435,8 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
         ([imageViews count] + 1) / maxColumns));
   }];
 
-  // Clear the residences imageSizeDictionary
-  [residence.imageSizeDictionary removeAllObjects];
+  // Clear the residences coverPhotoSizeDictionary
+  [residence.coverPhotoSizeDictionary removeAllObjects];
 }
 
 - (void) edit

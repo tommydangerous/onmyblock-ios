@@ -48,10 +48,11 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // If current session has a valid Facebook token
     [self openSession];
 
+  #warning Change This!!!
   // Fake login
-  [OMBUser fakeLogin];
+  // [OMBUser fakeLogin];
   // Use this to show whatever view controller you are working on
-  [_container showHomebaseRenter];
+  // [_container showHomebaseRenter];
 
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   id viewedIntro = [defaults objectForKey: OMBUserDefaultsViewedIntro];

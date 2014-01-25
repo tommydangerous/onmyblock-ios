@@ -92,6 +92,20 @@
   self.navigationItem.leftBarButtonItem = menuBarButtonItem;
 }
 
+- (void) showAlertViewWithError: (NSError *) error
+{
+  NSString *message = @"Please try again.";
+  NSString *title   = @"Unsuccessful";
+  if (error) {
+    message = error.localizedDescription;
+    title   = @"Error";
+  }
+  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title
+    message: message delegate: nil cancelButtonTitle: @"Try again" 
+      otherButtonTitles: nil];
+  [alertView show];
+}
+
 - (void) showContainer
 {
   [[self appDelegate].container showMenuWithFactor: 1];

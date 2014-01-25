@@ -15,19 +15,13 @@
 #import "OMBGradientView.h"
 #import "OMBMapViewController.h"
 #import "OMBResidence.h"
-//#import "OMBResidenceCoverPhotoURLConnection.h"
+#import "OMBResidenceCoverPhotoURLConnection.h"
 #import "OMBResidenceImagesConnection.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
 #import "OMBFilmstripImageCell.h"
 #import "OMBResidenceImage.h"
-
-@interface OMBResidencePartialView () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
-
-@property (nonatomic, strong) UICollectionView *imagesFilmstrip;
-
-@end
 
 @implementation OMBResidencePartialView
 
@@ -168,23 +162,50 @@
   [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
-- (void) resetFilmstrip
+#pragma mark - Protocol
+
+#pragma mark - Protocol UICollectionViewDataDelegate
+
+- (NSInteger) collectionView: (UICollectionView *) collectionView 
+numberOfItemsInSection: (NSInteger) section
 {
-	[_imagesFilmstrip removeFromSuperview];
-
-	UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
-	layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-	layout.itemSize = self.bounds.size;
-	layout.minimumLineSpacing = 0.0;
-
-	_imagesFilmstrip = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
-	[_imagesFilmstrip registerClass:[OMBFilmstripImageCell class] forCellWithReuseIdentifier:[OMBFilmstripImageCell reuseID]];
-	_imagesFilmstrip.dataSource = self;
-	_imagesFilmstrip.delegate = self;
-	_imagesFilmstrip.pagingEnabled = YES;
-	_imagesFilmstrip.bounces = NO;
-	[self insertSubview:_imagesFilmstrip atIndex:0];
+  return [_residence imagesArray].count;
 }
+
+- (UICollectionViewCell *) collectionView:(UICollectionView *) collectionView 
+cellForItemAtIndexPath: (NSIndexPath *) indexPath
+{
+  OMBFilmstripImageCell *cell = 
+    [collectionView dequeueReusableCellWithReuseIdentifier:
+      [OMBFilmstripImageCell reuseID] forIndexPath: indexPath];
+  // #warning UIImage resize is hurting performance
+  // UIImage *image = [_residence imageForSize: cell.imageView.bounds.size
+  //   forResidenceImage: residenceImage];
+  // if (image) {
+  //   cell.imageView.image = image;
+  // }
+  // else {
+  //   [_residence addImageWithResidenceImage: residenceImage
+  //     toImageSizeDictionaryWithSize: cell.imageView.bounds.size];
+  // }
+
+  // Don't resize images or else it hurts performance
+  OMBResidenceImage *residenceImage = [[_residence imagesArray] objectAtIndex: 
+    indexPath.row];
+  cell.imageView.image = residenceImage.image;
+  
+  return cell;
+}
+
+#pragma mark - Protocol UICollectionViewDelegate
+
+- (void) collectionView: (UICollectionView *) collectionView 
+didSelectItemAtIndexPath: (NSIndexPath *) indexPath
+{
+  if (self.selected)
+    self.selected(self.residence, indexPath.row);
+}
+
 
 #pragma mark - Methods
 
@@ -296,10 +317,11 @@
 
 	if (![_residence imagesArray].count) {
 		OMBResidenceImagesConnection *connection =
-		[[OMBResidenceImagesConnection alloc] initWithResidence:_residence];
+		  [[OMBResidenceImagesConnection alloc] initWithResidence: 
+        _residence];
 		connection.completionBlock = ^(NSError *error) {
-			[activityIndicatorView stopAnimating];
 			[_imagesFilmstrip reloadData];
+      [activityIndicatorView stopAnimating];
 		};
 		connection.delegate = self;
 		[connection start];
@@ -346,25 +368,27 @@
   [self adjustFavoriteButton];
 }
 
-
-- (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+- (void) resetFilmstrip
 {
-	return [_residence imagesArray].count;
-}
+  [_imagesFilmstrip removeFromSuperview];
 
-- (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-	OMBFilmstripImageCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[OMBFilmstripImageCell reuseID]
-																			forIndexPath:indexPath];
-	cell.image.image = [_residence photoAtIndex:indexPath.row withSize:self.bounds.size];
-	return cell;
-}
+  UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
+  layout.itemSize = self.bounds.size;
+  layout.minimumLineSpacing = 0.0f;
+  layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
-- (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-	if (self.selected)
-		self.selected(self.residence, indexPath.row);
-}
+  _imagesFilmstrip = [[UICollectionView alloc] initWithFrame: self.bounds 
+    collectionViewLayout: layout];
+  [_imagesFilmstrip registerClass: 
+    [OMBFilmstripImageCell class] forCellWithReuseIdentifier:
+      [OMBFilmstripImageCell reuseID]];
+  _imagesFilmstrip.alwaysBounceHorizontal = YES;
+  _imagesFilmstrip.bounces = YES;
+  _imagesFilmstrip.dataSource = self;
+  _imagesFilmstrip.delegate = self;
+  _imagesFilmstrip.pagingEnabled = YES;
 
+  [self insertSubview: _imagesFilmstrip atIndex: 0];
+}
 
 @end

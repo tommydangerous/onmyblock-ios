@@ -20,6 +20,7 @@ extern NSString *const OnMyBlockAPIURL;
   NSMutableData *container;
   NSURLConnection *internalConnection;
   NSDictionary *jsonDictionary;
+  NSTimeInterval timeoutInterval;
 }
 
 @property (nonatomic, copy) void (^completionBlock) (NSError *error);

@@ -615,13 +615,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!cell) {
     cell = [[OMBResidenceCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
-	  __weak OMBMapViewController *weakSelf = self;
-	  cell.residencePartialView.selected = ^(OMBResidence *residence, NSInteger __unused imageIndex){
-		  [weakSelf.navigationController pushViewController:
-		  [[OMBResidenceDetailViewController alloc] initWithResidence:
-			residence] animated: YES];
-	  };
   }
+  __weak OMBMapViewController *weakSelf = self;
+  cell.residencePartialView.selected = 
+    ^(OMBResidence *residence, NSInteger __unused imageIndex) {
+      [weakSelf.navigationController pushViewController:
+        [[OMBResidenceDetailViewController alloc] initWithResidence: 
+          residence] animated: YES];
+  };
   return cell;
 }
 
@@ -629,7 +630,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 numberOfRowsInSection: (NSInteger) section
 {
   return [[OMBResidenceListStore sharedStore].residences count];
-  return [[self propertiesSortedBy: @"" ascending: NO] count];
+  // return [[self propertiesSortedBy: @"" ascending: NO] count];
 }
 
 #pragma mark - Protocol UITableViewDelegate

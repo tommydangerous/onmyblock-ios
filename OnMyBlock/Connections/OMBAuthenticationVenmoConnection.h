@@ -12,6 +12,6 @@
 
 #pragma mark - Initializer
 
-- (id) initWithCode: (NSString *) code;
+- (id) initWithCode: (NSString *) code depositMethod: (BOOL) deposit;
 
 @end

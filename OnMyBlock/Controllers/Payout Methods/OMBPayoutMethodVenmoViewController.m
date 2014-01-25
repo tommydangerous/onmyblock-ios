@@ -9,8 +9,9 @@
 #import "OMBPayoutMethodVenmoViewController.h"
 
 #import "NSString+Extensions.h"
-#import "OMBAuthenticationVenmoConnection.h"
 #import "OMBNavigationController.h"
+#import "OMBPayoutMethod.h"
+#import "OMBPayoutMethodsViewController.h"
 #import "OMBWebViewController.h"
 
 @implementation OMBPayoutMethodVenmoViewController
@@ -43,8 +44,6 @@
   self.detailLabel3.text = @"payments from OnMyBlock.";
 
   self.connectButton.backgroundColor = [UIColor venmoBlue];
-  [self.connectButton addTarget: self action: @selector(connectButtonSelected)
-    forControlEvents: UIControlEventTouchUpInside];
   [self.connectButton setBackgroundImage: 
     [UIImage imageWithColor: [UIColor venmoBlueDark]]
       forState: UIControlStateHighlighted];
@@ -54,7 +53,30 @@
     forState: UIControlStateNormal];
 }
 
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+}
+
 #pragma mark - Protocol
+
+#pragma mark - Protocol UIActionSheetDelegate
+
+- (void) actionSheet: (UIActionSheet *) actionSheet 
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  if (buttonIndex == 0 || buttonIndex == 1) {
+    // Deposit
+    if (buttonIndex == 0) {
+      deposit = YES;
+    }
+    // Payment
+    else if (buttonIndex == 1) {
+      deposit = NO;
+    }
+    [self connectButtonSelected];
+  }
+}
 
 #pragma mark - Protocol UIWebViewDelegate
 
@@ -68,26 +90,58 @@ navigationType: (UIWebViewNavigationType) navigationType
     // {
     //   code = 84c1d3ebd7eaed3eda3dedabf8908044;
     // }
-    NSString *code = [[absoluteString dictionaryFromString] objectForKey: 
-      @"code"];
-    OMBAuthenticationVenmoConnection *connection = 
-      [[OMBAuthenticationVenmoConnection alloc] initWithCode: code];
-    [connection start];
-    [webViewController close];
+    if ([[absoluteString dictionaryFromString] objectForKey: @"code"]) {
+      NSString *code = [[absoluteString dictionaryFromString] objectForKey: 
+        @"code"];
+      [[OMBUser currentUser] authenticateVenmoWithCode: code 
+        depositMethod: deposit withCompletion: ^(NSError *error) {
+          if (error) {
+            [self showAlertViewWithError: error];
+          }
+          else {
+            [webViewController close];
+            OMBPayoutMethod *payoutMethod = 
+              [[OMBUser currentUser] primaryPaymentPayoutMethod];
+            if (!payoutMethod)
+              payoutMethod = [[OMBUser currentUser] primaryDepositPayoutMethod];
+            if (payoutMethod && 
+              [[payoutMethod.payoutType lowercaseString] isEqualToString: 
+                @"venmo"]) {
+              // Only pop to the root view controller
+              // if this was presented modally (via OMBViewControllerContainer)
+              NSArray *array = self.navigationController.viewControllers;
+              if ([[array firstObject] isKindOfClass: 
+                [OMBPayoutMethodsViewController class]] || [array count] < 2) {
+
+                [self.navigationController popToRootViewControllerAnimated: 
+                  YES];
+              }
+              else {
+                [self.navigationController popToViewController: 
+                  [array objectAtIndex: 1] animated: YES];
+              }
+            }
+          }
+        }
+      ];
+    }
+    else {
+      [webViewController close];
+    }
     return NO;
   }
   return YES;
 }
 
+#pragma mark - Protocol UIWebViewDelegate
+
 - (void) webViewDidFinishLoad: (UIWebView *) webView
 {
-  NSLog(@"WEB VIEW DID FINISH LOAD");
   [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
 - (void) webViewDidStartLoad: (UIWebView *) webView
 {
-  NSLog(@"WEB VIEW DID START LOAD");
   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 }
 
@@ -130,6 +184,22 @@ navigationType: (UIWebViewNavigationType) navigationType
   webViewController = [[OMBWebViewController alloc] init];
   webViewController.webView.delegate = self;
   webViewController.title = @"Venmo Authentication";
+  [webViewController.webView loadRequest: request];
+  [webViewController showCloseBarButtonItem];
+  [self presentViewController: 
+    [[OMBNavigationController alloc] initWithRootViewController: 
+      webViewController] animated: YES completion: nil];
+}
+
+- (void) signUpButtonSelected
+{
+  NSString *string = @"https://venmo.com/signup/start";
+  NSURL *url = [NSURL URLWithString: 
+    [string stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding]];
+  NSURLRequest *request = [NSURLRequest requestWithURL: url];
+  webViewController = [[OMBWebViewController alloc] init];
+  webViewController.webView.delegate = self;
+  webViewController.title = @"Venmo Sign Up";
   [webViewController.webView loadRequest: request];
   [webViewController showCloseBarButtonItem];
   [self presentViewController: 

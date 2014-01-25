@@ -31,7 +31,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   float iconViewSize = height / 1.618;
   _iconView = [[UIView alloc] init];
   _iconView.clipsToBounds = YES;
-  _iconView.layer.cornerRadius = 2.0f;
+  _iconView.layer.cornerRadius = 5.0f;
   _iconView.frame = CGRectMake(padding, 
     (padding * 0.5) + ((height - iconViewSize) * 0.5), 
       iconViewSize, iconViewSize);

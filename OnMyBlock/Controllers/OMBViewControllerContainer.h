@@ -17,6 +17,7 @@
 @class OMBMapFilterViewController;
 @class OMBNavigationController;
 @class OMBOfferAcceptedView;
+@class OMBPayoutMethodsViewController;
 @class OMBRenterApplicationViewController;
 @class OMBUserMenu;
 
@@ -88,6 +89,10 @@
 @property (nonatomic, strong) 
   OMBIntroStillImagesViewController *introViewController;
 @property (nonatomic, strong) OMBLoginViewController *loginViewController;
+@property (nonatomic, strong)
+  OMBNavigationController *payoutMethodsNavigationController;
+@property (nonatomic, strong)
+  OMBPayoutMethodsViewController *payoutMethodsViewController;
 @property (nonatomic, strong) 
   OMBRenterApplicationViewController *renterApplicationViewController;
 
@@ -146,6 +151,7 @@
 - (void) showManageListings;
 - (void) showMyRenterApp;
 - (void) showOfferAccepted;
+- (void) showPayoutMethods;
 - (void) showRenterApplication;
 - (void) showSearchAndSwitchToList: (BOOL) switchToList;
 - (void) showSignUp;

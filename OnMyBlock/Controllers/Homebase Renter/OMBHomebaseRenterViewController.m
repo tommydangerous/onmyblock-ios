@@ -19,7 +19,11 @@
 #import "OMBHomebaseRenterRentDepositInfoViewController.h"
 #import "OMBHomebaseRenterRoommateImageView.h"
 #import "OMBHomebaseRenterTopPriorityCell.h"
+#import "OMBPayoutMethod.h"
+#import "OMBPayoutTransaction.h"
+#import "OMBPayPalVerifyMobilePaymentConnection.h"
 #import "OMBOffer.h"
+#import "OMBResidence.h"
 #import "OMBScrollView.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
@@ -296,12 +300,91 @@
   //   CGPointMake(imagesScrollView.frame.size.width, 0.0f) animated: NO];
 
   // Fetch accepted offers
-  [[OMBUser currentUser] fetchAcceptedOffersWithCompletion: ^(NSError *error) {
-    [_activityTableView reloadData];
-  }];
+  if (!charging)
+    [[OMBUser currentUser] fetchAcceptedOffersWithCompletion: 
+      ^(NSError *error) {
+        [_activityTableView reloadData];
+      }
+    ];
+
+  // If user just came back from setting up payment method
+  if (selectedOffer && cameFromSettingUpPayoutMethods) {
+    alert.hidden = NO;
+    [self resetAlert];
+    [UIView animateWithDuration: 0.25f animations: ^{
+      alert.alpha = 1.0f;
+    }];
+    cameFromSettingUpPayoutMethods = NO;
+  }
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol PayPalPaymentDelegate
+
+- (void) payPalPaymentDidComplete: (PayPalPayment *) completedPayment
+{
+  if (!selectedOffer)
+    return;
+
+  // Payment was processed successfully; 
+  // send to server for verification and fulfillment.
+  OMBPayPalVerifyMobilePaymentConnection *conn =
+    [[OMBPayPalVerifyMobilePaymentConnection alloc] initWithOffer: 
+      selectedOffer paymentConfirmation: completedPayment.confirmation];
+  conn.completionBlock = ^(NSError *error) {
+    // Start spinning until it is done or incomplete
+    if (selectedOffer.payoutTransaction && 
+        selectedOffer.payoutTransaction.charged && 
+        selectedOffer.payoutTransaction.verified && !error) {
+      // Remove the offer from the user's accepted offers
+      [[OMBUser currentUser] removeOffer: selectedOffer 
+        type: OMBUserOfferTypeAccepted];
+
+      // Refresh the activity table view
+      [_activityTableView reloadData];
+      [_activityTableView reloadRowsAtIndexPaths:
+        @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
+          withRowAnimation: UITableViewRowAnimationFade];
+
+      selectedOffer = nil;
+
+      // Congratulations somewhere
+      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+        @"Congratulations" message: @"You got the place!" delegate: nil 
+          cancelButtonTitle: @"Celebrate" otherButtonTitles: nil];
+      [alertView show];
+    }
+    else {
+      [self showAlertViewWithError: error];
+    }
+    charging = NO;
+    [[self appDelegate].container stopSpinning];
+  };
+  [[self appDelegate].container startSpinning];
+  [conn start];
+
+  charging = YES;
+
+  // Dismiss the PayPalPaymentViewController.
+  [self dismissViewControllerAnimated: YES completion: nil];
+  [alert hideAlert];
+
+  // Send the entire confirmation dictionary
+  // NSData *confirmation = [NSJSONSerialization dataWithJSONObject:
+  //   completedPayment.confirmation options: 0 error: nil];
+
+  // Send confirmation to your server; 
+  // your server should verify the proof of payment
+  // and give the user their goods or services. 
+  // If the server is not reachable, save the confirmation and try again later.
+}
+
+- (void) payPalPaymentDidCancel
+{
+  // The payment was canceled; dismiss the PayPalPaymentViewController.
+  [self dismissViewControllerAnimated: YES completion: nil];
+}
 
 #pragma mark - Protocol UIScrollViewDelegate
 
@@ -705,47 +788,111 @@ viewForHeaderInSection: (NSInteger) section
   }
 }
 
+- (void) completeOfferConfirmation
+{
+  if (!selectedOffer)
+    return;
+
+  // Remove the offer from the user's accepted offers
+  [[OMBUser currentUser] removeOffer: selectedOffer 
+    type: OMBUserOfferTypeAccepted];
+
+  // Refresh the activity table view
+  [_activityTableView reloadData];
+  [_activityTableView reloadRowsAtIndexPaths:
+    @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
+      withRowAnimation: UITableViewRowAnimationFade];
+
+  selectedOffer = nil;
+
+  // Congratulations somewhere
+
+  [alert hideAlert];
+}
+
 - (void) confirmOffer: (UIButton *) button
 {
   selectedOffer = [[OMBUser currentUser].acceptedOffers objectForKey:
     [NSNumber numberWithInt: button.tag]];
+  if (selectedOffer) {
+    [self resetAlert];
+    [alert showAlert];
+  }
+}
+
+- (void) confirmOfferAndShowAlert
+{
   if (!selectedOffer)
     return;
-  alert.alertTitle.text   = @"Confirm Payment";
-  alert.alertMessage.text = [NSString stringWithFormat:
-    @"You will be charged %@ within 24 hours and guaranteed this place.", 
-      [NSString numberToCurrencyString: selectedOffer.amount]];
-  [alert.alertCancel addTarget: self action: @selector(hideAlert)
-    forControlEvents: UIControlEventTouchUpInside];
-  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
-  [alert.alertConfirm addTarget: self action: @selector(setupPayment)
-    forControlEvents: UIControlEventTouchUpInside];
-  [alert.alertConfirm setTitle: @"Confirm" forState: UIControlStateNormal];
-  [alert showAlert];
+  [alert hideAlert];
+
+  [[OMBUser currentUser] confirmOffer: selectedOffer withCompletion:
+    ^(NSError *error) {
+      if (selectedOffer.confirmed && 
+        selectedOffer.payoutTransaction && 
+        selectedOffer.payoutTransaction.charged && !error) {
+        // [self completeOfferConfirmation];
+
+        // Remove the offer from the user's accepted offers
+        [[OMBUser currentUser] removeOffer: selectedOffer 
+          type: OMBUserOfferTypeAccepted];
+
+        // Refresh the activity table view
+        [_activityTableView reloadData];
+        [_activityTableView reloadRowsAtIndexPaths:
+          @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
+            withRowAnimation: UITableViewRowAnimationFade];
+
+        selectedOffer = nil;
+
+        // Congratulations
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+          @"Check Your Venmo" message: 
+            @"Please confirm the charge in Venmo to complete the transaction." 
+              delegate: nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
+        [alertView show];
+      }
+      else {
+        [self showAlertViewWithError: error];
+      }
+      [[self appDelegate].container stopSpinning];
+    }
+  ];
+  [[self appDelegate].container startSpinning];
 }
 
 - (void) confirmOfferConfirm
 {
   if (!selectedOffer)
     return;
-  [[OMBUser currentUser] confirmOffer: selectedOffer withCompletion:
-    ^(NSError *error) {
-      if (selectedOffer.confirmed && !error) {
-        [alert hideAlert];
-      }
-      else {
-        NSString *message = @"Please try again.";
-        if (error)
-          message = error.localizedDescription;
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-          @"Unsuccessful" message: message delegate: nil 
-            cancelButtonTitle: @"Try again" otherButtonTitles: nil];
-        [alertView show];
-      }
-      [[self appDelegate].container stopSpinning];
+  OMBPayoutMethod *payoutMethod = 
+    [[OMBUser currentUser] primaryPaymentPayoutMethod];
+  // If user has a primary payout method that is for payment
+  if (payoutMethod) {
+    // If primary payment method is PayPal
+    if ([payoutMethod type] == OMBPayoutMethodPayoutTypePayPal) {
+      // Show PayPal payment viewcontroller
+      [self showPayPalPayment];
     }
-  ];
-  [[self appDelegate].container startSpinning];
+    // If primary payment method is Venmo
+    else {
+      [self confirmOfferAndShowAlert];
+    }
+  }
+  // If user does not have a primary payout method that is for payments
+  else {
+    // Alert buttons
+    [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
+    [alert.alertConfirm setTitle: @"Setup" forState: UIControlStateNormal];
+    [alert addTarget: self action: @selector(showPayoutMethods)
+      forButton: alert.alertConfirm];
+    // Alert message
+    alert.alertMessage.text = @"Please add at least one method of payment " 
+      @"before confirming.";
+    // Alert title
+    alert.alertTitle.text = @"Set Up Payment";
+    [alert animateChangeOfContent];
+  }
 }
 
 - (void) editRentalPayments
@@ -844,13 +991,34 @@ viewForHeaderInSection: (NSInteger) section
     return;
   alert.alertTitle.text   = @"Decline Offer";
   alert.alertMessage.text = @"Are you sure?";
-  [alert.alertCancel addTarget: self action: @selector(hideAlert)
-    forControlEvents: UIControlEventTouchUpInside];
   [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
-  [alert.alertConfirm addTarget: self action: @selector(rejectOfferConfirm)
-    forControlEvents: UIControlEventTouchUpInside];
   [alert.alertConfirm setTitle: @"Yes" forState: UIControlStateNormal];
+
+  [alert addTarget: self action: @selector(hideAlert)
+    forButton: alert.alertCancel];
+  [alert addTarget: self action: @selector(rejectOfferConfirm)
+    forButton: alert.alertConfirm];
+
   [alert showAlert];
+}
+
+- (void) resetAlert
+{
+  if (!selectedOffer)
+    return;
+
+  alert.alertTitle.text   = @"Confirm Payment";
+  alert.alertMessage.text = [NSString stringWithFormat:
+    @"You will be charged %@ within 24 hours.", 
+      [NSString numberToCurrencyString: selectedOffer.amount]];
+
+  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
+  [alert.alertConfirm setTitle: @"Confirm" forState: UIControlStateNormal];
+
+  [alert addTarget: self action: @selector(hideAlert)
+    forButton: alert.alertCancel];
+  [alert addTarget: self action: @selector(confirmOfferConfirm)
+    forButton: alert.alertConfirm];
 }
 
 - (void) scrollTableViewIfBelowThreshold: (UITableView *) tableView
@@ -883,28 +1051,83 @@ viewForHeaderInSection: (NSInteger) section
   }
 }
 
-- (void) setupPayment
-{
-  alert.alertTitle.text = @"Setup Payment";
-  alert.alertMessage.text = 
-    @"Please set up a payment method to complete your confirmation.";
-
-  [alert.alertCancel addTarget: self action: @selector(hideAlert)
-    forControlEvents: UIControlEventTouchUpInside];
-  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
-
-  [alert.alertConfirm addTarget: self action: @selector(showSetupPayment)
-    forControlEvents: UIControlEventTouchUpInside];
-  [alert.alertConfirm setTitle: @"Setup" forState: UIControlStateNormal];
-
-  [alert animateChangeOfContent];
-}
-
 - (void) showAddRemoveRoommates
 {
   [self.navigationController pushViewController: 
     [[OMBHomebaseRenterAddRemoveRoommatesViewController alloc] init] 
       animated: YES];
+}
+
+- (void) showPayPalPayment
+{
+  if (!selectedOffer)
+    return;
+
+  // Use these credentials for logging in and paying in SandBox
+  // Email: quazarventures@gmail.com
+  // Password: onmyblock
+
+  // Create a PayPalPayment
+  PayPalPayment *payment = [[PayPalPayment alloc] init];
+  payment.amount = [[NSDecimalNumber alloc] initWithString: 
+    [NSString stringWithFormat: @"%0.2f", selectedOffer.amount]];
+  payment.currencyCode     = @"USD";
+  payment.shortDescription = 
+    [selectedOffer.residence.address capitalizedString];
+
+  // Check whether payment is processable.
+  if (!payment.processable) {
+    // If, for example, the amount was negative or 
+    // the shortDescription was empty, then
+    // this payment would not be processable. 
+    // You would want to handle that here.
+  }
+  
+  // Provide a payerId that uniquely identifies a user 
+  // within the scope of your system, such as an email address or user ID.
+  NSString *aPayerId = [NSString stringWithFormat: @"user_%i",
+    [OMBUser currentUser].uid];
+
+  // Create a PayPalPaymentViewController with the credentials and payerId, 
+  // the PayPalPayment from the previous step, 
+  // and a PayPalPaymentDelegate to handle the results.
+  
+  // Sandbox account
+  NSString *cliendId = 
+    @"AetqKxBgNs-WXu7L7mhq_kpihxGdOUSo0mgLppw0wvTw_pCdP6n3ANLYt4X6";
+  NSString *receiverEmail = @"tommydangerouss-facilitator@gmail.com";
+
+  // Start out working with the test environment! 
+  // When you are ready, remove this line to switch to live.
+  [PayPalPaymentViewController setEnvironment: PayPalEnvironmentSandbox];
+
+  PayPalPaymentViewController *paymentViewController = 
+    [[PayPalPaymentViewController alloc] initWithClientId: cliendId 
+      receiverEmail: receiverEmail payerId: aPayerId payment: payment 
+        delegate: self];
+
+  // paymentViewController.defaultUserEmail = [OMBUser currentUser].email;
+  // paymentViewController.defaultUserPhoneCountryCode = @"1";
+  // paymentViewController.defaultUserPhoneNumber = [OMBUser currentUser].phone;
+
+  // Will only support paying with PayPal, not with credit cards
+  paymentViewController.hideCreditCardButton = YES;
+
+  [UIView animateWithDuration: 0.25f animations: ^{
+    alert.alpha = 0.0f;
+  } completion: ^(BOOL finished) {
+    if (finished)
+      alert.hidden = YES;
+  }];
+  cameFromSettingUpPayoutMethods = YES;
+
+  // This improves user experience
+  // by preconnecting to PayPal to prepare the device for
+  // processing payments
+  // [PayPalPaymentViewController prepareForPaymentUsingClientId: cliendId];
+  // Present the PayPalPaymentViewController.
+  [self presentViewController: paymentViewController animated: YES 
+    completion: nil];
 }
 
 - (void) showRentDepositInfo: (NSInteger) index
@@ -915,9 +1138,16 @@ viewForHeaderInSection: (NSInteger) section
   [self.navigationController pushViewController: vc animated: YES];
 }
 
-- (void) showSetupPayment
+- (void) showPayoutMethods
 {
-  
+  [UIView animateWithDuration: 0.25f animations: ^{
+    alert.alpha = 0.0f;
+  } completion: ^(BOOL finished) {
+    if (finished)
+      alert.hidden = YES;
+  }];
+  cameFromSettingUpPayoutMethods = YES;
+  [[self appDelegate].container showPayoutMethods];
 }
 
 - (void) switchToPaymentsTableView

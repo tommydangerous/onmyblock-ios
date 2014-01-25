@@ -29,6 +29,7 @@
 #import "OMBMyRenterApplicationViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOfferAcceptedView.h"
+#import "OMBPayoutMethodsViewController.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBUserMenu.h"
 #import "OMBUser.h"
@@ -99,6 +100,11 @@
   _introViewController = [[OMBIntroStillImagesViewController alloc] init];
   // Login
   _loginViewController = [[OMBLoginViewController alloc] init];
+  // Payout Methods
+  _payoutMethodsViewController = [[OMBPayoutMethodsViewController alloc] init];
+  _payoutMethodsNavigationController = 
+    [[OMBNavigationController alloc] initWithRootViewController: 
+      _payoutMethodsViewController];
   // Renter Application
   _renterApplicationViewController = 
     [[OMBRenterApplicationViewController alloc] init];
@@ -355,7 +361,7 @@
 
   // Activity view
   activityView = [[OMBActivityView alloc] init];
-  [_detailView addSubview: activityView];
+  // [_detailView addSubview: activityView];
 
   [self presentDetailViewController: _mapNavigationController];
   // [self presentDetailViewController: _accountNavigationController];
@@ -690,8 +696,9 @@ willDecelerate: (BOOL) decelerate
 
   viewController.view.frame = [self frameForDetailViewController];
 
-  // [_detailView addSubview: viewController.view];
-  [_detailView insertSubview: viewController.view belowSubview: activityView];
+  [_detailView addSubview: viewController.view];
+  // [_detailView insertSubview: viewController.view belowSubview: 
+  //   activityView];
   _currentDetailViewController = viewController;
 
   [viewController didMoveToParentViewController: self];
@@ -1027,6 +1034,13 @@ willDecelerate: (BOOL) decelerate
   [offerAcceptedView show];
 }
 
+- (void) showPayoutMethods
+{
+  [_payoutMethodsViewController showCancelBarButtonItem];
+  [self presentViewController: _payoutMethodsNavigationController
+    animated: YES completion: nil];
+}
+
 - (void) showRenterApplication
 {
   [self presentViewController: _renterApplicationViewController 
@@ -1060,11 +1074,13 @@ willDecelerate: (BOOL) decelerate
 
 - (void) startSpinning
 {
+  [[[UIApplication sharedApplication] keyWindow] addSubview: activityView];
   [activityView startSpinning];
 }
 
 - (void) stopSpinning
 {
+  [activityView removeFromSuperview];
   [activityView stopSpinning];
 }
 

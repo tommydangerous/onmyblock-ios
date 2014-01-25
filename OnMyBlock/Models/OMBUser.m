@@ -9,6 +9,7 @@
 #import "OMBUser.h"
 
 #import "OMBAppDelegate.h"
+#import "OMBAuthenticationVenmoConnection.h"
 #import "OMBConversationMessageStore.h"
 #import "OMBCosigner.h"
 #import "OMBEmployment.h"
@@ -23,6 +24,9 @@
 #import "OMBOfferDecisionConnection.h"
 #import "OMBOffersAcceptedConnection.h"
 #import "OMBOffersReceivedConnection.h"
+#import "OMBPayoutMethod.h"
+#import "OMBPayoutMethodCreateConnection.h"
+#import "OMBPayoutMethodListConnection.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
@@ -56,7 +60,8 @@ NSString *const OMBMessagesUnviewedCountNotification =
 // Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
 #if __ENVIRONMENT__ == 1
   // Development server
-  NSString *const OMBFakeUserAccessToken = @"cea246ff2139e0fa5b17ae255e9a946d";
+  #warning Change This!!!
+  NSString *const OMBFakeUserAccessToken = @"6591173fc1a1f1ac409c0efb3a0a05b1";// @"cea246ff2139e0fa5b17ae255e9a946d";
 #elif __ENVIRONMENT__ == 2
   // Staging server
   NSString *const OMBFakeUserAccessToken = @"60721b1691403ed9037b52f8816e351e";
@@ -65,7 +70,7 @@ NSString *const OMBMessagesUnviewedCountNotification =
   NSString *const OMBFakeUserAccessToken = @"";
 #endif
 
-int kNotificationTimerInterval = 30;
+int kNotificationTimerInterval = 60;
 
 @implementation OMBUser
 
@@ -79,6 +84,7 @@ int kNotificationTimerInterval = 30;
   _favorites           = [NSMutableDictionary dictionary];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _messages            = [NSMutableDictionary dictionary];
+  _payoutMethods       = [NSMutableDictionary dictionary];
   _receivedOffers      = [NSMutableDictionary dictionary];
   _renterApplication   = [[OMBRenterApplication alloc] init];
   _residences          = [NSMutableDictionary dictionaryWithDictionary: @{
@@ -86,14 +92,20 @@ int kNotificationTimerInterval = 30;
     @"temporaryResidences": [NSMutableDictionary dictionary]
   }];
 
-  [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(sessionStateChanged:)
-      name: FBSessionStateChangedNotification object: nil];
   // [[NSNotificationCenter defaultCenter] addObserver: self
   //   selector: @selector(logout)
   //     name: OMBCurrentUserLogoutNotification object: nil];
 
   return self;
+}
+
+#pragma mark - Override
+
+#pragma mark - Override NSObject
+
+- (void) dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 #pragma mark - Methods
@@ -105,6 +117,13 @@ int kNotificationTimerInterval = 30;
   static OMBUser *user = nil;
   if (!user) {
     user = [[OMBUser alloc] init];
+    [[NSNotificationCenter defaultCenter] addObserver: user
+      selector: @selector(sessionStateChanged:)
+        name: FBSessionStateChangedNotification object: nil];
+    // Fetch favorites, fetch payout methods
+    [[NSNotificationCenter defaultCenter] addObserver: user
+      selector: @selector(performInitialLoginSetup)
+        name: OMBUserLoggedInNotification object: nil];
   }
   return user;
 }
@@ -225,6 +244,13 @@ withCompletion: (void (^) (NSError *error)) block
   [_messages setObject: array forKey: number];
 }
 
+- (void) addPayoutMethod: (OMBPayoutMethod *) object
+{
+  NSNumber *key = [NSNumber numberWithInt: object.uid];
+  if (![_payoutMethods objectForKey: key])
+    [_payoutMethods setObject: object forKey: key];
+}
+
 - (void) addReceivedOffer: (OMBOffer *) offer
 {
   NSNumber *key = [NSNumber numberWithInt: offer.uid];
@@ -264,14 +290,22 @@ withCompletion: (void (^) (NSError *error)) block
   return NO;
 }
 
+- (void) authenticateVenmoWithCode: (NSString *) code 
+depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
+{
+  OMBAuthenticationVenmoConnection *conn = 
+    [[OMBAuthenticationVenmoConnection alloc] initWithCode: code
+      depositMethod: deposit];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (void) authenticateWithServer: (void (^) (NSError *error)) block
 {
   OMBUserFacebookAuthenticationConnection *connection = 
     [[OMBUserFacebookAuthenticationConnection alloc] initWithUser: self];
   connection.completionBlock = ^(NSError *error) {
     if ([[OMBUser currentUser] loggedIn]) {
-      // Load the user's favorites
-      [self fetchFavorites];
       // Post notification
       [[NSNotificationCenter defaultCenter] postNotificationName: 
         OMBUserLoggedInNotification object: nil];
@@ -288,12 +322,36 @@ withCompletion: (void (^) (NSError *error)) block
   NSLog(@"Authenticate with server");
 }
 
+- (void) changeOtherSamePrimaryPayoutMethods: (OMBPayoutMethod *) payoutMethod
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat: 
+    @"%K == %@ && %K == %@ && %K != %i", 
+      @"deposit", [NSNumber numberWithBool: payoutMethod.deposit], 
+        @"primary", [NSNumber numberWithBool: payoutMethod.primary], 
+          @"uid", payoutMethod.uid];
+  for (OMBPayoutMethod *object in
+    [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate]) {
+
+    object.primary = NO;
+  }
+}
+
 - (void) confirmOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block
 {
   OMBOfferDecisionConnection *conn =
     [[OMBOfferDecisionConnection alloc] initWithOffer: offer
       decision: OMBOfferDecisionConnectionTypeConfirm];
+  conn.completionBlock = block;
+  [conn start];
+}
+
+- (void) createPayoutMethodWithDictionary: (NSDictionary *) dictionary
+withCompletion: (void (^) (NSError *error)) block
+{
+  OMBPayoutMethodCreateConnection *conn = 
+    [[OMBPayoutMethodCreateConnection alloc] initWithDictionary:
+      dictionary];
   conn.completionBlock = block;
   [conn start];
 }
@@ -306,6 +364,15 @@ withCompletion: (void (^) (NSError *error)) block
       decision: OMBOfferDecisionConnectionTypeDecline];
   conn.completionBlock = block;
   [conn start];
+}
+
+- (NSArray *) depositPayoutMethods
+{
+  NSPredicate *predicate = 
+    [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
+      @"deposit", [NSNumber numberWithBool: YES], 
+        @"primary", [NSNumber numberWithBool: YES]];
+  return [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate];
 }
 
 - (void) downloadImageFromImageURLWithCompletion: 
@@ -329,6 +396,14 @@ withCompletion: (void (^) (NSError *error)) block
 {
   OMBOffersAcceptedConnection *conn = 
     [[OMBOffersAcceptedConnection alloc] init];
+  conn.completionBlock = block;
+  [conn start];
+}
+
+- (void) fetchPayoutMethodsWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBPayoutMethodListConnection *conn =
+    [[OMBPayoutMethodListConnection alloc] init];
   conn.completionBlock = block;
   [conn start];
 }
@@ -426,9 +501,15 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [OMBUser currentUser].image    = nil;
   [[OMBUser currentUser].imageSizeDictionary removeAllObjects];
   [OMBUser currentUser].imageURL = nil;
+  // Messages
   [[OMBUser currentUser].messages removeAllObjects];
+  // Notification
   [[OMBUser currentUser].notificationFetchTimer invalidate];
+  // Payout methods
+  [[OMBUser currentUser].payoutMethods removeAllObjects];
+  // Received offers
   [[OMBUser currentUser].receivedOffers removeAllObjects];
+  // Renter application
   [[OMBUser currentUser].renterApplication removeAllObjects];
 
   // Clear residences
@@ -450,6 +531,32 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 - (NSArray *) messagesWithUser: (OMBUser *) user
 {
   return [_messages objectForKey: [NSNumber numberWithInt: user.uid]];
+}
+
+- (NSArray *) paymentPayoutMethods
+{
+  NSPredicate *predicate = 
+    [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
+      @"deposit", [NSNumber numberWithBool: NO], 
+        @"primary", [NSNumber numberWithBool: YES]];
+  return [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate];
+}
+
+- (void) performInitialLoginSetup
+{
+  // Load the user's favorites
+  [self fetchFavorites];
+  // Load the user's payout methods
+  [self fetchPayoutMethodsWithCompletion: nil];
+
+  // Timer for fetching notifications
+  _notificationFetchTimer = [NSTimer timerWithTimeInterval: 
+    kNotificationTimerInterval target: self
+      selector: @selector(fetchNotificationCounts:) userInfo: nil 
+        repeats: YES];
+  // NSRunLoopCommonModes, mode used for tracking events
+  [[NSRunLoop currentRunLoop] addTimer: _notificationFetchTimer
+    forMode: NSRunLoopCommonModes];
 }
 
 - (NSString *) phoneString
@@ -479,13 +586,32 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   return @"";
 }
 
+- (OMBPayoutMethod *) primaryDepositPayoutMethod
+{
+  
+  return [[self depositPayoutMethods] firstObject];
+}
+
+- (OMBPayoutMethod *) primaryPaymentPayoutMethod
+{
+  return [[self paymentPayoutMethods] firstObject];
+}
+
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary
 {
   NSMutableSet *newSet = [NSMutableSet set];
   for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
-    OMBOffer *offer = [[OMBOffer alloc] init];
-    [offer readFromDictionary: dict];
-    [self addAcceptedOffer: offer];
+    NSInteger offerUID = [[dict objectForKey: @"id"] intValue];
+    OMBOffer *offer = [_acceptedOffers objectForKey: 
+      [NSNumber numberWithInt: offerUID]];
+    if (!offer) {
+      offer = [[OMBOffer alloc] init];
+      [offer readFromDictionary: dict];
+      [self addAcceptedOffer: offer];
+    }
+    else {
+      [offer readFromDictionary: dict];
+    }
 
     [newSet addObject: [NSNumber numberWithInt: offer.uid]];
   }
@@ -581,17 +707,6 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
   // Add to the OMBUserStore
   [[OMBUserStore sharedStore] addUser: self];
-
-  // If this user instance is the current user using the app
-  if ([_accessToken length] > 0) {
-    _notificationFetchTimer = [NSTimer timerWithTimeInterval: 
-      kNotificationTimerInterval target: self
-        selector: @selector(fetchNotificationCounts:) userInfo: nil 
-          repeats: YES];
-    // NSRunLoopCommonModes, mode used for tracking events
-    [[NSRunLoop currentRunLoop] addTimer: _notificationFetchTimer
-      forMode: NSRunLoopCommonModes];
-  }
 }
 
 - (void) readFromEmploymentDictionary: (NSDictionary *) dictionary
@@ -697,6 +812,34 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     }
   }
   [_messages setObject: array forKey: [NSNumber numberWithInt: user.uid]];
+}
+
+- (void) readFromPayoutMethodsDictionary: (NSDictionary *) dictionary
+{
+  NSMutableSet *newSet = [NSMutableSet set];
+  for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
+    NSInteger payoutMethodUID = [[dict objectForKey: @"id"] intValue];
+    OMBPayoutMethod *payoutMethod = [_payoutMethods objectForKey:
+      [NSNumber numberWithInt: payoutMethodUID]];
+    if (!payoutMethod) {
+      payoutMethod = [[OMBPayoutMethod alloc] init];
+      [payoutMethod readFromDictionary: dict];
+      [self addPayoutMethod: payoutMethod];
+    }
+    else {
+      [payoutMethod readFromDictionary: dict];
+    }
+
+    [newSet addObject: [NSNumber numberWithInt: payoutMethod.uid]];
+  }
+
+  // Remove the offers that are no longer suppose to be there
+  NSMutableSet *oldSet = [NSMutableSet setWithArray:
+    [[_payoutMethods allValues] valueForKey: @"uid"]];
+  [oldSet minusSet: newSet];
+  for (NSNumber *number in [oldSet allObjects]) {
+    [_payoutMethods removeObjectForKey: number];
+  }
 }
 
 - (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary
@@ -885,6 +1028,14 @@ withKey: (NSString *) key ascending: (BOOL) ascending
   else if (type == OMBUserOfferTypeReceived)
     array = [_receivedOffers allValues];
   return [array sortedArrayUsingDescriptors: @[sort]];
+}
+
+- (NSArray *) sortedPayoutMethodsWithKey: (NSString *) key
+ascending: (BOOL) ascending
+{
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
+    ascending: ascending];
+  return [[_payoutMethods allValues] sortedArrayUsingDescriptors: @[sort]];
 }
 
 @end

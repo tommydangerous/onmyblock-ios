@@ -37,7 +37,7 @@
     residenceImage.absoluteString = [self.imageURL absoluteString];
     residenceImage.image    = image;
     residenceImage.position = 0;
-    residenceImage.uid      = -999 + arc4random_uniform(100);
+    residenceImage.uid      = -9999 + arc4random_uniform(1000);
     [residence addResidenceImage: residenceImage];
   }
   [super connectionDidFinishLoading: connection];

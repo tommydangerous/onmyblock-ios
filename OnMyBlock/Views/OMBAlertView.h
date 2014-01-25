@@ -14,6 +14,7 @@
 {
   AMBlurView *alert;
   UIView *alertButtonsView;
+  UIView *alertButtonsViewMiddleBorder;
   UIView *fadedBackground;
 }
 
@@ -33,8 +34,12 @@
 
 #pragma mark - Instance Methods
 
+- (void) addTarget: (id) target action: (SEL) action 
+forButton: (UIButton *) button;
 - (void) animateChangeOfContent;
 - (void) hideAlert;
+- (void) onlyShowOneButton: (UIButton *) button;
 - (void) showAlert;
+- (void) showBothButtons;
 
 @end

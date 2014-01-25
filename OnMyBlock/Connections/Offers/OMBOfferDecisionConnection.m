@@ -9,6 +9,7 @@
 #import "OMBOfferDecisionConnection.h"
 
 #import "OMBOffer.h"
+#import "OMBPayoutTransaction.h"
 
 @implementation OMBOfferDecisionConnection
 
@@ -39,6 +40,8 @@ decision: (OMBOfferDecisionConnectionType) type
   };
   [self setRequestWithString: string method: @"POST" parameters: params];
 
+  timeoutInterval = 60;
+
   return self;
 }
 
@@ -48,10 +51,19 @@ decision: (OMBOfferDecisionConnectionType) type
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBOfferDecisionConnection\n%@", [self json]);
+  // NSLog(@"OMBOfferDecisionConnection\n%@", [self json]);
 
   if ([self successful]) {
     [offer readFromDictionary: [self objectDictionary]];
+
+    // Payout Transaction
+    if ([[self json] objectForKey: @"payout_transaction"] != [NSNull null]) {
+      NSDictionary *dict = [[self json] objectForKey: @"payout_transaction"];
+      OMBPayoutTransaction *payoutTransaction = 
+        [[OMBPayoutTransaction alloc] init];
+      [payoutTransaction readFromDictionary: dict];
+      offer.payoutTransaction = payoutTransaction;
+    }
   }
 
   [super connectionDidFinishLoading: connection];

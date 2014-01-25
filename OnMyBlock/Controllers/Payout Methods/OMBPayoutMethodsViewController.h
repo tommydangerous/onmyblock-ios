@@ -10,7 +10,15 @@
 
 @interface OMBPayoutMethodsViewController : OMBTableViewController
 {
+  UIBarButtonItem *addBarButtonItem;
+  UIBarButtonItem *cancelBarButtonItem;
   UIView *noPayoutMethodsView;
 }
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) showCancelBarButtonItem;
 
 @end

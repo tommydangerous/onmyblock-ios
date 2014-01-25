@@ -45,7 +45,6 @@ reuseIdentifier: (NSString *) reuseIdentifier
 {
   [super prepareForReuse];
 
-
 	[_residencePartialView resetFilmstrip];
   if (_connection)
     [_connection cancelConnection];

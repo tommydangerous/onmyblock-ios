@@ -10,18 +10,24 @@
 
 @implementation OMBFilmstripImageCell
 
-- (id)initWithFrame:(CGRect)frame
+#pragma mark - Initialzer
+
+- (id) initWithFrame: (CGRect) rect
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-		_image = [[UIImageView alloc] initWithFrame:self.bounds];
-		_image.contentMode = UIViewContentModeTop;
-		[self addSubview:_image];
-    }
-    return self;
+  if (!(self = [super initWithFrame: rect])) return nil;
+
+  _imageView = [[UIImageView alloc] initWithFrame: self.bounds];
+  _imageView.contentMode = UIViewContentModeScaleAspectFill;
+  [self addSubview: _imageView];
+
+  return self;
 }
 
-+ (NSString *)reuseID
+#pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (NSString *) reuseID
 {
 	return NSStringFromClass([self class]);
 }

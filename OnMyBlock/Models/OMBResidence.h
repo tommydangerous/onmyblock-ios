@@ -52,6 +52,7 @@
 // iOS app properties
 @property (nonatomic, strong) NSMutableDictionary *amenities;
 @property (nonatomic, strong) UIImage *coverPhotoForCell;
+@property (nonatomic, strong) NSMutableDictionary *coverPhotoSizeDictionary;
 @property (nonatomic, strong) NSURL *coverPhotoURL;
 @property (nonatomic, strong) NSMutableArray *images;
 @property (nonatomic, strong) NSMutableDictionary *imageSizeDictionary;
@@ -70,16 +71,16 @@
 
 #pragma mark Instance Methods
 
-// - (void) addImage: (UIImage *) image atPosition: (int) position 
-// withString: (NSString *) string;
+- (void) addImageWithResidenceImage: (OMBResidenceImage *) residenceImage
+toImageSizeDictionaryWithSize: (CGSize) size;
 - (void) addOffer: (OMBOffer *) offer;
 - (void) addOpenHouse: (OMBOpenHouse *) openHouse;
 - (void) addResidenceImage: (OMBResidenceImage *) residenceImage;
 - (NSArray *) availableAmenities;
 - (NSString *) availableOnString;
 - (UIImage *) coverPhoto;
-- (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size;
-- (NSString *) defaultContactMessage;
+- (UIImage *) coverPhotoForSize: (CGSize) size;
+- (UIImage *) coverPhotoForSizeKey: (NSString *) string;
 - (NSString *) dictionaryKey;
 - (void) downloadCoverPhotoWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchOffersWithCompletion: (void (^) (NSError *error)) block;
@@ -87,9 +88,12 @@
 - (NSURL *) googleStaticStreetViewImageURL;
 - (NSArray *) imagesArray;
 - (UIImage *) imageAtPosition: (int) position;
-- (UIImage *) imageForSize: (CGSize) size;
-- (UIImage *) imageForSizeKey: (NSString *) string;
+- (UIImage *) imageForSize: (CGSize) size 
+forResidenceImage: (OMBResidenceImage *) residenceImage;
+- (UIImage *) imageForSizeKey: (NSString *) string 
+forResidenceImage: (OMBResidenceImage *) residenceImage;
 - (NSInteger) numberOfStepsLeft;
+- (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size;
 - (void) readFromOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromOpenHouseDictionary: (NSDictionary *) dictionary;
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary;

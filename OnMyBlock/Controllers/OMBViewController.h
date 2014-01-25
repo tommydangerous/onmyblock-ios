@@ -26,6 +26,7 @@
 
 - (OMBAppDelegate *) appDelegate;
 - (void) setMenuBarButtonItem;
+- (void) showAlertViewWithError: (NSError *) error;
 - (void) showDoneEditingBarButtonItem;
 - (void) showMenuBarButtonItem;
 

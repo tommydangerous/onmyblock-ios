@@ -11,9 +11,15 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
+@class OMBWebViewController;
+
 @interface OMBSelectedPayoutMethodViewController : OMBViewController
+<UIActionSheetDelegate, UIWebViewDelegate>
 {
+  BOOL deposit;
   UIView *detailLabelView;
+  UIActionSheet *sheet;
+  OMBWebViewController *webViewController;
 }
 
 @property (nonatomic, strong) UIButton *connectButton;

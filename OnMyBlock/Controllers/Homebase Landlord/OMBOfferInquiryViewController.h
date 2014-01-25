@@ -21,6 +21,7 @@
   UIView *backView;
   CGFloat backViewOffsetY;
   UIView *buttonsView;
+  BOOL cameFromSettingUpPayoutMethods;
   UIButton *contactButton;
   NSArray *legalQuestions;
   OMBOffer *offer;

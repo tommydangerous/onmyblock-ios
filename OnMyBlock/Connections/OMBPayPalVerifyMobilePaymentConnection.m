@@ -8,28 +8,29 @@
 
 #import "OMBPayPalVerifyMobilePaymentConnection.h"
 
+#import "OMBOffer.h"
+#import "OMBPayoutTransaction.h"
+
 @implementation OMBPayPalVerifyMobilePaymentConnection
 
 #pragma mark - Initializer
 
-- (id) initWithPaymentConfirmation: (NSDictionary *) dictionary;
+- (id) initWithOffer: (OMBOffer *) object 
+paymentConfirmation: (NSDictionary *) dictionary
 {
   if (!(self = [super init])) return nil;
 
-  NSString *string = [NSString stringWithFormat: 
-    @"%@/payouts/paypal/charge", OnMyBlockAPIURL];
-  NSURL *url = [NSURL URLWithString: string];
-  NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
+  offer = object;
+
+  NSString *string = [NSString stringWithFormat: @"%@/offers/%i/charge_paypal",
+    OnMyBlockAPIURL, offer.uid];
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,
     @"confirmation": dictionary
   };
-  NSData *json = [NSJSONSerialization dataWithJSONObject: params
-    options: 0 error: nil];
-  [req addValue: @"application/json" forHTTPHeaderField: @"Content-Type"];
-  [req setHTTPBody: json];
-  [req setHTTPMethod: @"POST"];
-  self.request = req;
+  [self setRequestWithString: string method: @"POST" parameters: params];
+
+  timeoutInterval = 60.0;
 
   return self;
 }
@@ -40,12 +41,15 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
-  if ([[json objectForKey: @"success"] intValue]) {
-    NSLog(@"SUCCESS");
+  // NSLog(@"OMBPayPalVerifyMobilePaymentConnection\n%@", [self json]);
+
+  if ([self successful]) {
+    OMBPayoutTransaction *payoutTransaction = 
+      [[OMBPayoutTransaction alloc] init];
+    [payoutTransaction readFromDictionary: [self objectDictionary]];
+    offer.payoutTransaction = payoutTransaction;
   }
-  NSLog(@"%@", json);
+
   [super connectionDidFinishLoading: connection];
 }
 

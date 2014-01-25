@@ -8,10 +8,16 @@
 
 #import "OMBConnection.h"
 
+@class OMBOffer;
+
 @interface OMBPayPalVerifyMobilePaymentConnection : OMBConnection
+{
+  OMBOffer *offer;
+}
 
 #pragma mark - Initializer
 
-- (id) initWithPaymentConfirmation: (NSDictionary *) dictionary;
+- (id) initWithOffer: (OMBOffer *) object 
+paymentConfirmation: (NSDictionary *) dictionary;
 
 @end

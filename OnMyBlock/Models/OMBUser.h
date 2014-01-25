@@ -29,6 +29,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 @class OMBMessage;
 @class OMBNeighborhood;
 @class OMBOffer;
+@class OMBPayoutMethod;
 @class OMBPreviousRental;
 @class OMBRenterApplication;
 @class OMBResidence;
@@ -54,6 +55,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, strong) NSMutableDictionary *messages;
 @property (nonatomic, strong) NSTimer *notificationFetchTimer;
+@property (nonatomic, strong) NSMutableDictionary *payoutMethods;
 @property (nonatomic, strong) NSMutableDictionary *receivedOffers;
 @property (nonatomic, strong) OMBRenterApplication *renterApplication;
 @property (nonatomic, strong) NSMutableDictionary *residences;
@@ -81,14 +83,21 @@ withCompletion: (void (^) (NSError *error)) block;
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
 - (void) addResidence: (OMBResidence *) residence;
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence;
+- (void) authenticateVenmoWithCode: (NSString *) code 
+depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block;
+- (void) changeOtherSamePrimaryPayoutMethods: (OMBPayoutMethod *) payoutMethod;
 - (void) confirmOffer: (OMBOffer *) offer
+withCompletion: (void (^) (NSError *error)) block;
+- (void) createPayoutMethodWithDictionary: (NSDictionary *) dictionary
 withCompletion: (void (^) (NSError *error)) block;
 - (void) declineOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
+- (NSArray *) depositPayoutMethods;
 - (void) downloadImageFromImageURLWithCompletion: 
 (void (^) (NSError *error)) block;
 - (NSArray *) favoritesArray;
 - (void) fetchAcceptedOffersWithCompletion: (void (^) (NSError *error)) block;
+- (void) fetchPayoutMethodsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchReceivedOffersWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
@@ -98,7 +107,10 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (BOOL) loggedIn;
 - (void) logout;
 - (NSArray *) messagesWithUser: (OMBUser *) user;
+- (NSArray *) paymentPayoutMethods;
 - (NSString *) phoneString;
+- (OMBPayoutMethod *) primaryDepositPayoutMethod;
+- (OMBPayoutMethod *) primaryPaymentPayoutMethod;
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
@@ -106,6 +118,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromFavoriteResidencesDictionary: (NSDictionary *) dictionary;
 - (void) readFromLegalAnswerDictionary: (NSDictionary *) dictionary;
 - (void) readFromMessagesDictionary: (NSDictionary *) dictionary;
+- (void) readFromPayoutMethodsDictionary: (NSDictionary *) dictionary;
 - (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary;
 - (void) readFromReceivedOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
@@ -121,5 +134,7 @@ ascending: (BOOL) ascending;
 - (NSString *) shortName;
 - (NSArray *) sortedOffersType: (OMBUserOfferType) type 
 withKey: (NSString *) key ascending: (BOOL) ascending;
+- (NSArray *) sortedPayoutMethodsWithKey: (NSString *) key
+ascending: (BOOL) ascending;
 
 @end

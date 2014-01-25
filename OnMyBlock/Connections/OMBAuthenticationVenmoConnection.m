@@ -12,24 +12,18 @@
 
 #pragma mark - Initializer
 
-- (id) initWithCode: (NSString *) code
+- (id) initWithCode: (NSString *) code depositMethod: (BOOL) deposit
 {
   if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: @"%@/authentications/venmo",
     OnMyBlockAPIURL];
-  NSURL *url = [NSURL URLWithString: string];
-  NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,
-    @"code":         code
+    @"code":    code,
+    @"deposit": deposit ? @"true" : @"false"
   };
-  NSData *json = [NSJSONSerialization dataWithJSONObject: params
-    options: 0 error: nil];
-  [req addValue: @"application/json" forHTTPHeaderField: @"Content-Type"];
-  [req setHTTPBody: json];
-  [req setHTTPMethod: @"POST"];
-  self.request = req;
+  [self setRequestWithString: string method: @"POST" parameters: params];
 
   return self;
 }
@@ -40,10 +34,11 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
-  if ([[json objectForKey: @"success"] intValue] == 1) {
-    NSLog(@"SUCCESS");
+  if ([self successful]) {
+    NSDictionary *dict = @{
+      @"objects": @[[self objectDictionary]]
+    };
+    [[OMBUser currentUser] readFromPayoutMethodsDictionary: dict];
   }
   [super connectionDidFinishLoading: connection];
 }

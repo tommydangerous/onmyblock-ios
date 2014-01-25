@@ -8,10 +8,13 @@
 
 #import "OMBSelectedPayoutMethodViewController.h"
 
-#import "PayPalMobile.h"
+@class TextFieldPadding;
 
 @interface OMBPayoutMethodPayPalViewController : 
   OMBSelectedPayoutMethodViewController
-<PayPalPaymentDelegate>
+<UITextFieldDelegate>
+{
+  TextFieldPadding *emailTextField;
+}
 
 @end
