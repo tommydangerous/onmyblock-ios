@@ -31,7 +31,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
   // [self setupTracking];
 
-  // [self testFlightTakeOff];
+  [self testFlightTakeOff];
     
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
@@ -48,11 +48,11 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // If current session has a valid Facebook token
     [self openSession];
 
-  #warning Remove fake login
-  // Fake login
-  [OMBUser fakeLogin];
-  // Use this to show whatever view controller you are working on
-  [_container showFavorites];
+  // #warning Remove fake login
+  // // Fake login
+  // [OMBUser fakeLogin];
+  // // Use this to show whatever view controller you are working on
+  // [_container showFavorites];
 
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   id viewedIntro = [defaults objectForKey: OMBUserDefaultsViewedIntro];

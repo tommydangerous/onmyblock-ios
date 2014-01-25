@@ -187,13 +187,13 @@
     }
     if ([array count] == 0) {
       // If the residence has no image, show the Google Static street view
-      OMBResidenceGoogleStaticImageDownloader *downloader =
-        [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:
-          residence url: [residence googleStaticStreetViewImageURL]];
-      downloader.completionBlock = ^(NSError *error) {
-        [super connectionDidFinishLoading: connection];
-      };
-      [downloader startDownload];
+      // OMBResidenceGoogleStaticImageDownloader *downloader =
+      //   [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:
+      //     residence url: [residence googleStaticStreetViewImageURL]];
+      // downloader.completionBlock = ^(NSError *error) {
+      //   [super connectionDidFinishLoading: connection];
+      // };
+      // [downloader startDownload];
     }
     else {
       self.completionBlock = nil;
