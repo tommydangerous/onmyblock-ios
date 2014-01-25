@@ -695,7 +695,26 @@ willDecelerate: (BOOL) decelerate
   hitArea.hidden     = YES;
   _menuScroll.hidden = NO;
 
-  [_mapNavigationController popToRootViewControllerAnimated: NO];
+  // Pop every navigation controller to the root view
+  NSArray *array = @[
+    // Both
+    _accountNavigationController,
+    _payoutMethodsNavigationController,
+    // Renter
+    _mapFilterNavigationController,
+    _mapNavigationController,
+    _myRenterAppNavigationController,
+    _favoritesNavigationController,
+    _homebaseRenterNavigationController,
+    _inboxNavigationController,
+    // Landlord
+    _homebaseLandlordNavigationController,
+    _manageListingsNavigationController
+  ];
+  for (OMBNavigationController *nav in array) {
+    [nav popToRootViewControllerAnimated: NO];
+  }
+
   [self presentDetailViewController: _mapNavigationController];
 }
 

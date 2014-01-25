@@ -27,7 +27,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat labelHeight = 44.0f;
   UILabel *label = [UILabel new];
   label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  label.text = @"Rent it Now Price";
+  label.text = @"Security Deposit";
+  // label.text = @"Rent it Now Price";
   label.textColor = [UIColor textColor];
   CGRect labelRect = [label.text boundingRectWithSize: 
     CGSizeMake(screenWidth, labelHeight) font: label.font];
@@ -72,7 +73,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
       rightViewRect.size.height);
   _textField.leftPaddingX = leftView.frame.size.width;
   _textField.rightPaddingX = rightView.frame.size.width;
-  _textField.rightView = rightView;
+  // _textField.rightView = rightView;
   _textField.rightViewMode = _textField.leftViewMode;
   _textField.textColor = [UIColor blueDark];
   [self.contentView addSubview: _textField];

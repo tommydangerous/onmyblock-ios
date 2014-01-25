@@ -73,6 +73,15 @@ attributes: (NSArray *) attributes
       else
         value = @"false";
     }
+    // Deposit
+    if ([key isEqualToString: @"deposit"]) {
+      if (object.deposit) {
+        value = [NSNumber numberWithFloat: object.deposit];
+      }
+      else {
+        value = [NSNumber numberWithFloat: 0.0f];
+      }
+    }
     // Description
     if ([key isEqualToString: @"description"])
       key = @"desc";

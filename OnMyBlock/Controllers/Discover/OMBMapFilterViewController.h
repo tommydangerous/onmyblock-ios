@@ -14,16 +14,18 @@
 <CLLocationManagerDelegate, UIPickerViewDataSource, UIPickerViewDelegate,
   UIScrollViewDelegate>
 {
+  UIPickerView *availabilityPickerView;
+  NSCalendar *calendar;
   UIButton *currentLocationButton;
   UIBarButtonItem *doneBarButtonItem;
   UIView *fadedBackground;
   BOOL isEditing;
   CLLocationManager *locationManager;
+  NSMutableDictionary *moveInDates;
   UITableView *neighborhoodTableView;
   UIView *neighborhoodTableViewContainer;
 	UILabel *pickerViewHeaderLabel;
 	UIPickerView *rentPickerView;
-	UIPickerView *availabilityPickerView;
   UIView *pickerViewContainer;
   UIBarButtonItem *searchBarButtonItem;
   OMBNeighborhood *selectedNeighborhood;

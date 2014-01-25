@@ -31,6 +31,8 @@ float kStandardHeight = 44.0f;
 {
   if (!(self = [super init])) return nil;
 
+  calendar = [NSCalendar currentCalendar];
+
   // Location manager
   locationManager                 = [[CLLocationManager alloc] init];
   locationManager.delegate        = self;
@@ -246,6 +248,56 @@ float kStandardHeight = 44.0f;
       rentPickerView.frame.size.height);
 }
 
+- (void) viewWillAppear: (BOOL) animated
+{
+  moveInDates = [NSMutableDictionary dictionary];
+
+  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit | 
+    NSWeekdayCalendarUnit | NSYearCalendarUnit);
+  NSDate *today = [NSDate date];
+
+  // Testing
+  // NSDateComponents *c = [NSDateComponents new];
+  // [c setDay: 1];
+  // [c setMonth: 11];
+  // [c setYear: 2014];
+  // today = [calendar dateFromComponents: c];
+
+  NSDateComponents *todayComps = [calendar components: unitFlags
+    fromDate: today];
+  NSInteger startMonth = ([todayComps month] - 1) / 3;
+  startMonth = (startMonth * 3) + 1;
+  NSInteger startYear = [todayComps year];
+
+  NSInteger stepMonth = 3;
+  for (int i = 0; i < 4; i++) {
+    NSDateComponents *comps = [NSDateComponents new];
+    [comps setDay: 1];
+    NSInteger month = startMonth + (i * stepMonth);
+    NSInteger year  = startYear;
+    if (month > 12) {
+      year  = startYear + (month / 12);
+      month = month % 12;
+    }
+    [comps setMonth: month];
+    [comps setYear: year];
+
+    NSString *season;
+    if ([comps month] < 4)
+      season = @"winter";
+    else if ([comps month] < 7)
+      season = @"spring";
+    else if ([comps month] < 10)
+      season = @"summer";
+    else
+      season = @"fall";
+    NSString *string = [NSString stringWithFormat: @"%@ %i",
+      [season capitalizedString], [comps year]];
+    [moveInDates setObject: [calendar dateFromComponents: comps]
+      forKey: string];
+  }
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol CLLocationManagerDelegate
@@ -293,7 +345,8 @@ numberOfRowsInComponent: (NSInteger) component
 	else if (pickerView == availabilityPickerView)
 	{
 		// Immediately, Fall, Spring, Winter, Summer
-		return 5;
+		// return 5;
+    return [moveInDates count];
 	}
 	return 0;
 }
@@ -324,13 +377,17 @@ inComponent: (NSInteger) component
 	else if (pickerView == availabilityPickerView)
 	{
 		OMBMapFilterDateAvailableCell *cell = (OMBMapFilterDateAvailableCell *)
-		[self.table cellForRowAtIndexPath:
-		 [NSIndexPath indexPathForRow:1 inSection: 5]];
-		NSString *string = [self pickerView: pickerView titleForRow: row
-							   forComponent: component];
-		cell.dateAvailable.text = string;
-		[_valuesDictionary setObject:string
-							  forKey:@"dateAvailable"];
+		  [self.table cellForRowAtIndexPath:
+		    [NSIndexPath indexPathForRow:1 inSection: 5]];
+    cell.dateAvailable.text = [self moveInDateStringAtIndex: row];
+    [_valuesDictionary setObject: 
+      [[self moveInDatesSortedArray] objectAtIndex: row] 
+        forKey: @"moveInDate"];
+		// NSString *string = [self pickerView: pickerView titleForRow: row
+		// 					   forComponent: component];
+		// cell.dateAvailable.text = string;
+		// [_valuesDictionary setObject:string
+		// 					  forKey:@"dateAvailable"];
 	}
 }
 
@@ -355,23 +412,24 @@ rowHeightForComponent: (NSInteger) component
 		}
 		return string;
 	}
-	else if (pickerView == availabilityPickerView)
-	{
-		switch (row)
-		{
-			case 0: return @"Immediately";
-			case 1: return @"Winter '14 (Jan - Mar)";
-			case 2: return @"Spring '14 (Apr - June)";
-			case 3: return @"Summer '14 (July - Sept)";
-			case 4: return @"Fall '14 (Oct - Dec)";
-			default: break;
-		}
+	else if (pickerView == availabilityPickerView) {
+		// switch (row)
+		// {
+		// 	case 0: return @"Immediately";
+		// 	case 1: return @"Winter '14 (Jan - Mar)";
+		// 	case 2: return @"Spring '14 (Apr - June)";
+		// 	case 3: return @"Summer '14 (July - Sept)";
+		// 	case 4: return @"Fall '14 (Oct - Dec)";
+		// 	default: break;
+		// }
+
+    // return [[self moveInDatesStringArray] objectAtIndex: row];
+
+    return [self moveInDateStringAtIndex: row];
 	}
 	
   return nil;
 }
-
-
 
 - (CGFloat) pickerView: (UIPickerView *) pickerView 
 widthForComponent: (NSInteger) component
@@ -737,7 +795,7 @@ viewForHeaderInSection: (NSInteger) section
     _shouldSearch = YES;
   else if ([[_valuesDictionary objectForKey: @"propertyType"] count] > 0)
     _shouldSearch = YES;
-	else if ([_valuesDictionary objectForKey:@"dateAvailable"] != [NSNull null])
+	else if ([_valuesDictionary objectForKey:@"moveInDate"] != [NSNull null])
 		_shouldSearch = YES;
 
   [self resetValuesDictionary];
@@ -871,6 +929,66 @@ viewForHeaderInSection: (NSInteger) section
   [self showSearchBarButtonItem];
 }
 
+- (NSArray *) moveInDatesSortedArray
+{
+  return [[moveInDates allValues] sortedArrayUsingComparator: 
+    ^(id obj1, id obj2) {
+      return [obj1 compare: obj2];
+    }
+  ];
+}
+
+- (NSArray *) moveInDatesStringArray
+{
+  NSMutableArray *arrayDates = [NSMutableArray array];
+  NSMutableArray *arrayStrings = [NSMutableArray array];
+  for (NSString *key in [moveInDates allKeys]) {
+    NSDate *date = [moveInDates objectForKey: key];
+    NSDate *lastDate = [arrayDates lastObject];
+    NSLog(@"LAST DATE: %@", lastDate);
+    NSLog(@"DATE: %@",      date);
+
+    if (lastDate) {
+      // Last date is earlier than date
+      if ([lastDate compare: date] == NSOrderedAscending) {
+        [arrayDates addObject: date];
+        [arrayStrings addObject: key];
+      }
+      // Last date is later than date
+      else if ([lastDate compare: date] == NSOrderedDescending) {
+        NSInteger index = [arrayDates indexOfObject: lastDate];
+        [arrayDates insertObject: date atIndex: index];
+        [arrayStrings insertObject: key atIndex: index];
+      }
+    }
+    else {
+      [arrayDates addObject: date];
+      [arrayStrings addObject: key];
+    }
+    NSLog(@"%@", arrayDates);
+  }
+  return (NSArray *) arrayStrings;
+}
+
+- (NSString *) moveInDateStringAtIndex: (NSInteger) index
+{
+  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit | 
+    NSWeekdayCalendarUnit | NSYearCalendarUnit);
+  NSDateComponents *comps = [calendar components: unitFlags
+    fromDate: [[self moveInDatesSortedArray] objectAtIndex: index]];
+  NSString *season;
+  if ([comps month] < 4)
+    season = @"winter";
+  else if ([comps month] < 7)
+    season = @"spring";
+  else if ([comps month] < 10)
+    season = @"summer";
+  else
+    season = @"fall";
+  return [NSString stringWithFormat: @"%@ %i",
+    [season capitalizedString], [comps year]];
+}
+
 - (void) resetValuesDictionary
 {
   _valuesDictionary = [NSMutableDictionary dictionaryWithDictionary: 
@@ -881,7 +999,8 @@ viewForHeaderInSection: (NSInteger) section
       @"minRent":      [NSNull null],
       @"neighborhood": [NSNull null],
       @"propertyType": [NSMutableArray array],
-	  @"dateAvailable":[NSNull null]
+      @"moveInDate": [NSNull null]
+	  // @"dateAvailable":[NSNull null]
     }
   ];
 }

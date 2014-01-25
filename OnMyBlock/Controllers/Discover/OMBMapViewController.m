@@ -909,12 +909,24 @@ withTitle: (NSString *) title;
     minRent = tempMaxRent;
   }
 
+  // Move in date
+  NSString *moveInDateString = @"";
+  if ([dictionary objectForKey: @"moveInDate"] != [NSNull null]) {
+    NSDate *date = [dictionary objectForKey: @"moveInDate"];
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    dateFormatter.dateFormat = @"yyyy-MM-dd";
+    moveInDateString = [dateFormatter stringFromDate: date];
+  }
+
   NSMutableDictionary *params = (NSMutableDictionary *) @{
     @"bathrooms": bathrooms,
     @"bedrooms":  bedrooms,
     @"max_rent":  maxRent,
-    @"min_rent":  minRent
+    @"min_rent":  minRent,
+    @"move_in_date": moveInDateString
   };
+
+  NSLog(@"%@", params);
 
   return params;
 }

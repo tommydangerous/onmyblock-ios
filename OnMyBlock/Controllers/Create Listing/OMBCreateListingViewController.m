@@ -835,8 +835,8 @@ replacementString: (NSString *) string
       animated: YES];
     // Last step; details
     if (stepNumber == 2) {
-      [nextButton setTitle: @"Next" forState: UIControlStateNormal];
       // Turn into save
+      [nextButton setTitle: @"Save" forState: UIControlStateNormal];
 
       // [self.navigationItem setRightBarButtonItem: saveBarButtonItem
       //   animated: YES];

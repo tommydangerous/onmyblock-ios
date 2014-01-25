@@ -32,7 +32,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat labelHeight = 58.0f;
   UILabel *label = [UILabel new];
   label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
-  label.text = @"Starting Price";
+  label.text = @"Rent Price";
+  // label.text = @"Starting Price";
   label.textColor = [UIColor textColor];
   CGRect labelRect = [label.text boundingRectWithSize: 
     CGSizeMake(screenWidth, labelHeight) font: label.font];
@@ -95,8 +96,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
   UILabel *noteLabel = [UILabel new];
   noteLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
   noteLabel.numberOfLines = 0;
-  noteLabel.text = 
-    @"Start at a low price to attract more renters.";
+  // noteLabel.text = 
+  //   @"Start at a low price to attract more renters.";
+  noteLabel.text = @"This is the monthly rent price.";
   noteLabel.textColor = [UIColor blue];
   CGRect noteLabelRect = [noteLabel.text boundingRectWithSize: CGSizeMake(
     noteLabelWidth, 9999) font: noteLabel.font];
