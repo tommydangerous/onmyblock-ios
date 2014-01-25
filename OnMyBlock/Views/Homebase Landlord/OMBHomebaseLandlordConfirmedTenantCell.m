@@ -8,6 +8,8 @@
 
 #import "OMBHomebaseLandlordConfirmedTenantCell.h"
 
+#import "OMBUser.h"
+
 @implementation OMBHomebaseLandlordConfirmedTenantCell
 
 #pragma mark - Initializer
@@ -27,12 +29,23 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 #pragma mark - Instance Methods
 
-- (void) loadUserData
+- (void) loadUser: (OMBUser *) object
 {
-  objectImageView.image = [UIImage imageNamed: @"edward_d.jpg"];
-  topLabel.text    = @"Edward Drake";
-  middleLabel.text = @"University of California - Berkeley";
-  bottomLabel.text = @"(408) 858-1234";
+  user = object;
+
+  if (user.image) {
+    objectImageView.image = [user imageForSize: objectImageView.bounds.size];
+  }
+  else {
+    [user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+      objectImageView.image = [user imageForSize: 
+        objectImageView.bounds.size];
+    }];
+    objectImageView.image = [UIImage imageNamed: @"user_icon.png"];
+  }
+  topLabel.text    = [user fullName];
+  middleLabel.text = user.school;
+  bottomLabel.text = [user phoneString];
 }
 
 @end

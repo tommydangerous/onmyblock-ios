@@ -12,6 +12,7 @@
 #import "DRNRealTimeBlurView.h"
 #import "OMBAlertView.h"
 #import "OMBCenteredImageView.h"
+#import "OMBEmptyImageTwoLabelCell.h"
 #import "OMBExtendedHitAreaViewContainer.h"
 #import "OMBHomebaseLandlordOfferCell.h"
 #import "OMBHomebaseRenterAddRemoveRoommatesViewController.h"
@@ -39,7 +40,6 @@
   if (!(self = [super init])) return nil;
 
   self.screenName = @"Homebase Renter";
-  self.title      = @"Tommy's Homebase";
 
   return self;
 }
@@ -251,6 +251,10 @@
 
   // [self showRentDepositInfo];
   // [self showAddRemoveRoommates];
+
+  // Title
+  self.title = [NSString stringWithFormat: @"%@'s Homebase",
+    [[OMBUser currentUser].firstName capitalizedString]];
 
   [imageViewArray removeAllObjects];
   [imagesScrollView.subviews enumerateObjectsUsingBlock: 
@@ -526,8 +530,21 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.section == 0) {
       // Blank space
       if (indexPath.row == 0) {
-        cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
-          0.0f, 0.0f);
+        static NSString *EmptyOffersCellIdentifier = 
+          @"EmptyOffersCellIdentifier";
+        OMBEmptyImageTwoLabelCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
+            EmptyOffersCellIdentifier];
+        if (!cell1)
+          cell1 = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: 
+              EmptyOffersCellIdentifier];
+        [cell1 setTopLabelText: @"Your offers will appear here."];
+        [cell1 setMiddleLabelText: @"You will be able to confirm"];
+        [cell1 setBottomLabelText: @"or reject them."];
+        [cell1 setObjectImageViewImage: [UIImage imageNamed: 
+          @"money_icon.png"]];
+        return cell1;
       }
       else {
         // static NSString *TopPriorityCellIdentifier = 
@@ -666,8 +683,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       // Blank space
       if (indexPath.row == 0) {
         if ([[[OMBUser currentUser].acceptedOffers allValues] count] == 0) {
-          return tableView.frame.size.height - 
-            (tableView.tableHeaderView.frame.size.height + (13.0f * 2));
+          return [OMBEmptyImageTwoLabelCell heightForCell];
+          // return tableView.frame.size.height - 
+          //   (tableView.tableHeaderView.frame.size.height + (13.0f * 2));
         }
       }
       else {

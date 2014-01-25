@@ -401,7 +401,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
       // resizes this image in it's OMBCenteredImageView then sets 
       // the object for key in the imagesSizedictionary
       image = [UIImage image: residenceImage.image 
-        size: CGSizeMake(width, height)];
+        proportionatelySized: CGSizeMake(width, height)];
     }
   }
   return image;

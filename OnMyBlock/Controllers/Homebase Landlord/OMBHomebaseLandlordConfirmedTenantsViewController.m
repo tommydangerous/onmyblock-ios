@@ -9,14 +9,18 @@
 #import "OMBHomebaseLandlordConfirmedTenantsViewController.h"
 
 #import "OMBHomebaseLandlordConfirmedTenantCell.h"
+#import "OMBOffer.h"
+#import "OMBUser.h"
 
 @implementation OMBHomebaseLandlordConfirmedTenantsViewController
 
 #pragma mark - Initializer
 
-- (id) init
+- (id) initWithOffer: (OMBOffer *) object
 {
   if (!(self = [super init])) return nil;
+
+  offer = object;
 
   self.screenName = self.title = @"Confirmed Tenants";
 
@@ -45,14 +49,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!cell)
     cell = [[OMBHomebaseLandlordConfirmedTenantCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
-  [cell loadUserData];
+  // Will eventually need an accessory type
+  cell.accessoryType = UITableViewCellAccessoryNone;
+  cell.selectionStyle = UITableViewCellSelectionStyleNone;
+  [cell loadUser: offer.user];
   return cell;
 }
 
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  return 4;
+  return 1;
 }
 
 #pragma mark - Protocol UITableViewDelegate

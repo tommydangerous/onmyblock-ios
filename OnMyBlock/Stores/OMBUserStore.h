@@ -24,6 +24,8 @@
 #pragma mark Instance Methods
 
 - (void) addUser: (OMBUser *) object;
+- (void) removeUser: (OMBUser *) object;
+- (NSDictionary *) users;
 - (OMBUser *) userWithUID: (int) uid;
 
 @end

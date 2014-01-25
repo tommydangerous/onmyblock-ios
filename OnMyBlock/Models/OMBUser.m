@@ -521,7 +521,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
       // into the dictionary; e.g. the OMBMangeListingsCell 
       // resizes this image in it's OMBCenteredImageView then sets 
       // the object for key in the imagesSizedictionary
-      img = [UIImage image: self.image size: CGSizeMake(width, height)];
+      img = [UIImage image: self.image proportionatelySized: 
+        CGSizeMake(width, height)];
       if (width == height)
         [_imageSizeDictionary setObject: img forKey: string];
     }
@@ -539,6 +540,9 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (void) logout
 {
+  // Remove user from shared store
+  [[OMBUserStore sharedStore] removeUser: [OMBUser currentUser]];
+
   [OMBUser currentUser].about               = @"";
   [OMBUser currentUser].accessToken         = @"";
   [OMBUser currentUser].email               = @"";

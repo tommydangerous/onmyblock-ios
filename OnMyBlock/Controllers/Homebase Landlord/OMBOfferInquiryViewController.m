@@ -1288,8 +1288,10 @@ viewForHeaderInSection: (NSInteger) section
 
   // Create a PayPalPayment
   PayPalPayment *payment = [[PayPalPayment alloc] init];
-  payment.amount = [[NSDecimalNumber alloc] initWithString: 
-    [NSString stringWithFormat: @"%0.2f", offer.amount]];
+  #warning Change this to the actual amount eventually
+  payment.amount = [[NSDecimalNumber alloc] initWithString: @"0.01"];
+  // payment.amount = [[NSDecimalNumber alloc] initWithString: 
+  //   [NSString stringWithFormat: @"%0.2f", offer.amount]];
   payment.currencyCode     = @"USD";
   payment.shortDescription = 
     [offer.residence.address capitalizedString];

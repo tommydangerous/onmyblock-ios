@@ -32,16 +32,19 @@ reuseIdentifier: (NSString *) reuseIdentifier
 - (void) loadResidence: (OMBResidence *) object
 {
   // Image
-  if ([object coverPhoto]) {
-    objectImageView.image = [object coverPhotoForSize: 
-      objectImageView.frame.size];
+  NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
+    objectImageView.bounds.size.width, objectImageView.bounds.size.height];
+  UIImage *image = [object coverPhotoForSizeKey: sizeKey];
+  if (image) {
+    objectImageView.image = image;
   }
   else {
     [object downloadCoverPhotoWithCompletion: ^(NSError *error) {
-      objectImageView.image = [object coverPhoto];
-      [object.coverPhotoSizeDictionary setObject: objectImageView.image
-        forKey: [NSString stringWithFormat: @"%f,%f", 
-          objectImageView.frame.size.width, objectImageView.frame.size.height]];
+      if ([object coverPhoto]) {
+        objectImageView.image = [object coverPhoto];
+        [object.coverPhotoSizeDictionary setObject: 
+          objectImageView.image forKey: sizeKey];
+      }
     }];
   }
   // Address

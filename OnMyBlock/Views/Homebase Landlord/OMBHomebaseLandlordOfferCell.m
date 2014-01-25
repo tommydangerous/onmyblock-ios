@@ -13,6 +13,7 @@
 #import "OMBOffer.h"
 #import "OMBResidence.h"
 #import "OMBUser.h"
+#import "UIFont+OnMyBlock.h"
 
 @implementation OMBHomebaseLandlordOfferCell
 
@@ -39,7 +40,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
     userImageView.frame.size.width + padding + padding);
   // Time
   timeLabel = [UILabel new];
-  timeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
+  timeLabel.font = [UIFont smallTextFont];
   timeLabel.frame = CGRectMake(userImageView.frame.origin.x + 
     userImageView.frame.size.width + padding, padding, width, 15.0f);
   timeLabel.textAlignment = NSTextAlignmentRight;
@@ -47,35 +48,36 @@ reuseIdentifier: (NSString *) reuseIdentifier
   
   // Name
   nameLabel = [UILabel new];
-  nameLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  nameLabel.font = [UIFont normalTextFontBold];
   nameLabel.frame = CGRectMake(timeLabel.frame.origin.x, 
     timeLabel.frame.origin.y, timeLabel.frame.size.width, 22.0f);
   nameLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: nameLabel];
 
-  // Type
-  typeLabel = [UILabel new];
-  typeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
-  typeLabel.frame = CGRectMake(nameLabel.frame.origin.x,
+  // Address
+  addressLabel = [UILabel new];
+  addressLabel.font = [UIFont smallTextFont];
+  addressLabel.frame = CGRectMake(nameLabel.frame.origin.x,
     nameLabel.frame.origin.y + nameLabel.frame.size.height,
       nameLabel.frame.size.width, nameLabel.frame.size.height);
-  typeLabel.textColor = [UIColor grayMedium];
-  [self.contentView addSubview: typeLabel];
+  addressLabel.textColor = [UIColor grayMedium];
+  [self.contentView addSubview: addressLabel];
 
   // Rent
   rentLabel = [UILabel new];
-  rentLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
-  rentLabel.frame = CGRectMake(typeLabel.frame.origin.x,
-    typeLabel.frame.origin.y + typeLabel.frame.size.height,
-      typeLabel.frame.size.width, typeLabel.frame.size.height);
+  rentLabel.font = [UIFont normalTextFont];
+  rentLabel.frame = CGRectMake(addressLabel.frame.origin.x,
+    addressLabel.frame.origin.y + addressLabel.frame.size.height,
+      addressLabel.frame.size.width, addressLabel.frame.size.height);
   rentLabel.textColor = [UIColor pink];
   [self.contentView addSubview: rentLabel];
 
-  // Address
-  addressLabel = [UILabel new];
-  addressLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  addressLabel.textColor = [UIColor textColor];
-  [self.contentView addSubview: addressLabel];
+  // Type
+  typeLabel = [UILabel new];
+  typeLabel.font = [UIFont smallTextFont];
+  typeLabel.frame = rentLabel.frame;
+  typeLabel.textAlignment = NSTextAlignmentRight;
+  [self.contentView addSubview: typeLabel];
 
   return self;
 }
@@ -144,13 +146,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
     }];
     userImageView.image = [UIImage imageNamed: @"user_icon.png"];
   }
-
   // Name
   nameLabel.text = [_offer.user fullName];
-
   // Dates
   NSDateFormatter *dateFormatter = [NSDateFormatter new];
-  dateFormatter.dateFormat = @"MMM d, yy";
+  dateFormatter.dateFormat = @"M/d/yy";
   NSDate *moveInDate = [NSDate dateWithTimeIntervalSince1970: 
     _offer.residence.moveInDate];
   NSDate *moveOutDate = [_offer.residence moveOutDate];
@@ -158,31 +158,34 @@ reuseIdentifier: (NSString *) reuseIdentifier
     [dateFormatter stringFromDate: moveInDate],
       [dateFormatter stringFromDate: moveOutDate]];
   typeLabel.textColor = [UIColor textColor];
+  // Address
+  addressLabel.text = [_offer.residence.address capitalizedString];
+  // Rent
+  rentLabel.text = [NSString numberToCurrencyString: _offer.amount];
 
-  // Rent and address
-  NSMutableAttributedString *rentAttributedString = 
-    [[NSMutableAttributedString alloc] initWithString: 
-      [NSString numberToCurrencyString: (int) _offer.amount] attributes: @{
-        NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Medium" 
-          size: 15],
-        NSForegroundColorAttributeName: [UIColor pink]
-      }
-    ];
-  if ([_offer.residence.address length]) {
-    NSMutableAttributedString *addressAttributedString = 
-      [[NSMutableAttributedString alloc] initWithString: 
-        _offer.residence.address attributes: @{
-          NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
-            size: 15],
-          NSForegroundColorAttributeName: [UIColor textColor]
-        }
-      ];
-    NSMutableAttributedString *spacesString = 
-      [[NSMutableAttributedString alloc] initWithString: @"   "];
-    [rentAttributedString appendAttributedString: spacesString];
-    [rentAttributedString appendAttributedString: addressAttributedString];
-  }
-  rentLabel.attributedText = rentAttributedString;
+  // NSMutableAttributedString *rentAttributedString = 
+  //   [[NSMutableAttributedString alloc] initWithString: 
+  //     [NSString numberToCurrencyString: (int) _offer.amount] attributes: @{
+  //       NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Medium" 
+  //         size: 15],
+  //       NSForegroundColorAttributeName: [UIColor pink]
+  //     }
+  //   ];
+  // if ([_offer.residence.address length]) {
+  //   NSMutableAttributedString *addressAttributedString = 
+  //     [[NSMutableAttributedString alloc] initWithString: 
+  //       _offer.residence.address attributes: @{
+  //         NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
+  //           size: 15],
+  //         NSForegroundColorAttributeName: [UIColor textColor]
+  //       }
+  //     ];
+  //   NSMutableAttributedString *spacesString = 
+  //     [[NSMutableAttributedString alloc] initWithString: @"   "];
+  //   [rentAttributedString appendAttributedString: spacesString];
+  //   [rentAttributedString appendAttributedString: addressAttributedString];
+  // }
+  // rentLabel.attributedText = rentAttributedString;
 }
 
 - (void) loadOfferForLandlord: (OMBOffer *) object
@@ -235,30 +238,34 @@ reuseIdentifier: (NSString *) reuseIdentifier
   }
   typeLabel.text = status;
   typeLabel.textColor = color;
-  // Rent and address
-  NSMutableAttributedString *rentAttributedString = 
-    [[NSMutableAttributedString alloc] initWithString: 
-      [NSString numberToCurrencyString: (int) _offer.amount] attributes: @{
-        NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Medium" 
-          size: 15],
-        NSForegroundColorAttributeName: [UIColor pink]
-      }
-    ];
-  if ([_offer.residence.address length]) {
-    NSMutableAttributedString *addressAttributedString = 
-      [[NSMutableAttributedString alloc] initWithString: 
-        _offer.residence.address attributes: @{
-          NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
-            size: 15],
-          NSForegroundColorAttributeName: [UIColor textColor]
-        }
-      ];
-    NSMutableAttributedString *spacesString = 
-      [[NSMutableAttributedString alloc] initWithString: @"   "];
-    [rentAttributedString appendAttributedString: spacesString];
-    [rentAttributedString appendAttributedString: addressAttributedString];
-  }
-  rentLabel.attributedText = rentAttributedString;
+  // Address
+  addressLabel.text = [_offer.residence.address capitalizedString];
+  // Rent
+  rentLabel.text = [NSString numberToCurrencyString: _offer.amount];
+
+  // NSMutableAttributedString *rentAttributedString = 
+  //   [[NSMutableAttributedString alloc] initWithString: 
+  //     [NSString numberToCurrencyString: (int) _offer.amount] attributes: @{
+  //       NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Medium" 
+  //         size: 15],
+  //       NSForegroundColorAttributeName: [UIColor pink]
+  //     }
+  //   ];
+  // if ([_offer.residence.address length]) {
+  //   NSMutableAttributedString *addressAttributedString = 
+  //     [[NSMutableAttributedString alloc] initWithString: 
+  //       _offer.residence.address attributes: @{
+  //         NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
+  //           size: 15],
+  //         NSForegroundColorAttributeName: [UIColor textColor]
+  //       }
+  //     ];
+  //   NSMutableAttributedString *spacesString = 
+  //     [[NSMutableAttributedString alloc] initWithString: @"   "];
+  //   [rentAttributedString appendAttributedString: spacesString];
+  //   [rentAttributedString appendAttributedString: addressAttributedString];
+  // }
+  // rentLabel.attributedText = rentAttributedString;
 }
 
 - (void) loadOfferForRenter: (OMBOffer *) object
@@ -317,30 +324,34 @@ reuseIdentifier: (NSString *) reuseIdentifier
   }
   typeLabel.text = status;
   typeLabel.textColor = color;
-  // Rent and address
-  NSMutableAttributedString *rentAttributedString = 
-    [[NSMutableAttributedString alloc] initWithString: 
-      [NSString numberToCurrencyString: (int) _offer.amount] attributes: @{
-        NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Medium" 
-          size: 15],
-        NSForegroundColorAttributeName: [UIColor textColor]
-      }
-    ];
-  if ([_offer.residence.address length]) {
-    NSMutableAttributedString *addressAttributedString = 
-      [[NSMutableAttributedString alloc] initWithString: 
-        _offer.residence.address attributes: @{
-          NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
-            size: 15],
-          NSForegroundColorAttributeName: [UIColor grayMedium]
-        }
-      ];
-    NSMutableAttributedString *spacesString = 
-      [[NSMutableAttributedString alloc] initWithString: @"   "];
-    [rentAttributedString appendAttributedString: spacesString];
-    [rentAttributedString appendAttributedString: addressAttributedString];
-  }
-  rentLabel.attributedText = rentAttributedString;
+  // Address
+  addressLabel.text = [_offer.residence.address capitalizedString];
+  // Rent
+  rentLabel.text = [NSString numberToCurrencyString: _offer.amount];
+  
+  // NSMutableAttributedString *rentAttributedString = 
+  //   [[NSMutableAttributedString alloc] initWithString: 
+  //     [NSString numberToCurrencyString: (int) _offer.amount] attributes: @{
+  //       NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Medium" 
+  //         size: 15],
+  //       NSForegroundColorAttributeName: [UIColor textColor]
+  //     }
+  //   ];
+  // if ([_offer.residence.address length]) {
+  //   NSMutableAttributedString *addressAttributedString = 
+  //     [[NSMutableAttributedString alloc] initWithString: 
+  //       _offer.residence.address attributes: @{
+  //         NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
+  //           size: 15],
+  //         NSForegroundColorAttributeName: [UIColor grayMedium]
+  //       }
+  //     ];
+  //   NSMutableAttributedString *spacesString = 
+  //     [[NSMutableAttributedString alloc] initWithString: @"   "];
+  //   [rentAttributedString appendAttributedString: spacesString];
+  //   [rentAttributedString appendAttributedString: addressAttributedString];
+  // }
+  // rentLabel.attributedText = rentAttributedString;
 }
 
 @end

@@ -12,6 +12,7 @@
 #import "DRNRealTimeBlurView.h"
 #import "NSString+Extensions.h"
 #import "OMBCenteredImageView.h"
+#import "OMBEmptyImageTwoLabelCell.h"
 #import "OMBHomebaseLandlordConfirmedTenantsViewController.h"
 #import "OMBHomebaseLandlordOfferCell.h"
 #import "OMBHomebaseLandlordPaymentCell.h"
@@ -322,8 +323,24 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.section == 0) {
       // Blank space
       if (indexPath.row == 0) {
-        cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
-          0.0f, 0.0f);
+        static NSString *EmptyOffersCellIdentifier = 
+          @"EmptyOffersCellIdentifier";
+        OMBEmptyImageTwoLabelCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
+            EmptyOffersCellIdentifier];
+        if (!cell1)
+          cell1 = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: 
+              EmptyOffersCellIdentifier];
+        [cell1 setTopLabelText: @"Your offers will appear here."];
+        [cell1 setMiddleLabelText: @"You will be able to accept"];
+        [cell1 setBottomLabelText: @"or decline them."];
+        [cell1 setObjectImageViewImage: [UIImage imageNamed: 
+          @"money_icon.png"]];
+        return cell1;
+
+        // cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+        //   tableView.frame.size.width, 0.0f, 0.0f);
       }
       else {
         static NSString *OfferCellIdentifier = @"OfferCellIdentifier";
@@ -340,17 +357,42 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Confirmed Tenants
     else if (indexPath.section == 1) {
-      static NSString *ConfirmedTenantIdentifier = @"ConfirmedTenantIdentifier";
-      OMBHomebaseLandlordOfferCell *cell1 = 
-        [tableView dequeueReusableCellWithIdentifier:
-          ConfirmedTenantIdentifier];
-      if (!cell1)
-        cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault reuseIdentifier: 
+      // Blank space
+      if (indexPath.row == 0) {
+        static NSString *EmptyTenantsCellIdentifier = 
+          @"EmptyTenantsCellIdentifier";
+        OMBEmptyImageTwoLabelCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
+            EmptyTenantsCellIdentifier];
+        if (!cell1)
+          cell1 = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: 
+              EmptyTenantsCellIdentifier];
+        [cell1 setTopLabelText: @"Confirmed tenants are here."];
+        [cell1 setMiddleLabelText: @"Tenants appear here"];
+        [cell1 setBottomLabelText: @"once they pay."];
+        [cell1 setObjectImageViewImage: [UIImage imageNamed: 
+          @"group_icon.png"]];
+        return cell1;
+
+        // cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+        //   tableView.frame.size.width, 0.0f, 0.0f);
+      }
+      else {
+        static NSString *ConfirmedTenantIdentifier = 
+          @"ConfirmedTenantIdentifier";
+        OMBHomebaseLandlordOfferCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
             ConfirmedTenantIdentifier];
-      [cell1 loadConfirmedTenant: 
-        [[self confirmedTenants] objectAtIndex: indexPath.row]];
-      return cell1;
+        if (!cell1)
+          cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: 
+              ConfirmedTenantIdentifier];
+        // Account for empty row
+        [cell1 loadConfirmedTenant: 
+          [[self confirmedTenants] objectAtIndex: indexPath.row - 1]];
+        return cell1;
+      }
     }
   }
   // Payments
@@ -407,7 +449,8 @@ numberOfRowsInSection: (NSInteger) section
     }
     // Confirmed Tenants
     else if (section == 1) {
-      return [[OMBUser currentUser].confirmedTenants count];
+      // First row is for when there are no tenants
+      return 1 + [[OMBUser currentUser].confirmedTenants count];
     }
   }
   // Payments
@@ -438,6 +481,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   if (tableView == _activityTableView) {
     // Offers & Inquiries
     if (indexPath.section == 0) {
+      // Account for the emtpy row
       if (indexPath.row > 0) {
         OMBOffer *offer = [[self offers] objectAtIndex: 
           indexPath.row - 1];
@@ -448,9 +492,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Confirmed Tenants
     else if (indexPath.section == 1) {
-      [self.navigationController pushViewController:
-        [[OMBHomebaseLandlordConfirmedTenantsViewController alloc] init]
-          animated: YES];
+      // Account for the emtpy row
+      if (indexPath.row > 0) {
+        [self.navigationController pushViewController:
+          [[OMBHomebaseLandlordConfirmedTenantsViewController alloc] 
+            initWithOffer: [[self confirmedTenants] objectAtIndex: 
+              indexPath.row - 1]] animated: YES];
+      }
     }
   }
   else if (tableView == _paymentsTableView) {
@@ -483,8 +531,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       // Blank space
       if (indexPath.row == 0) {
         if ([[[OMBUser currentUser].receivedOffers allValues] count] == 0) {
-          return tableView.frame.size.height - 
-            (tableView.tableHeaderView.frame.size.height + (13.0f * 2));
+          return [OMBEmptyImageTwoLabelCell heightForCell];
+          // return tableView.frame.size.height - 
+          //   (tableView.tableHeaderView.frame.size.height + (13.0f * 2));
         }
       }
       else {
@@ -493,7 +542,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Confirmed Tenants
     else if (indexPath.section == 1) {
-      return [OMBHomebaseLandlordOfferCell heightForCell];
+      // Blank space
+      if (indexPath.row == 0) {
+        if ([[[OMBUser currentUser].confirmedTenants allValues] count] == 0) {
+          return [OMBEmptyImageTwoLabelCell heightForCell];
+          // return tableView.frame.size.height - 
+          //   (tableView.tableHeaderView.frame.size.height + (13.0f * 2));
+        }
+      }
+      else {
+        return [OMBHomebaseLandlordOfferCell heightForCell];
+      }
     }
   }
   // Payments

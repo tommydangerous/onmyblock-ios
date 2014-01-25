@@ -8,12 +8,17 @@
 
 #import "OMBImageThreeLabelCell.h"
 
+@class OMBUser;
+
 @interface OMBHomebaseLandlordConfirmedTenantCell : OMBImageThreeLabelCell
+{
+  OMBUser *user;
+}
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
-- (void) loadUserData;
+- (void) loadUser: (OMBUser *) object;
 
 @end

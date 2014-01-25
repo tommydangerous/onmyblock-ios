@@ -8,6 +8,16 @@
 
 #import "OMBTableViewController.h"
 
-@interface OMBHomebaseLandlordConfirmedTenantsViewController : OMBTableViewController
+@class OMBOffer;
+
+@interface OMBHomebaseLandlordConfirmedTenantsViewController : 
+  OMBTableViewController
+{
+  OMBOffer *offer;
+}
+
+#pragma mark - Initializer
+
+- (id) initWithOffer: (OMBOffer *) object;
 
 @end

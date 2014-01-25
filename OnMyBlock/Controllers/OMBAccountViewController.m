@@ -87,10 +87,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell.textLabel.textColor = [UIColor textColor];
     if (indexPath.section == 0) {
       if (indexPath.row == 1) {
-        cell.textLabel.text = @"Profile";
+        cell.textLabel.text = @"My Renter Profile";
       }
       else if (indexPath.row == 2) {
-        cell.textLabel.text = @"My Renter Profile";
+        cell.textLabel.text = @"My Renter Application";
       }
       else if (indexPath.row == 3) {
         cell.textLabel.text = @"Payout Methods";
@@ -203,7 +203,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (indexPath.section == 0) {
-    if (indexPath.row == 1) {
+    // Don't show the renter application
+    if (indexPath.row == 2) {
       return 0.0f;
     }
   }

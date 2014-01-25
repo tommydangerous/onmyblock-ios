@@ -42,6 +42,16 @@
   [users setObject: object forKey: [NSNumber numberWithInt: object.uid]];
 }
 
+- (void) removeUser: (OMBUser *) object
+{
+  [users removeObjectForKey: [NSNumber numberWithInt: object.uid]];
+}
+
+- (NSDictionary *) users
+{
+  return (NSDictionary *) users;
+}
+
 - (OMBUser *) userWithUID: (int) uid
 {
   return [users objectForKey: [NSNumber numberWithInt: uid]];
