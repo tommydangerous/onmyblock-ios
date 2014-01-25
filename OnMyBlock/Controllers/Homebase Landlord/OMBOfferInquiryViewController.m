@@ -24,7 +24,10 @@
 #import "OMBMessageStore.h"
 #import "OMBOffer.h"
 #import "OMBOfferInquiryResidenceCell.h"
+#import "OMBPayoutMethod.h"
 #import "OMBPayoutMethodsViewController.h"
+#import "OMBPayoutTransaction.h"
+#import "OMBPayPalVerifyMobilePaymentConnection.h"
 #import "OMBPreviousRentalCell.h"
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
@@ -43,8 +46,17 @@
   offer = object;
 
   self.screenName = @"Offer Inquiry";
-  self.title = [NSString stringWithFormat: @"%@'s Offer", 
-    [offer.user.firstName capitalizedString]];
+  if ([self offerBelongsToCurrentUser]) {
+    NSString *status = @"Pending";
+    if (offer.accepted)
+      status = @"Accepted";
+    else if (offer.declined)
+      status = @"Declined";
+    self.title = [NSString stringWithFormat: @"%@ Offer", status];
+  }
+  else
+    self.title = [NSString stringWithFormat: @"%@'s Offer", 
+      [offer.user.firstName capitalizedString]];
 
   return self;
 }
@@ -260,18 +272,35 @@
 {
   [super viewWillAppear: animated];
 
-  // If accepted
-  if (offer.accepted) {
-    respondView.alpha = 0.0f;
-    _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
-      CGRectZero];
-    _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
-      CGRectZero];
+  // Student
+  if ([self offerBelongsToCurrentUser]) {
+    if (offer.accepted && !offer.confirmed && !offer.rejected) {
+      [respondButton setTitle: @"Respond Now" forState: UIControlStateNormal];
+    }
+    else {
+      respondView.alpha = 0.0f;
+      _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
+        CGRectZero];
+      _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
+        CGRectZero];
+    }
   }
+  // Landlord
   else {
-    [respondButton setTitle: 
-      [NSString stringWithFormat: @"Respond to %@", self.title]
-        forState: UIControlStateNormal];
+    if (offer.accepted || offer.declined) {
+      respondView.alpha = 0.0f;
+      _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
+        CGRectZero];
+      _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
+        CGRectZero];
+    }
+    else {
+      NSString *string = [NSString stringWithFormat: @"%@'s Offer", 
+        [offer.user.firstName capitalizedString]];
+      [respondButton setTitle: 
+        [NSString stringWithFormat: @"Respond to %@", string]
+          forState: UIControlStateNormal];
+    }
   }
 
   // User image view
@@ -286,11 +315,15 @@
 
   // After setting up a payout method
   if (cameFromSettingUpPayoutMethods) {
-    accepted          = NO;
-    acceptedConfirmed = NO;
-
+    if ([self offerBelongsToCurrentUser]) {
+      [self confirmOffer];
+    }
+    else {
+      accepted          = NO;
+      acceptedConfirmed = NO;
+      [self alertConfirmSelected];
+    }
     alert.hidden = NO;
-    [self alertConfirmSelected];
     [UIView animateWithDuration: 0.25f animations: ^{
       alert.alpha = 1.0f;
     }];
@@ -311,6 +344,57 @@
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol PayPalPaymentDelegate
+
+- (void) payPalPaymentDidComplete: (PayPalPayment *) completedPayment
+{
+  // Payment was processed successfully; 
+  // send to server for verification and fulfillment.
+  OMBPayPalVerifyMobilePaymentConnection *conn =
+    [[OMBPayPalVerifyMobilePaymentConnection alloc] initWithOffer: 
+      offer paymentConfirmation: completedPayment.confirmation];
+  conn.completionBlock = ^(NSError *error) {
+    // Start spinning until it is done or incomplete
+    if (offer.payoutTransaction && 
+        offer.payoutTransaction.charged && 
+        offer.payoutTransaction.verified && !error) {
+      // Congratulations somewhere
+      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+        @"Congratulations" message: @"You got the place!" delegate: nil 
+          cancelButtonTitle: @"Celebrate" otherButtonTitles: nil];
+      [alertView show];
+    }
+    else {
+      [self showAlertViewWithError: error];
+    }
+    charging = NO;
+    [[self appDelegate].container stopSpinning];
+  };
+  [[self appDelegate].container startSpinning];
+  [conn start];
+
+  charging = YES;
+
+  // Dismiss the PayPalPaymentViewController.
+  [self dismissViewControllerAnimated: YES completion: nil];
+  [alert hideAlert];
+
+  // Send the entire confirmation dictionary
+  // NSData *confirmation = [NSJSONSerialization dataWithJSONObject:
+  //   completedPayment.confirmation options: 0 error: nil];
+
+  // Send confirmation to your server; 
+  // your server should verify the proof of payment
+  // and give the user their goods or services. 
+  // If the server is not reachable, save the confirmation and try again later.
+}
+
+- (void) payPalPaymentDidCancel
+{
+  // The payment was canceled; dismiss the PayPalPaymentViewController.
+  [self dismissViewControllerAnimated: YES completion: nil];
+}
 
 #pragma mark - Protocol UIScrollViewDelegate
 
@@ -443,6 +527,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
         cell1.detailTextLabel.text = offer.user.school;
         cell1.detailTextLabel.textColor = [UIColor grayMedium];
+        cell1.selectionStyle = UITableViewCellSelectionStyleNone;
         cell1.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
           size: 18];
         cell1.textLabel.text = [offer.user fullName];
@@ -999,29 +1084,180 @@ viewForHeaderInSection: (NSInteger) section
     }
   }
   else if (selectedSegmentIndex == 2) {
-    [self.navigationController pushViewController: 
-      [[OMBMessageDetailViewController alloc] initWithUser: offer.user]
-        animated: YES];
+    if ([self offerBelongsToCurrentUser])
+      [self.navigationController pushViewController: 
+        [[OMBMessageDetailViewController alloc] initWithUser: 
+          offer.landlordUser] animated: YES];
+    else
+      [self.navigationController pushViewController: 
+        [[OMBMessageDetailViewController alloc] initWithUser: offer.user]
+          animated: YES];
     selectedSegmentIndex = previouslySelectedIndex;
     [self changeTableView];
   }
 }
 
-- (void) respond
+- (void) confirmOfferAndShowAlert
+{
+  [alert hideAlert];
+  [[OMBUser currentUser] confirmOffer: offer withCompletion:
+    ^(NSError *error) {
+      if (offer.confirmed && 
+        offer.payoutTransaction && 
+        offer.payoutTransaction.charged && !error) {
+
+        [self.navigationController popViewControllerAnimated: YES];
+        // Congratulations
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+          @"Check Your Venmo" message: 
+            @"Please confirm the charge in Venmo to complete the transaction." 
+              delegate: nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
+        [alertView show];
+      }
+      else {
+        [self showAlertViewWithError: error];
+      }
+      [[self appDelegate].container stopSpinning];
+    }
+  ];
+  [[self appDelegate].container startSpinning];
+}
+
+- (void) confirmOffer
 {
   // Alert buttons
-  [alert.alertCancel setTitle: @"Decline" forState: UIControlStateNormal];
-  [alert.alertConfirm setTitle: @"Accept" forState: UIControlStateNormal];
+  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
+  [alert.alertConfirm setTitle: @"Confirm" 
+    forState: UIControlStateNormal];
 
   // Alert title
-  alert.alertTitle.text = @"Respond to Offer";
+  alert.alertTitle.text = @"Confirm Payment";
   // Alert message
-  alert.alertMessage.text = [NSString stringWithFormat: 
-    @"%@ would like to rent this place for %@ a month", 
-      [offer.user.firstName capitalizedString], 
-        [NSString numberToCurrencyString: (int) offer.amount]];
-  
-  [alert showAlert];
+  alert.alertMessage.text = 
+    @"After you confirm and pay, you will be charged within 24 hours.";
+
+  [alert addTarget: self action: @selector(hideAlert)
+    forButton: alert.alertCancel];
+  [alert addTarget: self action: @selector(confirmOfferConfirm)
+    forButton: alert.alertConfirm]; 
+
+  [alert animateChangeOfContent];
+}
+
+- (void) confirmOfferConfirm
+{
+  OMBPayoutMethod *payoutMethod = 
+    [[OMBUser currentUser] primaryPaymentPayoutMethod];
+  // If user has a primary payout method that is for payment
+  if (payoutMethod) {
+    // If primary payment method is PayPal
+    if ([payoutMethod type] == OMBPayoutMethodPayoutTypePayPal) {
+      // Show PayPal payment viewcontroller
+      [self showPayPalPayment];
+    }
+    // If primary payment method is Venmo
+    else {
+      [self confirmOfferAndShowAlert];
+    }
+  }
+  // If user does not have a primary payout method that is for payments
+  else {
+    // Alert buttons
+    [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
+    [alert.alertConfirm setTitle: @"Setup" forState: UIControlStateNormal];
+    [alert addTarget: self action: @selector(showPayoutMethods)
+      forButton: alert.alertConfirm];
+    // Alert message
+    alert.alertMessage.text = @"Please add at least one method of payment " 
+      @"before confirming.";
+    // Alert title
+    alert.alertTitle.text = @"Set Up Payment";
+    [alert animateChangeOfContent];
+  }
+}
+
+- (void) hideAlert
+{
+  [alert hideAlert];
+}
+
+- (BOOL) offerBelongsToCurrentUser
+{
+  return offer.user.uid == [OMBUser currentUser].uid;
+}
+
+- (void) rejectOffer
+{
+  alert.alertTitle.text   = @"Reject Offer";
+  alert.alertMessage.text = @"Are you sure?";
+  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
+  [alert.alertConfirm setTitle: @"Yes" forState: UIControlStateNormal];
+
+  [alert addTarget: self action: @selector(hideAlert)
+    forButton: alert.alertCancel];
+  [alert addTarget: self action: @selector(rejectOfferConfirm)
+    forButton: alert.alertConfirm];
+
+  [alert animateChangeOfContent];
+}
+
+- (void) rejectOfferConfirm
+{
+  [[OMBUser currentUser] rejectOffer: offer 
+    withCompletion: ^(NSError *error) {
+      if (offer.rejected && !error) {
+        [self.navigationController popViewControllerAnimated: YES];
+      }
+      else {
+        [self showAlertViewWithError: error];
+      }
+      [[self appDelegate].container stopSpinning];
+    }
+  ];
+  [[self appDelegate].container startSpinning];
+  [alert hideAlert];
+}
+
+- (void) respond
+{
+  if ([self offerBelongsToCurrentUser]) {
+    // Alert buttons
+    [alert.alertCancel setTitle: @"Reject" forState: UIControlStateNormal];
+    [alert.alertConfirm setTitle: @"Confirm" forState: UIControlStateNormal];
+
+    // Alert title
+    alert.alertTitle.text = @"Confirm Offer";
+    // Alert message
+    alert.alertMessage.text = 
+      @"You've been accepted, please confirm and pay to secure your place.";
+
+    [alert addTarget: self action: @selector(rejectOffer)
+      forButton: alert.alertCancel];
+    [alert addTarget: self action: @selector(confirmOffer)
+      forButton: alert.alertConfirm];
+
+    [alert showAlert];
+  }
+  else {
+    // Alert buttons
+    [alert.alertCancel setTitle: @"Decline" forState: UIControlStateNormal];
+    [alert.alertConfirm setTitle: @"Accept" forState: UIControlStateNormal];
+
+    // Alert title
+    alert.alertTitle.text = @"Respond to Offer";
+    // Alert message
+    alert.alertMessage.text = [NSString stringWithFormat: 
+      @"%@ would like to rent this place for %@ a month", 
+        [offer.user.firstName capitalizedString], 
+          [NSString numberToCurrencyString: (int) offer.amount]];
+
+    [alert addTarget: self action: @selector(alertCancelSelected)
+      forButton: alert.alertCancel];
+    [alert addTarget: self action: @selector(alertConfirmSelected)
+      forButton: alert.alertConfirm];
+
+    [alert showAlert];
+  }
 }
 
 - (void) segmentButtonSelected: (UIButton *) button
@@ -1042,6 +1278,79 @@ viewForHeaderInSection: (NSInteger) section
   }];
   cameFromSettingUpPayoutMethods = YES;
   [[self appDelegate].container showPayoutMethods];
+}
+
+- (void) showPayPalPayment
+{
+  // Use these credentials for logging in and paying in SandBox
+  // Email: quazarventures@gmail.com
+  // Password: onmyblock
+
+  // Create a PayPalPayment
+  PayPalPayment *payment = [[PayPalPayment alloc] init];
+  payment.amount = [[NSDecimalNumber alloc] initWithString: 
+    [NSString stringWithFormat: @"%0.2f", offer.amount]];
+  payment.currencyCode     = @"USD";
+  payment.shortDescription = 
+    [offer.residence.address capitalizedString];
+
+  // Check whether payment is processable.
+  if (!payment.processable) {
+    // If, for example, the amount was negative or 
+    // the shortDescription was empty, then
+    // this payment would not be processable. 
+    // You would want to handle that here.
+  }
+  
+  // Provide a payerId that uniquely identifies a user 
+  // within the scope of your system, such as an email address or user ID.
+  NSString *aPayerId = [NSString stringWithFormat: @"user_%i",
+    [OMBUser currentUser].uid];
+
+  // Create a PayPalPaymentViewController with the credentials and payerId, 
+  // the PayPalPayment from the previous step, 
+  // and a PayPalPaymentDelegate to handle the results.
+  
+  NSString *cliendId = 
+    @"AYF4PhAsNUDPRLYpTmTqtoo04_n7rmum1Q1fgpmApKJOF_eTrtxajPEFDK4Y";
+  NSString *receiverEmail = @"tommydangerouss@gmail.com";
+  
+  // Sandbox account
+  // NSString *cliendId = 
+  //   @"AetqKxBgNs-WXu7L7mhq_kpihxGdOUSo0mgLppw0wvTw_pCdP6n3ANLYt4X6";
+  // NSString *receiverEmail = @"tommydangerouss-facilitator@gmail.com";
+
+  // Start out working with the test environment! 
+  // When you are ready, remove this line to switch to live.
+  // [PayPalPaymentViewController setEnvironment: PayPalEnvironmentSandbox];
+
+  PayPalPaymentViewController *paymentViewController = 
+    [[PayPalPaymentViewController alloc] initWithClientId: cliendId 
+      receiverEmail: receiverEmail payerId: aPayerId payment: payment 
+        delegate: self];
+
+  // paymentViewController.defaultUserEmail = [OMBUser currentUser].email;
+  // paymentViewController.defaultUserPhoneCountryCode = @"1";
+  // paymentViewController.defaultUserPhoneNumber = [OMBUser currentUser].phone;
+
+  // Will only support paying with PayPal, not with credit cards
+  paymentViewController.hideCreditCardButton = YES;
+
+  [UIView animateWithDuration: 0.25f animations: ^{
+    alert.alpha = 0.0f;
+  } completion: ^(BOOL finished) {
+    if (finished)
+      alert.hidden = YES;
+  }];
+  cameFromSettingUpPayoutMethods = YES;
+
+  // This improves user experience
+  // by preconnecting to PayPal to prepare the device for
+  // processing payments
+  // [PayPalPaymentViewController prepareForPaymentUsingClientId: cliendId];
+  // Present the PayPalPaymentViewController.
+  [self presentViewController: paymentViewController animated: YES 
+    completion: nil];
 }
 
 @end

@@ -158,5 +158,7 @@
 - (void) showMenuWithFactor: (float) factor;
 - (void) startSpinning;
 - (void) stopSpinning;
+#warning Remove this
+- (void) showBookIt;
 
 @end

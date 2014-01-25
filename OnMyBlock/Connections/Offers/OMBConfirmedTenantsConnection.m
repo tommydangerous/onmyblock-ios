@@ -1,23 +1,23 @@
 //
-//  OMBOffersAcceptedConnection.m
+//  OMBConfirmedTenantsConnection.m
 //  OnMyBlock
 //
-//  Created by Tommy DANGerous on 1/21/14.
+//  Created by Tommy DANGerous on 1/24/14.
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import "OMBOffersAcceptedConnection.h"
+#import "OMBConfirmedTenantsConnection.h"
 
-@implementation OMBOffersAcceptedConnection
+@implementation OMBConfirmedTenantsConnection
 
-#pragma mark - Initializer
+#pragma mark - Init
 
 - (id) init
 {
   if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: 
-    @"%@/offers/accepted/?access_token=%@", 
+    @"%@/offers/confirmed_tenants/?access_token=%@",
       OnMyBlockAPIURL, [OMBUser currentUser].accessToken];
   [self setRequestWithString: string];
 
@@ -30,11 +30,8 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBOffersAcceptedConnection\n%@", [self json]);
-
-  [[OMBUser currentUser] readFromAcceptedOffersDictionary: [self json]];
-
-  [super connectionDidFinishLoading: connection];
+  [[OMBUser currentUser] readFromConfirmedTenantsDictionary: [self json]];
+  [super connectionDidFinishLoading: connection]; 
 }
 
 @end

@@ -205,4 +205,10 @@
   return [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: value];
 }
 
++ (UIColor *) yellow
+{
+  return [UIColor colorWithRed: 246/255.0 green: 186/255.0 blue: 50/255.0
+    alpha: 1.0f];
+}
+
 @end

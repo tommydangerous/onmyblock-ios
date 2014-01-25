@@ -10,8 +10,10 @@
 
 #import "OMBAppDelegate.h"
 #import "OMBAuthenticationVenmoConnection.h"
+#import "OMBConfirmedTenantsConnection.h"
 #import "OMBConversationMessageStore.h"
 #import "OMBCosigner.h"
+#import "OMBOfferCreateConnection.h"
 #import "OMBEmployment.h"
 #import "OMBFavoritesListConnection.h"
 #import "OMBFavoriteResidence.h"
@@ -27,6 +29,8 @@
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutMethodCreateConnection.h"
 #import "OMBPayoutMethodListConnection.h"
+#import "OMBPayoutTransaction.h"
+#import "OMBPayoutTransactionListConnection.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
@@ -86,6 +90,8 @@ int kNotificationTimerInterval = 60;
   if (!(self = [super init])) return nil;
 
   _acceptedOffers      = [NSMutableDictionary dictionary];
+  _confirmedTenants    = [NSMutableDictionary dictionary];
+  _depositPayoutTransactions = [NSMutableDictionary dictionary];
   _favorites           = [NSMutableDictionary dictionary];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _messages            = [NSMutableDictionary dictionary];
@@ -142,12 +148,14 @@ int kNotificationTimerInterval = 60;
   [OMBUser currentUser].firstName = @"fake";
   [OMBUser currentUser].lastName  = @"user";
   [OMBUser currentUser].phone     = @"4088581234";
-  [OMBUser currentUser].school    = @"university of california - berkeley";
+  [OMBUser currentUser].school    = @"University of California - Berkeley";
   [OMBUser currentUser].image     = [UIImage imageNamed: @"edward_d.jpg"];
   [OMBUser currentUser].uid       = 61;
 
   [OMBUser currentUser].renterApplication.cats = YES;
   [OMBUser currentUser].renterApplication.dogs = YES;
+
+  [[OMBUserStore sharedStore] addUser: [OMBUser currentUser]];
 
   // Post notification for logging in
   [[NSNotificationCenter defaultCenter] postNotificationName: 
@@ -208,9 +216,23 @@ withCompletion: (void (^) (NSError *error)) block
     [_acceptedOffers setObject: offer forKey: key];
 }
 
+- (void) addConfirmedTenant: (OMBOffer *) object
+{
+  NSNumber *key = [NSNumber numberWithInt: object.uid];
+  if (![_confirmedTenants objectForKey: key])
+    [_confirmedTenants setObject: object forKey: key];
+}
+
 - (void) addCosigner: (OMBCosigner *) cosigner
 {
   [_renterApplication addCosigner: cosigner];
+}
+
+- (void) addDepositPayoutTransaction: (OMBPayoutTransaction *) object
+{
+  NSNumber *key = [NSNumber numberWithInt: object.uid];
+  if (![_depositPayoutTransactions objectForKey: key])
+    [_depositPayoutTransactions setObject: object forKey: key];
 }
 
 - (void) addEmployment: (OMBEmployment *) employment
@@ -351,6 +373,15 @@ withCompletion: (void (^) (NSError *error)) block
   [conn start];
 }
 
+- (void) createOffer: (OMBOffer *) offer
+completion: (void (^) (NSError *error)) block
+{
+  OMBOfferCreateConnection *conn = 
+    [[OMBOfferCreateConnection alloc] initWithOffer: offer];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (void) createPayoutMethodWithDictionary: (NSDictionary *) dictionary
 withCompletion: (void (^) (NSError *error)) block
 {
@@ -401,6 +432,23 @@ withCompletion: (void (^) (NSError *error)) block
 {
   OMBOffersAcceptedConnection *conn = 
     [[OMBOffersAcceptedConnection alloc] init];
+  conn.completionBlock = block;
+  [conn start];
+}
+
+- (void) fetchConfirmedTenantsWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBConfirmedTenantsConnection *conn =
+    [[OMBConfirmedTenantsConnection alloc] init];
+  conn.completionBlock = block;
+  [conn start];
+}
+
+- (void) fetchDepositPayoutTransactionsWithCompletion:
+(void (^) (NSError *error)) block
+{
+  OMBPayoutTransactionListConnection *conn =
+    [[OMBPayoutTransactionListConnection alloc] initForDeposits: YES];
   conn.completionBlock = block;
   [conn start];
 }
@@ -483,7 +531,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (BOOL) loggedIn
 {
-  if ([OMBUser currentUser].accessToken)
+  if ([OMBUser currentUser].accessToken && 
+    [[OMBUser currentUser].accessToken length])
     return YES;
   return NO;
 }
@@ -502,8 +551,10 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [OMBUser currentUser].userType            = @"";
 
   [[OMBUser currentUser].acceptedOffers removeAllObjects];
+  [[OMBUser currentUser].confirmedTenants removeAllObjects];
+  [[OMBUser currentUser].depositPayoutTransactions removeAllObjects];
   [[OMBUser currentUser].favorites removeAllObjects];
-  [OMBUser currentUser].image    = nil;
+  [OMBUser currentUser].image = nil;
   [[OMBUser currentUser].imageSizeDictionary removeAllObjects];
   [OMBUser currentUser].imageURL = nil;
   // Messages
@@ -602,6 +653,29 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   return [[self paymentPayoutMethods] firstObject];
 }
 
+- (NSInteger) profilePercentage
+{
+  CGFloat count = 0.0f;
+  CGFloat total = 7.0f;
+  if ([_firstName length])
+    count += 1;
+  if ([_lastName length])
+    count += 1;
+  if ([_school length])
+    count += 1;
+  if ([_email length])
+    count += 1;
+  if ([_phone length])
+    count += 1;
+  if ([_about length])
+    count += 1;
+  if (_image)
+    count += 1;
+  CGFloat percent = count / total;
+  percent *= 100.0f;
+  return (NSInteger) percent;
+}
+
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary
 {
   NSMutableSet *newSet = [NSMutableSet set];
@@ -630,6 +704,34 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   }
 }
 
+- (void) readFromConfirmedTenantsDictionary: (NSDictionary *) dictionary
+{
+  NSMutableSet *newSet = [NSMutableSet set];
+  for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
+    NSInteger oUID = [[dict objectForKey: @"id"] intValue];
+    OMBOffer *obj = [_depositPayoutTransactions objectForKey:
+      [NSNumber numberWithInt: oUID]];
+    if (!obj) {
+      obj = [[OMBOffer alloc] init];
+      [obj readFromDictionary: dict];
+      [self addConfirmedTenant: obj];
+    }
+    else {
+      [obj readFromDictionary: dict];
+    }
+
+    [newSet addObject: [NSNumber numberWithInt: obj.uid]];
+  }
+
+  // Remove the offers that are no longer suppose to be there
+  NSMutableSet *oldSet = [NSMutableSet setWithArray:
+    [[_confirmedTenants allValues] valueForKey: @"uid"]];
+  [oldSet minusSet: newSet];
+  for (NSNumber *number in [oldSet allObjects]) {
+    [_confirmedTenants removeObjectForKey: number];
+  }
+}
+
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary
 {
   NSArray *array = [dictionary objectForKey: @"objects"];
@@ -637,6 +739,34 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     OMBCosigner *cosigner = [[OMBCosigner alloc] init];
     [cosigner readFromDictionary: dict];
     [self addCosigner: cosigner];
+  }
+}
+
+- (void) readFromDepositPayoutTransactionDictionary: (NSDictionary *) dictionary
+{
+  NSMutableSet *newSet = [NSMutableSet set];
+  for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
+    NSInteger oUID = [[dict objectForKey: @"id"] intValue];
+    OMBPayoutTransaction *obj = [_depositPayoutTransactions objectForKey:
+      [NSNumber numberWithInt: oUID]];
+    if (!obj) {
+      obj = [[OMBPayoutTransaction alloc] init];
+      [obj readFromDictionary: dict];
+      [self addDepositPayoutTransaction: obj];
+    }
+    else {
+      [obj readFromDictionary: dict];
+    }
+
+    [newSet addObject: [NSNumber numberWithInt: obj.uid]];
+  }
+
+  // Remove the offers that are no longer suppose to be there
+  NSMutableSet *oldSet = [NSMutableSet setWithArray:
+    [[_depositPayoutTransactions allValues] valueForKey: @"uid"]];
+  [oldSet minusSet: newSet];
+  for (NSNumber *number in [oldSet allObjects]) {
+    [_depositPayoutTransactions removeObjectForKey: number];
   }
 }
 
@@ -656,13 +786,19 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   //   success:     1,
   //   user_type:  user_type
   // }
-  NSInteger userUID = [[dictionary objectForKey: @"id"] intValue];
-  if (![OMBUser currentUser].uid || [OMBUser currentUser].uid != userUID) {
-    if ([dictionary objectForKey: @"access_token"])
-      _accessToken = [dictionary objectForKey: @"access_token"];
-    else
-      _accessToken = @"";
+  NSInteger userUID = 0;
+  if ([dictionary objectForKey: @"id"] != [NSNull null]) {
+    userUID = [[dictionary objectForKey: @"id"] intValue];
     _uid = userUID;
+  }
+  // Make sure readFromDictionary doesn't overwrite the 
+  // current user's access token
+  if ([OMBUser currentUser].uid && [OMBUser currentUser].uid == userUID) {
+    if ([dictionary objectForKey: @"access_token"]) {
+      if (!_accessToken || ![_accessToken length]) {
+        _accessToken = [dictionary objectForKey: @"access_token"];  
+      }
+    }
   }
 
   // About

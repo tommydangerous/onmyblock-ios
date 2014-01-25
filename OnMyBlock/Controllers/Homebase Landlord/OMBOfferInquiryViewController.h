@@ -8,12 +8,15 @@
 
 #import "OMBViewController.h"
 
+#import "PayPalMobile.h"
+
 @class OMBAlertView;
 @class OMBCenteredImageView;
 @class OMBOffer;
 
 @interface OMBOfferInquiryViewController : OMBViewController
-<UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
+<PayPalPaymentDelegate, UIScrollViewDelegate, UITableViewDataSource, 
+  UITableViewDelegate>
 {
   BOOL accepted;
   BOOL acceptedConfirmed;
@@ -21,6 +24,7 @@
   UIView *backView;
   CGFloat backViewOffsetY;
   UIView *buttonsView;
+  BOOL charging;
   BOOL cameFromSettingUpPayoutMethods;
   UIButton *contactButton;
   NSArray *legalQuestions;

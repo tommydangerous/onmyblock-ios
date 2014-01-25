@@ -8,6 +8,7 @@
 
 #import "OMBOfferCreateConnection.h"
 
+#import "NSString+Extensions.h"
 #import "OMBOffer.h"
 #import "OMBResidence.h"
 
@@ -22,11 +23,21 @@
   offer = object;
 
   NSString *string = [NSString stringWithFormat: @"%@/offers", OnMyBlockAPIURL];
+  CGFloat amount = offer.amount;
+  if (!amount)
+    amount = 0;
+  NSString *note = offer.note;
+  if (!offer.note || ![[offer.note stripWhiteSpace] length])
+    note = @"";
+  NSInteger residenceID = object.residence.uid;
+  if (!residenceID)
+    residenceID = 0;
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,
     @"offer": @{
-      @"amount":       [NSNumber numberWithFloat: offer.amount],
-      @"residence_id": [NSNumber numberWithFloat: object.residence.uid]
+      @"amount": [NSNumber numberWithFloat: amount],
+      @"note": note,
+      @"residence_id": [NSNumber numberWithInt: residenceID]
     }
   };
   [self setRequestWithString: string method: @"POST" parameters: params];

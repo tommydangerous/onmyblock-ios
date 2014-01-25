@@ -13,6 +13,7 @@
 #import "OMBAppDelegate.h"
 #import "OMBTabBarController.h"
 #import "OMBUser.h"
+#import "UIFont+OnMyBlock.h"
 
 @interface OMBViewController : GAITrackedViewController
 {

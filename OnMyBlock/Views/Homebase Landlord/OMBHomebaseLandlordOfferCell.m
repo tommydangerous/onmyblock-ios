@@ -129,25 +129,63 @@ reuseIdentifier: (NSString *) reuseIdentifier
       rentLabel.frame.origin.y, addressMaxWidth, rentLabel.frame.size.height);
 }
 
-- (void) loadConfirmedTenantData
+- (void) loadConfirmedTenant: (OMBOffer *) object
 {
+  _offer = object;
+  
   // Image
-  userImageView.image = [UIImage imageNamed: @"edward_d.jpg"];
-  // Time
-  timeLabel.text = @"+3 more";
-  timeLabel.textColor = [UIColor blueDark];
+  if (_offer.user.image) {
+    userImageView.image = [_offer.user imageForSize: userImageView.frame.size];
+  }
+  else {
+    [_offer.user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+      userImageView.image = [_offer.user imageForSize: 
+        userImageView.frame.size];
+    }];
+    userImageView.image = [UIImage imageNamed: @"user_icon.png"];
+  }
+
   // Name
-  nameLabel.text = @"Edward Drake";
-  // Type / Tenants
-  typeLabel.text = @"4/13/14 - 10/1/14";
-  // Rent
-  rentLabel.text = @"$2,100";
-  // Address
-  addressLabel.text = @"275 Sand Hill Rd";
-  [self adjustFrames];
+  nameLabel.text = [_offer.user fullName];
+
+  // Dates
+  NSDateFormatter *dateFormatter = [NSDateFormatter new];
+  dateFormatter.dateFormat = @"MMM d, yy";
+  NSDate *moveInDate = [NSDate dateWithTimeIntervalSince1970: 
+    _offer.residence.moveInDate];
+  NSDate *moveOutDate = [_offer.residence moveOutDate];
+  typeLabel.text = [NSString stringWithFormat: @"%@ - %@",
+    [dateFormatter stringFromDate: moveInDate],
+      [dateFormatter stringFromDate: moveOutDate]];
+  typeLabel.textColor = [UIColor textColor];
+
+  // Rent and address
+  NSMutableAttributedString *rentAttributedString = 
+    [[NSMutableAttributedString alloc] initWithString: 
+      [NSString numberToCurrencyString: (int) _offer.amount] attributes: @{
+        NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Medium" 
+          size: 15],
+        NSForegroundColorAttributeName: [UIColor pink]
+      }
+    ];
+  if ([_offer.residence.address length]) {
+    NSMutableAttributedString *addressAttributedString = 
+      [[NSMutableAttributedString alloc] initWithString: 
+        _offer.residence.address attributes: @{
+          NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
+            size: 15],
+          NSForegroundColorAttributeName: [UIColor textColor]
+        }
+      ];
+    NSMutableAttributedString *spacesString = 
+      [[NSMutableAttributedString alloc] initWithString: @"   "];
+    [rentAttributedString appendAttributedString: spacesString];
+    [rentAttributedString appendAttributedString: addressAttributedString];
+  }
+  rentLabel.attributedText = rentAttributedString;
 }
 
-- (void) loadOffer: (OMBOffer *) object
+- (void) loadOfferForLandlord: (OMBOffer *) object
 {
   _offer = object;
 
@@ -168,15 +206,35 @@ reuseIdentifier: (NSString *) reuseIdentifier
   timeLabel.textColor = [UIColor grayMedium];
   // Name
   nameLabel.text = [_offer.user fullName];
-  // Type / Tenants
-  if (_offer.accepted) {
-    typeLabel.text      = @"waiting on student";
-    typeLabel.textColor = [UIColor grayMedium];
+  // Status
+  UIColor *color;
+  NSString *status;
+  if (_offer.rejected) {
+    color = [UIColor red];
+    status = @"student rejected";
+  }
+  else if (_offer.confirmed) {
+    color = [UIColor green];
+    status = @"student confirmed";
+  }
+  else if (_offer.accepted) {
+    color = [UIColor yellow];
+    status = @"waiting for student";
+  }
+  else if (_offer.onHold) {
+    color = [UIColor grayMedium];
+    status = @"on hold";
+  }
+  else if (_offer.declined) {
+    color = [UIColor grayMedium];
+    status = @"declined";
   }
   else {
-    typeLabel.text      = @"response required";
-    typeLabel.textColor = [UIColor red];
+    color = [UIColor blue];
+    status = @"response required";
   }
+  typeLabel.text = status;
+  typeLabel.textColor = color;
   // Rent and address
   NSMutableAttributedString *rentAttributedString = 
     [[NSMutableAttributedString alloc] initWithString: 
@@ -193,6 +251,88 @@ reuseIdentifier: (NSString *) reuseIdentifier
           NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
             size: 15],
           NSForegroundColorAttributeName: [UIColor textColor]
+        }
+      ];
+    NSMutableAttributedString *spacesString = 
+      [[NSMutableAttributedString alloc] initWithString: @"   "];
+    [rentAttributedString appendAttributedString: spacesString];
+    [rentAttributedString appendAttributedString: addressAttributedString];
+  }
+  rentLabel.attributedText = rentAttributedString;
+}
+
+- (void) loadOfferForRenter: (OMBOffer *) object
+{
+  _offer = object;
+
+  // Image
+  if (![_offer.residence coverPhoto]) {
+    [userImageView clearImage];
+  }
+  NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
+    userImageView.bounds.size.width, userImageView.bounds.size.height];
+  UIImage *image = [_offer.residence coverPhotoForSizeKey: sizeKey];
+  if (image) {
+    userImageView.image = image;
+  }
+  else {
+    [_offer.residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
+      if ([_offer.residence coverPhoto]) {
+        userImageView.image = [_offer.residence coverPhoto];
+        [_offer.residence.coverPhotoSizeDictionary setObject: 
+          userImageView.image forKey: sizeKey];
+      }
+    }];
+  }
+
+  // Time
+  timeLabel.text = [NSString timeAgoInShortFormatWithTimeInterval:
+    _offer.createdAt];
+  timeLabel.textColor = [UIColor grayMedium];
+  timeLabel.hidden = YES;
+  // Title
+  nameLabel.text = _offer.residence.title;
+  // Status
+  UIColor *color;
+  NSString *status;
+  if (_offer.confirmed) {
+    color = [UIColor grayMedium];
+    status = @"confirmed";
+  }
+  else if (_offer.rejected) {
+    color = [UIColor grayMedium];
+    status = @"rejected";
+  }
+  else if (_offer.accepted) {
+    color = [UIColor green];
+    status = @"accepted";
+  }
+  else if (_offer.declined) {
+    color = [UIColor red];
+    status = @"declined";
+  }
+  else {
+    color = [UIColor yellow];
+    status = @"pending";
+  }
+  typeLabel.text = status;
+  typeLabel.textColor = color;
+  // Rent and address
+  NSMutableAttributedString *rentAttributedString = 
+    [[NSMutableAttributedString alloc] initWithString: 
+      [NSString numberToCurrencyString: (int) _offer.amount] attributes: @{
+        NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Medium" 
+          size: 15],
+        NSForegroundColorAttributeName: [UIColor textColor]
+      }
+    ];
+  if ([_offer.residence.address length]) {
+    NSMutableAttributedString *addressAttributedString = 
+      [[NSMutableAttributedString alloc] initWithString: 
+        _offer.residence.address attributes: @{
+          NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
+            size: 15],
+          NSForegroundColorAttributeName: [UIColor grayMedium]
         }
       ];
     NSMutableAttributedString *spacesString = 

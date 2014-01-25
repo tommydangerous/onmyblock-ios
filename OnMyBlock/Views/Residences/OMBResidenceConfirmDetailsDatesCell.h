@@ -8,10 +8,18 @@
 
 #import "OMBTableViewCell.h"
 
+@class OMBResidence;
+
 @interface OMBResidenceConfirmDetailsDatesCell : OMBTableViewCell
 
 @property (nonatomic, strong) UILabel *leaseMonthsLabel;
 @property (nonatomic, strong) UILabel *moveInDateLabel;
 @property (nonatomic, strong) UILabel *moveOutDateLabel;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) loadResidence: (OMBResidence *) object;
 
 @end

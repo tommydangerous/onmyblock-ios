@@ -75,7 +75,6 @@
   float marginTop          = 20;
   float bedBathLabelHeight = 25;
   float rentLabelHeight    = 40;
-  float rentLabelWidth = (screen.size.width - 30) / 2.0;
   float infoViewHeight = marginTop + marginTop + (bedBathLabelHeight * 2) +
     marginBottom;
   infoView = [[OMBGradientView alloc] init];
@@ -129,7 +128,8 @@
   // [infoView addSubview: offersAndTimeLabel];
 
   // Rent frame
-  rentLabel.frame = CGRectMake((screen.size.width - rentLabelWidth), 
+  CGFloat rentLabelWidth = screenWidth - (bedBathLabel.frame.origin.x * 2);
+  rentLabel.frame = CGRectMake(bedBathLabel.frame.origin.x, 
     offersAndTimeLabel.frame.origin.y - rentLabelHeight, 
       rentLabelWidth, rentLabelHeight);
 

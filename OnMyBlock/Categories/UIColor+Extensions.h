@@ -43,5 +43,6 @@
 + (UIColor *) venmoBlue;
 + (UIColor *) venmoBlueDark;
 + (UIColor *) whiteAlpha: (float) value;
++ (UIColor *) yellow;
 
 @end

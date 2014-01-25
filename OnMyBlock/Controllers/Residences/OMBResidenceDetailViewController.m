@@ -30,6 +30,7 @@
 #import "OMBResidenceDetailMapCell.h"
 #import "OMBResidenceDetailSellerCell.h"
 #import "OMBResidenceImage.h"
+#import "OMBResidenceBookItConfirmDetailsViewController.h"
 #import "OMBResidenceDetailConnection.h"
 #import "OMBResidenceImagesConnection.h"
 #import "OMBResidenceImageSlideViewController.h"
@@ -257,9 +258,10 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
         _contactMeButton.frame.origin.y, _contactMeButton.frame.size.width, 
           _contactMeButton.frame.size.height);
   _bookItButton.titleLabel.font = _contactMeButton.titleLabel.font;
-  [_bookItButton addTarget: self action: @selector(showBookItNow)
+  [_bookItButton addTarget: self action: @selector(showPlaceOffer)
     forControlEvents: UIControlEventTouchUpInside];
-  [_bookItButton setTitle: @"Book It!" forState: UIControlStateNormal];
+  [_bookItButton setTitle: @"Place Offer" // @"Book It!" 
+    forState: UIControlStateNormal];
   [_bookItButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [_bottomButtonView addSubview: _bookItButton];
@@ -358,7 +360,8 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   // Table footer view
   CGFloat footerHeight = _bottomButtonView.frame.size.height;
   // If this residence belongs to the current user
-  if (residence.user.uid == [OMBUser currentUser].uid) {
+  if ([[OMBUser currentUser] loggedIn] && 
+    residence.user.uid == [OMBUser currentUser].uid) {
     // Hide the table footer view and buttons at the bottom
     footerHeight = 0.0f;
     _bottomButtonView.hidden = YES;
@@ -745,7 +748,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) contactMeButtonSelected
 {
-  if ([OMBUser currentUser].accessToken) {
+  if ([[OMBUser currentUser] loggedIn]) {
     // messageDetailViewController = 
     //   [[OMBMessageDetailViewController alloc] initWithUser: residence.user];
     // [self.navigationController pushViewController: 
@@ -859,15 +862,28 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showBookItNow
 {
-  [self.navigationController pushViewController: 
-    [[OMBResidenceBookItViewController alloc] initWithResidence: residence] 
-      animated: YES];
+  if ([[OMBUser currentUser] loggedIn])
+    [self.navigationController pushViewController: 
+      [[OMBResidenceBookItViewController alloc] initWithResidence: residence] 
+        animated: YES];
+  else
+    [[self appDelegate].container showSignUp];
 }
 
 - (void) showImageSlideViewController
 {
   [self presentViewController: _imageSlideViewController animated: YES
     completion: nil];
+}
+
+- (void) showPlaceOffer
+{
+  if ([[OMBUser currentUser] loggedIn])
+    [self.navigationController pushViewController:
+      [[OMBResidenceBookItConfirmDetailsViewController alloc] initWithResidence:
+        residence] animated: YES];
+  else
+    [[self appDelegate].container showSignUp];
 }
 
 - (void) timerFireMethod: (NSTimer *) timer

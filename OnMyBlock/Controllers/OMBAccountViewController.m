@@ -90,7 +90,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.textLabel.text = @"Profile";
       }
       else if (indexPath.row == 2) {
-        cell.textLabel.text = @"My Renter Application";
+        cell.textLabel.text = @"My Renter Profile";
       }
       else if (indexPath.row == 3) {
         cell.textLabel.text = @"Payout Methods";

@@ -13,12 +13,14 @@
 #import "OMBAlertView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBExtendedHitAreaViewContainer.h"
+#import "OMBHomebaseLandlordOfferCell.h"
 #import "OMBHomebaseRenterAddRemoveRoommatesViewController.h"
 #import "OMBHomebaseRenterNotificationCell.h"
 #import "OMBHomebaseRenterPaymentNotificationCell.h"
 #import "OMBHomebaseRenterRentDepositInfoViewController.h"
 #import "OMBHomebaseRenterRoommateImageView.h"
 #import "OMBHomebaseRenterTopPriorityCell.h"
+#import "OMBOfferInquiryViewController.h"
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutTransaction.h"
 #import "OMBPayPalVerifyMobilePaymentConnection.h"
@@ -140,12 +142,12 @@
   middleDivider.backgroundColor = [UIColor whiteColor];
   middleDivider.frame = CGRectMake((buttonsView.frame.size.width - 1.0f) * 0.5f,
     0.0f, 1.0f, buttonsView.frame.size.height);
-  [buttonsView addSubview: middleDivider];
+  // [buttonsView addSubview: middleDivider];
 
   // Activity button
   activityButton = [UIButton new];
   activityButton.frame = CGRectMake(0.0f, 0.0f, 
-    buttonsView.frame.size.width * 0.5f, buttonsView.frame.size.height);
+    buttonsView.frame.size.width * 1, buttonsView.frame.size.height);
   activityButton.tag = 0;
   activityButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
@@ -169,7 +171,7 @@
   [paymentsButton setTitle: @"Rental Payments" forState: UIControlStateNormal];
   [paymentsButton setTitleColor: middleDivider.backgroundColor
     forState: UIControlStateNormal];
-  [buttonsView addSubview: paymentsButton];
+  // [buttonsView addSubview: paymentsButton];
 
   CGFloat tableViewOriginY = backView.frame.origin.y + 
     padding + buttonsView.frame.size.height + padding;
@@ -528,22 +530,32 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           0.0f, 0.0f);
       }
       else {
-        static NSString *TopPriorityCellIdentifier = 
-          @"TopPriorityCellIdentifier";
-        OMBHomebaseRenterTopPriorityCell *cell1 = 
+        // static NSString *TopPriorityCellIdentifier = 
+        //   @"TopPriorityCellIdentifier";
+        // OMBHomebaseRenterTopPriorityCell *cell1 = 
+        //   [tableView dequeueReusableCellWithIdentifier:
+        //     TopPriorityCellIdentifier];
+        // if (!cell1)
+        //   cell1 = [[OMBHomebaseRenterTopPriorityCell alloc] initWithStyle: 
+        //     UITableViewCellStyleDefault reuseIdentifier: 
+        //       TopPriorityCellIdentifier];
+        // OMBOffer *offer = [[self offers] objectAtIndex: indexPath.row - 1];
+        // cell1.noButton.tag = cell1.yesButton.tag = offer.uid;
+        // [cell1.noButton addTarget: self action: @selector(rejectOffer:)
+        //   forControlEvents: UIControlEventTouchUpInside];
+        // [cell1.yesButton addTarget: self action: @selector(confirmOffer:)
+        //   forControlEvents: UIControlEventTouchUpInside];
+        // [cell1 loadOffer: offer];
+        // return cell1;
+        static NSString *OfferCellIdentifier = @"OfferCellIdentifier";
+        OMBHomebaseLandlordOfferCell *cell1 = 
           [tableView dequeueReusableCellWithIdentifier:
-            TopPriorityCellIdentifier];
+            OfferCellIdentifier];
         if (!cell1)
-          cell1 = [[OMBHomebaseRenterTopPriorityCell alloc] initWithStyle: 
-            UITableViewCellStyleDefault reuseIdentifier: 
-              TopPriorityCellIdentifier];
-        OMBOffer *offer = [[self offers] objectAtIndex: indexPath.row - 1];
-        cell1.noButton.tag = cell1.yesButton.tag = offer.uid;
-        [cell1.noButton addTarget: self action: @selector(rejectOffer:)
-          forControlEvents: UIControlEventTouchUpInside];
-        [cell1.yesButton addTarget: self action: @selector(confirmOffer:)
-          forControlEvents: UIControlEventTouchUpInside];
-        [cell1 loadOffer: offer];
+          cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: OfferCellIdentifier];
+        [cell1 loadOfferForRenter: 
+          [[self offers] objectAtIndex: indexPath.row - 1]];
         return cell1;
       }
     }
@@ -624,6 +636,17 @@ numberOfRowsInSection: (NSInteger) section
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  if (tableView == _activityTableView) {
+    if (indexPath.section == 0) {
+      if (indexPath.row > 0) {
+        OMBOffer *offer = [[self offers] objectAtIndex: 
+          indexPath.row - 1];
+        [self.navigationController pushViewController:
+          [[OMBOfferInquiryViewController alloc] initWithOffer: offer]
+            animated: YES];
+      }
+    }
+  }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
@@ -648,7 +671,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         }
       }
       else {
-        return [OMBHomebaseRenterTopPriorityCell heightForCell];
+        // return [OMBHomebaseRenterTopPriorityCell heightForCell];
+        return [OMBHomebaseLandlordOfferCell heightForCell];
       }
     }
     // Recent Activity

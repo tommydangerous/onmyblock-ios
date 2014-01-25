@@ -37,8 +37,19 @@
 #import "UIImage+Color.h"
 #import "UIImage+NegativeImage.h"
 #import "UIImage+Resize.h"
+#warning Remove this
+#import "OMBResidence.h"
+#import "OMBResidenceBookItConfirmDetailsViewController.h"
+
 
 @implementation OMBViewControllerContainer
+#warning Remove this
+- (void) showBookIt
+{
+  [_mapNavigationController pushViewController:
+    [[OMBResidenceBookItConfirmDetailsViewController alloc] initWithResidence:
+      [OMBResidence fakeResidence]] animated: YES];
+}
 
 - (id) init
 {
@@ -684,6 +695,7 @@ willDecelerate: (BOOL) decelerate
   hitArea.hidden     = YES;
   _menuScroll.hidden = NO;
 
+  [_mapNavigationController popToRootViewControllerAnimated: NO];
   [self presentDetailViewController: _mapNavigationController];
 }
 

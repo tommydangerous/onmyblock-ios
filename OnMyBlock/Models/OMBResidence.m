@@ -9,6 +9,7 @@
 #import "OMBResidence.h"
 
 #import "NSString+Extensions.h"
+#import "OMBAllResidenceStore.h"
 #import "OMBConnection.h"
 #import "OMBOffer.h"
 #import "OMBOpenHouse.h"
@@ -77,19 +78,21 @@
     residence.bedrooms = 3.0f;
     residence.city = @"Gondor";
     residence.createdAt = [[NSDate date] timeIntervalSince1970];
+    residence.deposit = 2100.00;
     residence.description = @"The best place to not suffer.";
     residence.email = @"witch_king@gmail.com";
     residence.landlordName = @"Nazgul Smith";
     residence.latitude = -32;
-    residence.leaseMonths = 12;
+    residence.leaseMonths = 17;
     residence.longitude = 113;
+    residence.moveInDate = [[NSDate date] timeIntervalSince1970];
     residence.minRent = 1750.00;
     residence.phone = @"8581234567";
     residence.propertyType = @"sublet";
     residence.squareFeet = 900;
     residence.state = @"CA";
-    residence.title = @"Best College Pad Ever";
-    residence.uid = 9999;
+    residence.title = @"Ultra Best College Pad Ever Near Beach";
+    residence.uid = -1234;
     residence.updatedAt = [[NSDate date] timeIntervalSince1970];
     residence.zip = @"92122";
 
@@ -409,6 +412,35 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   NSLog(@"RESIDENCE FETCH OFFERS");
 }
 
+- (NSDate *) moveOutDate
+{
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit | 
+    NSWeekdayCalendarUnit | NSYearCalendarUnit);
+
+  NSDateComponents *moveInComps = [calendar components: unitFlags
+    fromDate: [NSDate dateWithTimeIntervalSince1970: _moveInDate]];
+  [moveInComps setDay: 1];
+  // NSDate *moveInDate = [calendar dateFromComponents: moveInComps];
+
+  // 9
+  NSInteger month = [moveInComps month];
+  // 14
+  NSInteger year  = [moveInComps year];
+  // 10 + 7 = 17
+  month += _leaseMonths;
+  // 14 + 17 / 12 (1) = 15
+  year += month / 12;
+  // 17 % 12 = 5
+  month = month % 12;
+  // 5-1-15
+  NSDateComponents *moveOutComps = [NSDateComponents new];
+  [moveOutComps setDay: 1];
+  [moveOutComps setMonth: month];
+  [moveOutComps setYear: year];
+  return [calendar dateFromComponents: moveOutComps];
+}
+
 - (NSInteger) numberOfStepsLeft
 {
   NSInteger stepsRemaining = [OMBResidence numberOfSteps];
@@ -562,7 +594,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
 
   // Address
   if ([dictionary objectForKey: @"address"] != [NSNull null])
-    _address = [dictionary objectForKey: @"address"];
+    _address = [[dictionary objectForKey: @"address"] stripWhiteSpace];
   // Amenities
   if ([dictionary objectForKey: @"amenities"] != [NSNull null]) {
     NSArray *amenitiesArray = [[dictionary objectForKey: 
@@ -605,8 +637,9 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
       _cats = NO;
   }
   // City
-  if ([dictionary objectForKey: @"city"] != [NSNull null])
-    _city = [dictionary objectForKey: @"city"];
+  if ([dictionary objectForKey: @"city"] != [NSNull null]) {
+    _city = [[dictionary objectForKey: @"city"] stripWhiteSpace];
+  }
   // Created at
   if ([dictionary objectForKey: @"created_at"] != [NSNull null])
     _createdAt = [[dateFormatter dateFromString:
@@ -614,6 +647,9 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   // Description
   if ([dictionary objectForKey: @"description"] != [NSNull null])
     _description = [dictionary objectForKey: @"description"];
+  // Deposit
+  if ([dictionary objectForKey: @"deposit"] != [NSNull null])
+    _deposit = [[dictionary objectForKey: @"deposit"] floatValue];
   // Dogs
   if ([dictionary objectForKey: @"dogs"] != [NSNull null]) {
     if ([[dictionary objectForKey: @"dogs"] intValue])
@@ -691,8 +727,9 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   if ([dictionary objectForKey: @"min_sqft"] != [NSNull null])
     _squareFeet = [[dictionary objectForKey: @"min_sqft"] intValue];
   // State
-  if ([dictionary objectForKey: @"state"] != [NSNull null])
-    _state = [dictionary objectForKey: @"state"];
+  if ([dictionary objectForKey: @"state"] != [NSNull null]) {
+    _state = [[dictionary objectForKey: @"state"] stripWhiteSpace];
+  }
   // Title
   if ([dictionary objectForKey: @"title"] != [NSNull null])
     _title = [dictionary objectForKey: @"title"];
@@ -717,6 +754,8 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   // Zip
   if ([dictionary objectForKey: @"zip"] != [NSNull null])
     _zip = [dictionary objectForKey: @"zip"];
+
+  [[OMBAllResidenceStore sharedStore] addResidence: self];
 }
 
 - (void) removeResidenceImage: (OMBResidenceImage *) residenceImage

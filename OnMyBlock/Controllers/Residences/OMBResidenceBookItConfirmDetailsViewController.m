@@ -8,10 +8,14 @@
 
 #import "OMBResidenceBookItConfirmDetailsViewController.h"
 
+#import "AMBlurView.h"
 #import "DRNRealTimeBlurView.h"
+#import "NSString+Extensions.h"
+#import "OMBAccountProfileViewController.h"
+#import "OMBAlertView.h"
 #import "OMBCenteredImageView.h"
+#import "OMBGradientView.h"
 #import "OMBOffer.h"
-#import "OMBOfferCreateConnection.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceAddPersonalNoteViewController.h"
@@ -33,12 +37,22 @@
 {
   if (!(self = [super init])) return nil;
 
-  deposit   = 1000;
   residence = object;
-  offer     = [[OMBOffer alloc] init];
+  deposit = 0;
+  if (residence.deposit)
+    deposit = residence.deposit;
+  offer = [[OMBOffer alloc] init];
   offer.residence = residence;
+  offer.user = [OMBUser currentUser];
 
-  self.screenName = self.title = @"Confirm Details";
+  self.screenName = self.title = @"Confirm Offer Details";
+
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(keyboardWillShow:)
+      name: UIKeyboardWillShowNotification object: nil];
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(keyboardWillHide:)
+      name: UIKeyboardWillHideNotification object: nil];
 
   return self;
 }
@@ -51,62 +65,128 @@
 {
   [super loadView];
 
+  doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
+    style: UIBarButtonItemStylePlain target: self action: @selector(done)];
+  [doneBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
+  } forState: UIControlStateNormal];
+
   [self setupForTable];
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenHeight = screen.size.height;
   CGFloat screenWidth = screen.size.width;
 
-  CGFloat height = screenHeight * 0.4f;
+  CGFloat imageHeight = screenHeight * 0.4f;
+  CGFloat height = imageHeight;
   CGFloat padding = 20.0f;
 
   // reviewBarButton = [[UIBarButtonItem alloc] initWithTitle: @"Review" 
   //   style: UIBarButtonItemStylePlain target: self action: @selector(review)];
   // self.navigationItem.rightBarButtonItem = reviewBarButton;
 
+  // Behind the table view so that when u scroll
+  // past the bottom, it is not white
+  UIView *bottomView = [UIView new];
+  bottomView.backgroundColor = [UIColor grayUltraLight];
+  bottomView.frame = CGRectMake(0.0f, screenHeight * 0.5f,
+    screenWidth, screenHeight * 0.5f);
+  [self.view insertSubview: bottomView belowSubview: self.table];
+
+  self.table.backgroundColor = [UIColor clearColor];
+  // Table header view
+  UIView *headerView = [[UIView alloc] init];
+  headerView.backgroundColor = [UIColor clearColor];
+  // 20 = status bar height
+  // 44 = navigation bar height
+  // 22 = line height for address
+  // 22 = line height for bed and bath
+  headerView.frame = CGRectMake(0.0f, 0.0f, screenWidth, 
+    20 + 44 + padding + 22.0f + 22.0f + padding);
+  self.table.tableHeaderView = headerView;
+
+  // Title label
+  titleLabel = [UILabel new];
+  titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  titleLabel.frame = CGRectMake(padding, 20 + 44 + padding,
+    screenWidth - (padding * 2), 22.0f);
+  titleLabel.textColor = [UIColor whiteColor];
+  [headerView addSubview: titleLabel];
+  // Bed bath label
+  bedBathLabel = [UILabel new];
+  bedBathLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  bedBathLabel.frame = CGRectMake(titleLabel.frame.origin.x,
+    titleLabel.frame.origin.y + titleLabel.frame.size.height,
+      titleLabel.frame.size.width, titleLabel.frame.size.height);
+  bedBathLabel.textColor = titleLabel.textColor;
+  [headerView addSubview: bedBathLabel];
+  // Rent label
+  rentLabel = [UILabel new];
+  rentLabel.frame = CGRectMake(titleLabel.frame.origin.x,
+    titleLabel.frame.origin.y, titleLabel.frame.size.width, 
+      27.0f);
+  rentLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 20];
+  rentLabel.textAlignment = NSTextAlignmentRight;
+  rentLabel.textColor = titleLabel.textColor;
+  [headerView addSubview: rentLabel];
+
+  // Back view
+  backView = [UIView new];
+  backView.frame = CGRectMake(0.0f, 0.0f, screenWidth, imageHeight);
+  [self.view insertSubview: backView belowSubview: self.table];
+
+  // Image of residence
+  residenceImageView = [[OMBCenteredImageView alloc] init];
+  residenceImageView.backgroundColor = [UIColor redColor];
+  residenceImageView.frame = backView.bounds;
+  [backView addSubview: residenceImageView];
+
+  // Gradient
+  OMBGradientView *gradient = [[OMBGradientView alloc] init];
+    gradient.colors = @[
+      [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.0],
+        [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.8]];
+  gradient.frame = backView.bounds;
+  [backView addSubview: gradient];
+
+  CGFloat submitHeight = 44.0f;
+  // Table footer view
   UIView *footerView = [[UIView alloc] init];
-  footerView.frame = CGRectMake(0.0f, 0.0f, screenWidth, 216.0f);
+  footerView.frame = CGRectMake(0.0f, 0.0f, screenWidth, submitHeight);
   self.table.tableFooterView = footerView;
+
+  // Submit offer view
+  AMBlurView *submitView = [[AMBlurView alloc] init];
+  submitView.blurTintColor = [UIColor blue];
+  submitView.frame = CGRectMake(0.0f, screenHeight - submitHeight, 
+    screenWidth, submitHeight);
+  [self.view addSubview: submitView];
   // Submit offer button
   submitOfferButton = [UIButton new];
-  submitOfferButton.alpha = 0.0f;
-  submitOfferButton.backgroundColor = [UIColor blue];
-  submitOfferButton.clipsToBounds = YES;
+  // submitOfferButton.clipsToBounds = YES;
   // submitOfferButton.frame = CGRectMake(padding, (216.0f - 58.0f) * 0.5,
   //   screenWidth - (padding * 2), padding + 18.0f + padding);
-  submitOfferButton.frame = CGRectMake(0.0f, 
-    screenHeight - (padding + 18.0f + padding),
-      screenWidth, padding + 18.0f + padding);
+  submitOfferButton.frame = submitView.bounds;
   // submitOfferButton.layer.cornerRadius = 2.0f;
   submitOfferButton.titleLabel.font = 
-    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 18];
-  [submitOfferButton addTarget: self action: @selector(submitOffer)
+    [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
+  [submitOfferButton addTarget: self action: @selector(showAlert)
     forControlEvents: UIControlEventTouchUpInside];
   [submitOfferButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor blueDark]] 
+    [UIImage imageWithColor: [UIColor blueHighlighted]] 
       forState: UIControlStateHighlighted];
   [submitOfferButton setTitle: @"Submit Offer" forState: UIControlStateNormal];
   [submitOfferButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
-  [self.view addSubview: submitOfferButton];
+  [submitView addSubview: submitOfferButton];
   // [footerView addSubview: submitOfferButton];
 
-  UIView *headerView = [[UIView alloc] init];
-  headerView.frame = CGRectMake(0.0f, 0.0f, screenWidth, height);
-  self.table.tableHeaderView = headerView;
-
-  // Image of residence
-  residenceImageView = [[OMBCenteredImageView alloc] init];
-  residenceImageView.frame = headerView.frame;
-  residenceImageView.image = [UIImage imageNamed: 
-    @"intro_still_image_slide_2_background.jpg"];
-  [headerView addSubview: residenceImageView];
-
+  // Blur view to go over the image
   DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
   blurView.blurRadius = 0.3f;
   blurView.frame = residenceImageView.frame;
   blurView.renderStatic = YES;
-  [headerView addSubview: blurView];
+  // [headerView addSubview: blurView];
 
   // Timer
   daysLabel    = [UILabel new];
@@ -132,7 +212,7 @@
       (height - labelSize) * 0.5, labelSize, labelSize);
     label.layer.cornerRadius = 5.0f;
     label.textColor = [UIColor whiteColor];
-    [headerView addSubview: label]; 
+    // [headerView addSubview: label]; 
   }
 
   [self setString: @"02" forTimeUnit: @"days"];
@@ -152,16 +232,122 @@
   currentOfferLabel.text = @"Current offer: $4,500";
   currentOfferLabel.textAlignment = NSTextAlignmentCenter;
   currentOfferLabel.textColor = [UIColor whiteColor];
-  [headerView addSubview: currentOfferLabel];
+  // [headerView addSubview: currentOfferLabel];
+
+  // Personal note text view
+  personalNoteTextView = [UITextView new];
+  // personalNoteTextView.contentInset = UIEdgeInsetsMake(0.0f, 10.0f, 
+  //   0.0f, -20.0f);
+  personalNoteTextView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+  personalNoteTextView.delegate = self;
+  personalNoteTextView.font = [UIFont normalTextFont];
+  personalNoteTextView.frame = CGRectMake(padding, padding, 
+    screenWidth - (padding * 2), padding * 5); // 5 times the line height
+  personalNoteTextView.textColor = [UIColor textColor];
+
+  // Personal note text view place holder
+  personalNoteTextViewPlaceholder = [UILabel new];
+  personalNoteTextViewPlaceholder.font = personalNoteTextView.font;
+  personalNoteTextViewPlaceholder.frame = CGRectMake(5.0f, 8.0f, 
+    personalNoteTextView.frame.size.width, 20.0f);
+  personalNoteTextViewPlaceholder.text = @"Write your personal note here...";
+  personalNoteTextViewPlaceholder.textColor = [UIColor grayMedium];
+  [personalNoteTextView addSubview: personalNoteTextViewPlaceholder];
+
+  // Alert view
+  alert = [[OMBAlertView alloc] init];
+  [alert addTarget: self action: @selector(hideAlert)
+    forButton: alert.alertCancel];
+  [alert addTarget: self action: @selector(submitOffer)
+    forButton: alert.alertConfirm];
+  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
+  [alert.alertConfirm setTitle: @"Submit" forState: UIControlStateNormal];
 }
 
 - (void) viewDidAppear: (BOOL) animated
 {
   [super viewDidAppear: animated];
 
-  if (!hasOfferValue) {
-    [self scrollToPlaceOffer];
-  }
+  // if (!hasOfferValue) {
+  //   [self scrollToPlaceOffer];
+  // }
+}
+
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  // Bed, bath
+  bedBathLabel.text = [NSString stringWithFormat: @"%.0f bd  /  %.0f ba",
+    residence.bedrooms, residence.bathrooms];
+  // Image
+  residenceImageView.image = [residence coverPhoto];
+  // Rent
+  rentLabel.text = [residence rentToCurrencyString];
+  // Title, address
+  if ([[residence.title stripWhiteSpace] length])
+    titleLabel.text = residence.title;
+  else
+    titleLabel.text = [residence.address capitalizedString];
+
+  // Resize Title and rent
+  CGFloat padding = bedBathLabel.frame.origin.x;
+  CGRect rentRect = [rentLabel.text boundingRectWithSize: 
+    CGSizeMake(bedBathLabel.frame.size.width, rentLabel.frame.size.height)
+      font: rentLabel.font];
+  rentLabel.frame = CGRectMake(
+    self.table.frame.size.width - (rentRect.size.width + padding), 
+      rentLabel.frame.origin.y, rentRect.size.width, 
+        rentLabel.frame.size.height);
+  titleLabel.frame = CGRectMake(titleLabel.frame.origin.x,
+    titleLabel.frame.origin.y, self.table.frame.size.width - 
+    (padding + padding + rentLabel.frame.size.width + padding), 
+      titleLabel.frame.size.height);
+
+  // Total price notes
+  totalPriceNotes = [NSString stringWithFormat: 
+    @"Your total of %@ will not be charged upfront but will only be charged "
+    @"upon mutual confirmation between you and the landlord.",
+      [residence rentToCurrencyString]];
+  CGRect rect = [totalPriceNotes boundingRectWithSize: 
+    CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999) 
+      font: [UIFont smallTextFont]];
+  totalPriceNotesSize = rect.size;
+
+  // Submit offer notes
+  NSMutableAttributedString *string1 =
+    [[NSMutableAttributedString alloc] initWithString: 
+      @"Tapping on \"Submit Offer\" means \n"
+      @"you agree to the "
+      attributes: @{
+        NSFontAttributeName: [UIFont smallTextFont],
+        NSForegroundColorAttributeName: [UIColor grayMedium]
+      }
+    ];
+  NSMutableAttributedString *string2 =
+    [[NSMutableAttributedString alloc] initWithString: @"lease agreement"
+      attributes: @{
+        NSFontAttributeName: [UIFont smallTextFont],
+        NSForegroundColorAttributeName: [UIColor blue]
+      }
+    ];
+  NSMutableAttributedString *string3 =
+    [[NSMutableAttributedString alloc] initWithString: @"."
+      attributes: @{
+        NSFontAttributeName: [UIFont smallTextFont],
+        NSForegroundColorAttributeName: [UIColor grayMedium]
+      }
+    ];
+  [string1 appendAttributedString: string2];
+  [string1 appendAttributedString: string3];
+
+  submitOfferNotes = string1;
+  CGRect rect2 = [submitOfferNotes boundingRectWithSize: 
+    CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999) 
+      options: NSStringDrawingUsesLineFragmentOrigin context: nil];
+  submitOfferNotesSize = rect2.size;
+
+  [self.table reloadData];
 }
 
 #pragma mark - Protocol
@@ -183,28 +369,48 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   }
 }
 
+- (void) scrollViewDidScroll: (UIScrollView *) scrollView
+{
+  CGFloat y = scrollView.contentOffset.y;
+  CGFloat adjustment = y / 3.0f;
+
+  // Adjust the back view
+  // 0.0f = the back view's origin y
+  CGRect backViewRect = backView.frame;  
+  backViewRect.origin.y = 0.0f - adjustment;
+  backView.frame = backViewRect;
+}
+
 #pragma mark - Protocol UITableViewDataSource
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
   // Place offer
-  // Move in and move out dates
-  // Price breakdown
-  // Monthly schedule, lease agreement
-  // Buyer
-  return 5;
+  // Move in, move out, lease months, view lease details
+  // Price breakdown, security deposit, 1st month's rent, total, notes
+  // Monthly schedule, lease agreement (NOT IN USE ANYMORE) !!!
+  // Buyer, my renter profile, add a personal note, personal note text view
+  // Submit offer notes
+  // Spacing for typing
+  return 6 + 1;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  CGFloat padding = 20.0f;
   static NSString *EmptyCellIdentifier = @"EmptyCellIdentifier";
   UITableViewCell *emptyCell = [tableView dequeueReusableCellWithIdentifier:
     EmptyCellIdentifier];
   if (!emptyCell)
     emptyCell = [[UITableViewCell alloc] initWithStyle:
       UITableViewCellStyleValue1 reuseIdentifier: EmptyCellIdentifier];
+  emptyCell.detailTextLabel.text = @"";
   emptyCell.selectionStyle = UITableViewCellSelectionStyleNone;
+  emptyCell.textLabel.font = 
+    [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  emptyCell.textLabel.text = @"";
+  emptyCell.textLabel.textColor = [UIColor textColor];
   UIView *bottomBorder = [emptyCell.contentView viewWithTag: 9999];
   if (bottomBorder)
     [bottomBorder removeFromSuperview];
@@ -213,6 +419,19 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     bottomBorder.backgroundColor = [UIColor grayLight];
     bottomBorder.tag = 9999;
   }
+  // Spacing as the first row in each section except the first section
+  // if (indexPath.section != 0) {
+  //   if (indexPath.row == 0) {
+  //     emptyCell.accessoryType = UITableViewCellAccessoryNone;
+  //     emptyCell.backgroundColor = [UIColor grayUltraLight];
+  //     emptyCell.detailTextLabel.text = emptyCell.textLabel.text = @"";
+  //     emptyCell.selectionStyle = UITableViewCellSelectionStyleNone;
+  //     // Bottom border
+  //     // bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f,
+  //     //   tableView.frame.size.width, 0.5f);
+  //     // [emptyCell.contentView addSubview: bottomBorder];
+  //   }
+  // }
   // Place offer
   if (indexPath.section == 0) {
     if (indexPath.row == 0) {
@@ -231,56 +450,147 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       return cell;
     }
   }
-  // Move in and move out dates
+  // Move in and move out dates, View Lease Details
   else if (indexPath.section == 1) {
-    if (indexPath.row == 1) {
+    // if (indexPath.row == 1) {
+    if (indexPath.row == 0) {
       static NSString *DateIdentifier = @"DateIdentifier";
       OMBResidenceConfirmDetailsDatesCell *cell =
         [tableView dequeueReusableCellWithIdentifier: DateIdentifier];
-      if (!cell)
+      if (!cell) {
         cell = [[OMBResidenceConfirmDetailsDatesCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: DateIdentifier];
+        [cell loadResidence: residence];
+      }
+      return cell;
+    }
+    else if (indexPath.row == 1) {
+      static NSString *CellIdentifier = @"CellIdentifier";
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        CellIdentifier];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:
+          UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier];
+        UILabel *label = [UILabel new];
+        label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
+        label.frame = CGRectMake(20.0f, 0.0f,
+          tableView.frame.size.width - (20 * 2), cell.bounds.size.height);
+        label.text = @"View Lease Details";
+        label.textAlignment = NSTextAlignmentRight;
+        label.textColor = [UIColor blue];
+        [cell.contentView addSubview: label];
+        UIView *bor = [UIView new];
+        bor.backgroundColor = [UIColor grayLight];
+        bor.frame = CGRectMake(0.0f, label.frame.size.height - 0.5f,
+          cell.bounds.size.width, 0.5f);
+        [cell.contentView addSubview: bor];
+      }
+      cell.backgroundColor = [UIColor grayUltraLight];
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+        0.0f, 0.0f);
       return cell;
     }
   }
   // Price breakdown
   else if (indexPath.section == 2) {
     emptyCell.accessoryType = UITableViewCellAccessoryNone;
-    if (indexPath.row == 1 || indexPath.row == 2) {
-      emptyCell.backgroundColor = [UIColor whiteColor];
-      emptyCell.detailTextLabel.font = emptyCell.textLabel.font = 
-        [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-      emptyCell.detailTextLabel.textColor = 
-        emptyCell.textLabel.textColor = [UIColor textColor];
-      if (indexPath.row == 1) {
-        emptyCell.detailTextLabel.text = [NSString numberToCurrencyString:
+    // Price Breakdown, Deposit, 1st Month's Rent
+    if (indexPath.row == 0 || indexPath.row == 1 || indexPath.row == 2) {
+      static NSString *PriceCellIdentifier = @"PriceCellIdentifier";
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        PriceCellIdentifier];
+      if (!cell)
+        cell = [[UITableViewCell alloc] initWithStyle:
+          UITableViewCellStyleValue1 reuseIdentifier: PriceCellIdentifier];
+      cell.backgroundColor = [UIColor whiteColor];
+      cell.detailTextLabel.font = 
+        [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      if (indexPath.row == 0)
+        cell.textLabel.font = [UIFont fontWithName: 
+          @"HelveticaNeue-Medium" size: 15];
+      else
+        cell.textLabel.font = 
+          [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+      cell.detailTextLabel.text = @"";
+      cell.detailTextLabel.textColor = [UIColor textColor];
+      cell.textLabel.textColor = [UIColor textColor];
+      if (indexPath.row == 0) {
+        cell.textLabel.text = @"Price Breakdown";
+      }
+      else if (indexPath.row == 1) {
+        cell.detailTextLabel.text = [NSString numberToCurrencyString: 
           deposit];
-        emptyCell.textLabel.text = @"Deposit";
+        cell.textLabel.text = @"Security Deposit";
       }
       else if (indexPath.row == 2) {
-        emptyCell.detailTextLabel.text = [NSString numberToCurrencyString:
-          offer.amount];
-        emptyCell.textLabel.text = @"1st Month's Rent";
+        cell.detailTextLabel.text = [residence rentToCurrencyString];
+        cell.textLabel.text = @"1st Month's Rent";
       }
+      return cell;
     }
+    // Total
     else if (indexPath.row == 3) {
-      emptyCell.backgroundColor = [UIColor whiteColor];
-      emptyCell.detailTextLabel.font = 
+      static NSString *TotalCellIdentifier = @"TotalCellIdentifier";
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        TotalCellIdentifier];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:
+          UITableViewCellStyleValue1 reuseIdentifier: TotalCellIdentifier];
+        // Bottom border
+        UIView *bor = [UIView new];
+        bor.backgroundColor = [UIColor grayLight];
+        bor.frame = CGRectMake(0.0f, 20 + 36.0f + 20 - 0.5f,
+          tableView.frame.size.width, 0.5f);
+        [cell.contentView addSubview: bor];
+      }
+      cell.backgroundColor = [UIColor whiteColor];
+      cell.detailTextLabel.font = 
         [UIFont fontWithName: @"HelveticaNeue-Medium" size: 27];
-      CGFloat total = deposit + offer.amount;
-      emptyCell.detailTextLabel.text = [NSString numberToCurrencyString:
+      CGFloat total = deposit + residence.minRent;
+      cell.detailTextLabel.text = [NSString numberToCurrencyString:
         total];
-      emptyCell.detailTextLabel.textColor = [UIColor blueDark];
-      emptyCell.textLabel.font = 
+      cell.detailTextLabel.textColor = [UIColor blue];
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.textLabel.font = 
         [UIFont fontWithName: @"HelveticaNeue-Light" size: 27];
-      emptyCell.textLabel.text = @"Total";
-      emptyCell.textLabel.textColor = [UIColor textColor];
-      // Bottom border
-      bottomBorder.frame = CGRectMake(0.0f, (20 + 36.0f + 20) - 0.5f,
-        tableView.frame.size.width, 0.5f);
-      [emptyCell.contentView addSubview: bottomBorder];
+      cell.textLabel.text = @"Total";
+      cell.textLabel.textColor = [UIColor textColor];
+      return cell;
     }
+    // Extra information, notes, etc.
     else if (indexPath.row == 4) {
+      static NSString *CellIdentifier = @"CellIdentifier";
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        CellIdentifier];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:
+          UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier];
+        UILabel *label = [UILabel new];
+        label.font = [UIFont smallTextFont];
+        label.frame = CGRectMake(padding, padding,
+          tableView.frame.size.width - (padding * 2), 
+            totalPriceNotesSize.height);
+        label.numberOfLines = 0;
+        label.text = totalPriceNotes;
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor grayMedium];
+        [cell.contentView addSubview: label];
+        // UIView *bor = [UIView new];
+        // bor.backgroundColor = [UIColor grayLight];
+        // bor.frame = CGRectMake(0.0f, label.frame.size.height - 0.5f,
+        //   cell.bounds.size.width, 0.5f);
+        // [cell.contentView addSubview: bor];
+      }
+      cell.backgroundColor = [UIColor grayUltraLight];
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+        0.0f, 0.0f);
+      return cell;
+    }
+    // Price Breakdown arrow (Not being used)!!!
+    else if (indexPath.row == 99) {
       static NSString *PriceBreakdownIdentifier = @"PriceBreakdownIdentifier";
       UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier: PriceBreakdownIdentifier];
@@ -314,74 +624,157 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       return cell;
     }
   }
-  // Monthly schedule, lease agreement
+  // Monthly schedule, View Lease Details (NOT IN USE ANYMORE) !!!
   else if (indexPath.section == 3) {
     if (indexPath.row == 1 || indexPath.row == 2) {
       emptyCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
       emptyCell.backgroundColor = [UIColor whiteColor];
       emptyCell.detailTextLabel.text = @"";
       emptyCell.selectionStyle = UITableViewCellSelectionStyleDefault;
-      emptyCell.textLabel.font = 
-        [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-      emptyCell.textLabel.textColor = [UIColor textColor];
+      
       // Monthly schedule
       if (indexPath.row == 1) {
         emptyCell.textLabel.text = @"Monthly Payment Schedule";
       }
       // Lease agreement
       else if (indexPath.row == 2) {
-        emptyCell.textLabel.text = @"Lease Agreement";
-        // Bottom border
-        bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f,
-          tableView.frame.size.width, 0.5f);
-        [emptyCell.contentView addSubview: bottomBorder];
+        emptyCell.textLabel.text = @"View Lease Details";
       }
     }
   }
-  // Buyer
+  // Buyer, My Renter Profile, Add a personal note
   else if (indexPath.section == 4) {
-    if (indexPath.row == 1) {
+    // Buyer
+    if (indexPath.row == 0) {
       static NSString *BuyerCellIdentifier = @"BuyerCellIdentifier";
       OMBResidenceConfirmDetailsBuyerCell *cell =
         [tableView dequeueReusableCellWithIdentifier: BuyerCellIdentifier];
-      if (!cell)
+      if (!cell) {
         cell = [[OMBResidenceConfirmDetailsBuyerCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: BuyerCellIdentifier];
+        UIView *bor = [UIView new];
+        bor.backgroundColor = [UIColor grayLight];
+        bor.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 0.5f);
+        [cell.contentView addSubview: bor];
+      }
+      [cell loadUser: [OMBUser currentUser]];
       return cell;
     }
-    else if (indexPath.row == 2 || indexPath.row == 3) {
-      emptyCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-      emptyCell.backgroundColor = [UIColor whiteColor];
-      emptyCell.detailTextLabel.font = emptyCell.textLabel.font = 
+    // My Renter Profile
+    else if (indexPath.row == 1) {
+      static NSString *RenterProfileCellIdentifier = 
+        @"RenterProfileCellIdentifier";
+      UITableViewCell *cell =
+        [tableView dequeueReusableCellWithIdentifier: 
+          RenterProfileCellIdentifier];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:
+          UITableViewCellStyleValue1 reuseIdentifier: 
+            RenterProfileCellIdentifier];
+      }
+      cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+      cell.backgroundColor = [UIColor whiteColor];
+      cell.detailTextLabel.font = cell.textLabel.font = 
         [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-      emptyCell.selectionStyle = UITableViewCellSelectionStyleDefault;
-      emptyCell.textLabel.textColor = [UIColor textColor];
-      if (indexPath.row == 2) {
-        emptyCell.detailTextLabel.text = @"50% complete";
-        emptyCell.detailTextLabel.textColor = [UIColor red];
-        emptyCell.textLabel.text = @"Renter Application";
-      }
-      else if (indexPath.row == 3) {
-        emptyCell.detailTextLabel.text = @"";
-        emptyCell.textLabel.text = @"Add a personal note";
-        bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f,
+      NSInteger percentage = [[OMBUser currentUser] profilePercentage];
+      cell.detailTextLabel.text = [NSString stringWithFormat:
+        @"%i%% complete", percentage];
+      UIColor *color = [UIColor red];
+      if (percentage >= 90)
+        color = [UIColor green];
+      else if (percentage >= 50)
+        color = [UIColor yellow];
+      cell.detailTextLabel.textColor = color;
+      cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+      cell.textLabel.text = @"My Renter Profile";
+      cell.textLabel.textColor = [UIColor textColor];
+      return cell;
+    }
+    // Add a personal note
+    else if (indexPath.row == 2) {
+      static NSString *AddNoteIdentifier = @"AddNoteIdentifier";
+      UITableViewCell *cell =
+        [tableView dequeueReusableCellWithIdentifier: AddNoteIdentifier];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:
+          UITableViewCellStyleDefault 
+            reuseIdentifier: AddNoteIdentifier];
+        // Border
+        UIView *bottomBorder2 = [UIView new];
+        bottomBorder2.backgroundColor = tableView.separatorColor;
+        bottomBorder2.frame = CGRectMake(0.0f, 44.0f - 0.5f, 
           tableView.frame.size.width, 0.5f);
-        [emptyCell.contentView addSubview: bottomBorder];
+        [cell.contentView addSubview: bottomBorder2];
+        // Arrow pointing down
+        CGFloat padding = 20.0f;
+        CGFloat sortArrowSize = 20.0f;
+        UIImageView *sortArrow = [[UIImageView alloc] init];
+        sortArrow.alpha = 0.3f;
+        sortArrow.frame = CGRectMake(tableView.frame.size.width - 
+          (sortArrowSize + padding), (44.0f - sortArrowSize) * 0.5, 
+            sortArrowSize, sortArrowSize);
+        sortArrow.image = [UIImage imageNamed: @"arrow_left.png"];
+        sortArrow.transform = CGAffineTransformMakeRotation(
+          -90 * M_PI / 180.0f);
+        [cell.contentView addSubview: sortArrow];
       }
+      cell.textLabel.font = 
+        [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+      cell.textLabel.text = @"Add a personal note";
+      cell.textLabel.textColor = [UIColor textColor];
+      return cell;
+    }
+    // Personal note text view
+    else if (indexPath.row == 3) {
+      static NSString *NoteCellIdentifier = @"NoteCellIdentifier";
+      UITableViewCell *cell =
+        [tableView dequeueReusableCellWithIdentifier: NoteCellIdentifier];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier: NoteCellIdentifier];
+        [personalNoteTextView removeFromSuperview];
+        [cell.contentView addSubview: personalNoteTextView];
+        UIView *bor = [UIView new];
+        bor.backgroundColor = [UIColor grayLight];
+        bor.frame = CGRectMake(0.0f, 
+          padding + personalNoteTextView.frame.size.height + padding - 0.5f, 
+            tableView.frame.size.width, 0.5f);
+        [cell.contentView addSubview: bor];
+      }
+      personalNoteTextView.text = personalNote;
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      return cell;
     }
   }
-  // Bottom border on the first row with the gray spacing
-  if (indexPath.section != 0) {
-    if (indexPath.row == 0) {
-      emptyCell.accessoryType = UITableViewCellAccessoryNone;
-      emptyCell.backgroundColor = tableView.backgroundColor;
-      emptyCell.detailTextLabel.text = emptyCell.textLabel.text = @"";
-      emptyCell.selectionStyle = UITableViewCellSelectionStyleNone;
-      // Bottom border
-      bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f,
-        tableView.frame.size.width, 0.5f);
-      [emptyCell.contentView addSubview: bottomBorder];
+  // Submit offer notes
+  else if (indexPath.section == 5) {
+    static NSString *SubmitNotesIdentifier = @"SubmitNotesIdentifier";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+      SubmitNotesIdentifier];
+    if (!cell) {
+      cell = [[UITableViewCell alloc] initWithStyle:
+        UITableViewCellStyleValue1 reuseIdentifier: SubmitNotesIdentifier];
+      UILabel *label = [UILabel new];
+      label.attributedText = submitOfferNotes;
+      label.font = [UIFont smallTextFont];
+      label.frame = CGRectMake(padding, (padding * 2),
+        tableView.frame.size.width - (padding * 2), 
+          submitOfferNotesSize.height);
+      label.numberOfLines = 0;
+      label.textAlignment = NSTextAlignmentCenter;
+      [cell.contentView addSubview: label];
     }
+    cell.backgroundColor = [UIColor grayUltraLight];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+      0.0f, 0.0f);
+    return cell;
+  }
+  // Spacing
+  else if (indexPath.section == [tableView numberOfSections] - 1) {
+    emptyCell.backgroundColor = [UIColor grayUltraLight];
+    emptyCell.separatorInset = UIEdgeInsetsMake(0.0f, 
+      tableView.frame.size.width, 0.0f, 0.0f);
   }
   return emptyCell;
 }
@@ -395,11 +788,21 @@ numberOfRowsInSection: (NSInteger) section
   }
   // Dates
   else if (section == 1) {
+    // No top spacing
+    // Move in, move out, lease months, view lease details
     return 1 + 1;
+    // Spacing
+    // return 1 + 1;
   }
   // Price Breakdown
   else if (section == 2) {
-    return 1 + 4;
+    // Price Breakdown
+    // Security Deposit
+    // 1st Month's Rent
+    // Total
+    // Total price notes
+    return 5;
+    // return 1 + 4;
   }
   // Monthly schedule, lease agreement
   else if (section == 3) {
@@ -407,7 +810,20 @@ numberOfRowsInSection: (NSInteger) section
   }
   // Buyer
   else if (section == 4) {
-    return 1 + 3;
+    // Buyer
+    // My Renter Profile
+    // Add a personal note
+    // Note text view
+    return 4;
+    // return 1 + 3;
+  }
+  // Submit offer notes
+  else if (section == 5) {
+    return 1;
+  }
+  // Spacing for typing
+  else if (section == [tableView numberOfSections] - 1) {
+    return 1;
   }
   return 0;
 }
@@ -417,16 +833,24 @@ numberOfRowsInSection: (NSInteger) section
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  // Price breakdown
-  if (indexPath.section == 2) {
-    // Price breakdown
-    if (indexPath.row == 4) {
-      isShowingPriceBreakdown = YES;
-      [tableView reloadSections: [NSIndexSet indexSetWithIndex: 2]
-        withRowAnimation: UITableViewRowAnimationFade];
+  // Move in, move out, lease months, view lease details
+  if (indexPath.section == 1) {
+    // View lease details
+    if (indexPath.row == 1) {
+      [self.navigationController pushViewController:
+        [[OMBResidenceLeaseAgreementViewController alloc] init] animated: YES];
     }
   }
-  // Monthly schedule, lease agreement
+  // Price breakdown (NOT BEING USED) !!!
+  // else if (indexPath.section == 2) {
+  //   // Price breakdown
+  //   if (indexPath.row == 4) {
+  //     isShowingPriceBreakdown = YES;
+  //     [tableView reloadSections: [NSIndexSet indexSetWithIndex: 2]
+  //       withRowAnimation: UITableViewRowAnimationFade];
+  //   }
+  // }
+  // Monthly schedule, lease agreement (NOT IN USE) !!!
   else if (indexPath.section == 3) {
     if (indexPath.row == 1) {
       [self.navigationController pushViewController:
@@ -440,16 +864,33 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Buyer
   else if (indexPath.section == 4) {
-    // Renter application
-    if (indexPath.row == 2) {
+    // My Renter Profile (No longer Renter application)
+    if (indexPath.row == 1) {
+      // [self.navigationController pushViewController:
+      //   [[OMBRenterApplicationViewController alloc] initWithUser: 
+      //     [OMBUser currentUser]] animated: YES];
       [self.navigationController pushViewController:
-        [[OMBRenterApplicationViewController alloc] initWithUser: 
-          [OMBUser currentUser]] animated: YES];
+        [[OMBAccountProfileViewController alloc] init] animated: YES];
     }
     // Add a personal note
-    else if (indexPath.row == 3) {
+    else if (indexPath.row == 2) {
+      // [self.navigationController pushViewController:
+      //   [[OMBResidenceAddPersonalNoteViewController alloc] init] 
+      //     animated: YES];
+      NSIndexPath *nextIndexPath = [NSIndexPath indexPathForRow: 
+        indexPath.row + 1 inSection: indexPath.section];
+      isAddingAPersonalNote = !isAddingAPersonalNote;
+      [tableView reloadRowsAtIndexPaths: @[indexPath, nextIndexPath] 
+        withRowAnimation: UITableViewRowAnimationFade];
+      [tableView scrollToRowAtIndexPath: nextIndexPath
+        atScrollPosition: UITableViewScrollPositionTop animated: YES];
+    }
+  }
+  // Submit offer notes
+  else if (indexPath.section == 5) {
+    if (indexPath.row == 0) {
       [self.navigationController pushViewController:
-        [[OMBResidenceAddPersonalNoteViewController alloc] init] animated: YES];
+        [[OMBResidenceLeaseAgreementViewController alloc] init] animated: YES];
     }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
@@ -463,51 +904,95 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // Place offer
   if (indexPath.section == 0) {
     if (indexPath.row == 0) {
+      return 0.0f;
       return [OMBResidenceConfirmDetailsPlaceOfferCell heightForCell];
     }
   }
-  else if (!hasOfferValue) {
-    return 0.0f;
-  }
-  // Dates
+  // else if (!hasOfferValue) {
+  //   return 0.0f;
+  // }
+
+  // Move in, move out, lease months, view lease details
   else if (indexPath.section == 1) {
+    // if (indexPath.row == 0) {
+    //   return spacing;
+    // }
+    // else if (indexPath.row == 1) {
     if (indexPath.row == 0) {
-      return spacing;
+      return [OMBResidenceConfirmDetailsDatesCell heightForCell];
     }
     else if (indexPath.row == 1) {
-      return [OMBResidenceConfirmDetailsDatesCell heightForCell];
+      return spacing;
     }
   }
   // Price breakdown
   else if (indexPath.section == 2) {
+    // Price Breakdown (No longer Spacing)
     if (indexPath.row == 0) {
       return spacing;
     }
+    // Deposit, 1st Month's Rent
     else if (indexPath.row == 1 || indexPath.row == 2) {
-      if (isShowingPriceBreakdown)
-        return spacing;
+      // if (isShowingPriceBreakdown)
+      return spacing;
     }
+    // Total
     else if (indexPath.row == 3) {
       return padding + 36.0f + padding;
     }
+    // Total price notes
     else if (indexPath.row == 4) {
+      return padding + totalPriceNotesSize.height + padding + padding;
+    }
+    // Price Breakdown
+    else if (indexPath.row == 99) {
+      return 0.0f;
       if (!isShowingPriceBreakdown)
         return spacing;
     }
   }
-  // Monthly schedule, lease agreement
+  // Monthly schedule, View Lease Details
   else if (indexPath.section == 3) {
-    return spacing;
+    return 0.0f;
+    // Spacing, View Lease Details
+    if (indexPath.row == 0 || indexPath.row == 2)
+      return spacing;
   }
   // Buyer
   else if (indexPath.section == 4) {
-    if (indexPath.row == 0 || indexPath.row == 2 || indexPath.row == 3) {
-      return spacing;
-    }
-    else if (indexPath.row == 1) {
+    // Buyer
+    if (indexPath.row == 0) {
       return [OMBResidenceConfirmDetailsBuyerCell heightForCell];
     }
+    // My Renter Profile
+    else if (indexPath.row == 1) {
+      return spacing;
+    }
+    // Add a personal note
+    else if (indexPath.row == 2) {
+      if (!isAddingAPersonalNote)
+        return spacing;
+    }
+    // Personal note text view
+    else if (indexPath.row == 3) {
+      if (isAddingAPersonalNote)
+        return padding + personalNoteTextView.frame.size.height + padding;
+    }
+    // if (indexPath.row == 0 || indexPath.row == 2 || indexPath.row == 3) {
+    //   return spacing;
+    // }
+    // else if (indexPath.row == 1) {
+    //   return [OMBResidenceConfirmDetailsBuyerCell heightForCell];
+    // }
   }
+  // Submit offer notes
+  else if (indexPath.section == 5) {
+    return (padding * 2) + submitOfferNotesSize.height + (padding * 2);
+  }
+  // Spacing
+  else if (indexPath.section == [tableView numberOfSections] - 1)
+    if (isEditing)
+      return 216.0f;
   return 0.0f;
 }
 
@@ -521,12 +1006,59 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+#pragma mark - Protocol UITextViewDelegate
+
+- (void) textViewDidBeginEditing: (UITextView *) textView
+{
+  isEditing = YES;
+  [self.table beginUpdates];
+  [self.table endUpdates];
+  [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
+  [self.table scrollToRowAtIndexPath: 
+    [NSIndexPath indexPathForRow: 3 inSection: 4] 
+      atScrollPosition: UITableViewScrollPositionTop animated: YES];
+}
+
+- (void) textViewDidChange: (UITextView *) textView
+{
+  if ([[textView.text stripWhiteSpace] length]) {
+    personalNoteTextViewPlaceholder.hidden = YES;
+  }
+  else {
+    personalNoteTextViewPlaceholder.hidden = NO;
+  }
+  personalNote = textView.text;
+}
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
+- (void) done
+{
+  [self.view endEditing: YES];
+}
+
+- (void) hideAlert
+{
+  [alert hideAlert];
+}
+
+- (void) keyboardWillHide: (NSNotification *) notification
+{
+  isEditing = NO;
+  [self.table beginUpdates];
+  [self.table endUpdates];
+  [self.navigationItem setRightBarButtonItem: nil animated: YES];
+}
+
+- (void) keyboardWillShow: (NSNotification *) notification
+{
+  
+}
+
 - (void) review
-{  
+{
   if ([[[self yourOfferTextField].text stripWhiteSpace] length]) {
     hasOfferValue = YES;
     [self.view endEditing: YES];
@@ -591,31 +1123,53 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+- (void) showAlert
+{
+  NSDateFormatter *dateFormmater = [NSDateFormatter new];
+  dateFormmater.dateFormat = @"M/d/yy";
+
+  alert.alertTitle.text = @"Submit Offer";
+  alert.alertMessage.text = [NSString stringWithFormat: 
+    @"Are you sure you want to submit an offer to rent "
+    @"this place from %@ - %@ for %@/mo?",
+      [dateFormmater stringFromDate: 
+        [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]],
+          [dateFormmater stringFromDate: [residence moveOutDate]],
+            [residence rentToCurrencyString]];
+  [alert showAlert];
+}
+
 - (void) submitOffer
 {
-  OMBOfferCreateConnection *conn = 
-    [[OMBOfferCreateConnection alloc] initWithOffer: offer];
-  conn.completionBlock = ^(NSError *error) {
-    UIAlertView *alertView;
+  [alert hideAlert];
+  offer.amount = residence.minRent;
+  offer.note   = personalNote;
+  [[OMBUser currentUser] createOffer: offer completion: ^(NSError *error) {
     if (offer.uid && !error) {
-      alertView = [[UIAlertView alloc] initWithTitle: @"Offer submitted!"
-        message: @"You will receive a response in your homebase" delegate: self 
-          cancelButtonTitle: @"OK" otherButtonTitles: nil];
+      NSString *userTypeString = @"landlord";
+      if ([residence.propertyType isEqualToString: @"sublet"])
+        userTypeString = @"subletter";
+      NSString *message = [NSString stringWithFormat: 
+        @"The %@ has been notified of your offer and "
+        @"will be getting back to you shortly.\n\n"
+        @"If the %@ accepts your offer, you will have 48 hours to confirm "
+        @"and pay the 1st month's rent and deposit through your "
+        @"selected payment method. If the %@ for some reason rejects your "
+        @"offer, you will be notified immediately. You can improve "
+        @"your chances of being accepted by completing your renter profile.",
+          userTypeString, userTypeString, userTypeString];
+      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+        @"Offer Placed!" message: message delegate: nil cancelButtonTitle: @"OK"
+          otherButtonTitles: nil];
+      [alertView show];
+      [self.navigationController popViewControllerAnimated: YES];
     }
     else {
-      NSString *message = @"Offer was not submitted, please try again.";
-      if (error)
-        message = error.localizedDescription;
-      alertView = [[UIAlertView alloc] initWithTitle: 
-        @"Please try again" message: message delegate: nil 
-          cancelButtonTitle: @"Try again"
-            otherButtonTitles: nil];
+      [self showAlertViewWithError: error];
     }
-    [alertView show];
     [[self appDelegate].container stopSpinning];
-  };
-  [conn start];
-  [[self appDelegate].container startSpinning]; 
+  }];
+  [[self appDelegate].container startSpinning];
 }
 
 - (void) textFieldDidChange: (TextFieldPadding *) textField

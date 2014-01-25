@@ -8,6 +8,7 @@
 
 #import "OMBOffer.h"
 
+#import "OMBAllResidenceStore.h"
 #import "OMBResidence.h"
 #import "OMBUser.h"
 #import "OMBUserStore.h"
@@ -97,6 +98,9 @@
     [user readFromDictionary: userDict];
     _landlordUser = user;
   }
+  // Note
+  if ([dictionary objectForKey: @"note"] != [NSNull null])
+    _note = [dictionary objectForKey: @"note"];
   // On hold
   if ([[dictionary objectForKey: @"on_hold"] intValue])
     _onHold = YES;
@@ -109,8 +113,14 @@
     _rejected = NO;
   // Residence
   if ([dictionary objectForKey: @"residence"] != [NSNull null]) {
-    OMBResidence *res = [[OMBResidence alloc] init];
-    [res readFromResidenceDictionary: [dictionary objectForKey: @"residence"]];
+    NSDictionary *resDict = [dictionary objectForKey: @"residence"];
+    NSInteger residenceUID = [[resDict objectForKey: @"id"] intValue];
+    OMBResidence *res = [[OMBAllResidenceStore sharedStore] residenceForUID:
+      residenceUID];
+    if (!res) {
+      res = [[OMBResidence alloc] init];
+      [res readFromResidenceDictionary: resDict];
+    }
     _residence = res;
   }
   // Updated at
@@ -118,7 +128,7 @@
     _updatedAt = [[dateFormatter dateFromString:
       [dictionary objectForKey: @"updated_at"]] timeIntervalSince1970];
   // UID
-  if ([[dictionary objectForKey: @"id"] intValue])
+  if ([dictionary objectForKey: @"id"] != [NSNull null])
     _uid = [[dictionary objectForKey: @"id"] intValue];
   // User
   if ([dictionary objectForKey: @"user"] != [NSNull null]) {
@@ -127,8 +137,8 @@
     OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
     if (!user) {
       user = [[OMBUser alloc] init];
+      [user readFromDictionary: userDict];
     }
-    [user readFromDictionary: userDict];
     _user = user;
   }
 }

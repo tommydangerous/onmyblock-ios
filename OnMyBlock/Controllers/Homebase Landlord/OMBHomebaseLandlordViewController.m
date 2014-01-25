@@ -102,12 +102,12 @@
   middleDivider.backgroundColor = [UIColor whiteColor];
   middleDivider.frame = CGRectMake((buttonsView.frame.size.width - 1.0f) * 0.5f,
     0.0f, 1.0f, buttonsView.frame.size.height);
-  [buttonsView addSubview: middleDivider];
+  // [buttonsView addSubview: middleDivider];
 
   // Activity button
   activityButton = [UIButton new];
   activityButton.frame = CGRectMake(0.0f, 0.0f, 
-    buttonsView.frame.size.width * 0.5f, buttonsView.frame.size.height);
+    buttonsView.frame.size.width * 1, buttonsView.frame.size.height);
   activityButton.tag = 0;
   activityButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
@@ -131,7 +131,7 @@
   [paymentsButton setTitle: @"Rental Payments" forState: UIControlStateNormal];
   [paymentsButton setTitleColor: [UIColor whiteColor] 
     forState: UIControlStateNormal];
-  [buttonsView addSubview: paymentsButton];
+  // [buttonsView addSubview: paymentsButton];
 
   CGFloat tableViewOriginY = backView.frame.origin.y + 
     padding + buttonsView.frame.size.height + padding;
@@ -231,6 +231,13 @@
     [_activityTableView reloadData];
   }];
 
+  // Fetch deposit payout transactions
+  [[OMBUser currentUser] fetchConfirmedTenantsWithCompletion:
+    ^(NSError *error) {
+      [_activityTableView reloadData];
+    }
+  ];
+
   [_activityTableView reloadData];
 }
 
@@ -287,8 +294,7 @@
   if (tableView == _activityTableView) {
     // Inquiries
     // Confirmed Tenants
-    return 1;
-    // return 2;
+    return 2;
   }
   // Payments
   else if (tableView == _paymentsTableView) {
@@ -327,21 +333,23 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         if (!cell1)
           cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle: 
             UITableViewCellStyleDefault reuseIdentifier: OfferCellIdentifier];
-        [cell1 loadOffer: 
+        [cell1 loadOfferForLandlord: 
           [[self offers] objectAtIndex: indexPath.row - 1]];
         return cell1;
       }
     }
     // Confirmed Tenants
     else if (indexPath.section == 1) {
-      static NSString *OfferCellIdentifier = @"OfferCellIdentifier";
+      static NSString *ConfirmedTenantIdentifier = @"ConfirmedTenantIdentifier";
       OMBHomebaseLandlordOfferCell *cell1 = 
         [tableView dequeueReusableCellWithIdentifier:
-          OfferCellIdentifier];
+          ConfirmedTenantIdentifier];
       if (!cell1)
         cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault reuseIdentifier: OfferCellIdentifier];
-      [cell1 loadConfirmedTenantData];
+          UITableViewCellStyleDefault reuseIdentifier: 
+            ConfirmedTenantIdentifier];
+      [cell1 loadConfirmedTenant: 
+        [[self confirmedTenants] objectAtIndex: indexPath.row]];
       return cell1;
     }
   }
@@ -399,7 +407,7 @@ numberOfRowsInSection: (NSInteger) section
     }
     // Confirmed Tenants
     else if (section == 1) {
-      return 2;
+      return [[OMBUser currentUser].confirmedTenants count];
     }
   }
   // Payments
@@ -613,6 +621,11 @@ viewForHeaderInSection: (NSInteger) section
         _paymentsTableView.contentOffset.x, threshold);
     }
   }
+}
+
+- (NSArray *) confirmedTenants
+{
+  return [[OMBUser currentUser].confirmedTenants allValues];
 }
 
 - (NSArray *) offers

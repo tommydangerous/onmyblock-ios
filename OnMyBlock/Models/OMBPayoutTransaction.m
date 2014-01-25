@@ -8,6 +8,11 @@
 
 #import "OMBPayoutTransaction.h"
 
+#import "OMBAllResidenceStore.h"
+#import "OMBResidence.h"
+#import "OMBUser.h"
+#import "OMBUserStore.h"
+
 @implementation OMBPayoutTransaction
 
 #pragma mark - Initializer
@@ -53,10 +58,42 @@
     _paid = NO;
 
   // Payee
+  if ([dictionary objectForKey: @"payee"] != [NSNull null]) {
+    NSDictionary *dict = [dictionary objectForKey: @"payee"];
+    NSInteger oUID = [[dict objectForKey: @"id"] intValue];
+    OMBUser *obj = [[OMBUserStore sharedStore] userWithUID: oUID];
+    if (!obj) {
+      obj = [[OMBUser alloc] init];
+      [obj readFromDictionary: dict];
+    }
+    _payee = obj;
+  }
+
 
   // Payer
+  if ([dictionary objectForKey: @"payer"] != [NSNull null]) {
+    NSDictionary *dict = [dictionary objectForKey: @"payer"];
+    NSInteger oUID = [[dict objectForKey: @"id"] intValue];
+    OMBUser *obj = [[OMBUserStore sharedStore] userWithUID: oUID];
+    if (!obj) {
+      obj = [[OMBUser alloc] init];
+      [obj readFromDictionary: dict];
+    }
+    _payer = obj;
+  }
 
   // Residence
+  if ([dictionary objectForKey: @"residence"] != [NSNull null]) {
+    NSDictionary *dict = [dictionary objectForKey: @"residence"];
+    NSInteger oUID = [[dict objectForKey: @"id"] intValue];
+    OMBResidence *obj = [[OMBAllResidenceStore sharedStore] residenceForUID:
+      oUID];
+    if (!obj) {
+      obj = [[OMBResidence alloc] init];
+      [obj readFromResidenceDictionary: dict];
+    }
+    _residence = obj;
+  }
 
   // Verified
   if ([[dictionary objectForKey: @"verified"] intValue])

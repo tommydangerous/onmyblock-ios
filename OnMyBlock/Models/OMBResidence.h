@@ -25,6 +25,7 @@
 @property (nonatomic) BOOL cats;
 @property (nonatomic, strong) NSString *city;
 @property (nonatomic) NSTimeInterval createdAt;
+@property (nonatomic) CGFloat deposit;
 @property (nonatomic, strong) NSString *description;
 @property (nonatomic) BOOL dogs;
 @property (nonatomic, strong) NSString *email;
@@ -92,6 +93,7 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 forResidenceImage: (OMBResidenceImage *) residenceImage;
 - (UIImage *) imageForSizeKey: (NSString *) string 
 forResidenceImage: (OMBResidenceImage *) residenceImage;
+- (NSDate *) moveOutDate;
 - (NSInteger) numberOfStepsLeft;
 - (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size;
 - (void) readFromOffersDictionary: (NSDictionary *) dictionary;

@@ -28,7 +28,8 @@
 #pragma mark - Instance Methods
 
 - (void) adjustFrames;
-- (void) loadConfirmedTenantData;
-- (void) loadOffer: (OMBOffer *) object;
+- (void) loadConfirmedTenant: (OMBOffer *) object;
+- (void) loadOfferForLandlord: (OMBOffer *) object;
+- (void) loadOfferForRenter: (OMBOffer *) object;
 
 @end

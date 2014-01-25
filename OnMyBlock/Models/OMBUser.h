@@ -48,7 +48,9 @@ extern NSString *const OMBUserLoggedOutNotification;
 @property (nonatomic, strong) NSString *userType;
 
 @property (nonatomic, strong) NSMutableDictionary *acceptedOffers;
+@property (nonatomic, strong) NSMutableDictionary *confirmedTenants;
 @property (nonatomic, strong) OMBNeighborhood *currentLocation;
+@property (nonatomic, strong) NSMutableDictionary *depositPayoutTransactions;
 @property (nonatomic, strong) NSMutableDictionary *favorites;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) NSMutableDictionary *imageSizeDictionary;
@@ -88,6 +90,8 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block;
 - (void) changeOtherSamePrimaryPayoutMethods: (OMBPayoutMethod *) payoutMethod;
 - (void) confirmOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
+- (void) createOffer: (OMBOffer *) offer
+  completion: (void (^) (NSError *error)) block;
 - (void) createPayoutMethodWithDictionary: (NSDictionary *) dictionary
 withCompletion: (void (^) (NSError *error)) block;
 - (void) declineOffer: (OMBOffer *) offer
@@ -97,7 +101,10 @@ withCompletion: (void (^) (NSError *error)) block;
 (void (^) (NSError *error)) block;
 - (NSArray *) favoritesArray;
 - (void) fetchAcceptedOffersWithCompletion: (void (^) (NSError *error)) block;
+- (void) fetchConfirmedTenantsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchPayoutMethodsWithCompletion: (void (^) (NSError *error)) block;
+- (void) fetchDepositPayoutTransactionsWithCompletion:
+(void (^) (NSError *error)) block;
 - (void) fetchReceivedOffersWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
@@ -111,8 +118,12 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (NSString *) phoneString;
 - (OMBPayoutMethod *) primaryDepositPayoutMethod;
 - (OMBPayoutMethod *) primaryPaymentPayoutMethod;
+- (NSInteger) profilePercentage;
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary;
+- (void) readFromConfirmedTenantsDictionary: (NSDictionary *) dictionary;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
+- (void) readFromDepositPayoutTransactionDictionary: 
+(NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) readFromEmploymentDictionary: (NSDictionary *) dictionary;
 - (void) readFromFavoriteResidencesDictionary: (NSDictionary *) dictionary;
