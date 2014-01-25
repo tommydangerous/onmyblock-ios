@@ -103,7 +103,7 @@
 
 + (NSInteger) numberOfSteps
 {
-  return 6;
+  return 7;
 }
 
 #pragma mark Instance Methods
@@ -416,8 +416,11 @@ withString: (NSString *) string
   // Address
   if ([_address length] && [_city length] && [_state length] && [_zip length])
     stepsRemaining -= 1;
-  // Additional Details
+  // Lease Details
   if (_moveInDate)
+    stepsRemaining -= 1;
+  // Listing Details
+  if (_bedrooms)
     stepsRemaining -= 1;
 
   return stepsRemaining;  

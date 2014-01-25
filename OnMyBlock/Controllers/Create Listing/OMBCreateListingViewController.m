@@ -223,7 +223,6 @@
   detailsTableView.delegate = self;
   detailsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
   [self.view addSubview: detailsTableView];
-  
   // Length picker
   lengthLeasePickerView = [[UIPickerView alloc] init];
   lengthLeasePickerView.backgroundColor = [UIColor whiteColor];
@@ -231,18 +230,14 @@
   lengthLeasePickerView.delegate = self;
   lengthLeasePickerView.frame = CGRectMake(0.0f,44.0f,
                                            lengthLeasePickerView.frame.size.width, lengthLeasePickerView.frame.size.height);
-  
   // Length picker view container
   pickerViewContainer = [UIView new];
-  [self.view addSubview: pickerViewContainer];
-  
   // Header for length picker view with cancel and done button
   AMBlurView *pickerViewHeader = [[AMBlurView alloc] init];
   pickerViewHeader.blurTintColor = [UIColor blueLight];
   pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
                                       self.view.frame.size.width, 44.0f);
 	[pickerViewContainer addSubview:pickerViewHeader];
-	
   // Header label
   pickerViewHeaderLabel = [UILabel new];
   pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
@@ -294,16 +289,14 @@
   fadedBackground.alpha = 0.0f;
   fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
   fadedBackground.frame = CGRectMake(0, headerView.frame.origin.y, screen.size.width, screen.size.height - headerView.frame.origin.y - pickerViewContainer.frame.size.height);
-  //fadedBackground.frame = screen;
-  
-  
-  
+  fadedBackground.frame = screen;
   [self.view addSubview: fadedBackground];
   UITapGestureRecognizer *tapGesture =
   [[UITapGestureRecognizer alloc] initWithTarget: self
                                           action: @selector(hidePickerView)];
   [fadedBackground addGestureRecognizer: tapGesture];
-  
+  // fadedBackground must to be behind pickerViewContainer
+  [self.view addSubview: pickerViewContainer];
   
   // Activity spinner
   activityView = [[OMBActivityView alloc] init];
@@ -587,11 +580,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 		NSString *string = [self pickerView: pickerView titleForRow: row
                            forComponent: component];
 		cell.lenghtLease.text = string;
-    if(row == 0){
-      cell.lenghtLease.text = @"Month to month";
-      string = @"0";
-    }
-		[valuesDictionary setObject:[NSNumber numberWithInt:[string integerValue]]
+    
+		[valuesDictionary setObject:[NSNumber numberWithInteger:row]
                           forKey:@"leaseMonths"];
 	}
 }
@@ -611,7 +601,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 		if (row == 0) {
 			return @"Month to month";
 		}
-		NSString *string = [NSString stringWithFormat:@"%i",row];
+		NSString *string = [NSString stringWithFormat:@"%i month%@ lease",row, (row > 1 ? @"s":@"")];
 		return string;
 	}
 	
@@ -816,6 +806,7 @@ replacementString: (NSString *) string
 {
   CGRect rect = pickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height;
+  [self showNextButton:YES];
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 0.0f;
     pickerViewContainer.frame = rect;
@@ -906,7 +897,7 @@ replacementString: (NSString *) string
       [detailsTableView cellForRowAtIndexPath:
        [NSIndexPath indexPathForRow:2 inSection: 0]];
       if([propertyType isEqualToString:@"house"] || [propertyType isEqualToString:@"apartment"]){
-        cell.lenghtLease.text = @"12";
+        cell.lenghtLease.text = @"12 months lease";
         [lengthLeasePickerView selectRow:12 inComponent:0 animated:YES];
         [valuesDictionary setObject: [NSNumber numberWithInt: 12]
                              forKey: @"leaseMonths"];
@@ -1015,6 +1006,7 @@ withMiles: (int) miles animated: (BOOL) animated
 		
 		//[rentPickerView removeFromSuperview];
 		[pickerViewContainer addSubview:lengthLeasePickerView];
+    [self showNextButton:NO];
 	}
 	
   CGRect rect = pickerViewContainer.frame;
