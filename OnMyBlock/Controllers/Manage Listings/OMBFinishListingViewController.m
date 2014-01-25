@@ -14,6 +14,7 @@
 #import "OMBFinishListingAddressViewController.h"
 #import "OMBFinishListingAmenitiesViewController.h"
 #import "OMBFinishListingDescriptionViewController.h"
+#import "OMBFinishListingLeaseDetailsViewController.h"
 #import "OMBFinishListingOtherDetailsViewController.h"
 #import "OMBFinishListingPhotosViewController.h"
 #import "OMBFinishListingRentAuctionDetailsViewController.h"
@@ -41,7 +42,7 @@
 {
   if (!(self = [super init])) return nil;
 
-  numberOfSteps = 6;
+  numberOfSteps = 7;
   residence = object;
 
   self.screenName = self.title = @"Finish Listing";
@@ -119,7 +120,7 @@
   [unlistView addSubview: unlistButton];
 
   CGFloat visibleImageHeight = screen.size.height * 
-    PropertyInfoViewImageHeightPercentage;
+    PropertyInfoViewImageHeightPercentage; // ... * 0.4
   CGFloat headerImageHeight = 44.0f + visibleImageHeight + 44.0f;
 
   // Table header view
@@ -152,6 +153,16 @@
   headerImageViewGradient.frame = headerImageView.frame;
   [self.view insertSubview: headerImageViewGradient belowSubview: self.table];
 
+  // Check mark
+  CGFloat imageSize = 20.0f;
+  UIImageView *imageView = [UIImageView new];
+  imageView.frame = CGRectMake(headerImageView.frame.size.width - padding - imageSize,
+                                 visibleImageHeight - padding, imageSize, imageSize);
+  imageView.tag   = 8888;
+  [headerImageView addSubview:imageView];
+  imageView.alpha = 0.2f;
+  imageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
+  
   // Camera view for add photo button
   cameraView = [UIView new];
   cameraView.frame = CGRectMake(0.0f, padding + 44.0f,
@@ -228,7 +239,7 @@
       headerImageView.image = [residence coverPhoto];
 
     // Update the Photos (X) count
-    [self reloadPhotosRow];
+    [self verifyPhotos];
   };
   [conn start];
 
@@ -245,6 +256,7 @@
   // [self reloadTitleRow];
 
   [self.table reloadData];
+  [self verifyPhotos];
 
   // Calculate how many steps are left
   NSString *publishNowButtonTitle = @"Publish Now";
@@ -422,31 +434,19 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   imageView.alpha = 0.2f;
   imageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
   NSString *string = @"";
-  // Photos
-  if (indexPath.row == 0) {
-    string = @"Photos";
-    if ([residence.images count]) {
-      string = [string stringByAppendingString: 
-        [NSString stringWithFormat: @" (%i)", [residence.images count]]];
-
-      cell.textLabel.textColor = [UIColor textColor];
-      imageView.alpha = 1.0f;
-      imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
-    }
-  }
+  
   // Title
-  else if (indexPath.row == 1) {
+  if (indexPath.row == 0) {
     string = @"Title";
     if ([residence.title length]) {
       string = residence.title;
-
       cell.textLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
   }
   // Description
-  else if (indexPath.row == 2) {
+  else if (indexPath.row == 1) {
     string = @"Description";
     if ([residence.description length]) {
       cell.textLabel.textColor = [UIColor textColor];
@@ -455,7 +455,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Rent / Auction Details
-  else if (indexPath.row == 3) {
+  else if (indexPath.row == 2) {
     // string = @"Rent / Auction Details";
     string = @"Rent Details";
     if (residence.minRent) {
@@ -465,7 +465,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Address
-  else if (indexPath.row == 4) {
+  else if (indexPath.row == 3) {
     string = @"Select Address";
     if ([residence.address length]) {
       string = [residence.address capitalizedString];
@@ -474,10 +474,19 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
   }  
-  // Additional Details
-  else if (indexPath.row == 5) {
-    string = @"Additional Details";
+  // Lease Details
+  else if (indexPath.row == 4) {
+    string = @"Lease Details";
     if (residence.moveInDate) {
+      cell.textLabel.textColor = [UIColor textColor];
+      imageView.alpha = 1.0f;
+      imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+    }
+  }
+  // Listing Details
+  else if (indexPath.row == 5) {
+    string = @"Listing Details";
+    if (residence.bedrooms) {
       cell.textLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
@@ -490,12 +499,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  // Photos
+  // ! Photos
   // Title
   // Description
   // Rent / Auction Details
   // Address
-  // Other Details
+  // Lease Details
+  // Listing Details
   return 6;
 }
 
@@ -504,41 +514,41 @@ numberOfRowsInSection: (NSInteger) section
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  // Photos
-  if (indexPath.row == 0) {
-    [self.navigationController pushViewController:
-      [[OMBFinishListingPhotosViewController alloc] initWithResidence: 
-        residence] animated: YES];
-  }
   // Title
-  else if (indexPath.row == 1) {
+  if (indexPath.row == 0) {
     [self.navigationController pushViewController:
       [[OMBFinishListingTitleViewController alloc] initWithResidence: 
         residence] animated: YES];
   }
   // Description
-  else if (indexPath.row == 2) {
+  else if (indexPath.row == 1) {
     [self.navigationController pushViewController:
       [[OMBFinishListingDescriptionViewController alloc] initWithResidence: 
         residence] animated: YES];
   }
   // Rent / Auction Details
-  else if (indexPath.row == 3) {
+  else if (indexPath.row == 2) {
     [self.navigationController pushViewController:
       [[OMBFinishListingRentAuctionDetailsViewController alloc] 
         initWithResidence: residence] animated: YES]; 
   }
   // Address
-  else if (indexPath.row == 4) {
+  else if (indexPath.row == 3) {
     [self.navigationController pushViewController:
       [[OMBFinishListingAddressViewController alloc] initWithResidence: 
         residence] animated: YES];
   }
-  // Additional Details
+  // Lease Details
+  else if (indexPath.row == 4) {
+    [self.navigationController pushViewController:
+     [[OMBFinishListingLeaseDetailsViewController alloc] initWithResidence:
+      residence] animated: YES];
+  }
+  // Listing Details
   else if (indexPath.row == 5) {
     [self.navigationController pushViewController:
-      [[OMBFinishListingOtherDetailsViewController alloc] initWithResidence: 
-        residence] animated: YES];
+     [[OMBFinishListingOtherDetailsViewController alloc] initWithResidence:
+      residence] animated: YES];
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
@@ -648,9 +658,23 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) reloadPhotosRow
 {
+  NSLog(@"reloadPhotosRow");
   [self.table reloadRowsAtIndexPaths: 
     @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
       withRowAnimation: UITableViewRowAnimationNone];
+  
+}
+
+-(void)verifyPhotos{
+  NSLog(@"photos");
+  UIImageView *checkImageView = (UIImageView *) [headerImageView viewWithTag: 8888];
+  if ([residence.images count]) {
+    checkImageView.alpha =  1.0f;
+    checkImageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+  }else{
+    checkImageView.alpha =  0.2f;
+    checkImageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
+  }
 }
 
 - (void) unlist

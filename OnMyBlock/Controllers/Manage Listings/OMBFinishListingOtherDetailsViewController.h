@@ -14,7 +14,6 @@
 UIPickerViewDelegate, UITextFieldDelegate>
 {
   UIActionSheet *deleteActionSheet;
-  NSArray *leaseTypeOptions;
   NSArray *propertyTypeOptions;
   NSIndexPath *selectedIndexPath;
 }

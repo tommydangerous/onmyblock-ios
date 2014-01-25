@@ -18,7 +18,8 @@
 
 @interface OMBCreateListingViewController : OMBViewController
 <CLLocationManagerDelegate, MKMapViewDelegate, UIScrollViewDelegate, 
-UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
+UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate,
+UIPickerViewDataSource, UIPickerViewDelegate>
 {
   OMBActivityView *activityView;
   UIBarButtonItem *backBarButtonItem;
@@ -44,6 +45,10 @@ UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
   MKMapView *map;
   // Step 3
   UITableView *detailsTableView;
+  UIView *fadedBackground;
+	UILabel *pickerViewHeaderLabel;
+  UIView *pickerViewContainer;
+  UIPickerView *lengthLeasePickerView;
 
   NSMutableDictionary *valuesDictionary;
 }

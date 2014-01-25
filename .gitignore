@@ -1,5 +1,5 @@
-OnMyBlock.xcodeproj/project.xcworkspace/xcuserdata
-OnMyBlock.xcodeproj/xcuserdata
+*.xcuserstate
+
 # Ignore configuration files
 /.env*
 !/.env.example

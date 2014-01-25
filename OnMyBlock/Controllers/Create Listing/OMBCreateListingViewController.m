@@ -21,6 +21,7 @@
 #import "OMBTemporaryResidence.h"
 #import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
+#import "OMBCreateListingDetailLeaseCell.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
@@ -51,7 +52,7 @@
   [valuesDictionary setObject: [NSNumber numberWithInt: 1] 
     forKey: @"bedrooms"];
   [valuesDictionary setObject: @"" forKey: @"city"];
-  [valuesDictionary setObject: [NSNumber numberWithInt: 6] 
+  [valuesDictionary setObject: [NSNumber numberWithInt: 0]
     forKey: @"leaseMonths"];
   [valuesDictionary setObject: @"" forKey: @"propertyType"];
 
@@ -212,6 +213,7 @@
   [locationView addSubview: cityTableView];
 
   // Step 3
+  
   detailsTableView = [[UITableView alloc] initWithFrame: CGRectMake(
     locationView.frame.origin.x, propertyTypeTableView.frame.origin.y,
      propertyTypeTableView.frame.size.width, 
@@ -221,8 +223,82 @@
   detailsTableView.delegate = self;
   detailsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
   [self.view addSubview: detailsTableView];
-
-  // Activty spinner
+  // Length picker
+  lengthLeasePickerView = [[UIPickerView alloc] init];
+  lengthLeasePickerView.backgroundColor = [UIColor whiteColor];
+  lengthLeasePickerView.dataSource = self;
+  lengthLeasePickerView.delegate = self;
+  lengthLeasePickerView.frame = CGRectMake(0.0f,44.0f,
+                                           lengthLeasePickerView.frame.size.width, lengthLeasePickerView.frame.size.height);
+  // Length picker view container
+  pickerViewContainer = [UIView new];
+  // Header for length picker view with cancel and done button
+  AMBlurView *pickerViewHeader = [[AMBlurView alloc] init];
+  pickerViewHeader.blurTintColor = [UIColor blueLight];
+  pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
+                                      self.view.frame.size.width, 44.0f);
+	[pickerViewContainer addSubview:pickerViewHeader];
+  // Header label
+  pickerViewHeaderLabel = [UILabel new];
+  pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  pickerViewHeaderLabel.frame = pickerViewHeader.frame;
+  pickerViewHeaderLabel.text = @"";
+  pickerViewHeaderLabel.textAlignment = NSTextAlignmentCenter;
+  pickerViewHeaderLabel.textColor = [UIColor textColor];
+  [pickerViewHeader addSubview: pickerViewHeaderLabel];
+  // Cancel button
+  UIButton *lengthLeaseCancelButton = [UIButton new];
+  lengthLeaseCancelButton.titleLabel.font = pickerViewHeaderLabel.font;
+  CGRect lengthLeaseCancelButtonRect = [@"Cancel" boundingRectWithSize:
+                                        CGSizeMake(pickerViewHeader.frame.size.width,
+                                                   pickerViewHeader.frame.size.height)
+                                                                   font: lengthLeaseCancelButton.titleLabel.font];
+  lengthLeaseCancelButton.frame = CGRectMake(padding, 0.0f,
+                                             lengthLeaseCancelButtonRect.size.width, pickerViewHeader.frame.size.height);
+  [lengthLeaseCancelButton addTarget: self
+                       action: @selector(cancelPicker)
+             forControlEvents: UIControlEventTouchUpInside];
+  [lengthLeaseCancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
+  [lengthLeaseCancelButton setTitleColor: [UIColor blueDark]
+                         forState: UIControlStateNormal];
+  [pickerViewHeader addSubview: lengthLeaseCancelButton];
+  // Done button
+  UIButton *lengthLeaseDoneButton = [UIButton new];
+  lengthLeaseDoneButton.titleLabel.font = lengthLeaseCancelButton.titleLabel.font;
+  CGRect lengthLeaseDoneButtonRect = [@"Done" boundingRectWithSize:
+                               CGSizeMake(pickerViewHeader.frame.size.width,
+                                          pickerViewHeader.frame.size.height)
+                                                       font: lengthLeaseDoneButton.titleLabel.font];
+  lengthLeaseDoneButton.frame = CGRectMake(pickerViewHeader.frame.size.width -
+                                    (padding + lengthLeaseDoneButtonRect.size.width), 0.0f,
+                                    lengthLeaseDoneButtonRect.size.width, pickerViewHeader.frame.size.height);
+  [lengthLeaseDoneButton addTarget: self
+                     action: @selector(hidePickerView)
+           forControlEvents: UIControlEventTouchUpInside];
+  [lengthLeaseDoneButton setTitle: @"Done" forState: UIControlStateNormal];
+  [lengthLeaseDoneButton setTitleColor: [UIColor blueDark]
+                       forState: UIControlStateNormal];
+  [pickerViewHeader addSubview: lengthLeaseDoneButton];
+  
+  pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
+                                         lengthLeasePickerView.frame.size.width,
+                                         pickerViewHeader.frame.size.height +
+                                         lengthLeasePickerView.frame.size.height);
+  
+  fadedBackground = [[UIView alloc] init];
+  fadedBackground.alpha = 0.0f;
+  fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
+  fadedBackground.frame = CGRectMake(0, headerView.frame.origin.y, screen.size.width, screen.size.height - headerView.frame.origin.y - pickerViewContainer.frame.size.height);
+  fadedBackground.frame = screen;
+  [self.view addSubview: fadedBackground];
+  UITapGestureRecognizer *tapGesture =
+  [[UITapGestureRecognizer alloc] initWithTarget: self
+                                          action: @selector(hidePickerView)];
+  [fadedBackground addGestureRecognizer: tapGesture];
+  // fadedBackground must to be behind pickerViewContainer
+  [self.view addSubview: pickerViewContainer];
+  
+  // Activity spinner
   activityView = [[OMBActivityView alloc] init];
   [self.view addSubview: activityView];
 
@@ -256,7 +332,7 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-
+  
   stepNumber = 0;
 }
 
@@ -309,16 +385,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     UIImage *image;
     NSString *string = @"";
     if (indexPath.row == 0) {
-      image  = [UIImage imageNamed: @"sublet_icon.png"];
-      string = @"Sublet";
-    }
-    else if (indexPath.row == 1) {
       image  = [UIImage imageNamed: @"house_icon_2.png"];
       string = @"House";
     }
-    else if (indexPath.row == 2) {
+    else if (indexPath.row == 1) {
       image  = [UIImage imageNamed: @"apartment_icon_2.png"];
       string = @"Apartment";
+    }
+    else if (indexPath.row == 2) {
+      image  = [UIImage imageNamed: @"sublet_icon.png"];
+      string = @"Sublet/Room";
     }
     [c setFramesForSubviewsWithSize: CGSizeMake(tableView.frame.size.width,
       tableView.frame.size.height / 3.0f)];
@@ -364,10 +440,21 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [[valuesDictionary objectForKey: @"bathrooms"] intValue]];
     }
     else if (indexPath.row == 2) {
-      string = @"Month Lease";
-      valueString = [NSString stringWithFormat: @"%i",
-        [[valuesDictionary objectForKey: @"leaseMonths"] intValue]];
+      
+      static NSString *PropertyTypeCellIdentifier =
+			@"LengthLeaseCellIdentifier";
+			OMBCreateListingDetailLeaseCell *cell =
+			[tableView dequeueReusableCellWithIdentifier:
+			 PropertyTypeCellIdentifier];
+			if (!cell)
+				cell = [[OMBCreateListingDetailLeaseCell alloc] initWithStyle:
+                UITableViewCellStyleDefault reuseIdentifier:
+                PropertyTypeCellIdentifier];
+      cell.detailNameLabel.text = @"Length of lease";
+      
+			return cell;
     }
+    
     [c setFramesForSubviewsWithSize: CGSizeMake(tableView.frame.size.width,
       tableView.frame.size.height / 3.0f)];
     c.detailNameLabel.text = string;
@@ -410,13 +497,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   if (tableView == propertyTypeTableView) {
     NSString *string = @"";
     if (indexPath.row == 0) {
-      string = @"sublet";
-    }
-    else if (indexPath.row == 1) {
       string = @"house";
     }
-    else if (indexPath.row == 2) {
+    else if (indexPath.row == 1) {
       string = @"apartment";
+    }
+    else if (indexPath.row == 2) {
+      string = @"sublet";
     }
     [valuesDictionary setObject: string forKey: @"propertyType"];
     [self next];
@@ -426,6 +513,16 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     cityTextField.text = [_citiesArray objectAtIndex: indexPath.row];
     [valuesDictionary setObject: cityTextField.text forKey: @"city"];
     [self next];
+  }
+  // Details
+  else if (tableView == detailsTableView) {
+    // Picker View
+    if (indexPath.section == 0 && indexPath.row == 2) {
+      [detailsTableView scrollToRowAtIndexPath:
+       [NSIndexPath indexPathForRow: 0 inSection: indexPath.section]
+                        atScrollPosition: UITableViewScrollPositionTop animated: YES];
+      [self showPickerView:lengthLeasePickerView];
+    }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
@@ -445,6 +542,80 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     return (tableView.frame.size.height - nextView.frame.size.height) / 3.0f;
   }
   return 0.0f;
+}
+
+#pragma mark - Protocol UIPickerViewDataSource
+
+- (NSInteger) numberOfComponentsInPickerView: (UIPickerView *) pickerView
+{
+	if (pickerView == lengthLeasePickerView)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+- (NSInteger) pickerView: (UIPickerView *) pickerView
+ numberOfRowsInComponent: (NSInteger) component
+{
+	
+	if (pickerView == lengthLeasePickerView)
+	{
+		// Months
+		return 13;
+	}
+	return 0;
+}
+
+#pragma mark - Protocol UIPickerViewDelegate
+
+- (void) pickerView: (UIPickerView *) pickerView didSelectRow: (NSInteger) row
+        inComponent: (NSInteger) component
+{
+	if (pickerView == lengthLeasePickerView)
+	{
+		OMBCreateListingDetailLeaseCell *cell = (OMBCreateListingDetailLeaseCell *)
+		[detailsTableView cellForRowAtIndexPath:
+		 [NSIndexPath indexPathForRow:2 inSection: 0]];
+		NSString *string = [self pickerView: pickerView titleForRow: row
+                           forComponent: component];
+		cell.lenghtLease.text = string;
+    
+		[valuesDictionary setObject:[NSNumber numberWithInteger:row]
+                          forKey:@"leaseMonths"];
+	}
+}
+
+- (CGFloat) pickerView: (UIPickerView *) pickerView
+ rowHeightForComponent: (NSInteger) component
+{
+  return 44.0f;
+}
+
+- (NSString *) pickerView: (UIPickerView *) pickerView
+              titleForRow: (NSInteger) row
+             forComponent: (NSInteger) component
+{
+	if (pickerView == lengthLeasePickerView)
+	{
+		if (row == 0) {
+			return @"Month to month";
+		}
+		NSString *string = [NSString stringWithFormat:@"%i month%@ lease",row, (row > 1 ? @"s":@"")];
+		return string;
+	}
+	
+  return nil;
+}
+
+- (CGFloat) pickerView: (UIPickerView *) pickerView
+     widthForComponent: (NSInteger) component
+{
+	if (pickerView == lengthLeasePickerView)
+	{
+		return pickerView.bounds.size.width - 40.0f;
+	}
+	return 0;
 }
 
 #pragma mark - Protocol UITextFieldDelegate
@@ -487,6 +658,7 @@ replacementString: (NSString *) string
       [self showNextButton: NO];
     }
     else {
+      [self hidePickerView];
       [self.navigationItem setLeftBarButtonItem: backBarButtonItem
         animated: YES];
       // [self.navigationItem setRightBarButtonItem: nextBarButtonItem
@@ -546,6 +718,23 @@ replacementString: (NSString *) string
 {
   [self.navigationController dismissViewControllerAnimated: YES
     completion: nil];
+}
+
+
+- (void) cancelPicker
+{
+	if ([lengthLeasePickerView superview])
+	{
+		OMBCreateListingDetailLeaseCell *cell = (OMBCreateListingDetailLeaseCell *)
+		[detailsTableView cellForRowAtIndexPath:
+		 [NSIndexPath indexPathForRow: 2 inSection: 0]];
+		cell.lenghtLease.text = @"Month to month";
+		[lengthLeasePickerView selectRow:0 inComponent:0 animated:YES];
+    [valuesDictionary setObject: [NSNumber numberWithInt: 0]
+                         forKey: @"leaseMonths"];
+	}
+	
+  [self hidePickerView];
 }
 
 - (void ) changeDetailValueAtIndex: (int) index plus: (BOOL) plus
@@ -613,6 +802,18 @@ replacementString: (NSString *) string
   [conn start];
 }
 
+- (void) hidePickerView
+{
+  CGRect rect = pickerViewContainer.frame;
+  rect.origin.y = self.view.frame.size.height;
+  [self showNextButton:YES];
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 0.0f;
+    pickerViewContainer.frame = rect;
+  }];
+//  [self showSearchBarButtonItem];
+}
+
 - (void) minusButtonSelected: (UIButton *) button
 {
   [self changeDetailValueAtIndex: button.tag plus: NO];
@@ -634,7 +835,7 @@ replacementString: (NSString *) string
       animated: YES];
     // Last step; details
     if (stepNumber == 2) {
-      [nextButton setTitle: @"Save" forState: UIControlStateNormal];
+      [nextButton setTitle: @"Next" forState: UIControlStateNormal];
       // Turn into save
 
       // [self.navigationItem setRightBarButtonItem: saveBarButtonItem
@@ -688,6 +889,25 @@ replacementString: (NSString *) string
         rect3.origin.x         = 0.0f;
         detailsTableView.frame = rect3;
       };
+      
+      NSString *propertyType = [valuesDictionary objectForKey: @"propertyType"];
+      
+      // which propertyType
+      OMBCreateListingDetailLeaseCell *cell = (OMBCreateListingDetailLeaseCell *)
+      [detailsTableView cellForRowAtIndexPath:
+       [NSIndexPath indexPathForRow:2 inSection: 0]];
+      if([propertyType isEqualToString:@"house"] || [propertyType isEqualToString:@"apartment"]){
+        cell.lenghtLease.text = @"12 months lease";
+        [lengthLeasePickerView selectRow:12 inComponent:0 animated:YES];
+        [valuesDictionary setObject: [NSNumber numberWithInt: 12]
+                             forKey: @"leaseMonths"];
+      }else if([propertyType isEqualToString:@"sublet"]){
+        cell.lenghtLease.text = @"Month to month";
+        [lengthLeasePickerView selectRow:0 inComponent:0 animated:YES];
+        [valuesDictionary setObject: [NSNumber numberWithInt: 0]
+                             forKey: @"leaseMonths"];
+      }
+      
       [self checkValidationForCity];
     }
     [UIView animateWithDuration: 0.25f animations: animations 
@@ -775,6 +995,26 @@ withMiles: (int) miles animated: (BOOL) animated
     CGRect nextRect   = nextView.frame;
     nextRect.origin.y = originY;
     nextView.frame    = nextRect;
+  }];
+}
+
+- (void) showPickerView:(UIPickerView *)pickerView
+{
+	if (lengthLeasePickerView == pickerView)
+	{
+		pickerViewHeaderLabel.text = @"Length of Lease";
+		
+		//[rentPickerView removeFromSuperview];
+		[pickerViewContainer addSubview:lengthLeasePickerView];
+    [self showNextButton:NO];
+	}
+	
+  CGRect rect = pickerViewContainer.frame;
+  rect.origin.y = self.view.frame.size.height -
+  pickerViewContainer.frame.size.height;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 1.0f;
+    pickerViewContainer.frame = rect;
   }];
 }
 
