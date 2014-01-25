@@ -33,6 +33,7 @@
 #import "OMBResidenceDetailViewController.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 #import "UIImage+Color.h"
 
 @implementation OMBOfferInquiryViewController
@@ -510,6 +511,29 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.detailTextLabel.text = @"October 12, 2014";
       cell.textLabel.text = @"Move-out Date";
     }
+    // Offer note
+    else if (indexPath.row == 4) {
+      static NSString *OfferNoteIdentifier = @"OfferNoteIdentifier";
+      UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
+        OfferNoteIdentifier];
+      if (!cell1) {
+        cell1 = [[UITableViewCell alloc] initWithStyle: 
+          UITableViewCellStyleDefault reuseIdentifier: OfferNoteIdentifier];
+        UILabel *label = [UILabel new];
+        label.font = [UIFont smallTextFont];
+        label.numberOfLines = 0;
+        label.text = offer.note;
+        label.textColor = [UIColor textColor];
+        CGRect rect = [label.text boundingRectWithSize: 
+          CGSizeMake(tableView.frame.size.width - (padding * 2), 9999) 
+            font: label.font];
+        label.frame = CGRectMake(padding, padding, rect.size.width,
+          rect.size.height);
+        [cell1.contentView addSubview: label];
+      }
+      cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+      return cell1;
+    }
   }
   // Profile
   else if (tableView == _profileTableView) {
@@ -695,7 +719,8 @@ numberOfRowsInSection: (NSInteger) section
     // Offer
     // Move-in Date
     // Move-out Date
-    return 3;
+    // Offer note
+    return 5;
     // return 4;
   }
   // Profile
@@ -784,7 +809,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Move-out Date
     else if (indexPath.row == 3) {
+      return 0.0f;
       return standardHeight;
+    }
+    // Offer note
+    else if (indexPath.row == 4) {
+      CGRect rect = [offer.note boundingRectWithSize: 
+        CGSizeMake(tableView.frame.size.width - (padding * 2), 9999) 
+          font: [UIFont smallTextFont]];
+      return padding + rect.size.height + padding;
     }
   }
   // Profile

@@ -625,20 +625,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [alertView show];
   }
   else {
-    [[self appDelegate].container startSpinning];
-    // [activityView startSpinning];
-
     OMBResidencePublishConnection *conn = 
       [[OMBResidencePublishConnection alloc] initWithResidence: residence];
     conn.completionBlock = ^(NSError *error) {
-      if (error) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Error" 
-          message: error.localizedDescription delegate: nil 
-            cancelButtonTitle: @"Try again"
-              otherButtonTitles: nil];
-        [alertView show];
-      }
-      else {
+      if (!residence.inactive && !error) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
           @"Congratulations" message: @"Your place has been published." 
           delegate: nil 
@@ -649,9 +639,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         publishNowView.hidden = YES;
         unlistView.hidden     = NO;
       }
+      else {
+        [self showAlertViewWithError: error];
+      }
       [[self appDelegate].container stopSpinning];
-      // [activityView stopSpinning];
     };
+    [[self appDelegate].container startSpinning];
     [conn start];
   }
 }
