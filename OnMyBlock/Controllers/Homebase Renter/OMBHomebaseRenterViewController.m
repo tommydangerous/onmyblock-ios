@@ -32,6 +32,9 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+NegativeImage.h"
 
+// Make this 0.4f when having roommates
+float kHomebaseRenterImagePercentage = 0.3f;
+
 @implementation OMBHomebaseRenterViewController
 
 #pragma mark - Initializer
@@ -79,10 +82,11 @@
   // The image in the back
   backView = [UIView new];
   backView.frame = CGRectMake(0.0f, 0.0f, 
-    screenWidth, (screenHeight * 0.4f) + (padding + standardHeight + padding));
+    screenWidth, (screenHeight * kHomebaseRenterImagePercentage) + 
+    (padding + standardHeight + padding));
   [self.view addSubview: backView];
   // Image of residence
-  OMBCenteredImageView *residenceImageView = 
+  residenceImageView = 
     [[OMBCenteredImageView alloc] init];
   residenceImageView.frame = backView.frame;  
   residenceImageView.image = [UIImage imageNamed: 
@@ -94,7 +98,7 @@
   colorView.frame = residenceImageView.frame;
   [backView addSubview: colorView];
   // Blur
-  DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
+  blurView = [[DRNRealTimeBlurView alloc] init];
   blurView.blurRadius = 0.3f;
   blurView.frame = residenceImageView.frame;  
   blurView.renderStatic = YES;
@@ -410,9 +414,9 @@
   // Activity or Payments
   if (scrollView == _activityTableView || scrollView == _paymentsTableView) {
     CGFloat originalButtonsViewOriginY = padding + standardHeight + 
-      (screen.size.height * 0.4f) + padding;
+      (screen.size.height * kHomebaseRenterImagePercentage) + padding;
     CGFloat minOriginY = padding + standardHeight + padding;
-    // CGFloat maxDistanceForBackView = originalButtonsViewOriginY - minOriginY;
+    CGFloat maxDistanceForBackView = originalButtonsViewOriginY - minOriginY;
 
     CGFloat newOriginY = originalButtonsViewOriginY - y;
     if (newOriginY > originalButtonsViewOriginY)
@@ -423,6 +427,25 @@
     CGRect buttonsViewRect = buttonsView.frame;
     buttonsViewRect.origin.y = newOriginY;
     buttonsView.frame = buttonsViewRect;
+
+    // Move view up
+    CGFloat adjustment = y / 3.0f;
+    // Adjust the header image view
+    CGRect backViewRect = backView.frame;
+    CGFloat newOriginY2 = backViewOffsetY - adjustment;
+    if (newOriginY2 > backViewOffsetY)
+      newOriginY2 = backViewOffsetY;
+    else if (newOriginY2 < backViewOffsetY - (maxDistanceForBackView / 3.0f))
+      newOriginY2 = backViewOffsetY - (maxDistanceForBackView / 3.0f);
+    backViewRect.origin.y = newOriginY2;
+    backView.frame = backViewRect;
+
+    // Scale the background image
+    CGFloat newScale = 1 + ((y * -3.0f) / blurView.frame.size.height);
+    if (newScale < 1)
+      newScale = 1;
+    blurView.transform = CGAffineTransformScale(
+      CGAffineTransformIdentity, newScale, newScale);
 
     // Change the colors of the buttons
     // CGFloat maxDistancePercent = y / maxDistanceForBackView;
@@ -715,17 +738,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 viewForHeaderInSection: (NSInteger) section
 {
   CGFloat padding = 20.0f;
-  AMBlurView *blurView = [[AMBlurView alloc] init];
-  blurView.blurTintColor = [UIColor blueLight];
-  blurView.frame = CGRectMake(0.0f, 0.0f, 
+  AMBlurView *blur = [[AMBlurView alloc] init];
+  blur.blurTintColor = [UIColor blueLight];
+  blur.frame = CGRectMake(0.0f, 0.0f, 
     tableView.frame.size.width, 13.0f * 2);
   UILabel *label = [UILabel new];
   label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 13];
   label.frame = CGRectMake(padding, 0.0f, 
-    blurView.frame.size.width - (padding * 2), blurView.frame.size.height);
+    blur.frame.size.width - (padding * 2), blur.frame.size.height);
   label.textAlignment = NSTextAlignmentCenter;
   label.textColor = [UIColor blueDark];
-  [blurView addSubview: label];
+  [blur addSubview: label];
   NSString *titleString = @"";
   // Activity
   if (tableView == _activityTableView) {
@@ -745,7 +768,7 @@ viewForHeaderInSection: (NSInteger) section
     }
   }
   label.text = titleString;
-  return blurView;
+  return blur;
 }
 
 #pragma mark - Methods

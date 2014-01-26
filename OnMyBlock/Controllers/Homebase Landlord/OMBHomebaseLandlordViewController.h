@@ -8,12 +8,15 @@
 
 #import "OMBViewController.h"
 
+@class DRNRealTimeBlurView;
+
 @interface OMBHomebaseLandlordViewController : OMBViewController
 <UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
 {
   UIButton *activityButton;
   UIView *backView;
   CGFloat backViewOffsetY;
+  DRNRealTimeBlurView *blurView;
   UIView *buttonsView;
   UIBarButtonItem *inboxBarButtonItem;
   UIButton *paymentsButton;

@@ -20,6 +20,7 @@
 #import "ILTranslucentView.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
+#import "UIImage+NegativeImage.h"
 
 @implementation OMBIntroStillImagesViewController
 
@@ -119,7 +120,10 @@
     slide1.frame.size.width, slide1.frame.size.height);
   slide1.imageView.image = [UIImage imageNamed: @"logo_white.png"];
   slide1.titleLabel.text = @"OnMyBlock";
-  [slide1 setDetailLabelText: @"The auction marketplace\nfor student housing."];
+  // [slide1 setDetailLabelText: 
+  //   @"The auction marketplace\nfor student housing."];
+  [slide1 setDetailLabelText: 
+    @"The marketplace\nfor student housing."];
   [_scroll addSubview: slide1];
 
   OMBIntroStillImageSlide *slide2 = 
@@ -127,7 +131,9 @@
       [UIImage imageNamed: @"intro_still_image_slide_2_background.jpg"]];
   slide2.frame = CGRectMake(screenWidth * 1.0f, 0.0f,
     slide2.frame.size.width, slide2.frame.size.height);
-  slide2.imageView.image = [UIImage imageNamed: @"search_icon.png"];
+  // slide2.imageView.image = [UIImage imageNamed: @"search_icon.png"];
+  slide2.imageView.image = 
+    [[UIImage imageNamed: @"map_marker_icon.png"] negativeImage];
   slide2.titleLabel.text = @"Discover";
   [slide2 setDetailLabelText: @"Find the best college sublets,\n" 
     @"houses, and apartments."];
@@ -138,11 +144,15 @@
       [UIImage imageNamed: @"intro_still_image_slide_3_background.jpg"]];
   slide3.frame = CGRectMake(screenWidth * 2.0f, 0.0f,
     slide3.frame.size.width, slide3.frame.size.height);
-  slide3.imageView.image = [UIImage imageNamed: @"book_icon.png"];
-  slide3.secondDetailLabel.text = @"When your offer is accepted...";
+  // slide3.imageView.image = [UIImage imageNamed: @"book_icon.png"];
+  slide3.imageView.image = 
+    [[UIImage imageNamed: @"credit_card_icon.png"] negativeImage];
+  // slide3.secondDetailLabel.text = @"When your offer is accepted...";
   slide3.titleLabel.text = @"Book";
-  [slide3 setDetailLabelText: @"Bid on your favorite rentals\n" 
-    @"through a live auction."];
+  // [slide3 setDetailLabelText: @"Bid on your favorite rentals\n" 
+  //   @"through a live auction."];
+  [slide3 setDetailLabelText: @"Make offers on your\n" 
+    @"favorite places."];
   [_scroll addSubview: slide3];
 
   OMBIntroStillImageSlide *slide4 = 
@@ -150,10 +160,14 @@
       [UIImage imageNamed: @"intro_still_image_slide_4_background.jpg"]];
   slide4.frame = CGRectMake(screenWidth * 3.0f, 0.0f,
     slide4.frame.size.width, slide4.frame.size.height);
-  slide4.imageView.image = [UIImage imageNamed: @"celebrate_icon.png"];
+  // slide4.imageView.image = [UIImage imageNamed: @"celebrate_icon.png"];
+  slide4.imageView.image = 
+    [[UIImage imageNamed: @"champagne_icon.png"] negativeImage];
   slide4.titleLabel.text = @"Celebrate";
-  [slide4 setDetailLabelText: @"You are ready to move\n" 
-    @"into your new college pad."];
+  // [slide4 setDetailLabelText: @"You are ready to move\n" 
+  //   @"into your new college pad."];
+  [slide4 setDetailLabelText: @"Once you are accepted,\n" 
+    @"you'll be ready to move in."];
   [_scroll addSubview: slide4];
 
   slides = @[

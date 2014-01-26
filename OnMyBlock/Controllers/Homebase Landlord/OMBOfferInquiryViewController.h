@@ -12,6 +12,7 @@
 
 @class OMBAlertView;
 @class OMBCenteredImageView;
+@class OMBGradientView;
 @class OMBOffer;
 
 @interface OMBOfferInquiryViewController : OMBViewController
@@ -27,6 +28,7 @@
   BOOL charging;
   BOOL cameFromSettingUpPayoutMethods;
   UIButton *contactButton;
+  OMBGradientView *gradient;
   NSArray *legalQuestions;
   OMBOffer *offer;
   UIButton *offerButton;

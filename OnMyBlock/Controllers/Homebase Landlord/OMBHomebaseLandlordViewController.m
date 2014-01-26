@@ -80,7 +80,7 @@
   colorView.frame = residenceImageView.frame;
   [backView addSubview: colorView];
   // Blur
-  DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
+  blurView = [[DRNRealTimeBlurView alloc] init];
   blurView.blurRadius = 0.3f;
   blurView.frame = residenceImageView.frame;  
   blurView.renderStatic = YES;
@@ -277,13 +277,24 @@
     welcomeViewRect.origin.y = welcomeViewNewOriginY;
     welcomeView.frame = welcomeViewRect;
 
-    // Move the back view image
+    // Move view up
     CGFloat adjustment = y / 3.0f;
-    if (y > maxDistanceForBackView)
-      adjustment = maxDistanceForBackView / 3.0f;
+    // Adjust the header image view
     CGRect backViewRect = backView.frame;
-    backViewRect.origin.y = backViewOffsetY - adjustment;
+    CGFloat newOriginY2 = backViewOffsetY - adjustment;
+    if (newOriginY2 > backViewOffsetY)
+      newOriginY2 = backViewOffsetY;
+    else if (newOriginY2 < backViewOffsetY - (maxDistanceForBackView / 3.0f))
+      newOriginY2 = backViewOffsetY - (maxDistanceForBackView / 3.0f);
+    backViewRect.origin.y = newOriginY2;
     backView.frame = backViewRect;
+
+    // Scale the background image
+    CGFloat newScale = 1 + ((y * -3.0f) / blurView.frame.size.height);
+    if (newScale < 1)
+      newScale = 1;
+    blurView.transform = CGAffineTransformScale(
+      CGAffineTransformIdentity, newScale, newScale);
   }
 }
 
@@ -586,17 +597,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 viewForHeaderInSection: (NSInteger) section
 {
   CGFloat padding = 20.0f;
-  AMBlurView *blurView = [[AMBlurView alloc] init];
-  blurView.blurTintColor = [UIColor blueLight];
-  blurView.frame = CGRectMake(0.0f, 0.0f, 
+  AMBlurView *blur = [[AMBlurView alloc] init];
+  blur.blurTintColor = [UIColor blueLight];
+  blur.frame = CGRectMake(0.0f, 0.0f, 
     tableView.frame.size.width, 13.0f * 2);
   UILabel *label = [UILabel new];
   label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 13];
   label.frame = CGRectMake(padding, 0.0f, 
-    blurView.frame.size.width - (padding * 2), blurView.frame.size.height);
+    blur.frame.size.width - (padding * 2), blur.frame.size.height);
   label.textAlignment = NSTextAlignmentCenter;
   label.textColor = [UIColor blueDark];
-  [blurView addSubview: label];
+  [blur addSubview: label];
   NSString *titleString = @"";
   // Activity
   if (tableView == _activityTableView) {
@@ -620,7 +631,7 @@ viewForHeaderInSection: (NSInteger) section
     }
   }
   label.text = titleString;
-  return blurView;
+  return blur;
 }
 
 #pragma mark - Methods
