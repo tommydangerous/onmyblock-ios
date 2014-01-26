@@ -30,6 +30,7 @@
 #import "OMBScrollView.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIImage+NegativeImage.h"
 
 @implementation OMBHomebaseRenterViewController
 
@@ -294,6 +295,8 @@
           imageView.imageView.image = [OMBUser currentUser].image;
         }
       ];
+      imageView.imageView.image = 
+        [[UIImage imageNamed: @"user_icon_default.png"] negativeImage];
     }
     [imageViewArray addObject: imageView];
     [imagesScrollView addSubview: imageView];
