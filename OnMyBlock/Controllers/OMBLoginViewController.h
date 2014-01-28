@@ -25,6 +25,7 @@
 
 #pragma mark - Instance Methods
 
+- (void) showLandlordSignUp;
 - (void) showLogin;
 - (void) showSignUp;
 

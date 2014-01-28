@@ -92,7 +92,7 @@
   [backView addSubview: colorView];
   // Blur
   DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
-  blurView.blurRadius = 0.3f;
+
   blurView.frame = residenceImageView.frame;  
   blurView.renderStatic = YES;
   [backView addSubview: blurView];

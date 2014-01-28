@@ -173,7 +173,7 @@
   backViewRect.origin.y = newOriginY;
   backView.frame = backViewRect;
 
-  CGFloat newScale = 1 + ((y * -1) / userImageView.frame.size.height);
+  CGFloat newScale = 1 + ((y * -3) / userImageView.frame.size.height);
   if (newScale < 1)
     newScale = 1;
   userImageView.transform = CGAffineTransformScale(CGAffineTransformIdentity,

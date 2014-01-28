@@ -30,7 +30,7 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBOffersAcceptedConnection\n%@", [self json]);
+  // NSLog(@"OMBOffersAcceptedConnection\n%@", [self json]);
 
   [[OMBUser currentUser] readFromAcceptedOffersDictionary: [self json]];
 

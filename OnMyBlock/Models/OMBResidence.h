@@ -84,6 +84,8 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 - (UIImage *) coverPhotoForSizeKey: (NSString *) string;
 - (NSString *) dictionaryKey;
 - (void) downloadCoverPhotoWithCompletion: (void (^) (NSError *error)) block;
+- (void) downloadImagesWithCompletion: (void (^) (NSError *error)) block;
+- (void) fetchDetailsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchOffersWithCompletion: (void (^) (NSError *error)) block;
 - (NSURL *) googleStaticMapImageURL;
 - (NSURL *) googleStaticStreetViewImageURL;

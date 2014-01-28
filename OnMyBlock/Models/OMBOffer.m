@@ -119,8 +119,8 @@
       residenceUID];
     if (!res) {
       res = [[OMBResidence alloc] init];
-      [res readFromResidenceDictionary: resDict];
     }
+    [res readFromResidenceDictionary: resDict];
     _residence = res;
   }
   // Updated at

@@ -10,7 +10,10 @@
 
 #import "PayPalMobile.h"
 
+@class DRNRealTimeBlurView;
 @class OMBAlertView;
+@class OMBBlurView;
+@class OMBCenteredImageView;
 @class OMBOffer;
 @class OMBScrollView;
 
@@ -21,8 +24,9 @@
   UIButton *activityButton;
   UIButton *addRemoveRoommatesButton;
   OMBAlertView *alert;
-  UIView *backView;
+  OMBBlurView *backView;
   CGFloat backViewOffsetY;
+  DRNRealTimeBlurView *blurView;
   UIView *buttonsView;
   BOOL cameFromSettingUpPayoutMethods;
   BOOL charging;
@@ -31,6 +35,7 @@
   NSMutableArray *imageViewArray;
   UIView *middleDivider; // For the buttons view
   UIButton *paymentsButton;
+  OMBCenteredImageView *residenceImageView;
   OMBOffer *selectedOffer;
   int selectedSegmentIndex;
   UITapGestureRecognizer *tapGesture;

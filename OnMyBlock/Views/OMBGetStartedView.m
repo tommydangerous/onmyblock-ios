@@ -11,8 +11,10 @@
 #import "DDPageControl.h"
 #import "OMBAppDelegate.h"
 #import "OMBIntroStillImagesViewController.h"
+#import "OMBOrView.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 
@@ -24,49 +26,53 @@
 {
   if (!(self = [super init])) return nil;
 
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  float screenHeight = screen.size.height;
-  float screenWidth  = screen.size.width;
+  // This is the order of views
+  // OnMyBlock
+  // Sign up using Facebook
+  // We will never post on your behalf without permission
+  // ----- or -----
+  // Sign up using Email
+  // Already a user? Login
 
-  CGFloat padding = 20.0f;
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGFloat screenHeight = screen.size.height;
+  CGFloat screenWidth  = screen.size.width;
+  CGFloat standardHeight = 44.0f;
+  CGFloat padding      = 20.0f;
+  CGFloat middleOriginY = screenHeight * 0.5f;
+  CGFloat buttonHeight = padding + 18.0f + padding;
+  CGFloat buttonWidth = screenWidth - (padding * 2);
 
   self.frame = screen;
 
-  UILabel *label1 = [[UILabel alloc] init];
-  label1.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 22];
-  // 33 + 40 = height of label1 plus the height of the page control
-  label1.frame = CGRectMake(0, ((screenHeight - (33 + 40)) * 0.5) - padding,
-    screenWidth, 33);
-  label1.text = @"Built for college students";
-  label1.textAlignment = NSTextAlignmentCenter;
-  label1.textColor = [UIColor textColor];
-  [self addSubview: label1];
+  CGRect orViewRect = CGRectMake(padding, 
+    middleOriginY + (screenHeight * 0.05f), 
+      screenWidth - (padding * 2), standardHeight);
+  OMBOrView *orView = [[OMBOrView alloc] initWithFrame: orViewRect 
+    color: [UIColor whiteColor]];
+  [self addSubview: orView];
 
-  UILabel *onmyblock = [[UILabel alloc] init];
-  onmyblock.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 36];
-  onmyblock.frame = CGRectMake(label1.frame.origin.x, 
-    (label1.frame.origin.y - (54 + 20)), screenWidth, 54);
-  NSMutableAttributedString *onmyString = 
-    [[NSMutableAttributedString alloc] initWithString: @"OnMy" attributes: @{
-      NSForegroundColorAttributeName: [UIColor textColor]
-    }];
-  NSAttributedString *blockString = [[NSAttributedString alloc] initWithString: 
-    @"Block" attributes: @{
-      NSForegroundColorAttributeName: [UIColor blue]
-    }];
-  [onmyString appendAttributedString: blockString];
-  onmyblock.attributedText = onmyString;
-  onmyblock.textAlignment = NSTextAlignmentCenter;
-  [self addSubview: onmyblock];
+  // We will never post on your behalf
+  UILabel *neverLabel = [UILabel new];
+  neverLabel.font = [UIFont normalTextFont];
+  neverLabel.frame = CGRectMake(orView.frame.origin.x, 
+    orView.frame.origin.y - (standardHeight + (padding * 0.5f)), buttonWidth,
+      standardHeight);
+  neverLabel.text = @"We will never post on your behalf";
+  neverLabel.textColor = [UIColor whiteColor];
+  neverLabel.textAlignment = NSTextAlignmentCenter;
+  [self addSubview: neverLabel];
 
-  float getStartedButtonWidth = screenWidth - (padding * 2);
   // Facebook button
   _facebookButton = [[UIButton alloc] init];
   _facebookButton.backgroundColor = [UIColor facebookBlue];
   _facebookButton.clipsToBounds = YES;
-  _facebookButton.frame = CGRectMake(screenWidth, 
-      label1.frame.origin.y + label1.frame.size.height + (padding * 2), 
-        getStartedButtonWidth, padding + 18 + padding);
+  // _facebookButton.frame = CGRectMake(screenWidth, 
+  //   label1.frame.origin.y + label1.frame.size.height + (padding * 2), 
+  //     getStartedButtonWidth, padding + 18 + padding);
+  _facebookButton.frame = CGRectMake(orView.frame.origin.x,
+    neverLabel.frame.origin.y - buttonHeight, buttonWidth,
+      buttonHeight);
   _facebookButton.layer.cornerRadius = 5.0f;
   _facebookButton.titleLabel.font = 
     [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
@@ -90,14 +96,51 @@
       size: CGSizeMake(facebookImageSize, facebookImageSize)];
   [_facebookButton addSubview: facebookImageView];
 
+
+  // Built for college students (NOT BEING USED) !!!
+  UILabel *label1 = [[UILabel alloc] init];
+  label1.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 22];
+  // 33 + 40 = height of label1 plus the height of the page control
+  label1.frame = CGRectMake(0, ((screenHeight - (33 + 40)) * 0.5) - padding,
+    screenWidth, 33);
+  label1.text = @"Built for college students";
+  label1.textAlignment = NSTextAlignmentCenter;
+  label1.textColor = [UIColor textColor];
+  // [self addSubview: label1];
+
+  // OnMyBlock
+  UILabel *onmyblock = [[UILabel alloc] init];
+  onmyblock.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 36];
+  // onmyblock.frame = CGRectMake(label1.frame.origin.x, 
+  //   (label1.frame.origin.y - (54 + 20)), screenWidth, 54);
+  onmyblock.frame = CGRectMake(orView.frame.origin.x,
+    _facebookButton.frame.origin.y - (54.0f + (screenHeight * 0.1f)), 
+      buttonWidth, 54.0f);
+  NSMutableAttributedString *onmyString = 
+    [[NSMutableAttributedString alloc] initWithString: @"OnMy" attributes: @{
+      NSForegroundColorAttributeName: [UIColor whiteColor] //[UIColor textColor]
+    }];
+  NSAttributedString *blockString = [[NSAttributedString alloc] initWithString: 
+    @"Block" attributes: @{
+      NSForegroundColorAttributeName: [UIColor blue]
+    }];
+  [onmyString appendAttributedString: blockString];
+  onmyblock.attributedText = onmyString;
+  onmyblock.textAlignment = NSTextAlignmentCenter;
+  [self addSubview: onmyblock];
+
+  // Sign up using Email
   _getStartedButton = [[UIButton alloc] init];
-  
   _getStartedButton.clipsToBounds = YES;
-  _getStartedButton.frame = CGRectMake(_facebookButton.frame.origin.x, 
-    (_facebookButton.frame.origin.y + 
-    _facebookButton.frame.size.height + padding), 
-      _facebookButton.frame.size.width, _facebookButton.frame.size.height);
-  _getStartedButton.layer.borderColor = [UIColor textColor].CGColor;
+  // _getStartedButton.frame = CGRectMake(_facebookButton.frame.origin.x, 
+  //   (_facebookButton.frame.origin.y + 
+  //   _facebookButton.frame.size.height + padding), 
+  //     _facebookButton.frame.size.width, _facebookButton.frame.size.height);
+  _getStartedButton.frame = CGRectMake(padding, 
+    orView.frame.origin.y + orView.frame.size.height + padding, 
+      buttonWidth, buttonHeight);
+  // _getStartedButton.layer.borderColor = [UIColor textColor].CGColor;
+  _getStartedButton.layer.borderColor = [UIColor whiteColor].CGColor;
   _getStartedButton.layer.borderWidth = 1.0f;
   _getStartedButton.layer.cornerRadius = _facebookButton.layer.cornerRadius;
   _getStartedButton.titleLabel.font = _facebookButton.titleLabel.font;
@@ -107,11 +150,11 @@
   // [_getStartedButton setBackgroundImage: 
   //   [UIImage imageWithColor: [UIColor colorWithWhite: 140/255.0 alpha: 0.8]] 
   //     forState: UIControlStateHighlighted];
-  [_getStartedButton addTarget: self action: @selector(getStartedButtonTapped)
-    forControlEvents: UIControlEventTouchUpInside];
+  // [_getStartedButton addTarget: self action: @selector(getStartedButtonTapped)
+  //   forControlEvents: UIControlEventTouchUpInside];
   [_getStartedButton setTitle: @"Sign up with email" 
     forState: UIControlStateNormal];
-  [_getStartedButton setTitleColor: [UIColor textColor] 
+  [_getStartedButton setTitleColor: [UIColor whiteColor] // [UIColor textColor] 
     forState: UIControlStateNormal];
   [self addSubview: _getStartedButton];
   CGFloat emailImageSize = 
@@ -123,32 +166,34 @@
     (_getStartedButton.frame.size.height - emailImageSize) * 0.5, 
       emailImageSize, emailImageSize);
   emailImageView.image = [UIImage image: 
-    [UIImage imageNamed: @"messages_icon_dark.png"] 
+    [UIImage imageNamed: @"messages_icon_white.png"] 
       size: CGSizeMake(emailImageSize, emailImageSize)];
   [_getStartedButton addSubview: emailImageView];
 
-   // Already signed up? Login
-   UIButton *login = [[UIButton alloc] init];
-   login.frame = CGRectMake(
-    ((screenWidth - _getStartedButton.frame.size.width) * 0.5),
-      (_getStartedButton.frame.origin.y + _getStartedButton.frame.size.height
-      + 20),
-        _getStartedButton.frame.size.width, 
-          _getStartedButton.frame.size.height);
-  login.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
-    size: 15];
+  // Already a user? Login
+  UIButton *login = [[UIButton alloc] init];
+  login.contentHorizontalAlignment =
+    UIControlContentHorizontalAlignmentCenter;
+  login.frame = CGRectMake(orView.frame.origin.x, 
+    _getStartedButton.frame.origin.y + _getStartedButton.frame.size.height, 
+      buttonWidth, standardHeight);
+  login.titleLabel.font = neverLabel.font;
   NSMutableAttributedString *alreadyString = 
-    [[NSMutableAttributedString alloc] initWithString: @"Already signed up? "
-      attributes: @{ NSForegroundColorAttributeName: [UIColor grayMedium] }];
+    [[NSMutableAttributedString alloc] initWithString: @"Already a user? "
+      attributes: @{ 
+        NSForegroundColorAttributeName: [UIColor whiteColor] 
+      }
+    ];
   NSAttributedString *loginString = [[NSAttributedString alloc] initWithString:
     @"Login" attributes: @{
-      NSForegroundColorAttributeName: [UIColor blue]
-    }];
+      NSForegroundColorAttributeName: [UIColor whiteColor]
+    }
+  ];
   [alreadyString appendAttributedString: loginString];
   [login addTarget: self action: @selector(showLogin)
     forControlEvents: UIControlEventTouchUpInside];
   [login setAttributedTitle: alreadyString forState: UIControlStateNormal];
-  // [self addSubview: login];
+  [self addSubview: login];
 
   return self;
 }

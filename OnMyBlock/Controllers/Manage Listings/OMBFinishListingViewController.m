@@ -565,11 +565,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) addPhotos
 {
-  UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle: nil 
-    delegate: self cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil
-      otherButtonTitles: @"Take Photo", @"Choose Existing", nil];
-  [self.view addSubview: actionSheet];
-  [actionSheet showInView: self.view];
+  if ([[residence imagesArray] count]) {
+    [self.navigationController pushViewController:
+      [[OMBFinishListingPhotosViewController alloc] initWithResidence:
+        residence] animated: YES];
+  }
+  else {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle: nil 
+      delegate: self cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil
+        otherButtonTitles: @"Take Photo", @"Choose Existing", nil];
+    [self.view addSubview: actionSheet];
+    [actionSheet showInView: self.view];
+  }
 }
 
 - (void) createResidenceImageWithDictionary: (NSDictionary *) dictionary

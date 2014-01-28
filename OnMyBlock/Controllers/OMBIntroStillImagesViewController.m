@@ -11,15 +11,18 @@
 #import "DRNRealTimeBlurView.h"
 #import "DDPageControl.h"
 #import "OMBActivityView.h"
+#import "OMBBlurView.h"
 #import "OMBCloseButtonView.h"
 #import "OMBGetStartedView.h"
 #import "OMBIntroStillImageSlide.h"
 #import "OMBLoginViewController.h"
 #import "OMBSignUpView.h"
+#import "OMBStudentOrLandlordView.h"
 #import "OMBViewControllerContainer.h"
 #import "ILTranslucentView.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
+#import "UIImage+NegativeImage.h"
 
 @implementation OMBIntroStillImagesViewController
 
@@ -50,39 +53,54 @@
 
   self.view = [[UIView alloc] initWithFrame: screen];
 
-  float screenHeight = screen.size.height;
-  float screenWidth  = screen.size.width;
+  CGFloat screenHeight = screen.size.height;
+  CGFloat screenWidth  = screen.size.width;
+  CGFloat padding      = 20.0f;
 
   NSArray *imageNames = @[
     @"intro_still_image_slide_1_background.jpg",
     @"intro_still_image_slide_2_background.jpg",
-    @"intro_still_image_slide_3_background.jpg",
-    @"intro_still_image_slide_4_background.jpg"
+    @"intro_still_image_slide_9_background.jpg",
+    @"intro_still_image_slide_4_background.jpg",
+    @"intro_still_image_slide_8_background.jpg"
   ];
   backgroundViewArray = [NSMutableArray array];
   for (NSString *string in imageNames) {
+    OMBBlurView *blur = [[OMBBlurView alloc] initWithFrame: screen];
+    blur.blurRadius = 5.0f;
+    blur.imageView.clipsToBounds = YES;
+    blur.imageView.contentMode   = UIViewContentModeScaleAspectFill;
+    // If this is the last image, the get started view
+    if ([imageNames indexOfObject: string] == [imageNames count] - 1)
+      blur.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+    else 
+      blur.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+    [blur refreshWithImage: [UIImage imageNamed: string]];
+    [self.view insertSubview: blur atIndex: 0];
+    [backgroundViewArray addObject: blur];
+
     // Background view
-    UIView *backgroundView = [[UIView alloc] initWithFrame: screen];
-    [self.view insertSubview: backgroundView atIndex: 0];
-    [backgroundViewArray addObject: backgroundView];
-    // Background image
-    UIImageView *backgroundImageView  = [[UIImageView alloc] init];
-    backgroundImageView.clipsToBounds = YES;
-    backgroundImageView.contentMode   = UIViewContentModeScaleAspectFill;
-    backgroundImageView.frame         = backgroundView.frame;
-    backgroundImageView.image         = [UIImage imageNamed: string];
-    [backgroundView addSubview: backgroundImageView];
-    // Black tint
-    UIView *colorView         = [[UIView alloc] init];
-    colorView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
-    colorView.frame           = backgroundView.frame;
-    [backgroundView addSubview: colorView];
-    // Blur
-    DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
-    blurView.blurRadius           = 0.2f;
-    blurView.frame                = backgroundView.frame;
-    blurView.renderStatic         = YES;
-    [backgroundView addSubview: blurView];
+    // UIView *backgroundView = [[UIView alloc] initWithFrame: screen];
+    // [self.view insertSubview: backgroundView atIndex: 0];
+    // [backgroundViewArray addObject: backgroundView];
+    // // Background image
+    // UIImageView *backgroundImageView  = [[UIImageView alloc] init];
+    // backgroundImageView.clipsToBounds = YES;
+    // backgroundImageView.contentMode   = UIViewContentModeScaleAspectFill;
+    // backgroundImageView.frame         = backgroundView.frame;
+    // backgroundImageView.image         = [UIImage imageNamed: string];
+    // [backgroundView addSubview: backgroundImageView];
+    // // Black tint
+    // UIView *colorView         = [[UIView alloc] init];
+    // colorView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+    // colorView.frame           = backgroundView.frame;
+    // [backgroundView addSubview: colorView];
+    // // Blur
+    // DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
+
+    // blurView.frame                = backgroundView.frame;
+    // blurView.renderStatic         = YES;
+    // [backgroundView addSubview: blurView];
   }
 
   // The auction marketplace for student housing
@@ -91,7 +109,7 @@
   // Celebrate
   // Get Started
   // Sign up
-  int numberOfPages = 6;
+  NSInteger numberOfPages = 6;
 
   // Scroll
   _scroll               = [[UIScrollView alloc] init];
@@ -103,57 +121,57 @@
   _scroll.showsHorizontalScrollIndicator = NO;
   [self.view addSubview: _scroll];
 
-  // Blur
-  // ILTranslucentView *translucentView = [[ILTranslucentView alloc] init];
-  // translucentView.backgroundColor = [UIColor clearColor];
-  // translucentView.frame = screen;
-  // translucentView.translucentAlpha = 0.9;
-  // translucentView.translucentStyle = UIBarStyleDefault;
-  // translucentView.translucentTintColor = [UIColor clearColor];
-  // [self.view addSubview: translucentView];
-
   OMBIntroStillImageSlide *slide1 = 
-    [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: 
-      [UIImage imageNamed: @"intro_still_image_slide_1_background.jpg"]];
+    [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: nil];
   slide1.frame = CGRectMake(screenWidth * 0.0f, 0.0f,
     slide1.frame.size.width, slide1.frame.size.height);
   slide1.imageView.image = [UIImage imageNamed: @"logo_white.png"];
   slide1.titleLabel.text = @"OnMyBlock";
-  [slide1 setDetailLabelText: @"The auction marketplace\nfor student housing."];
+  // [slide1 setDetailLabelText: 
+  //   @"The auction marketplace\nfor student housing."];
+  [slide1 setDetailLabelText: 
+    @"The marketplace\nfor student housing."];
   [_scroll addSubview: slide1];
 
   OMBIntroStillImageSlide *slide2 = 
-    [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: 
-      [UIImage imageNamed: @"intro_still_image_slide_2_background.jpg"]];
+    [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: nil];
   slide2.frame = CGRectMake(screenWidth * 1.0f, 0.0f,
     slide2.frame.size.width, slide2.frame.size.height);
-  slide2.imageView.image = [UIImage imageNamed: @"search_icon.png"];
+  // slide2.imageView.image = [UIImage imageNamed: @"search_icon.png"];
+  slide2.imageView.image = 
+    [[UIImage imageNamed: @"map_marker_icon.png"] negativeImage];
   slide2.titleLabel.text = @"Discover";
   [slide2 setDetailLabelText: @"Find the best college sublets,\n" 
     @"houses, and apartments."];
   [_scroll addSubview: slide2];
 
   OMBIntroStillImageSlide *slide3 = 
-    [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: 
-      [UIImage imageNamed: @"intro_still_image_slide_3_background.jpg"]];
+    [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: nil];
   slide3.frame = CGRectMake(screenWidth * 2.0f, 0.0f,
     slide3.frame.size.width, slide3.frame.size.height);
-  slide3.imageView.image = [UIImage imageNamed: @"book_icon.png"];
-  slide3.secondDetailLabel.text = @"When your offer is accepted...";
+  // slide3.imageView.image = [UIImage imageNamed: @"book_icon.png"];
+  slide3.imageView.image = 
+    [[UIImage imageNamed: @"bookmark_icon.png"] negativeImage];
+  // slide3.secondDetailLabel.text = @"When your offer is accepted...";
   slide3.titleLabel.text = @"Book";
-  [slide3 setDetailLabelText: @"Bid on your favorite rentals\n" 
-    @"through a live auction."];
+  // [slide3 setDetailLabelText: @"Bid on your favorite rentals\n" 
+  //   @"through a live auction."];
+  [slide3 setDetailLabelText: @"Make offers on your\n" 
+    @"favorite places."];
   [_scroll addSubview: slide3];
 
   OMBIntroStillImageSlide *slide4 = 
-    [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: 
-      [UIImage imageNamed: @"intro_still_image_slide_4_background.jpg"]];
+    [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: nil];
   slide4.frame = CGRectMake(screenWidth * 3.0f, 0.0f,
     slide4.frame.size.width, slide4.frame.size.height);
-  slide4.imageView.image = [UIImage imageNamed: @"celebrate_icon.png"];
+  // slide4.imageView.image = [UIImage imageNamed: @"celebrate_icon.png"];
+  slide4.imageView.image = 
+    [[UIImage imageNamed: @"champagne_icon.png"] negativeImage];
   slide4.titleLabel.text = @"Celebrate";
-  [slide4 setDetailLabelText: @"You are ready to move\n" 
-    @"into your new college pad."];
+  // [slide4 setDetailLabelText: @"You are ready to move\n" 
+  //   @"into your new college pad."];
+  [slide4 setDetailLabelText: @"Once you are accepted,\n" 
+    @"you'll be ready to move in."];
   [_scroll addSubview: slide4];
 
   slides = @[
@@ -163,6 +181,9 @@
   _getStartedView = [[OMBGetStartedView alloc] init];
   _getStartedView.frame = CGRectMake(screenWidth * 4.0f, 0.0f, 
     screenWidth, screenHeight);
+  [_getStartedView.getStartedButton addTarget: self 
+    action: @selector(showStudentLandlordView) 
+      forControlEvents: UIControlEventTouchUpInside];
   [_scroll addSubview: _getStartedView];
 
   // 6. Sign up
@@ -251,21 +272,35 @@
     forState: UIControlStateHighlighted];
   [skipButtonView addSubview: closeButton];
 
-  // Close button view
-  CGFloat padding = 20.0f;
-  CGFloat closeButtonViewHeight = 23.0f;
-  CGRect closeButtonRect = CGRectMake(
-    (screen.size.width - (closeButtonViewHeight + padding)), (20.0f + padding),
-      closeButtonViewHeight, closeButtonViewHeight);
-  UIButton *closeButtonStarted = [[UIButton alloc] initWithFrame:closeButtonRect];
-  [closeButtonStarted setBackgroundImage:[UIImage imageNamed:@"close_white.png"] forState:UIControlStateNormal];
-  [closeButtonStarted addTarget: self action: @selector(close)
-               forControlEvents:UIControlEventTouchUpInside];
-  [_getStartedView addSubview: closeButtonStarted];
+  // Close button for get started view
+  CGFloat closeButtonPadding = padding * 0.5f;
+  CGFloat closeButtonViewHeight = 26.0f;
+  CGFloat closeButtonViewWidth  = closeButtonViewHeight;
+  CGRect closeButtonRect = CGRectMake(_getStartedView.frame.size.width - 
+    (closeButtonViewWidth + closeButtonPadding), 
+      padding + closeButtonPadding, closeButtonViewWidth, 
+        closeButtonViewHeight);
+  OMBCloseButtonView *closeXButton = [[OMBCloseButtonView alloc] initWithFrame:
+    closeButtonRect color: [UIColor whiteColor]];
+  [closeXButton.closeButton addTarget: self 
+    action: @selector(close)
+      forControlEvents: UIControlEventTouchUpInside];
+  [_getStartedView addSubview: closeXButton];
   
   // Activity indicator spinner
   _activityView = [[OMBActivityView alloc] init];
   [self.view addSubview: _activityView];
+
+  // Student or Landlord view
+  studentLandlordView = [[OMBStudentOrLandlordView alloc] init];
+  [self.view addSubview: studentLandlordView];
+  // Setup the buttons
+  [studentLandlordView.landlordButton addTarget: self 
+    action: @selector(showLandlordSignUp) 
+      forControlEvents: UIControlEventTouchUpInside];
+  [studentLandlordView.studentButton addTarget: self 
+    action: @selector(showStudentSignUp) 
+      forControlEvents: UIControlEventTouchUpInside];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -274,6 +309,10 @@
 
   // [[self appDelegate].container stopSpinning];
   [_activityView stopSpinning];
+
+  // #warning Remove this
+  // [_scroll setContentOffset: CGPointMake(4 * _scroll.frame.size.width, 0.0f)
+  //   animated: NO];
 }
 
 #pragma mark - Protocol
@@ -464,6 +503,11 @@
     completion: nil];
 }
 
+- (void) hideStudentLandlordView
+{
+  [studentLandlordView hide];
+}
+
 - (void) resetViews
 {
   for (UIView *v in backgroundViewArray) {
@@ -487,7 +531,8 @@
 
 - (void) scrollToSignUp
 {
-  [self scrollToPage: 5];
+  [self scrollToPage: 4];
+  // [self scrollToPage: 5];
 }
 
 - (void) setupForLoggedInUser
@@ -523,10 +568,29 @@
       _scroll.frame.size.height);
 }
 
+- (void) showLandlordSignUp
+{
+  [_loginViewController showLandlordSignUp];
+  [self presentViewController: _loginViewController
+    animated: YES completion: nil];
+}
+
 - (void) showLogin
 {
   [_loginViewController showLogin];
   [self presentViewController: _loginViewController 
+    animated: YES completion: nil];
+}
+
+- (void) showStudentLandlordView
+{
+  [studentLandlordView showFromView: self.view];
+}
+
+- (void) showStudentSignUp
+{
+  [_loginViewController showSignUp];
+  [self presentViewController: _loginViewController
     animated: YES completion: nil];
 }
 

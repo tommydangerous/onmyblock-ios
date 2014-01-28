@@ -43,8 +43,8 @@
 
   CGRect screen = [[UIScreen mainScreen] bounds];
 
-  self.view = [[UIView alloc] init];
-  self.view.frame = screen;
+  self.view = [[UIView alloc] initWithFrame: screen];
+  self.view.backgroundColor = [UIColor clearColor];
 
   // Image slide scroll view
   _imageSlideScrollView               = [[UIScrollView alloc] init];
@@ -104,10 +104,10 @@
     (screen.size.width * [array count]), screen.size.height);
 
   // Adjust the content offset depending on the residence detail current page
-  CGPoint point = CGPointMake(
-    (_imageSlideScrollView.frame.size.width * 
-      ([_residenceDetailViewController currentPageOfImages] - 1)), 0);
-  [_imageSlideScrollView setContentOffset: point animated: NO];
+  // CGPoint point = CGPointMake(
+  //   (_imageSlideScrollView.frame.size.width * 
+  //     ([_residenceDetailViewController currentPageOfImages] - 1)), 0);
+  // [_imageSlideScrollView setContentOffset: point animated: NO];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -124,10 +124,8 @@
 - (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView
 {
   if (scrollView == _imageSlideScrollView) {
-    CGPoint point = CGPointMake(
-      (_residenceDetailViewController.imagesScrollView.frame.size.width * 
-        (scrollView.contentOffset.x / scrollView.frame.size.width)), 0);
-    [_residenceDetailViewController.imagesScrollView setContentOffset: point];  
+    // [_residenceDetailViewController setContentOffsetForImageCollectionView:
+    //   scrollView.contentOffset.x / scrollView.frame.size.width];
   }
 }
 
@@ -178,13 +176,17 @@
 
 - (void) close
 {
-  [self dismissViewControllerAnimated: YES completion: ^{
-    for (UIView *v in _imageSlideScrollView.subviews) {
-      if ([v isKindOfClass: [UIScrollView class]]) {
-        UIScrollView *scroll = (UIScrollView *) v;
-        scroll.zoomScale     = scroll.minimumZoomScale;
+  [UIView animateWithDuration: 0.25f animations: ^{
+    self.view.alpha = 0.0f;
+  } completion: ^(BOOL finished) {
+    [self dismissViewControllerAnimated: NO completion: ^{
+      for (UIView *v in _imageSlideScrollView.subviews) {
+        if ([v isKindOfClass: [UIScrollView class]]) {
+          UIScrollView *scroll = (UIScrollView *) v;
+          scroll.zoomScale     = scroll.minimumZoomScale;
+        }
       }
-    }
+    }];
   }];
 }
 

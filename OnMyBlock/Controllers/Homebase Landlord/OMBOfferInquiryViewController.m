@@ -94,7 +94,7 @@
     backView.frame.size.height);  
   [backView addSubview: userImageView];
 
-  OMBGradientView *gradient = [[OMBGradientView alloc] init];
+  gradient = [[OMBGradientView alloc] init];
   gradient.frame = userImageView.frame;
   gradient.colors = @[
     [UIColor colorWithWhite: 0.0f alpha: 0.0f],
@@ -421,13 +421,26 @@
     buttonsViewRect.origin.y = newOriginY;
     buttonsView.frame = buttonsViewRect;
 
-    // Move the back view image
+    // Move view up
     CGFloat adjustment = y / 3.0f;
-    if (y > maxDistanceForBackView)
-      adjustment = maxDistanceForBackView / 3.0f;
+    // Adjust the header image view
     CGRect backViewRect = backView.frame;
-    backViewRect.origin.y = backViewOffsetY - adjustment;
+    CGFloat newOriginY2 = backViewOffsetY - adjustment;
+    if (newOriginY2 > backViewOffsetY)
+      newOriginY2 = backViewOffsetY;
+    else if (newOriginY2 < backViewOffsetY - (maxDistanceForBackView / 3.0f))
+      newOriginY2 = backViewOffsetY - (maxDistanceForBackView / 3.0f);
+    backViewRect.origin.y = newOriginY2;
     backView.frame = backViewRect;
+
+    // Scale the background image
+    CGFloat newScale = 1 + ((y * -3.0f) / userImageView.frame.size.height);
+    if (newScale < 1)
+      newScale = 1;
+    gradient.transform = CGAffineTransformScale(
+      CGAffineTransformIdentity, newScale, newScale);
+    userImageView.transform = CGAffineTransformScale(
+      CGAffineTransformIdentity, newScale, newScale);
   }
 }
 

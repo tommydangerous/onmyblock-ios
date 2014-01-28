@@ -11,6 +11,7 @@
 #import "AMBlurView.h"
 #import "DRNRealTimeBlurView.h"
 #import "OMBAlertView.h"
+#import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBEmptyImageTwoLabelCell.h"
 #import "OMBExtendedHitAreaViewContainer.h"
@@ -31,6 +32,9 @@
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+NegativeImage.h"
+
+// Make this 0.4f when having roommates
+float kHomebaseRenterImagePercentage = 0.3f;
 
 @implementation OMBHomebaseRenterViewController
 
@@ -77,28 +81,31 @@
 
   backViewOffsetY = padding + standardHeight;
   // The image in the back
-  backView = [UIView new];
-  backView.frame = CGRectMake(0.0f, 0.0f, 
-    screenWidth, (screenHeight * 0.4f) + (padding + standardHeight + padding));
+  CGRect backViewRect = CGRectMake(0.0f, 0.0f, 
+    screenWidth, (screenHeight * kHomebaseRenterImagePercentage) + 
+    (padding + standardHeight + padding));
+  backView = [[OMBBlurView alloc] initWithFrame: backViewRect];
+  backView.blurRadius = 5.0f;
+  backView.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
   [self.view addSubview: backView];
+
   // Image of residence
-  OMBCenteredImageView *residenceImageView = 
-    [[OMBCenteredImageView alloc] init];
-  residenceImageView.frame = backView.frame;  
-  residenceImageView.image = [UIImage imageNamed: 
-    @"intro_still_image_slide_3_background.jpg"];
-  [backView addSubview: residenceImageView];
+  // residenceImageView = 
+  //   [[OMBCenteredImageView alloc] init];
+  // residenceImageView.frame = backView.frame;  
+  // residenceImageView.image = [UIImage imageNamed: 
+  //   @"intro_still_image_slide_3_background.jpg"];
+  // [backView addSubview: residenceImageView];
   // Black tint
-  UIView *colorView = [[UIView alloc] init];
-  colorView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
-  colorView.frame = residenceImageView.frame;
-  [backView addSubview: colorView];
+  // UIView *colorView = [[UIView alloc] init];
+  // colorView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+  // colorView.frame = residenceImageView.frame;
+  // [backView addSubview: colorView];
   // Blur
-  DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
-  blurView.blurRadius = 0.3f;
-  blurView.frame = residenceImageView.frame;  
-  blurView.renderStatic = YES;
-  [backView addSubview: blurView];
+  // blurView = [[DRNRealTimeBlurView alloc] init];
+  // blurView.frame = residenceImageView.frame;  
+  // blurView.renderStatic = YES;
+  // [backView addSubview: blurView];
 
   CGFloat imageSize = backView.frame.size.width / 3.0f;
   // Images scroll
@@ -252,6 +259,9 @@
 
   // [self showRentDepositInfo];
   // [self showAddRemoveRoommates];
+
+  [backView refreshWithImage: 
+    [UIImage imageNamed: @"intro_still_image_slide_3_background.jpg"]];
 
   // Title
   self.title = [NSString stringWithFormat: @"%@'s Homebase",
@@ -410,9 +420,9 @@
   // Activity or Payments
   if (scrollView == _activityTableView || scrollView == _paymentsTableView) {
     CGFloat originalButtonsViewOriginY = padding + standardHeight + 
-      (screen.size.height * 0.4f) + padding;
+      (screen.size.height * kHomebaseRenterImagePercentage) + padding;
     CGFloat minOriginY = padding + standardHeight + padding;
-    // CGFloat maxDistanceForBackView = originalButtonsViewOriginY - minOriginY;
+    CGFloat maxDistanceForBackView = originalButtonsViewOriginY - minOriginY;
 
     CGFloat newOriginY = originalButtonsViewOriginY - y;
     if (newOriginY > originalButtonsViewOriginY)
@@ -423,6 +433,25 @@
     CGRect buttonsViewRect = buttonsView.frame;
     buttonsViewRect.origin.y = newOriginY;
     buttonsView.frame = buttonsViewRect;
+
+    // Move view up
+    CGFloat adjustment = y / 3.0f;
+    // Adjust the header image view
+    CGRect backViewRect = backView.frame;
+    CGFloat newOriginY2 = backViewOffsetY - adjustment;
+    if (newOriginY2 > backViewOffsetY)
+      newOriginY2 = backViewOffsetY;
+    else if (newOriginY2 < backViewOffsetY - (maxDistanceForBackView / 3.0f))
+      newOriginY2 = backViewOffsetY - (maxDistanceForBackView / 3.0f);
+    backViewRect.origin.y = newOriginY2;
+    backView.frame = backViewRect;
+
+    // Scale the background image
+    CGFloat newScale = 1 + ((y * -3.0f) / backView.imageView.frame.size.height);
+    if (newScale < 1)
+      newScale = 1;
+    backView.imageView.transform = CGAffineTransformScale(
+      CGAffineTransformIdentity, newScale, newScale);
 
     // Change the colors of the buttons
     // CGFloat maxDistancePercent = y / maxDistanceForBackView;
@@ -715,17 +744,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 viewForHeaderInSection: (NSInteger) section
 {
   CGFloat padding = 20.0f;
-  AMBlurView *blurView = [[AMBlurView alloc] init];
-  blurView.blurTintColor = [UIColor blueLight];
-  blurView.frame = CGRectMake(0.0f, 0.0f, 
+  AMBlurView *blur = [[AMBlurView alloc] init];
+  blur.blurTintColor = [UIColor blueLight];
+  blur.frame = CGRectMake(0.0f, 0.0f, 
     tableView.frame.size.width, 13.0f * 2);
   UILabel *label = [UILabel new];
   label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 13];
   label.frame = CGRectMake(padding, 0.0f, 
-    blurView.frame.size.width - (padding * 2), blurView.frame.size.height);
+    blur.frame.size.width - (padding * 2), blur.frame.size.height);
   label.textAlignment = NSTextAlignmentCenter;
   label.textColor = [UIColor blueDark];
-  [blurView addSubview: label];
+  [blur addSubview: label];
   NSString *titleString = @"";
   // Activity
   if (tableView == _activityTableView) {
@@ -745,7 +774,7 @@ viewForHeaderInSection: (NSInteger) section
     }
   }
   label.text = titleString;
-  return blurView;
+  return blur;
 }
 
 #pragma mark - Methods
