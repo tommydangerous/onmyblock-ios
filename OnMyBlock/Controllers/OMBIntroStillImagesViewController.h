@@ -14,6 +14,7 @@
 @class OMBGetStartedView;
 @class OMBLoginViewController;
 @class OMBSignUpView;
+@class OMBStudentOrLandlordView;
 
 @interface OMBIntroStillImagesViewController : OMBViewController
 <UIScrollViewDelegate>
@@ -25,6 +26,7 @@
   UIButton *signUpButton;
   UIView *skipButtonView;
   NSArray *slides;
+  OMBStudentOrLandlordView *studentLandlordView;
 }
 
 // Views that do not scroll
@@ -41,6 +43,7 @@
 
 #pragma mark - Instance Methods
 
+- (void) hideStudentLandlordView;
 - (void) resetViews;
 - (void) scrollToPage: (int) page;
 - (void) setupForLoggedInUser;

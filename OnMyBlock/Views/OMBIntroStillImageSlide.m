@@ -24,26 +24,28 @@
 
   self.frame = screen;
 
-  // Background view
-  _backgroundView = [[UIView alloc] initWithFrame: self.frame];
-  // [self addSubview: _backgroundView];
-  // Background image
-  UIImageView *backgroundImageView  = [[UIImageView alloc] init];
-  backgroundImageView.clipsToBounds = YES;
-  backgroundImageView.contentMode   = UIViewContentModeScaleAspectFill;
-  backgroundImageView.frame         = _backgroundView.frame;
-  backgroundImageView.image         = image;
-  [_backgroundView addSubview: backgroundImageView];
-  // Black tint
-  UIView *colorView         = [[UIView alloc] init];
-  colorView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
-  colorView.frame           = _backgroundView.frame;
-  [_backgroundView addSubview: colorView];
-  // Blur
-  DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
-  blurView.frame                = _backgroundView.frame;
-  blurView.renderStatic         = YES;
-  [_backgroundView addSubview: blurView];
+  if (image) {
+    // Background view
+    _backgroundView = [[UIView alloc] initWithFrame: self.frame];
+    // [self addSubview: _backgroundView];
+    // Background image
+    UIImageView *backgroundImageView  = [[UIImageView alloc] init];
+    backgroundImageView.clipsToBounds = YES;
+    backgroundImageView.contentMode   = UIViewContentModeScaleAspectFill;
+    backgroundImageView.frame         = _backgroundView.frame;
+    backgroundImageView.image         = image;
+    [_backgroundView addSubview: backgroundImageView];
+    // Black tint
+    UIView *colorView         = [[UIView alloc] init];
+    colorView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+    colorView.frame           = _backgroundView.frame;
+    [_backgroundView addSubview: colorView];
+    // Blur
+    DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
+    blurView.frame                = _backgroundView.frame;
+    blurView.renderStatic         = YES;
+    [_backgroundView addSubview: blurView];
+  }
 
   float padding = 20.0f;
 

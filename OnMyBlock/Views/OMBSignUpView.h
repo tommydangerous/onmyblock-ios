@@ -12,6 +12,7 @@
 
 @interface OMBSignUpView : UIView <UITextFieldDelegate>
 {
+  BOOL isForLandlord;
   UIButton *loginSwitchButton;
   UIView *orView;
   UIScrollView *scroll;
@@ -35,6 +36,8 @@
 - (void) resetViewOrigins;
 - (void) showLogin;
 - (void) showSignUp;
+- (void) showSignUpForLandlord;
+- (void) showSignUpForStudent;
 - (void) signUp;
 - (void) updateScrollContentSizeAnimated: (BOOL) animated;
 

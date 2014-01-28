@@ -548,7 +548,10 @@
     [_facebookButton setTitle: @"Sign up using Facebook" 
       forState: UIControlStateNormal];
     // Email text field
-    _emailTextField.placeholder = @"School email";
+    if (isForLandlord)
+      _emailTextField.placeholder = @"Landlord email";
+    else
+      _emailTextField.placeholder = @"School email";
     [_loginButton setTitle: @"Sign up" forState: UIControlStateNormal];
   }];
   if (_firstNameTextField.alpha == 0) {
@@ -577,6 +580,18 @@
   }
   [self endEditing: YES];
   [self updateScrollContentSizeAnimated: YES];
+}
+
+- (void) showSignUpForLandlord
+{
+  isForLandlord = YES;
+  [self showSignUp];
+}
+
+- (void) showSignUpForStudent
+{
+  isForLandlord = NO;
+  [self showSignUp];
 }
 
 - (void) signUp

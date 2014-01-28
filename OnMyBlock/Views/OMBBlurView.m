@@ -17,6 +17,8 @@
   if (!(self = [super initWithFrame: rect])) return nil;
 
   _imageView = [[UIImageView alloc] initWithFrame: rect];
+  // _imageView.clipsToBounds = YES;
+  // _imageView.contentMode   = UIViewContentModeScaleAspectFill;
   [self addSubview: _imageView];
 
   return self;
@@ -35,8 +37,14 @@
   // There he is! The new API method
   [self drawViewHierarchyInRect: self.frame afterScreenUpdates: NO];
 
+  // Blur Radius = how blurry
+  // Average 20
+  
+  // Low saturation is less color
+  // High saturation is more intense color
+  // Average saturation is 1.8
   UIImage *blurredSnapshotImage = [image applyBlurWithRadius: 
-    _blurRadius tintColor: _tintColor saturationDeltaFactor: 1.8 
+    _blurRadius tintColor: _tintColor saturationDeltaFactor: 1.5
       maskImage: nil];
 
   // Be nice and clean your mess up

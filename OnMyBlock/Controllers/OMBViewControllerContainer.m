@@ -820,6 +820,9 @@ willDecelerate: (BOOL) decelerate
   _menuScroll.hidden = YES;
   [self setCurrentUserMenuHeaderTextColor];
 
+  // Hide the student or landlord view in the intro
+  [_introViewController hideStudentLandlordView];
+
   // Hide the menu
   [self hideMenuWithFactor: 1.0f];
   // Hide the intro view controller -> login view controller

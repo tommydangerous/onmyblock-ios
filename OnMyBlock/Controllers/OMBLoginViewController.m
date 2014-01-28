@@ -55,21 +55,30 @@
   [_signUpView updateScrollContentSizeAnimated: NO];
   [self.view addSubview: _signUpView];
 
-  int padding = 10;
+  CGFloat padding = 20.0f;
+  
   // Close view
-  float closeButtonViewHeight = 20;
-  float closeButtonViewWidth  = closeButtonViewHeight;
-  CGRect closeButtonRect = CGRectMake(
-    (screen.size.width - (closeButtonViewWidth + padding)), (20 + padding), 
-      closeButtonViewWidth, closeButtonViewHeight);
+  CGFloat closeButtonPadding = padding * 0.5f;
+  CGFloat closeButtonViewHeight = 26.0f;
+  CGFloat closeButtonViewWidth  = closeButtonViewHeight;
+  CGRect closeButtonRect = CGRectMake(screen.size.width - 
+    (closeButtonViewWidth + closeButtonPadding), 
+      padding + closeButtonPadding, closeButtonViewWidth, 
+        closeButtonViewHeight);
   closeButtonView = [[OMBCloseButtonView alloc] initWithFrame: closeButtonRect
     color: [UIColor grayMedium]];
-  [self.view addSubview: closeButtonView];
   [closeButtonView.closeButton addTarget: self action: @selector(close)
     forControlEvents: UIControlEventTouchUpInside];
+  [self.view addSubview: closeButtonView];
 
   _activityView = [[OMBActivityView alloc] init];
   [self.view addSubview: _activityView];
+
+  // Block the status bar
+  UIView *statusView = [UIView new];
+  statusView.backgroundColor = [UIColor whiteColor];
+  statusView.frame = CGRectMake(0.0f, 0.0f, screen.size.width, 20.0f);
+  [self.view addSubview: statusView];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -90,6 +99,11 @@
   [self dismissViewControllerAnimated: YES completion: nil];
 }
 
+- (void) showLandlordSignUp
+{
+  [_signUpView showSignUpForLandlord];
+}
+
 - (void) showLogin
 {
   [_signUpView showLogin];
@@ -97,7 +111,7 @@
 
 - (void) showSignUp
 {
-  [_signUpView showSignUp];
+  [_signUpView showSignUpForStudent];
 }
 
 @end
