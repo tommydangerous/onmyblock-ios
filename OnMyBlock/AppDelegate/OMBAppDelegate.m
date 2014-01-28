@@ -54,9 +54,9 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [self openSession];
 
   // #warning Remove fake login
-  // [OMBUser fakeLogin]; // Fake login
+  [OMBUser fakeLogin]; // Fake login
   // Use this to show whatever view controller you are working on
-  // [_container showHomebaseRenter];
+  [_container showHomebaseLandlord];
 
   // Check to see if the user has a saved api key in the user defaults
   [[OMBUser currentUser] checkForUserDefaultsAPIKey];

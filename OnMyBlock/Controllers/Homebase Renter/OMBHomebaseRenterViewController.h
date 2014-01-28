@@ -12,6 +12,7 @@
 
 @class DRNRealTimeBlurView;
 @class OMBAlertView;
+@class OMBBlurView;
 @class OMBCenteredImageView;
 @class OMBOffer;
 @class OMBScrollView;
@@ -23,7 +24,7 @@
   UIButton *activityButton;
   UIButton *addRemoveRoommatesButton;
   OMBAlertView *alert;
-  UIView *backView;
+  OMBBlurView *backView;
   CGFloat backViewOffsetY;
   DRNRealTimeBlurView *blurView;
   UIView *buttonsView;

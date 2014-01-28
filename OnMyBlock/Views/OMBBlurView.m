@@ -16,8 +16,8 @@
 {
   if (!(self = [super initWithFrame: rect])) return nil;
 
-  imageView = [[UIImageView alloc] initWithFrame: rect];
-  [self addSubview: imageView];
+  _imageView = [[UIImageView alloc] initWithFrame: rect];
+  [self addSubview: _imageView];
 
   return self;
 }
@@ -25,6 +25,25 @@
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) refreshWithImage: (UIImage *) image
+{
+  // Create the image context
+  UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, 
+    self.window.screen.scale);
+
+  // There he is! The new API method
+  [self drawViewHierarchyInRect: self.frame afterScreenUpdates: NO];
+
+  UIImage *blurredSnapshotImage = [image applyBlurWithRadius: 
+    _blurRadius tintColor: _tintColor saturationDeltaFactor: 1.8 
+      maskImage: nil];
+
+  // Be nice and clean your mess up
+  UIGraphicsEndImageContext();
+
+  _imageView.image = blurredSnapshotImage;
+}
 
 - (void) refreshWithView: (UIView *) view
 {
@@ -45,7 +64,7 @@
   // Be nice and clean your mess up
   UIGraphicsEndImageContext();
 
-  imageView.image = blurredSnapshotImage;
+  _imageView.image = blurredSnapshotImage;
 }
 
 @end

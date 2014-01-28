@@ -11,6 +11,7 @@
 #import "AMBlurView.h"
 #import "DRNRealTimeBlurView.h"
 #import "OMBAlertView.h"
+#import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBEmptyImageTwoLabelCell.h"
 #import "OMBExtendedHitAreaViewContainer.h"
@@ -80,28 +81,31 @@ float kHomebaseRenterImagePercentage = 0.3f;
 
   backViewOffsetY = padding + standardHeight;
   // The image in the back
-  backView = [UIView new];
-  backView.frame = CGRectMake(0.0f, 0.0f, 
+  CGRect backViewRect = CGRectMake(0.0f, 0.0f, 
     screenWidth, (screenHeight * kHomebaseRenterImagePercentage) + 
     (padding + standardHeight + padding));
+  backView = [[OMBBlurView alloc] initWithFrame: backViewRect];
+  backView.blurRadius = 5.0f;
+  backView.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
   [self.view addSubview: backView];
+
   // Image of residence
-  residenceImageView = 
-    [[OMBCenteredImageView alloc] init];
-  residenceImageView.frame = backView.frame;  
-  residenceImageView.image = [UIImage imageNamed: 
-    @"intro_still_image_slide_3_background.jpg"];
-  [backView addSubview: residenceImageView];
+  // residenceImageView = 
+  //   [[OMBCenteredImageView alloc] init];
+  // residenceImageView.frame = backView.frame;  
+  // residenceImageView.image = [UIImage imageNamed: 
+  //   @"intro_still_image_slide_3_background.jpg"];
+  // [backView addSubview: residenceImageView];
   // Black tint
-  UIView *colorView = [[UIView alloc] init];
-  colorView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
-  colorView.frame = residenceImageView.frame;
-  [backView addSubview: colorView];
+  // UIView *colorView = [[UIView alloc] init];
+  // colorView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+  // colorView.frame = residenceImageView.frame;
+  // [backView addSubview: colorView];
   // Blur
-  blurView = [[DRNRealTimeBlurView alloc] init];
-  blurView.frame = residenceImageView.frame;  
-  blurView.renderStatic = YES;
-  [backView addSubview: blurView];
+  // blurView = [[DRNRealTimeBlurView alloc] init];
+  // blurView.frame = residenceImageView.frame;  
+  // blurView.renderStatic = YES;
+  // [backView addSubview: blurView];
 
   CGFloat imageSize = backView.frame.size.width / 3.0f;
   // Images scroll
@@ -255,6 +259,9 @@ float kHomebaseRenterImagePercentage = 0.3f;
 
   // [self showRentDepositInfo];
   // [self showAddRemoveRoommates];
+
+  [backView refreshWithImage: 
+    [UIImage imageNamed: @"intro_still_image_slide_3_background.jpg"]];
 
   // Title
   self.title = [NSString stringWithFormat: @"%@'s Homebase",
@@ -440,10 +447,10 @@ float kHomebaseRenterImagePercentage = 0.3f;
     backView.frame = backViewRect;
 
     // Scale the background image
-    CGFloat newScale = 1 + ((y * -3.0f) / blurView.frame.size.height);
+    CGFloat newScale = 1 + ((y * -3.0f) / backView.imageView.frame.size.height);
     if (newScale < 1)
       newScale = 1;
-    blurView.transform = CGAffineTransformScale(
+    backView.imageView.transform = CGAffineTransformScale(
       CGAffineTransformIdentity, newScale, newScale);
 
     // Change the colors of the buttons

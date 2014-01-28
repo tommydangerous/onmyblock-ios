@@ -10,17 +10,16 @@
 #import <UIKit/UIKit.h>
 
 @interface OMBBlurView : UIView
-{
-  UIImageView *imageView;
-}
 
 @property (nonatomic) CGFloat blurRadius;
+@property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIColor *tintColor;
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
+- (void) refreshWithImage: (UIImage *) image;
 - (void) refreshWithView: (UIView *) view;
 
 @end

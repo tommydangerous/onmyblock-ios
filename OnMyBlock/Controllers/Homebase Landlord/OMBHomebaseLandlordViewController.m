@@ -11,14 +11,18 @@
 #import "AMBlurView.h"
 #import "DRNRealTimeBlurView.h"
 #import "NSString+Extensions.h"
+#import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBEmptyImageTwoLabelCell.h"
 #import "OMBHomebaseLandlordConfirmedTenantsViewController.h"
 #import "OMBHomebaseLandlordOfferCell.h"
 #import "OMBHomebaseLandlordPaymentCell.h"
+#import "OMBHomebaseRenterViewController.h"
 #import "OMBInboxViewController.h"
 #import "OMBOfferInquiryViewController.h"
 #import "UIColor+Extensions.h"
+
+float kHomebaseLandlordImagePercentage = 0.4f;
 
 @implementation OMBHomebaseLandlordViewController
 
@@ -63,28 +67,33 @@
 
   backViewOffsetY = padding + standardHeight;
   // The image in the back
-  backView = [UIView new];
-  backView.frame = CGRectMake(0.0f, 0.0f, 
-    screenWidth, (screenHeight * 0.4f) + backViewOffsetY);
+  CGRect backViewRect = CGRectMake(0.0f, 0.0f, 
+    screenWidth, (screenHeight * kHomebaseLandlordImagePercentage) + 
+    (padding + standardHeight + padding));
+  backView = [[OMBBlurView alloc] initWithFrame: backViewRect];
+  backView.blurRadius = 5.0f;
+  backView.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
   [self.view addSubview: backView];
-  // Image of residence
-  OMBCenteredImageView *residenceImageView = 
-    [[OMBCenteredImageView alloc] init];
-  residenceImageView.frame = backView.frame;  
-  residenceImageView.image = [UIImage imageNamed: 
-    @"intro_still_image_slide_1_background.jpg"];
-  [backView addSubview: residenceImageView];
-  // Black tint
-  UIView *colorView = [[UIView alloc] init];
-  colorView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
-  colorView.frame = residenceImageView.frame;
-  [backView addSubview: colorView];
-  // Blur
-  blurView = [[DRNRealTimeBlurView alloc] init];
 
-  blurView.frame = residenceImageView.frame;  
-  blurView.renderStatic = YES;
-  [backView addSubview: blurView];
+  // Image of residence
+  // OMBCenteredImageView *residenceImageView = 
+  //   [[OMBCenteredImageView alloc] init];
+  // residenceImageView.frame = backView.frame;  
+  // residenceImageView.image = [UIImage imageNamed: 
+  //   @"intro_still_image_slide_1_background.jpg"];
+  // [backView addSubview: residenceImageView];
+  // // Black tint
+  // UIView *colorView = [[UIView alloc] init];
+  // colorView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+  // colorView.frame = residenceImageView.frame;
+  // [backView addSubview: colorView];
+  // // Blur
+  // blurView = [[DRNRealTimeBlurView alloc] init];
+
+  // blurView.frame = residenceImageView.frame;  
+  // blurView.renderStatic = YES;
+  // [backView addSubview: blurView];
+
   // Need to do this or else blur is off
   backView.frame = CGRectMake(0.0f, backViewOffsetY,
     backView.frame.size.width, backView.frame.size.height);
@@ -227,6 +236,9 @@
 {
   [super viewWillAppear: animated];
 
+  [backView refreshWithImage: 
+    [UIImage imageNamed: @"intro_still_image_slide_1_background.jpg"]];
+
   // Fetch received offers
   [[OMBUser currentUser] fetchReceivedOffersWithCompletion: ^(NSError *error) {
     [_activityTableView reloadData];
@@ -254,7 +266,8 @@
   CGFloat y = scrollView.contentOffset.y;
 
   if (scrollView == _activityTableView || scrollView == _paymentsTableView) {
-    CGFloat originalButtonsViewOriginY = screen.size.height * 0.4f;
+    CGFloat originalButtonsViewOriginY =
+      (screen.size.height * kHomebaseLandlordImagePercentage) + padding;
     CGFloat minOriginY = padding + standardHeight + padding;
     CGFloat maxDistanceForBackView = originalButtonsViewOriginY - minOriginY;
 
@@ -290,10 +303,10 @@
     backView.frame = backViewRect;
 
     // Scale the background image
-    CGFloat newScale = 1 + ((y * -3.0f) / blurView.frame.size.height);
+    CGFloat newScale = 1 + ((y * -3.0f) / backView.imageView.frame.size.height);
     if (newScale < 1)
       newScale = 1;
-    blurView.transform = CGAffineTransformScale(
+    backView.imageView.transform = CGAffineTransformScale(
       CGAffineTransformIdentity, newScale, newScale);
   }
 }
