@@ -10,42 +10,48 @@
 
 #import "OMBViewController.h"
 
+@class OMBBlurView;
+@class OMBCloseButtonView;
+@class OMBCollectionView;
+@class OMBExtendedHitAreaViewContainer;
 @class OMBGradientView;
 @class OMBMessageDetailViewController;
 @class OMBResidence;
 @class OMBResidenceImageSlideViewController;
 
 @interface OMBResidenceDetailViewController : OMBViewController
-<MKMapViewDelegate, UIScrollViewDelegate, UITableViewDataSource, 
-  UITableViewDelegate, UITextViewDelegate>
+<MKMapViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate,
+  UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate, 
+    UITextViewDelegate>
 {
   UIActivityIndicatorView *activityIndicatorView;
+  CGFloat backViewOffsetY;
+  OMBBlurView *blurView;
   NSTimer *countdownTimer;
+  CGFloat currentOfferOriginY;
   UIImage *favoritedImage;
+  OMBGradientView *gradientView;
+  OMBExtendedHitAreaViewContainer *headerView;
+  OMBCollectionView *imageCollectionView;
+  UIScrollView *imageScrollView;
+  OMBCloseButtonView *imageScrollViewCloseButton;
   OMBMessageDetailViewController *messageDetailViewController;
   UIImage *notFavoritedImage;
   OMBResidence *residence;
 }
 
-@property (nonatomic, strong) UIScrollView *imagesScrollView;
 @property (nonatomic, strong) OMBResidenceImageSlideViewController
   *imageSlideViewController;
-// Array of image views for the images scroll view
-@property (nonatomic, strong) NSMutableArray *imageViewArray;
-@property (nonatomic, strong) MKMapView *miniMap;
-@property (nonatomic, strong) UILabel *pageOfImagesLabel;
-@property (nonatomic, strong) UITableView *table;
 
-// Views not in cells
 @property (nonatomic, strong) UIButton *bookItButton;
 @property (nonatomic, strong) UIView *bottomButtonView;
 @property (nonatomic, strong) UIButton *contactMeButton;
 @property (nonatomic, strong) UILabel *countDownTimerLabel;
 @property (nonatomic, strong) UILabel *currentOfferLabel;
 @property (nonatomic, strong) UIButton *favoritesButton;
-@property (nonatomic, strong) OMBGradientView *gradientView;
-@property (nonatomic, strong) UIView *imagesView;
 @property (nonatomic, strong) UILabel *numberOfOffersLabel;
+@property (nonatomic, strong) UILabel *pageOfImagesLabel;
+@property (nonatomic, strong) UITableView *table;
 
 #pragma mark - Initializer
 
@@ -54,10 +60,5 @@
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
-
-- (void) addImageViewsToImageScrollView;
-// - (void) addSimilarResidence: (OMBResidence *) object;
-- (void) adjustPageOfImagesLabelFrame;
-- (int) currentPageOfImages;
 
 @end

@@ -27,6 +27,14 @@
 
 #pragma mark - Override
 
+#pragma mark - NSObject
+
+- (void) dealloc
+{
+  // Must dealloc or notifications get sent to zombies
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
 #pragma mark - Override UIViewController
 
 - (void) loadView

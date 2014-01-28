@@ -88,6 +88,7 @@ withCompletion: (void (^) (NSError *error)) block;
 - (void) authenticateVenmoWithCode: (NSString *) code 
 depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block;
 - (void) changeOtherSamePrimaryPayoutMethods: (OMBPayoutMethod *) payoutMethod;
+- (void) checkForUserDefaultsAPIKey;
 - (void) confirmOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
 - (void) createOffer: (OMBOffer *) offer
@@ -102,6 +103,7 @@ withCompletion: (void (^) (NSError *error)) block;
 - (NSArray *) favoritesArray;
 - (void) fetchAcceptedOffersWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchConfirmedTenantsWithCompletion: (void (^) (NSError *error)) block;
+- (void) fetchCurrentUserInfo;
 - (void) fetchPayoutMethodsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchDepositPayoutTransactionsWithCompletion:
 (void (^) (NSError *error)) block;

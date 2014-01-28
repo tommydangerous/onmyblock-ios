@@ -36,6 +36,7 @@
 #import "OMBResidenceStore.h"
 #import "OMBPreviousRental.h"
 #import "OMBTemporaryResidence.h"
+#import "OMBUserCurrentUserInfoConnection.h"
 #import "OMBUserFacebookAuthenticationConnection.h"
 #import "OMBUserImageDownloader.h"
 #import "OMBUserStore.h"
@@ -363,6 +364,38 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
   }
 }
 
+- (void) checkForUserDefaultsAPIKey
+{
+  // Store the access token in the user defaults
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSMutableDictionary *apiKeyDict = [defaults objectForKey:
+    OMBUserDefaultsAPIKey];
+  if (apiKeyDict) {
+    if ([apiKeyDict objectForKey: OMBUserDefaultsAPIKeyExpiresAt]) {
+      NSTimeInterval expiresAt = 
+        [[apiKeyDict objectForKey: OMBUserDefaultsAPIKeyExpiresAt] floatValue];
+      NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+      // If it has not expired
+      if (expiresAt > now) {
+        id previousAccessToken = 
+          [apiKeyDict objectForKey: OMBUserDefaultsAPIKeyAccessToken];
+        if (previousAccessToken && previousAccessToken != [NSNull null]) {
+          _accessToken = (NSString *) previousAccessToken;
+          [self fetchCurrentUserInfo];
+        }
+      }
+      // If it has expired
+      else {
+        // Clear the user defaults for the api key
+        apiKeyDict = [NSMutableDictionary dictionary];
+        [[NSUserDefaults standardUserDefaults] setObject: apiKeyDict 
+          forKey: OMBUserDefaultsAPIKey];
+        [defaults synchronize];
+      }
+    }
+  }
+}
+
 - (void) confirmOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block
 {
@@ -444,12 +477,47 @@ withCompletion: (void (^) (NSError *error)) block
   [conn start];
 }
 
+- (void) fetchCurrentUserInfo
+{
+  OMBUserCurrentUserInfoConnection *conn = 
+    [[OMBUserCurrentUserInfoConnection alloc] init];
+  conn.completionBlock = ^(NSError *error) {
+    if (_uid && !error) {
+      [[NSNotificationCenter defaultCenter] postNotificationName: 
+        OMBUserLoggedInNotification object: nil];
+    }
+  };
+  [conn start];
+}
+
 - (void) fetchDepositPayoutTransactionsWithCompletion:
 (void (^) (NSError *error)) block
 {
   OMBPayoutTransactionListConnection *conn =
     [[OMBPayoutTransactionListConnection alloc] initForDeposits: YES];
   conn.completionBlock = block;
+  [conn start];
+}
+
+- (void) fetchFavorites
+{
+  [[[OMBFavoritesListConnection alloc] init] start];
+}
+
+- (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
+delegate: (id) delegate completion: (void (^) (NSError *error)) block
+{
+  OMBMessageDetailConnection *conn = 
+    [[OMBMessageDetailConnection alloc] initWithPage: page withUser: user];
+  conn.completionBlock = block;
+  conn.delegate = delegate;
+  [conn start];
+}
+
+- (void) fetchNotificationCounts: (NSTimer *) timer
+{
+  OMBMessagesUnviewedCountConnection *conn =
+    [[OMBMessagesUnviewedCountConnection alloc] init];
   [conn start];
 }
 
@@ -466,28 +534,6 @@ withCompletion: (void (^) (NSError *error)) block
   OMBOffersReceivedConnection *conn =
     [[OMBOffersReceivedConnection alloc] init];
   conn.completionBlock = block;
-  [conn start];
-}
-
-- (void) fetchFavorites
-{
-  [[[OMBFavoritesListConnection alloc] init] start];
-}
-
-- (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
-delegate: (id) delegate completion: (void (^) (NSError *error)) block
-{
-  OMBMessageDetailConnection *conn = 
-    [[OMBMessageDetailConnection alloc] initWithPage: page withUser: user];
-  conn.completionBlock = block;
-  conn.delegate        = delegate;
-  [conn start];
-}
-
-- (void) fetchNotificationCounts: (NSTimer *) timer
-{
-  OMBMessagesUnviewedCountConnection *conn =
-    [[OMBMessagesUnviewedCountConnection alloc] init];
   [conn start];
 }
 
@@ -511,6 +557,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (UIImage *) imageForSizeKey: (NSString *) string
 {
+  if (!_image)
+    return nil;
   UIImage *img = [_imageSizeDictionary objectForKey: string];
   if (!img) {
     NSArray *words = [string componentsSeparatedByString: @","];
@@ -521,7 +569,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
       // into the dictionary; e.g. the OMBMangeListingsCell 
       // resizes this image in it's OMBCenteredImageView then sets 
       // the object for key in the imagesSizedictionary
-      img = [UIImage image: self.image proportionatelySized: 
+      img = [UIImage image: _image proportionatelySized: 
         CGSizeMake(width, height)];
       if (width == height)
         [_imageSizeDictionary setObject: img forKey: string];
@@ -584,6 +632,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   // Clear conversations
   [[OMBConversationMessageStore sharedStore].messages removeAllObjects];
 
+  // Delete the user defaults for the api key storage
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSMutableDictionary *apiKeyDict = [NSMutableDictionary dictionary];
+  // Set the dictionary in the defaults
+  [[NSUserDefaults standardUserDefaults] setObject: apiKeyDict 
+    forKey: OMBUserDefaultsAPIKey];
+  [defaults synchronize];
+
   [[NSNotificationCenter defaultCenter] postNotificationName: 
     OMBUserLoggedOutNotification object: nil];
 }
@@ -608,6 +664,54 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [self fetchFavorites];
   // Load the user's payout methods
   [self fetchPayoutMethodsWithCompletion: nil];
+
+  // Store the access token in the user defaults
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSDictionary *apiKeyDict = (NSMutableDictionary *) 
+    [defaults objectForKey: OMBUserDefaultsAPIKey];
+  if (!apiKeyDict) {
+    apiKeyDict = [NSMutableDictionary dictionary];
+  }
+
+  BOOL refreshExpiresAt = YES;
+  // Access token
+  if (_accessToken) {
+    id previousAccessToken = 
+      [apiKeyDict objectForKey: OMBUserDefaultsAPIKeyAccessToken];
+    if (previousAccessToken && previousAccessToken != [NSNull null]) {
+      // If the old key matches the new key, don't refresh the expires at
+      if ([(NSString *) previousAccessToken isEqualToString: _accessToken]) {
+        refreshExpiresAt = NO;
+      }
+    }
+  }
+  else {
+
+  }
+  // Expires at
+  NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+  NSTimeInterval threeDays = 60 * 60 * 24 * 3;
+  if (refreshExpiresAt) {
+    apiKeyDict = @{
+      OMBUserDefaultsAPIKeyAccessToken: _accessToken,
+      OMBUserDefaultsAPIKeyExpiresAt: [NSNumber numberWithFloat: 
+        now + threeDays]
+    };
+  }
+  else {
+    NSTimeInterval expiresAt = [[NSDate date] timeIntervalSince1970];
+    if ([apiKeyDict objectForKey: OMBUserDefaultsAPIKeyExpiresAt])
+      expiresAt = [[apiKeyDict objectForKey: 
+        OMBUserDefaultsAPIKeyExpiresAt] floatValue];
+    apiKeyDict = @{
+      OMBUserDefaultsAPIKeyAccessToken: _accessToken,
+      OMBUserDefaultsAPIKeyExpiresAt: [NSNumber numberWithFloat: expiresAt]
+    };
+  }
+  // Set the dictionary in the defaults
+  [[NSUserDefaults standardUserDefaults] setObject: apiKeyDict 
+    forKey: OMBUserDefaultsAPIKey];
+  [defaults synchronize];
 
   // Timer for fetching notifications
   _notificationFetchTimer = [NSTimer timerWithTimeInterval: 

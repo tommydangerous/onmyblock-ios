@@ -12,35 +12,42 @@
 
 #import "OMBAnnotation.h"
 #import "OMBAnnotationView.h"
+#import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
+#import "OMBCloseButtonView.h"
+#import "OMBCollectionView.h"
+#import "OMBExtendedHitAreaViewContainer.h"
 #import "OMBFavoriteResidence.h"
 #import "OMBFavoriteResidenceConnection.h"
 #import "OMBGradientView.h"
+#import "OMBImageScrollView.h"
 #import "OMBLoginViewController.h"
-#import "OMBMapViewController.h"
+#import "OMBMapViewViewController.h"
 #import "OMBMessageDetailViewController.h"
 #import "OMBMessageNewViewController.h"
+#import "OMBNavigationController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceBookItViewController.h"
 #import "OMBResidenceCell.h"
 #import "OMBResidenceDetailActivityCell.h"
 #import "OMBResidenceDetailAddressCell.h"
 #import "OMBResidenceDetailAmenitiesCell.h"
+#import "OMBResidenceDetailImageCollectionViewCell.h"
 #import "OMBResidenceDetailDescriptionCell.h"
 #import "OMBResidenceDetailMapCell.h"
 #import "OMBResidenceDetailSellerCell.h"
 #import "OMBResidenceImage.h"
 #import "OMBResidenceBookItConfirmDetailsViewController.h"
-#import "OMBResidenceDetailConnection.h"
-#import "OMBResidenceImagesConnection.h"
 #import "OMBResidenceImageSlideViewController.h"
 #import "OMBTemporaryResidence.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 
 float kResidenceDetailCellSpacingHeight = 40.0f;
+float kResidenceDetailImagePercentage   = 0.5f;
 
 @implementation OMBResidenceDetailViewController
 
@@ -75,13 +82,19 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
 
 #pragma mark - Override
 
+#pragma mark - NSObject
+
+- (void) dealloc
+{
+  // Must dealloc or notifications get sent to zombies
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
 #pragma mark - Override UIViewController
 
 - (void) loadView
 {
   [super loadView];
-
-  _imageViewArray = [NSMutableArray array];
 
   self.navigationItem.rightBarButtonItem =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
@@ -89,91 +102,114 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
         action: @selector(shareButtonSelected)];
 
   CGRect screen = [[UIScreen mainScreen] bounds];
-  self.view     = [[UIView alloc] initWithFrame: screen];
+  self.view     = [[OMBBlurView alloc] initWithFrame: screen];
 
-  float padding      = 20.0f;
-  float screenHeight = screen.size.height;
-  float screenWidth  = screen.size.width;
+  CGFloat padding      = 20.0f;
+  CGFloat headerViewPadding = padding * 0.5f;
+  CGFloat screenHeight = screen.size.height;
+  CGFloat screenWidth  = screen.size.width;
+  CGFloat standardHeight = 44.0f; // Height of navigation bar
+  backViewOffsetY = padding + standardHeight;
 
-  UIFont *fontLight18  = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
-  UIFont *fontMedium18 = [UIFont fontWithName: @"HelveticaNeue-Medium" 
-    size: 18];
-
-  _table = [[UITableView alloc] initWithFrame: screen
-    style: UITableViewStylePlain];
-  _table.alwaysBounceVertical         = YES;
-  _table.backgroundColor              = [UIColor grayUltraLight];
-  _table.canCancelContentTouches      = YES;
-  // _table.contentInset                 = UIEdgeInsetsMake(0, 0, -49, 0);
-  _table.dataSource                   = self;
-  _table.delegate                     = self;
-  _table.separatorColor               = [UIColor clearColor];
-  _table.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
-  _table.separatorStyle               = UITableViewCellSeparatorStyleNone;
-  _table.showsVerticalScrollIndicator = NO;
-  [self.view addSubview: _table];
-
-  // Images
-  _imagesView = [[UIView alloc] init];
-  _imagesView.frame = CGRectMake(0.0f, 0.0f, screenWidth, screenHeight * 0.5f);
-  _table.tableHeaderView = _imagesView;
-  // Images scrolling view; image slides
-  _imagesScrollView = [[UIScrollView alloc] init];
-  _imagesScrollView.alwaysBounceHorizontal = YES;
-  _imagesScrollView.backgroundColor = [UIColor blackColor];
-  _imagesScrollView.bounces  = YES;
-  _imagesScrollView.delegate = self;
-  _imagesScrollView.frame    = _imagesView.frame;
-  _imagesScrollView.pagingEnabled                  = YES;
-  _imagesScrollView.showsHorizontalScrollIndicator = NO;
-  [_imagesView addSubview: _imagesScrollView];
+  // Images collection view
+  // Layout
+  CGSize imageCollectionSize = CGSizeMake(screenWidth,
+    screenHeight * kResidenceDetailImagePercentage);
+  UICollectionViewFlowLayout *imageCollectionViewLayout =
+    [UICollectionViewFlowLayout new];
+  imageCollectionViewLayout.itemSize = imageCollectionSize;
+  imageCollectionViewLayout.headerReferenceSize = CGSizeZero;
+  imageCollectionViewLayout.minimumInteritemSpacing = 0.0f;
+  imageCollectionViewLayout.minimumLineSpacing = 0.0f;
+  imageCollectionViewLayout.scrollDirection = 
+    UICollectionViewScrollDirectionHorizontal;
+  imageCollectionViewLayout.sectionInset = UIEdgeInsetsMake(0.0f, 0.0f,
+    0.0f, 0.0f);
+  // Collection view
+  imageCollectionView = [[OMBCollectionView alloc] initWithFrame:
+    CGRectMake(0.0f, backViewOffsetY,
+      imageCollectionSize.width, imageCollectionSize.height) 
+        collectionViewLayout: imageCollectionViewLayout];
+  imageCollectionView.alwaysBounceHorizontal = YES;
+  imageCollectionView.bounces       = YES;
+  imageCollectionView.dataSource    = self;
+  imageCollectionView.delegate      = self;
+  imageCollectionView.pagingEnabled = YES;
+  [self.view addSubview: imageCollectionView];
   // Tap gesture when user clicks the images
   UITapGestureRecognizer *tapGesture = 
     [[UITapGestureRecognizer alloc] initWithTarget: self 
-      action: @selector(showImageSlideViewController)];
-  [_imagesScrollView addGestureRecognizer: tapGesture];
-  // Gradient
-  _gradientView = [[OMBGradientView alloc] init];
-  _gradientView.colors = @[
-    [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.0],
-    [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.5]
+      action: @selector(showImageSlides)];
+  [imageCollectionView addGestureRecognizer: tapGesture];
+
+  // The table to hold most of the data
+  _table = [[UITableView alloc] initWithFrame: screen
+    style: UITableViewStylePlain];
+  _table.alwaysBounceVertical    = YES;
+  _table.backgroundColor         = [UIColor clearColor];
+  _table.canCancelContentTouches = YES;
+  _table.dataSource              = self;
+  _table.delegate                = self;
+  _table.separatorColor          = [UIColor clearColor];
+  _table.separatorInset = UIEdgeInsetsMake(0.0f, padding, 0.0f, 0.0f);
+  _table.separatorStyle               = UITableViewCellSeparatorStyleNone;
+  _table.showsVerticalScrollIndicator = NO;
+  // Table header view
+  _table.tableHeaderView = [[UIView alloc] initWithFrame: 
+    CGRectMake(0.0f, 0.0f, screenWidth, 
+      imageCollectionView.frame.origin.y + 
+      imageCollectionView.frame.size.height)];
+  [self.view addSubview: _table];
+
+  // Gradient; this goes behind the table, but in front of the image
+  // collection view
+  gradientView = [[OMBGradientView alloc] init];
+  gradientView.colors = @[
+    [UIColor colorWithRed: 0.0f green: 0.0f blue: 0.0f alpha: 0.0f],
+    [UIColor colorWithRed: 0.0f green: 0.0f blue: 0.0f alpha: 0.3f]
   ];
-  _gradientView.frame      = _imagesView.frame;
-  _gradientView.scrollView = _imagesScrollView;
-  [_imagesView addSubview: _gradientView];
+  gradientView.frame = imageCollectionView.frame;
+  [self.view insertSubview: gradientView belowSubview: _table];
+
+  // This goes in front of the table
+  headerView = [[OMBExtendedHitAreaViewContainer alloc] init];
+  headerView.frame = gradientView.frame;
+  headerView.scrollView = imageCollectionView;
+  [self.view addSubview: headerView];
+
   // Activity indicator view
   activityIndicatorView = 
     [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
       UIActivityIndicatorViewStyleWhiteLarge];
   activityIndicatorView.color = [UIColor whiteColor];
   CGRect activityFrame = activityIndicatorView.frame;
-  activityFrame.origin.x = (_imagesScrollView.frame.size.width - 
-    activityFrame.size.width) / 2.0;
-  activityFrame.origin.y = (_imagesScrollView.frame.size.height - 
-    activityFrame.size.height) / 2.0;
+  activityFrame.origin.x = (imageCollectionView.frame.size.width - 
+    activityFrame.size.width) * 0.5f;
+  activityFrame.origin.y = (imageCollectionView.frame.size.height - 
+    activityFrame.size.height) * 0.5f;
   activityIndicatorView.frame = activityFrame;
   activityIndicatorView.layer.zPosition = 9999;
-  [_imagesScrollView addSubview: activityIndicatorView];
+  [headerView addSubview: activityIndicatorView];
+
   // Page of images
   _pageOfImagesLabel = [[UILabel alloc] init];
   _pageOfImagesLabel.backgroundColor = [UIColor colorWithWhite: 0.0f 
     alpha: 0.5f];
-  _pageOfImagesLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-    size: 13];
+  _pageOfImagesLabel.font = [UIFont smallTextFont];
   _pageOfImagesLabel.frame = CGRectMake(
-    (_imagesScrollView.frame.size.width - (50 + (padding * 0.5))), 
-      (padding * 0.5), 50.0f, 30.0f);
+    imageCollectionView.frame.size.width - (50 + headerViewPadding), 
+      headerViewPadding, 50.0f, 30.0f);
   _pageOfImagesLabel.layer.cornerRadius = 2.0f;
   _pageOfImagesLabel.textAlignment = NSTextAlignmentCenter;
   _pageOfImagesLabel.textColor = [UIColor whiteColor];
-  [_imagesView addSubview: _pageOfImagesLabel];
+  [headerView addSubview: _pageOfImagesLabel];
 
   // Favorites Button
   _favoritesButton = [[UIButton alloc] init];
   _favoritesButton.frame = CGRectMake(5.0f, 5.0f, 40.0f, 40.0f);
   [_favoritesButton addTarget: self action: @selector(favoritesButtonSelected)
     forControlEvents: UIControlEventTouchUpInside];
-  [_imagesView addSubview: _favoritesButton];
+  [headerView addSubview: _favoritesButton];
   // When favorited
   favoritedImage = [UIImage image: 
     [UIImage imageNamed: @"favorite_filled_white.png"] 
@@ -184,26 +220,24 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
       size: _favoritesButton.frame.size];
 
   // Number of offers
-  _numberOfOffersLabel = [[UILabel alloc] init];
-  _numberOfOffersLabel.font = fontMedium18;
-  _numberOfOffersLabel.frame = CGRectMake(padding * 0.5, 
-    _imagesView.frame.size.height - (27.0f + (padding * 0.5)), 
-      _imagesView.frame.size.width - padding, 27.0f);
-  _numberOfOffersLabel.text = @"5 offers";
-  _numberOfOffersLabel.textAlignment = NSTextAlignmentRight;
-  _numberOfOffersLabel.textColor = [UIColor whiteColor];
+  // _numberOfOffersLabel = [[UILabel alloc] init];
+  // _numberOfOffersLabel.font = fontMedium18;
+  // _numberOfOffersLabel.text = @"5 offers";
+  // _numberOfOffersLabel.textAlignment = NSTextAlignmentRight;
+  // _numberOfOffersLabel.textColor = [UIColor whiteColor];
   // [_imagesView addSubview: _numberOfOffersLabel];
 
   // Current offer
-  _currentOfferLabel = [[UILabel alloc] init];
+  currentOfferOriginY = (imageCollectionView.frame.origin.y + 
+    imageCollectionView.frame.size.height) - (36.0f + (headerViewPadding * 2));
+  _currentOfferLabel = [UILabel new];
   _currentOfferLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
     size: 27];
-  _currentOfferLabel.frame = CGRectMake(_numberOfOffersLabel.frame.origin.x,
-    _numberOfOffersLabel.frame.origin.y - 36.0f, 
-      _numberOfOffersLabel.frame.size.width, 36.0f);
-  _currentOfferLabel.textAlignment = _numberOfOffersLabel.textAlignment;
-  _currentOfferLabel.textColor = _numberOfOffersLabel.textColor;
-  [_imagesView addSubview: _currentOfferLabel];
+  _currentOfferLabel.frame = CGRectMake(headerViewPadding, currentOfferOriginY,
+      screenWidth - (headerViewPadding * 2), 36.0f);
+  _currentOfferLabel.textAlignment = NSTextAlignmentRight;
+  _currentOfferLabel.textColor = [UIColor whiteColor];;
+  [self.view insertSubview: _currentOfferLabel belowSubview: _table];
 
   // Bottom view
   _bottomButtonView = [[UIView alloc] init];
@@ -239,7 +273,8 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
     (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
   // _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
   //   _bottomButtonView.frame.size.width, 44.0f);
-  _contactMeButton.titleLabel.font = fontLight18;
+  _contactMeButton.titleLabel.font = [UIFont fontWithName: 
+    @"HelveticaNeue-Light" size: 18];
   [_contactMeButton addTarget: self action: @selector(contactMeButtonSelected)
     forControlEvents: UIControlEventTouchUpInside];
   [_contactMeButton setBackgroundImage: 
@@ -254,9 +289,9 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   _bookItButton = [[UIButton alloc] init];
   _bookItButton.backgroundColor = _contactMeButton.backgroundColor;
   _bookItButton.frame = CGRectMake(
-      _bottomButtonView.frame.size.width - _contactMeButton.frame.size.width, 
-        _contactMeButton.frame.origin.y, _contactMeButton.frame.size.width, 
-          _contactMeButton.frame.size.height);
+    _bottomButtonView.frame.size.width - _contactMeButton.frame.size.width, 
+      _contactMeButton.frame.origin.y, _contactMeButton.frame.size.width, 
+        _contactMeButton.frame.size.height);
   _bookItButton.titleLabel.font = _contactMeButton.titleLabel.font;
   [_bookItButton addTarget: self action: @selector(showPlaceOffer)
     forControlEvents: UIControlEventTouchUpInside];
@@ -266,59 +301,32 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
     forState: UIControlStateNormal];
   [_bottomButtonView addSubview: _bookItButton];
 
-  // Mini map
-  // _miniMap          = [[MKMapView alloc] init];
-  // _miniMap.delegate = self;
-  // _miniMap.frame    = CGRectMake(padding, 
-  //   kResidenceDetailCellSpacingHeight + padding,
-  //     screenWidth - (padding * 2), screenWidth * 0.5);
-  // _miniMap.mapType       = MKMapTypeStandard;
-  // _miniMap.rotateEnabled = NO;
-  // _miniMap.scrollEnabled = NO;
-  // _miniMap.showsPointsOfInterest = NO;
-  // _miniMap.zoomEnabled   = NO;
-}
+  // The scroll view when users view images full screen
+  imageScrollView = [UIScrollView new];
+  imageScrollView.bounces = NO;
+  imageScrollView.delegate = self;
+  imageScrollView.frame = screen;
+  imageScrollView.pagingEnabled = YES;
+  imageScrollView.showsHorizontalScrollIndicator = NO;
 
-- (void) viewDidAppear: (BOOL) animated
-{
-  [super viewDidAppear: animated];
-  [self resetImageViews];
-  // If images were already downloaded for the residence,
-  // create image views and set the residence images to them
-  if ([[residence imagesArray] count] > 1) {
-    for (OMBResidenceImage *residenceImage in [residence imagesArray]) {
-      OMBCenteredImageView *imageView = [[OMBCenteredImageView alloc] init];
-      [imageView setImage: residenceImage.image];
+  // Close button for image scroll view
+  CGFloat closeButtonPadding = padding * 0.5f;
+  CGFloat closeButtonViewHeight = 26.0f;
+  CGFloat closeButtonViewWidth  = closeButtonViewHeight;
+  CGRect closeButtonRect = CGRectMake(imageScrollView.frame.size.width - 
+    (closeButtonViewWidth + closeButtonPadding), 
+      padding + closeButtonPadding, closeButtonViewWidth, 
+        closeButtonViewHeight);
+  imageScrollViewCloseButton = [[OMBCloseButtonView alloc] initWithFrame:
+    closeButtonRect color: [UIColor whiteColor]];
+  [imageScrollViewCloseButton.closeButton addTarget: self 
+    action: @selector(closeImageSlides)
+      forControlEvents: UIControlEventTouchUpInside];
+  [imageScrollView addSubview: imageScrollViewCloseButton];
 
-      // UIImageView *imageView    = [[UIImageView alloc] init];
-      // imageView.backgroundColor = [UIColor clearColor];
-      // imageView.clipsToBounds   = YES;
-      // imageView.contentMode     = UIViewContentModeTopLeft;
-      // imageView.image = [UIImage image: residenceImage.image 
-      //   sizeToFitVertical: CGSizeMake(_imagesScrollView.frame.size.width,
-      //     _imagesScrollView.frame.size.height)];
-
-      [_imageViewArray addObject: imageView];
-    }
-    [self addImageViewsToImageScrollView];
-
-    _pageOfImagesLabel.text = [NSString stringWithFormat: @"%i/%i",
-      [self currentPageOfImages], (int) [[residence imagesArray] count]];
-
-    [self adjustPageOfImagesLabelFrame];
-  }
-  // If images were not downloaded for the residence,
-  // download the images and add the image view and image to images scroll view
-  else {
-    OMBResidenceImagesConnection *connection = 
-      [[OMBResidenceImagesConnection alloc] initWithResidence: residence];
-    connection.completionBlock = ^(NSError *error) {
-      [activityIndicatorView stopAnimating];
-    };
-    connection.delegate = self;
-    [connection start];
-    [activityIndicatorView startAnimating];
-  }
+  blurView = [[OMBBlurView alloc] initWithFrame: screen];
+  blurView.blurRadius = 20.0f;
+  blurView.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
 }
 
 - (void) viewDidDisappear: (BOOL) animated
@@ -326,6 +334,21 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   [super viewDidDisappear: animated];
   // Need to do this or an error occurs
   _table.delegate = nil;
+}
+
+- (void) viewDidLoad
+{
+  [super viewDidLoad];
+
+  // Do this or else there will be extra spacing at the
+  // top of the image collection view
+  self.automaticallyAdjustsScrollViewInsets = NO;
+
+  // Register collection view cell for the collection view
+  [imageCollectionView registerClass: 
+    [OMBResidenceDetailImageCollectionViewCell class] 
+      forCellWithReuseIdentifier:
+        [OMBResidenceDetailImageCollectionViewCell reuseIdentifierString]];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -338,24 +361,29 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
     _table.delegate = self;
 
   // Fetch residence detail data
-  OMBResidenceDetailConnection *connection =
-    [[OMBResidenceDetailConnection alloc] initWithResidence: residence];
-  connection.completionBlock = ^(NSError *error) {
+  [residence fetchDetailsWithCompletion: ^(NSError *error) {
     [self refreshResidenceData];
-  };
-  [connection start];
+  }];
 
+  // Download images
+  [residence downloadImagesWithCompletion: ^(NSError *error) {
+    [self reloadImageData];
+    [activityIndicatorView stopAnimating];
+  }];
+  [activityIndicatorView startAnimating];
+  [self reloadImageData];
+
+  // Set the rent
   _currentOfferLabel.text = [residence rentToCurrencyString];
 
+  // Adjust the favorites button if user already favorited
   [self adjustFavoriteButton];
 
+  // If temporary residence, make the favorite button hidden
   if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
     _favoritesButton.hidden = YES;
     [self.navigationItem setRightBarButtonItem: nil animated: NO];
   }
-
-  // Fetch the offers (Do this in another phase, we aren't showing offers)
-  // [residence fetchOffersWithCompletion: nil];
 
   // Table footer view
   CGFloat footerHeight = _bottomButtonView.frame.size.height;
@@ -368,6 +396,9 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
   }
   _table.tableFooterView = [[UIView alloc] initWithFrame: 
     CGRectMake(0.0f, 0.0f, _table.frame.size.width, footerHeight)];
+
+  // Fetch the offers (Do this in another phase, we aren't showing offers)
+  // [residence fetchOffersWithCompletion: nil];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -379,6 +410,40 @@ float kResidenceDetailCellSpacingHeight = 40.0f;
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol UICollectionViewDataSource
+
+- (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView 
+cellForItemAtIndexPath: (NSIndexPath *) indexPath
+{
+  OMBResidenceDetailImageCollectionViewCell *cell =
+    [collectionView dequeueReusableCellWithReuseIdentifier:
+      [OMBResidenceDetailImageCollectionViewCell reuseIdentifierString]
+        forIndexPath: indexPath];
+  [cell loadResidenceImage: 
+    [[residence imagesArray] objectAtIndex: indexPath.row]];
+  return cell;
+}
+
+- (NSInteger) collectionView: (UICollectionView *) collectionView 
+numberOfItemsInSection: (NSInteger) section
+{
+  return [[residence imagesArray] count];
+}
+
+- (NSInteger) numberOfSectionsInCollectionView: 
+(UICollectionView *) collectionView
+{
+  return 1;
+}
+
+#pragma mark - Protocol UICollectionViewDelegate
+
+- (void) collectionView: (UICollectionView *) collectionView 
+didSelectItemAtIndexPath: (NSIndexPath *) indexPath
+{
+  NSLog(@"COLLECTION VIEW DID SELECT ITEM");
+}
 
 #pragma mark - Protocol MKMapViewDelegate
 
@@ -403,15 +468,99 @@ viewForAnnotation: (id <MKAnnotation>) annotation
 
 #pragma mark - Protocol UIScrollViewDelegate
 
+- (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView
+{
+  if (scrollView == imageScrollView) {
+    NSInteger page = scrollView.contentOffset.x / scrollView.frame.size.width;
+    imageCollectionView.contentOffset = CGPointMake(
+      imageCollectionView.frame.size.width * page, 0.0f); 
+  }
+}
+
 - (void) scrollViewDidScroll: (UIScrollView *) scrollView
 {
-  // Change the page numbers when scrolling
-  if (scrollView == _imagesScrollView) {
+  CGFloat x = scrollView.contentOffset.x;
+  CGFloat y = scrollView.contentOffset.y;
+  CGFloat padding = 20.0f;
+  // If the table is scrolling
+  if (scrollView == _table) {
+    CGFloat adjustment = y / 3.0f;
+
+    // Adjust the image collection view
+    CGRect backRect = imageCollectionView.frame;
+    backRect.origin.y = backViewOffsetY - adjustment;
+    imageCollectionView.frame = backRect;
+
+    // Adjust the gradient
+    gradientView.frame = backRect;
+
+    // Header view
+    headerView.frame = backRect;
+
+    // Adjust the current offer label
+    CGRect currentOfferRect = _currentOfferLabel.frame;
+    currentOfferRect.origin.y = currentOfferOriginY - adjustment;
+    _currentOfferLabel.frame = currentOfferRect;
+  }
+  // When changing the image in the image collection view
+  else if (scrollView == imageCollectionView) {
     if ([self currentPageOfImages]) {
       _pageOfImagesLabel.text = [NSString stringWithFormat: @"%i/%i",
         [self currentPageOfImages], (int) [[residence imagesArray] count]];
     }
   }
+  // If the image scroll view is scrolling, move the close button
+  else if (scrollView == imageScrollView) {
+    CGRect rect = imageScrollViewCloseButton.frame;
+    rect.origin.x = 
+      (scrollView.frame.size.width - (rect.size.width + (padding * 0.5f))) + x;
+    imageScrollViewCloseButton.frame = rect;
+  }
+}
+
+- (void) scrollViewDidZoom: (UIScrollView *) scrollView
+{
+  if ([scrollView isKindOfClass: [OMBImageScrollView class]]) {
+    NSUInteger index = [scrollView.subviews indexOfObjectPassingTest:
+      ^(id obj, NSUInteger idx, BOOL *stop) {
+        return [obj isKindOfClass: [UIImageView class]];
+      }
+    ];
+    if (index != NSNotFound) {
+      UIImageView *imageView = [scrollView.subviews objectAtIndex: index];
+      // Center the image as it becomes smaller than the size of the screen
+      CGSize boundsSize    = scrollView.bounds.size;
+      CGRect frameToCenter = imageView.frame;
+      // Center horizontally
+      if (frameToCenter.size.width < boundsSize.width) {
+        frameToCenter.origin.x = 
+          (boundsSize.width - frameToCenter.size.width) / 2.0;
+      }
+      else
+        frameToCenter.origin.x = 0;
+      // Center vertically
+      if (frameToCenter.size.height < boundsSize.height)
+        frameToCenter.origin.y = 
+          (boundsSize.height - frameToCenter.size.height) / 2.0;
+      else
+        frameToCenter.origin.y = 0;
+      imageView.frame = frameToCenter;
+    }
+  }
+}
+
+- (UIView *) viewForZoomingInScrollView: (UIScrollView *) scrollView
+{
+  if ([scrollView isKindOfClass: [OMBImageScrollView class]]) {
+    NSUInteger index = [scrollView.subviews indexOfObjectPassingTest:
+      ^(id obj, NSUInteger idx, BOOL *stop) {
+        return [obj isKindOfClass: [UIImageView class]];
+      }
+    ];
+    if (index != NSNotFound)
+      return [scrollView.subviews objectAtIndex: index]; 
+  }
+  return nil;
 }
 
 #pragma mark - Protocol UITableViewDataSource
@@ -430,8 +579,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!emptyCell)
     emptyCell = [[UITableViewCell alloc] initWithStyle:
       UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier];
-  emptyCell.backgroundColor =
-    emptyCell.contentView.backgroundColor = [UIColor clearColor];
+  emptyCell.backgroundColor = [UIColor grayUltraLight];
   emptyCell.selectionStyle = UITableViewCellSelectionStyleNone;
   CALayer *topBorder = [CALayer layer];
   topBorder.backgroundColor = [UIColor grayLight].CGColor;
@@ -458,6 +606,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         @"%.0f bd  /  %.0f ba  /  %i mo lease", 
           residence.bedrooms, residence.bathrooms, residence.leaseMonths];
       // Property Type - Move in Date
+      NSString *propertyType = @"Property type";
+      if ([[residence.propertyType stripWhiteSpace] length])
+        propertyType = [residence.propertyType capitalizedString];
       NSString *availableDateString = @"immediately";
       if (residence.moveInDate) {
         if (residence.moveInDate > [[NSDate date] timeIntervalSince1970]) {
@@ -469,8 +620,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         }
       }
       cell.propertyTypeLabel.text = [NSString stringWithFormat: 
-        @"%@ - available %@",
-          [residence.propertyType capitalizedString], availableDateString];
+        @"%@ - available %@", propertyType, availableDateString];
       return cell;
     }
   }
@@ -568,6 +718,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
         annotation.coordinate     = coordinate;
         [cell.mapView addAnnotation: annotation];
+
+        // Tap
+        UITapGestureRecognizer *tap = 
+          [[UITapGestureRecognizer alloc] initWithTarget: self 
+            action: @selector(showMap)];
+        [cell.mapView addGestureRecognizer: tap];
       }
       if ([residence.city length] && [residence.state length])
         cell.titleLabel.text = [NSString stringWithFormat: @"%@, %@",
@@ -619,6 +775,12 @@ numberOfRowsInSection: (NSInteger) section
 }
 
 #pragma mark - Protocol UITableViewDelegate
+
+- (void) tableView: (UITableView *) tableView
+didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  [tableView deselectRowAtIndexPath: indexPath animated: YES];
+}
 
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
@@ -702,22 +864,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
-- (void) addImageViewsToImageScrollView
-{
-  // Add imageViews to _imagesScrollView from _imagesViewArray
-  // and then set the _imagesScrollView content size
-  for (OMBCenteredImageView *imageView in _imageViewArray) {
-    imageView.frame = CGRectMake((_imagesScrollView.frame.size.width * 
-      [_imageViewArray indexOfObject: imageView]), 0, 
-        _imagesScrollView.frame.size.width, 
-          _imagesScrollView.frame.size.height);
-    [_imagesScrollView addSubview: imageView];
-  }
-  _imagesScrollView.contentSize = CGSizeMake(
-    (_imagesScrollView.frame.size.width * [_imageViewArray count]), 
-      _imagesScrollView.frame.size.height);
-}
-
 - (void) adjustFavoriteButton
 {
   UIImage *image = notFavoritedImage;
@@ -733,17 +879,37 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) adjustPageOfImagesLabelFrame
 {
   CGRect pageRect = [_pageOfImagesLabel.text boundingRectWithSize:
-    CGSizeMake(50.0f, _pageOfImagesLabel.frame.size.height)
+    CGSizeMake(9999.0f, _pageOfImagesLabel.frame.size.height)
       options: NSStringDrawingUsesLineFragmentOrigin
         attributes: @{ NSFontAttributeName: _pageOfImagesLabel.font }
           context: nil];
   // Padding on each side
   CGFloat pageWidth = (_pageOfImagesLabel.frame.origin.y * 2.0f) +
     pageRect.size.width;
-  _pageOfImagesLabel.frame = CGRectMake(_imagesScrollView.frame.size.width - 
+  _pageOfImagesLabel.frame = CGRectMake(imageCollectionView.frame.size.width - 
     (pageWidth + _pageOfImagesLabel.frame.origin.y), 
       _pageOfImagesLabel.frame.origin.y, pageWidth,
         _pageOfImagesLabel.frame.size.height);
+}
+
+- (void) closeImageSlides
+{
+  [UIView animateWithDuration: 0.25f animations: ^{
+    blurView.alpha = 0.0f;
+    imageScrollView.alpha = 0.0f;
+  } completion: ^(BOOL finished) {
+    // Remove from superview
+    [blurView removeFromSuperview];
+    [imageScrollView removeFromSuperview];
+    // Remove all subviews
+    [imageScrollView.subviews enumerateObjectsUsingBlock: 
+      ^(UIView *v, NSUInteger idx, BOOL *stop) {
+        // Don't remove the X close button
+        if (![v isKindOfClass: [OMBCloseButtonView class]])
+          [v removeFromSuperview];
+      }
+    ];
+  }];
 }
 
 - (void) contactMeButtonSelected
@@ -770,7 +936,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (int) currentPageOfImages
 {
   return (1 + 
-    _imagesScrollView.contentOffset.x / _imagesScrollView.frame.size.width);
+    imageCollectionView.contentOffset.x / imageCollectionView.frame.size.width);
 }
 
 - (void) currentUserLogout
@@ -799,7 +965,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [UIView animateWithDuration: 0.5f delay:0
         options: UIViewAnimationOptionBeginFromCurrentState
           animations: ^{
-            imageView.transform = CGAffineTransformMakeScale(0.7f, 0.7f);
+            imageView.transform = CGAffineTransformMakeScale(0.8f, 0.8f);
             [_favoritesButton setImage: favoritedImage
               forState: UIControlStateNormal];
           }
@@ -816,6 +982,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     [appDelegate showSignUp];
   }
+}
+
+- (void) reloadImageData
+{
+  [imageCollectionView reloadData];
+
+  // Set the pages text 1/2
+  _pageOfImagesLabel.text = [NSString stringWithFormat: @"%i/%i",
+    [self currentPageOfImages], (int) [[residence imagesArray] count]];
+
+  [self adjustPageOfImagesLabelFrame];
 }
 
 - (void) refreshResidenceData
@@ -836,19 +1013,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   //   forMode: NSRunLoopCommonModes];
 }
 
-- (void) resetImageViews
-{
-  // Remove UIImageView from _imagesScrollView
-  [_imagesScrollView.subviews enumerateObjectsUsingBlock: 
-    ^(UIView *v, NSUInteger idx, BOOL *stop) {
-      if ([v isKindOfClass: [UIImageView class]])
-        [v removeFromSuperview];
-    }
-  ];
-  // Empty out any UIImageView from the _imageViewArray
-  [_imageViewArray removeAllObjects];
-}
-
 - (void) shareButtonSelected
 {
   NSArray *dataToShare = @[[residence shareString]];
@@ -857,7 +1021,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       applicationActivities: nil];
   [[self appDelegate].container presentViewController: activityViewController
     animated: YES completion: nil];
-
 }
 
 - (void) showBookItNow
@@ -870,10 +1033,66 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [[self appDelegate].container showSignUp];
 }
 
-- (void) showImageSlideViewController
+- (void) showImageSlides
 {
-  [self presentViewController: _imageSlideViewController animated: YES
-    completion: nil];
+  CGRect rect = imageScrollView.frame;
+
+  NSArray *array = [residence imagesArray];
+  for (OMBResidenceImage *residenceImage in array) {
+    OMBImageScrollView *scroll = [[OMBImageScrollView alloc] init];
+    scroll.backgroundColor     = [UIColor clearColor];
+    scroll.delegate            = self;
+    scroll.frame = CGRectMake(
+      [array indexOfObject: residenceImage] * rect.size.width, 0.0f,
+        rect.size.width, rect.size.height);
+    [imageScrollView insertSubview: scroll belowSubview: 
+      imageScrollViewCloseButton];
+
+    UIImage *image         = residenceImage.image;
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
+    imageView.image = image;
+    [scroll addSubview: imageView];
+
+    scroll.minimumZoomScale = rect.size.width / image.size.width;
+    scroll.maximumZoomScale = 1.0;
+    scroll.showsHorizontalScrollIndicator = NO;
+    scroll.showsVerticalScrollIndicator   = NO;
+    scroll.zoomScale = scroll.minimumZoomScale;
+  }
+  // Set content size
+  imageScrollView.contentSize = CGSizeMake(rect.size.width * [array count],
+    rect.size.height);
+
+  // Adjust the content offset depending on the residence detail current page
+  CGPoint point = CGPointMake(
+    rect.size.width * ([self currentPageOfImages] - 1), 0.0f);
+  [imageScrollView setContentOffset: point animated: NO];
+
+
+  // Blur
+  blurView.alpha = 0.0f;
+  [blurView refreshWithView: self.view];
+  [[[UIApplication sharedApplication] keyWindow] addSubview: blurView];
+
+  imageScrollView.alpha = 0.0f;
+  // Add the image scroll view
+  [[[UIApplication sharedApplication] keyWindow] addSubview: 
+    imageScrollView];
+
+  [UIView animateWithDuration: 0.25f animations: ^{
+    blurView.alpha = 1.0f;
+    imageScrollView.alpha = 1.0f;
+  }];
+}
+
+- (void) showMap
+{
+  CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+    residence.latitude, residence.longitude);
+  [self.navigationController pushViewController:
+    [[OMBMapViewViewController alloc] initWithCoordinate: coordinate 
+      title: [residence.address capitalizedString]] animated: YES];
 }
 
 - (void) showPlaceOffer

@@ -37,19 +37,19 @@
 #import "UIImage+Color.h"
 #import "UIImage+NegativeImage.h"
 #import "UIImage+Resize.h"
-// #warning Remove this
-// #import "OMBResidence.h"
-// #import "OMBResidenceBookItConfirmDetailsViewController.h"
+#warning Remove this
+#import "OMBResidence.h"
+#import "OMBResidenceDetailViewController.h"
 
 
 @implementation OMBViewControllerContainer
-// #warning Remove this
-// - (void) showBookIt
-// {
-//   [_mapNavigationController pushViewController:
-//     [[OMBResidenceBookItConfirmDetailsViewController alloc] initWithResidence:
-//       [OMBResidence fakeResidence]] animated: YES];
-// }
+#warning Remove this
+- (void) showTest
+{
+  [_mapNavigationController pushViewController:
+    [[OMBResidenceDetailViewController alloc] initWithResidence:
+      [OMBResidence fakeResidence]] animated: YES];
+}
 
 - (id) init
 {
@@ -826,19 +826,34 @@ willDecelerate: (BOOL) decelerate
   void (^completion)(void) = ^(void) {
     [_introViewController setupForLoggedInUser];
   };
-  // Hide the login view controller
-  [_loginViewController dismissViewControllerAnimated: YES 
-    completion: completion];
-  [_introViewController.loginViewController dismissViewControllerAnimated: YES
-    completion: ^{
-      // Then hide the intro view controller
+  // Hide the login view controller that was presented by
+  // the view controller container
+  if (_loginViewController.presentingViewController) {
+    [_loginViewController dismissViewControllerAnimated: YES 
+      completion: completion];
+  }
+  else if (_introViewController.presentingViewController) {
+    if (_introViewController.loginViewController.presentingViewController) {
+      // Hide the login view controller inside the intro view controller
+      // that was presented by the view controller container
+      [_introViewController.loginViewController dismissViewControllerAnimated: 
+        YES completion: ^{
+          // Then hide the intro view controller
+          [_introViewController dismissViewControllerAnimated: YES 
+            completion: completion];
+        }
+      ];
+    }
+    else {
+      // Hide the intro view controller that was presented by the 
+      // view controller container
       [_introViewController dismissViewControllerAnimated: YES 
         completion: completion];
     }
-  ];
-  // Hide the intro view controller
-  [_introViewController dismissViewControllerAnimated: YES 
-    completion: completion];
+  }
+  else {
+    completion();
+  }
 
   // Download the user's profile image and set it to the account image view
   [[OMBUser currentUser] downloadImageFromImageURLWithCompletion: 

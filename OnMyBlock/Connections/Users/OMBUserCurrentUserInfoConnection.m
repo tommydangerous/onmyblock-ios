@@ -1,14 +1,14 @@
 //
-//  OMBOffersAcceptedConnection.m
+//  OMBUserCurrentUserInfoConnection.m
 //  OnMyBlock
 //
-//  Created by Tommy DANGerous on 1/21/14.
+//  Created by Tommy DANGerous on 1/27/14.
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import "OMBOffersAcceptedConnection.h"
+#import "OMBUserCurrentUserInfoConnection.h"
 
-@implementation OMBOffersAcceptedConnection
+@implementation OMBUserCurrentUserInfoConnection
 
 #pragma mark - Initializer
 
@@ -17,7 +17,7 @@
   if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: 
-    @"%@/offers/accepted/?access_token=%@", 
+    @"%@/users/current_user_info/?access_token=%@",
       OnMyBlockAPIURL, [OMBUser currentUser].accessToken];
   [self setRequestWithString: string];
 
@@ -30,11 +30,12 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  // NSLog(@"OMBOffersAcceptedConnection\n%@", [self json]);
+  NSLog(@"OMBUserCurrentUserInfoConnection\n%@", [self json]);
 
-  [[OMBUser currentUser] readFromAcceptedOffersDictionary: [self json]];
-
+  [[OMBUser currentUser] readFromDictionary: [self objectDictionary]];
+  
   [super connectionDidFinishLoading: connection];
 }
+
 
 @end

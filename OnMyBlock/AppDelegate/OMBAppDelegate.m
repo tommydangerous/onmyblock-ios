@@ -20,6 +20,11 @@
 NSString *const FBSessionStateChangedNotification = 
   @"com.onmyblock.Login:FBSessionStateChangedNotification";
 NSString *const OMBUserDefaults = @"OMBUserDefaults";
+NSString *const OMBUserDefaultsAPIKey = @"OMBUserDefaultsAPIKey";
+NSString *const OMBUserDefaultsAPIKeyAccessToken = 
+  @"OMBUserDefaultsAPIKeyAccessToken";
+NSString *const OMBUserDefaultsAPIKeyExpiresAt = 
+  @"OMBUserDefaultsAPIKeyExpiresAt";
 NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
 
 @implementation OMBAppDelegate
@@ -48,13 +53,17 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // If current session has a valid Facebook token
     [self openSession];
 
-  #warning Remove fake login
-  // // Fake login
-  [OMBUser fakeLogin];
-  // // Use this to show whatever view controller you are working on
-  // [_container showHomebaseLandlord];
+  // #warning Remove fake login
+  // [OMBUser fakeLogin]; // Fake login
+  // Use this to show whatever view controller you are working on
+  // [_container showHomebaseRenter];
+
+  // Check to see if the user has a saved api key in the user defaults
+  [[OMBUser currentUser] checkForUserDefaultsAPIKey];
 
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSLog(@"%@", [defaults objectForKey: @"OMBUserDefaultsAPIKey"]);
+  
   id viewedIntro = [defaults objectForKey: OMBUserDefaultsViewedIntro];
   if (!viewedIntro) {
     [defaults setObject: [NSNumber numberWithBool: NO] 

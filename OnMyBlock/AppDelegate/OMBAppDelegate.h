@@ -12,6 +12,9 @@
 
 extern NSString *const FBSessionStateChangedNotification;
 extern NSString *const OMBUserDefaults;
+extern NSString *const OMBUserDefaultsAPIKey;
+extern NSString *const OMBUserDefaultsAPIKeyAccessToken;
+extern NSString *const OMBUserDefaultsAPIKeyExpiresAt;
 extern NSString *const OMBUserDefaultsViewedIntro;
 
 @class OMBViewControllerContainer;

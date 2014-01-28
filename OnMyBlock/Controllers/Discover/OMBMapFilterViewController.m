@@ -589,12 +589,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 			static NSString *PropertyTypeCellIdentifier =
 			@"DateAvailableCellIdentifier";
 			OMBMapFilterDateAvailableCell *cell =
-			[tableView dequeueReusableCellWithIdentifier:
-			 PropertyTypeCellIdentifier];
+        [tableView dequeueReusableCellWithIdentifier: 
+          PropertyTypeCellIdentifier];
 			if (!cell)
 				cell = [[OMBMapFilterDateAvailableCell alloc] initWithStyle:
-						UITableViewCellStyleDefault reuseIdentifier:
-						PropertyTypeCellIdentifier];
+					UITableViewCellStyleDefault reuseIdentifier:
+            PropertyTypeCellIdentifier];
 			return cell;
 		}
 	}
@@ -672,6 +672,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       [self hideNeighborhoodTableViewContainer];
 		[self showPickerView:rentPickerView];
     }
+  // Date available
 	else if (indexPath.section == 5 && indexPath.row == 1) {
 		[self.table scrollToRowAtIndexPath:
 		 [NSIndexPath indexPathForRow: 0 inSection: indexPath.section]
@@ -851,22 +852,23 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) cancelPicker
 {
-	if ([rentPickerView superview])
-	{
+	if ([rentPickerView superview]) {
 		OMBMapFilterRentCell *cell = (OMBMapFilterRentCell *)
-		[self.table cellForRowAtIndexPath:
-		 [NSIndexPath indexPathForRow: 1 inSection: 1]];
+		  [self.table cellForRowAtIndexPath:
+		    [NSIndexPath indexPathForRow: 1 inSection: 1]];
 		cell.minRentTextField.text = cell.maxRentTextField.text = @"";
 		[rentPickerView selectRow: 0 inComponent: 0 animated: YES];
 		[rentPickerView selectRow: 0 inComponent: 1 animated: YES];
+    [_valuesDictionary setObject: [NSNull null] forKey: @"maxRent"];
+    [_valuesDictionary setObject: [NSNull null] forKey: @"minRent"];
 	}
-	else if ([availabilityPickerView superview])
-	{
+	else if ([availabilityPickerView superview]) {
 		OMBMapFilterDateAvailableCell *cell = (OMBMapFilterDateAvailableCell *)
-		[self.table cellForRowAtIndexPath:
-		 [NSIndexPath indexPathForRow: 1 inSection: 5]];
+		  [self.table cellForRowAtIndexPath: 
+        [NSIndexPath indexPathForRow: 1 inSection: 5]];
 		cell.dateAvailable.text = @"";
-		[availabilityPickerView selectRow:0 inComponent:0 animated:YES];
+		[availabilityPickerView selectRow: 0 inComponent: 0 animated: YES];
+    [_valuesDictionary setObject: [NSNull null] forKey: @"moveInDate"];
 	}
 	
   [self hidePickerView];
@@ -1030,15 +1032,13 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) showPickerView:(UIPickerView *)pickerView
 {
-	if (rentPickerView == pickerView)
-	{
+	if (rentPickerView == pickerView) {
 		pickerViewHeaderLabel.text = @"Rent Range";
 		
 		[availabilityPickerView removeFromSuperview];
 		[pickerViewContainer addSubview:rentPickerView];
 	}
-	else if (availabilityPickerView == pickerView)
-	{
+	else if (availabilityPickerView == pickerView) {
 		pickerViewHeaderLabel.text = @"Date Available";
 		
 		[rentPickerView removeFromSuperview];
@@ -1051,6 +1051,11 @@ viewForHeaderInSection: (NSInteger) section
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 1.0f;
     pickerViewContainer.frame = rect;
+  } completion: ^(BOOL finished) {
+    if (finished)
+      if ([_valuesDictionary objectForKey: @"moveInDate"] == [NSNull null])
+        [self pickerView: availabilityPickerView didSelectRow: 0 
+          inComponent: 0];
   }];
 }
 

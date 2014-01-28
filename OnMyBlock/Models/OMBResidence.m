@@ -14,7 +14,9 @@
 #import "OMBOffer.h"
 #import "OMBOpenHouse.h"
 #import "OMBResidenceCoverPhotoURLConnection.h"
+#import "OMBResidenceDetailConnection.h"
 #import "OMBResidenceGoogleStaticImageDownloader.h"
+#import "OMBResidenceImagesConnection.h"
 #import "OMBResidenceImage.h"
 #import "OMBUser.h"
 #import "OMBUserStore.h"
@@ -96,11 +98,14 @@
     residence.updatedAt = [[NSDate date] timeIntervalSince1970];
     residence.zip = @"92122";
 
-    OMBResidenceImage *image = [[OMBResidenceImage alloc] init];
-    image.absoluteString = @"fake_image.jpg";
-    image.image = [UIImage imageNamed: @"residence_fake.jpg"];
-    image.position = 1;
-    [residence.images addObject: image];
+    for (int i = 1; i < 10; i++) {
+      OMBResidenceImage *image = [[OMBResidenceImage alloc] init];
+      image.absoluteString = [NSString stringWithFormat:
+        @"residence_fake_%i.jpg", i];
+      image.image = [UIImage imageNamed: @"residence_fake.jpg"];
+      image.position = i;
+      [residence.images addObject: image];
+    }
   }
   return residence;
 }
@@ -290,6 +295,14 @@ toImageSizeDictionaryWithSize: (CGSize) size
   [conn start];
 }
 
+- (void) downloadImagesWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBResidenceImagesConnection *conn = 
+    [[OMBResidenceImagesConnection alloc] initWithResidence: self];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (NSURL *) googleStaticMapImageURL
 {
   NSString *base = @"https://maps.googleapis.com/maps/api/staticmap?";
@@ -405,6 +418,14 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
     }
   }
   return image;
+}
+
+- (void) fetchDetailsWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBResidenceDetailConnection *conn =
+    [[OMBResidenceDetailConnection alloc] initWithResidence: self];
+  conn.completionBlock = block;
+  [conn start];
 }
 
 - (void) fetchOffersWithCompletion: (void (^) (NSError *error)) block
@@ -595,6 +616,10 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
   dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
 
+  // ID
+  if ([dictionary objectForKey: @"id"] != [NSNull null])
+    _uid = [[dictionary objectForKey: @"id"] intValue];
+
   // Address
   if ([dictionary objectForKey: @"address"] != [NSNull null])
     _address = [[dictionary objectForKey: @"address"] stripWhiteSpace];
@@ -663,9 +688,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   // Email
   if ([dictionary objectForKey: @"email"] != [NSNull null])
     _email = [dictionary objectForKey: @"email"];
-  // ID
-  if ([dictionary objectForKey: @"id"] != [NSNull null])
-    _uid = [[dictionary objectForKey: @"id"] intValue];
+  // Inactive
   if  ([dictionary objectForKey: @"inactive"] != [NSNull null]) {
     if ([[dictionary objectForKey: @"inactive"] intValue]) {
       _inactive = YES;
@@ -710,9 +733,15 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   if ([dictionary objectForKey: @"min_rent"] != [NSNull null])
     _minRent = [[dictionary objectForKey: @"min_rent"] floatValue];
   // Move-in Date
-  if ([dictionary objectForKey: @"move_in_date"] != [NSNull null])
-    _moveInDate = [[dateFormatter dateFromString:
-      [dictionary objectForKey: @"move_in_date"]] timeIntervalSince1970];
+  if ([dictionary objectForKey: @"move_in_date"] != [NSNull null] &&
+    [[dictionary objectForKey: @"move_in_date"] length]) {
+    NSDate *date = [dateFormatter dateFromString: 
+      [dictionary objectForKey: @"move_in_date"]];
+    _moveInDate = [date timeIntervalSince1970];
+  }
+  else {
+    _moveInDate = [[NSDate date] timeIntervalSince1970];
+  }
   // Phone
   if ([dictionary objectForKey: @"phone"] != [NSNull null])
     _phone = [dictionary objectForKey: @"phone"];
