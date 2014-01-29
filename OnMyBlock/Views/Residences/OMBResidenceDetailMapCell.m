@@ -24,15 +24,30 @@ reuseIdentifier: (NSString *)reuseIdentifier
   CGFloat screenWidth  = screen.size.width;
   CGFloat padding      = 20.0f;
 
+  _segmentedControl = [[UISegmentedControl alloc] initWithItems:
+                     @[@"Map", @"Street"]];
+  _segmentedControl.selectedSegmentIndex = 0;
+  CGRect segmentedFrame = CGRectMake( (screenWidth - _segmentedControl.frame.size.width) / 2, 44.0f + padding / 2,
+                                     _segmentedControl.frame.size.width, _segmentedControl.frame.size.height);
+  _segmentedControl.frame = segmentedFrame;
+  _segmentedControl.tintColor = [UIColor blue];
+  [self.contentView addSubview:_segmentedControl];
+  NSLog(@"%f",_segmentedControl.frame.size.height);
   _mapView          = [[MKMapView alloc] init];
-  _mapView.frame    = CGRectMake(padding, 44.0f + padding,
-    screenWidth - (padding * 2), screenWidth * 0.5);
+  _mapView.frame    = CGRectMake(padding, 44.0f + padding + 29.0f,
+                                 screenWidth - (padding * 2), screenWidth * 0.5);
   _mapView.mapType       = MKMapTypeStandard;
   _mapView.rotateEnabled = NO;
   _mapView.scrollEnabled = NO;
   _mapView.showsPointsOfInterest = NO;
   _mapView.zoomEnabled   = NO;
+  _mapView.hidden = NO;
   [self.contentView addSubview: _mapView];
+  
+  _streetView          = [[UIImageView alloc] init];
+  _streetView.frame = _mapView.frame;
+  _streetView.hidden = YES;
+  [self.contentView addSubview: _streetView];
 
   return self;
 }
@@ -45,7 +60,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
 
-  return 44.0f + 20.0f + (screen.size.width * 0.5f) + 20.0f;
+  return 44.0f + 20.0f + 29.0f + (screen.size.width * 0.5f) + 20.0f;
 }
 
 #pragma mark - Instance Methods

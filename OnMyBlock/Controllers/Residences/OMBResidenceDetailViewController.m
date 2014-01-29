@@ -718,12 +718,28 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
         annotation.coordinate     = coordinate;
         [cell.mapView addAnnotation: annotation];
-
+        
+        // Add street view
+        if(!cell.streetView.image){
+          NSLog(@"download street view");
+          
+          cell.imageView.image = nil;
+          dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+          dispatch_async(queue, ^{
+            NSData *data = [NSData dataWithContentsOfURL:[residence googleStaticStreetViewImageURL]];
+            UIImage *image = [UIImage imageWithData:data];
+            dispatch_async(dispatch_get_main_queue(), ^{
+              cell.streetView.image = image;
+            });
+          });
+        }
         // Tap
         UITapGestureRecognizer *tap = 
           [[UITapGestureRecognizer alloc] initWithTarget: self 
             action: @selector(showMap)];
         [cell.mapView addGestureRecognizer: tap];
+        
+        [cell.segmentedControl addTarget:self action:@selector(changeStateSegmented:) forControlEvents:UIControlEventValueChanged];
       }
       if ([residence.city length] && [residence.state length])
         cell.titleLabel.text = [NSString stringWithFormat: @"%@, %@",
@@ -890,6 +906,31 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     (pageWidth + _pageOfImagesLabel.frame.origin.y), 
       _pageOfImagesLabel.frame.origin.y, pageWidth,
         _pageOfImagesLabel.frame.size.height);
+}
+
+- (void)changeStateSegmented:(UISegmentedControl *) control{
+  
+  OMBResidenceDetailMapCell *cell = (OMBResidenceDetailMapCell *)
+  [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow:1 inSection:5]];
+  
+  switch (control.selectedSegmentIndex) {
+      // Show map
+    case 0: {
+      cell.mapView.hidden = NO;
+      cell.streetView.hidden = YES;
+      
+      break;
+    }
+      // Show street
+    case 1: {
+      cell.mapView.hidden = YES;
+      cell.streetView.hidden = NO;
+      break;
+    }
+    default:
+      break;
+  }
+  
 }
 
 - (void) closeImageSlides
