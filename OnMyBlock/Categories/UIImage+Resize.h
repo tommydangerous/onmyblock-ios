@@ -8,10 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+extern CGFloat const MIN_RESOLUTION;
+extern CGFloat const MAX_IMAGE_UPLOAD_SIZE;
+
 @interface UIImage (Resize)
 
 #pragma mark - Methods
 
++ (NSData *) compressImage: (UIImage *) image
+  withMinimumResolution: (CGFloat) resolution;
 + (UIImage *) image: (UIImage *) image proportionatelySized: (CGSize) size;
 + (UIImage *) image: (UIImage *) image size: (CGSize) size;
 + (UIImage *) image: (UIImage *) image size: (CGSize) size 

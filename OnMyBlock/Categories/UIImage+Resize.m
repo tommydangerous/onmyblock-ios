@@ -8,9 +8,39 @@
 
 #import "UIImage+Resize.h"
 
+CGFloat const MIN_RESOLUTION        = 640.0f * 320.0f;
+CGFloat const MAX_IMAGE_UPLOAD_SIZE = 200000.0f; // 200kbs
+
 @implementation UIImage (Resize)
 
 #pragma mark - Methods
+
++ (NSData *) compressImage: (UIImage *) image
+withMinimumResolution: (CGFloat) resolution
+{
+  if (resolution < MIN_RESOLUTION)
+    resolution = MIN_RESOLUTION;
+
+  //Resize the image 
+  CGFloat factor = 1.0f;
+  CGFloat imageResolution = image.size.height * image.size.width;
+  if (imageResolution > resolution) {
+    factor = sqrt(imageResolution / resolution)*2;
+    image  = [UIImage image: image proportionatelySized: 
+      CGSizeMake(image.size.width/factor, image.size.height/factor)];
+  }
+  CGFloat compression = 0.9f;
+  CGFloat maxCompression = 0.1f;
+  NSData *imageData = UIImageJPEGRepresentation(image, compression);
+  while ([imageData length] > MAX_IMAGE_UPLOAD_SIZE && 
+    compression > maxCompression) {
+    
+    compression -= 0.10f;
+    imageData = UIImageJPEGRepresentation(image, compression);
+    NSLog(@"COMPRESS: %d", imageData.length);
+  }
+  return imageData;
+}
 
 + (UIImage *) image: (UIImage *) image proportionatelySized: (CGSize) size
 {

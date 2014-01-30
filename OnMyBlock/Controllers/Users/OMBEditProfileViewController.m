@@ -119,6 +119,7 @@
   [super viewWillAppear: animated];
 
   [backgroundBlurView refreshWithImage: user.image];
+  [userImageView setImage: [OMBUser currentUser].image];
 
   valueDictionary = [NSMutableDictionary dictionaryWithDictionary: @{
     @"about":     user.about,
@@ -176,8 +177,8 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     image = [info objectForKey: UIImagePickerControllerOriginalImage];
   [[OMBUser currentUser] uploadImage: image withCompletion: ^(NSError *error) {
     if ([OMBUser currentUser].image && !error) {
-      [backgroundBlurView refreshWithImage: [OMBUser currentUser].image];
-      [userImageView setImage: [OMBUser currentUser].image];
+      // [backgroundBlurView refreshWithImage: [OMBUser currentUser].image];
+      // [userImageView setImage: [OMBUser currentUser].image];
     }
     else {
       [self showAlertViewWithError: error];
@@ -218,7 +219,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[UITableViewCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: ImageCellID];
         [userImageView removeFromSuperview];
-        [userImageView setImage: [OMBUser currentUser].image];
         [cell.contentView addSubview: userImageView];
         // Label
         UILabel *label = [UILabel new];

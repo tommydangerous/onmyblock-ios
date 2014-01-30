@@ -10,6 +10,7 @@
 
 #import "Base64.h"
 #import "UIImage+FixOrientation.h"
+#import "UIImage+Resize.h"
 
 @implementation OMBUserUploadImageConnection
 
@@ -26,8 +27,10 @@
 
   // Convert our image to Base64 encoding
   [Base64 initialize];
-  NSData *imageData = UIImagePNGRepresentation(
-    [[OMBUser currentUser].image fixOrientation]);
+  // NSData *imageData = UIImagePNGRepresentation(
+  //   [[OMBUser currentUser].image fixOrientation]);
+  NSData *imageData = [UIImage compressImage: 
+    [[OMBUser currentUser].image fixOrientation] withMinimumResolution: 0];
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,
     @"image_data":   [Base64 encode: imageData]

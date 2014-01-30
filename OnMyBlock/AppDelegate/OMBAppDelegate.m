@@ -152,7 +152,6 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
   [FBSession.activeSession closeAndClearTokenInformation];
   // Need to clear the cookie stored in Safari
   NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-  #warning Clear the COOKIES
   for (NSHTTPCookie *cookie in [storage cookies]) {
     NSString *domainName = [cookie domain];
     NSRange domainRange = [domainName rangeOfString: @"facebook"];

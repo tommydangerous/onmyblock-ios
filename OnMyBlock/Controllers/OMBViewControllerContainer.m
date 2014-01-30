@@ -406,13 +406,13 @@
 - (void) presentViewController: (UIViewController *) viewControllerToPresent 
 animated: (BOOL) flag completion: (void (^)(void)) completion
 {
-  [UIView animateWithDuration: 0.25f animations: ^{
-    CGAffineTransform scale = CGAffineTransformScale(CGAffineTransformIdentity,
-      0.9f, 0.9f);
-    _detailView.transform = scale;
-  }];
   [super presentViewController: viewControllerToPresent animated: flag
     completion: completion];
+  [UIView animateWithDuration: 0.25f animations: ^{
+    CGAffineTransform scale = CGAffineTransformScale(CGAffineTransformIdentity,
+      0.95f, 0.95f);
+    _detailView.transform = scale;
+  }];
 }
 
 - (void) viewWillAppear: (BOOL) animated

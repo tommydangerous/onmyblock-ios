@@ -1346,8 +1346,9 @@ completion: (void (^) (NSError *error)) block
 withCompletion: (void (^) (NSError *error)) block
 {
   CGSize newSize = CGSizeMake(640.0f, 320.0f);
-  [OMBUser currentUser].image = [UIImage image: img 
-    proportionatelySized: newSize];;
+
+  UIImage *image = [UIImage image: img proportionatelySized: newSize];
+  [OMBUser currentUser].image = image;
 
   OMBUserUploadImageConnection *conn = 
     [[OMBUserUploadImageConnection alloc] init];

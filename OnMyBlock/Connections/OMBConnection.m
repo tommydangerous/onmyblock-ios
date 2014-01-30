@@ -95,7 +95,7 @@ totalBytesExpectedToWrite: (NSInteger) totalBytesExpectedToWrite
 {
   CGFloat x = (CGFloat) totalBytesWritten;
   CGFloat y = (CGFloat) totalBytesExpectedToWrite;
-  NSLog(@"%@: %f", [_request URL].absoluteString, x / y);
+  NSLog(@"%@: %f/%f (%f)", [_request URL].absoluteString, x, y, x / y);
     
   // use to notify the progress indicator
   [[NSNotificationCenter defaultCenter] postNotificationName:@"progressConnection" object:[NSNumber numberWithFloat: x/y]];

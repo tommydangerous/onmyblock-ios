@@ -13,6 +13,7 @@
 #import "OMBResidenceImage.h"
 #import "OMBTemporaryResidence.h"
 #import "UIImage+FixOrientation.h"
+#import "UIImage+Resize.h"
 
 @implementation OMBResidenceUploadImageConnection
 
@@ -32,8 +33,10 @@ residenceImage: (OMBResidenceImage *) image;
     OnMyBlockAPIURL, resource, object.uid];
 
   [Base64 initialize];
-  NSData *imageData = UIImagePNGRepresentation(
-    [residenceImage.image fixOrientation]);
+  // NSData *imageData = UIImagePNGRepresentation(
+  //   [residenceImage.image fixOrientation]);
+  NSData *imageData = [UIImage compressImage: 
+    [residenceImage.image fixOrientation] withMinimumResolution: 0];
 
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,
