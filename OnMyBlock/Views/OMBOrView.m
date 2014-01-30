@@ -21,7 +21,7 @@
   CGFloat padding = 20.0f;
 
   orLabel = [[UILabel alloc] init];
-  orLabel.font = [UIFont largeTextFontBold];
+  orLabel.font = [UIFont mediumTextFontBold];
   orLabel.frame = CGRectMake(0.0f, 0.0f, self.frame.size.width, 
     self.frame.size.height);
   orLabel.text = @"OR";
@@ -54,9 +54,9 @@
 - (void) setLabelBold: (BOOL) bold
 {
   if (bold)
-    orLabel.font = [UIFont largeTextFontBold];
+    orLabel.font = [UIFont mediumTextFontBold];
   else
-    orLabel.font = [UIFont largeTextFont];
+    orLabel.font = [UIFont mediumTextFont];
 }
 
 @end

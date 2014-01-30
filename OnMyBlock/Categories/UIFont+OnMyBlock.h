@@ -20,6 +20,8 @@ extern NSString *const OMBFontNameBold;
 + (UIFont *) fontWithSize: (NSInteger) size bold: (BOOL) bold;
 + (UIFont *) largeTextFont;
 + (UIFont *) largeTextFontBold;
++ (UIFont *) mediumTextFont;
++ (UIFont *) mediumTextFontBold;
 + (UIFont *) normalTextFont;
 + (UIFont *) normalTextFontBold;
 + (UIFont *) smallTextFont;

@@ -31,6 +31,7 @@
 #import "OMBOfferAcceptedView.h"
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBRenterApplicationViewController.h"
+#import "OMBRenterProfileViewController.h"
 #import "OMBUserMenu.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
@@ -63,6 +64,10 @@
     selector: @selector(setupForLoggedInUser)
       name: OMBUserLoggedInNotification object: nil];
 
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(updateAccountView)
+      name: OMBCurrentUserUploadedImage object: nil];
+
   return self;
 }
 
@@ -90,7 +95,12 @@
   menuSpeedThreshold = 800;
   menuWidth = screenWidth * 0.8;
 
+  self.view.backgroundColor = [UIColor redColor];
   self.view.frame = screen;
+  UIView *blackView = [UIView new];
+  blackView.backgroundColor = [UIColor blackColor];
+  blackView.frame = self.view.frame;
+  [self.view addSubview: blackView];
 
   // Gesture for sliding the menu
   panGesture = [[UIPanGestureRecognizer alloc] initWithTarget: self 
@@ -119,6 +129,11 @@
   // Renter Application
   _renterApplicationViewController = 
     [[OMBRenterApplicationViewController alloc] init];
+  // Renter profile
+  _renterProfileViewController = [[OMBRenterProfileViewController alloc] init];
+  _renterProfileNavigationController = 
+    [[OMBNavigationController alloc] initWithRootViewController:
+      _renterProfileViewController];
 
   // Renter
   // Search
@@ -386,6 +401,27 @@
 
   [self adjustMenuScrollContent];
   [self addCurrentMenuButtonsToMenuScroll];
+}
+
+- (void) presentViewController: (UIViewController *) viewControllerToPresent 
+animated: (BOOL) flag completion: (void (^)(void)) completion
+{
+  [UIView animateWithDuration: 0.25f animations: ^{
+    CGAffineTransform scale = CGAffineTransformScale(CGAffineTransformIdentity,
+      0.9f, 0.9f);
+    _detailView.transform = scale;
+  }];
+  [super presentViewController: viewControllerToPresent animated: flag
+    completion: completion];
+}
+
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  [UIView animateWithDuration: 0.25f animations: ^{
+    _detailView.transform = CGAffineTransformIdentity;
+  }];
 }
 
 #pragma mark - Protocol
@@ -869,7 +905,7 @@ willDecelerate: (BOOL) decelerate
         image = [UIImage imageNamed: 
           @"default_user_image.png"];
       }
-      [_accountView setImage: image];
+      [_accountView setImage: image]; 
     }
   ];
 
@@ -1096,6 +1132,13 @@ willDecelerate: (BOOL) decelerate
     animated: YES completion: nil];
 }
 
+- (void) showRenterProfile
+{
+  [self hideMenuWithFactor: 1.0f];
+  [_renterProfileViewController loadUser: [OMBUser currentUser]];
+  [self presentDetailViewController: _renterProfileNavigationController]; 
+}
+
 - (void) showSearch
 {
   [self showSearchAndSwitchToList: YES];
@@ -1138,6 +1181,11 @@ willDecelerate: (BOOL) decelerate
   if (menuIsVisible) {
     [self hideMenuWithFactor: 1.0f];
   }
+}
+
+- (void) updateAccountView
+{
+  [_accountView setImage: [OMBUser currentUser].image];
 }
 
 - (void) updateStatusBarStyle

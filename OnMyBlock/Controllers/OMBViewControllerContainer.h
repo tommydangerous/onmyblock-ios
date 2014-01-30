@@ -19,6 +19,7 @@
 @class OMBOfferAcceptedView;
 @class OMBPayoutMethodsViewController;
 @class OMBRenterApplicationViewController;
+@class OMBRenterProfileViewController;
 @class OMBUserMenu;
 
 @interface OMBViewControllerContainer : OMBViewController
@@ -117,6 +118,11 @@
 // Inbox
 @property (nonatomic, strong) OMBNavigationController 
   *inboxNavigationController;
+// Renter Profile
+@property (nonatomic, strong) OMBRenterProfileViewController
+  *renterProfileViewController;
+@property (nonatomic, strong) OMBNavigationController
+  *renterProfileNavigationController;
 
 // Seller
 
@@ -153,6 +159,7 @@
 - (void) showOfferAccepted;
 - (void) showPayoutMethods;
 - (void) showRenterApplication;
+- (void) showRenterProfile;
 - (void) showSearchAndSwitchToList: (BOOL) switchToList;
 - (void) showSignUp;
 - (void) showMenuWithFactor: (float) factor;

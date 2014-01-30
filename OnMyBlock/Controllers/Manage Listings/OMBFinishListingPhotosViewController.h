@@ -22,7 +22,6 @@ UIScrollViewDelegate>
   UIButton *addPhotoButton;
   AMBlurView *addPhotoButtonView;
   int currentImageViewIndexSelected;
-  UIBarButtonItem *doneBarButtonItem;
   UIBarButtonItem *editBarButtonItem;
   NSMutableArray *imageViews;
   BOOL isEditing;

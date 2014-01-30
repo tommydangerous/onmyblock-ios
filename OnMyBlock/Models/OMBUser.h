@@ -17,8 +17,10 @@ extern NSString *const OMBActivityIndicatorViewStartAnimatingNotification;
 extern NSString *const OMBActivityIndicatorViewStopAnimatingNotification;
 extern NSString *const OMBCurrentUserChangedFavorite;
 extern NSString *const OMBCurrentUserLogoutNotification;
+extern NSString *const OMBCurrentUserUploadedImage;
 extern NSString *const OMBFakeUserAccessToken;
 extern NSString *const OMBMessagesUnviewedCountNotification;
+extern NSString *const OMBUserCreateAuthenticationForFacebookNotification;
 extern NSString *const OMBUserLoggedInNotification;
 extern NSString *const OMBUserLoggedOutNotification;
 
@@ -91,6 +93,10 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block;
 - (void) checkForUserDefaultsAPIKey;
 - (void) confirmOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
+- (void) createAuthenticationForFacebookWithCompletion: 
+  (void (^) (NSError *error)) block;
+- (void) createAuthenticationForLinkedInWithAccessToken: (NSString *) string
+  completion: (void (^) (NSError *error)) block;
 - (void) createOffer: (OMBOffer *) offer
   completion: (void (^) (NSError *error)) block;
 - (void) createPayoutMethodWithDictionary: (NSDictionary *) dictionary
@@ -149,5 +155,9 @@ ascending: (BOOL) ascending;
 withKey: (NSString *) key ascending: (BOOL) ascending;
 - (NSArray *) sortedPayoutMethodsWithKey: (NSString *) key
 ascending: (BOOL) ascending;
+- (void) updateWithDictionary: (NSDictionary *) dictionary 
+completion: (void (^) (NSError *error)) block;
+- (void) uploadImage: (UIImage *) img 
+withCompletion: (void (^) (NSError *error)) block;
 
 @end

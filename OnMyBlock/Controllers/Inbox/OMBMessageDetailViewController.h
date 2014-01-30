@@ -18,7 +18,6 @@
   OMBMessageInputToolbar *bottomToolbar;
   UIBarButtonItem *contactBarButtonItem;
   UIToolbar *contactToolbar;
-  UIBarButtonItem *doneBarButtonItem;
   BOOL isEditing;
   CGPoint startingPoint;
   OMBUser *user;

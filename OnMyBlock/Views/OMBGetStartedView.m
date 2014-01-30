@@ -142,7 +142,9 @@
   // _getStartedButton.layer.borderColor = [UIColor textColor].CGColor;
   _getStartedButton.layer.borderColor = [UIColor whiteColor].CGColor;
   _getStartedButton.layer.borderWidth = 1.0f;
-  _getStartedButton.layer.cornerRadius = _facebookButton.layer.cornerRadius;
+  // _getStartedButton.layer.cornerRadius = _facebookButton.layer.cornerRadius;
+  _getStartedButton.layer.cornerRadius = 
+    _getStartedButton.frame.size.height * 0.5f;
   _getStartedButton.titleLabel.font = _facebookButton.titleLabel.font;
   // [_getStartedButton setBackgroundImage: 
   //   [UIImage imageWithColor: [UIColor grayMedium]] 
@@ -150,8 +152,9 @@
   // [_getStartedButton setBackgroundImage: 
   //   [UIImage imageWithColor: [UIColor colorWithWhite: 140/255.0 alpha: 0.8]] 
   //     forState: UIControlStateHighlighted];
-  // [_getStartedButton addTarget: self action: @selector(getStartedButtonTapped)
-  //   forControlEvents: UIControlEventTouchUpInside];
+  // [_getStartedButton addTarget: self 
+  //   action: @selector(getStartedButtonTapped)
+  //     forControlEvents: UIControlEventTouchUpInside];
   [_getStartedButton setTitle: @"Sign up with email" 
     forState: UIControlStateNormal];
   [_getStartedButton setTitleColor: [UIColor whiteColor] // [UIColor textColor] 

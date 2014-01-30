@@ -17,13 +17,11 @@
   UIButton *addButton;
   UIView *backView;
   UILabel *depositLabel;
-  UIBarButtonItem *doneBarButtonItem;
   UILabel *dueLabel;
   BOOL editingRentalPayments;
   UILabel *firstMonthRentLabel;
   BOOL isEditing;
   OMBCenteredImageView *residenceImageView;
-  UIBarButtonItem *saveBarButtonItem;
   UILabel *totalDepositLabel;
   UILabel *totalRentLabel;
 }

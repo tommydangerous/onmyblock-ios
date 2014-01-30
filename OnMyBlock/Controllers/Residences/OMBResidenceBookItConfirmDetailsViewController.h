@@ -25,7 +25,6 @@
   CGFloat deposit;
   BOOL hasOfferValue;
   UILabel *daysLabel;
-  UIBarButtonItem *doneBarButtonItem;
   UILabel *hoursLabel;
   BOOL isAddingAPersonalNote;
   BOOL isEditing;

@@ -14,7 +14,6 @@
   OMBTableViewController
 <UITextFieldDelegate, UITextViewDelegate>
 {
-  UIBarButtonItem *doneBarButtonItem;
   TextFieldPadding *emailTextField;
   UIBarButtonItem *inviteBarButtonItem;
   BOOL isEditing;

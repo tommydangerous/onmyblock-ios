@@ -74,7 +74,7 @@ residenceImage: (OMBResidenceImage *) image;
 {
   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
   // Set timeout
-  [self.request setTimeoutInterval: 60];
+  [self.request setTimeoutInterval: 120];
   container = [[NSMutableData alloc] init];
   internalConnection = [[NSURLConnection alloc] initWithRequest: self.request
     delegate: self startImmediately: YES];

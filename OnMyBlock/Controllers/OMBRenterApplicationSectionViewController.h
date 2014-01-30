@@ -16,10 +16,8 @@
 <UIActionSheetDelegate>
 {
   UIBarButtonItem *addBarButtonItem;
-  UIBarButtonItem *doneBarButtonItem;
   BOOL isEditing;
   NSIndexPath *selectedIndexPath;
-  UIBarButtonItem *saveBarButtonItem;
   UIActionSheet *sheet;
   BOOL showedAddModelViewControllerForTheFirstTime;
   OMBUser *user;

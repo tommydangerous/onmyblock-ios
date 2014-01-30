@@ -17,7 +17,6 @@
   UIPickerView *availabilityPickerView;
   NSCalendar *calendar;
   UIButton *currentLocationButton;
-  UIBarButtonItem *doneBarButtonItem;
   UIView *fadedBackground;
   BOOL isEditing;
   CLLocationManager *locationManager;

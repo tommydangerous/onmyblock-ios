@@ -12,33 +12,79 @@
 
 @implementation OMBRenterApplicationUpdateConnection
 
-- (id) init
+#pragma mark - Initializer
+
+- (id) initWithRenterApplication: (OMBRenterApplication *) object
+dictionary: (NSDictionary *) dictionary
 {
   if (!(self = [super init])) return nil;
 
+  renterApplication = object;
+
   NSString *string = [NSString stringWithFormat: 
-    @"%@/renter-applications/update-renter-application", OnMyBlockAPIURL];
-  NSURL *url = [NSURL URLWithString: string];
-  NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
-  NSString *cats = [NSString stringWithFormat: @"%i",
-    [[NSNumber numberWithBool: 
-      [OMBUser currentUser].renterApplication.cats] intValue]];
-  NSString *dogs = [NSString stringWithFormat: @"%i",
-    [[NSNumber numberWithBool: 
-      [OMBUser currentUser].renterApplication.dogs] intValue]];
+    @"%@/renter_applications/update_renter_application", OnMyBlockAPIURL];
+  NSMutableDictionary *attributeDictionary = [NSMutableDictionary dictionary];
+  for (NSString *attribute in [dictionary allKeys]) {
+    NSString *key = attribute;
+    id value = [dictionary objectForKey: attribute];
+    // Cats
+    if ([key isEqualToString: @"cats"]) {
+      if ([value intValue])
+        value = @"true";
+      else
+        value = @"false";
+    }
+    // Coapplicant count
+    if ([key isEqualToString: @"coapplicantCount"])
+      key = @"coapplicant_count";
+    // Dogs
+    if ([key isEqualToString: @"dogs"]) {
+      if ([value intValue])
+        value = @"true";
+      else
+        value = @"false";
+    }
+    // Has cosigner
+    if ([key isEqualToString: @"hasCosigner"]) {
+      key = @"has_cosigner";
+      if ([value intValue])
+        value = @"true";
+      else
+        value = @"false";
+    }
+    [attributeDictionary setObject: value forKey: key];
+  }
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,
-    @"cats":         cats,
-    @"dogs":         dogs
+    @"renter_application": attributeDictionary
   };
-  NSData *json = [NSJSONSerialization dataWithJSONObject: params
-    options: 0 error: nil];
-  [req addValue: @"application/json" forHTTPHeaderField: @"Content-Type"];
-  [req setHTTPBody: json];
-  [req setHTTPMethod: @"POST"];
-  self.request = req;
+  [self setRequestWithString: string method: @"PATCH" parameters: params];
 
   return self;
 }
+
+#pragma mark - Protocol
+
+#pragma mark - Protocol NSURLConnectionDataDelegate
+
+- (void) connectionDidFinishLoading: (NSURLConnection *) connection
+{
+  // NSLog(@"OMBRenterApplicationUpdateConnection\n%@", [self json]);
+
+  if ([self successful]) {
+    [renterApplication readFromDictionary: [self objectDictionary]];
+  }
+  else {
+    internalError = [NSError errorWithDomain: OMBConnectionErrorDomainUser
+      code: OMBConnectionErrorDomainUserCodeSaveFailed userInfo: @{
+        @"message": @"Update unsuccessful.",
+        @"title":   @"Save failed"
+      }
+    ];
+  }
+
+  [super connectionDidFinishLoading: connection];
+}
+
 
 @end

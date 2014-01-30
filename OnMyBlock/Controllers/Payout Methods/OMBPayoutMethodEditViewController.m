@@ -46,7 +46,7 @@
 {
   [super loadView];
 
-  UIBarButtonItem *saveBarButtonItem = 
+  saveBarButtonItem = 
     [[UIBarButtonItem alloc] initWithTitle: @"Save"
       style: UIBarButtonItemStylePlain target: self action: @selector(save)];
   [saveBarButtonItem setTitleTextAttributes: @{

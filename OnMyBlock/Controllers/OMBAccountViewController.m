@@ -8,10 +8,10 @@
 
 #import "OMBAccountViewController.h"
 
-#import "OMBAccountProfileViewController.h"
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBPrivacyPolicyViewController.h"
 #import "OMBRenterApplicationViewController.h"
+#import "OMBRenterProfileViewController.h"
 #import "OMBTermsOfServiceViewController.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
@@ -159,8 +159,10 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   if (indexPath.section == 0) {
     // Profile
     if (indexPath.row == 1) {
-      [self.navigationController pushViewController: 
-        [[OMBAccountProfileViewController alloc] init] animated: YES];
+      OMBRenterProfileViewController *vc =
+        [[OMBRenterProfileViewController alloc] init];
+      [vc loadUser: [OMBUser currentUser]];
+      [self.navigationController pushViewController: vc animated: YES];
     }
     // Renter Application
     else if (indexPath.row == 2) {

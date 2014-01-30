@@ -9,6 +9,7 @@
 #import "OMBLabelTextFieldCell.h"
 
 #import "NSString+Extensions.h"
+#import "OMBViewController.h"
 
 @implementation OMBLabelTextFieldCell
 
@@ -36,6 +37,13 @@ reuseIdentifier: (NSString *)reuseIdentifier
 }
 
 #pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (CGFloat) heightForCell
+{
+  return OMBStandardHeight;
+}
 
 #pragma mark - Instance Methods
 

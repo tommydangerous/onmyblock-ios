@@ -11,7 +11,6 @@
 @interface OMBPayoutMethodsViewController : OMBTableViewController
 {
   UIBarButtonItem *addBarButtonItem;
-  UIBarButtonItem *cancelBarButtonItem;
   UIView *noPayoutMethodsView;
 }
 

@@ -12,10 +12,8 @@
 
 @interface OMBFinishListingSectionViewController : OMBTableViewController
 {
-  UIBarButtonItem *doneBarButtonItem;
   BOOL isEditing;
   OMBResidence *residence;
-  UIBarButtonItem *saveBarButtonItem;
 }
 
 #pragma mark - Initializer

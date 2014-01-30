@@ -27,10 +27,20 @@ NSString *const OMBFontNameBold = @"HelveticaNeue-Medium";
 
 + (UIFont *) largeTextFont
 {
-  return [UIFont fontWithSize: 18 bold: NO];
+  return [UIFont fontWithSize: 27 bold: NO];
 }
 
 + (UIFont *) largeTextFontBold
+{
+  return [UIFont fontWithSize: 27 bold: YES]; 
+}
+
++ (UIFont *) mediumTextFont
+{
+  return [UIFont fontWithSize: 18 bold: NO];
+}
+
++ (UIFont *) mediumTextFontBold
 {
   return [UIFont fontWithSize: 18 bold: YES]; 
 }

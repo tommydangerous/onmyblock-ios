@@ -56,8 +56,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // #warning Remove fake login
   // [OMBUser fakeLogin]; // Fake login
   // Use this to show whatever view controller you are working on
-  // [_container showHomebaseLandlord];
-  // [_container showIntroAnimatedDissolve: NO];
+  // [_container showRenterProfile];
 
   // Check to see if the user has a saved api key in the user defaults
   [[OMBUser currentUser] checkForUserDefaultsAPIKey];
@@ -137,6 +136,7 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
   // Stop all the spinners
   [[NSNotificationCenter defaultCenter] postNotificationName:
     OMBActivityIndicatorViewStopAnimatingNotification object: nil];
+  [_container stopSpinning];
 }
 
 - (void) applicationWillTerminate: (UIApplication *) application
@@ -146,6 +146,21 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) clearFacebookTokenInformation
+{
+  [FBSession.activeSession closeAndClearTokenInformation];
+  // Need to clear the cookie stored in Safari
+  NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+  #warning Clear the COOKIES
+  for (NSHTTPCookie *cookie in [storage cookies]) {
+    NSString *domainName = [cookie domain];
+    NSRange domainRange = [domainName rangeOfString: @"facebook"];
+    if (domainRange.length > 0) {
+      [storage deleteCookie:cookie];
+    }
+  }
+}
 
 - (void) hideIntro
 {
@@ -185,7 +200,7 @@ state: (FBSessionState) state error: (NSError *) error
     }
     case FBSessionStateClosed:
     case FBSessionStateClosedLoginFailed:
-      [FBSession.activeSession closeAndClearTokenInformation];
+      [self clearFacebookTokenInformation];
       break;
     default:
       break;

@@ -12,6 +12,10 @@
 #import "UIImage+Resize.h"
 #import "UIColor+Extensions.h"
 
+CGFloat const OMBPadding              = 20.0f;
+CGFloat const OMBStandardButtonHeight = 58.0f;
+CGFloat const OMBStandardHeight       = 44.0f;
+
 @implementation OMBViewController
 
 #pragma mark - Initializer
@@ -41,10 +45,27 @@
 {
   [super loadView];
 
-  doneEditingBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithTitle: @"Done" 
-      style: UIBarButtonItemStylePlain target: self 
-        action: @selector(doneEditing)];
+  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
+  // Back
+  backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Back"
+    style: UIBarButtonItemStylePlain target: self action: @selector(back)];
+  // Cancel
+  cancelBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
+    style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
+  // Done
+  doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
+    style: UIBarButtonItemStylePlain target: self action: @selector(done)];
+  [doneBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+  } forState: UIControlStateNormal];
+  // Save
+  saveBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Save"
+    style: UIBarButtonItemStylePlain target: self action: @selector(save)];
+  [saveBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+  } forState: UIControlStateNormal];
+
+  // Menu
   menuBarButtonItem =
     [[UIBarButtonItem alloc] initWithImage: 
       [UIImage image:  [UIImage imageNamed: @"menu_icon_staggered.png"] 
@@ -89,10 +110,24 @@
   return (OMBAppDelegate *) [UIApplication sharedApplication].delegate;
 }
 
-- (void) doneEditing
+- (void) back
 {
-  [self.view endEditing: YES];
-  [self showMenuBarButtonItem];
+  // Subclasses implement this 
+}
+
+- (void) cancel
+{
+  // Subclasses implement this
+}
+
+- (void) done
+{
+  // Subclasses implement this
+}
+
+- (void) save
+{
+  // Subclasses implement this
 }
 
 - (void) setMenuBarButtonItem
@@ -105,8 +140,18 @@
   NSString *message = @"Please try again.";
   NSString *title   = @"Unsuccessful";
   if (error) {
-    message = error.localizedDescription;
-    title   = @"Error";
+    if (error.userInfo) {
+      if ([error.userInfo objectForKey: @"message"]) {
+        message = [error.userInfo objectForKey: @"message"];
+      }
+      if ([error.userInfo objectForKey: @"title"]) {
+        title = [error.userInfo objectForKey: @"title"];
+      }
+    }
+    else {
+      message = error.localizedDescription;
+      title   = @"Error";  
+    }
   }
   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title
     message: message delegate: nil cancelButtonTitle: @"Try again" 
@@ -117,17 +162,6 @@
 - (void) showContainer
 {
   [[self appDelegate].container showMenuWithFactor: 1];
-}
-
-- (void) showDoneEditingBarButtonItem
-{
-  [self.navigationItem setRightBarButtonItem: doneEditingBarButtonItem 
-    animated: YES];
-}
-
-- (void) showMenuBarButtonItem
-{
-  [self.navigationItem setRightBarButtonItem: menuBarButtonItem animated: YES];
 }
 
 @end

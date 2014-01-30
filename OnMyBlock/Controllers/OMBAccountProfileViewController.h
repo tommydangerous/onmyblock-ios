@@ -15,10 +15,8 @@
 <UIActionSheetDelegate, UIImagePickerControllerDelegate,
   UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
 {
-  UIBarButtonItem *doneBarButtonItem;
   UIBarButtonItem *editBarButtonItem;
   UIImagePickerController *imagePickerController;
-  UIBarButtonItem *saveBarButtonItem;
   UIActionSheet *uploadActionSheet;
   UIView *uploadPhotoView;
   OMBCenteredImageView *userProfileImageView;

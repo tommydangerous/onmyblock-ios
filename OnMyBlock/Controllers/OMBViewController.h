@@ -15,10 +15,17 @@
 #import "OMBUser.h"
 #import "UIFont+OnMyBlock.h"
 
+extern CGFloat const OMBPadding;
+extern CGFloat const OMBStandardButtonHeight;
+extern CGFloat const OMBStandardHeight;
+
 @interface OMBViewController : GAITrackedViewController
 {
-  UIBarButtonItem *doneEditingBarButtonItem;
+  UIBarButtonItem *backBarButtonItem;
+  UIBarButtonItem *cancelBarButtonItem;
+  UIBarButtonItem *doneBarButtonItem;
   UIBarButtonItem *menuBarButtonItem;
+  UIBarButtonItem *saveBarButtonItem;
 }
 
 #pragma mark - Methods
@@ -26,9 +33,11 @@
 #pragma mark - Instance Methods
 
 - (OMBAppDelegate *) appDelegate;
+- (void) back;
+- (void) cancel;
+- (void) done;
+- (void) save;
 - (void) setMenuBarButtonItem;
 - (void) showAlertViewWithError: (NSError *) error;
-- (void) showDoneEditingBarButtonItem;
-- (void) showMenuBarButtonItem;
 
 @end

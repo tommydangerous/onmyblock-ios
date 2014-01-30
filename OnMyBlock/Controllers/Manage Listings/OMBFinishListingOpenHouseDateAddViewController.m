@@ -48,7 +48,7 @@
 
   UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
 
-  UIBarButtonItem *cancelBarButtonItem =
+  cancelBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @"Cancel" 
       style: UIBarButtonItemStylePlain target: self 
         action: @selector(cancel)];

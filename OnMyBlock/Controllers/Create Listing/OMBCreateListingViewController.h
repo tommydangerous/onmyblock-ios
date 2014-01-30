@@ -22,15 +22,12 @@ UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate,
 UIPickerViewDataSource, UIPickerViewDelegate>
 {
   OMBActivityView *activityView;
-  UIBarButtonItem *backBarButtonItem;
-  UIBarButtonItem *cancelBarButtonItem;
   CLLocationManager *locationManager;
   UIBarButtonItem *nextBarButtonItem;
   UIButton *nextButton;
   AMBlurView *nextView;
   UIView *progressBar;
   UILabel *questionLabel;
-  UIBarButtonItem *saveBarButtonItem;
   UILabel *stepLabel;
   int stepNumber;
   NSTimer *typingTimer;

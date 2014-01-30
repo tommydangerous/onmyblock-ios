@@ -13,11 +13,8 @@
 @interface OMBRenterApplicationAddModelViewController : OMBTableViewController
 <UITextFieldDelegate>
 {
-  UIBarButtonItem *cancelBarButtonItem;
   UIBarButtonItem *clearBarButtonItem;
-  UIBarButtonItem *doneBarButtonItem;
   BOOL isEditing;
-  UIBarButtonItem *saveBarButtonItem;
   NSArray *textFieldArray;
 }
 

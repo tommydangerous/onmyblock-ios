@@ -44,7 +44,8 @@ float kHomebaseRenterImagePercentage = 0.3f;
 {
   if (!(self = [super init])) return nil;
 
-  self.screenName = @"Homebase Renter";
+  self.screenName = @"Homebase Renter View Controller";
+  self.title      = @"Student Homebase";
 
   return self;
 }
@@ -262,10 +263,6 @@ float kHomebaseRenterImagePercentage = 0.3f;
 
   [backView refreshWithImage: 
     [UIImage imageNamed: @"intro_still_image_slide_3_background.jpg"]];
-
-  // Title
-  self.title = [NSString stringWithFormat: @"%@'s Homebase",
-    [[OMBUser currentUser].firstName capitalizedString]];
 
   [imageViewArray removeAllObjects];
   [imagesScrollView.subviews enumerateObjectsUsingBlock: 

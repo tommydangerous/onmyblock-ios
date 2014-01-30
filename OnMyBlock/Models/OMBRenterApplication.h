@@ -17,10 +17,14 @@
 @interface OMBRenterApplication : NSObject
 
 @property (nonatomic) BOOL cats;
+@property (nonatomic) NSInteger coapplicantCount;
 @property (nonatomic, strong) NSMutableArray *cosigners;
 @property (nonatomic) BOOL dogs;
 @property (nonatomic, strong) NSMutableArray *employments;
+@property (nonatomic) BOOL facebookAuthenticated;
+@property (nonatomic) BOOL hasCosigner;
 @property (nonatomic, strong) NSMutableDictionary *legalAnswers;
+@property (nonatomic) BOOL linkedinAuthenticated;
 @property (nonatomic, strong) NSMutableArray *previousRentals;
 
 #pragma mark - Methods
@@ -37,5 +41,7 @@
 (OMBLegalQuestion *) legalQuestion;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) removeAllObjects;
+- (void) updateWithDictionary: (NSDictionary *) dictionary
+completion: (void (^) (NSError *error)) block;
 
 @end

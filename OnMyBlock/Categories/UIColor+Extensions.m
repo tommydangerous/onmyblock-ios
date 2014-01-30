@@ -147,6 +147,12 @@
     alpha: 1.0f];
 }
 
++ (UIColor *) linkedinGray
+{
+  return [UIColor colorWithRed: 221/255.0f green: 221/255.0f blue: 221/255.0f
+    alpha: 1.0f];
+}
+
 + (UIColor *) paypalBlue
 {
   return [UIColor colorWithRed: 0.0f green: 69/255.0f blue: 124/255.0f

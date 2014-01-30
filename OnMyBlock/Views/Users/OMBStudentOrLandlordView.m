@@ -51,7 +51,7 @@
   CGFloat originX = padding;
   // I am a...
   UILabel *label1 = [UILabel new];
-  label1.font = [UIFont largeTextFont];
+  label1.font = [UIFont mediumTextFont];
   label1.frame = CGRectMake(originX, padding, 
     boxView.frame.size.width - (padding * 2), standardHeight);
   label1.text = @"I am a";
@@ -71,7 +71,7 @@
   _studentButton.layer.borderColor = [UIColor textColor].CGColor;
   _studentButton.layer.borderWidth = 0.0f;
   _studentButton.layer.cornerRadius = 5.0f;
-  _studentButton.titleLabel.font = [UIFont largeTextFontBold];
+  _studentButton.titleLabel.font = [UIFont mediumTextFontBold];
   [_studentButton setBackgroundImage: 
     [UIImage imageWithColor: [UIColor blueHighlighted]] 
       forState: UIControlStateHighlighted];

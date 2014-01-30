@@ -923,7 +923,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     OMBUser *user = residence.user;
     if (!user || [user.firstName length] == 0)
       user = [OMBUser landlordUser];
-    [self presentViewController: 
+    [[self appDelegate].container presentViewController: 
       [[OMBNavigationController alloc] initWithRootViewController: 
         [[OMBMessageNewViewController alloc] initWithUser: user]]
           animated: YES completion: nil];
@@ -1019,8 +1019,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   UIActivityViewController *activityViewController = 
     [[UIActivityViewController alloc] initWithActivityItems: dataToShare
       applicationActivities: nil];
-  [[self appDelegate].container presentViewController: activityViewController
-    animated: YES completion: nil];
+  [[self appDelegate].container.currentDetailViewController 
+    presentViewController: activityViewController 
+      animated: YES completion: nil];
 }
 
 - (void) showBookItNow

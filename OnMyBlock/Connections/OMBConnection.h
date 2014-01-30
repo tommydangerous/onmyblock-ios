@@ -15,10 +15,21 @@ extern NSMutableArray *sharedConnectionList;
 extern NSString *const OnMyBlockAPI;
 extern NSString *const OnMyBlockAPIURL;
 
+extern NSString *const OMBConnectionErrorDomainUser;
+typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainUserCode) {
+  OMBConnectionErrorDomainUserCodeSaveFailed
+};
+extern NSString *const OMBConnectionErrorDomainAuthentication;
+typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainAuthenticationCode) {
+  OMBConnectionErrorDomainAuthenticationCodeFacebookFailed,
+  OMBConnectionErrorDomainAuthenticationCodeLinkedInFailed
+};
+
 @interface OMBConnection : NSURLConnection
 {
   NSMutableData *container;
   NSURLConnection *internalConnection;
+  NSError *internalError;
   NSDictionary *jsonDictionary;
   NSTimeInterval timeoutInterval;
 }

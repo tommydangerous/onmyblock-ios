@@ -29,6 +29,7 @@ extern NSString *const OMBUserDefaultsViewedIntro;
 
 #pragma mark - Instance Methods
 
+- (void) clearFacebookTokenInformation;
 - (void) openSession;
 - (void) showLogin;
 - (void) showSignUp;

@@ -47,7 +47,7 @@
   toolbar.tintColor = [UIColor blue];
   [self.view addSubview: toolbar];
 
-  UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithImage: 
+  backBarButtonItem = [[UIBarButtonItem alloc] initWithImage: 
     [UIImage image: [UIImage imageNamed: @"arrow_left.png"] 
       size: CGSizeMake(20, 20)] style: UIBarButtonItemStylePlain 
         target: _webView action: @selector(goBack)];

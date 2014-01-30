@@ -11,12 +11,12 @@
 #import "AMBlurView.h"
 #import "DRNRealTimeBlurView.h"
 #import "NSString+Extensions.h"
-#import "OMBAccountProfileViewController.h"
 #import "OMBAlertView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBGradientView.h"
 #import "OMBOffer.h"
 #import "OMBRenterApplicationViewController.h"
+#import "OMBRenterProfileViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceAddPersonalNoteViewController.h"
 #import "OMBResidenceConfirmDetailsBuyerCell.h"
@@ -866,11 +866,10 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.section == 4) {
     // My Renter Profile (No longer Renter application)
     if (indexPath.row == 1) {
-      // [self.navigationController pushViewController:
-      //   [[OMBRenterApplicationViewController alloc] initWithUser: 
-      //     [OMBUser currentUser]] animated: YES];
-      [self.navigationController pushViewController:
-        [[OMBAccountProfileViewController alloc] init] animated: YES];
+      OMBRenterProfileViewController *vc = 
+        [[OMBRenterProfileViewController alloc] init];
+      [vc loadUser: [OMBUser currentUser]];
+      [self.navigationController pushViewController: vc animated: YES];
     }
     // Add a personal note
     else if (indexPath.row == 2) {

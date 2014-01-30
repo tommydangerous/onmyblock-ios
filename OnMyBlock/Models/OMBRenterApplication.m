@@ -13,6 +13,7 @@
 #import "OMBLegalAnswer.h"
 #import "OMBLegalQuestion.h"
 #import "OMBPreviousRental.h"
+#import "OMBRenterApplicationUpdateConnection.h"
 
 @implementation OMBRenterApplication
 
@@ -23,9 +24,11 @@
   if (!(self = [super init])) return nil;
 
   _cats      = NO;
+  _coapplicantCount = 0;
   _cosigners = [NSMutableArray array];
   _dogs      = NO;
   _employments     = [NSMutableArray array];
+  _hasCosigner = NO;
   _legalAnswers    = [NSMutableDictionary dictionary];
   _previousRentals = [NSMutableArray array];
 
@@ -102,10 +105,31 @@
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
+  // Cats
   if ([[dictionary objectForKey: @"cats"] intValue] == 1)
     _cats = YES;
+  // Coapplicant count
+  if ([dictionary objectForKey: @"coapplicant_count"] != [NSNull null])
+    _coapplicantCount = [[dictionary objectForKey: 
+      @"coapplicant_count"] intValue];
+  // Dogs
   if ([[dictionary objectForKey: @"dogs"] intValue] == 1)
     _dogs = YES;
+  // Facebook authenticated
+  if ([[dictionary objectForKey: @"facebook_authenticated"] intValue])
+    _facebookAuthenticated = YES;
+  else
+    _facebookAuthenticated = NO;
+  // Has cosigner
+  if ([[dictionary objectForKey: @"has_cosigner"] intValue] == 1)
+    _hasCosigner = YES;
+  else
+    _hasCosigner = NO;
+  // LinkedIn authenticated
+  if ([[dictionary objectForKey: @"linkedin_authenticated"] intValue])
+    _linkedinAuthenticated = YES;
+  else
+    _linkedinAuthenticated = NO;
 }
 
 - (void) removeAllObjects
@@ -116,6 +140,16 @@
   [_employments removeAllObjects];
   [_legalAnswers removeAllObjects];
   [_previousRentals removeAllObjects];
+}
+
+- (void) updateWithDictionary: (NSDictionary *) dictionary
+completion: (void (^) (NSError *error)) block
+{
+  OMBRenterApplicationUpdateConnection *conn = 
+    [[OMBRenterApplicationUpdateConnection alloc] initWithRenterApplication:
+      self dictionary: dictionary];
+  conn.completionBlock = block;
+  [conn start];
 }
 
 @end

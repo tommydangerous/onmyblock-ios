@@ -15,11 +15,9 @@
   OMBTableViewController
 <UITextFieldDelegate>
 {
-  UIBarButtonItem *doneBarButtonItem;
   BOOL isEditing;
   OMBOpenHouse *openHouse;
   OMBResidence *residence;
-  UIBarButtonItem *saveBarButtonItem;
 }
 
 #pragma mark - Initializer

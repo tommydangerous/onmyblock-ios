@@ -9,6 +9,8 @@
 #import "OMBUser.h"
 
 #import "OMBAppDelegate.h"
+#import "OMBAuthenticationFacebookConnection.h"
+#import "OMBAuthenticationLinkedInConnection.h"
 #import "OMBAuthenticationVenmoConnection.h"
 #import "OMBConfirmedTenantsConnection.h"
 #import "OMBConversationMessageStore.h"
@@ -40,6 +42,8 @@
 #import "OMBUserFacebookAuthenticationConnection.h"
 #import "OMBUserImageDownloader.h"
 #import "OMBUserStore.h"
+#import "OMBUserUpdateConnection.h"
+#import "OMBUserUploadImageConnection.h"
 #import "OMBViewControllerContainer.h"
 #import "UIImage+Resize.h"
 
@@ -52,6 +56,10 @@ NSString *const OMBCurrentUserChangedFavorite =
 // Menu view controller posts this, and user listens for it
 NSString *const OMBCurrentUserLogoutNotification = 
   @"OMBCurrentUserLogoutNotification";
+NSString *const OMBCurrentUserUploadedImage = @"OMBCurrentUserUploadedImage";
+// When authenticating with Facebook while logged in
+NSString *const OMBUserCreateAuthenticationForFacebookNotification =
+  @"OMBUserCreateAuthenticationForFacebookNotification";
 // Whenever the user logs in
 // Login connection, sign up connection, and authenticate with server
 // posts this notification
@@ -406,6 +414,25 @@ withCompletion: (void (^) (NSError *error)) block
   [conn start];
 }
 
+- (void) createAuthenticationForFacebookWithCompletion: 
+  (void (^) (NSError *error)) block
+{
+  OMBAuthenticationFacebookConnection *conn =
+    [[OMBAuthenticationFacebookConnection alloc] init];
+  conn.completionBlock = block;
+  [conn start];
+}
+
+- (void) createAuthenticationForLinkedInWithAccessToken: (NSString *) string
+completion: (void (^) (NSError *error)) block
+{
+  OMBAuthenticationLinkedInConnection *conn = 
+    [[OMBAuthenticationLinkedInConnection alloc] initWithLinkedInAccessToken:
+      string];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (void) createOffer: (OMBOffer *) offer
 completion: (void (^) (NSError *error)) block
 {
@@ -581,7 +608,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 - (BOOL) loggedIn
 {
   if ([OMBUser currentUser].accessToken && 
-    [[OMBUser currentUser].accessToken length])
+    [[OMBUser currentUser].accessToken length] && [OMBUser currentUser].uid)
     return YES;
   return NO;
 }
@@ -642,6 +669,10 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
   [[NSNotificationCenter defaultCenter] postNotificationName: 
     OMBUserLoggedOutNotification object: nil];
+
+  // Clear Facebook token information
+  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+  [appDelegate clearFacebookTokenInformation];
 }
 
 - (NSArray *) messagesWithUser: (OMBUser *) user
@@ -903,9 +934,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   // current user's access token
   if ([OMBUser currentUser].uid && [OMBUser currentUser].uid == userUID) {
     if ([dictionary objectForKey: @"access_token"]) {
-      if (!_accessToken || ![_accessToken length]) {
-        _accessToken = [dictionary objectForKey: @"access_token"];  
-      }
+      _accessToken = [dictionary objectForKey: @"access_token"];
     }
   }
 
@@ -1244,15 +1273,32 @@ ascending: (BOOL) ascending
       [alertView show];
     }
     else {
-      OMBUser *currentUser = [OMBUser currentUser];
-      currentUser.email = [user objectForKey: @"email"];
-      currentUser.facebookAccessToken = 
-        [[[FBSession activeSession] accessTokenData] accessToken];
-      currentUser.facebookId = [user objectForKey: @"id"];
-      currentUser.firstName  = [user objectForKey: @"first_name"];
-      currentUser.lastName   = [user objectForKey: @"last_name"];
       NSLog(@"Facebook active session is open");
-      [currentUser authenticateWithServer: nil];
+      [OMBUser currentUser].facebookAccessToken =
+        [[[FBSession activeSession] accessTokenData] accessToken];
+      [OMBUser currentUser].facebookId = [user objectForKey: @"id"];
+      if ([[OMBUser currentUser] loggedIn]) {
+        if ([OMBUser currentUser].facebookAccessToken && 
+          [OMBUser currentUser].facebookId) {
+          [[OMBUser currentUser] createAuthenticationForFacebookWithCompletion:
+            ^(NSError *error) {
+              NSMutableDictionary *userInfoDict = 
+                [NSMutableDictionary dictionary];
+              if (error)
+                [userInfoDict setObject: error forKey: @"error"];
+              [[NSNotificationCenter defaultCenter] postNotificationName:
+                OMBUserCreateAuthenticationForFacebookNotification
+                  object: nil userInfo: (NSDictionary *) userInfoDict];
+            }
+          ];
+        }
+      }
+      else {
+        [OMBUser currentUser].email     = [user objectForKey: @"email"];
+        [OMBUser currentUser].firstName = [user objectForKey: @"first_name"];
+        [OMBUser currentUser].lastName  = [user objectForKey: @"last_name"];
+        [[OMBUser currentUser] authenticateWithServer: nil];
+      }
     }
   };
   if (FBSession.activeSession.isOpen)
@@ -1285,6 +1331,33 @@ ascending: (BOOL) ascending
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
     ascending: ascending];
   return [[_payoutMethods allValues] sortedArrayUsingDescriptors: @[sort]];
+}
+
+- (void) updateWithDictionary: (NSDictionary *) dictionary 
+completion: (void (^) (NSError *error)) block
+{
+  OMBUserUpdateConnection *conn =
+    [[OMBUserUpdateConnection alloc] initWithDictionary: dictionary];
+  conn.completionBlock = block;
+  [conn start];
+}
+
+- (void) uploadImage: (UIImage *) img 
+withCompletion: (void (^) (NSError *error)) block
+{
+  CGSize newSize = CGSizeMake(640.0f, 320.0f);
+  [OMBUser currentUser].image = [UIImage image: img 
+    proportionatelySized: newSize];;
+
+  OMBUserUploadImageConnection *conn = 
+    [[OMBUserUploadImageConnection alloc] init];
+  conn.completionBlock = block;
+  [conn start];
+
+  // Observers:
+  // OMBViewControllerContainer
+  [[NSNotificationCenter defaultCenter] postNotificationName:
+    OMBCurrentUserUploadedImage object: nil];
 }
 
 @end

@@ -8,6 +8,16 @@
 
 #import "OMBConnection.h"
 
+@class OMBRenterApplication;
+
 @interface OMBRenterApplicationUpdateConnection : OMBConnection
+{
+  OMBRenterApplication *renterApplication;
+}
+
+#pragma mark - Initializer
+
+- (id) initWithRenterApplication: (OMBRenterApplication *) object
+dictionary: (NSDictionary *) dictionary;
 
 @end
