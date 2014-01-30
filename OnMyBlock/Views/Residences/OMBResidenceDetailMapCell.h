@@ -12,6 +12,8 @@
 
 @interface OMBResidenceDetailMapCell : OMBResidenceDetailCell
 
+@property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) MKMapView *mapView;
+@property (nonatomic, strong) UIImageView *streetView;
 
 @end
