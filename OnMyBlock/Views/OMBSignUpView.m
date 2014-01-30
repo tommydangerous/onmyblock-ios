@@ -80,7 +80,7 @@
     (_facebookButton.frame.size.height - facebookImageSize) * 0.5, 
       facebookImageSize, facebookImageSize);
   facebookImageView.image = [UIImage image: 
-    [UIImage imageNamed: @"facebook_icon.png"] 
+    [UIImage imageNamed: @"facebook_icon_white.png"] 
       size: CGSizeMake(facebookImageSize, facebookImageSize)];
   [_facebookButton addSubview: facebookImageView];
 

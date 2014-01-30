@@ -71,7 +71,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 - (void) setupForFacebook
 {
   backgroundImageView.image = [UIImage imageWithColor: [UIColor facebookBlue]];
-  objectImageView.image = [UIImage imageNamed: @"facebook_icon.png"];
+  objectImageView.image = [UIImage imageNamed: @"facebook_icon_white.png"];
   topLabel.text = @"From Facebook";
 }
 

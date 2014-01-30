@@ -47,6 +47,20 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 #pragma mark - Instance Methods
 
+- (void) setFrameUsingSize: (CGSize) size
+{
+  CGRect screen       = [[UIScreen mainScreen] bounds];
+  CGFloat screenWidth = screen.size.width;
+  CGFloat padding = OMBPadding;
+  _textFieldLabel.frame = CGRectMake(padding, 0.0f, 
+    size.width, OMBStandardHeight);
+  _textField.frame = CGRectMake(_textFieldLabel.frame.origin.x + 
+    _textFieldLabel.frame.size.width + padding, _textFieldLabel.frame.origin.y,
+      screenWidth - (_textFieldLabel.frame.origin.x + 
+        _textFieldLabel.frame.size.width + padding + padding), 
+          _textFieldLabel.frame.size.height);
+}
+
 - (void) setFramesUsingString: (NSString *) string
 {
   CGRect screen       = [[UIScreen mainScreen] bounds];

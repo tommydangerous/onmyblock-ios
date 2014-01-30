@@ -33,10 +33,13 @@ float kKeyboardHeight = 216.0;
   if (!(self = [super initWithResidence: object])) return nil;
   
   propertyTypeOptions = @[
-                          @"sublet",
-                          @"house",
-                          @"apartment"
-                          ];
+    @"house",
+    @"apartment",
+    @"sublet"
+  ];
+  CGRect rect = [@"Property Type" boundingRectWithSize:
+    CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFont]];
+  sizeForLabelTextFieldCell = rect.size;
   
   self.screenName = self.title = @"Listing Details";
 
@@ -273,9 +276,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *TextFieldCellIdentifier = @"TextFieldCellIdentifier";
       OMBLabelTextFieldCell *cell1 =
       [tableView dequeueReusableCellWithIdentifier: TextFieldCellIdentifier];
-      if (!cell1)
+      if (!cell1) {
         cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle:
-                 UITableViewCellStyleDefault reuseIdentifier: TextFieldCellIdentifier];
+          UITableViewCellStyleDefault reuseIdentifier: TextFieldCellIdentifier];
+        [cell1 setFrameUsingSize: sizeForLabelTextFieldCell];
+      }
       cell1.selectionStyle = UITableViewCellSelectionStyleNone;
       cell1.textField.placeholderColor = [UIColor grayLight];
       cell1.textField.placeholder = @"required";
@@ -354,7 +359,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell1.textFieldLabel.text = string;
       [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
                 forControlEvents: UIControlEventEditingChanged];
-      [cell1 setFramesUsingString: @"Move-out Date"];
       return cell1;
     }
   }

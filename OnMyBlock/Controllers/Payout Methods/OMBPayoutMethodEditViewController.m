@@ -13,6 +13,7 @@
 #import "OMBPayoutMethodUpdateConnection.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 
 @implementation OMBPayoutMethodEditViewController
 
@@ -25,6 +26,10 @@
   payoutMethod = object;
   deposit = payoutMethod.deposit;
   primary = payoutMethod.primary;
+
+  CGRect rect = [@"Email" boundingRectWithSize:
+    CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFont]];
+  sizeForLabelTextFieldCell = rect.size;
 
   self.screenName = @"Edit Payout Method";
   NSString *string;
@@ -139,6 +144,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (!cell1) {
       cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle: 
         UITableViewCellStyleDefault reuseIdentifier: LabelCellIdentifier];
+      [cell1 setFrameUsingSize: sizeForLabelTextFieldCell];
     }
     cell1.selectionStyle = UITableViewCellSelectionStyleNone;
     cell1.textField.text = [payoutMethod.email lowercaseString];
@@ -146,7 +152,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell1.textField.textColor = [UIColor grayMedium];
     cell1.textField.userInteractionEnabled = NO;
     cell1.textFieldLabel.text = @"Email";
-    [cell1 setFramesUsingString: @"Email"];
     [bottomBorder removeFromSuperview];
     [cell1.contentView addSubview: bottomBorder];
     return cell1;

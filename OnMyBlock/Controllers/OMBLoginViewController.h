@@ -10,7 +10,7 @@
 
 @class OMBActivityView;
 @class OMBCloseButtonView;
-@class OMBSignUpView;
+@class OMBLoginSignUpView;
 @class TextFieldPadding;
 
 @interface OMBLoginViewController : OMBViewController
@@ -19,7 +19,7 @@
 }
 
 @property (nonatomic, strong) OMBActivityView *activityView;
-@property (nonatomic, strong) OMBSignUpView *signUpView;
+@property (nonatomic, strong) OMBLoginSignUpView *signUpView;
 
 #pragma mark - Methods
 

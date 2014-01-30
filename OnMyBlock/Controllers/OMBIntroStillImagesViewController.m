@@ -8,6 +8,7 @@
 
 #import "OMBIntroStillImagesViewController.h"
 
+#import "AMBlurView.h"
 #import "DRNRealTimeBlurView.h"
 #import "DDPageControl.h"
 #import "OMBActivityView.h"
@@ -62,7 +63,7 @@
     @"intro_still_image_slide_2_background.jpg",
     @"intro_still_image_slide_9_background.jpg",
     @"intro_still_image_slide_4_background.jpg",
-    @"intro_still_image_slide_8_background.jpg"
+    @"intro_still_image_slide_3_background.jpg"
   ];
   backgroundViewArray = [NSMutableArray array];
   for (NSString *string in imageNames) {
@@ -310,9 +311,28 @@
   // [[self appDelegate].container stopSpinning];
   [_activityView stopSpinning];
 
-  // #warning Remove this
-  // [_scroll setContentOffset: CGPointMake(4 * _scroll.frame.size.width, 0.0f)
-  //   animated: NO];
+  // Make the status bar white
+  [[UIApplication sharedApplication] setStatusBarStyle:
+    UIStatusBarStyleLightContent];
+
+  #warning Remove this
+  [_scroll setContentOffset: CGPointMake(4 * _scroll.frame.size.width, 0.0f)
+    animated: NO];
+}
+
+- (void) viewDidAppear: (BOOL) animated
+{
+  [super viewDidAppear: animated];
+
+  [self showLogin];
+}
+
+- (void) viewWillDisappear: (BOOL) animated
+{
+  [super viewWillDisappear: animated];
+
+  [[UIApplication sharedApplication] setStatusBarStyle:
+    UIStatusBarStyleDefault];
 }
 
 #pragma mark - Protocol
@@ -376,50 +396,72 @@
       _pageControl.alpha = 1 - percent;
   }
   // Get started view
-  if (page >= 3 && page <= 4) {
+  if (page <= _pageControl.numberOfPages) {
     percent = (x - (width * 3)) / width;
 
-    float stopOriginX = 
-      (screenWidth - _getStartedView.getStartedButton.frame.size.width) * 0.5;
-    float facebookPercent = percent * 1.3;
-    if (facebookPercent >= 1)
-      facebookPercent = 1;
-    float facebookOriginX =
+    CGFloat stopOriginX = 
+      (screenWidth - _getStartedView.facebookButtonView.frame.size.width) * 0.5;
+    CGFloat facebookFactor = 1.4f;
+    CGFloat facebookPercent = percent * facebookFactor;
+    if (facebookPercent >= 1) {
+      if (percent <= 1.0f) {
+        facebookPercent = 1;
+      }
+      else {
+        facebookPercent = 1 + ((percent - 1) * facebookFactor);
+      }
+    }
+    CGFloat facebookOriginX =
       screenWidth - ((screenWidth - stopOriginX) * facebookPercent);
-    _getStartedView.facebookButton.frame = CGRectMake(
+    _getStartedView.facebookButtonView.frame = CGRectMake(
       facebookOriginX,
-        _getStartedView.facebookButton.frame.origin.y,
-          _getStartedView.facebookButton.frame.size.width,
-            _getStartedView.facebookButton.frame.size.height);
+        _getStartedView.facebookButtonView.frame.origin.y,
+          _getStartedView.facebookButtonView.frame.size.width,
+            _getStartedView.facebookButtonView.frame.size.height);
+    CGFloat getStartedFactor = 1.2f;
+    CGFloat getStartedPercent = percent * getStartedFactor;
+    if (getStartedPercent >= 1) {
+      if (percent <= 1.0f) {
+        getStartedPercent = 1;
+      }
+      else {
+        getStartedPercent = 1 + ((percent - 1) * getStartedFactor);
+      }
+    }
     float getStartedOriginX = 
-      screenWidth - ((screenWidth - stopOriginX) * percent);
-    _getStartedView.getStartedButton.frame = CGRectMake(
+      screenWidth - ((screenWidth - stopOriginX) * getStartedPercent);
+    _getStartedView.getStartedButtonView.frame = CGRectMake(
       getStartedOriginX,
-        _getStartedView.getStartedButton.frame.origin.y,
-          _getStartedView.getStartedButton.frame.size.width,
-            _getStartedView.getStartedButton.frame.size.height);
+        _getStartedView.getStartedButtonView.frame.origin.y,
+          _getStartedView.getStartedButtonView.frame.size.width,
+            _getStartedView.getStartedButtonView.frame.size.height);
+    CGRect landlordButtonRect = _getStartedView.landlordButton.frame;
+    CGFloat landlordButtonOriginX = screenWidth - 
+      ((landlordButtonRect.size.width + (screenWidth * 0.5f * 0.5f)) * percent);
+    landlordButtonRect.origin.x = landlordButtonOriginX;
+    _getStartedView.landlordButton.frame = landlordButtonRect;
   }
   // Sign up view
   if (page >= 4) {
     percent = (x - (width * 4)) / width;
 
-    float stopOriginX = 
-      (screenWidth - _getStartedView.getStartedButton.frame.size.width) * 0.5;
-    float facebookPercent = percent * 1.3;
-    float facebookOriginX =
-      stopOriginX - ((screenWidth - stopOriginX) * facebookPercent);
-    _getStartedView.facebookButton.frame = CGRectMake(
-      facebookOriginX,
-        _getStartedView.facebookButton.frame.origin.y,
-          _getStartedView.facebookButton.frame.size.width,
-            _getStartedView.facebookButton.frame.size.height);
-    float getStartedOriginX = 
-      stopOriginX - ((screenWidth - stopOriginX) * percent);
-    _getStartedView.getStartedButton.frame = CGRectMake(
-      getStartedOriginX,
-        _getStartedView.getStartedButton.frame.origin.y,
-          _getStartedView.getStartedButton.frame.size.width,
-            _getStartedView.getStartedButton.frame.size.height);
+    // float stopOriginX = 
+    //   (screenWidth - _getStartedView.getStartedButton.frame.size.width) * 0.5;
+    // float facebookPercent = percent * 1.3;
+    // float facebookOriginX =
+    //   stopOriginX - ((screenWidth - stopOriginX) * facebookPercent);
+    // _getStartedView.facebookButton.frame = CGRectMake(
+    //   facebookOriginX,
+    //     _getStartedView.facebookButton.frame.origin.y,
+    //       _getStartedView.facebookButton.frame.size.width,
+    //         _getStartedView.facebookButton.frame.size.height);
+    // float getStartedOriginX = 
+    //   stopOriginX - ((screenWidth - stopOriginX) * percent);
+    // _getStartedView.getStartedButton.frame = CGRectMake(
+    //   getStartedOriginX,
+    //     _getStartedView.getStartedButton.frame.origin.y,
+    //       _getStartedView.getStartedButton.frame.size.width,
+    //         _getStartedView.getStartedButton.frame.size.height);
 
     // Sign up view
     int padding = 20;

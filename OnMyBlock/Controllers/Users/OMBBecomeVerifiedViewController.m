@@ -35,6 +35,12 @@
     @"Work & School Summary"
   ];
   user = object;
+  valueDictionary = [NSMutableDictionary dictionaryWithDictionary: @{
+    @"coapplicantCount": [NSNumber numberWithInt: 
+      user.renterApplication.coapplicantCount],
+    @"hasCosigner": [NSNumber numberWithBool: 
+      user.renterApplication.hasCosigner]
+  }];
 
   self.screenName = @"Become Verified View Controller";
   self.title      = @"Become Verified";
@@ -87,7 +93,7 @@
   nextButton = [UIButton new];
   nextButton.frame = CGRectMake(0.0f, 0.0f, nextView.frame.size.width,
     nextView.frame.size.height);
-  nextButton.titleLabel.font = [UIFont mediumTextFont];
+  nextButton.titleLabel.font = [UIFont mediumTextFontBold];
   [nextButton addTarget: self action: @selector(next)
     forControlEvents: UIControlEventTouchUpInside];
   [nextButton setBackgroundImage: 
@@ -252,13 +258,6 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-
-  valueDictionary = [NSMutableDictionary dictionaryWithDictionary: @{
-    @"coapplicantCount": [NSNumber numberWithInt: 
-      user.renterApplication.coapplicantCount],
-    @"hasCosigner": [NSNumber numberWithBool: 
-      user.renterApplication.hasCosigner]
-  }];
 
   // Header label
   headerLabel.text = [headerLabelArray firstObject];

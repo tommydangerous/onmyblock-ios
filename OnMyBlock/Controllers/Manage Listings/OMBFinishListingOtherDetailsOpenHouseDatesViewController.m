@@ -21,6 +21,10 @@
 {
   if (!(self = [super initWithResidence: object])) return nil;
 
+  CGRect rect = [@"Starts" boundingRectWithSize:
+    CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFont]];
+  sizeForLabelTextFieldCell = rect.size;
+
   self.screenName = self.title = @"Open House Dates";
 
   return self;
@@ -95,9 +99,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     static NSString *TextFieldCellIdentifier = @"TextFieldCellIdentifier";
     OMBLabelTextFieldCell *cell1 = 
       [tableView dequeueReusableCellWithIdentifier: TextFieldCellIdentifier];
-    if (!cell1)
+    if (!cell1) {
       cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle: 
         UITableViewCellStyleDefault reuseIdentifier: TextFieldCellIdentifier];
+      [cell1 setFrameUsingSize: sizeForLabelTextFieldCell];
+    }
     cell1.selectionStyle = UITableViewCellSelectionStyleNone;
     cell1.textField.userInteractionEnabled = YES;
 
@@ -189,7 +195,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell1.textField.textAlignment = NSTextAlignmentRight;
     cell1.textField.textColor = [UIColor blueDark];
     cell1.textFieldLabel.text = string;
-    [cell1 setFramesUsingString: @"Starts"];
     return cell1;
   }
 

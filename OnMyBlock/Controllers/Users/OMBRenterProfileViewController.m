@@ -8,6 +8,7 @@
 
 #import "OMBRenterProfileViewController.h"
 
+#import "AMBlurView.h"
 #import "NSString+Extensions.h"
 #import "OMBBecomeVerifiedViewController.h"
 #import "OMBCenteredImageView.h"
@@ -60,11 +61,11 @@
 
   // The background is white, 
   // use this to cover it when scrolling pass the bottom
-  UIView *bottomBackground = [UIView new];
-  bottomBackground.backgroundColor = [UIColor grayUltraLight];
-  bottomBackground.frame = CGRectMake(0.0f, screenHeight * 0.5f,
-    screenWidth, screenHeight * 0.5f);
-  [self.view insertSubview: bottomBackground belowSubview: self.table];
+  // UIView *bottomBackground = [UIView new];
+  // bottomBackground.backgroundColor = [UIColor grayUltraLight];
+  // bottomBackground.frame = CGRectMake(0.0f, screenHeight * 0.5f,
+  //   screenWidth, screenHeight * 0.5f);
+  // [self.view insertSubview: bottomBackground belowSubview: self.table];
 
   // Back view
   backViewOriginY = padding + standardHeight;
@@ -116,11 +117,37 @@
   tableHeaderView.frame = CGRectMake(0.0f, 0.0f, screenWidth, 
     backViewOriginY + backView.frame.size.height);
   self.table.tableHeaderView = tableHeaderView;
+
+  // Edit button
+  editButtonView = [[AMBlurView alloc] init];
+  editButtonView.blurTintColor = [UIColor blue];
+  editButtonView.frame = CGRectMake(0.0f, screenHeight - OMBStandardHeight,
+    screenWidth, OMBStandardHeight);
+  [self.view addSubview: editButtonView];
+  // Button
+  editButton = [UIButton new];
+  editButton.frame = editButtonView.bounds;
+  editButton.titleLabel.font = [UIFont mediumTextFontBold];
+  [editButton addTarget: self action: @selector(edit)
+    forControlEvents: UIControlEventTouchUpInside];
+  [editButton setBackgroundImage: [UIImage imageWithColor: 
+    [UIColor blueHighlighted]] forState: UIControlStateHighlighted];
+  [editButton setTitle: @"Complete Renter Profile"
+    forState: UIControlStateNormal];
+  [editButton setTitleColor: [UIColor whiteColor]
+    forState: UIControlStateNormal];
+  [editButtonView addSubview: editButton];
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
+
+  // If the current user is looking at their own renter profile
+  if (user.uid == [OMBUser currentUser].uid) {
+    // Check to see if the edit button should be at the bottom
+    [self updateEditButton];
+  }
 
   // We only want to show the menu icon if its the root view controller
   if ([self.navigationController.viewControllers count] == 1) {
@@ -257,86 +284,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         headLabel.textAlignment = NSTextAlignmentCenter;
         headLabel.textColor = [UIColor grayMedium];
         [cell.contentView addSubview: headLabel];
+        // Border top
+        UIView *bor = [cell.contentView viewWithTag: 9999];
+        if (!bor) {
+          bor = [UIView new];
+          bor.backgroundColor = tableView.separatorColor;
+          bor.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 0.5f);
+          bor.tag = 9999;
+        }
+        [cell.contentView addSubview: bor];
       }
-      return cell;
-    }
-    // Co-applicants, co-signer, facebook, linkedin
-    else if (
-      indexPath.row == OMBRenterProfileSectionRenterInfoRowCoapplicants ||
-      indexPath.row == OMBRenterProfileSectionRenterInfoRowCosigner ||
-      indexPath.row == OMBRenterProfileSectionRenterInfoRowFacebook ||
-      indexPath.row == OMBRenterProfileSectionRenterInfoRowLinkedIn) {
-
-      static NSString *RentalInfoID = @"RentalInfoID";
-      OMBRenterProfileUserInfoCell *cell = 
-        [tableView dequeueReusableCellWithIdentifier: RentalInfoID];
-      if (!cell)
-        cell = [[OMBRenterProfileUserInfoCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault reuseIdentifier: RentalInfoID];
-      [cell reset];
-      UIView *borTop = [cell.contentView viewWithTag: 9999];
-      if (!borTop) {
-        borTop = [UIView new];
-        borTop.backgroundColor = tableView.separatorColor;
-        borTop.frame = CGRectMake(0.0f, 0.0f, 
-          tableView.frame.size.width, 0.5f);
-        borTop.tag = 9999;
-      }
-      UIView *borBot = [cell.contentView viewWithTag: 9998];
-      if (!borBot) {
-        borBot = [UIView new];
-        borBot.backgroundColor = tableView.separatorColor;
-        borBot.frame = CGRectMake(0.0f, (cell.label.frame.origin.y + 
-          cell.label.frame.size.height + padding) - 0.5f, 
-            tableView.frame.size.width, 0.5f);
-        borBot.tag = 9998;
-      }
-      CGSize imageSize = cell.iconImageView.bounds.size;
-      UIImage *image;
-      NSString *string;
-      NSString *valueString;
-      // Co-applicants
-      if (indexPath.row == OMBRenterProfileSectionRenterInfoRowCoapplicants) {
-        image = [UIImage imageNamed: @"group_icon.png"];
-        string = @"Co-applicants";
-        valueString = [NSString stringWithFormat: @"%i",
-          user.renterApplication.coapplicantCount];
-        [borTop removeFromSuperview];
-        [cell.contentView addSubview: borTop];
-      }
-      // Co-signer
-      else if (indexPath.row == OMBRenterProfileSectionRenterInfoRowCosigner) {
-        image = [UIImage imageNamed: @"landlord_icon.png"];
-        string = @"Co-signer";
-        if (user.renterApplication.hasCosigner)
-          valueString = @"Yes";
-        else
-          valueString = @"No";
-      }
-      // Facebook
-      else if (indexPath.row == OMBRenterProfileSectionRenterInfoRowFacebook) {
-        image  = [[UIImage imageNamed: @"facebook_icon.png"] negativeImage];
-        string = @"Facebook";
-        if (user.renterApplication.facebookAuthenticated)
-          valueString = @"Verified";
-        else
-          valueString = @"Unverified";
-      }
-      // LinkedIn
-      else if (indexPath.row == OMBRenterProfileSectionRenterInfoRowLinkedIn) {
-        image  = [[UIImage imageNamed: 
-          @"linkedin_white_icon.png"] negativeImage];
-        string = @"LinkedIn";
-        if (user.renterApplication.linkedinAuthenticated)
-          valueString = @"Verified";
-        else
-          valueString = @"Unverified";
-        [borBot removeFromSuperview];
-        [cell.contentView addSubview: borBot];
-      }
-      cell.iconImageView.image = [UIImage image: image size: imageSize];
-      cell.label.text = string;
-      cell.valueLabel.text = valueString;
       return cell;
     }
     // Rental Info Note
@@ -359,8 +316,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         NSArray *array = @[label1, label2, label3];
         for (UILabel *label in array) {
           label.font = [UIFont normalTextFont];
+          // label.frame = CGRectMake(padding, 
+          //   padding + (22.0f * [array indexOfObject: label]), 
+          //     tableView.frame.size.width - (padding * 2), 22.0f);
           label.frame = CGRectMake(padding, 
-            padding + (22.0f * [array indexOfObject: label]), 
+            22.0f * [array indexOfObject: label], 
               tableView.frame.size.width - (padding * 2), 22.0f);
           label.textAlignment = NSTextAlignmentCenter;
           label.textColor = [UIColor grayMedium];
@@ -405,7 +365,80 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [button setTitleColor: [UIColor whiteColor]
           forState: UIControlStateHighlighted];
         [cell.contentView addSubview: button];
+        UIView *bor = [cell.contentView viewWithTag: 9999];
+        if (!bor) {
+          bor = [UIView new];
+          bor.backgroundColor = tableView.separatorColor;
+          bor.frame = CGRectMake(0.0f, 
+            padding + OMBStandardButtonHeight + padding - 0.5f, 
+              tableView.frame.size.width, 0.5f);
+          bor.tag = 9999;
+        }
+        [cell.contentView addSubview: bor];
       }
+      return cell;
+    }
+    // Co-applicants, co-signer, facebook, linkedin
+    else if (
+      indexPath.row == OMBRenterProfileSectionRenterInfoRowCoapplicants ||
+      indexPath.row == OMBRenterProfileSectionRenterInfoRowCosigner ||
+      indexPath.row == OMBRenterProfileSectionRenterInfoRowFacebook ||
+      indexPath.row == OMBRenterProfileSectionRenterInfoRowLinkedIn) {
+
+      static NSString *RentalInfoID = @"RentalInfoID";
+      OMBRenterProfileUserInfoCell *cell = 
+        [tableView dequeueReusableCellWithIdentifier: RentalInfoID];
+      if (!cell)
+        cell = [[OMBRenterProfileUserInfoCell alloc] initWithStyle: 
+          UITableViewCellStyleDefault reuseIdentifier: RentalInfoID];
+      [cell reset];
+      CGSize imageSize = cell.iconImageView.bounds.size;
+      UIImage *image;
+      NSString *string;
+      NSString *valueString;
+      // Co-applicants
+      if (indexPath.row == OMBRenterProfileSectionRenterInfoRowCoapplicants) {
+        image = [UIImage imageNamed: @"group_icon.png"];
+        string = @"Co-applicants";
+        valueString = [NSString stringWithFormat: @"%i",
+          user.renterApplication.coapplicantCount];
+      }
+      // Co-signer
+      else if (indexPath.row == OMBRenterProfileSectionRenterInfoRowCosigner) {
+        image = [UIImage imageNamed: @"landlord_icon.png"];
+        string = @"Co-signer";
+        if (user.renterApplication.hasCosigner)
+          valueString = @"Yes";
+        else
+          valueString = @"No";
+      }
+      // Facebook
+      else if (indexPath.row == OMBRenterProfileSectionRenterInfoRowFacebook) {
+        image  = [UIImage imageNamed: @"facebook_icon_blue.png"];
+        string = @"Facebook";
+        if (user.renterApplication.facebookAuthenticated) {
+          cell.iconImageView.alpha = 1.0f;
+          valueString = @"Verified";
+        }
+        else
+          valueString = @"Unverified";
+      }
+      // LinkedIn
+      else if (indexPath.row == OMBRenterProfileSectionRenterInfoRowLinkedIn) {
+        image  = [UIImage imageNamed: @"linkedin_icon.png"];
+        string = @"LinkedIn";
+        if (user.renterApplication.linkedinAuthenticated) {
+          cell.iconImageView.alpha = 1.0f;
+          valueString = @"Verified";
+        }
+        else
+          valueString = @"Unverified";
+        cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+          0.0f, 0.0f);
+      }
+      cell.iconImageView.image = [UIImage image: image size: imageSize];
+      cell.label.text = string;
+      cell.valueLabel.text = valueString;
       return cell;
     }
   }
@@ -445,12 +478,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   if (indexPath.section == OMBRenterProfileSectionUserInfo) {
     // About
     if (indexPath.row == OMBRenterProfileSectionUserInfoRowAbout) {
-      NSAttributedString *aString = [user.about attributedStringWithFont:
-        [UIFont normalTextFont] lineHeight: 22.0f];
-      CGRect rect = [aString boundingRectWithSize: 
-        CGSizeMake([OMBRenterProfileUserInfoCell widthForLabel], 9999.0f)
-          options: NSStringDrawingUsesLineFragmentOrigin context: nil];
-      CGFloat height = (padding * 0.5f) + rect.size.height + padding;
+      CGFloat height = (padding * 0.5f) + [user heightForAboutTextWithWidth:
+        [OMBRenterProfileUserInfoCell widthForLabel]] + padding;
       if (height < [OMBRenterProfileUserInfoCell heightForCell])
         height = [OMBRenterProfileUserInfoCell heightForCell];
       return height;
@@ -463,6 +492,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.row == 
       OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoHeader) {
       return padding + OMBStandardHeight + padding;
+    }
+    // Rental Info Note
+    else if (indexPath.row ==
+      OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoNote) {
+      return 22.0f * 3; // 22 is the line height for the label
+      // return padding + (22.0f * 3) + padding;
+    }
+    // Become Renter Verified
+    else if (indexPath.row == 
+      OMBRenterProfileSectionRenterInfoRowBecomeRenterVerified) {
+      return padding + OMBStandardButtonHeight + padding;
     }
     // Co-applicant count
     else if (indexPath.row ==
@@ -484,16 +524,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       OMBRenterProfileSectionRenterInfoRowLinkedIn) {
       return [OMBRenterProfileUserInfoCell heightForCell]; 
     }
-    // Rental Info Note
-    else if (indexPath.row ==
-      OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoNote) {
-      return padding + (22.0f * 3) + padding;
-    }
-    // Become Renter Verified
-    else if (indexPath.row == 
-      OMBRenterProfileSectionRenterInfoRowBecomeRenterVerified) {
-      return padding + OMBStandardButtonHeight + padding;
-    }
   }
   return 0.0f;
 }
@@ -514,13 +544,14 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   [[self appDelegate].container presentViewController: 
     [[OMBNavigationController alloc] initWithRootViewController:
-      [[OMBEditProfileViewController alloc] initWithUser: user]]
-        animated: YES completion: nil];
+      editProfileViewController] animated: YES completion: nil];
 }
 
 - (void) loadUser: (OMBUser *) object
 {
   user = object;
+  editProfileViewController = 
+    [[OMBEditProfileViewController alloc] initWithUser: user];
   [self reloadData];
 }
 
@@ -542,6 +573,57 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   [[self appDelegate].container presentViewController:
     [[OMBNavigationController alloc] initWithRootViewController: vc]
       animated: YES completion: nil];
+}
+
+- (void) updateEditButton
+{
+  // Image
+  // First name
+  // Last name
+  // School
+  // Email
+  // Phone
+  // About
+  NSInteger totalSteps = 7;
+  // Image
+  if (user.image && user.imageURL) {
+    NSRegularExpression *regex =
+      [NSRegularExpression regularExpressionWithPattern: @"default_user_image"
+        options: 0 error: nil];
+    NSArray *matches = [regex matchesInString: user.imageURL.absoluteString
+      options: 0 range: NSMakeRange(0, [user.imageURL.absoluteString length])];
+    if (![matches count])
+      totalSteps -= 1;
+  }
+  // First name
+  if (user.firstName && [user.firstName length])
+    totalSteps -= 1;
+  // Last name
+  if (user.lastName && [user.lastName length])
+    totalSteps -= 1;
+  // School
+  if (user.school && [user.school length])
+    totalSteps -= 1;
+  // Email
+  if (user.email && [user.email length])
+    totalSteps -= 1;
+  // Phone
+  if (user.phone && [user.phone length])
+    totalSteps -= 1;
+  // About
+  if (user.about && [user.about length])
+    totalSteps -= 1;
+
+  if (totalSteps == 0) {
+    editButtonView.hidden = YES;
+    self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
+  }
+  else {
+    editButtonView.hidden = NO;
+    self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectMake(
+      0.0f, 0.0f, self.table.frame.size.width, 
+        editButtonView.frame.size.height)];
+  }
 }
 
 @end

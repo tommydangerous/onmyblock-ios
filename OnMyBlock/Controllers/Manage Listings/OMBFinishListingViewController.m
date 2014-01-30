@@ -31,6 +31,7 @@
 #import "OMBTemporaryResidence.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 
@@ -82,15 +83,15 @@
   // Publish Now view
   publishNowView = [[AMBlurView alloc] init];
   publishNowView.blurTintColor = [UIColor blue];
-  publishNowView.frame = CGRectMake(0.0f, screen.size.height - 58.0f,
-    screen.size.width, 58.0f);
+  publishNowView.frame = CGRectMake(0.0f, 
+    screen.size.height - OMBStandardHeight, screen.size.width, 
+      OMBStandardHeight);
   [self.view addSubview: publishNowView];
   // Publish Now button
   publishNowButton = [UIButton new];
   publishNowButton.frame = CGRectMake(0.0f, 0.0f, screen.size.width,
     publishNowView.frame.size.height);
-  publishNowButton.titleLabel.font = 
-    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 18];
+  publishNowButton.titleLabel.font = [UIFont mediumTextFontBold];
   [publishNowButton addTarget: self action: @selector(publishNow)
     forControlEvents: UIControlEventTouchUpInside];
   [publishNowButton setBackgroundImage: 

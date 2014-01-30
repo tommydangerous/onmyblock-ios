@@ -843,14 +843,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // About
       else if (indexPath.row == 1) {
-        NSAttributedString *aString = 
-          [offer.user.about attributedStringWithFont: 
-            [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] 
-              lineHeight: 22.0f];
-        CGRect rect = [aString boundingRectWithSize: 
-          CGSizeMake(tableView.frame.size.width - (padding * 2), 9999) 
-            options: NSStringDrawingUsesLineFragmentOrigin context: nil];
-        return padding + rect.size.height + padding;
+        return padding + [offer.user heightForAboutTextWithWidth: 
+          tableView.frame.size.width - (padding * 2)] + padding;
       }
     }
     // Co-signers

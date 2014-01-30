@@ -63,6 +63,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 @property (nonatomic, strong) NSMutableDictionary *receivedOffers;
 @property (nonatomic, strong) OMBRenterApplication *renterApplication;
 @property (nonatomic, strong) NSMutableDictionary *residences;
+@property (nonatomic, strong) NSMutableDictionary *heightForAboutTextDictionary;
 @property (nonatomic) int uid;
 
 #pragma mark - Methods
@@ -117,6 +118,7 @@ withCompletion: (void (^) (NSError *error)) block;
 - (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (NSString *) fullName;
+- (CGFloat) heightForAboutTextWithWidth: (CGFloat) width;
 - (UIImage *) imageForSize: (CGSize) size;
 - (UIImage *) imageForSizeKey: (NSString *) string;
 - (BOOL) loggedIn;

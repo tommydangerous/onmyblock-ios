@@ -17,6 +17,7 @@
 
 #pragma mark - Instance Methods
 
+- (void) setFrameUsingSize: (CGSize) size;
 - (void) setFramesUsingString: (NSString *) string;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "OMBUser.h"
 
+#import "NSString+Extensions.h"
 #import "OMBAppDelegate.h"
 #import "OMBAuthenticationFacebookConnection.h"
 #import "OMBAuthenticationLinkedInConnection.h"
@@ -45,6 +46,7 @@
 #import "OMBUserUpdateConnection.h"
 #import "OMBUserUploadImageConnection.h"
 #import "OMBViewControllerContainer.h"
+#import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 
 NSString *const OMBActivityIndicatorViewStartAnimatingNotification =
@@ -111,6 +113,7 @@ int kNotificationTimerInterval = 60;
     @"residences":          [NSMutableDictionary dictionary],
     @"temporaryResidences": [NSMutableDictionary dictionary]
   }];
+  _heightForAboutTextDictionary = [NSMutableDictionary dictionary];
 
   // [[NSNotificationCenter defaultCenter] addObserver: self
   //   selector: @selector(logout)
@@ -155,6 +158,8 @@ int kNotificationTimerInterval = 60;
   [OMBUser currentUser].accessToken = OMBFakeUserAccessToken;
   [OMBUser currentUser].email     = @"fake_user@gmail.com";
   [OMBUser currentUser].firstName = @"fake";
+  [OMBUser currentUser].imageURL  = [NSURL URLWithString: 
+    @"http://localhost:3000/default_user_image.png"];
   [OMBUser currentUser].lastName  = @"user";
   [OMBUser currentUser].phone     = @"4088581234";
   [OMBUser currentUser].school    = @"University of California - Berkeley";
@@ -646,6 +651,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [[OMBUser currentUser].receivedOffers removeAllObjects];
   // Renter application
   [[OMBUser currentUser].renterApplication removeAllObjects];
+  [[OMBUser currentUser].heightForAboutTextDictionary removeAllObjects];
 
   // Clear residences
   for (NSString *key in [[OMBUser currentUser].residences allKeys]) {
@@ -1310,6 +1316,24 @@ ascending: (BOOL) ascending
   return [NSString stringWithFormat: @"%@ %@.",
     [self.firstName capitalizedString], 
       [[self.lastName substringToIndex: 1] capitalizedString]];
+}
+
+- (CGFloat) heightForAboutTextWithWidth: (CGFloat) width
+{
+  // This only stores the about text with [UIFont normalFontText] and
+  // line height of 22.0f
+  NSNumber *key = [NSNumber numberWithFloat: width];
+  NSNumber *height = [_heightForAboutTextDictionary objectForKey: key];
+  if (!height) {
+    NSAttributedString *aString = [_about attributedStringWithFont:
+      [UIFont normalTextFont] lineHeight: 22.0f];
+    CGRect rect = [aString boundingRectWithSize: 
+      CGSizeMake(width, 9999) options: NSStringDrawingUsesLineFragmentOrigin 
+        context: nil];
+    height = [NSNumber numberWithFloat: rect.size.height];
+    [_heightForAboutTextDictionary setObject: height forKey: key];
+  }
+  return [height floatValue];
 }
 
 - (NSArray *) sortedOffersType: (OMBUserOfferType) type 

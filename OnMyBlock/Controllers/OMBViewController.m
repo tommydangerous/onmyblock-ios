@@ -12,8 +12,11 @@
 #import "UIImage+Resize.h"
 #import "UIColor+Extensions.h"
 
+CGFloat const OMBCornerRadius         = 5.0f;
+CGFloat const OMBKeyboardHeight       = 216.0f;
 CGFloat const OMBPadding              = 20.0f;
 CGFloat const OMBStandardButtonHeight = 58.0f;
+CGFloat const OMBStandardDuration     = 0.25f;
 CGFloat const OMBStandardHeight       = 44.0f;
 
 @implementation OMBViewController

@@ -12,9 +12,9 @@
 #import "OMBCloseButtonView.h"
 #import "OMBLoginConnection.h"
 #import "OMBIntroViewController.h"
+#import "OMBLoginSignUpView.h"
 #import "OMBNavigationController.h"
 #import "OMBSignUpConnection.h"
-#import "OMBSignUpView.h"
 #import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
 #import "TextFieldPadding.h"
@@ -49,42 +49,33 @@
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view = [[UIView alloc] initWithFrame: screen];
 
-  _signUpView = [[OMBSignUpView alloc] init];
-  [_signUpView resetOriginX];
-  [_signUpView resetOriginY];
-  [_signUpView updateScrollContentSizeAnimated: NO];
+  _signUpView = [[OMBLoginSignUpView alloc] init];
   [self.view addSubview: _signUpView];
 
-  CGFloat padding = 20.0f;
+  CGFloat padding = OMBPadding;
   
   // Close view
-  CGFloat closeButtonPadding = padding * 0.5f;
-  CGFloat closeButtonViewHeight = 26.0f;
+  CGFloat closeButtonPadding    = padding;
+  CGFloat closeButtonViewHeight = padding;
   CGFloat closeButtonViewWidth  = closeButtonViewHeight;
   CGRect closeButtonRect = CGRectMake(screen.size.width - 
-    (closeButtonViewWidth + closeButtonPadding), 
+    (closeButtonViewWidth + closeButtonPadding - 3.0f), 
       padding + closeButtonPadding, closeButtonViewWidth, 
         closeButtonViewHeight);
   closeButtonView = [[OMBCloseButtonView alloc] initWithFrame: closeButtonRect
-    color: [UIColor grayMedium]];
+    color: [UIColor colorWithWhite: 1.0f alpha: 0.8f]];
   [closeButtonView.closeButton addTarget: self action: @selector(close)
     forControlEvents: UIControlEventTouchUpInside];
-  [self.view addSubview: closeButtonView];
+  // [self.view addSubview: closeButtonView];
 
   _activityView = [[OMBActivityView alloc] init];
   [self.view addSubview: _activityView];
-
-  // Block the status bar
-  UIView *statusView = [UIView new];
-  statusView.backgroundColor = [UIColor whiteColor];
-  statusView.frame = CGRectMake(0.0f, 0.0f, screen.size.width, 20.0f);
-  [self.view addSubview: statusView];
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
-  [_signUpView resetOriginX];
-  [_signUpView updateScrollContentSizeAnimated: NO];
+  // [_signUpView resetOriginX];
+  // [_signUpView updateScrollContentSizeAnimated: NO];
 
   // [[self appDelegate].container stopSpinning];
   [_activityView stopSpinning];
@@ -101,17 +92,17 @@
 
 - (void) showLandlordSignUp
 {
-  [_signUpView showSignUpForLandlord];
+  // [_signUpView showSignUpForLandlord];
 }
 
 - (void) showLogin
 {
-  [_signUpView showLogin];
+  // [_signUpView showLogin];
 }
 
 - (void) showSignUp
 {
-  [_signUpView showSignUpForStudent];
+  // [_signUpView showSignUpForStudent];
 }
 
 @end

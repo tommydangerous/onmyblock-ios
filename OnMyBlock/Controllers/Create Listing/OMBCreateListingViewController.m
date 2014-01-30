@@ -23,6 +23,7 @@
 #import "OMBViewControllerContainer.h"
 #import "OMBCreateListingDetailLeaseCell.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 
@@ -312,8 +313,7 @@
   nextButton = [UIButton new];
   nextButton.frame = CGRectMake(0.0f, 0.0f, nextView.frame.size.width,
     nextView.frame.size.height);
-  nextButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
-    size: 18];
+  nextButton.titleLabel.font = [UIFont mediumTextFontBold];
   [nextButton addTarget: self action: @selector(next)
     forControlEvents: UIControlEventTouchUpInside];
   [nextButton setBackgroundImage: 

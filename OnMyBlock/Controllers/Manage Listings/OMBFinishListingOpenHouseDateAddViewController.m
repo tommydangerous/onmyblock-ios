@@ -29,6 +29,9 @@
   openHouse.duration  = 1;
   openHouse.startDate = [[NSDate date] timeIntervalSince1970];
   residence = object;
+  CGRect rect = [@"Duration" boundingRectWithSize:
+    CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFont]];
+  sizeForLabelTextFieldCell = rect.size;
 
   self.screenName = self.title = @"Add Open House";
 
@@ -93,9 +96,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   static NSString *CellIdentifier = @"CellIdentifier";
   OMBLabelTextFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:
     CellIdentifier];
-  if (!cell)
+  if (!cell) {
     cell = [[OMBLabelTextFieldCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+    [cell setFrameUsingSize: sizeForLabelTextFieldCell];
+  }
   cell.selectionStyle = UITableViewCellSelectionStyleNone;
   cell.textField.placeholderColor = [UIColor grayLight];
   cell.textField.placeholder = @"";
@@ -170,7 +175,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell.textField.textAlignment  = NSTextAlignmentRight;
     cell.textField.textColor      = [UIColor blueDark];
     cell.textFieldLabel.textColor = [UIColor textColor];
-    [cell setFramesUsingString: @"Duration"];
   }
   return cell;
 }

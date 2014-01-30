@@ -15,6 +15,7 @@
 + (UIColor *) blue;
 + (UIColor *) blueAlpha: (float) value;
 + (UIColor *) blueHighlighted;
++ (UIColor *) blueHighlightedAlpha: (CGFloat) value;
 + (UIColor *) blueDark;
 + (UIColor *) blueDarkAlpha: (float) value;
 + (UIColor *) blueLight;

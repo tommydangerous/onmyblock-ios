@@ -10,6 +10,9 @@
 
 @interface OMBTableViewController : OMBViewController
 <UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
+{
+  CGSize sizeForLabelTextFieldCell;
+}
 
 @property (nonatomic) NSInteger currentPage;
 @property (nonatomic) BOOL fetching;

@@ -15,8 +15,11 @@
 #import "OMBUser.h"
 #import "UIFont+OnMyBlock.h"
 
+extern CGFloat const OMBCornerRadius;
+extern CGFloat const OMBKeyboardHeight;
 extern CGFloat const OMBPadding;
 extern CGFloat const OMBStandardButtonHeight;
+extern CGFloat const OMBStandardDuration;
 extern CGFloat const OMBStandardHeight;
 
 @interface OMBViewController : GAITrackedViewController

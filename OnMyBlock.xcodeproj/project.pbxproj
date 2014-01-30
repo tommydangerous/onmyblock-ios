@@ -71,8 +71,6 @@
 		AB0269D61822A12600E72F53 /* AMBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0269D51822A12600E72F53 /* AMBlurView.m */; };
 		AB0269D91822A97A00E72F53 /* logout_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = AB0269D71822A97A00E72F53 /* logout_icon.png */; };
 		AB0269DA1822A97A00E72F53 /* logout_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB0269D81822A97A00E72F53 /* logout_icon@2x.png */; };
-		AB026BC51822B4DB00E72F53 /* facebook_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = AB026BC31822B4DB00E72F53 /* facebook_icon.png */; };
-		AB026BC61822B4DB00E72F53 /* facebook_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB026BC41822B4DB00E72F53 /* facebook_icon@2x.png */; };
 		AB026BC91822BE1200E72F53 /* OMBUserFacebookAuthenticationConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB026BC81822BE1200E72F53 /* OMBUserFacebookAuthenticationConnection.m */; };
 		AB026BD01822E98500E72F53 /* OMBSignUpConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB026BCF1822E98500E72F53 /* OMBSignUpConnection.m */; };
 		AB026BD31822EFBC00E72F53 /* OMBFavoritesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB026BD21822EFBC00E72F53 /* OMBFavoritesListViewController.m */; };
@@ -135,6 +133,9 @@
 		AB2613111818EC800053A8AA /* OMBResidenceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2613101818EC800053A8AA /* OMBResidenceCell.m */; };
 		AB26131718197D030053A8AA /* OMBCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB26131618197D030053A8AA /* OMBCollectionViewController.m */; };
 		AB26131E18198E570053A8AA /* OMBSpringFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */; };
+		AB44986E189AC10100979B3B /* facebook_icon_blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */; };
+		AB44986F189AC10100979B3B /* facebook_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */; };
+		AB449872189AEFFF00979B3B /* OMBLoginSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */; };
 		AB44FBC118358DA400F07747 /* OMBResidencePartialView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB44FBC018358DA400F07747 /* OMBResidencePartialView.m */; };
 		AB4ED2D4188222C8009AFB01 /* OMBResidenceImageUpdateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4ED2D3188222C8009AFB01 /* OMBResidenceImageUpdateConnection.m */; };
 		AB4ED2D7188230A4009AFB01 /* OMBResidenceUpdateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4ED2D6188230A4009AFB01 /* OMBResidenceUpdateConnection.m */; };
@@ -718,8 +719,6 @@
 		AB0269D51822A12600E72F53 /* AMBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMBlurView.m; sourceTree = "<group>"; };
 		AB0269D71822A97A00E72F53 /* logout_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logout_icon.png; sourceTree = "<group>"; };
 		AB0269D81822A97A00E72F53 /* logout_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout_icon@2x.png"; sourceTree = "<group>"; };
-		AB026BC31822B4DB00E72F53 /* facebook_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook_icon.png; sourceTree = "<group>"; };
-		AB026BC41822B4DB00E72F53 /* facebook_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon@2x.png"; sourceTree = "<group>"; };
 		AB026BC71822BE1200E72F53 /* OMBUserFacebookAuthenticationConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBUserFacebookAuthenticationConnection.h; sourceTree = "<group>"; };
 		AB026BC81822BE1200E72F53 /* OMBUserFacebookAuthenticationConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBUserFacebookAuthenticationConnection.m; sourceTree = "<group>"; };
 		AB026BCE1822E98500E72F53 /* OMBSignUpConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSignUpConnection.h; sourceTree = "<group>"; };
@@ -823,6 +822,10 @@
 		AB26131618197D030053A8AA /* OMBCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCollectionViewController.m; sourceTree = "<group>"; };
 		AB26131C18198E570053A8AA /* OMBSpringFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSpringFlowLayout.h; sourceTree = "<group>"; };
 		AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSpringFlowLayout.m; sourceTree = "<group>"; };
+		AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_blue@2x.png"; sourceTree = "<group>"; };
+		AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_white@2x.png"; sourceTree = "<group>"; };
+		AB449870189AEFFF00979B3B /* OMBLoginSignUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLoginSignUpView.h; sourceTree = "<group>"; };
+		AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBLoginSignUpView.m; sourceTree = "<group>"; };
 		AB44FBBF18358DA400F07747 /* OMBResidencePartialView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidencePartialView.h; sourceTree = "<group>"; };
 		AB44FBC018358DA400F07747 /* OMBResidencePartialView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidencePartialView.m; sourceTree = "<group>"; };
 		AB4ED2D2188222C8009AFB01 /* OMBResidenceImageUpdateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceImageUpdateConnection.h; sourceTree = "<group>"; };
@@ -2571,14 +2574,14 @@
 				AB63D21A1821B17100D63800 /* email_icon@2x.png */,
 				ABF8ECA2182D54040080B1E2 /* email_icon_white.png */,
 				ABF8ECA3182D54040080B1E2 /* email_icon_white@2x.png */,
-				AB026BC31822B4DB00E72F53 /* facebook_icon.png */,
-				AB026BC41822B4DB00E72F53 /* facebook_icon@2x.png */,
 				AB63D2181821B14400D63800 /* favorite.png */,
 				ABACA727181EDDBB004EBF6A /* favorite@2x.png */,
 				AB1A033F183E64600016CD7B /* favorite_filled_white.png */,
 				AB1A0340183E64600016CD7B /* favorite_filled_white@2x.png */,
 				ABBB18D618243D4F00211499 /* favorite_outline.png */,
 				ABBB18D418243C3300211499 /* favorite_outline@2x.png */,
+				AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */,
+				AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */,
 				AB1A033D183E642A0016CD7B /* favorite_outline_white.png */,
 				AB1A033B183E63E60016CD7B /* favorite_outline_white@2x.png */,
 				ABBB18CC1824138E00211499 /* favorite_pink.png */,
@@ -2890,6 +2893,8 @@
 				ABB91162189808180046611F /* OMBStudentOrLandlordView.m */,
 				ABB91175189844300046611F /* OMBRenterProfileUserInfoCell.h */,
 				ABB91176189844300046611F /* OMBRenterProfileUserInfoCell.m */,
+				AB449870189AEFFF00979B3B /* OMBLoginSignUpView.h */,
+				AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */,
 			);
 			path = Users;
 			sourceTree = "<group>";
@@ -3366,6 +3371,7 @@
 				ABE706811885F39B007A4E29 /* phone_icon_white@2x.png in Resources */,
 				AB70CB8B186D0A240083DF4C /* apartment_icon@2x.png in Resources */,
 				ABB9116B189810810046611F /* landlord_sign_up_icon@2x.png in Resources */,
+				AB44986F189AC10100979B3B /* facebook_icon_white@2x.png in Resources */,
 				ABB911591897F7DE0046611F /* intro_still_image_slide_5_background@2x.jpg in Resources */,
 				ABF18BA71816BC53002DD723 /* marker_circle_selected@2x.png in Resources */,
 				AB0269D91822A97A00E72F53 /* logout_icon.png in Resources */,
@@ -3390,6 +3396,7 @@
 				DE96E4AF1890198A0081D69F /* or_line.png in Resources */,
 				AB0269A618220CA700E72F53 /* phone.png in Resources */,
 				AB0269CE18229DD800E72F53 /* login_icon.png in Resources */,
+				AB44986E189AC10100979B3B /* facebook_icon_blue@2x.png in Resources */,
 				A685EFC9188F2AEE0074E336 /* 22.png in Resources */,
 				A685EFBE188F2AEE0074E336 /* 11.png in Resources */,
 				A685EFC6188F2AEE0074E336 /* 19.png in Resources */,
@@ -3410,10 +3417,8 @@
 				DE96E4BB189019B60081D69F /* logo_intro_white.png in Resources */,
 				ABB9116A189810810046611F /* landlord_sign_up_icon.png in Resources */,
 				ABB06B0F1847E439009CBBEA /* how_it_works_icon.png in Resources */,
-				AB026BC61822B4DB00E72F53 /* facebook_icon@2x.png in Resources */,
 				ABF8ECB5182D81060080B1E2 /* review_pink.png in Resources */,
 				ABB700121879FDFC005F0730 /* residence_fake@2x.jpg in Resources */,
-				AB026BC51822B4DB00E72F53 /* facebook_icon.png in Resources */,
 				ABED5FC71894F9FE00AD630C /* credit_card_icon@2x.png in Resources */,
 				AB01ED53185914DD00333390 /* paypal_icon@2x.png in Resources */,
 				DE96E4BF18903F120081D69F /* already_sing_in.png in Resources */,
@@ -3699,6 +3704,7 @@
 				ABA0808C1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m in Sources */,
 				ABE7067D1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.m in Sources */,
 				ABA5B4161856922600F825E1 /* OMBDeleteRenterApplicationSectionModelConnection.m in Sources */,
+				AB449872189AEFFF00979B3B /* OMBLoginSignUpView.m in Sources */,
 				AB6155D5184FEA2E00A193C7 /* OMBUserUploadImageConnection.m in Sources */,
 				67E94814188DB97D007703FC /* OMBFilmstripImageCell.m in Sources */,
 				ABE706A61889984D007A4E29 /* OMBMessagesUnviewedCountConnection.m in Sources */,

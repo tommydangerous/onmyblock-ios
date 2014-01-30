@@ -49,6 +49,10 @@ float k2KeyboardHeight = 216.0;
                         @"9 months lease",@"10 months lease",@"11 months lease",
                         @"12 months lease"];
   
+  CGRect rect = [@"Move-in Date" boundingRectWithSize:
+    CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFont]];
+  sizeForLabelTextFieldCell = rect.size;
+  
   self.screenName = self.title = @"Lease Details";
   
   return self;
@@ -272,9 +276,11 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       static NSString *TextFieldCellIdentifier = @"TextFieldCellIdentifier";
       OMBLabelTextFieldCell *cell1 =
       [tableView dequeueReusableCellWithIdentifier: TextFieldCellIdentifier];
-      if (!cell1)
+      if (!cell1) {
         cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle:
-                 UITableViewCellStyleDefault reuseIdentifier: TextFieldCellIdentifier];
+          UITableViewCellStyleDefault reuseIdentifier: TextFieldCellIdentifier];
+        [cell1 setFrameUsingSize: sizeForLabelTextFieldCell];
+      }
       cell1.selectionStyle = UITableViewCellSelectionStyleNone;
       cell1.textField.placeholder = @"";
       cell1.textField.userInteractionEnabled = YES;
@@ -535,7 +541,6 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell1.textFieldLabel.text = string;
       [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
                 forControlEvents: UIControlEventEditingChanged];
-      [cell1 setFramesUsingString: @"Move-out Date"];
       return cell1;
     }
   }

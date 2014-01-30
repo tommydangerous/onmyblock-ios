@@ -20,7 +20,7 @@
 
   [self setBackgroundImage: [UIImage imageWithColor: [UIColor facebookBlueDark]]
     forState: UIControlStateHighlighted];
-  [self setImage: [UIImage imageNamed: @"facebook_icon.png"]];
+  [self setImage: [UIImage imageNamed: @"facebook_icon_white.png"]];
 
 
   return self;

@@ -63,11 +63,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
   _label.attributedText = [object.about attributedStringWithFont: _label.font
     lineHeight: 22.0f];
   _label.numberOfLines = 0;
-  CGRect rect = [_label.attributedText boundingRectWithSize: 
-    CGSizeMake(_label.frame.size.width, 9999.0f)
-      options: NSStringDrawingUsesLineFragmentOrigin context: nil];
   _label.frame = CGRectMake(_label.frame.origin.x, padding * 0.5f,
-    _label.frame.size.width, rect.size.height);
+    _label.frame.size.width, [object heightForAboutTextWithWidth:
+      _label.frame.size.width]);
 }
 
 - (void) reset

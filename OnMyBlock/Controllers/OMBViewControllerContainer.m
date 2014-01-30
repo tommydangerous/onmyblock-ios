@@ -656,8 +656,8 @@ willDecelerate: (BOOL) decelerate
   } completion: ^(BOOL finished) {
     // Remove detail view overlay from the detail view
     [_detailViewOverlay removeFromSuperview];
-    [[UIApplication sharedApplication] setStatusBarStyle:
-      UIStatusBarStyleDefault];
+    // [[UIApplication sharedApplication] setStatusBarStyle:
+    //   UIStatusBarStyleDefault];
   }];
 
   // Animate the buttons
@@ -1073,8 +1073,8 @@ willDecelerate: (BOOL) decelerate
   } completion: ^(BOOL finished) {
     // Add detail view overlay to the detail view
     [_detailView addSubview: _detailViewOverlay];
-    [[UIApplication sharedApplication] setStatusBarStyle:
-      UIStatusBarStyleLightContent];
+    // [[UIApplication sharedApplication] setStatusBarStyle:
+    //   UIStatusBarStyleLightContent];
   }];
 
   // Animate the buttons

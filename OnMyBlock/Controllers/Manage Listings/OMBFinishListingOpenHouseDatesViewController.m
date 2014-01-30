@@ -23,6 +23,9 @@
 {
   if (!(self = [super initWithResidence: object])) return nil;
 
+  CGRect rect = [@"Duration" boundingRectWithSize:
+    CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFont]];
+  sizeForLabelTextFieldCell = rect.size;
   self.screenName = self.title = @"Open House Dates";
 
   return self;
@@ -98,9 +101,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   static NSString *CellIdentifier = @"CellIdentifier";
   OMBLabelTextFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:
     CellIdentifier];
-  if (!cell)
+  if (!cell) {
     cell = [[OMBLabelTextFieldCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+    [cell setFrameUsingSize: sizeForLabelTextFieldCell];
+  }
   cell.backgroundColor = [UIColor whiteColor];
   cell.selectionStyle = UITableViewCellSelectionStyleNone;
   cell.textField.placeholderColor = [UIColor grayLight];
@@ -163,7 +168,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   cell.textField.textAlignment  = NSTextAlignmentRight;
   cell.textField.textColor      = [UIColor blueDark];
   cell.textFieldLabel.textColor = [UIColor textColor];
-  [cell setFramesUsingString: @"Duration"];
   return cell;
 }
 

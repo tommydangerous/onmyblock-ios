@@ -28,6 +28,10 @@
   self.screenName = @"Edit Profile View Controller";
   self.title      = @"Edit Profile";
 
+  CGRect rect = [@"First name" boundingRectWithSize:
+    CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFontBold]];
+  sizeForLabelTextFieldCell = rect.size;
+
   user = object;
 
   [[NSNotificationCenter defaultCenter] addObserver: self
@@ -76,7 +80,6 @@
     screenWidth, screen.size.height - (OMBPadding + OMBStandardHeight));
 
   backgroundBlurView = [[OMBBlurView alloc] initWithFrame: self.view.frame];
-  backgroundBlurView.backgroundColor = [UIColor redColor];
   backgroundBlurView.blurRadius = 20.0f;
   backgroundBlurView.tintColor = [UIColor colorWithWhite: 1.0f alpha: 0.5f];
   [self.view insertSubview: backgroundBlurView belowSubview: self.table];
@@ -267,6 +270,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell) {
         cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
+        [cell setFrameUsingSize: sizeForLabelTextFieldCell];
       }
       // cell.backgroundColor = transparentWhite;
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -276,27 +280,27 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       NSString *labelString;
       // First name
       if (indexPath.row == OMBEditProfileSectionMainRowFirstName) {
-        key = @"firstName";
+        key         = @"firstName";
         labelString = @"First name";
       }
       // Last name
       else if (indexPath.row == OMBEditProfileSectionMainRowLastName) {
-        key = @"lastName";
+        key         = @"lastName";
         labelString = @"Last name";
       }
       // School
       else if (indexPath.row == OMBEditProfileSectionMainRowSchool) {
-        key = @"school";
+        key         = @"school";
         labelString = @"School";
       }
       // Email
       else if (indexPath.row == OMBEditProfileSectionMainRowEmail) {
-        key = @"email";
+        key         = @"email";
         labelString = @"Email";
       }
       // Phone
       else if (indexPath.row == OMBEditProfileSectionMainRowPhone) {
-        key = @"phone";
+        key         = @"phone";
         labelString = @"Phone";
       }
       cell.textField.delegate  = self;
@@ -305,7 +309,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.textFieldLabel.text = labelString;
       [cell.textField addTarget: self action: @selector(textFieldDidChange:)
         forControlEvents: UIControlEventEditingChanged];
-      [cell setFramesUsingString: @"First name"];
       return cell;
     }
   }
@@ -446,6 +449,9 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   [[OMBUser currentUser] updateWithDictionary: valueDictionary 
     completion: ^(NSError *error) {
       if (!error) {
+        // Clear this because they updated their about
+        // so the sizes need to change
+        [[OMBUser currentUser].heightForAboutTextDictionary removeAllObjects];
         [self cancel];
       }
       else {

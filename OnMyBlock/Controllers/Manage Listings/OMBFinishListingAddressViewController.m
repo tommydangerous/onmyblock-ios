@@ -34,6 +34,10 @@
   locationManager.desiredAccuracy = kCLLocationAccuracyBest;
   locationManager.distanceFilter  = 50;
 
+  CGRect rect = [@"Address" boundingRectWithSize:
+    CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFont]];
+  sizeForLabelTextFieldCell = rect.size;
+
   self.screenName = self.title = @"Location";
 
   [[NSNotificationCenter defaultCenter] addObserver: self
@@ -273,9 +277,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     static NSString *TextFieldCellIdentifier = @"TextFieldCellIdentifier";
     OMBLabelTextFieldCell *c = [tableView dequeueReusableCellWithIdentifier:
       TextFieldCellIdentifier];
-    if (!c)
+    if (!c) {
       c = [[OMBLabelTextFieldCell alloc] initWithStyle: 
         UITableViewCellStyleDefault reuseIdentifier: TextFieldCellIdentifier];
+      [c setFrameUsingSize: sizeForLabelTextFieldCell];
+    }
     c.selectionStyle = UITableViewCellSelectionStyleNone;
     c.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     c.textField.delegate = self;
@@ -327,7 +333,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     
     c.textFieldLabel.text = string;
-    [c setFramesUsingString: @"Address"];
     return c;
   }
   return cell;

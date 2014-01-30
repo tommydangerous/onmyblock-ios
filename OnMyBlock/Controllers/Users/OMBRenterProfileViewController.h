@@ -8,7 +8,9 @@
 
 #import "OMBTableViewController.h"
 
+@class AMBlurView;
 @class OMBCenteredImageView;
+@class OMBEditProfileViewController;
 @class OMBUser;
 
 // Sections
@@ -29,12 +31,12 @@ typedef NS_ENUM(NSInteger, OMBRenterProfileSectionUserInfoRow) {
 // in section renter info
 typedef NS_ENUM(NSInteger, OMBRenterProfileSectionRenterInfoRow) {
   OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoHeader,
+  OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoNote,
+  OMBRenterProfileSectionRenterInfoRowBecomeRenterVerified,
   OMBRenterProfileSectionRenterInfoRowCoapplicants,
   OMBRenterProfileSectionRenterInfoRowCosigner,
   OMBRenterProfileSectionRenterInfoRowFacebook,
-  OMBRenterProfileSectionRenterInfoRowLinkedIn,
-  OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoNote,
-  OMBRenterProfileSectionRenterInfoRowBecomeRenterVerified
+  OMBRenterProfileSectionRenterInfoRowLinkedIn
 };
 
 @interface OMBRenterProfileViewController : OMBTableViewController
@@ -43,6 +45,9 @@ typedef NS_ENUM(NSInteger, OMBRenterProfileSectionRenterInfoRow) {
   UIView *backView;
   CGFloat backViewOriginY;
   UIBarButtonItem *editBarButtonItem;
+  UIButton *editButton;
+  AMBlurView *editButtonView;
+  OMBEditProfileViewController *editProfileViewController;
   UILabel *fullNameLabel;
   UIView *nameView;
   CGFloat nameViewOriginY;

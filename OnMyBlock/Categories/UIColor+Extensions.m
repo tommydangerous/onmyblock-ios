@@ -36,8 +36,13 @@
 
 + (UIColor *) blueHighlighted
 {
+  return [UIColor blueHighlightedAlpha: 1.0f];
+}
+
++ (UIColor *) blueHighlightedAlpha: (CGFloat) value
+{
   return [UIColor colorWithRed: (111 - 20)/255.0 green: (174 - 20)/255.0 
-    blue: (193 - 20)/255.0 alpha: 1]; 
+    blue: (193 - 20)/255.0 alpha: value];
 }
 
 + (UIColor *) blueDark
