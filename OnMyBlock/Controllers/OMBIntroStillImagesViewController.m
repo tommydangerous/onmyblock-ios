@@ -110,7 +110,7 @@
   // Celebrate
   // Get Started
   // Sign up
-  NSInteger numberOfPages = 6;
+  NSInteger numberOfPages = 5;
 
   // Scroll
   _scroll               = [[UIScrollView alloc] init];
@@ -182,8 +182,21 @@
   _getStartedView = [[OMBGetStartedView alloc] init];
   _getStartedView.frame = CGRectMake(screenWidth * 4.0f, 0.0f, 
     screenWidth, screenHeight);
+  // Facebook
+  [_getStartedView.facebookButton addTarget: self 
+    action: @selector(showFacebook) 
+      forControlEvents: UIControlEventTouchUpInside];
+  // Sign up
   [_getStartedView.getStartedButton addTarget: self 
-    action: @selector(showStudentLandlordView) 
+    action: @selector(showSignUp) 
+      forControlEvents: UIControlEventTouchUpInside];
+  // Login
+  [_getStartedView.loginButton addTarget: self
+    action: @selector(showLogin)
+      forControlEvents: UIControlEventTouchUpInside];
+  // Landlords
+  [_getStartedView.landlordButton addTarget: self 
+    action: @selector(showLandlordSignUp) 
       forControlEvents: UIControlEventTouchUpInside];
   [_scroll addSubview: _getStartedView];
 
@@ -191,7 +204,7 @@
   _signUpView = [[OMBSignUpView alloc] init];
   _signUpView.frame = CGRectMake(screenWidth * 5.0f, 0.0f,
     screenWidth, screenHeight);
-  [_scroll addSubview: _signUpView];
+  // [_scroll addSubview: _signUpView];
 
   CGFloat bottomViewHeight = 58.0f;
   // Bottom view
@@ -230,7 +243,7 @@
   _pageControl                   = [[DDPageControl alloc] init];
   _pageControl.indicatorDiameter = 10.0f;
   _pageControl.indicatorSpace    = 15.0f;
-  _pageControl.numberOfPages     = numberOfPages - 1;
+  _pageControl.numberOfPages     = numberOfPages;
   _pageControl.offColor          = [UIColor whiteColor];
   _pageControl.onColor           = [UIColor whiteColor];
   _pageControl.type = DDPageControlTypeOnFullOffEmpty;
@@ -315,16 +328,17 @@
   [[UIApplication sharedApplication] setStatusBarStyle:
     UIStatusBarStyleLightContent];
 
-  #warning Remove this
-  [_scroll setContentOffset: CGPointMake(4 * _scroll.frame.size.width, 0.0f)
-    animated: NO];
+  // #warning Remove this
+  // [_scroll setContentOffset: CGPointMake(4 * _scroll.frame.size.width, 0.0f)
+  //   animated: NO];
 }
 
 - (void) viewDidAppear: (BOOL) animated
 {
   [super viewDidAppear: animated];
 
-  [self showLogin];
+  // #warning Remove this
+  // [self showLogin];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -574,6 +588,7 @@
 - (void) scrollToSignUp
 {
   [self scrollToPage: 4];
+  _pageControl.currentPage = 4;
   // [self scrollToPage: 5];
 }
 
@@ -610,6 +625,11 @@
       _scroll.frame.size.height);
 }
 
+- (void) showFacebook
+{
+  [[self appDelegate] openSession];
+}
+
 - (void) showLandlordSignUp
 {
   [_loginViewController showLandlordSignUp];
@@ -620,6 +640,13 @@
 - (void) showLogin
 {
   [_loginViewController showLogin];
+  [self presentViewController: _loginViewController 
+    animated: YES completion: nil];
+}
+
+- (void) showSignUp
+{
+  [_loginViewController showSignUp];
   [self presentViewController: _loginViewController 
     animated: YES completion: nil];
 }

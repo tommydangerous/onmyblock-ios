@@ -20,6 +20,7 @@
 + (UIColor *) blueDarkAlpha: (float) value;
 + (UIColor *) blueLight;
 + (UIColor *) facebookBlue;
++ (UIColor *) facebookBlueAlpha: (CGFloat) value;
 + (UIColor *) facebookBlueDark;
 + (UIColor *) grayDark;
 + (UIColor *) grayDarkAlpha: (float) value;

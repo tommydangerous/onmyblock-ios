@@ -11,6 +11,8 @@
 #import "AMBlurView.h"
 #import "OMBBlurView.h"
 #import "OMBCloseButtonView.h"
+#import "OMBFacebookButton.h"
+#import "OMBOrView.h"
 #import "OMBViewController.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
@@ -34,12 +36,12 @@
 
   self.frame = screen;
   // Blur view
-  blurView = [[OMBBlurView alloc] initWithFrame: screen];
-  blurView.blurRadius = 20.0f;
-  blurView.tintColor  = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
-  [blurView refreshWithImage: [UIImage imageNamed:
-    @"intro_still_image_slide_5_background.jpg"]];
-  [self addSubview: blurView];
+  _blurView = [[OMBBlurView alloc] initWithFrame: screen];
+  _blurView.blurRadius = 20.0f;
+  _blurView.tintColor  = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+  // [_blurView refreshWithImage: [UIImage imageNamed:
+  //   @"intro_still_image_slide_5_background.jpg"]];
+  [self addSubview: _blurView];
 
   // Scroll
   scroll = [[UIScrollView alloc] init];
@@ -63,13 +65,31 @@
   headerLabel.text = @"Students";
   headerLabel.textColor = [UIColor whiteColor];
   headerLabel.textAlignment = NSTextAlignmentCenter;
-  [scroll addSubview: headerLabel];
+  // [scroll addSubview: headerLabel];
+
+  // Facebook button
+  _facebookButton = [[OMBFacebookButton alloc] initWithFrame: CGRectMake(
+    padding, padding + padding + padding, width, buttonHeight)];
+  _facebookButton.backgroundColor = [UIColor facebookBlueAlpha: 0.8f];
+  _facebookButton.layer.cornerRadius = OMBCornerRadius;
+  _facebookButton.titleLabel.font = [UIFont mediumTextFont];
+  [_facebookButton setTitle: @"Sign up using Facebook"
+    forState: UIControlStateNormal];
+  [scroll addSubview: _facebookButton];
+
+  // Or view
+  orView = [[OMBOrView alloc] initWithFrame: CGRectMake(0.0f,
+    _facebookButton.frame.origin.y + _facebookButton.frame.size.height + padding,
+      screenWidth, padding) color: [UIColor whiteColor]];
+  [orView setCapitalizedLabel: NO];
+  [orView setLabelBold: NO];
+  [scroll addSubview: orView];
 
   // Hold all the text fields
   textFieldView = [[UIView alloc] init];
   textFieldView.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
   textFieldView.frame = CGRectMake(padding, 
-    headerLabel.frame.origin.y + headerLabel.frame.size.height + padding, 
+    orView.frame.origin.y + orView.frame.size.height + padding, 
       width, buttonHeight * 4);
   textFieldView.layer.cornerRadius = OMBCornerRadius;
   [scroll addSubview: textFieldView];
@@ -112,7 +132,7 @@
   for (TextFieldPadding *textField in textFieldArray) {
     NSInteger index = [textFieldArray indexOfObject: textField];
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    // textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     textField.delegate = self;
     textField.font = [UIFont normalTextFont];
     textField.frame = CGRectMake(0.0f, index * buttonHeight,
@@ -156,10 +176,10 @@
   _actionButton.clipsToBounds = YES;
   _actionButton.frame = CGRectMake(0.0f, 0.0f, width, buttonHeight);
   _actionButton.layer.cornerRadius = OMBCornerRadius;
-  _actionButton.titleLabel.font = [UIFont mediumTextFontBold];
+  _actionButton.titleLabel.font = [UIFont mediumTextFont];
   [_actionButton setBackgroundImage: [UIImage imageWithColor: 
     [UIColor blueHighlightedAlpha: 0.8f]] forState: UIControlStateHighlighted];
-  [_actionButton setTitle: @"Sign Up" forState: UIControlStateNormal];
+  [_actionButton setTitle: @"Student Sign Up" forState: UIControlStateNormal];
   [_actionButton setTitleColor: [UIColor whiteColor] 
     forState: UIControlStateNormal];
   [bottomView addSubview: _actionButton];
@@ -202,12 +222,50 @@
     selector: @selector(keyboardWillHide:)
       name: UIKeyboardWillHideNotification object: nil];
 
+  [self refreshContentSize];
+
   return self;
 }
 
 #pragma mark - Protocol
 
 #pragma mark - Protocol UITextFieldDelegate
+
+- (void) textFieldDidBeginEditing: (UITextField *) textField
+{
+  if (!isEditing) {
+    isEditing = YES;
+    [self refreshContentSize];
+  }
+
+  NSInteger index = 0;
+  if (textField == _emailTextField)
+    index = OMBLoginSignUpViewTextFieldEmail;
+  else if (textField == _firstNameTextField)
+    index = OMBLoginSignUpViewTextFieldFirstName;
+  else if (textField == _lastNameTextField)
+    index = OMBLoginSignUpViewTextFieldLastName;
+  else if (textField == _passwordTextField)
+    index = OMBLoginSignUpViewTextFieldPassword;
+
+  CGFloat contentHeight = scroll.contentSize.height;
+  CGFloat height        = scroll.frame.size.height;
+  CGFloat bottomY       = contentHeight - height;
+
+  CGFloat originY = textFieldView.frame.origin.y;
+  if (isLogin)
+    index -= 2;
+  if (index < 0)
+    index = 0;
+  originY += index * _firstNameTextField.frame.size.height;
+  if (originY > bottomY)
+    originY = bottomY;
+
+  CGPoint point = CGPointMake(0.0f, originY);
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    scroll.contentOffset = point;
+  }];
+}
 
 - (BOOL) textFieldShouldReturn: (UITextField *) textField
 {
@@ -219,6 +277,12 @@
 
 #pragma mark - Instance Methods
 
+- (void) clearTextFields
+{
+  _emailTextField.text = _firstNameTextField.text = 
+    _lastNameTextField.text = _passwordTextField.text = @"";
+}
+
 - (CGFloat) heightForScrollContentSize
 {
   CGFloat height  = 0.0f;
@@ -226,6 +290,11 @@
   height = actionSwitchButton.frame.origin.y + 
     actionSwitchButton.frame.size.height + padding;
   return height;
+}
+
+- (BOOL) isLogin
+{
+  return isLogin;
 }
 
 - (void) keyboardWillHide: (NSNotification *) notification
@@ -236,8 +305,6 @@
 
 - (void) keyboardWillShow: (NSNotification *) notification
 {
-  isEditing = YES;
-  [self refreshContentSize];
 }
 
 - (void) refreshContentSize
@@ -251,10 +318,33 @@
   }];
 }
 
-- (void) switchLogin
+- (void) scrollToTop
+{
+  [scroll setContentOffset: CGPointZero animated: YES];
+}
+
+- (void) switchToLandlord
+{
+  isLandlord = YES;
+  [self updateUserViews];
+}
+
+- (void) switchToLogin
 {
   isLogin = YES;
   [self updateViews];
+}
+
+- (void) switchToSignUp
+{
+  isLogin = NO;
+  [self updateViews];
+}
+
+- (void) switchToStudent
+{
+  isLandlord = NO;
+  [self updateUserViews];
 }
 
 - (void) switchUserViews
@@ -277,7 +367,7 @@
     headerLabel.text = @"Landlords";
     _emailTextField.placeholder = @"Landlord email";
     if (isLogin)
-      actionButtonString = @"Landlord Login";
+      actionButtonString = @"Login";
     else
       actionButtonString = @"Landlord Sign Up";
     [_actionButton setTitle: actionButtonString
@@ -291,7 +381,7 @@
     if (isLogin)
       actionButtonString = @"Login";
     else
-      actionButtonString = @"Sign Up";
+      actionButtonString = @"Student Sign Up";
     [_actionButton setTitle: actionButtonString
       forState: UIControlStateNormal];
     [userSwitchButton setTitle: @"Landlord?" forState: UIControlStateNormal];
@@ -332,20 +422,16 @@
       if (finished) {
         _firstNameTextField.hidden = YES;
         _lastNameTextField.hidden  = YES;
-        // Action button
-        if (isLandlord) {
-          [_actionButton setTitle: @"Landlord Login" 
-            forState: UIControlStateNormal];
-        }
-        else {
-          [_actionButton setTitle: @"Login" 
-            forState: UIControlStateNormal];
-        }
-        // Action switch button
-        [actionSwitchButton setTitle: @"Sign up" 
-          forState: UIControlStateNormal];
       }
     }];
+    // Facebook
+    [_facebookButton setTitle: @"Login using Facebook"
+      forState: UIControlStateNormal];
+    // Action button
+    [_actionButton setTitle: @"Login" forState: UIControlStateNormal];
+    // Action switch button
+    [actionSwitchButton setTitle: @"Sign up" 
+      forState: UIControlStateNormal];
   }
   // Sign up
   else {
@@ -377,22 +463,22 @@
         textFieldView.frame.origin.y + textFieldView.frame.size.height + 
         OMBPadding, bottomView.frame.size.width, 
           bottomView.frame.size.height);
-    } completion: ^(BOOL finished) {
-      if (finished) {
-        // Action button
-        if (isLandlord) {
-          [_actionButton setTitle: @"Landlord Sign Up" 
-            forState: UIControlStateNormal];
-        }
-        else {
-          [_actionButton setTitle: @"Sign Up" 
-            forState: UIControlStateNormal];
-        }
-        // Action switch button
-        [actionSwitchButton setTitle: @"Login" 
-          forState: UIControlStateNormal];
-      }
     }];
+    // Facebook
+    [_facebookButton setTitle: @"Sign up using Facebook"
+      forState: UIControlStateNormal];
+    // Action button
+    if (isLandlord) {
+      [_actionButton setTitle: @"Landlord Sign Up" 
+        forState: UIControlStateNormal];
+    }
+    else {
+      [_actionButton setTitle: @"Student Sign Up" 
+        forState: UIControlStateNormal];
+    }
+    // Action switch button
+    [actionSwitchButton setTitle: @"Login" 
+      forState: UIControlStateNormal];
   }
   [self refreshContentSize];
 }

@@ -21,6 +21,7 @@
 
 #pragma mark - Instance Methods
 
+- (void) setCapitalizedLabel: (BOOL) capitalize;
 - (void) setLabelBold: (BOOL) bold;
 
 @end

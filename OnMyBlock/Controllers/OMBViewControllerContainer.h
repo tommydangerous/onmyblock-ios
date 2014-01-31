@@ -10,6 +10,7 @@
 
 @class DRNRealTimeBlurView;
 @class OMBActivityView;
+@class OMBBlurView;
 @class OMBCenteredImageView;
 @class OMBExtendedHitAreaViewContainer;
 @class OMBIntroStillImagesViewController;
@@ -76,6 +77,7 @@
 }
 
 @property (nonatomic, strong) OMBCenteredImageView *accountView;
+@property (nonatomic, strong) OMBBlurView *backgroundBlurView;
 @property (nonatomic, strong) UIViewController *currentDetailViewController;
 @property (nonatomic, strong) UIView *detailView;
 @property (nonatomic, strong) UIView *detailViewOverlay;
@@ -165,7 +167,7 @@
 - (void) showMenuWithFactor: (float) factor;
 - (void) startSpinning;
 - (void) stopSpinning;
-#warning Remove this
-- (void) showTest;
+// #warning Remove this
+// - (void) showTest;
 
 @end

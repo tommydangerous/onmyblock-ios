@@ -51,6 +51,14 @@
 
 #pragma mark - Instance Methods
 
+- (void) setCapitalizedLabel: (BOOL) capitalize
+{
+  if (capitalize)
+    orLabel.text = [orLabel.text capitalizedString];
+  else
+    orLabel.text = [orLabel.text lowercaseString];
+}
+
 - (void) setLabelBold: (BOOL) bold
 {
   if (bold)

@@ -17,5 +17,6 @@
 @property (nonatomic, strong) UIButton *getStartedButton;
 @property (nonatomic, strong) AMBlurView *getStartedButtonView;
 @property (nonatomic, strong) UIButton *landlordButton;
+@property (nonatomic, strong) UIButton *loginButton;
 
 @end

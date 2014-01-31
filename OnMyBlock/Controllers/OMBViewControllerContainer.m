@@ -12,6 +12,7 @@
 #import "DRNRealTimeBlurView.h"
 #import "OMBAccountViewController.h"
 #import "OMBActivityView.h"
+#import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBCreateListingViewController.h"
 #import "OMBExtendedHitAreaViewContainer.h"
@@ -38,19 +39,19 @@
 #import "UIImage+Color.h"
 #import "UIImage+NegativeImage.h"
 #import "UIImage+Resize.h"
-#warning Remove this
-#import "OMBResidence.h"
-#import "OMBResidenceDetailViewController.h"
+// #warning Remove this
+// #import "OMBResidence.h"
+// #import "OMBResidenceDetailViewController.h"
 
 
 @implementation OMBViewControllerContainer
-#warning Remove this
-- (void) showTest
-{
-  [_mapNavigationController pushViewController:
-    [[OMBResidenceDetailViewController alloc] initWithResidence:
-      [OMBResidence fakeResidence]] animated: YES];
-}
+// #warning Remove this
+// - (void) showTest
+// {
+//   [_mapNavigationController pushViewController:
+//     [[OMBResidenceDetailViewController alloc] initWithResidence:
+//       [OMBResidence fakeResidence]] animated: YES];
+// }
 
 - (id) init
 {
@@ -169,30 +170,44 @@
     [[OMBNavigationController alloc] initWithRootViewController:
       [[OMBManageListingsViewController alloc] init]];
 
+
+  // Background blur view
+  _backgroundBlurView = [[OMBBlurView alloc] initWithFrame: self.view.frame];
+  _backgroundBlurView.blurRadius = 10.0f;
+  _backgroundBlurView.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.5f];
+  [_backgroundBlurView refreshWithImage: 
+    [UIImage imageNamed: @"menu_background.jpg"]];
+  [self.view addSubview: _backgroundBlurView];
+
   // Background view
-  backgroundView = [[UIView alloc] initWithFrame: self.view.frame];
-  [self.view addSubview: backgroundView];
+  // backgroundView = [[UIView alloc] initWithFrame: self.view.frame];
+  // [self.view addSubview: backgroundView];
+
   // Background image
-  backgroundImageView = [[UIImageView alloc] init];
-  backgroundImageView.contentMode  = UIViewContentModeScaleAspectFill;
-  backgroundImageView.frame        = backgroundView.frame;
-  backgroundImageView.image = 
-    [UIImage imageNamed: @"menu_background.jpg"];
-  [backgroundView addSubview: backgroundImageView];
+  // backgroundImageView = [[UIImageView alloc] init];
+  // backgroundImageView.contentMode  = UIViewContentModeScaleAspectFill;
+  // backgroundImageView.frame        = backgroundView.frame;
+  // backgroundImageView.image = 
+  //   [UIImage imageNamed: @"menu_background.jpg"];
+  // [backgroundView addSubview: backgroundImageView];
+
   // Black tint
-  UIView *colorView = [[UIView alloc] init];
-  colorView.backgroundColor = [UIColor colorWithRed: 0 green: 0 blue: 0
-    alpha: 0.5];
-  colorView.frame = backgroundView.frame;
-  [backgroundView addSubview: colorView];
-  // Blur
-  blurView = [[DRNRealTimeBlurView alloc] init];
-  blurView.frame = backgroundView.frame;
-  blurView.renderStatic = YES;
-  [backgroundView addSubview: blurView];
+  // UIView *colorView = [[UIView alloc] init];
+  // colorView.backgroundColor = [UIColor colorWithRed: 0 green: 0 blue: 0
+  //   alpha: 0.5];
+  // colorView.frame = backgroundView.frame;
+  // [backgroundView addSubview: colorView];
+  // // Blur
+  // blurView = [[DRNRealTimeBlurView alloc] init];
+  // blurView.frame = backgroundView.frame;
+  // blurView.renderStatic = YES;
+  // [backgroundView addSubview: blurView];
+
   // Scale the background larger so when they slide the menu, it "zooms"
-  backgroundImageView.transform = CGAffineTransformMakeScale(2, 2);
-  blurView.transform = CGAffineTransformMakeScale(2, 2);
+  _backgroundBlurView.transform = CGAffineTransformScale(
+    CGAffineTransformIdentity, 2.0f, 2.0f);
+  // backgroundImageView.transform = CGAffineTransformMakeScale(2, 2);
+  // blurView.transform = CGAffineTransformMakeScale(2, 2);
 
   // Menu
   // Logged out
@@ -574,8 +589,8 @@ willDecelerate: (BOOL) decelerate
     if (horizontalDifference != 0) {
       _detailView.transform = CGAffineTransformConcat(
         transformScale, transformTranslation);
-      blurView.transform = CGAffineTransformMakeScale(newBlurViewScale, 
-        newBlurViewScale);
+      _backgroundBlurView.transform = CGAffineTransformMakeScale(
+        newBlurViewScale, newBlurViewScale);
 
       // Animate current set of menu buttons
       // Top buttons slide in first
@@ -634,6 +649,12 @@ willDecelerate: (BOOL) decelerate
 
 - (void) hideMenuWithFactor: (float) factor
 {
+  [self hideMenuWithFactor: factor completion: nil];
+}
+
+- (void) hideMenuWithFactor: (CGFloat) factor 
+completion: (void (^) (void)) block
+{
   float duration = defaultDurationOfMenuAnimation;
   if (factor && factor > 0)
     duration /= factor;
@@ -648,12 +669,16 @@ willDecelerate: (BOOL) decelerate
       transformScale, transformTranslation);
 
     // Zoom into the background image view
-    blurView.transform = CGAffineTransformMakeScale(2, 2);
+    _backgroundBlurView.transform = CGAffineTransformScale(
+      CGAffineTransformIdentity, 2.0f, 2.0f);
+    // blurView.transform = CGAffineTransformMakeScale(2, 2);
 
     // Hide the account image view
     _accountView.alpha     = 0.0;
     _accountView.transform = CGAffineTransformMakeScale(0, 0);
   } completion: ^(BOOL finished) {
+    if (block)
+      block();
     // Remove detail view overlay from the detail view
     [_detailViewOverlay removeFromSuperview];
     // [[UIApplication sharedApplication] setStatusBarStyle:
@@ -991,8 +1016,10 @@ willDecelerate: (BOOL) decelerate
   //   getStartedButtonRect;
   
   [_introViewController resetViews];
-  [self presentViewController: _introViewController animated: animated
-    completion: nil];
+  [self hideMenuWithFactor: 1.0f completion: ^{
+    [self presentViewController: _introViewController animated: animated
+      completion: nil];
+  }];
 }
 
 - (void) showIntroAnimatedDissolve: (BOOL) animated
@@ -1026,7 +1053,9 @@ willDecelerate: (BOOL) decelerate
 - (void) showLogin
 {
   [_loginViewController showLogin];
-  [self presentLoginViewController];
+  [self hideMenuWithFactor: 1.0f completion: ^{
+    [self presentLoginViewController];
+  }];
 }
 
 - (void) showLogout
@@ -1065,7 +1094,8 @@ willDecelerate: (BOOL) decelerate
       transformScale, transformTranslation);
 
     // Zoom into the background image view
-    blurView.transform = CGAffineTransformMakeScale(1, 1);
+    _backgroundBlurView.transform = CGAffineTransformIdentity;
+    // blurView.transform = CGAffineTransformMakeScale(1, 1);
 
     // Hide the account image view
     _accountView.alpha     = 1.0;
@@ -1161,7 +1191,9 @@ willDecelerate: (BOOL) decelerate
 - (void) showSignUp
 {
   [_loginViewController showSignUp];
-  [self presentLoginViewController];
+  [self hideMenuWithFactor: 1.0f completion: ^{
+    [self presentLoginViewController];
+  }];
 }
 
 - (void) startSpinning

@@ -65,8 +65,13 @@
 
 + (UIColor *) facebookBlue
 {
+  return [UIColor facebookBlueAlpha: 1.0f];
+}
+
++ (UIColor *) facebookBlueAlpha: (CGFloat) value
+{
   return [UIColor colorWithRed: (59/255.0) green: (87/255.0) 
-    blue: (157/255.0) alpha: 1];
+    blue: (157/255.0) alpha: value];
 }
 
 + (UIColor *) facebookBlueDark

@@ -57,7 +57,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // [OMBUser fakeLogin]; // Fake login
   // Use this to show whatever view controller you are working on
   // [_container showRenterProfile];
-  [_container showIntroAnimatedDissolve: NO];
+  // [_container showIntroAnimatedDissolve: NO];
 
   // Check to see if the user has a saved api key in the user defaults
   [[OMBUser currentUser] checkForUserDefaultsAPIKey];

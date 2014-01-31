@@ -78,8 +78,6 @@
   _facebookButton.frame = _facebookButtonView.bounds;
   _facebookButton.layer.cornerRadius = _facebookButtonView.layer.cornerRadius;
   _facebookButton.titleLabel.font = [UIFont mediumTextFont];
-  [_facebookButton addTarget: self action: @selector(showFacebookLogin)
-    forControlEvents: UIControlEventTouchUpInside];
   [_facebookButton setTitle: @"Sign up using Facebook" 
     forState: UIControlStateNormal];
   [_facebookButton setBackgroundImage: 
@@ -172,14 +170,14 @@
   [_getStartedButton addSubview: emailImageView];
 
   // Already a user? Login
-  UIButton *login = [[UIButton alloc] init];
-  login.contentHorizontalAlignment =
+  _loginButton = [UIButton new];
+  _loginButton.contentHorizontalAlignment =
     UIControlContentHorizontalAlignmentRight;
-  login.frame = CGRectMake(_getStartedButtonView.frame.origin.x,
+  _loginButton.frame = CGRectMake(_getStartedButtonView.frame.origin.x,
     _getStartedButtonView.frame.origin.y + 
     _getStartedButtonView.frame.size.height, 
       _getStartedButtonView.frame.size.width, standardHeight);
-  login.titleLabel.font = [UIFont smallTextFont];
+  _loginButton.titleLabel.font = [UIFont normalTextFont];
   NSMutableAttributedString *alreadyString = 
     [[NSMutableAttributedString alloc] initWithString: @"Already a user? "
       attributes: @{ 
@@ -192,10 +190,9 @@
     }
   ];
   [alreadyString appendAttributedString: loginString];
-  [login addTarget: self action: @selector(showLogin)
-    forControlEvents: UIControlEventTouchUpInside];
-  [login setAttributedTitle: alreadyString forState: UIControlStateNormal];
-  [self addSubview: login];
+  [_loginButton setAttributedTitle: alreadyString 
+    forState: UIControlStateNormal];
+  [self addSubview: _loginButton];
 
   // Landlords
   _landlordButton = [UIButton new];
@@ -206,37 +203,13 @@
   _landlordButton.layer.borderWidth = 1.0f;
   _landlordButton.layer.cornerRadius = _landlordButton.frame.size.height * 0.5f;
   _landlordButton.titleLabel.font = [UIFont normalTextFont];
-  [_landlordButton setTitle: @"Landlords" forState: UIControlStateNormal];
+  [_landlordButton setTitle: @"Landlords Here" 
+    forState: UIControlStateNormal];
   [_landlordButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [self addSubview: _landlordButton];
 
   return self;
-}
-
-#pragma mark - Methods
-
-#pragma mark - Instance Methods
-
-- (void) getStartedButtonTapped
-{
-  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  [appDelegate.container.introViewController scrollToPage: 
-    appDelegate.container.introViewController.pageControl.numberOfPages];
-}
-
-- (void) showFacebookLogin
-{
-  [[NSNotificationCenter defaultCenter] postNotificationName:
-    OMBActivityIndicatorViewStartAnimatingNotification object: nil];
-  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  [appDelegate openSession];
-}
-
-- (void) showLogin
-{
-  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  [appDelegate.container.introViewController showLogin];
 }
 
 @end

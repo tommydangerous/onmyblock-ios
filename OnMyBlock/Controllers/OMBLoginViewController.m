@@ -9,18 +9,16 @@
 #import "OMBLoginViewController.h"
 
 #import "OMBActivityView.h"
+#import "OMBBlurView.h"
 #import "OMBCloseButtonView.h"
+#import "OMBFacebookButton.h"
 #import "OMBLoginConnection.h"
-#import "OMBIntroViewController.h"
 #import "OMBLoginSignUpView.h"
-#import "OMBNavigationController.h"
 #import "OMBSignUpConnection.h"
 #import "OMBUser.h"
-#import "OMBViewControllerContainer.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
-#import "UIImage+Resize.h"
 
 @implementation OMBLoginViewController
 
@@ -30,10 +28,15 @@
 {
   if (!(self = [super init])) return nil;
 
-  // self.edgesForExtendedLayout = 
-  //   (UIRectEdgeBottom | UIRectEdgeLeft | UIRectEdgeRight);
+  imageNames = @[
+    @"intro_still_image_slide_5_background.jpg",
+    @"intro_still_image_slide_6_background.jpg",
+    @"intro_still_image_slide_7_background.jpg",
+    @"intro_still_image_slide_8_background.jpg"
+  ];
+
   self.screenName = @"Login View Controller";
-  self.title = @"Login";
+  self.title      = @"Login";
 
   return self;
 }
@@ -47,37 +50,44 @@
   [super loadView];
 
   CGRect screen = [[UIScreen mainScreen] bounds];
+
   self.view = [[UIView alloc] initWithFrame: screen];
 
-  _signUpView = [[OMBLoginSignUpView alloc] init];
-  [self.view addSubview: _signUpView];
+  // Login and sign up view
+  _loginSignUpView = [[OMBLoginSignUpView alloc] init];
+  // Close button
+  [_loginSignUpView.closeButtonView.closeButton addTarget: self
+    action: @selector(close) forControlEvents: UIControlEventTouchUpInside];
+  // Facebook
+  [_loginSignUpView.facebookButton addTarget: self
+    action: @selector(showFacebook) 
+      forControlEvents: UIControlEventTouchUpInside];
+  // Login or Sign Up
+  [_loginSignUpView.actionButton addTarget: self 
+    action: @selector(loginOrSignUp) 
+      forControlEvents: UIControlEventTouchUpInside];
+  [self.view addSubview: _loginSignUpView];
 
-  CGFloat padding = OMBPadding;
-  
-  // Close view
-  CGFloat closeButtonPadding    = padding;
-  CGFloat closeButtonViewHeight = padding;
-  CGFloat closeButtonViewWidth  = closeButtonViewHeight;
-  CGRect closeButtonRect = CGRectMake(screen.size.width - 
-    (closeButtonViewWidth + closeButtonPadding - 3.0f), 
-      padding + closeButtonPadding, closeButtonViewWidth, 
-        closeButtonViewHeight);
-  closeButtonView = [[OMBCloseButtonView alloc] initWithFrame: closeButtonRect
-    color: [UIColor colorWithWhite: 1.0f alpha: 0.8f]];
-  [closeButtonView.closeButton addTarget: self action: @selector(close)
-    forControlEvents: UIControlEventTouchUpInside];
-  // [self.view addSubview: closeButtonView];
-
+  // Activity spinner
   _activityView = [[OMBActivityView alloc] init];
   [self.view addSubview: _activityView];
 }
 
+- (void) viewDidDisappear: (BOOL) animated
+{
+  [super viewDidDisappear: animated];
+
+  [_loginSignUpView scrollToTop];
+}
+
 - (void) viewWillAppear: (BOOL) animated
 {
-  // [_signUpView resetOriginX];
-  // [_signUpView updateScrollContentSizeAnimated: NO];
+  [super viewWillAppear: animated];
 
-  // [[self appDelegate].container stopSpinning];
+  int index = arc4random_uniform([imageNames count] - 1);
+  UIImage *image = [UIImage imageNamed: [imageNames objectAtIndex: index]];
+  [_loginSignUpView.blurView refreshWithImage: image];
+
   [_activityView stopSpinning];
 }
 
@@ -90,19 +100,110 @@
   [self dismissViewControllerAnimated: YES completion: nil];
 }
 
+- (void) login
+{
+  NSString *emailString = _loginSignUpView.emailTextField.text;
+  NSString *passwordString = _loginSignUpView.passwordTextField.text;
+  if ([emailString length] && [passwordString length]) {
+    NSDictionary *params = @{
+      @"email":    emailString,
+      @"password": passwordString
+    };
+    OMBLoginConnection *conn =
+      [[OMBLoginConnection alloc] initWithParameters: params];
+    conn.completionBlock = ^(NSError *error) {
+      if ([[OMBUser currentUser] loggedIn]) {
+        [_loginSignUpView clearTextFields];
+      }
+      else {
+        _loginSignUpView.passwordTextField.text = @"";
+        if (error) {
+          [self showAlertViewWithError: error];
+        }
+        else {
+          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+            @"Login failed" message: @"Invalid email or password" delegate: nil
+              cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+          [alertView show];
+        }
+      }
+      [_activityView stopSpinning];
+    };
+    [conn start];
+    [_activityView startSpinning];
+    [self.view endEditing: YES];
+  }
+}
+
+- (void) loginOrSignUp
+{
+  if ([_loginSignUpView isLogin])
+    [self login];
+  else
+    [self signUp];
+}
+
+- (void) showFacebook
+{
+  [[self appDelegate] openSession];
+}
+
 - (void) showLandlordSignUp
 {
-  // [_signUpView showSignUpForLandlord];
+  [_loginSignUpView switchToLandlord];
+  [_loginSignUpView switchToSignUp];
 }
 
 - (void) showLogin
 {
-  // [_signUpView showLogin];
+  [_loginSignUpView switchToStudent];
+  [_loginSignUpView switchToLogin];
 }
 
 - (void) showSignUp
 {
-  // [_signUpView showSignUpForStudent];
+  [_loginSignUpView switchToStudent];
+  [_loginSignUpView switchToSignUp];
+}
+
+- (void) signUp
+{
+  NSString *emailString = _loginSignUpView.emailTextField.text;
+  NSString *firstNameString = _loginSignUpView.firstNameTextField.text;
+  NSString *lastNameString = _loginSignUpView.lastNameTextField.text;
+  NSString *passwordString = _loginSignUpView.passwordTextField.text;
+  if ([emailString length] && [firstNameString length] &&
+    [lastNameString length] && [passwordString length]) {
+
+    NSDictionary *params = @{
+      @"email":      emailString,
+      @"first_name": firstNameString,
+      @"last_name":  lastNameString,
+      @"password":   passwordString
+    };
+    OMBSignUpConnection *conn = 
+      [[OMBSignUpConnection alloc] initWithParameters: params];
+    conn.completionBlock = ^(NSError *error) {
+      if ([[OMBUser currentUser] loggedIn]) {
+        [_loginSignUpView clearTextFields];
+      }
+      else {
+        if (error) {
+          [self showAlertViewWithError: error];
+        }
+        else {
+          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+            @"Sign up failed" message: @"Please try again" delegate: nil
+              cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+          [alertView show];
+        }
+      }
+      [_activityView stopSpinning];
+    };
+    [conn start];
+    [_activityView startSpinning];
+    [self.view endEditing: YES];
+  } 
 }
 
 @end
