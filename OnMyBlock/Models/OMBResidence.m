@@ -22,6 +22,10 @@
 #import "OMBUserStore.h"
 #import "UIImage+Resize.h"
 
+NSString *const OMBResidencePropertyTypeApartment = @"apartment";
+NSString *const OMBResidencePropertyTypeHouse     = @"house";
+NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
+
 @implementation OMBResidence
 
 #pragma mark - Initializer

@@ -20,6 +20,11 @@
 {
   if (!(self = [super initWithFrame: rect])) return nil;
 
+  // Landlord type
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(updateLandlordType:)
+      name: OMBCurrentUserLandlordTypeChangeNotification object: nil];
+  // Messages badge
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(updateMessagesUnviewedCount:) 
       name: OMBMessagesUnviewedCountNotification object: nil];
@@ -313,6 +318,14 @@
   [self setFramesForButtons: _currentButtons];
 }
 
+- (void) setup
+{
+  if (_isForLandlord)
+    [self setupForSeller];
+  else
+    [self setupForRenter];
+}
+
 - (void) setupForRenter
 {
   [self removeCurrentButtonsFromMenuScroll];
@@ -324,7 +337,7 @@
 - (void) setupForSeller
 {
   [self removeCurrentButtonsFromMenuScroll];
-  [_headerButton setTitle: @"Landlord" forState: UIControlStateNormal];
+  [_headerButton setTitle: @"Create Listing" forState: UIControlStateNormal];
   _currentButtons  = _sellerButtons;
   [self setupButtons];
 }
@@ -394,6 +407,22 @@ withNumber: (NSNumber *) number
       newWidth = 20.0f;
     newRect.size.width = 1.0f + newWidth + 1.0f;
     label.frame = newRect;
+  }
+}
+
+- (void) updateLandlordType: (NSNotification *) notification
+{
+  NSString *title = @"Create Listing";
+  id landlordType = [[notification userInfo] objectForKey: @"landlordType"];
+  // If this user menu is a user menu with the landlord options
+  if (_isForLandlord) {
+    if (landlordType != [NSNull null]) {
+      if ([(NSString *) landlordType length]) {
+        title = (NSString *) landlordType;
+      }
+    }
+    [_headerButton setTitle: [title capitalizedString] 
+      forState: UIControlStateNormal];
   }
 }
 

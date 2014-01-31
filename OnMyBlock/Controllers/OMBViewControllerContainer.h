@@ -45,7 +45,6 @@
   UIButton *searchButton;
   UIButton *discoverButton;
   UIButton *howItWorksButton;
-  UIButton *createListingButton;
   UIButton *loginButton;
   UIButton *signUpButton;
   // Bottom right button
@@ -72,6 +71,7 @@
   UIImageView *backgroundImageView;
   UIView *backgroundView;
   DRNRealTimeBlurView *blurView;
+  UIButton *createListingButton;
   OMBExtendedHitAreaViewContainer *hitArea;
   OMBOfferAcceptedView *offerAcceptedView;
 }

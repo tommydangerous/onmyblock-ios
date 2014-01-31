@@ -397,6 +397,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   _imagesFilmstrip.dataSource = self;
   _imagesFilmstrip.delegate = self;
   _imagesFilmstrip.pagingEnabled = YES;
+  _imagesFilmstrip.showsHorizontalScrollIndicator = NO;
 
   [self insertSubview: _imagesFilmstrip atIndex: 0];
 }

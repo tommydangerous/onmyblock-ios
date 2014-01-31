@@ -57,6 +57,11 @@
 {
   if (!(self = [super init])) return nil;
 
+  // Landlord type
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(updateLandlordType:)
+      name: OMBCurrentUserLandlordTypeChangeNotification object: nil];
+
   // These 3 post this notification
   // Login connection
   // Sign up connection
@@ -218,13 +223,15 @@
   _menuScroll.showsVerticalScrollIndicator = NO;
   [self.view addSubview: _menuScroll];
   // Logged in
-  // Hit Area
+  // Hit Area so that the infinite scroll can scroll
+  // when scrolling on the very bottom because the infinite scroll frame
+  // does not reach all the way to the bottom of the screen
   hitArea = [[OMBExtendedHitAreaViewContainer alloc] init];
   hitArea.clipsToBounds = YES;
   hitArea.frame = _menuScroll.frame;
   hitArea.hidden = YES;
   [self.view addSubview: hitArea];
-  // Infinite scroll
+  // Infinite scroll; when they are logged in
   _infiniteScroll = [[UIScrollView alloc] init];
   _infiniteScroll.clipsToBounds = NO;
   _infiniteScroll.delegate = self;
@@ -234,8 +241,11 @@
   _infiniteScroll.pagingEnabled = YES;
   _infiniteScroll.panGestureRecognizer.maximumNumberOfTouches = 1;
   _infiniteScroll.showsVerticalScrollIndicator = NO;
-  hitArea.scrollView = _infiniteScroll;
   [hitArea addSubview: _infiniteScroll];
+
+  // This is set when user creates a listing
+  _infiniteScroll.scrollEnabled = NO;
+  // hitArea.scrollView = _infiniteScroll;
 
   // Buttons
   CGFloat imageSize = 22.0f;
@@ -272,22 +282,6 @@
     [UIImage imageNamed: @"discover_icon.png"] 
       size: discoverImageView.frame.size];
   [discoverButton addSubview: discoverImageView];
-
-  // Create Listing
-  createListingButton = [[UIButton alloc] init];
-  [createListingButton addTarget: self action: @selector(showLogin)
-    forControlEvents: UIControlEventTouchUpInside];
-  [createListingButton setTitle: @"Create Listing" 
-    forState: UIControlStateNormal];
-  // [buttonsLoggedOut addObject: createListingButton];
-  // Image view
-  UIImageView *createListingImageView = [[UIImageView alloc] init];
-  createListingImageView.frame = discoverImageView.frame;
-  UIImage *createListingImage = [UIImage imageNamed: 
-    @"create_listing_icon.png"];
-  createListingImageView.image = [UIImage image: createListingImage
-    size: createListingImageView.frame.size];
-  [createListingButton addSubview: createListingImageView];
 
   // How it Works
   howItWorksButton = [[UIButton alloc] init];
@@ -355,15 +349,27 @@
       m.frame = rect;
     }
     if (index % 2 == 0)
-      [m setupForRenter];
+      m.isForLandlord = NO;
     else
-      [m setupForSeller];
+      m.isForLandlord = YES;
+    [m setup];
     [m setHeaderInactive];
     [_infiniteScroll addSubview: m];
   }
   // Scroll to renter menu
   [_infiniteScroll setContentOffset: 
     CGPointMake(0, userMenu1.frame.size.height * 2) animated: NO];
+
+  // Create listing button at the bottom when the user hasn't
+  // created a listing yet
+  createListingButton = [UIButton new];
+  createListingButton.frame = CGRectMake(0.0f, 
+    screenHeight - userMenu1.headerButton.frame.size.height, 
+      userMenu1.headerButton.frame.size.width, 
+        userMenu1.headerButton.frame.size.height);
+  [createListingButton addTarget: self action: @selector(showCreateListing)
+    forControlEvents: UIControlEventTouchUpInside];
+  [self.view addSubview: createListingButton];
 
   // Detail view
   _detailView = [[UIView alloc] initWithFrame: screen];
@@ -484,20 +490,20 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   }
 }
 
-- (void) scrollViewDidEndDragging: (UIScrollView *) scrollView 
-willDecelerate: (BOOL) decelerate
-{
-  if (scrollView == _infiniteScroll) {
-    NSLog(@"END DRAGGING");
-  }
-}
+// - (void) scrollViewDidEndDragging: (UIScrollView *) scrollView 
+// willDecelerate: (BOOL) decelerate
+// {
+//   if (scrollView == _infiniteScroll) {
+//     NSLog(@"END DRAGGING");
+//   }
+// }
 
-- (void) scrollViewDidScroll: (UIScrollView *) scrollView
-{
-  if (scrollView == _infiniteScroll) {
-    // float y = scrollView.contentOffset.y;
-  }
-}
+// - (void) scrollViewDidScroll: (UIScrollView *) scrollView
+// {
+//   if (scrollView == _infiniteScroll) {
+//     // float y = scrollView.contentOffset.y;
+//   }
+// }
 
 #pragma mark - Methods
 
@@ -749,12 +755,21 @@ completion: (void (^) (void)) block
   [_accountView removeFromSuperview];
   // Adjust the intro view
   [_introViewController setupForLoggedOutUser];
-  [self showIntroAnimatedDissolve: NO];
+  // [self showIntroAnimatedDissolve: YES];
 
   // [self showLoggedOutButtons];
   // [self adjustMenuScrollContent];
   hitArea.hidden     = YES;
   _menuScroll.hidden = NO;
+
+  // Do this so that the next person can't do anything
+  // on the landlord side unless they've created a listing
+  _infiniteScroll.scrollEnabled = NO;
+  hitArea.scrollView = nil;
+  // Reset the infinite scroll to a renter side for the next login
+  [_infiniteScroll setContentOffset: CGPointMake(0.0f, 
+    _infiniteScroll.frame.size.height * 2) animated: NO];
+  [self setCurrentUserMenuHeaderTextColor];
 
   // Pop every navigation controller to the root view
   NSArray *array = @[
@@ -954,10 +969,12 @@ completion: (void (^) (void)) block
       [[OMBCreateListingViewController alloc] init]] animated: YES 
         completion: ^{
           [self hideMenuWithFactor: 1.0f];
-          [self presentDetailViewController: 
-            _manageListingsNavigationController];
+          // Only show the manage listings if user has created a listing
+          if ([[OMBUser currentUser] hasLandlordType])
+            [self presentDetailViewController: 
+              _manageListingsNavigationController];
         }
-      ];         
+      ];  
 }
 
 - (void) showDiscover
@@ -1218,6 +1235,23 @@ completion: (void (^) (void)) block
 - (void) updateAccountView
 {
   [_accountView setImage: [OMBUser currentUser].image];
+}
+
+- (void) updateLandlordType: (NSNotification *) notification
+{
+  id landlordType = [[notification userInfo] objectForKey: @"landlordType"];
+  // If there is a landlord type of any sort, enable the scroll,
+  // and hide the create listing button box
+  createListingButton.hidden    = NO;
+  hitArea.scrollView            = nil;
+  _infiniteScroll.scrollEnabled = NO;
+  if (landlordType != [NSNull null]) {
+    if ([(NSString *) landlordType length]) {
+      createListingButton.hidden    = YES;
+      hitArea.scrollView            = _infiniteScroll;
+      _infiniteScroll.scrollEnabled = YES;
+    }
+  }
 }
 
 - (void) updateStatusBarStyle

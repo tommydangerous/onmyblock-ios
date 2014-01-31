@@ -55,6 +55,11 @@ NSString *const OMBActivityIndicatorViewStopAnimatingNotification =
   @"OMBActivityIndicatorViewStopAnimatingNotification";
 NSString *const OMBCurrentUserChangedFavorite = 
   @"OMBCurrentUserChangedFavorite";
+// Observers:
+// - OMBViewControllerContainer
+// - OMBUserMenu
+NSString *const OMBCurrentUserLandlordTypeChangeNotification =
+  @"OMBCurrentUserLandlordTypeChangeNotification";
 // Menu view controller posts this, and user listens for it
 NSString *const OMBCurrentUserLogoutNotification = 
   @"OMBCurrentUserLogoutNotification";
@@ -581,6 +586,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   return nameString;
 }
 
+- (BOOL) hasLandlordType
+{
+  if (_landlordType && [_landlordType length])
+    return YES;
+  return NO;
+}
+
 - (UIImage *) imageForSize: (CGSize) size
 {
   return [self imageForSizeKey: [NSString stringWithFormat: @"%f,%f", 
@@ -629,6 +641,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [OMBUser currentUser].facebookAccessToken = @"";
   [OMBUser currentUser].facebookId          = @"";
   [OMBUser currentUser].firstName           = @"";
+  [OMBUser currentUser].landlordType        = @"";
   [OMBUser currentUser].lastName            = @"";
   [OMBUser currentUser].phone               = @"";
   [OMBUser currentUser].school              = @"";
@@ -758,6 +771,10 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   // NSRunLoopCommonModes, mode used for tracking events
   [[NSRunLoop currentRunLoop] addTimer: _notificationFetchTimer
     forMode: NSRunLoopCommonModes];
+
+  // Update landlord type visuals in the view controller container
+  // and the user menus
+  [self postLandlordTypeChangeNotification];
 }
 
 - (NSString *) phoneString
@@ -785,6 +802,16 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     }
   }
   return @"";
+}
+
+- (void) postLandlordTypeChangeNotification
+{
+  [[NSNotificationCenter defaultCenter] postNotificationName:
+    OMBCurrentUserLandlordTypeChangeNotification object: nil
+      userInfo: @{
+        @"landlordType": _landlordType ? _landlordType : [NSNull null]
+      }
+    ];
 }
 
 - (OMBPayoutMethod *) primaryDepositPayoutMethod
@@ -970,6 +997,11 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
   }
   _imageURL = [NSURL URLWithString: string];
+
+  // Landlord type
+  if ([dictionary objectForKey: @"landlord_type"] != [NSNull null])
+    _landlordType = [dictionary objectForKey: @"landlord_type"];
+
   // Last name
   if ([dictionary objectForKey: @"last_name"] != [NSNull null])
     _lastName = [dictionary objectForKey: @"last_name"];

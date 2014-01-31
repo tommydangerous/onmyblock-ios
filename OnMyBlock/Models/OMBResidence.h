@@ -13,6 +13,10 @@
 @class OMBResidenceImage;
 @class OMBUser;
 
+extern NSString *const OMBResidencePropertyTypeApartment;
+extern NSString *const OMBResidencePropertyTypeHouse;
+extern NSString *const OMBResidencePropertyTypeSublet;
+
 @interface OMBResidence : NSObject
 
 // Web app properties

@@ -26,6 +26,9 @@
     // First name
     if ([attribute isEqualToString: @"firstName"])
       key = @"first_name";
+    // Landlord type
+    if ([attribute isEqualToString: @"landlordType"])
+      key = @"landlord_type";
     // Last name
     if ([attribute isEqualToString: @"lastName"])
       key = @"last_name";

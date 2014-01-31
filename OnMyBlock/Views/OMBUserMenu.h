@@ -34,12 +34,15 @@
 @property (nonatomic, strong) UILabel *renterHomebaseNotificationBadge;
 @property (nonatomic, strong) UILabel *sellerHomebaseNotificationBadge;
 
+@property (nonatomic) BOOL isForLandlord;
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
 - (void) setHeaderActive;
 - (void) setHeaderInactive;
+- (void) setup;
 - (void) setupForRenter;
 - (void) setupForSeller;
 
