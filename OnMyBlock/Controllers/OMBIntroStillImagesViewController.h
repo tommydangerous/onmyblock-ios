@@ -23,6 +23,7 @@
   UIView *bottomView;
   OMBCloseButtonView *closeButtonView;
   UIButton *loginButton;
+  NSInteger numberOfPages;
   UIButton *signUpButton;
   UIView *skipButtonView;
   NSArray *slides;

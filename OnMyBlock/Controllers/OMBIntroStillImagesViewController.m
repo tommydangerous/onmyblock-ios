@@ -110,7 +110,7 @@
   // Celebrate
   // Get Started
   // Sign up
-  NSInteger numberOfPages = 5;
+  numberOfPages = 5;
 
   // Scroll
   _scroll               = [[UIScrollView alloc] init];
@@ -375,9 +375,15 @@
 
   // Fade the background image views in and out
   for (UIView *bView in backgroundViewArray) {
-    percent = (x - (width * [backgroundViewArray indexOfObject: bView])) / 
-      width;
-    bView.alpha = 1 - percent;
+    NSInteger index = [backgroundViewArray indexOfObject: bView];
+    percent = (x - (width * index)) / width;
+    CGFloat newPercent = 1 - percent;
+    // If this is the get started view
+    if (index == numberOfPages - 1) {
+      if (newPercent < 1)
+        newPercent = 1;
+    }
+    bView.alpha = newPercent;
   }
   // Scale the slide views
   for (UIView *slide in slides) {
@@ -598,7 +604,7 @@
   bottomView.hidden = YES;
   _getStartedView.hidden     = YES;
   _signUpView.hidden         = YES;
-  _pageControl.numberOfPages = 4;
+  _pageControl.numberOfPages = numberOfPages - 1;
   // 60.0f = height of page control
   _pageControl.frame = CGRectMake(0.0f, 
     _scroll.frame.size.height - (60.0f + bottomView.frame.size.height), 
@@ -614,7 +620,7 @@
   bottomView.hidden = NO;
   _getStartedView.hidden     = NO;
   _signUpView.hidden         = NO;
-  _pageControl.numberOfPages = 5;
+  _pageControl.numberOfPages = numberOfPages;
   // 60.0f = height of page control
   _pageControl.frame = CGRectMake(0.0f, 
     _scroll.frame.size.height - (60.0f + bottomView.frame.size.height), 

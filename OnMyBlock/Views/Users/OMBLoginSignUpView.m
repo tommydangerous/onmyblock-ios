@@ -65,7 +65,7 @@
   headerLabel.text = @"Students";
   headerLabel.textColor = [UIColor whiteColor];
   headerLabel.textAlignment = NSTextAlignmentCenter;
-  // [scroll addSubview: headerLabel];
+  [scroll addSubview: headerLabel];
 
   // Facebook button
   _facebookButton = [[OMBFacebookButton alloc] initWithFrame: CGRectMake(
