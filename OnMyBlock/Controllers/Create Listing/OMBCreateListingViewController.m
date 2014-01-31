@@ -943,7 +943,6 @@ replacementString: (NSString *) string
         _temporaryResidence dictionary: valuesDictionary];
     conn.completionBlock = ^(NSError *error) {
       if (_temporaryResidence.uid && !error) {
-        #warning Check to see if user is a landlord type
         // Check to see what type of property it is and then
         // change the user's landlord type
         // Only if the user doesn't already have a landlord type
