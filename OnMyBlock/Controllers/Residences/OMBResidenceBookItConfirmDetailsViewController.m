@@ -308,7 +308,7 @@
   totalPriceNotes = [NSString stringWithFormat: 
     @"Your total of %@ will not be charged upfront but will only be charged "
     @"upon mutual confirmation between you and the landlord.",
-      [residence rentToCurrencyString]];
+      [NSString numberToCurrencyString: deposit + residence.minRent]];
   CGRect rect = [totalPriceNotes boundingRectWithSize: 
     CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999) 
       font: [UIFont smallTextFont]];

@@ -302,7 +302,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // Status
   UIColor *color;
   NSString *status;
-  if (_offer.confirmed) {
+  if (_offer.onHold) {
+    color = [UIColor grayMedium];
+    status = @"on hold";
+  }
+  else if (_offer.confirmed) {
     color = [UIColor grayMedium];
     status = @"confirmed";
   }

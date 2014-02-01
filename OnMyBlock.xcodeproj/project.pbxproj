@@ -375,6 +375,9 @@
 		ABB06B0C1847C866009CBBEA /* tommy_d@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABB06B0A1847C866009CBBEA /* tommy_d@2x.png */; };
 		ABB06B0F1847E439009CBBEA /* how_it_works_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = ABB06B0D1847E439009CBBEA /* how_it_works_icon.png */; };
 		ABB06B101847E439009CBBEA /* how_it_works_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABB06B0E1847E439009CBBEA /* how_it_works_icon@2x.png */; };
+		ABB173BB189C684F0010D28F /* speech_bubble_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = ABB173B9189C684F0010D28F /* speech_bubble_icon.png */; };
+		ABB173BC189C684F0010D28F /* speech_bubble_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABB173BA189C684F0010D28F /* speech_bubble_icon@2x.png */; };
+		ABB173BF189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB173BE189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m */; };
 		ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C56E1811719B00DD91C9 /* OMBAppDelegate.m */; };
 		ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C5731811776700DD91C9 /* OMBViewController.m */; };
 		ABB3C57F1811781C00DD91C9 /* MFSideMenuContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C57E1811781C00DD91C9 /* MFSideMenuContainerViewController.m */; };
@@ -1219,6 +1222,10 @@
 		ABB06B0A1847C866009CBBEA /* tommy_d@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tommy_d@2x.png"; sourceTree = "<group>"; };
 		ABB06B0D1847E439009CBBEA /* how_it_works_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = how_it_works_icon.png; sourceTree = "<group>"; };
 		ABB06B0E1847E439009CBBEA /* how_it_works_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "how_it_works_icon@2x.png"; sourceTree = "<group>"; };
+		ABB173B9189C684F0010D28F /* speech_bubble_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = speech_bubble_icon.png; sourceTree = "<group>"; };
+		ABB173BA189C684F0010D28F /* speech_bubble_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "speech_bubble_icon@2x.png"; sourceTree = "<group>"; };
+		ABB173BD189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBEmptyBackgroundWithImageAndLabel.h; sourceTree = "<group>"; };
+		ABB173BE189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBEmptyBackgroundWithImageAndLabel.m; sourceTree = "<group>"; };
 		ABB3C56D1811719B00DD91C9 /* OMBAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAppDelegate.h; sourceTree = "<group>"; };
 		ABB3C56E1811719B00DD91C9 /* OMBAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAppDelegate.m; sourceTree = "<group>"; };
 		ABB3C5721811776700DD91C9 /* OMBViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBViewController.h; sourceTree = "<group>"; };
@@ -2166,6 +2173,8 @@
 				ABB9119318996E2E0046611F /* OMBButtonWithImage.m */,
 				ABB91195189976060046611F /* OMBLinkedInButton.h */,
 				ABB91196189976060046611F /* OMBLinkedInButton.m */,
+				ABB173BD189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.h */,
+				ABB173BE189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2684,6 +2693,8 @@
 				ABE7067E1885F39B007A4E29 /* phone_icon_white.png */,
 				ABE7067F1885F39B007A4E29 /* phone_icon_white@2x.png */,
 				AB02807B1843EE6D0081B30F /* picture_frame_image@2x.png */,
+				ABB173B9189C684F0010D28F /* speech_bubble_icon.png */,
+				ABB173BA189C684F0010D28F /* speech_bubble_icon@2x.png */,
 				AB8C8C14181579EE00A1B087 /* placeholder_property.png */,
 				AB8C8C15181579EE00A1B087 /* placeholder_property@2x.png */,
 				ABB7007A187BCEEF005F0730 /* plus_icon.png */,
@@ -3371,6 +3382,7 @@
 				ABE706811885F39B007A4E29 /* phone_icon_white@2x.png in Resources */,
 				AB70CB8B186D0A240083DF4C /* apartment_icon@2x.png in Resources */,
 				ABB9116B189810810046611F /* landlord_sign_up_icon@2x.png in Resources */,
+				ABB173BB189C684F0010D28F /* speech_bubble_icon.png in Resources */,
 				AB44986F189AC10100979B3B /* facebook_icon_white@2x.png in Resources */,
 				ABB911591897F7DE0046611F /* intro_still_image_slide_5_background@2x.jpg in Resources */,
 				ABF18BA71816BC53002DD723 /* marker_circle_selected@2x.png in Resources */,
@@ -3528,6 +3540,7 @@
 				ABBA58C81876000900E9BF4E /* discover_icon@2x.png in Resources */,
 				A685EFB7188F2AEE0074E336 /* 4.png in Resources */,
 				AB756AB6185A2335001AF572 /* logo_white@2x.png in Resources */,
+				ABB173BC189C684F0010D28F /* speech_bubble_icon@2x.png in Resources */,
 				ABE7068418860DB4007A4E29 /* user_icon_white.png in Resources */,
 				ABBA58C71876000900E9BF4E /* discover_icon.png in Resources */,
 			);
@@ -3841,6 +3854,7 @@
 				ABB7006D187B6067005F0730 /* OMBHomebaseRenterRoommateImageView.m in Sources */,
 				AB44FBC118358DA400F07747 /* OMBResidencePartialView.m in Sources */,
 				ABA4F214187D422B00D725D4 /* OMBTemporaryResidence.m in Sources */,
+				ABB173BF189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m in Sources */,
 				ABDF174A1866396C004E2755 /* OMBResidenceBookItViewController.m in Sources */,
 				ABA5B42C1857B9E300F825E1 /* OMBEmploymentListConnection.m in Sources */,
 				ABB91197189976060046611F /* OMBLinkedInButton.m in Sources */,

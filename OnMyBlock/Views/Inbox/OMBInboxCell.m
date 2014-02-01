@@ -76,6 +76,9 @@ reuseIdentifier: (NSString *)reuseIdentifier
 {
   message = object;
 
+  // See who sent this message
+  OMBUser *otherUser = [message otherUser];
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenWidth = screen.size.width;
   CGFloat padding = 15.0f;
@@ -83,13 +86,13 @@ reuseIdentifier: (NSString *)reuseIdentifier
   // User image
   NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
     userImageView.frame.size.width, userImageView.frame.size.height];
-  if (message.sender.image) {
-    userImageView.image = [message.sender imageForSizeKey: sizeKey];
+  if (otherUser.image) {
+    userImageView.image = [otherUser imageForSizeKey: sizeKey];
   }
   else {
-    [message.sender downloadImageFromImageURLWithCompletion: 
+    [otherUser downloadImageFromImageURLWithCompletion: 
       ^(NSError *error) {
-        userImageView.image = [message.sender imageForSizeKey: sizeKey];
+        userImageView.image = [otherUser imageForSizeKey: sizeKey];
       }
     ];
   }
@@ -132,12 +135,15 @@ reuseIdentifier: (NSString *)reuseIdentifier
         100.0f, 20.0f);
 
   // User name
-  userNameLabel.text = [message.sender fullName];
+  userNameLabel.text = [otherUser fullName];
   CGRect userNameRect = userNameLabel.frame;
   userNameRect.size.width = screenWidth - 
     (padding + userImageView.frame.size.width + padding + padding +
       dateTimeLabel.frame.size.width + padding);
   userNameLabel.frame = userNameRect;
+
+  if (message.sender.uid == [OMBUser currentUser].uid)
+    message.viewed = YES;
 
   // Viewed; change fonts
   if (message.viewed) {

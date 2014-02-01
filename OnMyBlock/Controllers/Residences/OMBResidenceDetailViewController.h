@@ -35,6 +35,7 @@
   OMBCollectionView *imageCollectionView;
   UIScrollView *imageScrollView;
   OMBCloseButtonView *imageScrollViewCloseButton;
+  MKMapView *map;
   OMBMessageDetailViewController *messageDetailViewController;
   UIImage *notFavoritedImage;
   OMBResidence *residence;

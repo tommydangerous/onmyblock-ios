@@ -18,4 +18,4 @@
 // Production  = 3
 // Staging     = 2
 // Development = 1
-#define __ENVIRONMENT__ 1
+#define __ENVIRONMENT__ 2

@@ -8,6 +8,7 @@
 
 #import "OMBFavoritesListViewController.h"
 
+#import "OMBEmptyBackgroundWithImageAndLabel.h"
 #import "OMBFavoriteResidence.h"
 #import "OMBFavoriteResidenceCell.h"
 #import "OMBFavoritesListConnection.h"
@@ -57,6 +58,20 @@
   [self setMenuBarButtonItem];
 
   self.table.backgroundColor = [UIColor blackColor];
+
+  emptyBackgroundView = 
+    [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame: 
+      self.view.frame];
+  emptyBackgroundView.alpha = 0.0f;
+  emptyBackgroundView.imageView.alpha = 0.5f;
+  emptyBackgroundView.imageView.image = [UIImage imageNamed: 
+    @"favorites_icon.png"];
+  NSString *text = @"Places that you favorited appear here. "
+    @"Add your favorite places by tapping the heart on a place.";
+  emptyBackgroundView.label.textColor = [UIColor colorWithWhite: 1.0f 
+    alpha: 0.8f];
+  [emptyBackgroundView setLabelText: text];
+  [self.view addSubview: emptyBackgroundView];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -94,7 +109,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  return [[[OMBUser currentUser] favoritesArray] count];
+  return [[self favorites] count];
 }
 
 #pragma mark - Protocol UITableViewDelegate
@@ -152,6 +167,12 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
   else {
     [self reloadTable];
   }
+  [self updateEmptyBackgroundView];
+}
+
+- (NSArray *) favorites
+{
+  return [[OMBUser currentUser] favoritesArray];
 }
 
 - (void) fetchFavorites
@@ -160,6 +181,7 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
     [[OMBFavoritesListConnection alloc] init];
   connection.completionBlock = ^(NSError *error) {
     [self reloadTable];
+    [self updateEmptyBackgroundView];
   };
   connection.delegate = self;
   [connection start];
@@ -168,6 +190,24 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) reloadTable
 {
   [self.table reloadData];
+}
+
+- (void) updateEmptyBackgroundView
+{
+  if ([[self favorites] count]) {
+    if (emptyBackgroundView.alpha) {
+      [UIView animateWithDuration: OMBStandardDuration animations: ^{
+        emptyBackgroundView.alpha = 0.0f;
+      }];
+    }
+  }
+  else {
+    if (!emptyBackgroundView.alpha) {
+      [UIView animateWithDuration: OMBStandardDuration animations: ^{
+        emptyBackgroundView.alpha = 1.0f;
+      }];
+    }
+  }
 }
 
 @end

@@ -27,6 +27,7 @@
 #pragma mark - Instance Methods
 
 - (void) calculateSizeForMessageCell;
+- (OMBUser *) otherUser;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 
 @end

@@ -8,6 +8,8 @@
 
 #import "OMBResidenceDetailMapCell.h"
 
+#import "OMBViewController.h"
+
 @implementation OMBResidenceDetailMapCell
 
 #pragma mark - Initializer
@@ -22,7 +24,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenWidth  = screen.size.width;
-  CGFloat padding      = 20.0f;
+  CGFloat padding      = OMBPadding;
 
   _segmentedControl = [[UISegmentedControl alloc] initWithItems:
                      @[@"Map", @"Street"]];
@@ -32,20 +34,20 @@ reuseIdentifier: (NSString *)reuseIdentifier
   _segmentedControl.frame = segmentedFrame;
   _segmentedControl.tintColor = [UIColor blue];
   [self.contentView addSubview:_segmentedControl];
-  NSLog(@"%f",_segmentedControl.frame.size.height);
-  _mapView          = [[MKMapView alloc] init];
-  _mapView.frame    = CGRectMake(padding, 44.0f + padding + 29.0f,
-                                 screenWidth - (padding * 2), screenWidth * 0.5);
-  _mapView.mapType       = MKMapTypeStandard;
-  _mapView.rotateEnabled = NO;
-  _mapView.scrollEnabled = NO;
-  _mapView.showsPointsOfInterest = NO;
-  _mapView.zoomEnabled   = NO;
-  _mapView.hidden = NO;
-  [self.contentView addSubview: _mapView];
+
+  // _mapView          = [[MKMapView alloc] init];
+  // _mapView.frame    = CGRectMake(padding, 44.0f + padding + 29.0f,
+  //                                screenWidth - (padding * 2), screenWidth * 0.5);
+  // _mapView.mapType       = MKMapTypeStandard;
+  // _mapView.rotateEnabled = NO;
+  // _mapView.scrollEnabled = NO;
+  // _mapView.showsPointsOfInterest = NO;
+  // _mapView.zoomEnabled   = NO;
+  // _mapView.hidden = NO;
+  // [self.contentView addSubview: _mapView];
   
-  _streetView          = [[UIImageView alloc] init];
-  _streetView.frame = _mapView.frame;
+  _streetView = [[UIImageView alloc] init];
+  _streetView.frame = [OMBResidenceDetailMapCell frameForMapView];
   _streetView.hidden = YES;
   [self.contentView addSubview: _streetView];
 
@@ -55,6 +57,15 @@ reuseIdentifier: (NSString *)reuseIdentifier
 #pragma mark - Methods
 
 #pragma mark - Class Methods
+
++ (CGRect) frameForMapView
+{
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGFloat screenWidth = screen.size.width;
+  CGFloat padding     = OMBPadding;
+  return CGRectMake(padding, 44.0f + padding + 29.0f,
+    screenWidth - (padding * 2), screenWidth * 0.5);
+}
 
 + (CGFloat) heightForCell
 {

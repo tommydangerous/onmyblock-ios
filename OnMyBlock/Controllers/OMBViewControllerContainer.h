@@ -74,6 +74,7 @@
   UIButton *createListingButton;
   OMBExtendedHitAreaViewContainer *hitArea;
   OMBOfferAcceptedView *offerAcceptedView;
+  UIView *viewForScrollingInfiniteScroll;
 }
 
 @property (nonatomic, strong) OMBCenteredImageView *accountView;

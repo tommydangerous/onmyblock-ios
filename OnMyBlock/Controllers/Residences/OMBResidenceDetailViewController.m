@@ -326,7 +326,21 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   blurView = [[OMBBlurView alloc] initWithFrame: screen];
   blurView.blurRadius = 20.0f;
-  blurView.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
+  blurView.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.5f];
+
+  // Map
+  map = [[MKMapView alloc] init];
+  map.delegate = self;
+  map.frame = [OMBResidenceDetailMapCell frameForMapView];
+  map.hidden = NO;
+  map.rotateEnabled = NO;
+  map.scrollEnabled = NO;
+  map.showsPointsOfInterest = NO;
+  map.zoomEnabled = NO;
+  UITapGestureRecognizer *tap = 
+    [[UITapGestureRecognizer alloc] initWithTarget: self 
+      action: @selector(showMap)];
+  [map addGestureRecognizer: tap];
 }
 
 - (void) viewDidDisappear: (BOOL) animated
@@ -368,9 +382,9 @@ float kResidenceDetailImagePercentage   = 0.5f;
   // Download images
   [residence downloadImagesWithCompletion: ^(NSError *error) {
     [self reloadImageData];
-    [activityIndicatorView stopAnimating];
+    // [activityIndicatorView stopAnimating];
   }];
-  [activityIndicatorView startAnimating];
+  // [activityIndicatorView startAnimating];
   [self reloadImageData];
 
   // Set the rent
@@ -399,6 +413,20 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   // Fetch the offers (Do this in another phase, we aren't showing offers)
   // [residence fetchOffersWithCompletion: nil];
+
+  // Map
+  if ([[map annotations] count] == 0) {
+    CGFloat distanceInMiles = 1609 * 0.5; // 1609 meters = 1 mile
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+      residence.latitude, residence.longitude);
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(
+      coordinate, distanceInMiles, distanceInMiles);
+    [map setRegion: region animated: NO];
+    // Add annotation
+    OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
+    annotation.coordinate     = coordinate;
+    [map addAnnotation: annotation];
+  }
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -410,6 +438,27 @@ float kResidenceDetailImagePercentage   = 0.5f;
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol MKMapViewDelegate
+
+- (MKAnnotationView *) mapView: (MKMapView *) mapView
+viewForAnnotation: (id <MKAnnotation>) annotation
+{
+  // If the annotation is the user's location, show the default pulsing circle
+  if (annotation == map.userLocation)
+    return nil;
+
+  static NSString *ReuseIdentifier = @"AnnotationViewIdentifier";
+  OMBAnnotationView *annotationView = (OMBAnnotationView *)
+    [map dequeueReusableAnnotationViewWithIdentifier: ReuseIdentifier];
+  if (!annotationView) {
+    annotationView = 
+      [[OMBAnnotationView alloc] initWithAnnotation: annotation 
+        reuseIdentifier: ReuseIdentifier];
+  }
+  [annotationView loadAnnotation: annotation];
+  return annotationView;
+}
 
 #pragma mark - Protocol UICollectionViewDataSource
 
@@ -443,27 +492,6 @@ numberOfItemsInSection: (NSInteger) section
 didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 {
   NSLog(@"COLLECTION VIEW DID SELECT ITEM");
-}
-
-#pragma mark - Protocol MKMapViewDelegate
-
-- (MKAnnotationView *) mapView: (MKMapView *) map 
-viewForAnnotation: (id <MKAnnotation>) annotation
-{
-  // If the annotation is the user's location, show the default pulsing circle
-  if (annotation == map.userLocation)
-    return nil;
-
-  static NSString *ReuseIdentifier = @"AnnotationViewIdentifier";
-  OMBAnnotationView *annotationView = (OMBAnnotationView *)
-    [map dequeueReusableAnnotationViewWithIdentifier: ReuseIdentifier];
-  if (!annotationView) {
-    annotationView = 
-      [[OMBAnnotationView alloc] initWithAnnotation: annotation 
-        reuseIdentifier: ReuseIdentifier];
-  }
-  [annotationView loadAnnotation: annotation];
-  return annotationView;
 }
 
 #pragma mark - Protocol UIScrollViewDelegate
@@ -655,10 +683,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *AmentiesCellIdentifier = @"AmentiesCellIdentifier";
       OMBResidenceDetailAmenitiesCell *cell = 
         [tableView dequeueReusableCellWithIdentifier: AmentiesCellIdentifier];
-      if (!cell)
+      if (!cell) {
         cell = [[OMBResidenceDetailAmenitiesCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: AmentiesCellIdentifier];
-      [cell loadAmenitiesData: [residence availableAmenities]];
+        [cell loadAmenitiesData: [residence availableAmenities]];
+      }
       return cell;
     }
   }
@@ -670,11 +699,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       OMBResidenceDetailDescriptionCell *cell = 
         [tableView dequeueReusableCellWithIdentifier: 
           DescriptionCellIdentifier];
-      if (!cell)
+      if (!cell) {
         cell = [[OMBResidenceDetailDescriptionCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: 
             DescriptionCellIdentifier];
-      [cell loadData: residence.description];
+        [cell loadData: residence.description];
+      }
       return cell;
     }
   }
@@ -705,19 +735,21 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell) {
         cell = [[OMBResidenceDetailMapCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: MapCellIdentifier];
-        cell.mapView.delegate = self;
 
-        // Set the region of the mini map
-        CGFloat distanceInMiles = 1609 * 0.5; // 1609 meters = 1 mile
-        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
-          residence.latitude, residence.longitude);
-        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(
-          coordinate, distanceInMiles, distanceInMiles);
-        [cell.mapView setRegion: region animated: NO];
-        // Add annotation
-        OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
-        annotation.coordinate     = coordinate;
-        [cell.mapView addAnnotation: annotation];
+        // cell.mapView.delegate = self;
+        // // Set the region of the mini map
+        // CGFloat distanceInMiles = 1609 * 0.5; // 1609 meters = 1 mile
+        // CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+        //   residence.latitude, residence.longitude);
+        // MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(
+        //   coordinate, distanceInMiles, distanceInMiles);
+        // [cell.mapView setRegion: region animated: NO];
+        // // Add annotation
+        // OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
+        // annotation.coordinate     = coordinate;
+        // [cell.mapView addAnnotation: annotation];
+        [map removeFromSuperview];
+        [cell.contentView addSubview: map];
         
         // Add street view
         if(!cell.streetView.image){
@@ -734,10 +766,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           });
         }
         // Tap
-        UITapGestureRecognizer *tap = 
-          [[UITapGestureRecognizer alloc] initWithTarget: self 
-            action: @selector(showMap)];
-        [cell.mapView addGestureRecognizer: tap];
+        // UITapGestureRecognizer *tap = 
+        //   [[UITapGestureRecognizer alloc] initWithTarget: self 
+        //     action: @selector(showMap)];
+        // [cell.mapView addGestureRecognizer: tap];
         
         [cell.segmentedControl addTarget:self action:@selector(changeStateSegmented:) forControlEvents:UIControlEventValueChanged];
       }
@@ -916,14 +948,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   switch (control.selectedSegmentIndex) {
       // Show map
     case 0: {
-      cell.mapView.hidden = NO;
+      // cell.mapView.hidden = NO;
+      map.hidden = NO;
       cell.streetView.hidden = YES;
       
       break;
     }
       // Show street
     case 1: {
-      cell.mapView.hidden = YES;
+      // cell.mapView.hidden = YES;
+      map.hidden = YES;
       cell.streetView.hidden = NO;
       break;
     }
@@ -938,7 +972,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [UIView animateWithDuration: 0.25f animations: ^{
     blurView.alpha = 0.0f;
     imageScrollView.alpha = 0.0f;
+    imageScrollView.transform = CGAffineTransformScale(
+      CGAffineTransformIdentity, 0.0f, 0.0f);
   } completion: ^(BOOL finished) {
+    imageScrollView.transform = CGAffineTransformIdentity;
     // Remove from superview
     [blurView removeFromSuperview];
     [imageScrollView removeFromSuperview];
@@ -1118,6 +1155,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [[[UIApplication sharedApplication] keyWindow] addSubview: blurView];
 
   imageScrollView.alpha = 0.0f;
+  imageScrollView.transform = CGAffineTransformScale(CGAffineTransformIdentity,
+    0.0f, 0.0f);
   // Add the image scroll view
   [[[UIApplication sharedApplication] keyWindow] addSubview: 
     imageScrollView];
@@ -1125,6 +1164,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [UIView animateWithDuration: 0.25f animations: ^{
     blurView.alpha = 1.0f;
     imageScrollView.alpha = 1.0f;
+    imageScrollView.transform = CGAffineTransformIdentity;
   }];
 }
 

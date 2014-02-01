@@ -274,6 +274,15 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+- (void) downloadResidenceImages
+{
+  if ([[_residence imagesArray] count] <= 1) {
+    [_residence downloadImagesWithCompletion: ^(NSError *error) {
+      [_imagesFilmstrip reloadData];
+    }];
+  }
+}
+
 //- (void) loadImageAnimated: (BOOL) animated
 //{
 //  if (animated) {
@@ -322,21 +331,20 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   bedBathLabel.text = [NSString stringWithFormat: @"%@ / %@", beds, baths];
 
   // Images
-	if (![_residence imagesArray].count) {
-		OMBResidenceImagesConnection *connection =
-		  [[OMBResidenceImagesConnection alloc] initWithResidence: 
-        _residence];
-		connection.completionBlock = ^(NSError *error) {
-			[_imagesFilmstrip reloadData];
-      [activityIndicatorView stopAnimating];
-		};
-		connection.delegate = self;
-		[connection start];
-		[activityIndicatorView startAnimating];
-	}
-	else {
-		[_imagesFilmstrip reloadData];
-	}
+  // Cover photo
+  if ([_residence coverPhoto]) {
+    [_imagesFilmstrip reloadData];
+    [self downloadResidenceImages];
+  }
+  else {
+    // Download cover photo
+    [_residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
+      [_imagesFilmstrip reloadData];
+      [self downloadResidenceImages];
+      // [activityIndicatorView stopAnimating];
+    }];
+    // [activityIndicatorView startAnimating];
+  }
 
 	// Rent
   rentLabel.text = [NSString stringWithFormat: @"%@", 

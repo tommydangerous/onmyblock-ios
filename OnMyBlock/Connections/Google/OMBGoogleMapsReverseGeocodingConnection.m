@@ -15,13 +15,19 @@
 
 #pragma mark - Initializer
 
-- (id) initWithAddress: (NSString *) address
+- (id) initWithAddress: (NSString *) address city: (NSString *) city
+state: (NSString *) state
 {
   if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: 
     @"http://maps.googleapis.com/maps/api/geocode/json?" 
-      @"address=%@&sensor=true", address];
+      @"address=%@&"
+      @"components="
+      @"country:%@|"
+      @"route:%@|"
+      @"administrative_area:%@&"
+      @"sensor=true", address, @"us", city, state];
 
   NSLog(@"STRING: %@", string);
   [self setRequestWithString: string];
@@ -50,7 +56,7 @@
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
 
-  NSLog(@"OMBGoogleMapsReverseGeocodingConnection\n%@", json);
+  // NSLog(@"OMBGoogleMapsReverseGeocodingConnection\n%@", json);
 
   NSArray *array = [json objectForKey: @"results"];
   

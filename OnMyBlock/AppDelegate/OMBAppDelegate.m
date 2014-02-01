@@ -56,14 +56,14 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // #warning Remove fake login
   // [OMBUser fakeLogin]; // Fake login
   // Use this to show whatever view controller you are working on
-  // [_container showRenterProfile];
+  // [_container showFavorites];
   // [_container showIntroAnimatedDissolve: NO];
 
   // Check to see if the user has a saved api key in the user defaults
   [[OMBUser currentUser] checkForUserDefaultsAPIKey];
 
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  NSLog(@"%@", [defaults objectForKey: @"OMBUserDefaultsAPIKey"]);
+  // NSLog(@"%@", [defaults objectForKey: @"OMBUserDefaultsAPIKey"]);
   
   id viewedIntro = [defaults objectForKey: OMBUserDefaultsViewedIntro];
   if (!viewedIntro) {

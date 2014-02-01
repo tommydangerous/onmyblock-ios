@@ -172,7 +172,8 @@
   }
   else {
     conn = [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithAddress:
-      [NSString stringWithFormat: @"%@, %@", city, state]];
+      [NSString stringWithFormat: @"%@, %@", city, state] 
+        city: city state: state];
   }
   conn.delegate = self;
   [conn start];
@@ -256,8 +257,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
   // Address
   if (tableView == addressTableView) {
+    // If this is not the last row ("Address Form")
     if (indexPath.row < 
-      [tableView numberOfRowsInSection: indexPath.section] - 1) {
+      [tableView numberOfRowsInSection: indexPath.section] - 1 &&
+      indexPath.row < [_addressArray count]) {
 
       NSDictionary *dict = [_addressArray objectAtIndex: indexPath.row];
       cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
@@ -530,7 +533,7 @@ withMiles: (CGFloat) miles animated: (BOOL) animated
   // Search for places via Google
   OMBGoogleMapsReverseGeocodingConnection *conn = 
     [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithAddress: 
-      addressTextField.text];
+      addressTextField.text city: city state: state];
   conn.completionBlock = ^(NSError *error) {
     [addressTableView reloadData];
   };
