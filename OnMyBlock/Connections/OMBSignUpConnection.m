@@ -42,7 +42,7 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBSignUpConnection%@", [self json]);
+  NSLog(@"OMBSignUpConnection\n%@", [self json]);
   
   if ([self successful]) {
     [[OMBUser currentUser] readFromDictionary: [self objectDictionary]];

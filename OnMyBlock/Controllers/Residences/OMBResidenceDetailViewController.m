@@ -135,6 +135,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   imageCollectionView.dataSource    = self;
   imageCollectionView.delegate      = self;
   imageCollectionView.pagingEnabled = YES;
+  imageCollectionView.showsHorizontalScrollIndicator = NO;
   [self.view addSubview: imageCollectionView];
   // Tap gesture when user clicks the images
   UITapGestureRecognizer *tapGesture = 

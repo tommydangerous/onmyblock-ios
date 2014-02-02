@@ -132,14 +132,14 @@ code: (NSInteger) code
 
 - (NSString *) errorMessage
 {
-  if ([[self json] objectForKey: @"error_message"] != [NSNull null])
+  if ([[self json] objectForKey: @"error_message"])
     return [[self json] objectForKey: @"error_message"];
   return @"";
 }
 
 - (NSString *) errorTitle
 {
-  if ([[self json] objectForKey: @"error_title"] != [NSNull null])
+  if ([[self json] objectForKey: @"error_title"])
     return [[self json] objectForKey: @"error_title"];
   return @"";
 }
