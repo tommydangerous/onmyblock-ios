@@ -8,22 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+#import "NSError+OnMyBlock.h"
 #import "OMBUser.h"
 
 extern NSTimeInterval RequestTimeoutInterval;
 extern NSMutableArray *sharedConnectionList;
 extern NSString *const OnMyBlockAPI;
 extern NSString *const OnMyBlockAPIURL;
-
-extern NSString *const OMBConnectionErrorDomainUser;
-typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainUserCode) {
-  OMBConnectionErrorDomainUserCodeSaveFailed
-};
-extern NSString *const OMBConnectionErrorDomainAuthentication;
-typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainAuthenticationCode) {
-  OMBConnectionErrorDomainAuthenticationCodeFacebookFailed,
-  OMBConnectionErrorDomainAuthenticationCodeLinkedInFailed
-};
 
 @interface OMBConnection : NSURLConnection
 {
@@ -59,15 +50,21 @@ didFailWithError: (NSError *) error;
 #pragma mark Instance Methods
 
 - (void) cancelConnection;
+- (void) createInternalErrorWithDomain: (NSString *) domain
+code: (NSInteger) code;
+- (NSString *) errorMessage;
+- (NSString *) errorTitle;
 - (NSDictionary *) json;
+- (NSDictionary *) objectDictionary;
+- (NSDictionary *) objectsDictionary;
 - (NSInteger) objectUID;
 - (void) setPostRequestWithString: (NSString *) string
 withParameters: (NSDictionary *) dictionary;
 - (void) setRequestWithString: (NSString *) requestString;
 - (void) setRequestWithString: (NSString *) string method: (NSString *) method
 parameters: (NSDictionary *) dictionary;
-- (NSDictionary *) objectDictionary;
-- (NSDictionary *) objectsDictionary;
+- (void) startWithTimeoutInterval: (NSTimeInterval) interval
+onMainRunLoop: (BOOL) onMain;
 - (BOOL) successful;
 
 @end

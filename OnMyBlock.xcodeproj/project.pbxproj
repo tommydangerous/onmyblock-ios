@@ -378,6 +378,7 @@
 		ABB173BB189C684F0010D28F /* speech_bubble_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = ABB173B9189C684F0010D28F /* speech_bubble_icon.png */; };
 		ABB173BC189C684F0010D28F /* speech_bubble_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ABB173BA189C684F0010D28F /* speech_bubble_icon@2x.png */; };
 		ABB173BF189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB173BE189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m */; };
+		ABB173C2189ECA9B0010D28F /* NSError+OnMyBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB173C1189ECA9B0010D28F /* NSError+OnMyBlock.m */; };
 		ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C56E1811719B00DD91C9 /* OMBAppDelegate.m */; };
 		ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C5731811776700DD91C9 /* OMBViewController.m */; };
 		ABB3C57F1811781C00DD91C9 /* MFSideMenuContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB3C57E1811781C00DD91C9 /* MFSideMenuContainerViewController.m */; };
@@ -1226,6 +1227,8 @@
 		ABB173BA189C684F0010D28F /* speech_bubble_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "speech_bubble_icon@2x.png"; sourceTree = "<group>"; };
 		ABB173BD189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBEmptyBackgroundWithImageAndLabel.h; sourceTree = "<group>"; };
 		ABB173BE189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBEmptyBackgroundWithImageAndLabel.m; sourceTree = "<group>"; };
+		ABB173C0189ECA9B0010D28F /* NSError+OnMyBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+OnMyBlock.h"; sourceTree = "<group>"; };
+		ABB173C1189ECA9B0010D28F /* NSError+OnMyBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+OnMyBlock.m"; sourceTree = "<group>"; };
 		ABB3C56D1811719B00DD91C9 /* OMBAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAppDelegate.h; sourceTree = "<group>"; };
 		ABB3C56E1811719B00DD91C9 /* OMBAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAppDelegate.m; sourceTree = "<group>"; };
 		ABB3C5721811776700DD91C9 /* OMBViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBViewController.h; sourceTree = "<group>"; };
@@ -2297,6 +2300,8 @@
 				ABE4FBE118902D6A0009D643 /* NSDateFormatter+JSON.m */,
 				ABE679B01892D1F900A494FB /* UIFont+OnMyBlock.h */,
 				ABE679B11892D1F900A494FB /* UIFont+OnMyBlock.m */,
+				ABB173C0189ECA9B0010D28F /* NSError+OnMyBlock.h */,
+				ABB173C1189ECA9B0010D28F /* NSError+OnMyBlock.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -3568,6 +3573,7 @@
 				AB9545841849B217000513BE /* OMBCenteredImageView.m in Sources */,
 				ABB911A618998CA80046611F /* LIALinkedInHttpClient.m in Sources */,
 				ABF18BBD1816F913002DD723 /* OMBListButton.m in Sources */,
+				ABB173C2189ECA9B0010D28F /* NSError+OnMyBlock.m in Sources */,
 				AB756AB0185A1A68001AF572 /* OMBIntroStillImageSlide.m in Sources */,
 				AB90129A18527753003153A2 /* OMBPreviousRentalAddViewController.m in Sources */,
 				ABED5FE81896EE5D00AD630C /* UIImage+ImageEffects.m in Sources */,

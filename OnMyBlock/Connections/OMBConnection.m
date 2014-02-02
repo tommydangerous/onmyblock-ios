@@ -30,10 +30,6 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
   NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
 #endif
 
-NSString *const OMBConnectionErrorDomainUser = @"OMBConnectionErrorDomainUser";
-NSString *const OMBConnectionErrorDomainAuthentication =
-  @"OMBConnectionErrorDomainAuthentication";
-
 @implementation OMBConnection
 
 @synthesize completionBlock = _completionBlock;
@@ -95,11 +91,13 @@ totalBytesExpectedToWrite: (NSInteger) totalBytesExpectedToWrite
 {
   CGFloat x = (CGFloat) totalBytesWritten;
   CGFloat y = (CGFloat) totalBytesExpectedToWrite;
-  NSLog(@"%@: %f/%f (%f)", [_request URL].absoluteString, x, y, x / y);
+  CGFloat percentage = x / y;
     
-  // use to notify the progress indicator
-  [[NSNotificationCenter defaultCenter] postNotificationName:@"progressConnection" object:[NSNumber numberWithFloat: x/y]];
-    
+  // Use to notify the progress indicator
+  [[NSNotificationCenter defaultCenter] postNotificationName:
+    @"progressConnection" object: [NSNumber numberWithFloat: percentage]];
+
+  NSLog(@"%@: %f/%f (%f)", [_request URL].absoluteString, x, y, percentage);
 }
 
 #pragma mark - Protocol NSURLConnectionDelegate
@@ -121,6 +119,29 @@ didFailWithError: (NSError *) error
 - (void) cancelConnection
 {
   [internalConnection cancel];
+}
+
+- (void) createInternalErrorWithDomain: (NSString *) domain
+code: (NSInteger) code
+{
+  internalError = [NSError errorWithDomain: domain code: code userInfo: @{
+    @"message": [self errorMessage],
+    @"title":   [self errorTitle]
+  }];
+}
+
+- (NSString *) errorMessage
+{
+  if ([[self json] objectForKey: @"error_message"] != [NSNull null])
+    return [[self json] objectForKey: @"error_message"];
+  return @"";
+}
+
+- (NSString *) errorTitle
+{
+  if ([[self json] objectForKey: @"error_title"] != [NSNull null])
+    return [[self json] objectForKey: @"error_title"];
+  return @"";
 }
 
 - (NSDictionary *) json
@@ -175,20 +196,31 @@ parameters: (NSDictionary *) dictionary
 
 - (void) start
 {
+  [self startWithTimeoutInterval: 0 onMainRunLoop: NO];
+}
+
+- (void) startWithTimeoutInterval: (NSTimeInterval) interval
+onMainRunLoop: (BOOL) onMain
+{
   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+  container = [NSMutableData data];
   // Set timeout
-  if (timeoutInterval)
-    [_request setTimeoutInterval: timeoutInterval];
+  if (interval)
+    timeoutInterval = interval;
   else
-    [_request setTimeoutInterval: RequestTimeoutInterval];
-  container = [[NSMutableData alloc] init];
+    timeoutInterval = RequestTimeoutInterval;
+  [_request setTimeoutInterval: timeoutInterval];
   internalConnection = [[NSURLConnection alloc] initWithRequest: _request
     delegate: self startImmediately: NO];
   // During scrolling, the run loop is UITrackingRunLoopMode
   // By default, NSURLConnection schedules itself in NSDefaultRunLoopMode
   // Schedule the connection in the common modes, e.g. UITrackingRunLoopMode
-  [internalConnection scheduleInRunLoop: [NSRunLoop currentRunLoop]
-    forMode: NSRunLoopCommonModes];
+  if (onMain)
+    [internalConnection scheduleInRunLoop: [NSRunLoop mainRunLoop]
+      forMode: NSDefaultRunLoopMode];
+  else
+    [internalConnection scheduleInRunLoop: [NSRunLoop currentRunLoop]
+      forMode: NSRunLoopCommonModes];
   [internalConnection start];
   if (!sharedConnectionList)
     sharedConnectionList = [NSMutableArray array];
