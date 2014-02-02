@@ -50,8 +50,9 @@
   if ([self successful]) {
     [[OMBUser currentUser] readFromDictionary: [self objectDictionary]];
   }
-  else{
-
+  else {
+    [self createInternalErrorWithDomain: OMBConnectionErrorDomainAuthentication
+      code: OMBConnectionErrorDomainAuthenticationCodeFacebookFailed];
   }
 
   [super connectionDidFinishLoading: connection];

@@ -143,17 +143,19 @@ CGFloat const OMBStandardHeight       = 44.0f;
   NSString *message = @"Please try again.";
   NSString *title   = @"Unsuccessful";
   if (error) {
+    message = error.localizedDescription;
+    title   = @"Error";
     if (error.userInfo) {
-      if ([error.userInfo objectForKey: @"message"]) {
+      if ([error.userInfo objectForKey: @"message"] &&
+        [[error.userInfo objectForKey: @"message"] length]) {
+        
         message = [error.userInfo objectForKey: @"message"];
       }
-      if ([error.userInfo objectForKey: @"title"]) {
+      if ([error.userInfo objectForKey: @"title"] &&
+        [[error.userInfo objectForKey: @"title"] length]) {
+
         title = [error.userInfo objectForKey: @"title"];
       }
-    }
-    else {
-      message = error.localizedDescription;
-      title   = @"Error";  
     }
   }
   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title
