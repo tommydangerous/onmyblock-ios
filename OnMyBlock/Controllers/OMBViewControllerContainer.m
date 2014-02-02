@@ -243,6 +243,10 @@
   _infiniteScroll.showsVerticalScrollIndicator = NO;
   [hitArea addSubview: _infiniteScroll];
 
+	UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleMenu:)];
+	[hitArea addGestureRecognizer:tap];
+	tap.cancelsTouchesInView = NO;
+	
   // This is set when user creates a listing
   _infiniteScroll.scrollEnabled = NO;
   // hitArea.scrollView = _infiniteScroll;
@@ -472,25 +476,30 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 - (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView
 {
   if (scrollView == _infiniteScroll) {
-    float y   = scrollView.contentOffset.y;
-    int index = y / scrollView.frame.size.height;
+	  [self resetInfiniteScroll];
+  }
+}
+
+- (void) resetInfiniteScroll
+{
+	float y   = _infiniteScroll.contentOffset.y;
+    int index = y / _infiniteScroll.frame.size.height;
     int n     = index % 2;
     float multiplier;
     // If user landed on a renter menu
     if (n == 0) {
-      multiplier = 2;
+		multiplier = 2;
     }
     // If user landed on a seller menu
     else {
-      multiplier = 3;
+		multiplier = 3;
     }
-    [scrollView setContentOffset: 
-      CGPointMake(0, scrollView.frame.size.height * multiplier) animated: NO];
+    [_infiniteScroll setContentOffset:
+	 CGPointMake(0, _infiniteScroll.frame.size.height * multiplier) animated: NO];
     [self setCurrentUserMenuHeaderTextColor];
-  }
 }
 
-// - (void) scrollViewDidEndDragging: (UIScrollView *) scrollView 
+// - (void) scrollViewDidEndDragging: (UIScrollView *) scrollView
 // willDecelerate: (BOOL) decelerate
 // {
 //   if (scrollView == _infiniteScroll) {
@@ -523,6 +532,24 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   _menuScroll.contentInset = UIEdgeInsetsMake(
     ((screen.size.height - height) * 0.5), 0, 0, 0);
   _menuScroll.contentSize = CGSizeMake(menuWidth, height);
+}
+
+
+- (void) toggleMenu:(UITapGestureRecognizer *)tap//(UIButton *) button
+{
+	if (tap.state == UIGestureRecognizerStateEnded)
+    {
+		NSAssert(tap.view == hitArea, @"Tap gesture recognizer is assumed to be set on the hitArea view");
+		CGPoint touchPoint = [tap locationInView:tap.view];
+		CGRect intersection = CGRectIntersection(hitArea.bounds, _infiniteScroll.frame);
+		if ( !CGRectContainsPoint(intersection, touchPoint)) {
+			CGPoint offset = _infiniteScroll.contentOffset;
+			offset.y += _infiniteScroll.frame.size.height;
+			[UIView animateWithDuration:0.3
+							 animations:^{[_infiniteScroll setContentOffset:offset];}
+							 completion:^(BOOL finished) { [self resetInfiniteScroll]; }];
+		}
+    }
 }
 
 - (void) drag: (UIPanGestureRecognizer *) gesture
