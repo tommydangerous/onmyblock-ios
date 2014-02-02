@@ -18,6 +18,12 @@
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 
+@interface OMBMessageNewViewController ()
+{
+	NSString *host;
+}
+@end
+
 @implementation OMBMessageNewViewController
 
 #pragma mark - Initializer
@@ -27,8 +33,12 @@
   if (!(self = [super init])) return nil;
 
   user = object;
-
-  self.screenName = self.title = @"New Message";
+	
+	host = (user.firstName.length && [user.firstName caseInsensitiveCompare:@"Land"] != NSOrderedSame)?
+	[NSString stringWithFormat:@" %@",[user.firstName capitalizedString]] :
+	@"";
+	
+	self.screenName = self.title = [NSString stringWithFormat:@"Contact%@",  host];
 
   return self;
 }
@@ -52,10 +62,18 @@
   CGFloat padding = [OMBMessageCollectionViewCell paddingForCell];
   CGFloat toolbarHeight = 44.0f;
 
-  self.navigationItem.rightBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
-      style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
-
+	self.navigationItem.leftBarButtonItem =
+	[[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain
+									target: self action:@selector(cancel)];
+	
+	if ([[[UIDevice currentDevice] model] isEqualToString:@"iPhone"] ||
+		[[[UIDevice currentDevice] model] isEqualToString:@"iPhone Simulator"])
+	{
+		self.navigationItem.rightBarButtonItem =
+		[[UIBarButtonItem alloc] initWithTitle: @"Call" style: UIBarButtonItemStylePlain
+										target: self action: @selector(call)];
+	}
+	
   // To view
   AMBlurView *toView = [AMBlurView new];
   toView.frame = CGRectMake(0.0f, 20.0f + toolbarHeight, 
@@ -98,8 +116,8 @@
   bottomToolbar.messageContentTextView.delegate = self;
   [self.view addSubview: bottomToolbar];
 
-  bottomToolbar.cameraBarButtonItem.action = @selector(addImage);
-  bottomToolbar.cameraBarButtonItem.target = self;
+//  bottomToolbar.cameraBarButtonItem.action = @selector(addImage);
+//  bottomToolbar.cameraBarButtonItem.target = self;
   bottomToolbar.sendBarButtonItem.action   = @selector(send);
   bottomToolbar.sendBarButtonItem.target   = self;
 
@@ -122,6 +140,8 @@
   if (user) {
     toTextField.text = [user fullName];
     toTextField.userInteractionEnabled = NO;
+	bottomToolbar.messageContentTextView.text = [NSString stringWithFormat:@"Hi%@, I’m very interested in your place.  When would be a good time for me to visit to check it out?  Thank you!", host];
+	[self textViewDidChange:bottomToolbar.messageContentTextView];
     [bottomToolbar.messageContentTextView becomeFirstResponder];
   }
   else
@@ -178,6 +198,13 @@
 - (void) addImage
 {
   NSLog(@"ADD IMAGE");
+}
+
+- (void) call
+{
+	NSString *phone = [@"telprompt://" stringByAppendingString:user.phone];
+	NSURL *url = [NSURL URLWithString:phone];
+	[[UIApplication sharedApplication] openURL:url];
 }
 
 - (void) cancel

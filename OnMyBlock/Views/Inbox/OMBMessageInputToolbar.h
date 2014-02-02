@@ -10,7 +10,7 @@
 
 @interface OMBMessageInputToolbar : UIToolbar
 
-@property (nonatomic, strong) UIBarButtonItem *cameraBarButtonItem;
+//@property (nonatomic, strong) UIBarButtonItem *cameraBarButtonItem;
 @property (nonatomic, strong) UITextView *messageContentTextView;
 @property (nonatomic, strong) UIBarButtonItem *sendBarButtonItem;
 

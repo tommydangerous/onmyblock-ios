@@ -29,12 +29,12 @@
   // iOS 7 toolbar spacing is 16px; 20px on iPad
   leftPaddingNegative.width = -6.0f; // final width = 10
 
-  // Camera
-  UIImage *cameraIcon = [UIImage image: [UIImage imageNamed: @"camera_icon.png"]
-    size: CGSizeMake(26.0f, 26.0f)];
-  _cameraBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithImage: cameraIcon style:
-      UIBarButtonItemStylePlain target: nil action: nil];
+//  // Camera
+//  UIImage *cameraIcon = [UIImage image: [UIImage imageNamed: @"camera_icon.png"]
+//    size: CGSizeMake(26.0f, 26.0f)];
+//  _cameraBarButtonItem = 
+//    [[UIBarButtonItem alloc] initWithImage: cameraIcon style:
+//      UIBarButtonItemStylePlain target: nil action: nil];
 
   // Text view
   _messageContentTextView = [[UITextView alloc] init];
@@ -72,11 +72,11 @@
   CGRect sendRect = [_sendBarButtonItem.title boundingRectWithSize:
     CGSizeMake(screen.size.width, 44.0f) font: sendFont];
   _messageContentTextView.frame = CGRectMake(0.0f, 0.0f, screen.size.width - 
-    (10 + 26.0f + 10 + 10 + sendRect.size.width + 10), 6 + 20.0f + 6);
+    ( 10 + 10 + sendRect.size.width + 10), 6 + 20.0f + 6);
 
   self.items = @[
     leftPaddingNegative,
-    _cameraBarButtonItem,
+//    _cameraBarButtonItem,
     messageContentBarButtonItem,
     _sendBarButtonItem,
     rightPaddingNegative

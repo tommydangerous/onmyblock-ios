@@ -54,7 +54,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [self openSession];
 
   // #warning Remove fake login
-  // [OMBUser fakeLogin]; // Fake login
+  [OMBUser fakeLogin]; // Fake login
   // Use this to show whatever view controller you are working on
   // [_container showFavorites];
   // [_container showIntroAnimatedDissolve: NO];
