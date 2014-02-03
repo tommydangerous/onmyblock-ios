@@ -16,4 +16,10 @@
 @property (nonatomic, strong) MKMapView *mapView;
 @property (nonatomic, strong) UIImageView *streetView;
 
+#pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (CGRect) frameForMapView;
+
 @end

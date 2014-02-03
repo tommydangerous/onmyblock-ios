@@ -22,12 +22,17 @@
 
   NSString *string = [NSString stringWithFormat: @"%@/messages", 
     OnMyBlockAPIURL];
+  NSMutableDictionary *objectParams = 
+    [NSMutableDictionary dictionaryWithDictionary: @{
+      @"content": message.content,
+      @"recipient_id": [NSNumber numberWithInt: message.recipient.uid]
+    }];
+  if (message.residenceUID)
+    [objectParams setObject: [NSNumber numberWithInt: message.residenceUID]
+      forKey: @"residence_id"];
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,
-    @"message": @{
-      @"content":      message.content,
-      @"recipient_id": [NSNumber numberWithInt: message.recipient.uid]
-    }
+    @"message": objectParams
   };
   [self setRequestWithString: string method: @"POST" parameters: params];
 
@@ -40,13 +45,14 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
+  NSLog(@"OMBMessageCreateConnection\n%@", [self json]);
 
-  NSLog(@"OMBMessageCreateConnection\n%@", json);
-
-  if ([[json objectForKey: @"success"] intValue]) {
-    [message readFromDictionary: [json objectForKey: @"object"]];
+  if ([self successful]) {
+    [message readFromDictionary: [self objectDictionary]];
+  }
+  else {
+    [self createInternalErrorWithDomain: OMBConnectionErrorDomainMessage
+      code: OMBConnectionErrorDomainMessageCodeCreateFailed];
   }
 
   [super connectionDidFinishLoading: connection];

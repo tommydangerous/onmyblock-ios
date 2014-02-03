@@ -10,6 +10,7 @@
 
 #import "NSString+Extensions.h"
 #import "OMBUser.h"
+#import "OMBViewController.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
@@ -34,6 +35,9 @@
 
   float imageSize = 22;
   float leftPad   = 25;
+  // CGFloat buttonHeight = 10.0f + 40.0f + 10.0f;
+  CGFloat buttonHeight = OMBStandardButtonHeight;
+  CGFloat padding = OMBPadding;
 
   // Button
   _headerButton = [[UIButton alloc] init];
@@ -43,6 +47,8 @@
   _headerButton.frame = CGRectMake(0, 0, rect.size.width, 100);
   _headerButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
     size: 27];
+  [_headerButton addTarget: self action: @selector(headerButtonSelected) 
+    forControlEvents: UIControlEventTouchUpInside];
   [self addSubview: _headerButton];
 
   // Buttons
@@ -51,7 +57,7 @@
   // Search
   _searchButton = [UIButton new];
   _searchButton.frame = CGRectMake(-1 * rect.size.width, 0.0f, rect.size.width, 
-    10.0f + 40.0f + 10.0f);
+    buttonHeight);
   [_searchButton addTarget: self action: @selector(showSearch)
     forControlEvents: UIControlEventTouchUpInside];
   [_searchButton setTitle: @"Search" forState: UIControlStateNormal];
@@ -210,7 +216,7 @@
   ];
   for (UIButton *button in buttonsArray) {
     button.contentEdgeInsets = UIEdgeInsetsMake(0.0f, 
-      leftPad + imageSize + leftPad, 0.0f, 20.0f);
+      leftPad + imageSize + leftPad, 0.0f, padding);
     button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
       size: 15];
@@ -229,9 +235,9 @@
     label.backgroundColor = [UIColor pink];
     label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
     label.frame = CGRectMake(
-      discoverImageView.frame.origin.x - (20.0f * 0.5f), 
-        discoverImageView.frame.origin.y - (20.0f * 0.5f), 
-          20.0f, 20.0f);
+      discoverImageView.frame.origin.x - (padding * 0.5f), 
+        discoverImageView.frame.origin.y - (padding * 0.5f), 
+          padding, padding);
     label.hidden = YES;
     label.layer.cornerRadius = label.frame.size.height * 0.5f;
     label.textAlignment = NSTextAlignmentCenter;
@@ -262,6 +268,11 @@
   return [self appDelegate].container;
 }
 
+- (void) headerButtonSelected
+{
+  NSLog(@"SELECTED");
+}
+
 - (void) removeCurrentButtonsFromMenuScroll
 {
   for (UIView *v in _currentButtons) {
@@ -288,7 +299,9 @@
   [UIView animateWithDuration: 0.1 animations: ^{
     [_headerButton setTitleColor: [UIColor whiteColor]
       forState: UIControlStateNormal];
-  }];}
+  }];
+  _headerButton.userInteractionEnabled = NO;
+}
 
 - (void) setHeaderInactive
 {
@@ -296,6 +309,7 @@
     [_headerButton setTitleColor: [UIColor colorWithWhite: 1.0f alpha: 0.5f]
       forState: UIControlStateNormal];
   }];
+  _headerButton.userInteractionEnabled = YES;
 }
 
 - (void) setTopButtonFrame

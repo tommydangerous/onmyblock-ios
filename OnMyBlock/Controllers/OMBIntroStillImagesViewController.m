@@ -627,7 +627,7 @@
       _scroll.frame.size.width, 60.0f);
   // Number of pages + 1 for the sign up view at the end of the intro
   _scroll.contentSize = CGSizeMake(
-    (_scroll.frame.size.width * (_pageControl.numberOfPages + 1)), 
+    _scroll.frame.size.width * _pageControl.numberOfPages,
       _scroll.frame.size.height);
 }
 

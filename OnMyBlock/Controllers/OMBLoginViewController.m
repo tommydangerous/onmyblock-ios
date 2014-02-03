@@ -117,15 +117,7 @@
       }
       else {
         _loginSignUpView.passwordTextField.text = @"";
-        if (error) {
-          [self showAlertViewWithError: error];
-        }
-        else {
-          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-            @"Login failed" message: @"Invalid email or password" delegate: nil
-              cancelButtonTitle: @"Try again" otherButtonTitles: nil];
-          [alertView show];
-        }
+        [self showAlertViewWithError: error];
       }
       [_activityView stopSpinning];
     };
@@ -188,15 +180,7 @@
         [_loginSignUpView clearTextFields];
       }
       else {
-        if (error) {
-          [self showAlertViewWithError: error];
-        }
-        else {
-          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-            @"Sign up failed" message: @"Please try again" delegate: nil
-              cancelButtonTitle: @"Try again" otherButtonTitles: nil];
-          [alertView show];
-        }
+        [self showAlertViewWithError: error];
       }
       [_activityView stopSpinning];
     };

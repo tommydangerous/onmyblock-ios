@@ -243,6 +243,15 @@
   _infiniteScroll.showsVerticalScrollIndicator = NO;
   [hitArea addSubview: _infiniteScroll];
 
+  // This gesture recognizer enables the user to 
+  // tap the bottom of the infinite scroll (hit area)
+  // and makes the infinite scroll scroll up
+	UITapGestureRecognizer *toggleMenuTap = 
+    [[UITapGestureRecognizer alloc] initWithTarget: self 
+      action: @selector(toggleMenu:)];
+  toggleMenuTap.cancelsTouchesInView = NO;
+	[hitArea addGestureRecognizer: toggleMenuTap];
+	
   // This is set when user creates a listing
   _infiniteScroll.scrollEnabled = NO;
   // hitArea.scrollView = _infiniteScroll;
@@ -472,25 +481,11 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 - (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView
 {
   if (scrollView == _infiniteScroll) {
-    float y   = scrollView.contentOffset.y;
-    int index = y / scrollView.frame.size.height;
-    int n     = index % 2;
-    float multiplier;
-    // If user landed on a renter menu
-    if (n == 0) {
-      multiplier = 2;
-    }
-    // If user landed on a seller menu
-    else {
-      multiplier = 3;
-    }
-    [scrollView setContentOffset: 
-      CGPointMake(0, scrollView.frame.size.height * multiplier) animated: NO];
-    [self setCurrentUserMenuHeaderTextColor];
+	  [self resetInfiniteScroll];
   }
 }
 
-// - (void) scrollViewDidEndDragging: (UIScrollView *) scrollView 
+// - (void) scrollViewDidEndDragging: (UIScrollView *) scrollView
 // willDecelerate: (BOOL) decelerate
 // {
 //   if (scrollView == _infiniteScroll) {
@@ -838,6 +833,25 @@ completion: (void (^) (void)) block
   // Automatically the method didMoveToParentViewController: 
   // will be called on the detailViewController)
   [_currentDetailViewController removeFromParentViewController];
+}
+
+- (void) resetInfiniteScroll
+{
+  CGFloat y       = _infiniteScroll.contentOffset.y;
+  NSInteger index = y / _infiniteScroll.frame.size.height;
+  NSInteger n     = index % 2;
+  CGFloat multiplier;
+  // If user landed on a renter menu
+  if (n == 0) {
+    multiplier = 2;
+  }
+  // If user landed on a seller menu
+  else {
+    multiplier = 3;
+  }
+  [_infiniteScroll setContentOffset: CGPointMake(0.0f, 
+    _infiniteScroll.frame.size.height * multiplier) animated: NO];
+  [self setCurrentUserMenuHeaderTextColor];
 }
 
 - (void) setCurrentUserMenuHeaderTextColor
@@ -1229,6 +1243,39 @@ completion: (void (^) (void)) block
 {
   if (menuIsVisible) {
     [self hideMenuWithFactor: 1.0f];
+  }
+}
+
+- (void) toggleMenu: (UITapGestureRecognizer *) gestureRecognizer
+{
+  // When the tap finishes
+  if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+    NSAssert(gestureRecognizer.view == hitArea, 
+      @"Tap gesture recognizer is assumed to be set on the hitArea view");
+    // The point where the user lifts their finger
+    CGPoint touchPoint = [gestureRecognizer locationInView:
+      gestureRecognizer.view];
+    // The frame that goes from the top of the screen to
+    // almost all the way down to the screen minus
+    // the user menu header button height (100px)
+    CGRect intersection = CGRectIntersection(hitArea.bounds, 
+      _infiniteScroll.frame);
+    // If the point, where the user lifts their finger, is not
+    // within the frame of the infinite scroll, then
+    // scroll the infinite scroll up
+    if (!CGRectContainsPoint(intersection, touchPoint)) {
+      CGPoint offset = _infiniteScroll.contentOffset;
+      offset.y += _infiniteScroll.frame.size.height;
+      [UIView animateWithDuration: OMBStandardDuration
+        animations: ^{
+          [_infiniteScroll setContentOffset:offset];
+        }
+        completion: ^(BOOL finished) { 
+          if (finished)
+            [self resetInfiniteScroll];
+        }
+      ];
+    }
   }
 }
 

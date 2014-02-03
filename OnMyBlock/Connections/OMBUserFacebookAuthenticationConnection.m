@@ -17,25 +17,17 @@
   if (!(self = [super init])) return nil;
 
   user = object;
+
   NSString *string = [NSString stringWithFormat: 
     @"%@/auth/facebook/", OnMyBlockAPIURL];
-  NSURL *url = [NSURL URLWithString: string];
-  NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
-  NSString *params = [NSString stringWithFormat:
-    @"email=%@&"
-    @"facebook_access_token=%@&"
-    @"facebook_id=%@&"
-    @"first_name=%@&"
-    @"last_name=%@",
-    user.email, 
-    user.facebookAccessToken, 
-    user.facebookId, 
-    user.firstName, 
-    user.lastName
-  ];
-  [req setHTTPBody: [params dataUsingEncoding: NSUTF8StringEncoding]];
-  [req setHTTPMethod: @"POST"];
-  self.request = req;
+  NSDictionary *params = @{
+    @"email":                 user.email,
+    @"facebook_access_token": user.facebookAccessToken,
+    @"facebook_id":           user.facebookId,
+    @"first_name":            user.firstName,
+    @"last_name":             user.lastName
+  };
+  [self setRequestWithString: string method: @"POST" parameters: params];
 
   return self;
 }
@@ -46,17 +38,7 @@
 
 - (void) start
 {
-  [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-  container = [[NSMutableData alloc] init];
-  internalConnection = [[NSURLConnection alloc] initWithRequest: self.request
-    delegate: self startImmediately: NO];
-  [internalConnection scheduleInRunLoop: [NSRunLoop mainRunLoop]
-    forMode: NSDefaultRunLoopMode];
-  [internalConnection start];
-  if (!sharedConnectionList) {
-    sharedConnectionList = [NSMutableArray array];
-  }
-  [sharedConnectionList addObject: self];
+  [self startWithTimeoutInterval: 0 onMainRunLoop: YES];
 }
 
 #pragma mark - Protocol
@@ -65,9 +47,14 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
-  [[OMBUser currentUser] readFromDictionary: json];
+  if ([self successful]) {
+    [[OMBUser currentUser] readFromDictionary: [self objectDictionary]];
+  }
+  else {
+    [self createInternalErrorWithDomain: OMBConnectionErrorDomainAuthentication
+      code: OMBConnectionErrorDomainAuthenticationCodeFacebookFailed];
+  }
+
   [super connectionDidFinishLoading: connection];
 }
 

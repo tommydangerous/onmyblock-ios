@@ -30,6 +30,13 @@
   self.sizeForMessageCell = rect.size;
 }
 
+- (OMBUser *) otherUser
+{
+  if (_sender.uid == [OMBUser currentUser].uid)
+    return _recipient;
+  return _sender;
+}
+
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];

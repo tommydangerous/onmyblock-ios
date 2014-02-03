@@ -3,3 +3,4 @@
 # Ignore configuration files
 /.env*
 !/.env.example
+OnMyBlock.xcodeproj/xcuserdata

@@ -829,6 +829,16 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
   CGFloat count = 0.0f;
   CGFloat total = 7.0f;
+  // Image
+  if (_image && _imageURL) {
+    NSRegularExpression *regex =
+      [NSRegularExpression regularExpressionWithPattern: @"default_user_image"
+        options: 0 error: nil];
+    NSArray *matches = [regex matchesInString: _imageURL.absoluteString
+      options: 0 range: NSMakeRange(0, [_imageURL.absoluteString length])];
+    if (![matches count])
+      count -= 1;
+  }
   if ([_firstName length])
     count += 1;
   if ([_lastName length])
@@ -840,8 +850,6 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   if ([_phone length])
     count += 1;
   if ([_about length])
-    count += 1;
-  if (_image)
     count += 1;
   CGFloat percent = count / total;
   percent *= 100.0f;

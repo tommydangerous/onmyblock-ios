@@ -9,6 +9,7 @@
 #import "OMBInboxViewController.h"
 
 #import "OMBConversationMessageStore.h"
+#import "OMBEmptyBackgroundWithImageAndLabel.h"
 #import "OMBInboxCell.h"
 #import "OMBMessage.h"
 #import "OMBMessageDetailViewController.h"
@@ -53,50 +54,15 @@
     10.0f + (screen.size.width * 0.2) + 10.0f, 0.0f, 0.0f);
   self.table.showsVerticalScrollIndicator = YES;
 
-  // self.button = [UIButton new];
-  // self.button.backgroundColor = [UIColor blueColor];
-  // self.button.frame = CGRectMake(100, -110, 110, 110);
-  // [self.button addTarget: self action: @selector(fall)
-  //   forControlEvents: UIControlEventTouchUpInside];
-  // [self.view addSubview: self.button];
-}
-
-// Testing dynamics
-- (void) viewDidAppear1: (BOOL) animated
-{
-  [super viewDidAppear: animated];
-  // [self tableView: self.table didSelectRowAtIndexPath: 
-  //   [NSIndexPath indexPathForRow: 0 inSection: 0]];
-
-  self.redSquare = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 110, 110)];
-  self.redSquare.backgroundColor = [UIColor redColor];
-  [self.view addSubview: self.redSquare];
-
-  self.animator = [[UIDynamicAnimator alloc] initWithReferenceView: self.view];
-
-  // Gravity falling (acceleration)
-  UIGravityBehavior* gravityBehavior = [[UIGravityBehavior alloc] initWithItems:
-    @[self.redSquare]];
-  [self.animator addBehavior: gravityBehavior];
-
-  // Bounces
-  UICollisionBehavior* collisionBehavior = 
-  [[UICollisionBehavior alloc] initWithItems: @[self.redSquare]];
-  collisionBehavior.translatesReferenceBoundsIntoBoundary = YES;
-  [self.animator addBehavior: collisionBehavior];
-
-  // More bouncing
-  UIDynamicItemBehavior *elasticityBehavior = 
-    [[UIDynamicItemBehavior alloc] initWithItems: @[self.redSquare]];
-  elasticityBehavior.elasticity = 0.7f;
-  [self.animator addBehavior: elasticityBehavior];
-
-  // Snap the button in the middle
-  self.snapBehavior = [[UISnapBehavior alloc] initWithItem: 
-    self.button snapToPoint: [self appDelegate].window.center];
-  // We decrease the damping so the view has a little less spring.
-  self.snapBehavior.damping = 0.65f;
-  [self.animator addBehavior: self.snapBehavior];
+  noMessagesView = [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame:
+    screen];
+  noMessagesView.alpha = 0.0f;
+  noMessagesView.imageView.image = [UIImage imageNamed: 
+    @"speech_bubble_icon.png"];
+  NSString *text = @"Your messages with other users appear here. "
+    @"You currently have no messages.";
+  [noMessagesView setLabelText: text];
+  [self.view addSubview: noMessagesView];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -176,7 +142,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   OMBMessage *message = [self messageAtIndexPath: indexPath];
   message.viewed = YES;
   messageDetailViewController = 
-    [[OMBMessageDetailViewController alloc] initWithUser: message.sender];
+    [[OMBMessageDetailViewController alloc] initWithUser: [message otherUser]];
   [self.navigationController pushViewController: messageDetailViewController 
     animated: YES];
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
@@ -202,26 +168,14 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
-- (void) fall
-{
-  [self.animator removeBehavior: self.snapBehavior];
-
-  UIGravityBehavior *gravityBehaviour = 
-    [[UIGravityBehavior alloc] initWithItems: @[self.button]];
-  gravityBehaviour.gravityDirection = CGVectorMake(0, 10);
-  [self.animator addBehavior: gravityBehaviour];
- 
-  UIDynamicItemBehavior *itemBehaviour = 
-    [[UIDynamicItemBehavior alloc] initWithItems: @[self.button]];
-  [itemBehaviour addAngularVelocity: -M_PI_2 forItem: self.button];
-  [self.animator addBehavior: itemBehaviour];
-}
-
 - (OMBMessage *) messageAtIndexPath: (NSIndexPath *) indexPath
 {
-  return 
-    [[[OMBConversationMessageStore sharedStore] sortedMessages] objectAtIndex:
-      indexPath.row];
+  return [[self messages] objectAtIndex: indexPath.row];
+}
+
+- (NSArray *) messages
+{
+  return [[OMBConversationMessageStore sharedStore] sortedMessages];
 }
 
 - (void) newMessage
@@ -243,7 +197,21 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 
     [[OMBConversationMessageStore sharedStore] fetchMessagesAtPage: i 
       completion: ^(NSError *error) {
-        [self.table reloadData];
+        if ([[self messages] count]) {
+          [self.table reloadData];
+          if (noMessagesView.alpha) {
+            [UIView animateWithDuration: OMBStandardDuration animations: ^{
+              noMessagesView.alpha = 0.0f;
+            }];
+          }
+        }
+        else {
+          if (!noMessagesView.alpha) {
+            [UIView animateWithDuration: OMBStandardDuration animations: ^{
+              noMessagesView.alpha = 1.0f;
+            }];
+          }
+        }
         // NSInteger newCount = 
         //   [[[OMBConversationMessageStore sharedStore].messages 
         //     allKeys] count];

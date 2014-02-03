@@ -22,19 +22,18 @@
   if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: @"%@/login/", OnMyBlockAPIURL];
-  NSURL *url = [NSURL URLWithString: string];
-  NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
-  NSString *params = [NSString stringWithFormat:
-    @"email=%@&"
-    @"password=%@",
-    [dictionary objectForKey: @"email"],
-    [dictionary objectForKey: @"password"]
-  ];
-  [req setHTTPBody: [params dataUsingEncoding: NSUTF8StringEncoding]];
-  [req setHTTPMethod: @"POST"];
-  self.request = req;
+  [self setRequestWithString: string method: @"POST" parameters: dictionary];
 
   return self;
+}
+
+#pragma mark - Override
+
+#pragma mark - Override OMBConnection
+
+- (void) start
+{
+  [self startWithTimeoutInterval: 0 onMainRunLoop: YES];
 }
 
 #pragma mark - Protocol
@@ -43,16 +42,18 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
+  NSLog(@"OMBLoginConnection\n%@", [self json]);
 
-  NSLog(@"OMBLoginConnection\n%@", json);
-
-  if ([[json objectForKey: @"success"] intValue]) {
-    [[OMBUser currentUser] readFromDictionary: json];
+  if ([self successful]) {
+    [[OMBUser currentUser] readFromDictionary: [self objectDictionary]];
     [[NSNotificationCenter defaultCenter] postNotificationName: 
       OMBUserLoggedInNotification object: nil];
   }
+  else {
+    [self createInternalErrorWithDomain: OMBConnectionErrorDomainSession
+      code: OMBConnectionErrorDomainSessionCodeLoginFailed];
+  }
+
   [super connectionDidFinishLoading: connection];
 }
 

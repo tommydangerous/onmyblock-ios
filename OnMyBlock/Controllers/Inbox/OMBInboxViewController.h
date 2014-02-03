@@ -8,11 +8,13 @@
 
 #import "OMBTableViewController.h"
 
+@class OMBEmptyBackgroundWithImageAndLabel;
 @class OMBMessageDetailViewController;
 
 @interface OMBInboxViewController : OMBTableViewController
 {
   OMBMessageDetailViewController *messageDetailViewController;
+  OMBEmptyBackgroundWithImageAndLabel *noMessagesView;
 }
 
 @property (nonatomic, strong) UIAlertView *alertView;

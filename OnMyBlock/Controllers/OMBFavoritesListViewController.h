@@ -8,6 +8,11 @@
 
 #import "OMBTableViewController.h"
 
+@class OMBEmptyBackgroundWithImageAndLabel;
+
 @interface OMBFavoritesListViewController : OMBTableViewController
+{
+  OMBEmptyBackgroundWithImageAndLabel *emptyBackgroundView;
+}
 
 @end

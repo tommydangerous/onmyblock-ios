@@ -140,8 +140,8 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   bottomToolbar.messageContentTextView.delegate = self;
   [self.view addSubview: bottomToolbar];
 
-  bottomToolbar.cameraBarButtonItem.action = @selector(addImage);
-  bottomToolbar.cameraBarButtonItem.target = self;
+//  bottomToolbar.cameraBarButtonItem.action = @selector(addImage);
+//  bottomToolbar.cameraBarButtonItem.target = self;
   bottomToolbar.sendBarButtonItem.action   = @selector(send);
   bottomToolbar.sendBarButtonItem.target   = self;
 }

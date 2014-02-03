@@ -41,8 +41,8 @@
 
 - (void) addMessage: (OMBMessage *) message
 {
-  NSNumber *number = [NSNumber numberWithInt: message.sender.uid];
-  OMBMessage *msg = [_messages objectForKey: number];
+  NSNumber *number = [NSNumber numberWithInt: [message otherUser].uid];
+  OMBMessage *msg  = [_messages objectForKey: number];
   if (msg && msg.uid == message.uid)
     return;
   [_messages setObject: message forKey: number];
