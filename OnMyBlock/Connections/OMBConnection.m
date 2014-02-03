@@ -19,7 +19,7 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
   // Home
   // NSString *const OnMyBlockAPIURL = @"http://192.168.1.72:3000/api-v1";
   // Josselyn
-  // NSString *const OnMyBlockAPIURL = @"http://10.0.1.33:3000/api-v1";
+  // NSString *const OnMyBlockAPIURL = @"http://10.0.1.7:3000/api-v1";
   // Hotspot
   // NSString *const OnMyBlockAPIURL = @"http://172.20.10.5:3000/api-v1";
 #elif __ENVIRONMENT__ == 2

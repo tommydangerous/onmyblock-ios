@@ -52,6 +52,7 @@ typedef NS_ENUM(NSInteger, OMBLoginSignUpViewTextField) {
 #pragma mark - Instance Methods
 
 - (void) clearTextFields;
+- (BOOL) isLandlord;
 - (BOOL) isLogin;
 - (void) scrollToTop;
 - (void) switchToLandlord;

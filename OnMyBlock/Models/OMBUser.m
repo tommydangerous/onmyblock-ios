@@ -43,6 +43,7 @@
 #import "OMBUserCurrentUserInfoConnection.h"
 #import "OMBUserFacebookAuthenticationConnection.h"
 #import "OMBUserImageDownloader.h"
+#import "OMBUserListingsConnection.h"
 #import "OMBUserProfileConnection.h"
 #import "OMBUserStore.h"
 #import "OMBUserUpdateConnection.h"
@@ -78,6 +79,8 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
 NSString *const OMBMessagesUnviewedCountNotification =
   @"OMBMessagesUnviewedCountNotification";
+
+NSString *const OMBUserTypeLandlord = @"landlord";
 
 // Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
 #if __ENVIRONMENT__ == 1
@@ -171,6 +174,7 @@ int kNotificationTimerInterval = 60;
   [OMBUser currentUser].phone     = @"4088581234";
   [OMBUser currentUser].school    = @"University of California - Berkeley";
   [OMBUser currentUser].image     = [UIImage imageNamed: @"edward_d.jpg"];
+  [OMBUser currentUser].userType  = OMBUserTypeLandlord;
   [OMBUser currentUser].uid       = 61;
 
   [OMBUser currentUser].renterApplication.cats = YES;
@@ -551,6 +555,14 @@ withCompletion: (void (^) (NSError *error)) block
   [[[OMBFavoritesListConnection alloc] init] start];
 }
 
+- (void) fetchListingsWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBUserListingsConnection *conn = 
+    [[OMBUserListingsConnection alloc] initWithUser: self];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
 delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
@@ -643,6 +655,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 - (BOOL) isCurrentUser
 {
   return _uid == [OMBUser currentUser].uid;
+}
+
+- (BOOL) isLandlord
+{
+  if (_userType && [_userType isEqualToString: OMBUserTypeLandlord])
+    return YES;
+  return NO;
 }
 
 - (BOOL) loggedIn
@@ -1318,6 +1337,19 @@ withCompletion: (void (^) (NSError *error)) block
   }
 }
 
+- (NSArray *) residencesActive: (BOOL) active sortedWithKey: (NSString *) key 
+ascending: (BOOL) ascending
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %@",
+    @"inactive", active ? [NSNumber numberWithBool: NO] : 
+      [NSNumber numberWithBool: YES]];
+  NSArray *array = [[_residences objectForKey: @"residences"] allValues];
+  array = [array filteredArrayUsingPredicate: predicate];
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
+    ascending: ascending];
+  return [array sortedArrayUsingDescriptors: @[sort]];
+}
+
 - (NSArray *) residencesSortedWithKey: (NSString *) key 
 ascending: (BOOL) ascending
 {
@@ -1378,9 +1410,11 @@ ascending: (BOOL) ascending
 
 - (NSString *) shortName
 {
-  return [NSString stringWithFormat: @"%@ %@.",
-    [self.firstName capitalizedString], 
-      [[self.lastName substringToIndex: 1] capitalizedString]];
+  if (_firstName && _lastName)
+    return [NSString stringWithFormat: @"%@ %@.",
+      [self.firstName capitalizedString], 
+        [[self.lastName substringToIndex: 1] capitalizedString]];
+  return @"";
 }
 
 - (CGFloat) heightForAboutTextWithWidth: (CGFloat) width

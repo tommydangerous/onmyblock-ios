@@ -24,6 +24,7 @@ extern NSString *const OMBMessagesUnviewedCountNotification;
 extern NSString *const OMBUserCreateAuthenticationForFacebookNotification;
 extern NSString *const OMBUserLoggedInNotification;
 extern NSString *const OMBUserLoggedOutNotification;
+extern NSString *const OMBUserTypeLandlord;
 
 @class OMBCosigner;
 @class OMBEmployment;
@@ -80,7 +81,7 @@ extern NSString *const OMBUserLoggedOutNotification;
 #pragma mark - Instance Methods
 
 - (void) acceptOffer: (OMBOffer *) offer 
-withCompletion: (void (^) (NSError *error)) block;
+  withCompletion: (void (^) (NSError *error)) block;
 - (void) addCosigner: (OMBCosigner *) cosigner;
 - (void) addEmployment: (OMBEmployment *) employment;
 - (void) addLegalAnswer: (OMBLegalAnswer *) object;
@@ -116,7 +117,8 @@ withCompletion: (void (^) (NSError *error)) block;
 - (void) fetchEmploymentsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchPayoutMethodsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchDepositPayoutTransactionsWithCompletion:
-(void (^) (NSError *error)) block;
+  (void (^) (NSError *error)) block;
+- (void) fetchListingsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchReceivedOffersWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
@@ -127,6 +129,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (UIImage *) imageForSize: (CGSize) size;
 - (UIImage *) imageForSizeKey: (NSString *) string;
 - (BOOL) isCurrentUser;
+- (BOOL) isLandlord;
 - (BOOL) loggedIn;
 - (void) logout;
 - (NSArray *) messagesWithUser: (OMBUser *) user;
@@ -157,8 +160,10 @@ withCompletion: (void (^) (NSError *error)) block;
 - (void) removeReceivedOffer: (OMBOffer *) offer;
 - (void) removeResidence: (OMBResidence *) residence;
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence;
+- (NSArray *) residencesActive: (BOOL) active sortedWithKey: (NSString *) key 
+  ascending: (BOOL) ascending;
 - (NSArray *) residencesSortedWithKey: (NSString *) key 
-ascending: (BOOL) ascending;
+  ascending: (BOOL) ascending;
 - (NSString *) shortName;
 - (NSArray *) sortedOffersType: (OMBUserOfferType) type 
 withKey: (NSString *) key ascending: (BOOL) ascending;

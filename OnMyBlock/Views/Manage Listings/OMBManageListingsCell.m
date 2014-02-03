@@ -114,7 +114,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // Address
   if ([residence.address length] || [residence.title length]) {
     if ([residence.title length])
-      addressLabel.text = [residence.title capitalizedString];
+      addressLabel.text = residence.title;
     else
       addressLabel.text = [residence.address capitalizedString];
   }

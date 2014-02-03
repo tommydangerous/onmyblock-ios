@@ -15,10 +15,12 @@
 #import "OMBEditProfileViewController.h"
 #import "OMBEmploymentCell.h"
 #import "OMBGradientView.h"
+#import "OMBManageListingsCell.h"
 #import "OMBMessageDetailViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterProfileUserInfoCell.h"
+#import "OMBResidenceDetailViewController.h"
 #import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
 #import "UIFont+OnMyBlock.h"
@@ -213,7 +215,7 @@
   [super viewWillAppear: animated];
 
   // If the current user is looking at their own renter profile
-  if (user.uid == [OMBUser currentUser].uid) {
+  if ([user isCurrentUser] && ![user isLandlord]) {
     // Check to see if the edit button should be at the bottom
     [self updateEditButton];
   }
@@ -229,19 +231,32 @@
 
   [self reloadData];
 
-  // Fetch the employments
-  [user fetchEmploymentsWithCompletion: ^(NSError *error) {
-    [self.table reloadSections: 
-      [NSIndexSet indexSetWithIndex: OMBRenterProfileSectionEmployment] 
-        withRowAnimation: UITableViewRowAnimationFade];
-  }];
-
-  // Fetch the information about 
-  [user fetchUserProfileWithCompletion: ^(NSError *error) {
-    [self.table reloadSections: 
-      [NSIndexSet indexSetWithIndex: OMBRenterProfileSectionRenterInfo] 
-        withRowAnimation: UITableViewRowAnimationFade];
-  }];
+  // If user is the landlord
+  if ([user isLandlord]) {
+    // Fetch listings
+    [user fetchListingsWithCompletion: ^(NSError *error) {
+      [self.table reloadData];
+      // [self.table reloadSections: 
+      //   [NSIndexSet indexSetWithIndex: OMBRenterProfileSectionListings] 
+      //     withRowAnimation: UITableViewRowAnimationFade];
+    }];
+  }
+  else {
+    // Fetch the information about the user, specifically the renter application
+    [user fetchUserProfileWithCompletion: ^(NSError *error) {
+      [self.table reloadData];
+      // [self.table reloadSections: 
+      //   [NSIndexSet indexSetWithIndex: OMBRenterProfileSectionRenterInfo] 
+      //     withRowAnimation: UITableViewRowAnimationFade];
+    }];
+    // Fetch the employments
+    [user fetchEmploymentsWithCompletion: ^(NSError *error) {
+      [self.table reloadData];
+      // [self.table reloadSections: 
+      //   [NSIndexSet indexSetWithIndex: OMBRenterProfileSectionEmployment] 
+      //     withRowAnimation: UITableViewRowAnimationFade];
+    }];
+  }
 
   // [self showBecomeVerified];
 }
@@ -302,7 +317,8 @@ didFinishWithResult: (MFMailComposeResult) result error: (NSError*) error
   // User info
   // Rental info
   // Employment
-  return 3;
+  // Listings
+  return 4;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -606,6 +622,106 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         objectAtIndex: indexPath.row]];
     return cell;
   }
+  // Listings
+  else if (indexPath.section == OMBRenterProfileSectionListings) {
+    // Listings header
+    if (indexPath.row == 
+      OMBRenterProfileSectionListingsRowInfoHeader) {
+      static NSString *ListingsHeaderCellID = @"ListingsHeaderCellID";
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        ListingsHeaderCellID];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle: 
+          UITableViewCellStyleDefault reuseIdentifier: ListingsHeaderCellID];
+        cell.backgroundColor = [UIColor grayUltraLight];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+          tableView.frame.size.width, 0.0f, 0.0f);
+        // Priority Rental Info
+        UILabel *headLabel = [UILabel new];
+        headLabel.font = [UIFont mediumTextFont];
+        headLabel.frame = CGRectMake(0.0f, padding, 
+          tableView.frame.size.width, OMBStandardHeight);
+        if ([user isCurrentUser])
+          headLabel.text = @"My Listings";
+        else
+          headLabel.text = [NSString stringWithFormat: @"%@'s Listings",
+            [user.firstName capitalizedString]];
+        headLabel.textAlignment = NSTextAlignmentCenter;
+        headLabel.textColor = [UIColor grayMedium];
+        [cell.contentView addSubview: headLabel];
+        // Border top
+        UIView *bor = [cell.contentView viewWithTag: 9999];
+        if (!bor) {
+          bor = [UIView new];
+          bor.backgroundColor = tableView.separatorColor;
+          bor.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 0.5f);
+          bor.tag = 9999;
+        }
+        [cell.contentView addSubview: bor];
+      }
+      return cell;
+    }
+    // Create listing
+    else if (indexPath.row == OMBRenterProfileSectionListingsCreateListing) {
+      static NSString *CreateListingID = @"CreateListingID";
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        CreateListingID];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle: 
+          UITableViewCellStyleDefault reuseIdentifier: CreateListingID];
+        cell.backgroundColor = [UIColor grayUltraLight];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+          tableView.frame.size.width, 0.0f, 0.0f);
+        UIButton *button = [UIButton new];
+        button.backgroundColor = [UIColor whiteColor];
+        button.clipsToBounds = YES;
+        button.frame = CGRectMake(padding, 0.0f,
+          tableView.frame.size.width - (padding * 2), OMBStandardButtonHeight);
+        button.layer.borderColor = [UIColor blue].CGColor;
+        button.layer.borderWidth = 1.0f;
+        button.layer.cornerRadius = button.frame.size.height * 0.5f;
+        button.titleLabel.font = [UIFont mediumTextFont];
+        [button addTarget: self action: @selector(createListing)
+          forControlEvents: UIControlEventTouchUpInside];
+        [button setBackgroundImage: [UIImage imageWithColor: [UIColor blue]]
+          forState: UIControlStateHighlighted];
+        [button setTitle: @"Create Listing"
+          forState: UIControlStateNormal];
+        [button setTitleColor: [UIColor blue]
+          forState: UIControlStateNormal];
+        [button setTitleColor: [UIColor whiteColor]
+          forState: UIControlStateHighlighted];
+        [cell.contentView addSubview: button];
+        UIView *bor = [cell.contentView viewWithTag: 9999];
+        if (!bor) {
+          bor = [UIView new];
+          bor.backgroundColor = tableView.separatorColor;
+          bor.frame = CGRectMake(0.0f, 
+            OMBStandardButtonHeight + padding - 0.5f, 
+              tableView.frame.size.width, 0.5f);
+          bor.tag = 9999;
+        }
+        [cell.contentView addSubview: bor];
+      }
+      return cell;
+    }
+    // Listings
+    else {
+      static NSString *ListingsID = @"ListingsID";
+      OMBManageListingsCell *cell = 
+        [tableView dequeueReusableCellWithIdentifier: ListingsID];
+      if (!cell)
+        cell = [[OMBManageListingsCell alloc] initWithStyle: 
+          UITableViewCellStyleDefault reuseIdentifier: ListingsID];
+      // Minus 1 to account for the extra listings header
+      [cell loadResidenceData: [[self listings] objectAtIndex: 
+        indexPath.row - 1]];
+      cell.statusLabel.hidden = YES;
+      return cell;
+    }
+  }
   return emptyCell;
 }
 
@@ -636,6 +752,17 @@ numberOfRowsInSection: (NSInteger) section
   else if (section == OMBRenterProfileSectionEmployment) {
     return [[user.renterApplication employmentsSortedByStartDate] count];
   }
+  // Listings
+  else if (section == OMBRenterProfileSectionListings) {
+    // Listings header
+    if ([[self listings] count]) {
+      return 1 + [[self listings] count];
+    }
+    else {
+      // Listings header, create listing
+      return 1 + 1;
+    }
+  }
   return 0;
 }
 
@@ -655,66 +782,73 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     return [OMBRenterProfileUserInfoCell heightForCell];
   }
-  // Renter info
-  else if (indexPath.section == OMBRenterProfileSectionRenterInfo) {
-    // Rental Info Header
-    if (indexPath.row == 
-      OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoHeader) {
-      return padding + OMBStandardHeight + padding;
+  else {
+    if ([user isLandlord]) {
+      // Listings
+      if (indexPath.section == OMBRenterProfileSectionListings) {
+        // My Listings
+        if (indexPath.row == OMBRenterProfileSectionListingsRowInfoHeader) {
+          return padding + OMBStandardHeight + padding;
+        }
+        // Create listings
+        else if (indexPath.row == 
+          OMBRenterProfileSectionListingsCreateListing) {
+          if ([user isCurrentUser])
+            return OMBStandardButtonHeight + padding; 
+        }
+        // Listings
+        else {
+          return [OMBManageListingsCell heightForCell];
+        }
+      }
     }
-    // Rental Info Note
-    else if (indexPath.row ==
-      OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoNote) {
-      if ([user isCurrentUser])
-        return 22.0f * 3; // 22 is the line height for the label
-      // return padding + (22.0f * 3) + padding;
+    else {
+      // Renter info
+      if (indexPath.section == OMBRenterProfileSectionRenterInfo) {
+        // Rental Info Header
+        if (indexPath.row == 
+          OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoHeader) {
+          return padding + OMBStandardHeight + padding;
+        }
+        // Rental Info Note
+        else if (indexPath.row ==
+          OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoNote) {
+          if ([user isCurrentUser])
+            return 22.0f * 3; // 22 is the line height for the label
+          // return padding + (22.0f * 3) + padding;
+        }
+        // Become Renter Verified
+        else if (indexPath.row == 
+          OMBRenterProfileSectionRenterInfoRowBecomeRenterVerified) {
+          if ([user isCurrentUser])
+            return padding + OMBStandardButtonHeight + padding;
+        }
+        // Co-applicant count
+        else if (indexPath.row ==
+          OMBRenterProfileSectionRenterInfoRowCoapplicants) {
+          return [OMBRenterProfileUserInfoCell heightForCell];
+        }
+        // Co-signer
+        else if (indexPath.row == 
+          OMBRenterProfileSectionRenterInfoRowCosigner) {
+          return [OMBRenterProfileUserInfoCell heightForCell]; 
+        }
+        // Facebook
+        else if (indexPath.row == 
+          OMBRenterProfileSectionRenterInfoRowFacebook) {
+          return [OMBRenterProfileUserInfoCell heightForCell]; 
+        }
+        // LinkedIn
+        else if (indexPath.row == 
+          OMBRenterProfileSectionRenterInfoRowLinkedIn) {
+          return [OMBRenterProfileUserInfoCell heightForCell]; 
+        }
+      }
+      // Employment
+      else if (indexPath.section == OMBRenterProfileSectionEmployment) {
+        return [OMBEmploymentCell heightForCell];
+      }
     }
-    // Become Renter Verified
-    else if (indexPath.row == 
-      OMBRenterProfileSectionRenterInfoRowBecomeRenterVerified) {
-      if ([user isCurrentUser])
-        return padding + OMBStandardButtonHeight + padding;
-    }
-    // Co-applicant count
-    else if (indexPath.row ==
-      OMBRenterProfileSectionRenterInfoRowCoapplicants) {
-      return [OMBRenterProfileUserInfoCell heightForCell];
-    }
-    // Co-signer
-    else if (indexPath.row == 
-      OMBRenterProfileSectionRenterInfoRowCosigner) {
-      return [OMBRenterProfileUserInfoCell heightForCell]; 
-    }
-    // Facebook
-    else if (indexPath.row == 
-      OMBRenterProfileSectionRenterInfoRowFacebook) {
-      return [OMBRenterProfileUserInfoCell heightForCell]; 
-    }
-    // LinkedIn
-    else if (indexPath.row == 
-      OMBRenterProfileSectionRenterInfoRowLinkedIn) {
-      return [OMBRenterProfileUserInfoCell heightForCell]; 
-    }
-  }
-  // Employment
-  else if (indexPath.section == OMBRenterProfileSectionEmployment) {
-    return [OMBEmploymentCell heightForCell];
-    // OMBEmployment *employment = 
-    //   [[user.renterApplication employmentsSortedByStartDate] objectAtIndex: 
-    //     indexPath.row];
-    // CGFloat padding = OMBPadding;
-    // CGFloat height = padding + 22.0f + padding;
-    // if ([employment.title length] > 0 || employment.income)
-    //   height += 22.0f;
-    // if (employment.startDate)
-    //   height += 22.0f;
-
-    // Padding top              = 20
-    // Company name and website = 22
-    // Title and income         = 22
-    // Start date and end date  = 22
-    // Padding bottom           = 20
-    // return height;
   }
   return 0.0f;
 }
@@ -738,6 +872,16 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       }
     }
   }
+  // Listings
+  if (indexPath.section == OMBRenterProfileSectionListings) {
+    // If not the first row
+    if (indexPath.row != OMBRenterProfileSectionListingsRowInfoHeader) {
+      [self.navigationController pushViewController:
+        [[OMBResidenceDetailViewController alloc] initWithResidence:
+          [[self listings] objectAtIndex: indexPath.row - 1]]
+            animated: YES];
+    }
+  }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
@@ -754,6 +898,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     rect.origin.y = OMBPadding + OMBStandardHeight;
     contactToolbar.frame = rect;
   }];
+}
+
+- (void) createListing
+{
+  [[self appDelegate].container showCreateListing];
 }
 
 - (void) done
@@ -795,6 +944,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+- (NSArray *) listings
+{
+  return [user residencesActive: YES sortedWithKey: @"createdAt" ascending: NO];
+}
+
 - (void) loadUser: (OMBUser *) object
 {
   user = object;
@@ -832,7 +986,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   // User icon
   userIconView.image = user.image;
   // Full name
-  fullNameLabel.text = [user shortName];
+  if ([[user shortName] length])
+    fullNameLabel.text = [user shortName];
 
   [self.table reloadData];
 }

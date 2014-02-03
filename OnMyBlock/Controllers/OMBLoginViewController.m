@@ -137,7 +137,14 @@
 
 - (void) showFacebook
 {
+  if ([_loginSignUpView isLandlord]) {
+    [OMBUser currentUser].userType = OMBUserTypeLandlord;
+  }
+  else {
+    [OMBUser currentUser].userType = @"";
+  }
   [[self appDelegate] openSession];
+  [_activityView startSpinning];
 }
 
 - (void) showLandlordSignUp
@@ -167,12 +174,20 @@
   if ([emailString length] && [firstNameString length] &&
     [lastNameString length] && [passwordString length]) {
 
-    NSDictionary *params = @{
-      @"email":      emailString,
-      @"first_name": firstNameString,
-      @"last_name":  lastNameString,
-      @"password":   passwordString
-    };
+    NSMutableDictionary *params = 
+      [NSMutableDictionary dictionaryWithDictionary: @{
+        @"email":      emailString,
+        @"first_name": firstNameString,
+        @"last_name":  lastNameString,
+        @"password":   passwordString
+      }];
+    NSString *userTypeKey = @"user_type";
+    if ([_loginSignUpView isLandlord]) {
+      [params setObject: OMBUserTypeLandlord forKey: userTypeKey];
+    }
+    else {
+      [params removeObjectForKey: userTypeKey];
+    }
     OMBSignUpConnection *conn = 
       [[OMBSignUpConnection alloc] initWithParameters: params];
     conn.completionBlock = ^(NSError *error) {

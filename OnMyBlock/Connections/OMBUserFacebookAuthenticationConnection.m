@@ -25,7 +25,8 @@
     @"facebook_access_token": user.facebookAccessToken,
     @"facebook_id":           user.facebookId,
     @"first_name":            user.firstName,
-    @"last_name":             user.lastName
+    @"last_name":             user.lastName,
+    @"user_type":             user.userType ? user.userType : @""
   };
   [self setRequestWithString: string method: @"POST" parameters: params];
 
@@ -38,7 +39,7 @@
 
 - (void) start
 {
-  [self startWithTimeoutInterval: 0 onMainRunLoop: YES];
+  [self startWithTimeoutInterval: 30 onMainRunLoop: YES];
 }
 
 #pragma mark - Protocol

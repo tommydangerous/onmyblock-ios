@@ -19,7 +19,8 @@
 typedef NS_ENUM(NSInteger, OMBRenterProfileSection) {
   OMBRenterProfileSectionUserInfo,
   OMBRenterProfileSectionRenterInfo,
-  OMBRenterProfileSectionEmployment
+  OMBRenterProfileSectionEmployment,
+  OMBRenterProfileSectionListings
 };
 
 // Rows
@@ -41,6 +42,12 @@ typedef NS_ENUM(NSInteger, OMBRenterProfileSectionRenterInfoRow) {
   OMBRenterProfileSectionRenterInfoRowCosigner,
   OMBRenterProfileSectionRenterInfoRowFacebook,
   OMBRenterProfileSectionRenterInfoRowLinkedIn
+};
+
+// in section listings
+typedef NS_ENUM(NSInteger, OMBRenterProfileSectionListingsRow) {
+  OMBRenterProfileSectionListingsRowInfoHeader,
+  OMBRenterProfileSectionListingsCreateListing
 };
 
 @interface OMBRenterProfileViewController : OMBTableViewController
