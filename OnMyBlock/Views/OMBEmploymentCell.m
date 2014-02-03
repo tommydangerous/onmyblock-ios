@@ -11,7 +11,9 @@
 #import "OMBEmployment.h"
 #import "OMBEmploymentListViewController.h"
 #import "OMBMyRenterApplicationViewController.h"
+#import "OMBViewController.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 
 @implementation OMBEmploymentCell
 
@@ -26,15 +28,14 @@ reuseIdentifier: (NSString *)reuseIdentifier
   CGRect screen     = [[UIScreen mainScreen] bounds];
   float screenWidth = screen.size.width;
 
-  float padding = 20.0f;
+  float padding = OMBPadding;
 
   float originX = padding;
   float height  = 22.0f;
-  float width   = screenWidth - (originX * 2);  
+  float width   = screenWidth - (originX * 2);
 
   companyNameLabel = [[UILabel alloc] init];
-  companyNameLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
-    size: 15];
+  companyNameLabel.font = [UIFont normalTextFont];
   companyNameLabel.frame = CGRectMake(originX, padding, width, height);
   companyNameLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: companyNameLabel];
@@ -52,12 +53,11 @@ reuseIdentifier: (NSString *)reuseIdentifier
   [self.contentView addSubview: _companyWebsiteButton];
 
   titleIncomeLabel = [[UILabel alloc] init];
-  titleIncomeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
-    size: 15];
+  titleIncomeLabel.font = [UIFont normalTextFont];
   titleIncomeLabel.frame = CGRectMake(originX, 
     companyNameLabel.frame.origin.y + companyNameLabel.frame.size.height,
       width, height);
-  titleIncomeLabel.textColor = companyNameLabel.textColor;
+  titleIncomeLabel.textColor = [UIColor grayMedium];
   [self.contentView addSubview: titleIncomeLabel];
 
   startDateEndDateLabel = [[UILabel alloc] init];
@@ -65,7 +65,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   startDateEndDateLabel.frame = CGRectMake(originX,
     titleIncomeLabel.frame.origin.y + titleIncomeLabel.frame.size.height,
       width, height);
-  startDateEndDateLabel.textColor = [UIColor textColor];
+  startDateEndDateLabel.textColor = [UIColor grayMedium];
   [self.contentView addSubview: startDateEndDateLabel];
 
   return self;
@@ -73,82 +73,91 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 #pragma mark - Methods
 
+#pragma mark - Class Methods
+
++ (CGFloat) heightForCell
+{
+  return OMBPadding + (22.0f * 3) + OMBPadding;
+}
+
 #pragma mark - Instance Methods
 
 - (void) loadData: (OMBEmployment *) object
 {
   _employment = object;
 
-  CGRect screen     = [[UIScreen mainScreen] bounds];
-  float screenWidth = screen.size.width;
-  float padding     = 20.0f;
-  float originX     = padding;
-  float width       = screenWidth - (originX * 2);  
+  // CGRect screen     = [[UIScreen mainScreen] bounds];
+  // float screenWidth = screen.size.width;
+  // float padding     = 20.0f;
+  // float originX     = padding;
+  // float width       = screenWidth - (originX * 2);
 
   // Company name
-  companyNameLabel.text = [_employment.companyName capitalizedString];
-  CGRect companyNameRect = [companyNameLabel.text boundingRectWithSize:
-    CGSizeMake(width, companyNameLabel.frame.size.height)
-      options: NSStringDrawingUsesLineFragmentOrigin
-        attributes: @{ NSFontAttributeName: companyNameLabel.font }
-          context: nil];
-  companyNameLabel.frame = CGRectMake(companyNameLabel.frame.origin.x,
-    companyNameLabel.frame.origin.y, companyNameRect.size.width,
-      companyNameLabel.frame.size.height);
+  // companyNameLabel.text = [_employment.companyName capitalizedString];
+  companyNameLabel.text = _employment.companyName;
+  // CGRect companyNameRect = [companyNameLabel.text boundingRectWithSize:
+  //   CGSizeMake(width, companyNameLabel.frame.size.height)
+  //     options: NSStringDrawingUsesLineFragmentOrigin
+  //       attributes: @{ NSFontAttributeName: companyNameLabel.font }
+  //         context: nil];
+  // companyNameLabel.frame = CGRectMake(companyNameLabel.frame.origin.x,
+  //   companyNameLabel.frame.origin.y, companyNameRect.size.width,
+  //     companyNameLabel.frame.size.height);
 
   // Website
-  if ([_employment.companyWebsite length] > 0) {
-    [_companyWebsiteButton setTitle: [_employment shortCompanyWebsiteString] 
-      forState: UIControlStateNormal];
-    CGRect companyWebsiteRect = 
-      [[_employment shortCompanyWebsiteString] boundingRectWithSize:
-        CGSizeMake(width, _companyWebsiteButton.frame.size.height)
-          options: NSStringDrawingUsesLineFragmentOrigin
-            attributes: 
-            @{ NSFontAttributeName: _companyWebsiteButton.titleLabel.font }
-              context: nil];
-    _companyWebsiteButton.frame = CGRectMake(
-      companyNameLabel.frame.origin.x + companyNameLabel.frame.size.width + 
-      (padding * 0.5), 
-        _companyWebsiteButton.frame.origin.y, companyWebsiteRect.size.width, 
-          _companyWebsiteButton.frame.size.height);
-  }
-  else {
-    [_companyWebsiteButton setTitle: @"" forState: UIControlStateNormal];
-  }
+  // if ([_employment.companyWebsite length] > 0) {
+  //   [_companyWebsiteButton setTitle: [_employment shortCompanyWebsiteString] 
+  //     forState: UIControlStateNormal];
+  //   CGRect companyWebsiteRect = 
+  //     [[_employment shortCompanyWebsiteString] boundingRectWithSize:
+  //       CGSizeMake(width, _companyWebsiteButton.frame.size.height)
+  //         options: NSStringDrawingUsesLineFragmentOrigin
+  //           attributes: 
+  //           @{ NSFontAttributeName: _companyWebsiteButton.titleLabel.font }
+  //             context: nil];
+  //   _companyWebsiteButton.frame = CGRectMake(
+  //     companyNameLabel.frame.origin.x + companyNameLabel.frame.size.width + 
+  //     (padding * 0.5), 
+  //       _companyWebsiteButton.frame.origin.y, companyWebsiteRect.size.width, 
+  //         _companyWebsiteButton.frame.size.height);
+  // }
+  // else {
+  //   [_companyWebsiteButton setTitle: @"" forState: UIControlStateNormal];
+  // }
 
   // Title, income
   // Move the date labels back down
-  startDateEndDateLabel.frame = CGRectMake(
-    startDateEndDateLabel.frame.origin.x, 
-      titleIncomeLabel.frame.origin.y + titleIncomeLabel.frame.size.height, 
-        startDateEndDateLabel.frame.size.width, 
-          startDateEndDateLabel.frame.size.height);
-  NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-  [numberFormatter setNumberStyle: NSNumberFormatterCurrencyStyle];
-  if ([_employment.title length] > 0 && _employment.income) {
-    NSString *string = [numberFormatter stringFromNumber: 
-      [NSNumber numberWithFloat: _employment.income]];
-    string = [[string componentsSeparatedByString: @"."] objectAtIndex: 0];
-    titleIncomeLabel.text = [NSString stringWithFormat: @"%@ - %@ / mo",
-      [_employment.title capitalizedString], string];
-  }
-  else if ([_employment.title length] > 0) {
-    titleIncomeLabel.text = [_employment.title capitalizedString];
-  }
-  else if (_employment.income) {
-    NSString *string = [numberFormatter stringFromNumber: 
-      [NSNumber numberWithFloat: _employment.income]];
-    titleIncomeLabel.text = string;
-  }
-  else {
-    titleIncomeLabel.text = @"";
-    // If there is nothing in the title income label, move the date label up
-    startDateEndDateLabel.frame = CGRectMake(
-      startDateEndDateLabel.frame.origin.x, titleIncomeLabel.frame.origin.y, 
-        startDateEndDateLabel.frame.size.width, 
-          startDateEndDateLabel.frame.size.height);
-  }
+  // startDateEndDateLabel.frame = CGRectMake(
+  //   startDateEndDateLabel.frame.origin.x, 
+  //     titleIncomeLabel.frame.origin.y + titleIncomeLabel.frame.size.height, 
+  //       startDateEndDateLabel.frame.size.width, 
+  //         startDateEndDateLabel.frame.size.height);
+  // NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+  // [numberFormatter setNumberStyle: NSNumberFormatterCurrencyStyle];
+  // if ([_employment.title length] > 0 && _employment.income) {
+  //   NSString *string = [numberFormatter stringFromNumber: 
+  //     [NSNumber numberWithFloat: _employment.income]];
+  //   string = [[string componentsSeparatedByString: @"."] objectAtIndex: 0];
+  //   titleIncomeLabel.text = [NSString stringWithFormat: @"%@ - %@ / mo",
+  //     _employment.title, string];
+  // }
+  // else if ([_employment.title length] > 0) {
+  //   titleIncomeLabel.text = _employment.title;
+  // }
+  // else if (_employment.income) {
+  //   NSString *string = [numberFormatter stringFromNumber: 
+  //     [NSNumber numberWithFloat: _employment.income]];
+  //   titleIncomeLabel.text = string;
+  // }
+  // else {
+  //   titleIncomeLabel.text = @"";
+  //   // If there is nothing in the title income label, move the date label up
+  //   startDateEndDateLabel.frame = CGRectMake(
+  //     startDateEndDateLabel.frame.origin.x, titleIncomeLabel.frame.origin.y, 
+  //       startDateEndDateLabel.frame.size.width, 
+  //         startDateEndDateLabel.frame.size.height);
+  // }
+  titleIncomeLabel.text = _employment.title;
 
   // Start date
   if (_employment.startDate) {

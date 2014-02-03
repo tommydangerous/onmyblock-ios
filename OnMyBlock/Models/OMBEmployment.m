@@ -60,8 +60,18 @@
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
-  _companyName = [dictionary objectForKey: @"company_name"];
-  _companyWebsite = [dictionary objectForKey: @"company_website"];
+  // Company name
+  if ([dictionary objectForKey: @"company_name"] == [NSNull null])
+    _companyName = @"";
+  else
+    _companyName = [dictionary objectForKey: @"company_name"];
+
+  // Company website
+  if ([dictionary objectForKey: @"company_website"] == [NSNull null])
+    _companyWebsite = @"";
+  else
+    _companyWebsite = [dictionary objectForKey: @"company_website"];
+
   NSDateFormatter *dateFormatter = [NSDateFormatter new];
   dateFormatter.dateFormat = @"yyyy-MM-d HH:mm:ss ZZZ";
   if ([dictionary objectForKey: @"end_date"] != [NSNull null]) {
@@ -74,7 +84,10 @@
     _startDate = [[dateFormatter dateFromString: 
       [dictionary objectForKey: @"start_date"]] timeIntervalSince1970];
   }
-  _title = [dictionary objectForKey: @"title"];
+  if ([dictionary objectForKey: @"title"] == [NSNull null])
+    _title = @"";
+  else
+    _title = [dictionary objectForKey: @"title"];
   _uid   = [[dictionary objectForKey: @"id"] intValue];
 }
 

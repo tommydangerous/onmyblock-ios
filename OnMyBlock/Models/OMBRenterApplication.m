@@ -52,8 +52,9 @@
 - (void) addEmployment: (OMBEmployment *) employment
 {
   NSPredicate *predicate = [NSPredicate predicateWithFormat:
-    @"(%K == %@) AND (%K == %@)",
-      @"companyName", employment.companyName, @"title", employment.title];
+    @"(%K == %@) AND (%K == %f)",
+      @"companyName", employment.companyName, 
+        @"startDate", employment.startDate];
   NSArray *array = [_employments filteredArrayUsingPredicate: predicate];
   if ([array count] == 0)
     [_employments addObject: employment];

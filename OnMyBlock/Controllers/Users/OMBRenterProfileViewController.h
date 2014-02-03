@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
+#import <MessageUI/MessageUI.h>
+
 #import "OMBTableViewController.h"
 
 @class AMBlurView;
@@ -16,7 +18,8 @@
 // Sections
 typedef NS_ENUM(NSInteger, OMBRenterProfileSection) {
   OMBRenterProfileSectionUserInfo,
-  OMBRenterProfileSectionRenterInfo
+  OMBRenterProfileSectionRenterInfo,
+  OMBRenterProfileSectionEmployment
 };
 
 // Rows
@@ -41,10 +44,13 @@ typedef NS_ENUM(NSInteger, OMBRenterProfileSectionRenterInfoRow) {
 };
 
 @interface OMBRenterProfileViewController : OMBTableViewController
+<MFMailComposeViewControllerDelegate>
 {
   OMBCenteredImageView *backImageView;
   UIView *backView;
   CGFloat backViewOriginY;
+  UIBarButtonItem *contactBarButtonItem;
+  UIToolbar *contactToolbar;
   UIBarButtonItem *editBarButtonItem;
   UIButton *editButton;
   AMBlurView *editButtonView;

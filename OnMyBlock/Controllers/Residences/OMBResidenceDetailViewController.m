@@ -26,6 +26,7 @@
 #import "OMBMessageDetailViewController.h"
 #import "OMBMessageNewViewController.h"
 #import "OMBNavigationController.h"
+#import "OMBRenterProfileViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceBookItViewController.h"
 #import "OMBResidenceCell.h"
@@ -719,10 +720,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell)
         cell = [[OMBResidenceDetailSellerCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: SellerCellIdentifier];
-      OMBUser *user = residence.user;
-      if (!user || [user.firstName length] == 0)
-        user = [OMBUser landlordUser];
-      [cell loadUserData: user];
+      // OMBUser *user = residence.user;
+      // if (!user || [user.firstName length] == 0)
+      //   user = [OMBUser landlordUser];
+      [cell loadUserData: residence.user];
       return cell;
     }
   }
@@ -828,6 +829,17 @@ numberOfRowsInSection: (NSInteger) section
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  // Seller
+  if (indexPath.section == 4) {
+    if (indexPath.row == 1) {
+      if (residence.user) {
+        OMBRenterProfileViewController *vc = 
+          [[OMBRenterProfileViewController alloc] init];
+        [vc loadUser: residence.user];
+        [self.navigationController pushViewController: vc animated: YES];
+      }
+    }
+  }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
@@ -892,7 +904,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return kResidenceDetailCellSpacingHeight;
     }
     else if (indexPath.row == 1) {
-      return [OMBResidenceDetailSellerCell heightForCell];
+      // Only show this if there is a user for that residence
+      if (residence.user) {
+        return [OMBResidenceDetailSellerCell heightForCell];
+      }
     }
   }
 
@@ -999,12 +1014,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // [self.navigationController pushViewController: 
     //   messageDetailViewController
     //     animated: YES];
-    OMBUser *user = residence.user;
-    if (!user || [user.firstName length] == 0)
-      user = [OMBUser landlordUser];
+    // OMBUser *user = residence.user;
+    // if (!user || [user.firstName length] == 0)
+    //   user = [OMBUser landlordUser];
     [[self appDelegate].container presentViewController: 
       [[OMBNavigationController alloc] initWithRootViewController: 
-        [[OMBMessageNewViewController alloc] initWithUser: user 
+        [[OMBMessageNewViewController alloc] initWithUser: residence.user 
           residence: residence]] animated: YES completion: nil];
   }
   else {

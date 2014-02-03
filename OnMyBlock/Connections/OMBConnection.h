@@ -49,6 +49,7 @@ didFailWithError: (NSError *) error;
 
 #pragma mark Instance Methods
 
+- (NSString *) accessToken;
 - (void) cancelConnection;
 - (void) createInternalErrorWithDomain: (NSString *) domain
 code: (NSInteger) code;

@@ -113,17 +113,20 @@ withCompletion: (void (^) (NSError *error)) block;
 - (void) fetchAcceptedOffersWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchConfirmedTenantsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchCurrentUserInfo;
+- (void) fetchEmploymentsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchPayoutMethodsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchDepositPayoutTransactionsWithCompletion:
 (void (^) (NSError *error)) block;
 - (void) fetchReceivedOffersWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
+- (void) fetchUserProfileWithCompletion: (void (^) (NSError *error)) block;
 - (NSString *) fullName;
 - (BOOL) hasLandlordType;
 - (CGFloat) heightForAboutTextWithWidth: (CGFloat) width;
 - (UIImage *) imageForSize: (CGSize) size;
 - (UIImage *) imageForSizeKey: (NSString *) string;
+- (BOOL) isCurrentUser;
 - (BOOL) loggedIn;
 - (void) logout;
 - (NSArray *) messagesWithUser: (OMBUser *) user;
