@@ -1004,8 +1004,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       user = [OMBUser landlordUser];
     [[self appDelegate].container presentViewController: 
       [[OMBNavigationController alloc] initWithRootViewController: 
-        [[OMBMessageNewViewController alloc] initWithUser: user]]
-          animated: YES completion: nil];
+        [[OMBMessageNewViewController alloc] initWithUser: user 
+          residence: residence]] animated: YES completion: nil];
   }
   else {
     [[self appDelegate].container showSignUp];

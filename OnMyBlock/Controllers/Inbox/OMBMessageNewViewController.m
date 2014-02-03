@@ -15,6 +15,7 @@
 #import "OMBMessageCollectionViewCell.h"
 #import "OMBMessageCreateConnection.h"
 #import "OMBMessageInputToolbar.h"
+#import "OMBResidence.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 
@@ -28,24 +29,32 @@
 
 #pragma mark - Initializer
 
-- (id) initWithUser: (OMBUser *) object
-{
-  if (!(self = [super init])) return nil;
-
-  user = object;
-	
-	host = (user.firstName.length && [user.firstName caseInsensitiveCompare:@"Land"] != NSOrderedSame)?
-	[NSString stringWithFormat:@" %@",[user.firstName capitalizedString]] :
-	@"";
-	
-	self.screenName = self.title = [NSString stringWithFormat:@"Contact%@",  host];
-
-  return self;
-}
-
 - (id) init
 {
   return [self initWithUser: nil];
+}
+
+- (id) initWithUser: (OMBUser *) object
+{
+  return [self initWithUser: object residence: nil];
+}
+
+- (id) initWithUser: (OMBUser *) object residence: (OMBResidence *) res
+{
+  if (!(self = [super init])) return nil;
+
+  residence = res;
+  user      = object;
+  
+  host = (user.firstName.length && [user.firstName caseInsensitiveCompare:
+    @"Land"] != NSOrderedSame) ?
+  [NSString stringWithFormat:@" %@",[user.firstName capitalizedString]] :
+  @"";
+  
+  self.screenName = self.title = 
+    [NSString stringWithFormat: @"Contact%@", host];
+
+  return self;
 }
 
 #pragma mark - Override
@@ -251,7 +260,7 @@
   // Use an activity view within the view controller if
   // view controller presented modally
   // [[self appDelegate].container startSpinning];
-  [activityView startSpinning];
+  
 
   OMBMessage *message = [[OMBMessage alloc] init];
   message.content   = bottomToolbar.messageContentTextView.text;
@@ -261,22 +270,23 @@
   message.uid       = 9999 + arc4random_uniform(100);
   message.updatedAt = [[NSDate date] timeIntervalSince1970];
 
+  if (residence && residence.uid)
+    message.residenceUID = residence.uid;
+
   OMBMessageCreateConnection *conn = 
     [[OMBMessageCreateConnection alloc] initWithMessage: message];
   conn.completionBlock = ^(NSError *error) {
     // [[self appDelegate].container stopSpinning];
-    [activityView stopSpinning];
     if (error) {
-      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-        @"Message was not sent" message: @"Please try again" 
-          delegate: nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
-      [alertView show];
+      [self showAlertViewWithError: error];
     }
     else {
       [[OMBUser currentUser] addMessage: message];
       [self cancel];
     }
+    [activityView stopSpinning];
   };
+  [activityView startSpinning];
   [conn start];
 }
 

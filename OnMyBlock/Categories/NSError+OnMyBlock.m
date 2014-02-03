@@ -11,6 +11,9 @@
 // Authentication w/ 3rd parties
 NSString *const OMBConnectionErrorDomainAuthentication =
   @"OMBConnectionErrorDomainAuthentication";
+// Messages
+NSString *const OMBConnectionErrorDomainMessage =
+  @"OMBConnectionErrorDomainMessage";
 // Session
 NSString *const OMBConnectionErrorDomainSession = 
   @"OMBConnectionErrorDomainSession";
