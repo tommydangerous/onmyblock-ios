@@ -999,8 +999,10 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   else if (![string hasPrefix: @"http"]) {
     NSString *baseURLString = [[OnMyBlockAPIURL componentsSeparatedByString: 
       OnMyBlockAPI] objectAtIndex: 0];
+    // If user has no image
     if ([string isEqualToString: @"default_user_image.png"]) {
       string = [string stringByAppendingString: @"/"];
+      _image = [UIImage imageNamed: @"user_icon_default.png"];
     }
     string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
   }

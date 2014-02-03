@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, OMBRenterProfileSection) {
 // Rows
 // in section user info
 typedef NS_ENUM(NSInteger, OMBRenterProfileSectionUserInfoRow) {
+  OMBRenterProfileSectionUserInfoRowName,
   OMBRenterProfileSectionUserInfoRowSchool,
   OMBRenterProfileSectionUserInfoRowEmail,
   OMBRenterProfileSectionUserInfoRowPhone,

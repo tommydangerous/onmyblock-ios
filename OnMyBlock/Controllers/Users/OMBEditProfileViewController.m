@@ -117,6 +117,13 @@
   userImageView.layer.cornerRadius = userImageView.frame.size.width * 0.5f;
 }
 
+- (void) viewDidDisappear: (BOOL) animated
+{
+  [super viewDidDisappear: animated];
+
+  [self.table setContentOffset: CGPointZero animated: NO];
+}
+
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];

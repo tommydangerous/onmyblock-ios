@@ -33,7 +33,7 @@
   if (!(self = [super init])) return nil;
 
   self.screenName = @"Renter Profile View Controller";
-  self.title      = @"Renter Profile";
+  self.title      = @"My Renter Profile";
 
   return self;
 }
@@ -128,11 +128,13 @@
   editButton = [UIButton new];
   editButton.frame = editButtonView.bounds;
   editButton.titleLabel.font = [UIFont mediumTextFontBold];
-  [editButton addTarget: self action: @selector(edit)
+  // [editButton addTarget: self action: @selector(edit)
+  //   forControlEvents: UIControlEventTouchUpInside];
+  [editButton addTarget: self action: @selector(showBecomeVerified)
     forControlEvents: UIControlEventTouchUpInside];
   [editButton setBackgroundImage: [UIImage imageWithColor: 
     [UIColor blueHighlighted]] forState: UIControlStateHighlighted];
-  [editButton setTitle: @"Complete Renter Profile"
+  [editButton setTitle: @"Complete Your Renter Profile"
     forState: UIControlStateNormal];
   [editButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
@@ -227,23 +229,57 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       bor.tag = 9999;
     }
     CGSize imageSize = cell.iconImageView.bounds.size;
+    // Name
+    if (indexPath.row == OMBRenterProfileSectionUserInfoRowName) {
+      cell.iconImageView.image = [UIImage image: 
+        [UIImage imageNamed: @"user_icon.png"] size: imageSize];
+      if ([[user fullName] length]) {
+        cell.label.text = [user fullName];
+        cell.label.textColor = [UIColor textColor];
+      }
+      else {
+        cell.label.text = @"Full name";
+        cell.label.textColor = [UIColor grayMedium];
+      }
+    }
     // School
-    if (indexPath.row == OMBRenterProfileSectionUserInfoRowSchool) {
+    else if (indexPath.row == OMBRenterProfileSectionUserInfoRowSchool) {
       cell.iconImageView.image = [UIImage image: 
         [UIImage imageNamed: @"school_icon.png"] size: imageSize];
-      cell.label.text = user.school;
+      if (user.school && [user.school length]) {
+        cell.label.text = user.school;
+        cell.label.textColor = [UIColor textColor];
+      }
+      else {
+        cell.label.text = @"Your school";
+        cell.label.textColor = [UIColor grayMedium];
+      }
     }
     // Email
     else if (indexPath.row == OMBRenterProfileSectionUserInfoRowEmail) {
       cell.iconImageView.image = [UIImage image: 
         [UIImage imageNamed: @"messages_icon_dark.png"] size: imageSize];
-      cell.label.text = [user.email lowercaseString];
+      if (user.email && [user.email length]) {
+        cell.label.text = [user.email lowercaseString];
+        cell.label.textColor = [UIColor textColor];
+      }
+      else {
+        cell.label.text = @"Email";
+        cell.label.textColor = [UIColor grayMedium];
+      }
     }
     // Phone
     else if (indexPath.row == OMBRenterProfileSectionUserInfoRowPhone) {
       cell.iconImageView.image = [UIImage image: 
         [UIImage imageNamed: @"phone_icon.png"] size: imageSize];
-      cell.label.text = [user phoneString];
+      if (user.phone && [user.phone length]) {
+        cell.label.text = [user phoneString];
+        cell.label.textColor = [UIColor textColor];
+      }
+      else {
+        cell.label.text = @"Phone number";
+        cell.label.textColor = [UIColor grayMedium];
+      }
     }
     // About
     else if (indexPath.row == OMBRenterProfileSectionUserInfoRowAbout) {
@@ -280,7 +316,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         headLabel.font = [UIFont mediumTextFont];
         headLabel.frame = CGRectMake(0.0f, padding, 
           tableView.frame.size.width, OMBStandardHeight);
-        headLabel.text = @"Priority Rental Info";
+        headLabel.text = @"Important Renter Verifications";
         headLabel.textAlignment = NSTextAlignmentCenter;
         headLabel.textColor = [UIColor grayMedium];
         [cell.contentView addSubview: headLabel];
@@ -326,9 +362,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           label.textColor = [UIColor grayMedium];
           [cell.contentView addSubview: label];
         }
-        label1.text = @"Including this information in your";
-        label2.text = @"Renter Profile will give you a way better";
-        label3.text = @"chance at nabbing the best place.";
+        // label1.text = @"Including this information in your";
+        // label2.text = @"Renter Profile will give you a way better";
+        // label3.text = @"chance at nabbing the best place.";
+        label1.text = @"Becoming renter verified will";
+        label2.text = @"give you a much better chance";
+        label3.text = @"at securing the best places.";
       }
       return cell;
     }
@@ -450,11 +489,12 @@ numberOfRowsInSection: (NSInteger) section
 {
   // User info
   if (section == OMBRenterProfileSectionUserInfo) {
+    // Name
     // School
     // Email
     // Phone
     // About
-    return 4;
+    return 5;
   }
   // Renter info
   else if (section == OMBRenterProfileSectionRenterInfo) {
@@ -562,7 +602,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   // User icon
   userIconView.image = user.image;
   // Full name
-  fullNameLabel.text = [user fullName];
+  fullNameLabel.text = [user shortName];
+
   [self.table reloadData];
 }
 
