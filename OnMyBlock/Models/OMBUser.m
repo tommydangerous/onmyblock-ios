@@ -1260,6 +1260,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
       [self addResidence: residence];
 
       [[OMBResidenceStore sharedStore] addResidence: residence];
+
+      NSLog(@"%@", _residences);
     }
     else {
       OMBTemporaryResidence *temporaryResidence = 

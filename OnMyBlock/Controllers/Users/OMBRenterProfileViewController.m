@@ -717,7 +717,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           UITableViewCellStyleDefault reuseIdentifier: ListingsID];
       // Minus 1 to account for the extra listings header
       [cell loadResidenceData: [[self listings] objectAtIndex: 
-        indexPath.row - 1]];
+        indexPath.row - 2]];
       cell.statusLabel.hidden = YES;
       return cell;
     }
@@ -754,9 +754,10 @@ numberOfRowsInSection: (NSInteger) section
   }
   // Listings
   else if (section == OMBRenterProfileSectionListings) {
-    // Listings header
+    // If the user has listings
     if ([[self listings] count]) {
-      return 1 + [[self listings] count];
+      // Listings header, create listing, listings
+      return 1 + 1 + [[self listings] count];
     }
     else {
       // Listings header, create listing
@@ -878,7 +879,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.row != OMBRenterProfileSectionListingsRowInfoHeader) {
       [self.navigationController pushViewController:
         [[OMBResidenceDetailViewController alloc] initWithResidence:
-          [[self listings] objectAtIndex: indexPath.row - 1]]
+          [[self listings] objectAtIndex: indexPath.row - 2]]
             animated: YES];
     }
   }
@@ -946,6 +947,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (NSArray *) listings
 {
+  return [user residencesSortedWithKey: @"createdAt" ascending: NO];
   return [user residencesActive: YES sortedWithKey: @"createdAt" ascending: NO];
 }
 
