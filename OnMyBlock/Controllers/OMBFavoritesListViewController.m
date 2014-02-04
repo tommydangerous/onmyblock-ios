@@ -19,6 +19,7 @@
 #import "OMBResidencePartialView.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
+#import "UIImage+NegativeImage.h"
 
 @implementation OMBFavoritesListViewController
 
@@ -63,13 +64,14 @@
     [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame: 
       self.view.frame];
   emptyBackgroundView.alpha = 0.0f;
-  emptyBackgroundView.imageView.alpha = 0.5f;
-  emptyBackgroundView.imageView.image = [UIImage imageNamed: 
-    @"favorites_icon.png"];
+  emptyBackgroundView.backgroundColor = [UIColor backgroundColor];
+  // emptyBackgroundView.imageView.alpha = 0.5f;
+  emptyBackgroundView.imageView.image = [[UIImage imageNamed: 
+    @"favorites_icon.png"] negativeImage];
   NSString *text = @"Places that you favorited appear here. "
     @"Add your favorite places by tapping the heart on a place.";
-  emptyBackgroundView.label.textColor = [UIColor colorWithWhite: 1.0f 
-    alpha: 0.8f];
+  // emptyBackgroundView.label.textColor = [UIColor colorWithWhite: 1.0f 
+  //   alpha: 0.8f];
   [emptyBackgroundView setLabelText: text];
   [self.view addSubview: emptyBackgroundView];
 }

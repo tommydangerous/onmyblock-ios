@@ -33,8 +33,7 @@ float kHomebaseLandlordImagePercentage = 0.4f;
 {
   if (!(self = [super init])) return nil;
 
-  self.screenName = @"Homebase Landlord";
-  self.title      = @"Homebase";
+  self.title = @"Landlord Homebase";
 
   return self;
 }
