@@ -15,6 +15,8 @@
   BOOL deposit;
   OMBPayoutMethod *payoutMethod;
   BOOL primary;
+  UIButton *primaryButton;
+  UIView *primaryButtonView;
 }
 
 #pragma mark - Initializer

@@ -473,10 +473,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) textFieldDidChange: (TextFieldPadding *) textField
 {
   if (textField.indexPath.row == OMBEditProfileSectionMainRowFirstName) {
-    [valueDictionary setObject: textField.text forKey: @"firstName"];
+    if ([textField.text length])
+      [valueDictionary setObject: textField.text forKey: @"firstName"];
   }
   else if (textField.indexPath.row == OMBEditProfileSectionMainRowLastName) {
-    [valueDictionary setObject: textField.text forKey: @"lastName"]; 
+    if ([textField.text length])
+      [valueDictionary setObject: textField.text forKey: @"lastName"]; 
   }
   else if (textField.indexPath.row == OMBEditProfileSectionMainRowSchool) {
     [valueDictionary setObject: textField.text forKey: @"school"]; 

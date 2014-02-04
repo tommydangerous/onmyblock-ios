@@ -947,7 +947,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (NSArray *) listings
 {
-  return [user residencesSortedWithKey: @"createdAt" ascending: NO];
+  // return [user residencesSortedWithKey: @"createdAt" ascending: NO];
   return [user residencesActive: YES sortedWithKey: @"createdAt" ascending: NO];
 }
 

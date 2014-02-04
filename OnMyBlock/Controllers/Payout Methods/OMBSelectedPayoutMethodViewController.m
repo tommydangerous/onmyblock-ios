@@ -84,8 +84,9 @@
   _connectButton.layer.cornerRadius = 5.0f;
   _connectButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 18];
-  [_connectButton addTarget: self action: @selector(showActionSheet)
-    forControlEvents: UIControlEventTouchUpInside];
+  // Don't use this until users can select payment and/or deposit
+  // [_connectButton addTarget: self action: @selector(showActionSheet)
+  //   forControlEvents: UIControlEventTouchUpInside];
   [_connectButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [self.view addSubview: _connectButton];

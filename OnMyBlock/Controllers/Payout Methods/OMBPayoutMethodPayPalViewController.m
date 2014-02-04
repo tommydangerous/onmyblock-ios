@@ -53,6 +53,8 @@
   self.detailLabel3.text = @"payments from OnMyBlock.";
 
   self.connectButton.backgroundColor = [UIColor paypalBlue];
+  [self.connectButton addTarget: self action: @selector(showEmail)
+    forControlEvents: UIControlEventTouchUpInside];
   [self.connectButton setBackgroundImage: 
     [UIImage imageWithColor: [UIColor paypalBlueLight]]
       forState: UIControlStateHighlighted];
@@ -231,11 +233,11 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   if ([[emailTextField.text stripWhiteSpace] length]) {
     [[OMBUser currentUser] createPayoutMethodWithDictionary: @{
-      @"active":      [NSNumber numberWithBool: YES], 
-      @"deposit":     [NSNumber numberWithBool: deposit],
+      // @"active":      [NSNumber numberWithBool: YES], 
+      // @"deposit":     [NSNumber numberWithBool: deposit],
       @"email":       [emailTextField.text stripWhiteSpace],
       @"payoutType":  @"paypal",
-      @"primary":     [NSNumber numberWithBool: YES]
+      // @"primary":     [NSNumber numberWithBool: YES]
     } withCompletion: ^(NSError *error) {
       OMBPayoutMethod *payoutMethod;
       if (deposit)

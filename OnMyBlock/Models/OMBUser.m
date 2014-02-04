@@ -169,7 +169,7 @@ int kNotificationTimerInterval = 60;
   [OMBUser currentUser].email     = @"fake_user@gmail.com";
   [OMBUser currentUser].firstName = @"fake";
   [OMBUser currentUser].imageURL  = [NSURL URLWithString: 
-    @"http://localhost:3000/default_user_image.png"];
+    @"http://localhost:3000/user_image.png"];
   [OMBUser currentUser].lastName  = @"user";
   [OMBUser currentUser].phone     = @"4088581234";
   [OMBUser currentUser].school    = @"University of California - Berkeley";
@@ -376,11 +376,15 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
 
 - (void) changeOtherSamePrimaryPayoutMethods: (OMBPayoutMethod *) payoutMethod
 {
+  // NSPredicate *predicate = [NSPredicate predicateWithFormat: 
+  //   @"%K == %@ && %K == %@ && %K != %i", 
+  //     @"deposit", [NSNumber numberWithBool: payoutMethod.deposit], 
+  //       @"primary", [NSNumber numberWithBool: payoutMethod.primary], 
+  //         @"uid", payoutMethod.uid];
   NSPredicate *predicate = [NSPredicate predicateWithFormat: 
-    @"%K == %@ && %K == %@ && %K != %i", 
-      @"deposit", [NSNumber numberWithBool: payoutMethod.deposit], 
-        @"primary", [NSNumber numberWithBool: payoutMethod.primary], 
-          @"uid", payoutMethod.uid];
+    @"%K == %@ && %K != %i",
+      @"primary", [NSNumber numberWithBool: payoutMethod.primary], 
+        @"uid", payoutMethod.uid];
   for (OMBPayoutMethod *object in
     [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate]) {
 
@@ -743,9 +747,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (NSArray *) paymentPayoutMethods
 {
+  // NSPredicate *predicate = 
+  //   [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
+  //     @"deposit", [NSNumber numberWithBool: NO], 
+  //       @"primary", [NSNumber numberWithBool: YES]];
   NSPredicate *predicate = 
     [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
-      @"deposit", [NSNumber numberWithBool: NO], 
+      @"payment", [NSNumber numberWithBool: YES], 
         @"primary", [NSNumber numberWithBool: YES]];
   return [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate];
 }
@@ -879,7 +887,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     NSArray *matches = [regex matchesInString: _imageURL.absoluteString
       options: 0 range: NSMakeRange(0, [_imageURL.absoluteString length])];
     if (![matches count])
-      count -= 1;
+      count += 1;
   }
   if ([_firstName length])
     count += 1;
@@ -1260,8 +1268,6 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
       [self addResidence: residence];
 
       [[OMBResidenceStore sharedStore] addResidence: residence];
-
-      NSLog(@"%@", _residences);
     }
     else {
       OMBTemporaryResidence *temporaryResidence = 
@@ -1412,7 +1418,7 @@ ascending: (BOOL) ascending
 
 - (NSString *) shortName
 {
-  if (_firstName && _lastName)
+  if (_firstName && [_firstName length] && _lastName && [_lastName length])
     return [NSString stringWithFormat: @"%@ %@.",
       [self.firstName capitalizedString], 
         [[self.lastName substringToIndex: 1] capitalizedString]];

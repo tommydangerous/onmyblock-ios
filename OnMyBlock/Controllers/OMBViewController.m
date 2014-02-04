@@ -25,10 +25,12 @@ CGFloat const OMBStandardHeight       = 44.0f;
 
 - (id) init
 {
-  self = [super init];
-  if (self) {
-    self.view.backgroundColor = [UIColor backgroundColor];
-  }
+  if (!(self = [super init])) return nil;
+
+  self.screenName = NSStringFromClass([self class]);
+
+  self.view.backgroundColor = [UIColor backgroundColor];
+
   return self;
 }
 
