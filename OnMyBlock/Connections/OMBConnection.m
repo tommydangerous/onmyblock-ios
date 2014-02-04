@@ -116,6 +116,11 @@ didFailWithError: (NSError *) error
 
 #pragma mark Instance Methods
 
+- (NSString *) accessToken
+{
+  return [OMBUser currentUser].accessToken;
+}
+
 - (void) cancelConnection
 {
   [internalConnection cancel];

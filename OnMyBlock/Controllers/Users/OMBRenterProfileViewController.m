@@ -13,7 +13,9 @@
 #import "OMBBecomeVerifiedViewController.h"
 #import "OMBCenteredImageView.h"
 #import "OMBEditProfileViewController.h"
+#import "OMBEmploymentCell.h"
 #import "OMBGradientView.h"
+#import "OMBMessageDetailViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterProfileUserInfoCell.h"
@@ -33,7 +35,6 @@
   if (!(self = [super init])) return nil;
 
   self.screenName = @"Renter Profile View Controller";
-  self.title      = @"Renter Profile";
 
   return self;
 }
@@ -53,9 +54,12 @@
   CGFloat padding        = OMBPadding;
   CGFloat standardHeight = OMBStandardHeight;
 
+  contactBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Contact"
+    style: UIBarButtonItemStylePlain target: self action: @selector(contact)];
+  doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
+    style: UIBarButtonItemStylePlain target: self action: @selector(done)];
   editBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Edit"
     style: UIBarButtonItemStylePlain target: self action: @selector(edit)];
-  self.navigationItem.rightBarButtonItem = editBarButtonItem;
 
   self.view.backgroundColor = self.table.backgroundColor = [UIColor clearColor];
 
@@ -128,15 +132,80 @@
   editButton = [UIButton new];
   editButton.frame = editButtonView.bounds;
   editButton.titleLabel.font = [UIFont mediumTextFontBold];
-  [editButton addTarget: self action: @selector(edit)
+  // [editButton addTarget: self action: @selector(edit)
+  //   forControlEvents: UIControlEventTouchUpInside];
+  [editButton addTarget: self action: @selector(showBecomeVerified)
     forControlEvents: UIControlEventTouchUpInside];
   [editButton setBackgroundImage: [UIImage imageWithColor: 
     [UIColor blueHighlighted]] forState: UIControlStateHighlighted];
-  [editButton setTitle: @"Complete Renter Profile"
+  [editButton setTitle: @"Complete Your Renter Profile"
     forState: UIControlStateNormal];
   [editButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [editButtonView addSubview: editButton];
+
+  // Contact bar button items
+  // Left padding
+  UIBarButtonItem *leftPadding = 
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+      UIBarButtonSystemItemFixedSpace target: nil action: nil];
+  // iOS 7 toolbar spacing is 16px; 20px on iPad
+  leftPadding.width = 4.0f;
+  // Send Message
+  UIBarButtonItem *messageBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithTitle: @"Send Message"
+      style: UIBarButtonItemStylePlain target: self
+        action: @selector(sendMessage)];
+  [messageBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: [UIFont normalTextFont],
+    NSForegroundColorAttributeName: [UIColor blue]
+  } forState: UIControlStateNormal];
+  // Spacing
+  UIBarButtonItem *flexibleSpace = 
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem: 
+      UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
+  // Phone
+  UIImage *phoneIcon = [UIImage image: [UIImage imageNamed: @"phone_icon.png"]
+    size: CGSizeMake(22.0f, 22.0f)];
+  UIBarButtonItem *phoneBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithImage: phoneIcon style:
+      UIBarButtonItemStylePlain target: self action: @selector(phoneCallUser)];
+  // Email
+  UIImage *emailIcon = [UIImage image: [UIImage imageNamed: 
+    @"messages_icon_white.png"] size: CGSizeMake(22.0f, 22.0f)];
+  UIBarButtonItem *emailBarButtonItem =
+    [[UIBarButtonItem alloc] initWithImage: emailIcon style:
+      UIBarButtonItemStylePlain target: self action: @selector(emailUser)];
+  // Right padding
+  UIBarButtonItem *rightPadding = 
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+      UIBarButtonSystemItemFixedSpace target: nil action: nil];
+  // iOS 7 toolbar spacing is 16px; 20px on iPad
+  rightPadding.width = 4.0f;
+
+  // Contact toolbar that drops down when you tap contact
+  contactToolbar = [UIToolbar new];
+  contactToolbar.clipsToBounds = YES;
+  contactToolbar.frame = CGRectMake(0.0f, padding, 
+    screenWidth, standardHeight);
+  contactToolbar.hidden = YES;
+  contactToolbar.items = @[leftPadding, messageBarButtonItem, flexibleSpace,
+    phoneBarButtonItem, rightPadding, emailBarButtonItem];
+  contactToolbar.tintColor = [UIColor blue];
+  [self.view addSubview: contactToolbar];
+  CALayer *bottomBorder = [CALayer layer];
+  bottomBorder.backgroundColor = [UIColor grayLight].CGColor;
+  bottomBorder.frame = CGRectMake(0.0f, contactToolbar.frame.size.height - 0.5f,
+    contactToolbar.frame.size.width, 0.5f);
+  [contactToolbar.layer addSublayer: bottomBorder];
+}
+
+- (void) viewDidDisappear: (BOOL) animated
+{
+  [super viewDidDisappear: animated];
+
+  if (!contactToolbar.hidden)
+    [self done];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -148,6 +217,10 @@
     // Check to see if the edit button should be at the bottom
     [self updateEditButton];
   }
+  else {
+    editButtonView.hidden = YES;
+    self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
+  }
 
   // We only want to show the menu icon if its the root view controller
   if ([self.navigationController.viewControllers count] == 1) {
@@ -156,10 +229,32 @@
 
   [self reloadData];
 
+  // Fetch the employments
+  [user fetchEmploymentsWithCompletion: ^(NSError *error) {
+    [self.table reloadSections: 
+      [NSIndexSet indexSetWithIndex: OMBRenterProfileSectionEmployment] 
+        withRowAnimation: UITableViewRowAnimationFade];
+  }];
+
+  // Fetch the information about 
+  [user fetchUserProfileWithCompletion: ^(NSError *error) {
+    [self.table reloadSections: 
+      [NSIndexSet indexSetWithIndex: OMBRenterProfileSectionRenterInfo] 
+        withRowAnimation: UITableViewRowAnimationFade];
+  }];
+
   // [self showBecomeVerified];
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol MFMailComposeViewControllerDelegate
+
+- (void) mailComposeController: (MFMailComposeViewController*) controller 
+didFinishWithResult: (MFMailComposeResult) result error: (NSError*) error
+{
+  [controller dismissViewControllerAnimated: YES completion: nil];
+}
 
 #pragma mark - Protocol UIScrollViewDelegate
 
@@ -194,11 +289,20 @@
     CGAffineTransformIdentity, newScale, newScale);
 }
 
+- (void) scrollViewWillBeginDragging: (UIScrollView *) scrollView
+{
+  if (!contactToolbar.hidden)
+    [self done];
+}
+
 #pragma mark - Protocol UITableViewDataSource
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
-  return 2;
+  // User info
+  // Rental info
+  // Employment
+  return 3;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -227,23 +331,67 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       bor.tag = 9999;
     }
     CGSize imageSize = cell.iconImageView.bounds.size;
+    // Name
+    if (indexPath.row == OMBRenterProfileSectionUserInfoRowName) {
+      cell.iconImageView.image = [UIImage image: 
+        [UIImage imageNamed: @"user_icon.png"] size: imageSize];
+      if ([[user fullName] length]) {
+        cell.label.text = [user fullName];
+        cell.label.textColor = [UIColor textColor];
+      }
+      else {
+        cell.label.text = @"Full name";
+        cell.label.textColor = [UIColor grayMedium];
+      }
+    }
     // School
-    if (indexPath.row == OMBRenterProfileSectionUserInfoRowSchool) {
+    else if (indexPath.row == OMBRenterProfileSectionUserInfoRowSchool) {
       cell.iconImageView.image = [UIImage image: 
         [UIImage imageNamed: @"school_icon.png"] size: imageSize];
-      cell.label.text = user.school;
+      if (user.school && [user.school length]) {
+        cell.label.text = user.school;
+        cell.label.textColor = [UIColor textColor];
+      }
+      else {
+        cell.label.text = @"Your school";
+        cell.label.textColor = [UIColor grayMedium];
+      }
     }
     // Email
     else if (indexPath.row == OMBRenterProfileSectionUserInfoRowEmail) {
       cell.iconImageView.image = [UIImage image: 
         [UIImage imageNamed: @"messages_icon_dark.png"] size: imageSize];
-      cell.label.text = [user.email lowercaseString];
+      if (user.email && [user.email length]) {
+        cell.label.text = [user.email lowercaseString];
+        if ([user isCurrentUser]) {
+          cell.label.textColor = [UIColor textColor];
+        }
+        else {
+          cell.label.textColor = [UIColor blue];
+        }
+      }
+      else {
+        cell.label.text = @"Email";
+        cell.label.textColor = [UIColor grayMedium];
+      }
     }
     // Phone
     else if (indexPath.row == OMBRenterProfileSectionUserInfoRowPhone) {
       cell.iconImageView.image = [UIImage image: 
         [UIImage imageNamed: @"phone_icon.png"] size: imageSize];
-      cell.label.text = [user phoneString];
+      if (user.phone && [user.phone length]) {
+        cell.label.text = [user phoneString];
+        if ([user isCurrentUser]) {
+          cell.label.textColor = [UIColor textColor];
+        }
+        else {
+          cell.label.textColor = [UIColor blue];
+        }
+      }
+      else {
+        cell.label.text = @"Phone number";
+        cell.label.textColor = [UIColor grayMedium];
+      }
     }
     // About
     else if (indexPath.row == OMBRenterProfileSectionUserInfoRowAbout) {
@@ -280,7 +428,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         headLabel.font = [UIFont mediumTextFont];
         headLabel.frame = CGRectMake(0.0f, padding, 
           tableView.frame.size.width, OMBStandardHeight);
-        headLabel.text = @"Priority Rental Info";
+        headLabel.text = @"Important Renter Verifications";
         headLabel.textAlignment = NSTextAlignmentCenter;
         headLabel.textColor = [UIColor grayMedium];
         [cell.contentView addSubview: headLabel];
@@ -326,9 +474,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           label.textColor = [UIColor grayMedium];
           [cell.contentView addSubview: label];
         }
-        label1.text = @"Including this information in your";
-        label2.text = @"Renter Profile will give you a way better";
-        label3.text = @"chance at nabbing the best place.";
+        // label1.text = @"Including this information in your";
+        // label2.text = @"Renter Profile will give you a way better";
+        // label3.text = @"chance at nabbing the best place.";
+        label1.text = @"Becoming renter verified will";
+        label2.text = @"give you a much better chance";
+        label3.text = @"at securing the best places.";
       }
       return cell;
     }
@@ -433,14 +584,27 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         }
         else
           valueString = @"Unverified";
-        cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
-          0.0f, 0.0f);
+        // cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+        //   tableView.frame.size.width, 0.0f, 0.0f);
       }
       cell.iconImageView.image = [UIImage image: image size: imageSize];
       cell.label.text = string;
       cell.valueLabel.text = valueString;
       return cell;
     }
+  }
+  // Employment
+  else if (indexPath.section == OMBRenterProfileSectionEmployment) {
+    static NSString *EmploymentCellID = @"EmploymentCellID";
+    OMBEmploymentCell *cell = [tableView dequeueReusableCellWithIdentifier:
+      EmploymentCellID];
+    if (!cell)
+      cell = [[OMBEmploymentCell alloc] initWithStyle: 
+        UITableViewCellStyleDefault reuseIdentifier: EmploymentCellID];
+    [cell loadData: 
+      [[user.renterApplication employmentsSortedByStartDate] 
+        objectAtIndex: indexPath.row]];
+    return cell;
   }
   return emptyCell;
 }
@@ -450,11 +614,12 @@ numberOfRowsInSection: (NSInteger) section
 {
   // User info
   if (section == OMBRenterProfileSectionUserInfo) {
+    // Name
     // School
     // Email
     // Phone
     // About
-    return 4;
+    return 5;
   }
   // Renter info
   else if (section == OMBRenterProfileSectionRenterInfo) {
@@ -466,6 +631,10 @@ numberOfRowsInSection: (NSInteger) section
     // Priority Rental Info Note
     // Become Renter Verified
     return 7;
+  }
+  // Employment
+  else if (section == OMBRenterProfileSectionEmployment) {
+    return [[user.renterApplication employmentsSortedByStartDate] count];
   }
   return 0;
 }
@@ -496,13 +665,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // Rental Info Note
     else if (indexPath.row ==
       OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoNote) {
-      return 22.0f * 3; // 22 is the line height for the label
+      if ([user isCurrentUser])
+        return 22.0f * 3; // 22 is the line height for the label
       // return padding + (22.0f * 3) + padding;
     }
     // Become Renter Verified
     else if (indexPath.row == 
       OMBRenterProfileSectionRenterInfoRowBecomeRenterVerified) {
-      return padding + OMBStandardButtonHeight + padding;
+      if ([user isCurrentUser])
+        return padding + OMBStandardButtonHeight + padding;
     }
     // Co-applicant count
     else if (indexPath.row ==
@@ -525,6 +696,26 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return [OMBRenterProfileUserInfoCell heightForCell]; 
     }
   }
+  // Employment
+  else if (indexPath.section == OMBRenterProfileSectionEmployment) {
+    return [OMBEmploymentCell heightForCell];
+    // OMBEmployment *employment = 
+    //   [[user.renterApplication employmentsSortedByStartDate] objectAtIndex: 
+    //     indexPath.row];
+    // CGFloat padding = OMBPadding;
+    // CGFloat height = padding + 22.0f + padding;
+    // if ([employment.title length] > 0 || employment.income)
+    //   height += 22.0f;
+    // if (employment.startDate)
+    //   height += 22.0f;
+
+    // Padding top              = 20
+    // Company name and website = 22
+    // Title and income         = 22
+    // Start date and end date  = 22
+    // Padding bottom           = 20
+    // return height;
+  }
   return 0.0f;
 }
 
@@ -533,12 +724,51 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
-
+  // If not the current user
+  if (![user isCurrentUser]) {
+    // User info
+    if (indexPath.section == OMBRenterProfileSectionUserInfo) {
+      // Email
+      if (indexPath.row == OMBRenterProfileSectionUserInfoRowEmail) {
+        [self emailUser];
+      }
+      // Phone
+      else if (indexPath.row == OMBRenterProfileSectionUserInfoRowPhone) {
+        [self phoneCallUser];
+      }
+    }
+  }
+  [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) contact
+{
+  [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
+  contactToolbar.hidden = NO;
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    CGRect rect = contactToolbar.frame;
+    rect.origin.y = OMBPadding + OMBStandardHeight;
+    contactToolbar.frame = rect;
+  }];
+}
+
+- (void) done
+{
+  [self.navigationItem setRightBarButtonItem: contactBarButtonItem 
+    animated: YES];
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    CGRect rect = contactToolbar.frame;
+    rect.origin.y = OMBPadding;
+    contactToolbar.frame = rect;
+  } completion: ^(BOOL finished) {
+    if (finished)
+      contactToolbar.hidden = YES;
+  }];
+}
 
 - (void) edit
 {
@@ -547,23 +777,72 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       editProfileViewController] animated: YES completion: nil];
 }
 
+- (void) emailUser
+{
+  if ([MFMailComposeViewController canSendMail]) {
+    MFMailComposeViewController *mailer = 
+      [[MFMailComposeViewController alloc] init];
+    mailer.mailComposeDelegate = self;
+    // Subject
+    [mailer setSubject: @"Hello"];
+    // Recipients
+    NSArray *toRecipients = @[user.email];
+    [mailer setToRecipients: toRecipients];
+    // Body
+    NSString *emailBody = @"";
+    [mailer setMessageBody: emailBody isHTML: NO];
+    [self presentViewController: mailer animated: YES completion: nil];
+  }
+}
+
 - (void) loadUser: (OMBUser *) object
 {
   user = object;
   editProfileViewController = 
     [[OMBEditProfileViewController alloc] initWithUser: user];
+  // If this is the current user's renter profile
+  if (user.uid == [OMBUser currentUser].uid) {
+    self.title = @"My Renter Profile";
+  }
+  else {
+    self.title = [user.firstName capitalizedString];
+  }
   [self reloadData];
+}
+
+- (void) phoneCallUser
+{
+  if ([user.phone length]) {
+    NSString *string = [@"telprompt:" stringByAppendingString: user.phone];
+    [[UIApplication sharedApplication] openURL: [NSURL URLWithString: string]];
+  }
 }
 
 - (void) reloadData
 {
+  // If this is the current user's renter profile
+  if (user.uid == [OMBUser currentUser].uid) {
+    self.navigationItem.rightBarButtonItem = editBarButtonItem;
+  }
+  else {
+    self.navigationItem.rightBarButtonItem = contactBarButtonItem;
+  }
   // Image
   backImageView.image = user.image;
   // User icon
   userIconView.image = user.image;
   // Full name
-  fullNameLabel.text = [user fullName];
+  fullNameLabel.text = [user shortName];
+
   [self.table reloadData];
+}
+
+- (void) sendMessage
+{
+  if ([user isCurrentUser])
+    return;
+  [self.navigationController pushViewController:
+    [[OMBMessageDetailViewController alloc] initWithUser: user] animated: YES];
 }
 
 - (void) showBecomeVerified

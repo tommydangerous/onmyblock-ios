@@ -36,7 +36,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
   // [self setupTracking];
 
-  [self testFlightTakeOff];
+  // [self testFlightTakeOff];
     
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
@@ -56,7 +56,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // #warning Remove fake login
   // [OMBUser fakeLogin]; // Fake login
   // Use this to show whatever view controller you are working on
-  // [_container showFavorites];
+  [_container showRenterProfile];
   // [_container showIntroAnimatedDissolve: NO];
 
   // Check to see if the user has a saved api key in the user defaults

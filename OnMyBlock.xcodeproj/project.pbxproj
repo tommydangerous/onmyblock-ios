@@ -220,6 +220,7 @@
 		AB756AC6185A2DE3001AF572 /* celebrate_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB756AC4185A2DE3001AF572 /* celebrate_icon@2x.png */; };
 		AB756AC9185A3ADE001AF572 /* OMBPayPalVerifyMobilePaymentConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB756AC8185A3ADE001AF572 /* OMBPayPalVerifyMobilePaymentConnection.m */; };
 		AB76C0E018187B3F006354FB /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76C0DF18187B3F006354FB /* UIImage+Color.m */; };
+		AB7A231118A02526004AC149 /* OMBUserProfileConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB7A231018A02526004AC149 /* OMBUserProfileConnection.m */; };
 		AB802E9E18109E5200E04D11 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB802E9D18109E5200E04D11 /* Foundation.framework */; };
 		AB802EA018109E5200E04D11 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB802E9F18109E5200E04D11 /* CoreGraphics.framework */; };
 		AB802EA218109E5200E04D11 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB802EA118109E5200E04D11 /* UIKit.framework */; };
@@ -977,6 +978,8 @@
 		AB756AC8185A3ADE001AF572 /* OMBPayPalVerifyMobilePaymentConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayPalVerifyMobilePaymentConnection.m; sourceTree = "<group>"; };
 		AB76C0DE18187B3F006354FB /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
 		AB76C0DF18187B3F006354FB /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
+		AB7A230F18A02526004AC149 /* OMBUserProfileConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBUserProfileConnection.h; sourceTree = "<group>"; };
+		AB7A231018A02526004AC149 /* OMBUserProfileConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBUserProfileConnection.m; sourceTree = "<group>"; };
 		AB802E9A18109E5200E04D11 /* OnMyBlock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnMyBlock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB802E9D18109E5200E04D11 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AB802E9F18109E5200E04D11 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -2926,6 +2929,8 @@
 				ABB9115118971CB00046611F /* OMBUserCurrentUserInfoConnection.m */,
 				ABB9118618988C530046611F /* OMBUserUpdateConnection.h */,
 				ABB9118718988C530046611F /* OMBUserUpdateConnection.m */,
+				AB7A230F18A02526004AC149 /* OMBUserProfileConnection.h */,
+				AB7A231018A02526004AC149 /* OMBUserProfileConnection.m */,
 			);
 			path = Users;
 			sourceTree = "<group>";
@@ -3738,6 +3743,7 @@
 				AB19A08C186123CB00F84DE9 /* OMBResidenceDetailCell.m in Sources */,
 				ABB911A718998CA80046611F /* NSString+LIAEncode.m in Sources */,
 				AB6155C1184DA35E00A193C7 /* OMBIntroWelcomeView.m in Sources */,
+				AB7A231118A02526004AC149 /* OMBUserProfileConnection.m in Sources */,
 				ABF8EC9C182D3C570080B1E2 /* OMBIntroSearchView.m in Sources */,
 				AB131F371885E25B0057D769 /* OMBMyRenterApplicationViewController.m in Sources */,
 				ABE679BC18932E6900A494FB /* OMBPayoutTransactionListConnection.m in Sources */,

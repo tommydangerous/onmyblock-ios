@@ -60,12 +60,19 @@ reuseIdentifier: (NSString *) reuseIdentifier
 {
   CGFloat padding = OMBPadding;
 
-  _label.attributedText = [object.about attributedStringWithFont: _label.font
-    lineHeight: 22.0f];
-  _label.numberOfLines = 0;
-  _label.frame = CGRectMake(_label.frame.origin.x, padding * 0.5f,
-    _label.frame.size.width, [object heightForAboutTextWithWidth:
-      _label.frame.size.width]);
+  if (object.about && [object.about length]) {
+    _label.attributedText = [object.about attributedStringWithFont: _label.font
+      lineHeight: 22.0f];
+    _label.numberOfLines = 0;
+    _label.frame = CGRectMake(_label.frame.origin.x, padding * 0.5f,
+      _label.frame.size.width, [object heightForAboutTextWithWidth:
+        _label.frame.size.width]);
+    _label.textColor = [UIColor textColor];
+  }
+  else {
+    _label.text = @"A little about you...";
+    _label.textColor = [UIColor grayMedium];
+  }
 }
 
 - (void) reset

@@ -35,15 +35,12 @@
 {
   NSLog(@"OMBAuthenticationLinkedInConnection\n%@", [self json]);
 
-  if (![self successful]) {
-    internalError = [NSError errorWithDomain: 
-      OMBConnectionErrorDomainAuthentication
-      code: OMBConnectionErrorDomainAuthenticationCodeLinkedInFailed 
-        userInfo: @{
-          @"message": @"We couldn't verify your LinkedIn, please try again.",
-          @"title": @"Authentication failed"
-        }
-      ];
+  if ([self successful]) {
+
+  }
+  else {
+    [self createInternalErrorWithDomain: OMBConnectionErrorDomainAuthentication
+      code: OMBConnectionErrorDomainAuthenticationCodeLinkedInFailed];
   }
 
   [super connectionDidFinishLoading: connection];

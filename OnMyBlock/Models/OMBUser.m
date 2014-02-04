@@ -18,6 +18,7 @@
 #import "OMBCosigner.h"
 #import "OMBOfferCreateConnection.h"
 #import "OMBEmployment.h"
+#import "OMBEmploymentListConnection.h"
 #import "OMBFavoritesListConnection.h"
 #import "OMBFavoriteResidence.h"
 #import "OMBIntroStillImagesViewController.h"
@@ -42,6 +43,7 @@
 #import "OMBUserCurrentUserInfoConnection.h"
 #import "OMBUserFacebookAuthenticationConnection.h"
 #import "OMBUserImageDownloader.h"
+#import "OMBUserProfileConnection.h"
 #import "OMBUserStore.h"
 #import "OMBUserUpdateConnection.h"
 #import "OMBUserUploadImageConnection.h"
@@ -536,6 +538,14 @@ withCompletion: (void (^) (NSError *error)) block
   [conn start];
 }
 
+- (void) fetchEmploymentsWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBEmploymentListConnection *conn =
+    [[OMBEmploymentListConnection alloc] initWithUser: self];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (void) fetchFavorites
 {
   [[[OMBFavoritesListConnection alloc] init] start];
@@ -570,6 +580,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
   OMBOffersReceivedConnection *conn =
     [[OMBOffersReceivedConnection alloc] init];
+  conn.completionBlock = block;
+  [conn start];
+}
+
+- (void) fetchUserProfileWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBUserProfileConnection *conn = 
+    [[OMBUserProfileConnection alloc] initWithUser: self];
   conn.completionBlock = block;
   [conn start];
 }
@@ -620,6 +638,11 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     }
   }
   return img;
+}
+
+- (BOOL) isCurrentUser
+{
+  return _uid == [OMBUser currentUser].uid;
 }
 
 - (BOOL) loggedIn
@@ -999,8 +1022,10 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   else if (![string hasPrefix: @"http"]) {
     NSString *baseURLString = [[OnMyBlockAPIURL componentsSeparatedByString: 
       OnMyBlockAPI] objectAtIndex: 0];
+    // If user has no image
     if ([string isEqualToString: @"default_user_image.png"]) {
       string = [string stringByAppendingString: @"/"];
+      _image = [UIImage imageNamed: @"user_icon_default.png"];
     }
     string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
   }
@@ -1364,7 +1389,7 @@ ascending: (BOOL) ascending
   // line height of 22.0f
   NSNumber *key = [NSNumber numberWithFloat: width];
   NSNumber *height = [_heightForAboutTextDictionary objectForKey: key];
-  if (!height) {
+  if (!height || [height floatValue] == 0.0f) {
     NSAttributedString *aString = [_about attributedStringWithFont:
       [UIFont normalTextFont] lineHeight: 22.0f];
     CGRect rect = [aString boundingRectWithSize: 

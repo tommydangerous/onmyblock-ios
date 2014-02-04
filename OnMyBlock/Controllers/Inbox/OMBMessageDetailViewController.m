@@ -15,6 +15,7 @@
 #import "OMBMessageDetailCollectionViewFlowLayout.h"
 #import "OMBMessageInputToolbar.h"
 #import "OMBMessageStore.h"
+#import "OMBRenterProfileViewController.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
 
@@ -97,9 +98,9 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   leftPadding.width = 4.0f;
   // Renter application
   UIBarButtonItem *renterApplicationBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithTitle: @"" // @"Renter Application" 
+    [[UIBarButtonItem alloc] initWithTitle: @"Profile"
       style: UIBarButtonItemStylePlain target: self
-        action: @selector(showRenterApplication)];
+        action: @selector(showRenterProfile)];
   // Spacing
   UIBarButtonItem *flexibleSpace = 
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem: 
@@ -124,7 +125,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   contactToolbar.hidden = YES;
   contactToolbar.items = @[leftPadding, renterApplicationBarButtonItem, 
     flexibleSpace, phoneBarButtonItem, rightPadding];
-  contactToolbar.tintColor = [UIColor blueDark];
+  contactToolbar.tintColor = [UIColor blue];
   [self.view addSubview: contactToolbar];
   CALayer *bottomBorder = [CALayer layer];
   bottomBorder.backgroundColor = [UIColor grayLight].CGColor;
@@ -625,6 +626,14 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 - (void) showRenterApplication
 {
   NSLog(@"SHOW RENTER APPLICATION");
+}
+
+- (void) showRenterProfile
+{
+  OMBRenterProfileViewController *vc = 
+    [[OMBRenterProfileViewController alloc] init];
+  [vc loadUser: user];
+  [self.navigationController pushViewController: vc animated: YES];
 }
 
 @end
