@@ -21,6 +21,7 @@
 #import "OMBInboxViewController.h"
 #import "OMBOfferInquiryViewController.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 
 float kHomebaseLandlordImagePercentage = 0.4f;
 
@@ -62,8 +63,8 @@ float kHomebaseLandlordImagePercentage = 0.4f;
 
   CGFloat screenHeight = screen.size.height;
   CGFloat screenWidth  = screen.size.width;
-  CGFloat padding      = 20.0f;
-  CGFloat standardHeight = 44.0f;
+  CGFloat padding      = OMBPadding;
+  CGFloat standardHeight = OMBStandardHeight;
 
   backViewOffsetY = padding + standardHeight;
   // The image in the back
@@ -107,7 +108,7 @@ float kHomebaseLandlordImagePercentage = 0.4f;
   buttonsView.layer.borderColor = [UIColor whiteColor].CGColor;
   buttonsView.layer.borderWidth = 1.0f;
   buttonsView.layer.cornerRadius = buttonsView.frame.size.height * 0.5f;
-  [self.view addSubview: buttonsView];
+  // [self.view addSubview: buttonsView];
   UIView *middleDivider = [UIView new];
   middleDivider.backgroundColor = [UIColor whiteColor];
   middleDivider.frame = CGRectMake((buttonsView.frame.size.width - 1.0f) * 0.5f,
@@ -143,8 +144,11 @@ float kHomebaseLandlordImagePercentage = 0.4f;
     forState: UIControlStateNormal];
   // [buttonsView addSubview: paymentsButton];
 
-  CGFloat tableViewOriginY = backView.frame.origin.y + 
-    padding + buttonsView.frame.size.height + padding;
+  // CGFloat tableViewOriginY = backView.frame.origin.y + 
+  //   padding + buttonsView.frame.size.height + padding;
+  CGFloat tableViewOriginY = padding + standardHeight;
+  // CGRect tableViewFrame = CGRectMake(0.0f, tableViewOriginY, 
+  //   screenWidth, screenHeight - tableViewOriginY);
   CGRect tableViewFrame = CGRectMake(0.0f, tableViewOriginY, 
     screenWidth, screenHeight - tableViewOriginY);
   // Activity table view
@@ -193,8 +197,10 @@ float kHomebaseLandlordImagePercentage = 0.4f;
 
   // Welcome view
   welcomeView = [UIView new];
-  welcomeView.frame = CGRectMake(0.0f, backViewOffsetY,
-    screenWidth, buttonsView.frame.origin.y - (padding + standardHeight));
+  // welcomeView.frame = CGRectMake(0.0f, backViewOffsetY,
+  //   screenWidth, buttonsView.frame.origin.y - (padding + standardHeight));
+  welcomeView.frame = CGRectMake(0.0f, _activityTableView.frame.origin.y,
+    screenWidth, paymentTableViewHeader.frame.size.height);
   [self.view addSubview: welcomeView];
 
   CGFloat totalLabelHeights = 27.0f + (22.0f * 2);

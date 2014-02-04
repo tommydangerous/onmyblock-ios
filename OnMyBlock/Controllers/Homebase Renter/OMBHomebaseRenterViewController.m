@@ -35,6 +35,7 @@
 
 // Make this 0.4f when having roommates
 float kHomebaseRenterImagePercentage = 0.3f;
+// float kHomebaseRenterImagePercentage = 0.2f;
 
 @implementation OMBHomebaseRenterViewController
 
@@ -44,8 +45,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
 {
   if (!(self = [super init])) return nil;
 
-  self.screenName = @"Homebase Renter View Controller";
-  self.title      = @"Student Homebase";
+  self.title = @"Renter Homebase";
 
   return self;
 }
@@ -77,8 +77,8 @@ float kHomebaseRenterImagePercentage = 0.3f;
 
   CGFloat screenHeight = screen.size.height;
   CGFloat screenWidth  = screen.size.width;
-  CGFloat padding      = 20.0f;
-  CGFloat standardHeight = 44.0f;
+  CGFloat padding      = OMBPadding;
+  CGFloat standardHeight = OMBStandardHeight;
 
   backViewOffsetY = padding + standardHeight;
   // The image in the back
@@ -108,15 +108,19 @@ float kHomebaseRenterImagePercentage = 0.3f;
   // blurView.renderStatic = YES;
   // [backView addSubview: blurView];
 
+  // The pictures of the users go here
   CGFloat imageSize = backView.frame.size.width / 3.0f;
   // Images scroll
   imagesScrollView = [OMBScrollView new];
   imagesScrollView.clipsToBounds = NO;
   imagesScrollView.delegate = self;
+  // imagesScrollView.frame = CGRectMake(
+  //   (backView.frame.size.width - imageSize) * 0.5f, 
+  //     backViewOffsetY, imageSize, backView.frame.size.height - 
+  //     (standardHeight + padding));
   imagesScrollView.frame = CGRectMake(
     (backView.frame.size.width - imageSize) * 0.5f, 
-      backViewOffsetY, imageSize, backView.frame.size.height - 
-      (standardHeight + padding));
+      backViewOffsetY, imageSize, backView.frame.size.height);
   imagesScrollView.pagingEnabled = YES;
   imagesScrollView.showsHorizontalScrollIndicator = NO;
   [self.view addSubview: imagesScrollView];
@@ -145,7 +149,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
   buttonsView.layer.borderColor = [UIColor whiteColor].CGColor;
   buttonsView.layer.borderWidth = 1.0f;
   buttonsView.layer.cornerRadius = buttonsView.frame.size.height * 0.5f;
-  [self.view addSubview: buttonsView];
+  // [self.view addSubview: buttonsView];
   // Middle divider
   middleDivider = [UIView new];
   middleDivider.backgroundColor = [UIColor whiteColor];
@@ -182,8 +186,9 @@ float kHomebaseRenterImagePercentage = 0.3f;
     forState: UIControlStateNormal];
   // [buttonsView addSubview: paymentsButton];
 
-  CGFloat tableViewOriginY = backView.frame.origin.y + 
-    padding + buttonsView.frame.size.height + padding;
+  // CGFloat tableViewOriginY = backView.frame.origin.y + 
+  //   padding + buttonsView.frame.size.height + padding;
+  CGFloat tableViewOriginY = padding + standardHeight;
   CGRect tableViewFrame = CGRectMake(0.0f, tableViewOriginY, 
     screenWidth, screenHeight - tableViewOriginY);
   // Activity table view

@@ -97,10 +97,16 @@ float kResidenceDetailImagePercentage   = 0.5f;
 {
   [super loadView];
 
-  self.navigationItem.rightBarButtonItem =
+  UIBarButtonItem *shareBarButtonItem =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
       UIBarButtonSystemItemAction target: self
         action: @selector(shareButtonSelected)];
+  // UIBarButtonItem *shareBarButtonItem = 
+  //   [[UIBarButtonItem alloc] initWithTitle: @"Share"
+  //     style: UIBarButtonItemStylePlain target: self
+  //       action: @selector(shareButtonSelected)];
+  self.navigationItem.rightBarButtonItem = shareBarButtonItem;
+    
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view     = [[OMBBlurView alloc] initWithFrame: screen];

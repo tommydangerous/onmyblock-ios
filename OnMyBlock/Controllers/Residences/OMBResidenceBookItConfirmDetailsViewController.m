@@ -15,6 +15,7 @@
 #import "OMBCenteredImageView.h"
 #import "OMBGradientView.h"
 #import "OMBOffer.h"
+#import "OMBPayoutMethodListCell.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBRenterProfileViewController.h"
 #import "OMBResidence.h"
@@ -305,8 +306,10 @@
 
   // Total price notes
   totalPriceNotes = [NSString stringWithFormat: 
-    @"Your total of %@ will not be charged upfront but will only be charged "
-    @"once the landlord has accepted your offer and you have signed the lease.",
+    @"Your total of %@ will not be charged upfront\n"
+    @"but will only be charged once the landlord\n"
+    @"has accepted your offer and you\n"
+    @"have signed the lease.",
       [NSString numberToCurrencyString: deposit + residence.minRent]];
   CGRect rect = [totalPriceNotes boundingRectWithSize: 
     CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999) 
@@ -385,13 +388,14 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
   // Place offer
-  // Move in, move out, lease months, view lease details
-  // Price breakdown, security deposit, 1st month's rent, total, notes
-  // Monthly schedule, lease agreement (NOT IN USE ANYMORE) !!!
-  // Buyer, my renter profile, add a personal note, personal note text view
+  // Dates
+  // Price breakdown
+  // Payout methods
+  // Monthly schedule
+  // Renter profile
   // Submit offer notes
-  // Spacing for typing
-  return 6 + 1;
+  // Spacing
+  return 8;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -627,7 +631,33 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Payout methods
   else if (indexPath.section == 
     OMBResidenceBookItConfirmDetailsSectionPayoutMethods) {
-
+    if (indexPath.row < [[OMBUser currentUser].payoutMethods count]) {
+      static NSString *PayoutID = @"PayoutID";
+      OMBPayoutMethodListCell *cell = 
+        [tableView dequeueReusableCellWithIdentifier: PayoutID];
+      if (!cell)
+        cell = [[OMBPayoutMethodListCell alloc] initWithStyle: 
+          UITableViewCellStyleDefault reuseIdentifier: PayoutID];
+      OMBPayoutMethod *payoutMethod = [[self payoutMethods] objectAtIndex: 
+        indexPath.row];
+      [cell loadPayoutMethod: payoutMethod];
+      return cell;
+    }
+    else {
+      static NSString *AddPayoutID = @"AddPayoutID";
+      UITableViewCell *cell = 
+        [tableView dequeueReusableCellWithIdentifier: AddPayoutID];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle: 
+          UITableViewCellStyleDefault reuseIdentifier: AddPayoutID];
+        UILabel *label = [UILabel new];
+      }
+      return cell;
+      cell.backgroundColor = [UIColor grayUltraLight];
+      cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+        tableView.frame.size.width, 0.0f, 0.0f);
+      return cell;
+    }
   }
   // Monthly schedule, View Lease Details (NOT IN USE ANYMORE) !!!
   else if (indexPath.section == 
@@ -815,7 +845,9 @@ numberOfRowsInSection: (NSInteger) section
   }
   // Payout methods
   else if (section == OMBResidenceBookItConfirmDetailsSectionPayoutMethods) {
-
+    // The extra row is for adding a new payout method
+    if ([[OMBUser currentUser].payoutMethods count])
+      return [[OMBUser currentUser].payoutMethods count] + 1;
   }
   // Monthly schedule, lease agreement
   else if (section == OMBResidenceBookItConfirmDetailsSectionMonthlySchedule) {
@@ -958,13 +990,25 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Total price notes
     else if (indexPath.row == 4) {
-      return padding + totalPriceNotesSize.height + padding + padding;
+      return padding + totalPriceNotesSize.height + padding;
+      // return padding + totalPriceNotesSize.height + padding + padding;
     }
     // Price Breakdown
     else if (indexPath.row == 99) {
       return 0.0f;
       if (!isShowingPriceBreakdown)
         return spacing;
+    }
+  }
+  // Payout methods
+  else if (indexPath.section ==
+    OMBResidenceBookItConfirmDetailsSectionPayoutMethods) {
+    if (indexPath.row < [[OMBUser currentUser].payoutMethods count]) {
+      return [OMBPayoutMethodListCell heightForCell];
+    }
+    // Add a payout method
+    else {
+      return [OMBPayoutMethodListCell heightForCell];
     }
   }
   // Monthly schedule, View Lease Details
@@ -1075,6 +1119,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) keyboardWillShow: (NSNotification *) notification
 {
   
+}
+
+- (NSArray *) payoutMethods
+{
+  return [[OMBUser currentUser] sortedPayoutMethodsWithKey: @"createdAt"
+    ascending: NO];
 }
 
 - (void) review
