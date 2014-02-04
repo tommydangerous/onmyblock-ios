@@ -1204,7 +1204,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     @"this place from %@ - %@ for %@/mo?",
       [dateFormmater stringFromDate: 
         [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]],
-          [dateFormmater stringFromDate: [residence moveOutDate]],
+          [dateFormmater stringFromDate: [residence moveOutDateDate]],
             [residence rentToCurrencyString]];
   [alert showAlert];
 }

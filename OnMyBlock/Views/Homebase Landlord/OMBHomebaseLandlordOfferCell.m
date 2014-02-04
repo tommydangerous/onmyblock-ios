@@ -153,7 +153,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   dateFormatter.dateFormat = @"M/d/yy";
   NSDate *moveInDate = [NSDate dateWithTimeIntervalSince1970: 
     _offer.residence.moveInDate];
-  NSDate *moveOutDate = [_offer.residence moveOutDate];
+  NSDate *moveOutDate = [_offer.residence moveOutDateDate];
   typeLabel.text = [NSString stringWithFormat: @"%@ - %@",
     [dateFormatter stringFromDate: moveInDate],
       [dateFormatter stringFromDate: moveOutDate]];

@@ -42,6 +42,7 @@ extern NSString *const OMBResidencePropertyTypeSublet;
 @property (nonatomic) float longitude;
 @property (nonatomic) CGFloat minRent;
 @property (nonatomic) NSTimeInterval moveInDate;
+@property (nonatomic) NSTimeInterval moveOutDate;
 @property (nonatomic, strong) NSString *phone;
 @property (nonatomic, strong) NSString *propertyType;
 // @property (nonatomic) float rent;
@@ -99,7 +100,7 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 forResidenceImage: (OMBResidenceImage *) residenceImage;
 - (UIImage *) imageForSizeKey: (NSString *) string 
 forResidenceImage: (OMBResidenceImage *) residenceImage;
-- (NSDate *) moveOutDate;
+- (NSDate *) moveOutDateDate;
 - (NSInteger) numberOfStepsLeft;
 - (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size;
 - (void) readFromOffersDictionary: (NSDictionary *) dictionary;

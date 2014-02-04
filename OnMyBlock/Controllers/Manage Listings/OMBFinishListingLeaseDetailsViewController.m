@@ -49,9 +49,12 @@ float k2KeyboardHeight = 216.0;
                         @"9 months lease",@"10 months lease",@"11 months lease",
                         @"12 months lease"];
   
-  CGRect rect = [@"Move-in Date" boundingRectWithSize:
+  CGRect rect = [@"Move-out Date" boundingRectWithSize:
     CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFont]];
   sizeForLabelTextFieldCell = rect.size;
+
+  dateFormatter = [NSDateFormatter new];
+  dateFormatter.dateFormat = @"MMMM d, yyyy";
   
   self.screenName = self.title = @"Lease Details";
   
@@ -113,7 +116,8 @@ float k2KeyboardHeight = 216.0;
                      // @"bedrooms",
                      @"leaseMonths",
                      @"leaseType",
-                     @"moveInDate"
+                     @"moveInDate",
+                     @"moveOutDate",
                      // @"propertyType",
                      // @"squareFeet"
                      ]
@@ -293,8 +297,6 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         cell1.textField.userInteractionEnabled = NO;
         
         if (residence.moveInDate) {
-          NSDateFormatter *dateFormatter = [NSDateFormatter new];
-          dateFormatter.dateFormat = @"MMMM d, yyyy";
           cell1.textField.text = [dateFormatter stringFromDate:
                                   [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]];
         }
@@ -321,10 +323,10 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
           datePickerCell.datePicker.datePickerMode = UIDatePickerModeDate;
           
           // specify max date
-          NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-          [dateFormatter setDateFormat:@"dd-MM-yyyy"];
+          NSDateFormatter *df = [[NSDateFormatter alloc] init];
+          [df setDateFormat:@"dd-MM-yyyy"];
           NSDate *dateFromString = [[NSDate alloc] init];
-          dateFromString = [dateFormatter dateFromString:@"31-12-2015"];
+          dateFromString = [df dateFromString:@"31-12-2015"];
           datePickerCell.datePicker.maximumDate = dateFromString;
           
           if (residence.moveInDate) {
@@ -339,8 +341,11 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       else if (indexPath.row == 4) {
         string = @"Move-out Date";
         cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
-        cell1.textField.placeholder = @"required";
         cell1.textField.userInteractionEnabled = NO;
+        if (residence.moveOutDate) {
+          cell1.textField.text = [dateFormatter stringFromDate:
+            [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]];
+        }
       }
       // Move-out Date Picker
       else if (indexPath.row == 5) {
@@ -362,6 +367,11 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
                                         action: @selector(datePickerChanged:)
                               forControlEvents: UIControlEventValueChanged];
           datePickerCell.datePicker.datePickerMode = UIDatePickerModeDate;
+          if (residence.moveOutDate) {
+            [datePickerCell.datePicker setDate:
+             [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]
+                                      animated: NO];
+          }
           return datePickerCell;
         }
       }
@@ -696,9 +706,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // Move-out Date
       // Hide the move-out date, we are not using it
-      else if (indexPath.row == 4) {
-        return 0.0f;
-      }
+      // else if (indexPath.row == 4) {
+      //   return 0.0f;
+      // }
     }
     return 44.0f;
   }
@@ -747,8 +757,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) datePickerChanged: (UIDatePicker *) datePicker
 {
-  NSDateFormatter *dateFormatter = [NSDateFormatter new];
-  dateFormatter.dateFormat = @"MMMM d, yyyy";
   OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
   [self.table cellForRowAtIndexPath: selectedIndexPath];
   cell.textField.text = [dateFormatter stringFromDate: datePicker.date];
@@ -757,6 +765,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // Move-in Date
     if (selectedIndexPath.row == 2) {
       residence.moveInDate = [datePicker.date timeIntervalSince1970];
+    }
+    else if (selectedIndexPath.row == 4) {
+      residence.moveOutDate = [datePicker.date timeIntervalSince1970];
     }
   }
 }

@@ -131,7 +131,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
   _moveInDateLabel.text  = [dateFormmater stringFromDate: 
     [NSDate dateWithTimeIntervalSince1970: object.moveInDate]];
-  _moveOutDateLabel.text = [dateFormmater stringFromDate: [object moveOutDate]];
+  _moveOutDateLabel.text = [dateFormmater stringFromDate: [object moveOutDateDate]];
   _leaseMonthsLabel.text = [NSString stringWithFormat: 
     @"%i month lease", object.leaseMonths];
 }

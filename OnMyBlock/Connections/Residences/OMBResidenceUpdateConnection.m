@@ -118,6 +118,15 @@ attributes: (NSArray *) attributes
       else
         value = @"";
     }
+    // Move-out Date
+    if ([key isEqualToString: @"moveOutDate"]) {
+      key = @"move_out_date";
+      if (object.moveOutDate)
+        value = [dateFormatter stringFromDate: 
+          [NSDate dateWithTimeIntervalSince1970: object.moveOutDate]];
+      else
+        value = @"";
+    }
     // Property Type
     if ([key isEqualToString: @"propertyType"])
       key = @"property_type";

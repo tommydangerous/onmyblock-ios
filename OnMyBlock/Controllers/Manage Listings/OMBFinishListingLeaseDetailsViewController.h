@@ -13,6 +13,7 @@
 <UIActionSheetDelegate, UIPickerViewDataSource,
 UIPickerViewDelegate, UITextFieldDelegate>
 {
+  NSDateFormatter *dateFormatter;
   UIActionSheet *deleteActionSheet;
   NSArray *monthLeaseOptions;
   NSArray *leaseTypeOptions;

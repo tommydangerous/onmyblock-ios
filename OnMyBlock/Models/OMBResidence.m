@@ -437,7 +437,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   NSLog(@"RESIDENCE FETCH OFFERS");
 }
 
-- (NSDate *) moveOutDate
+- (NSDate *) moveOutDateDate
 {
   NSCalendar *calendar = [NSCalendar currentCalendar];
   NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit | 
@@ -745,6 +745,16 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   }
   else {
     _moveInDate = [[NSDate date] timeIntervalSince1970];
+  }
+  // Move-out Date
+  if ([dictionary objectForKey: @"move_out_date"] != [NSNull null] &&
+    [[dictionary objectForKey: @"move_out_date"] length]) {
+    NSDate *date = [dateFormatter dateFromString: 
+      [dictionary objectForKey: @"move_out_date"]];
+    _moveOutDate = [date timeIntervalSince1970];
+  }
+  else {
+    _moveOutDate = [[NSDate date] timeIntervalSince1970];
   }
   // Phone
   if ([dictionary objectForKey: @"phone"] != [NSNull null])
