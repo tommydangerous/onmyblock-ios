@@ -19,6 +19,13 @@
 
 extern float const PropertyInfoViewImageHeightPercentage;
 
+typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
+  OMBMapViewListSortKeyDistance,
+  OMBMapViewListSortKeyRecent,
+  OMBMapViewListSortKeyHighestPrice,
+  OMBMapViewListSortKeyLowestPrice
+};
+
 @interface OMBMapViewController : OMBViewController
 <CLLocationManagerDelegate, MKMapViewDelegate, 
   UIGestureRecognizerDelegate, UIScrollViewDelegate, UITableViewDataSource, 
@@ -28,6 +35,7 @@ extern float const PropertyInfoViewImageHeightPercentage;
   CLLocationCoordinate2D centerCoordinate;
   CGFloat currentDistanceOfScrolling;
   UIButton *currentLocationButton;
+  OMBMapViewListSortKey currentSortKey;
   BOOL fetching;
   UILabel *filterLabel;
   UIView *filterView;
@@ -41,11 +49,12 @@ extern float const PropertyInfoViewImageHeightPercentage;
   UISegmentedControl *segmentedControl;
   UIImageView *sortArrow;
   UIView *sortButtonsView;
-  NSArray *sortButtonArray;
+  NSMutableArray *sortButtonArray;
   UIButton *sortButtonHighestPrice;
   UIButton *sortButtonLowestPrice;
   UIButton *sortButtonPopular;
   UIButton *sortButtonMostRecent;
+  NSArray *sortKeys;
   UILabel *sortLabel;
   UILabel *sortSelectionLabel;
   AMBlurView *sortView;

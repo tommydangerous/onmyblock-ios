@@ -121,7 +121,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   sortView.blurTintColor = [UIColor blue];
   sortView.frame = CGRectMake(0.0f, 44.0f, 
     _listViewContainer.frame.size.width, 20.0f + 44.0f);
-  // [_listViewContainer addSubview: sortView];
+  [_listViewContainer addSubview: sortView];
   UITapGestureRecognizer *sortViewTap = 
     [[UITapGestureRecognizer alloc] initWithTarget: self 
       action: @selector(showSortButtons)];
@@ -161,52 +161,83 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [sortView addSubview: sortArrow];
 
   // Sort button array
+  // sortKeys = @[
+  //   @"distance",
+  //   @"recent",
+  //   @"highest price",
+  //   @"lowest price"
+  // ];
+  // sortButtonArray = [NSMutableArray array];
   sortButtonHighestPrice = [[UIButton alloc] init];
   sortButtonLowestPrice  = [[UIButton alloc] init];
   sortButtonPopular      = [[UIButton alloc] init];
   sortButtonMostRecent   = [[UIButton alloc] init];
-  sortButtonArray = @[
+  sortButtonArray = [NSMutableArray arrayWithArray: @[
     sortButtonPopular,
     sortButtonMostRecent,
     sortButtonHighestPrice,
     sortButtonLowestPrice
-  ];
+  ]];
   CGFloat sortButtonViewHeight = sortView.frame.size.height + 
     ((1 + 44) * [sortButtonArray count]);
   sortButtonsView = [[UIView alloc] init];
   sortButtonsView.frame = CGRectMake(0.0f, sortView.frame.origin.y, 
     sortView.frame.size.width, sortButtonViewHeight);
   sortButtonsView.hidden = YES;
+  // for (int i = 0; i < [sortKeys count]; i++) {
+  //   UIButton *button = [UIButton new];
+  //   button.backgroundColor = [UIColor colorWithWhite: 255/255.0 alpha: 0.95];
+  //   button.frame = CGRectMake(0.0f, 20.0f,
+  //     sortButtonsView.frame.size.width, 44.0f);
+  //   button.hidden = YES;
+  //   button.tag = i;
+  //   button.titleLabel.font = sortLabel.font;
+  //   [button addTarget: self action: @selector(sortButtonSelected:)
+  //     forControlEvents: UIControlEventTouchUpInside];
+  //   [button setBackgroundImage: [UIImage imageWithColor: [UIColor blue]]
+  //     forState: UIControlStateHighlighted];
+  //   [button setTitle: [[sortKeys objectAtIndex: i] capitalizedString] 
+  //     forState: UIControlStateNormal];
+    // [button setTitleColor: [UIColor textColor] 
+    //   forState: UIControlStateNormal];
+  //   [button setTitleColor: [UIColor whiteColor] 
+  //     forState: UIControlStateHighlighted];
+  //   [sortButtonArray addObject: button];
+  //   [sortButtonsView addSubview: button];
+  // }
   for (UIButton *button in sortButtonArray) {
     button.backgroundColor = [UIColor colorWithWhite: 255/255.0 alpha: 0.95];
     button.frame = CGRectMake(0.0f, 20.0f,
       sortButtonsView.frame.size.width, 44.0f);
     button.hidden = YES;
     NSString *string = @"";
-    if (button == sortButtonHighestPrice) {
+    if (button == sortButtonPopular) {
+      // string = @"Student Popularity";
+      string = @"Distance";
+    }
+    else if (button == sortButtonMostRecent) {
+      string = @"Recent";
+    }
+    else if (button == sortButtonHighestPrice) {
       string = @"Highest Price";
     }
     else if (button == sortButtonLowestPrice) {
       string = @"Lowest Price";
     }
-    else if (button == sortButtonPopular) {
-      string = @"Student Popularity";
-    }
-    else if (button == sortButtonMostRecent) {
-      string = @"Most Recent";
-    }
+    button.tag = [sortButtonArray indexOfObject: button];
     button.titleLabel.font = sortLabel.font;
     [button addTarget: self action: @selector(sortButtonSelected:)
       forControlEvents: UIControlEventTouchUpInside];
     [button setBackgroundImage: [UIImage imageWithColor: [UIColor blue]]
       forState: UIControlStateHighlighted];
     [button setTitle: string forState: UIControlStateNormal];
-    [button setTitleColor: [UIColor textColor] forState: UIControlStateNormal];
+    [button setTitleColor: [UIColor textColor] 
+      forState: UIControlStateNormal];
     [button setTitleColor: [UIColor whiteColor] 
       forState: UIControlStateHighlighted];
     [sortButtonsView addSubview: button];
   }
-  // [_listViewContainer insertSubview: sortButtonsView belowSubview: sortView];
+  [_listViewContainer insertSubview: sortButtonsView belowSubview: sortView];
 
   // List view
   _listView = [[UITableView alloc] init];
@@ -218,8 +249,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   _listView.separatorColor               = [UIColor clearColor];
   _listView.separatorStyle               = UITableViewCellSeparatorStyleNone;
   // _listView.showsVerticalScrollIndicator = NO;
-  // _listView.tableHeaderView = [[UIView alloc] initWithFrame: 
-  //   CGRectMake(0.0f, 0.0f, _listView.frame.size.width, 44.0f)];
+  _listView.tableHeaderView = [[UIView alloc] initWithFrame: 
+    CGRectMake(0.0f, 0.0f, _listView.frame.size.width, 44.0f)];
   [_listViewContainer insertSubview: _listView atIndex: 0];
 
   // Map view
@@ -685,6 +716,7 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
       OMBResidence *residence = [[self residencesForList] objectAtIndex: 
         indexPath.row];
       [(OMBResidenceCell *) cell loadResidenceData: residence];
+      NSLog(@"%@", residence.title);
     }
   }
   // NSArray *properties = [self propertiesSortedBy: @"" ascending: NO];
@@ -975,7 +1007,29 @@ withTitle: (NSString *) title;
 
 - (NSArray *) residencesForList
 {
-  return [OMBResidenceListStore sharedStore].residences;
+  // Sort
+  // Distance
+  if (currentSortKey == OMBMapViewListSortKeyDistance) {
+    return [[OMBResidenceListStore sharedStore] 
+      sortedResidencesByDistanceFromCoordinate: centerCoordinate];
+  }
+  // Recent
+  else if (currentSortKey == OMBMapViewListSortKeyRecent) {
+    return [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
+      @"createdAt" ascending: NO];
+  }
+  // Highest price
+  else if (currentSortKey == OMBMapViewListSortKeyHighestPrice) {
+    return [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
+      @"minRent" ascending: NO];
+  }
+  // Lowest price
+  else if (currentSortKey == OMBMapViewListSortKeyLowestPrice) {
+    return [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
+      @"minRent" ascending: YES];
+  }
+  return [[OMBResidenceListStore sharedStore] 
+      sortedResidencesByDistanceFromCoordinate: centerCoordinate];
 }
 
 - (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
@@ -1048,7 +1102,7 @@ withMiles: (int) miles animated: (BOOL) animated
   [self.navigationController pushViewController: 
     [[OMBResidenceDetailViewController alloc] initWithResidence: 
       propertyInfoView.residence] animated: YES];
-  NSLog(@"SHOW RESIDENCE VIEW CONTROLLER");
+  // NSLog(@"SHOW RESIDENCE VIEW CONTROLLER");
 }
 
 - (void) showSortButtons
@@ -1092,7 +1146,7 @@ withMiles: (int) miles animated: (BOOL) animated
       }
     }];
   }
-  NSLog(@"SHOW SORT BUTTONS");
+  // NSLog(@"SHOW SORT BUTTONS");
 }
 
 - (void) showSortViewAnimated: (BOOL) animated
@@ -1109,6 +1163,9 @@ withMiles: (int) miles animated: (BOOL) animated
 
 - (void) sortButtonSelected: (UIButton *) button
 {
+  currentSortKey = button.tag;
+  [_listView reloadData];
+  
   CGFloat slowestDuration = 0.5;
   CGFloat originalY = sortView.frame.origin.y + sortLabel.frame.origin.y + 
     ((sortLabel.frame.size.height - sortArrow.frame.size.height) * 0.5);
@@ -1129,10 +1186,10 @@ withMiles: (int) miles animated: (BOOL) animated
     CGFloat distanceRatio = arrowDistance / buttonDistance;
     CGFloat arrowDuration = slowestDuration - (0.1 * index);
     arrowDuration *= distanceRatio;
-    NSLog(@"Arrow Distance: %f", arrowDistance);
-    NSLog(@"Button Distance: %f", buttonDistance);
-    NSLog(@"Distance Ratio: %f", distanceRatio);
-    NSLog(@"Arrow Duration: %f", arrowDuration);
+    // NSLog(@"Arrow Distance: %f", arrowDistance);
+    // NSLog(@"Button Distance: %f", buttonDistance);
+    // NSLog(@"Distance Ratio: %f", distanceRatio);
+    // NSLog(@"Arrow Duration: %f", arrowDuration);
     [UIView animateWithDuration: arrowDuration animations: ^{
       sortArrow.frame = CGRectMake(sortArrow.frame.origin.x, originalY,
         sortArrow.frame.size.width, sortArrow.frame.size.height);
@@ -1153,7 +1210,7 @@ withMiles: (int) miles animated: (BOOL) animated
     for (UIButton *button2 in sortButtonArray) {
       CGFloat index2 = [sortButtonArray indexOfObject: button2];
       CGFloat duration = slowestDuration - (0.1 * index2);
-      NSLog(@"%f : %f", index2, duration);
+      // NSLog(@"%f : %f", index2, duration);
       [UIView animateWithDuration: duration animations: ^{
         button2.frame = CGRectMake(button2.frame.origin.x, 20.0f,
           button2.frame.size.width, button2.frame.size.height);
@@ -1170,7 +1227,7 @@ withMiles: (int) miles animated: (BOOL) animated
       }];
     }
   }];
-   NSLog(@"SORT BUTTON SELECTED");
+  // NSLog(@"SORT BUTTON SELECTED");
 }
 
 - (void) switchToListView

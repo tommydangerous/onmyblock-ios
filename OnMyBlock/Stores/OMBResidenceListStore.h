@@ -14,7 +14,7 @@
 @interface OMBResidenceListStore : NSObject
 
 @property (nonatomic) CLLocationCoordinate2D centerCoordinate;
-@property (nonatomic, strong) NSMutableArray *residences;
+@property (nonatomic, strong) NSMutableDictionary *residences;
 
 #pragma mark - Methods
 
@@ -28,6 +28,9 @@
 - (void) fetchResidencesWithParameters: (NSDictionary *) dictionary
 completion: (void (^) (NSError *error)) block;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
-- (NSArray *) sortedResidencesByDistance;
+- (NSArray *) sortedResidencesByDistanceFromCoordinate: 
+  (CLLocationCoordinate2D) coordinate;
+- (NSArray *) sortedResidencesWithKey: (NSString *) string
+  ascending: (BOOL) ascending;
 
 @end

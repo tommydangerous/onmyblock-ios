@@ -19,7 +19,7 @@
 {
   if (!(self = [super init])) return nil;
 
-  _residences = [NSMutableArray array];
+  _residences = [NSMutableDictionary dictionary];
 
   return self;
 }
@@ -40,10 +40,13 @@
 
 - (void) addResidence: (OMBResidence *) residence
 {
-  NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
-    @"uid", residence.uid];
-  if ([[_residences filteredArrayUsingPredicate: predicate] count] == 0)
-    [_residences addObject: residence];
+  NSNumber *key = [NSNumber numberWithInt: residence.uid];
+  if (![_residences objectForKey: key])
+    [_residences setObject: residence forKey: key];
+  // NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
+  //   @"uid", residence.uid];
+  // if ([[_residences filteredArrayUsingPredicate: predicate] count] == 0)
+  //   [_residences addObject: residence];
 }
 
 - (void) fetchResidencesWithParameters: (NSDictionary *) dictionary
@@ -64,12 +67,44 @@ completion: (void (^) (NSError *error)) block
   }
 }
 
-- (NSArray *) sortedResidencesByDistance
+- (NSArray *) sortedResidencesByDistanceFromCoordinate: 
+  (CLLocationCoordinate2D) coordinate
 {
   // MKMapPoint p1 = MKMapPointForCoordinate(coord1);
   // MKMapPoint p2 = MKMapPointForCoordinate(coord2);
   // CLLocationDistance dist = MKMetersBetweenMapPoints(p1, p2);
-  return [NSArray array];
+  return [[_residences allValues] sortedArrayUsingComparator: 
+    ^(id obj1, id obj2) {
+      MKMapPoint center = MKMapPointForCoordinate(coordinate);
+
+      // Residence 1
+      OMBResidence *res1 = (OMBResidence *) obj1;
+      CLLocationCoordinate2D coord1 = CLLocationCoordinate2DMake(res1.latitude,
+        res1.longitude);
+      MKMapPoint p1 = MKMapPointForCoordinate(coord1);
+      CLLocationDistance dist1 = MKMetersBetweenMapPoints(p1, center);
+
+      // Residence 2
+      OMBResidence *res2 = (OMBResidence *) obj2;
+      CLLocationCoordinate2D coord2 = CLLocationCoordinate2DMake(res2.latitude,
+        res2.longitude);
+      MKMapPoint p2 = MKMapPointForCoordinate(coord2);
+      CLLocationDistance dist2 = MKMetersBetweenMapPoints(p2, center);
+
+      if (dist1 > dist2)
+        return (NSComparisonResult) NSOrderedDescending;
+      if (dist1 < dist2)
+        return (NSComparisonResult) NSOrderedAscending;
+      return (NSComparisonResult) NSOrderedSame;
+    }];
+}
+
+- (NSArray *) sortedResidencesWithKey: (NSString *) string
+ascending: (BOOL) ascending
+{
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: string
+    ascending: ascending];
+  return [[_residences allValues] sortedArrayUsingDescriptors: @[sort]];
 }
 
 @end
