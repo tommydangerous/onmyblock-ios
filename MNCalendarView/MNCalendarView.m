@@ -236,6 +236,7 @@
     [cell setEnabled:[self dateEnabled:date]];
   
   if(self.selectedSecond && cell.enabled){
+    [cell selectCell];
     NSIndexPath *selection = [NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section];
     [self.collectionView selectItemAtIndexPath:selection animated:YES scrollPosition:UICollectionViewScrollPositionNone];
   }
@@ -268,14 +269,16 @@
   if ([cell isKindOfClass:MNCalendarViewDayCell.class] && cell.enabled) {
     MNCalendarViewDayCell *dayCell = (MNCalendarViewDayCell *)cell;
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:didSelectDate:)]) {
-      [self.delegate calendarView:self didSelectDate:dayCell.date];
-    }
-    
     [cell setSelected:YES];
+    dayCell.titleLabel.textColor = UIColor.greenColor;
     [self.collectionView reloadData];
     NSIndexPath *selection = [NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section];
     [self.collectionView selectItemAtIndexPath:selection animated:YES scrollPosition:UICollectionViewScrollPositionNone];
+    
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:didSelectDate:)]) {
+      [self.delegate calendarView:self didSelectDate:dayCell.date];
+    }
   }
 }
 

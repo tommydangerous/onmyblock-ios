@@ -374,7 +374,6 @@
       calendarCell.calendarView.selectedFirst = date;
       
       // update residence or offer
-      // residence.moveInDate || offer
     }
     else{
       [detailsCell.moveOutDateLabel setTitle:[dateFormmater stringFromDate: date]
@@ -386,9 +385,10 @@
 }
 
 - (BOOL)calendarView:(MNCalendarView *)calendarView shouldSelectDate:(NSDate *)date {
-  
-  OMBResidenceBookItCalendarCell *calendarCell = (OMBResidenceBookItCalendarCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 1
-                                                                                                                                         inSection: 1]];
+  OMBResidenceBookItCalendarCell *calendarCell =
+    (OMBResidenceBookItCalendarCell *)[self.table cellForRowAtIndexPath:
+                                       [NSIndexPath indexPathForRow: 1
+                                                          inSection: 1]];
   //Set days it cannot be selected
   
   if([date timeIntervalSinceDate: [NSDate date]] < 0){

@@ -19,4 +19,6 @@ extern NSString *const MNCalendarViewDayCellIdentifier;
           month:(NSDate *)month
        calendar:(NSCalendar *)calendar;
 
+- (void)selectCell;
+
 @end
