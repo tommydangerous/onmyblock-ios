@@ -188,6 +188,13 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   [self reloadTable];
 }
 
+- (void) viewWillDisappear: (BOOL) animated
+{
+  [super viewWillDisappear: animated];
+
+  [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol UICollectionViewDataSource
