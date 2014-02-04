@@ -7,6 +7,7 @@
 //
 
 #import "OMBTableViewController.h"
+#import "MNCalendarView.h"
 
 @class OMBAlertView;
 @class OMBCenteredImageView;
@@ -27,7 +28,7 @@ typedef NS_ENUM(NSInteger, OMBResidenceBookItConfirmDetailsSection) {
 @interface OMBResidenceBookItConfirmDetailsViewController : 
   OMBTableViewController
 <UIAlertViewDelegate, UIScrollViewDelegate, UITextFieldDelegate, 
-  UITextViewDelegate>
+  UITextViewDelegate, MNCalendarViewDelegate>
 {
   OMBAlertView *alert;
   UIView *backView;
@@ -56,6 +57,8 @@ typedef NS_ENUM(NSInteger, OMBResidenceBookItConfirmDetailsSection) {
   UILabel *titleLabel;
   NSString *totalPriceNotes;
   CGSize totalPriceNotesSize;
+  // calendar
+  NSIndexPath *selectedIndexPath;
 }
 
 #pragma mark - Initializer

@@ -59,23 +59,26 @@ reuseIdentifier: (NSString *)reuseIdentifier
         leftUnderline.frame.size.height);
   [moveOutLabel.layer addSublayer: rightUnderline];
 
-  _moveInDateLabel = [[UILabel alloc] init];
-  _moveInDateLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
+  _moveInDateLabel = [[UIButton alloc] init];
+  _moveInDateLabel.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
     size: 18];
   _moveInDateLabel.frame = CGRectMake(moveInLabel.frame.origin.x,
     moveInLabel.frame.origin.y + moveInLabel.frame.size.height,
       moveInLabel.frame.size.width, moveInLabel.frame.size.height);
-  _moveInDateLabel.textAlignment = moveInLabel.textAlignment;
-  _moveInDateLabel.textColor = [UIColor blue];
+  _moveInDateLabel.titleLabel.textAlignment = moveInLabel.textAlignment;
+  [_moveInDateLabel setTitleColor:[UIColor blue] forState:UIControlStateNormal];
   [self.contentView addSubview: _moveInDateLabel];
-
-  _moveOutDateLabel = [[UILabel alloc] init];
-  _moveOutDateLabel.font = _moveInDateLabel.font;
+//  _contactMeButton.backgroundColor = [UIColor blueAlpha: 0.8f];
+//  [_contactMeButton addTarget: self action: @selector(contactMeButtonSelected)
+//             forControlEvents: UIControlEventTouchUpInside];
+  
+  _moveOutDateLabel = [[UIButton alloc] init];
+  _moveOutDateLabel.titleLabel.font = _moveInDateLabel.titleLabel.font;
   _moveOutDateLabel.frame = CGRectMake(moveOutLabel.frame.origin.x,
     moveOutLabel.frame.origin.y + moveOutLabel.frame.size.height,
       moveOutLabel.frame.size.width, moveOutLabel.frame.size.height);
-  _moveOutDateLabel.textAlignment = _moveInDateLabel.textAlignment;
-  _moveOutDateLabel.textColor = _moveInDateLabel.textColor;
+  _moveOutDateLabel.titleLabel.textAlignment = _moveInDateLabel.titleLabel.textAlignment;
+  [_moveOutDateLabel setTitleColor:[_moveInDateLabel titleColorForState:UIControlStateNormal] forState:UIControlStateNormal];
   [self.contentView addSubview: _moveOutDateLabel];
 
   UIView *middleLine = [[UIView alloc] init];
@@ -128,12 +131,23 @@ reuseIdentifier: (NSString *)reuseIdentifier
 {
   NSDateFormatter *dateFormmater = [NSDateFormatter new];
   dateFormmater.dateFormat = @"MMM d, yy";
+// <<<<<<< HEAD
 
-  _moveInDateLabel.text  = [dateFormmater stringFromDate: 
-    [NSDate dateWithTimeIntervalSince1970: object.moveInDate]];
-  _moveOutDateLabel.text = [dateFormmater stringFromDate: [object moveOutDateDate]];
-  _leaseMonthsLabel.text = [NSString stringWithFormat: 
+//   _moveInDateLabel.text  = [dateFormmater stringFromDate: 
+//     [NSDate dateWithTimeIntervalSince1970: object.moveInDate]];
+//   _moveOutDateLabel.text = [dateFormmater stringFromDate: [object moveOutDateDate]];
+//   _leaseMonthsLabel.text = [NSString stringWithFormat: 
+// =======
+  
+  [_moveInDateLabel setTitle:@"Select date" forState:UIControlStateNormal];
+  [_moveOutDateLabel setTitle:@"-" forState:UIControlStateNormal];
+//  [_moveInDateLabel setTitle:[dateFormmater stringFromDate:
+//    [NSDate dateWithTimeIntervalSince1970: object.moveInDate]] forState:UIControlStateNormal];
+//  [_moveOutDateLabel setTitle:[dateFormmater stringFromDate: [object moveOutDate]] forState:UIControlStateNormal];
+  _leaseMonthsLabel.text = [NSString stringWithFormat:
+// >>>>>>> cb7fd819c965a120fc9188315e308ea1cc0a3452
     @"%i month lease", object.leaseMonths];
+  
 }
 
 @end

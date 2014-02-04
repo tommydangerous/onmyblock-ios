@@ -619,6 +619,14 @@
 		DE93158D18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */; };
 		DE93158F1891E05800111CF6 /* OMBCreateListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */; };
 		DE939CF918933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE939CF818933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m */; };
+		DE95E8C318A03AF700A2A341 /* OMBResidenceBookItCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8C218A03AF700A2A341 /* OMBResidenceBookItCalendarCell.m */; };
+		DE95E8D418A03B5500A2A341 /* MNCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8C718A03B5500A2A341 /* MNCalendarView.m */; };
+		DE95E8D518A03B5500A2A341 /* MNCalendarViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8C918A03B5500A2A341 /* MNCalendarViewCell.m */; };
+		DE95E8D618A03B5500A2A341 /* MNCalendarViewDayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8CB18A03B5500A2A341 /* MNCalendarViewDayCell.m */; };
+		DE95E8D718A03B5500A2A341 /* MNCalendarViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8CD18A03B5500A2A341 /* MNCalendarViewLayout.m */; };
+		DE95E8D818A03B5500A2A341 /* MNCalendarViewWeekdayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8CF18A03B5500A2A341 /* MNCalendarViewWeekdayCell.m */; };
+		DE95E8D918A03B5500A2A341 /* MNFastDateEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8D118A03B5500A2A341 /* MNFastDateEnumeration.m */; };
+		DE95E8DA18A03B5500A2A341 /* NSDate+MNAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8D318A03B5500A2A341 /* NSDate+MNAdditions.m */; };
 		DE96E4A2189019390081D69F /* sign_up_email.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A1189019390081D69F /* sign_up_email.png */; };
 		DE96E4A4189019400081D69F /* sign_up_email@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A3189019400081D69F /* sign_up_email@2x.png */; };
 		DE96E4A7189019450081D69F /* sign_up_fb.png in Resources */ = {isa = PBXBuildFile; fileRef = DE96E4A5189019450081D69F /* sign_up_fb.png */; };
@@ -1632,6 +1640,23 @@
 		DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingViewController.m; sourceTree = "<group>"; };
 		DE939CF718933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingLeaseDetailsViewController.h; sourceTree = "<group>"; };
 		DE939CF818933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFinishListingLeaseDetailsViewController.m; sourceTree = "<group>"; };
+		DE95E8C118A03AF700A2A341 /* OMBResidenceBookItCalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceBookItCalendarCell.h; sourceTree = "<group>"; };
+		DE95E8C218A03AF700A2A341 /* OMBResidenceBookItCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceBookItCalendarCell.m; sourceTree = "<group>"; };
+		DE95E8C518A03B5500A2A341 /* MNCalendarView-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MNCalendarView-Prefix.pch"; sourceTree = "<group>"; };
+		DE95E8C618A03B5500A2A341 /* MNCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNCalendarView.h; sourceTree = "<group>"; };
+		DE95E8C718A03B5500A2A341 /* MNCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNCalendarView.m; sourceTree = "<group>"; };
+		DE95E8C818A03B5500A2A341 /* MNCalendarViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNCalendarViewCell.h; sourceTree = "<group>"; };
+		DE95E8C918A03B5500A2A341 /* MNCalendarViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNCalendarViewCell.m; sourceTree = "<group>"; };
+		DE95E8CA18A03B5500A2A341 /* MNCalendarViewDayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNCalendarViewDayCell.h; sourceTree = "<group>"; };
+		DE95E8CB18A03B5500A2A341 /* MNCalendarViewDayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNCalendarViewDayCell.m; sourceTree = "<group>"; };
+		DE95E8CC18A03B5500A2A341 /* MNCalendarViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNCalendarViewLayout.h; sourceTree = "<group>"; };
+		DE95E8CD18A03B5500A2A341 /* MNCalendarViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNCalendarViewLayout.m; sourceTree = "<group>"; };
+		DE95E8CE18A03B5500A2A341 /* MNCalendarViewWeekdayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNCalendarViewWeekdayCell.h; sourceTree = "<group>"; };
+		DE95E8CF18A03B5500A2A341 /* MNCalendarViewWeekdayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNCalendarViewWeekdayCell.m; sourceTree = "<group>"; };
+		DE95E8D018A03B5500A2A341 /* MNFastDateEnumeration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNFastDateEnumeration.h; sourceTree = "<group>"; };
+		DE95E8D118A03B5500A2A341 /* MNFastDateEnumeration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNFastDateEnumeration.m; sourceTree = "<group>"; };
+		DE95E8D218A03B5500A2A341 /* NSDate+MNAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MNAdditions.h"; sourceTree = "<group>"; };
+		DE95E8D318A03B5500A2A341 /* NSDate+MNAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MNAdditions.m"; sourceTree = "<group>"; };
 		DE96E4A1189019390081D69F /* sign_up_email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sign_up_email.png; sourceTree = "<group>"; };
 		DE96E4A3189019400081D69F /* sign_up_email@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sign_up_email@2x.png"; sourceTree = "<group>"; };
 		DE96E4A5189019450081D69F /* sign_up_fb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sign_up_fb.png; sourceTree = "<group>"; };
@@ -1776,6 +1801,8 @@
 				AB19A09718617C0E00F84DE9 /* OMBResidenceDetailMapCell.m */,
 				ABDF174B18663AE8004E2755 /* OMBResidenceBookItCell.h */,
 				ABDF174C18663AE8004E2755 /* OMBResidenceBookItCell.m */,
+				DE95E8C118A03AF700A2A341 /* OMBResidenceBookItCalendarCell.h */,
+				DE95E8C218A03AF700A2A341 /* OMBResidenceBookItCalendarCell.m */,
 				ABDF175118688F4C004E2755 /* OMBResidenceConfirmDetailsPlaceOfferCell.h */,
 				ABDF175218688F4C004E2755 /* OMBResidenceConfirmDetailsPlaceOfferCell.m */,
 				ABDF17541868AABB004E2755 /* OMBResidenceConfirmDetailsDatesCell.h */,
@@ -1896,6 +1923,7 @@
 		AB802E9118109E5200E04D11 = {
 			isa = PBXGroup;
 			children = (
+				DE95E8C418A03B5500A2A341 /* MNCalendarView */,
 				ABB911AA18998FB20046611F /* AFNetworking */,
 				ABB9119818998CA80046611F /* IOSLinkedInAPI */,
 				ABED5FE91896FAED00AD630C /* DKLiveBlur */,
@@ -3213,6 +3241,28 @@
 			path = DKLiveBlur;
 			sourceTree = "<group>";
 		};
+		DE95E8C418A03B5500A2A341 /* MNCalendarView */ = {
+			isa = PBXGroup;
+			children = (
+				DE95E8C518A03B5500A2A341 /* MNCalendarView-Prefix.pch */,
+				DE95E8C618A03B5500A2A341 /* MNCalendarView.h */,
+				DE95E8C718A03B5500A2A341 /* MNCalendarView.m */,
+				DE95E8C818A03B5500A2A341 /* MNCalendarViewCell.h */,
+				DE95E8C918A03B5500A2A341 /* MNCalendarViewCell.m */,
+				DE95E8CA18A03B5500A2A341 /* MNCalendarViewDayCell.h */,
+				DE95E8CB18A03B5500A2A341 /* MNCalendarViewDayCell.m */,
+				DE95E8CC18A03B5500A2A341 /* MNCalendarViewLayout.h */,
+				DE95E8CD18A03B5500A2A341 /* MNCalendarViewLayout.m */,
+				DE95E8CE18A03B5500A2A341 /* MNCalendarViewWeekdayCell.h */,
+				DE95E8CF18A03B5500A2A341 /* MNCalendarViewWeekdayCell.m */,
+				DE95E8D018A03B5500A2A341 /* MNFastDateEnumeration.h */,
+				DE95E8D118A03B5500A2A341 /* MNFastDateEnumeration.m */,
+				DE95E8D218A03B5500A2A341 /* NSDate+MNAdditions.h */,
+				DE95E8D318A03B5500A2A341 /* NSDate+MNAdditions.m */,
+			);
+			path = MNCalendarView;
+			sourceTree = "<group>";
+		};
 		DE96E4A01890169E0081D69F /* GetStarted */ = {
 			isa = PBXGroup;
 			children = (
@@ -3579,6 +3629,7 @@
 				AB0280611843A3E40081B30F /* OMBIntroBidView.m in Sources */,
 				AB6155CE184FB43D00A193C7 /* OMBExtendedHitAreaViewContainer.m in Sources */,
 				ABB70058187B58AA005F0730 /* OMBHomebaseLandlordConfirmedTenantCell.m in Sources */,
+				DE95E8D818A03B5500A2A341 /* MNCalendarViewWeekdayCell.m in Sources */,
 				AB4ED2FF1884AD9F009AFB01 /* OMBResidenceSimilarConnection.m in Sources */,
 				AB9545841849B217000513BE /* OMBCenteredImageView.m in Sources */,
 				ABB911A618998CA80046611F /* LIALinkedInHttpClient.m in Sources */,
@@ -3593,6 +3644,7 @@
 				AB63D2141821AB2C00D63800 /* OMBUser.m in Sources */,
 				AB026BC91822BE1200E72F53 /* OMBUserFacebookAuthenticationConnection.m in Sources */,
 				AB6155C4184EA34000A193C7 /* OMBUserUpdateProfileConnection.m in Sources */,
+				DE95E8D918A03B5500A2A341 /* MNFastDateEnumeration.m in Sources */,
 				AB70CB90186D353E0083DF4C /* OMBCreateListingPropertyTypeCell.m in Sources */,
 				AB01ED4318582A7A00333390 /* OMBLegalAnswerListConnection.m in Sources */,
 				AB4F9D24181ABFA20086D618 /* OMBResidenceImageDownloader.m in Sources */,
@@ -3602,6 +3654,7 @@
 				ABB91163189808180046611F /* OMBStudentOrLandlordView.m in Sources */,
 				AB9D6128188DB9F000C9AC64 /* OMBOffersReceivedConnection.m in Sources */,
 				ABB70057187B58AA005F0730 /* OMBCoapplicantCell.m in Sources */,
+				DE95E8C318A03AF700A2A341 /* OMBResidenceBookItCalendarCell.m in Sources */,
 				AB6CCE4918941269000ED5CE /* OMBEmptyImageTwoLabelCell.m in Sources */,
 				AB9012A618568206003153A2 /* OMBPreviousRentalCreateConnection.m in Sources */,
 				ABE4FBFD18907E820009D643 /* OMBPayoutMethodCreateConnection.m in Sources */,
@@ -3612,6 +3665,7 @@
 				ABCB36BB187CAF97008A0EEF /* OMBHomebaseRenterAddRemoveRoommatesRoommateCell.m in Sources */,
 				AB0C36B218406779006DC3AD /* OMBStopwatchView.m in Sources */,
 				ABED5FE51896ED5E00AD630C /* OMBBlurView.m in Sources */,
+				DE95E8DA18A03B5500A2A341 /* NSDate+MNAdditions.m in Sources */,
 				ABA5B4221857900F00F825E1 /* OMBWebViewController.m in Sources */,
 				ABA4F211187D2D4700D725D4 /* OMBManageListingsConnection.m in Sources */,
 				AB57EA1E186B7C3C001682DB /* OMBMessageDetailCollectionViewFlowLayout.m in Sources */,
@@ -3672,6 +3726,7 @@
 				AB4ED2FC1884AD9F009AFB01 /* OMBResidenceCoverPhotoURLConnection.m in Sources */,
 				ABE28184186A416200A5D14E /* OMBMessage.m in Sources */,
 				ABB91177189844300046611F /* OMBRenterProfileUserInfoCell.m in Sources */,
+				DE95E8D518A03B5500A2A341 /* MNCalendarViewCell.m in Sources */,
 				AB4ED2D4188222C8009AFB01 /* OMBResidenceImageUpdateConnection.m in Sources */,
 				AB9545731848E6C1000513BE /* OMBTableViewController.m in Sources */,
 				ABB70080187BD5C4005F0730 /* OMBHomebaseRenterRentDepositInfoViewController.m in Sources */,
@@ -3680,12 +3735,14 @@
 				AB01ED3A1857DB5300333390 /* OMBLegalQuestion.m in Sources */,
 				AB1C216F1851436200ED7C06 /* OMBRenterApplication.m in Sources */,
 				AB01ED371857D96800333390 /* OMBLegalQuestionStore.m in Sources */,
+				DE95E8D618A03B5500A2A341 /* MNCalendarViewDayCell.m in Sources */,
 				ABA4F207187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m in Sources */,
 				AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */,
 				ABBA58971870C59700E9BF4E /* ELCAssetTablePicker.m in Sources */,
 				ABBB18DD182453BF00211499 /* OMBAnnotationCity.m in Sources */,
 				ABABEC4C1864D56A008B6768 /* OMBMapViewController.m in Sources */,
 				ABA080831868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m in Sources */,
+				DE95E8D418A03B5500A2A341 /* MNCalendarView.m in Sources */,
 				AB70CB68186CB9070083DF4C /* OMBTermsPrivacyViewController.m in Sources */,
 				ABABEC4B1864D56A008B6768 /* OMBMapFilterOldViewController.m in Sources */,
 				AB19A08C186123CB00F84DE9 /* OMBResidenceDetailCell.m in Sources */,
@@ -3824,6 +3881,7 @@
 				ABB911C418998FB30046611F /* AFURLRequestSerialization.m in Sources */,
 				ABED5FDF1896E8CE00AD630C /* DRNRealTimeBlurView.m in Sources */,
 				ABDF175318688F4C004E2755 /* OMBResidenceConfirmDetailsPlaceOfferCell.m in Sources */,
+				DE95E8D718A03B5500A2A341 /* MNCalendarViewLayout.m in Sources */,
 				AB4ED2DA18845DEF009AFB01 /* OMBOpenHouse.m in Sources */,
 				AB5B49D51833C9A400ED96DC /* OMBResidenceGoogleStaticImageDownloader.m in Sources */,
 				ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */,
@@ -4055,8 +4113,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Tommy Dang (ETDM478EZ7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tommy Dang (ETDM478EZ7)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4077,7 +4135,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4088,8 +4146,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: On My Block LLC (4PZFNY43X2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: On My Block LLC (4PZFNY43X2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
@@ -4109,7 +4167,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
