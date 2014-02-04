@@ -433,7 +433,7 @@ numberOfRowsInSection: (NSInteger) section
   else if (section == 2) {
     // Spacing
     // Delete Listing
-    return 2;
+    // return 2;
   }
   // Spacing for when typing
   else if (section == 3) {

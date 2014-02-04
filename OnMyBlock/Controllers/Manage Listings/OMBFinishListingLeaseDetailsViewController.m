@@ -375,11 +375,11 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         
         // Bottom border
         // Use layer because after clicking the row, the view goes away
-        CALayer *bottomBorderLayer = [CALayer layer];
-        bottomBorderLayer.backgroundColor = tableView.separatorColor.CGColor;
-        bottomBorderLayer.frame = CGRectMake(0.0f, 44.0f - 0.5f,
-                                             tableView.frame.size.width, 0.5f);
-        [cell1.contentView.layer addSublayer: bottomBorderLayer];
+        // CALayer *bottomBorderLayer = [CALayer layer];
+        // bottomBorderLayer.backgroundColor = tableView.separatorColor.CGColor;
+        // bottomBorderLayer.frame = CGRectMake(0.0f, 44.0f - 0.5f,
+        //                                      tableView.frame.size.width, 0.5f);
+        // [cell1.contentView.layer addSublayer: bottomBorderLayer];
         
       }
       // Month Lease Picker View
@@ -404,11 +404,11 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
           
           // Bottom border
           // Use layer because after clicking the row, the view goes away
-          CALayer *bottomBorderLayer = [CALayer layer];
-          bottomBorderLayer.backgroundColor = tableView.separatorColor.CGColor;
-          bottomBorderLayer.frame = CGRectMake(0.0f, k2KeyboardHeight - 0.5f,
-                                               tableView.frame.size.width, 0.5f);
-          [pickerCell.contentView.layer addSublayer: bottomBorderLayer];
+          // CALayer *bottomBorderLayer = [CALayer layer];
+          // bottomBorderLayer.backgroundColor = tableView.separatorColor.CGColor;
+          // bottomBorderLayer.frame = CGRectMake(0.0f, k2KeyboardHeight - 0.5f,
+          //                                      tableView.frame.size.width, 0.5f);
+          // [pickerCell.contentView.layer addSublayer: bottomBorderLayer];
           
           return pickerCell;
         }
@@ -618,7 +618,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   else if (section == 2) {
     // Spacing
     // Delete Listing
-    return 2;
+    // return 2;
   }
   // Spacing for when typing
   else if (section == 3) {
@@ -657,7 +657,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Delete Listing
   else if (indexPath.section == 2) {
-    [deleteActionSheet showInView: self.view];
+    // [deleteActionSheet showInView: self.view];
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
