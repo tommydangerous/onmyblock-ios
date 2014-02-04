@@ -363,17 +363,24 @@
   OMBResidenceConfirmDetailsDatesCell *detailsCell =
   (OMBResidenceConfirmDetailsDatesCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 0 inSection: 1]];
   
-  if(!calendarCell.calendarView.selectedFirst){
-  [detailsCell.moveInDateLabel setTitle:[dateFormmater stringFromDate:date]
-                               forState:UIControlStateNormal];
-    calendarCell.calendarView.selectedFirst = date;
-  }
-  else{
-    [detailsCell.moveOutDateLabel setTitle:[dateFormmater stringFromDate: date]
+  if([calendarCell respondsToSelector:@selector(calendarView)]){
+    if(!calendarCell.calendarView.selectedFirst){
+      [detailsCell.moveInDateLabel setTitle:[dateFormmater stringFromDate:date]
+                                   forState:UIControlStateNormal];
+      [detailsCell.moveOutDateLabel setTitle:@"-"
+                                   forState:UIControlStateNormal];
+      calendarCell.calendarView.selectedFirst = date;
+      
+      // update residence or offer
+      // residence.moveInDate || offer
+    }
+    else{
+      [detailsCell.moveOutDateLabel setTitle:[dateFormmater stringFromDate: date]
                                   forState:UIControlStateNormal];
-    calendarCell.calendarView.selectedSecond = date;
+      calendarCell.calendarView.selectedSecond = date;
+      // update residence or offer
+    }
   }
-  
 }
 
 - (BOOL)calendarView:(MNCalendarView *)calendarView shouldSelectDate:(NSDate *)date {
@@ -386,15 +393,17 @@
     return NO;
   }
   
-  if(calendarCell.calendarView.selectedFirst){
-    NSTimeInterval timeInterval = [date timeIntervalSinceDate: calendarCell.calendarView.selectedFirst];
+  if([calendarCell respondsToSelector:@selector(calendarView)]){
+    if(calendarCell.calendarView.selectedFirst){
+      NSTimeInterval timeInterval = [date timeIntervalSinceDate: calendarCell.calendarView.selectedFirst];
     
-    if(timeInterval < 0 || (timeInterval > MN_YEAR / 2))
-      return NO;
-    
-    if(calendarCell.calendarView.selectedSecond){
-      if([date timeIntervalSinceDate: calendarCell.calendarView.selectedSecond] > 0)
+      if(timeInterval < 0 || (timeInterval > MN_YEAR / 2)) // until 6 months
         return NO;
+    
+      if(calendarCell.calendarView.selectedSecond){
+        if([date timeIntervalSinceDate: calendarCell.calendarView.selectedSecond] > 0)
+          return NO;
+      }
     }
   }
   
@@ -508,8 +517,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell) {
         cell = [[OMBResidenceConfirmDetailsDatesCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: DateIdentifier];
-        [cell.moveInDateLabel addTarget:self action:@selector(showCalendar) forControlEvents:UIControlEventTouchUpInside];
-        [cell.moveOutDateLabel addTarget:self action:@selector(showCalendar) forControlEvents:UIControlEventTouchUpInside];
+        [cell.moveInDateLabel addTarget:self action:@selector(showMoveInCalendar) forControlEvents:UIControlEventTouchUpInside];
+        [cell.moveOutDateLabel addTarget:self action:@selector(showMoveOutCalendar) forControlEvents:UIControlEventTouchUpInside];
         [cell loadResidence: residence];
       }
       return cell;
@@ -1239,10 +1248,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 -(void) showCalendar{
   if (selectedIndexPath) {
-    if (selectedIndexPath.section == 1 &&
-        selectedIndexPath.row == 0) {
-      
+    if (selectedIndexPath.section == 1 && selectedIndexPath.row == 0) {
       selectedIndexPath = nil;
+      OMBResidenceBookItCalendarCell *calendarCell =
+      [self.table dequeueReusableCellWithIdentifier: @"CalendarCellIdentifier"];
+      if (!calendarCell)
+        calendarCell = [[OMBResidenceBookItCalendarCell alloc] initWithStyle:
+                        UITableViewCellStyleDefault reuseIdentifier:
+                        @"CalendarCellIdentifier"];
+      if(calendarCell.calendarView.selectedSecond)
+        calendarCell = nil;
     }
     else {
       selectedIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
@@ -1255,6 +1270,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
                                         [NSIndexPath indexPathForRow:
                                          0 + 1 inSection:1]
                                         ] withRowAnimation: UITableViewRowAnimationFade];
+}
+
+-(void) showMoveInCalendar{
+  [self showCalendar];
+}
+
+-(void) showMoveOutCalendar{
+  [self showCalendar];
 }
 
 - (void) submitOffer
