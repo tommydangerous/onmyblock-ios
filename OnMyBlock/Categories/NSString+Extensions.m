@@ -208,6 +208,15 @@ secondaryColor: (UIColor *) secondayColor
   return parameters;
 }
 
+- (NSArray *) matchingResultsWithRegularExpression: (NSString *) string
+{
+  NSRegularExpression *regex = 
+    [NSRegularExpression regularExpressionWithPattern: string 
+      options: 0 error: nil];
+  return [regex matchesInString: self options: 0 
+    range: NSMakeRange(0, [self length])];
+}
+
 - (NSString *) stripWhiteSpace
 {
   return [self stringByTrimmingCharactersInSet: 

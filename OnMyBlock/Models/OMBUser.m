@@ -1384,13 +1384,19 @@ ascending: (BOOL) ascending
       [alertView show];
     }
     else {
-      NSLog(@"Facebook active session is open");
+      NSLog(@"Facebook active session is open\n%@", user);
       [OMBUser currentUser].facebookAccessToken =
         [[[FBSession activeSession] accessTokenData] accessToken];
       [OMBUser currentUser].facebookId = [user objectForKey: @"id"];
+      // If user is logged in already; this is usually done
+      // from the renter profile, become verified
       if ([[OMBUser currentUser] loggedIn]) {
+        // If the user successfully has a facebook access token
+        // and a facebook id
         if ([OMBUser currentUser].facebookAccessToken && 
           [OMBUser currentUser].facebookId) {
+          // Create an authentication model for provider Facebook
+          // in the database on the web server
           [[OMBUser currentUser] createAuthenticationForFacebookWithCompletion:
             ^(NSError *error) {
               NSMutableDictionary *userInfoDict = 
@@ -1405,15 +1411,145 @@ ascending: (BOOL) ascending
         }
       }
       else {
-        [OMBUser currentUser].email     = [user objectForKey: @"email"];
-        [OMBUser currentUser].firstName = [user objectForKey: @"first_name"];
-        [OMBUser currentUser].lastName  = [user objectForKey: @"last_name"];
+        [[OMBUser currentUser] parseFacebookUserData: user];
         [[OMBUser currentUser] authenticateWithServer: nil];
       }
     }
   };
   if (FBSession.activeSession.isOpen)
     [FBRequestConnection startForMeWithCompletionHandler: completion];
+}
+
+- (void) parseFacebookUserData: (id <FBGraphUser>) user
+{
+  _email     = [user objectForKey: @"email"];
+  _firstName = [user objectForKey: @"first_name"];
+  _lastName  = [user objectForKey: @"last_name"];
+
+  // Education - School
+  NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:
+    NSGregorianCalendar];
+  NSDateComponents *dateComponents = [gregorian components: NSYearCalendarUnit
+    fromDate: [NSDate date]];
+
+  NSInteger thisYear = [dateComponents year];
+  NSInteger schoolYear = 0;
+  NSInteger currentSchoolYear = 1;
+  BOOL currentlyInSchool = NO;
+  if ([user objectForKey: @"education"]) {
+    for (NSDictionary *dict in [user objectForKey: @"education"]) {
+      NSString *type = [dict objectForKey: @"type"];
+      if (type && [type length]) {
+        // If it is college
+        if ([[type lowercaseString] isEqualToString: @"college"]) {
+          // Year
+          currentSchoolYear = thisYear;
+          if ([dict objectForKey: @"year"]) {
+            if ([[dict objectForKey: @"year"] objectForKey: @"name"]) {
+              currentSchoolYear = [[[dict objectForKey: @"year"] objectForKey: 
+                @"name"] intValue];
+            }
+            currentlyInSchool = NO;
+          }
+          else {
+            currentlyInSchool = YES;
+          }
+          NSDictionary *schoolDict = [dict objectForKey: @"school"];
+          if (schoolDict) {
+            if (currentSchoolYear > schoolYear) {
+              NSString *schoolName = [schoolDict objectForKey: @"name"];
+              _school = schoolName;
+
+              schoolYear = currentSchoolYear;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Hometown
+  NSString *location;
+  if ([user objectForKey: @"hometown"]) {
+    location = [[user objectForKey: @"hometown"] objectForKey: @"name"];
+  }
+
+  // Location
+  if (!location && [user objectForKey: @"location"]) {
+    location = [[user objectForKey: @"location"] objectForKey: @"name"];
+  }
+
+  // Work - Job title
+  NSString *employer;
+  NSString *position;
+  NSTimeInterval today = [[NSDate date] timeIntervalSince1970];
+  NSTimeInterval workDate = 0;
+  NSTimeInterval currentWorkDate = 1;
+  if ([user objectForKey: @"work"]) {
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    dateFormatter.dateFormat = @"yyyy-MM-dd";
+    for (NSDictionary *dict in [user objectForKey: @"work"]) {
+      // Start date
+      currentWorkDate = today;
+      if ([dict objectForKey: @"start_date"]) {
+        currentWorkDate = [[dateFormatter dateFromString: 
+          [dict objectForKey: @"start_date"]] timeIntervalSince1970];
+      }
+      // If this is the most recent job
+      if (currentWorkDate > workDate) {
+        // Employer
+        if ([dict objectForKey: @"employer"]) {
+          employer = [[dict objectForKey: @"employer"] objectForKey: @"name"];
+        }
+        // Position
+        if ([dict objectForKey: @"position"]) {
+          position = [[dict objectForKey: @"position"] objectForKey: @"name"];
+        }
+        workDate = currentWorkDate;
+      }
+    }
+  }
+
+  // About
+  // Name
+  NSString *aboutString = [NSString stringWithFormat: @"Hello, I am %@",
+    [self fullName]];
+  // Location
+  if (location && [location length]) {
+    aboutString = [aboutString stringByAppendingString: 
+      [NSString stringWithFormat: @" from %@.", location]];
+  }
+  else {
+    aboutString = [aboutString stringByAppendingString: @"."];
+  }
+  // School
+  if (_school && [_school length]) {
+    NSString *studyString = @"studied";
+    if (currentlyInSchool)
+      studyString = @"study";
+    aboutString = [aboutString stringByAppendingString: 
+      [NSString stringWithFormat: @" I %@ at %@.", studyString, _school]];
+  }
+  // Work
+  if (employer && [employer length]) {
+    if (position && [position length]) {
+      NSString *aString = @"a";
+      NSString *firstLetter = [position substringToIndex: 1];
+      if ([[[firstLetter lowercaseString] matchingResultsWithRegularExpression: 
+        @"[aiouy]"] count]) {
+
+        aString = @"an";
+      }
+      aboutString = [aboutString stringByAppendingString:
+        [NSString stringWithFormat: @" I am %@ %@ at %@.",
+          aString, position, employer]];
+    }
+    else {
+      aboutString = [aboutString stringByAppendingString:
+        [NSString stringWithFormat: @" I work at %@.", employer]];
+    }
+  }
+  _about = aboutString;
 }
 
 - (NSString *) shortName

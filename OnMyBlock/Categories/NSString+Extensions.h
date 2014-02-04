@@ -30,6 +30,7 @@ secondaryColor: (UIColor *) secondayColor;
 - (NSAttributedString *) attributedStringWithLineHeight: (CGFloat) lineHeight;
 - (CGRect) boundingRectWithSize: (CGSize) size font: (UIFont *) font;
 - (NSDictionary *) dictionaryFromString;
+- (NSArray *) matchingResultsWithRegularExpression: (NSString *) string;
 - (NSString *) stripWhiteSpace;
 
 @end

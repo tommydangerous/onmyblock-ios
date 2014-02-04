@@ -716,7 +716,6 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
       OMBResidence *residence = [[self residencesForList] objectAtIndex: 
         indexPath.row];
       [(OMBResidenceCell *) cell loadResidenceData: residence];
-      NSLog(@"%@", residence.title);
     }
   }
   // NSArray *properties = [self propertiesSortedBy: @"" ascending: NO];

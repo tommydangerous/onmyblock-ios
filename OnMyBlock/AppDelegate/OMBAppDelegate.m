@@ -176,7 +176,13 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
 
 - (void) openSession
 {
-  [FBSession openActiveSessionWithReadPermissions: @[@"email"] 
+  NSArray *facebookPermissions = @[
+    @"email",
+    @"user_education_history",
+    @"user_location",
+    @"user_work_history"
+  ];
+  [FBSession openActiveSessionWithReadPermissions: facebookPermissions
     allowLoginUI: YES completionHandler: 
       ^(FBSession *session, FBSessionState state, NSError *error) {
         [self sessionStateChanged: session state: state error: error];
