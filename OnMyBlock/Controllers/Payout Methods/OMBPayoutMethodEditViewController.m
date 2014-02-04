@@ -14,6 +14,7 @@
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
+#import "UIImage+Color.h"
 
 @implementation OMBPayoutMethodEditViewController
 
@@ -57,12 +58,82 @@
   [saveBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
   } forState: UIControlStateNormal];
-  self.navigationItem.rightBarButtonItem = saveBarButtonItem;
+  // self.navigationItem.rightBarButtonItem = saveBarButtonItem;
+
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGFloat screenHeight = screen.size.height;
+  CGFloat screenWidth  = screen.size.width;
+  CGFloat padding = OMBPadding;
+  CGFloat width = screenWidth - (padding * 2);
 
   [self setupForTable];
 
+  self.table.scrollEnabled = NO;
   self.table.tableHeaderView = [[UIView alloc] initWithFrame:
-    CGRectMake(0.0f, 0.0f, self.table.frame.size.width, 44.0f)];
+    CGRectMake(0.0f, 0.0f, self.table.frame.size.width, OMBStandardHeight)];
+
+  CGFloat pbvOriginY = padding + OMBStandardHeight + (OMBStandardHeight * 4);
+  primaryButtonView = [UIView new];
+  primaryButtonView.frame = CGRectMake(0.0f, pbvOriginY,
+    screenWidth, screenHeight - pbvOriginY);
+  [self.view addSubview: primaryButtonView];
+
+  UILabel *label1 = [UILabel new];
+  label1.font = [UIFont normalTextFont];
+  label1.frame = CGRectMake(padding, 0.0f, width, 22.0f);
+  label1.text = @"Would you like to use this account";
+  label1.textColor = [UIColor textColor];
+  label1.textAlignment = NSTextAlignmentCenter;
+  [primaryButtonView addSubview: label1];
+
+  UILabel *label2 = [UILabel new];
+  label2.font = label1.font;
+  label2.frame = CGRectMake(label1.frame.origin.x,
+    label1.frame.origin.y + label1.frame.size.height,
+      label1.frame.size.width, label1.frame.size.height);
+  label2.text = @"as your primary funding source";
+  label2.textColor = label1.textColor;
+  label2.textAlignment = label1.textAlignment;
+  [primaryButtonView addSubview: label2];
+
+  UILabel *label3 = [UILabel new];
+  label3.font = label1.font;
+  label3.frame = CGRectMake(label1.frame.origin.x,
+    label2.frame.origin.y + label2.frame.size.height,
+      label1.frame.size.width, label1.frame.size.height);
+  label3.text = @"to make and receive payments?";
+  label3.textColor = label1.textColor;
+  label3.textAlignment = label1.textAlignment;
+  [primaryButtonView addSubview: label3];
+
+  primaryButton = [UIButton new];
+  primaryButton.backgroundColor = [UIColor blue];
+  primaryButton.clipsToBounds = YES;
+  primaryButton.frame = CGRectMake(padding, 
+    label3.frame.origin.y + label3.frame.size.height + OMBStandardHeight, 
+      width, OMBStandardButtonHeight);
+  primaryButton.layer.cornerRadius = OMBCornerRadius;
+  primaryButton.titleLabel.font = [UIFont mediumTextFont];
+  [primaryButton addTarget: self action: @selector(setAsPrimary)
+    forControlEvents: UIControlEventTouchUpInside];
+  [primaryButton setBackgroundImage: 
+    [UIImage imageWithColor: [UIColor blueHighlighted]] 
+      forState: UIControlStateHighlighted];
+  [primaryButton setTitle: @"Set as Primary Funding Source"
+    forState: UIControlStateNormal];
+  [primaryButton setTitleColor: [UIColor whiteColor]
+    forState: UIControlStateNormal];
+  [primaryButtonView addSubview: primaryButton];
+}
+
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  if (payoutMethod.primary)
+    primaryButtonView.hidden = YES;
+  else
+    primaryButtonView.hidden = NO;
 }
 
 #pragma mark - Protocol
@@ -77,7 +148,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     CellIdentifier];
   if (!cell) {
     cell = [[UITableViewCell alloc] initWithStyle: 
-      UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+      UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier];
   }
   // Switch
   NSInteger switchTag = 9999;
@@ -91,7 +162,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           switchButton.frame.size.width, switchButton.frame.size.height);
     switchButton.onTintColor = [UIColor blue];
     switchButton.tag = switchTag;
-    [cell.contentView addSubview: switchButton];
+    // [cell.contentView addSubview: switchButton];
   }
   // Top border
   NSInteger topBorderTag = 9998;
@@ -113,19 +184,47 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       tableView.frame.size.width, 0.5f);
     bottomBorder.tag = bottomBorderTag;
   }
+  cell.detailTextLabel.font = [UIFont normalTextFontBold];
+  cell.detailTextLabel.text = @"";
+  cell.detailTextLabel.textColor = [UIColor blueDark];
   cell.selectionStyle = UITableViewCellSelectionStyleNone;
-  cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  cell.textLabel.font = [UIFont normalTextFont];
   cell.textLabel.textColor = [UIColor textColor];
   // Primary
   if (indexPath.row == 0) {
-    cell.textLabel.text = @"Primary method";
-    switchButton.on = primary ? YES : NO;
-    [switchButton removeTarget: self action: @selector(changeDeposit:)
-      forControlEvents: UIControlEventValueChanged];
-    [switchButton addTarget: self action: @selector(changePrimary:)
-      forControlEvents: UIControlEventValueChanged];
+    // cell.textLabel.text = @"Primary method";
+    // if (payoutMethod.primary)
+    //   cell.detailTextLabel.text = @"Yes";
+    // else
+    //   cell.detailTextLabel.text = @"No";
+    // switchButton.on = primary ? YES : NO;
+    // [switchButton removeTarget: self action: @selector(changeDeposit:)
+    //   forControlEvents: UIControlEventValueChanged];
+    // [switchButton addTarget: self action: @selector(changePrimary:)
+    //   forControlEvents: UIControlEventValueChanged];
+    // [topBorder removeFromSuperview];
+    // [cell.contentView addSubview: topBorder];
+    static NSString *PrimaryID = @"PrimaryID";
+    OMBLabelTextFieldCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
+      PrimaryID];
+    if (!cell1) {
+      cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle: 
+        UITableViewCellStyleDefault reuseIdentifier: PrimaryID];
+      [cell1 setFramesUsingString: @"Primary funding source"];
+    }
+    cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+    if (payoutMethod.primary)
+      cell1.textField.text = @"Yes";
+    else
+      cell1.textField.text = @"No";
+    cell1.textField.font = [UIFont normalTextFontBold];
+    cell1.textField.textAlignment = NSTextAlignmentRight;
+    cell1.textField.textColor = [UIColor blueDark];
+    cell1.textField.userInteractionEnabled = NO;
+    cell1.textFieldLabel.text = @"Primary funding source";
     [topBorder removeFromSuperview];
-    [cell.contentView addSubview: topBorder];
+    [cell1.contentView addSubview: topBorder];
+    return cell1;
   }
   // Deposit
   else if (indexPath.row == 1) {
@@ -173,6 +272,8 @@ numberOfRowsInSection: (NSInteger) section
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  if (indexPath.section == 0 && indexPath.row == 1)
+    return 0.0f;
   return 44.0f;
 }
 
@@ -248,6 +349,31 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   };
   [[self appDelegate].container startSpinning];
   [conn start];
+}
+
+- (void) setAsPrimary
+{
+  payoutMethod.primary = YES;
+  OMBPayoutMethodUpdateConnection *conn =
+    [[OMBPayoutMethodUpdateConnection alloc] initWithPayoutMethod:
+      payoutMethod attributes: @[@"primary"]];
+  conn.completionBlock = ^(NSError *error) {
+    if (payoutMethod.primary == YES && !error) {
+      // Make all other payout methods that are primary and the 
+      // same deposit (or payment) not primary
+      if (payoutMethod.primary)
+        [[OMBUser currentUser] changeOtherSamePrimaryPayoutMethods:
+          payoutMethod];
+      [self.navigationController popViewControllerAnimated: YES];
+    }
+    else {
+      [self showAlertViewWithError: error];
+    }
+    [[self appDelegate].container stopSpinning];
+  };
+  [[self appDelegate].container startSpinning];
+  [conn start];
+
 }
 
 @end

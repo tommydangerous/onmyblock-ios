@@ -1389,7 +1389,8 @@ viewForHeaderInSection: (NSInteger) section
   // This improves user experience
   // by preconnecting to PayPal to prepare the device for
   // processing payments
-  // [PayPalPaymentViewController prepareForPaymentUsingClientId: cliendId];
+  [PayPalPaymentViewController prepareForPaymentUsingClientId: cliendId];
+
   // Present the PayPalPaymentViewController.
   [self presentViewController: paymentViewController animated: YES 
     completion: nil];

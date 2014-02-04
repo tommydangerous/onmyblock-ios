@@ -150,7 +150,7 @@
   gradient.frame = backView.bounds;
   [backView addSubview: gradient];
 
-  CGFloat submitHeight = 44.0f;
+  CGFloat submitHeight = OMBStandardHeight;
   // Table footer view
   UIView *footerView = [[UIView alloc] init];
   footerView.frame = CGRectMake(0.0f, 0.0f, screenWidth, submitHeight);
@@ -169,8 +169,7 @@
   //   screenWidth - (padding * 2), padding + 18.0f + padding);
   submitOfferButton.frame = submitView.bounds;
   // submitOfferButton.layer.cornerRadius = 2.0f;
-  submitOfferButton.titleLabel.font = 
-    [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
+  submitOfferButton.titleLabel.font = [UIFont normalTextFontBold];
   [submitOfferButton addTarget: self action: @selector(showAlert)
     forControlEvents: UIControlEventTouchUpInside];
   [submitOfferButton setBackgroundImage: 
@@ -308,7 +307,7 @@
   // Total price notes
   totalPriceNotes = [NSString stringWithFormat: 
     @"Your total of %@ will not be charged upfront but will only be charged "
-    @"upon mutual confirmation between you and the landlord.",
+    @"once the landlord has accepted your offer and you have signed the lease.",
       [NSString numberToCurrencyString: deposit + residence.minRent]];
   CGRect rect = [totalPriceNotes boundingRectWithSize: 
     CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999) 
@@ -318,8 +317,7 @@
   // Submit offer notes
   NSMutableAttributedString *string1 =
     [[NSMutableAttributedString alloc] initWithString: 
-      @"Tapping on \"Submit Offer\" means \n"
-      @"you agree to the "
+      @"Tapping on \"Submit Offer\" means that you have read the "
       attributes: @{
         NSFontAttributeName: [UIFont smallTextFont],
         NSForegroundColorAttributeName: [UIColor grayMedium]
@@ -333,7 +331,8 @@
       }
     ];
   NSMutableAttributedString *string3 =
-    [[NSMutableAttributedString alloc] initWithString: @"."
+    [[NSMutableAttributedString alloc] initWithString: 
+      @" and would be willing to sign at a later date."
       attributes: @{
         NSFontAttributeName: [UIFont smallTextFont],
         NSForegroundColorAttributeName: [UIColor grayMedium]
@@ -491,7 +490,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   //   }
   // }
   // Place offer
-  if (indexPath.section == 0) {
+  if (indexPath.section == OMBResidenceBookItConfirmDetailsSectionPlaceOffer) {
     if (indexPath.row == 0) {
       static NSString *PlaceOfferIdentifier = @"PlaceOfferIdentifier";
       OMBResidenceConfirmDetailsPlaceOfferCell *cell =
@@ -509,7 +508,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Move in and move out dates, View Lease Details
-  else if (indexPath.section == 1) {
+  else if (indexPath.section == OMBResidenceBookItConfirmDetailsSectionDates) {
+    // if (indexPath.row == 1) {
     if (indexPath.row == 0) {
       static NSString *DateIdentifier = @"DateIdentifier";
       OMBResidenceConfirmDetailsDatesCell *cell =
@@ -569,7 +569,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Price breakdown
-  else if (indexPath.section == 2) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionPriceBreakdown) {
     emptyCell.accessoryType = UITableViewCellAccessoryNone;
     // Price Breakdown, Deposit, 1st Month's Rent
     if (indexPath.row == 0 || indexPath.row == 1 || indexPath.row == 2) {
@@ -627,7 +628,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       CGFloat total = deposit + residence.minRent;
       cell.detailTextLabel.text = [NSString numberToCurrencyString:
         total];
-      cell.detailTextLabel.textColor = [UIColor blue];
+      cell.detailTextLabel.textColor = [UIColor green];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.textLabel.font = 
         [UIFont fontWithName: @"HelveticaNeue-Light" size: 27];
@@ -700,8 +701,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       return cell;
     }
   }
+  // Payout methods
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionPayoutMethods) {
+
+  }
   // Monthly schedule, View Lease Details (NOT IN USE ANYMORE) !!!
-  else if (indexPath.section == 3) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionMonthlySchedule) {
     if (indexPath.row == 1 || indexPath.row == 2) {
       emptyCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
       emptyCell.backgroundColor = [UIColor whiteColor];
@@ -719,7 +726,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Buyer, My Renter Profile, Add a personal note
-  else if (indexPath.section == 4) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionRenterProfile) {
     // Buyer
     if (indexPath.row == 0) {
       static NSString *BuyerCellIdentifier = @"BuyerCellIdentifier";
@@ -823,7 +831,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Submit offer notes
-  else if (indexPath.section == 5) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes) {
     static NSString *SubmitNotesIdentifier = @"SubmitNotesIdentifier";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
       SubmitNotesIdentifier];
@@ -847,7 +856,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     return cell;
   }
   // Spacing
-  else if (indexPath.section == [tableView numberOfSections] - 1) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionSpacing) {
     emptyCell.backgroundColor = [UIColor grayUltraLight];
     emptyCell.separatorInset = UIEdgeInsetsMake(0.0f, 
       tableView.frame.size.width, 0.0f, 0.0f);
@@ -859,11 +869,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 numberOfRowsInSection: (NSInteger) section
 {
   // Place offer
-  if (section == 0) {
+  if (section == OMBResidenceBookItConfirmDetailsSectionPlaceOffer) {
     return 1;
   }
   // Dates
-  else if (section == 1) {
+  else if (section == OMBResidenceBookItConfirmDetailsSectionDates) {
     // No top spacing
     // Move in, move out, lease months, view lease details
     return 1 + 1 + 1;
@@ -871,7 +881,7 @@ numberOfRowsInSection: (NSInteger) section
     // return 1 + 1;
   }
   // Price Breakdown
-  else if (section == 2) {
+  else if (section == OMBResidenceBookItConfirmDetailsSectionPriceBreakdown) {
     // Price Breakdown
     // Security Deposit
     // 1st Month's Rent
@@ -880,12 +890,16 @@ numberOfRowsInSection: (NSInteger) section
     return 5;
     // return 1 + 4;
   }
+  // Payout methods
+  else if (section == OMBResidenceBookItConfirmDetailsSectionPayoutMethods) {
+
+  }
   // Monthly schedule, lease agreement
-  else if (section == 3) {
+  else if (section == OMBResidenceBookItConfirmDetailsSectionMonthlySchedule) {
     return 1 + 2;
   }
   // Buyer
-  else if (section == 4) {
+  else if (section == OMBResidenceBookItConfirmDetailsSectionRenterProfile) {
     // Buyer
     // My Renter Profile
     // Add a personal note
@@ -894,11 +908,11 @@ numberOfRowsInSection: (NSInteger) section
     // return 1 + 3;
   }
   // Submit offer notes
-  else if (section == 5) {
+  else if (section == OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes) {
     return 1;
   }
   // Spacing for typing
-  else if (section == [tableView numberOfSections] - 1) {
+  else if (section == OMBResidenceBookItConfirmDetailsSectionSpacing) {
     return 1;
   }
   return 0;
@@ -910,34 +924,13 @@ numberOfRowsInSection: (NSInteger) section
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // Move in, move out, lease months, view lease details
-  if (indexPath.section == 1) {
-    //calendar
-    /*if (indexPath.row == 0){
-      if (selectedIndexPath) {
-        if (selectedIndexPath.section == indexPath.section &&
-            selectedIndexPath.row == indexPath.row) {
-          
-          selectedIndexPath = nil;
-        }
-        else {
-          selectedIndexPath = indexPath;
-        }
-      }
-      else {
-        selectedIndexPath = indexPath;
-      }
-      [self.table reloadRowsAtIndexPaths: @[
-                                            [NSIndexPath indexPathForRow:
-                                             indexPath.row + 1 inSection: indexPath.section]
-                                            ] withRowAnimation: UITableViewRowAnimationFade];
-      
-    }else*/
-      // View lease details
-      if (indexPath.row == 2) {
-        [self.navigationController pushViewController:
-         [[OMBResidenceLeaseAgreementViewController alloc] init] animated: YES];
-      }
-    
+
+  if (indexPath.section == OMBResidenceBookItConfirmDetailsSectionDates) {
+    // View lease details
+    if (indexPath.row == 2) {
+      [self.navigationController pushViewController:
+        [[OMBResidenceLeaseAgreementViewController alloc] init] animated: YES];
+    }
   }
   // Price breakdown (NOT BEING USED) !!!
   // else if (indexPath.section == 2) {
@@ -949,7 +942,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   //   }
   // }
   // Monthly schedule, lease agreement (NOT IN USE) !!!
-  else if (indexPath.section == 3) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionMonthlySchedule) {
     if (indexPath.row == 1) {
       [self.navigationController pushViewController:
         [[OMBResidenceMonthlyPaymentScheduleViewController alloc] 
@@ -961,7 +955,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Buyer
-  else if (indexPath.section == 4) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionRenterProfile) {
     // My Renter Profile (No longer Renter application)
     if (indexPath.row == 1) {
       OMBRenterProfileViewController *vc = 
@@ -984,7 +979,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Submit offer notes
-  else if (indexPath.section == 5) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes) {
     if (indexPath.row == 0) {
       [self.navigationController pushViewController:
         [[OMBResidenceLeaseAgreementViewController alloc] init] animated: YES];
@@ -999,7 +995,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   CGFloat padding = 20.0f;
   CGFloat spacing = 44.0f;
   // Place offer
-  if (indexPath.section == 0) {
+  if (indexPath.section == OMBResidenceBookItConfirmDetailsSectionPlaceOffer) {
     if (indexPath.row == 0) {
       return 0.0f;
       return [OMBResidenceConfirmDetailsPlaceOfferCell heightForCell];
@@ -1010,7 +1006,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // }
 
   // Move in, move out, lease months, view lease details
-  else if (indexPath.section == 1) {
+  else if (indexPath.section == OMBResidenceBookItConfirmDetailsSectionDates) {
     // if (indexPath.row == 0) {
     //   return spacing;
     // }
@@ -1033,7 +1029,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Price breakdown
-  else if (indexPath.section == 2) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionPriceBreakdown) {
     // Price Breakdown (No longer Spacing)
     if (indexPath.row == 0) {
       return spacing;
@@ -1059,14 +1056,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Monthly schedule, View Lease Details
-  else if (indexPath.section == 3) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionMonthlySchedule) {
     return 0.0f;
     // Spacing, View Lease Details
     if (indexPath.row == 0 || indexPath.row == 2)
       return spacing;
   }
   // Buyer
-  else if (indexPath.section == 4) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionRenterProfile) {
     // Buyer
     if (indexPath.row == 0) {
       return [OMBResidenceConfirmDetailsBuyerCell heightForCell];
@@ -1093,11 +1092,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // }
   }
   // Submit offer notes
-  else if (indexPath.section == 5) {
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes) {
     return (padding * 2) + submitOfferNotesSize.height + (padding * 2);
   }
   // Spacing
-  else if (indexPath.section == [tableView numberOfSections] - 1)
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionSpacing)
     if (isEditing)
       return 216.0f;
   return 0.0f;

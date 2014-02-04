@@ -20,7 +20,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
     return nil;
 
-  self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+  // self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
   imageHolder = [UIView new];
   imageHolder.frame = objectImageView.frame;
@@ -71,7 +71,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
     imageHolder.backgroundColor = [UIColor grayMedium];
   }
   objectImageView.image = [UIImage imageNamed: @"paypal_icon.png"];
-  [self setUpTypeAndPrimary: object];
+  // [self setUpTypeAndPrimary: object];
+  if (object.primary)
+    self.accessoryType = UITableViewCellAccessoryCheckmark;
+  else
+    self.accessoryType = UITableViewCellAccessoryNone;
 }
 
 - (void) setUpForVenmo: (OMBPayoutMethod *) object primary: (BOOL) primary
@@ -84,7 +88,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
     imageHolder.backgroundColor = [UIColor grayMedium];
   }
   objectImageView.image = [UIImage imageNamed: @"venmo_icon.png"];
-  [self setUpTypeAndPrimary: object];
+  // [self setUpTypeAndPrimary: object];
+  if (object.primary)
+    self.accessoryType = UITableViewCellAccessoryCheckmark;
+  else
+    self.accessoryType = UITableViewCellAccessoryNone;
 }
 
 - (void) setUpTypeAndPrimary: (OMBPayoutMethod *) object

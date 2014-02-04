@@ -51,6 +51,12 @@
     forState: UIControlStateNormal];
   [self.signUpButton setTitle: @"Sign up for Venmo"
     forState: UIControlStateNormal];
+
+  // This is for when the payout method is both payment and depost
+  [self.connectButton removeTarget: self action: nil forControlEvents:
+    UIControlEventTouchUpInside];
+  [self.connectButton addTarget: self action: @selector(connectButtonSelected)
+    forControlEvents: UIControlEventTouchUpInside];
 }
 
 - (void) viewWillAppear: (BOOL) animated

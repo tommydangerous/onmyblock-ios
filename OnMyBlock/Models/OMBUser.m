@@ -43,6 +43,7 @@
 #import "OMBUserCurrentUserInfoConnection.h"
 #import "OMBUserFacebookAuthenticationConnection.h"
 #import "OMBUserImageDownloader.h"
+#import "OMBUserListingsConnection.h"
 #import "OMBUserProfileConnection.h"
 #import "OMBUserStore.h"
 #import "OMBUserUpdateConnection.h"
@@ -78,6 +79,8 @@ NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
 NSString *const OMBMessagesUnviewedCountNotification =
   @"OMBMessagesUnviewedCountNotification";
+
+NSString *const OMBUserTypeLandlord = @"landlord";
 
 // Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
 #if __ENVIRONMENT__ == 1
@@ -166,11 +169,12 @@ int kNotificationTimerInterval = 60;
   [OMBUser currentUser].email     = @"fake_user@gmail.com";
   [OMBUser currentUser].firstName = @"fake";
   [OMBUser currentUser].imageURL  = [NSURL URLWithString: 
-    @"http://localhost:3000/default_user_image.png"];
+    @"http://localhost:3000/user_image.png"];
   [OMBUser currentUser].lastName  = @"user";
   [OMBUser currentUser].phone     = @"4088581234";
   [OMBUser currentUser].school    = @"University of California - Berkeley";
   [OMBUser currentUser].image     = [UIImage imageNamed: @"edward_d.jpg"];
+  [OMBUser currentUser].userType  = OMBUserTypeLandlord;
   [OMBUser currentUser].uid       = 61;
 
   [OMBUser currentUser].renterApplication.cats = YES;
@@ -372,11 +376,15 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
 
 - (void) changeOtherSamePrimaryPayoutMethods: (OMBPayoutMethod *) payoutMethod
 {
+  // NSPredicate *predicate = [NSPredicate predicateWithFormat: 
+  //   @"%K == %@ && %K == %@ && %K != %i", 
+  //     @"deposit", [NSNumber numberWithBool: payoutMethod.deposit], 
+  //       @"primary", [NSNumber numberWithBool: payoutMethod.primary], 
+  //         @"uid", payoutMethod.uid];
   NSPredicate *predicate = [NSPredicate predicateWithFormat: 
-    @"%K == %@ && %K == %@ && %K != %i", 
-      @"deposit", [NSNumber numberWithBool: payoutMethod.deposit], 
-        @"primary", [NSNumber numberWithBool: payoutMethod.primary], 
-          @"uid", payoutMethod.uid];
+    @"%K == %@ && %K != %i",
+      @"primary", [NSNumber numberWithBool: payoutMethod.primary], 
+        @"uid", payoutMethod.uid];
   for (OMBPayoutMethod *object in
     [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate]) {
 
@@ -551,6 +559,14 @@ withCompletion: (void (^) (NSError *error)) block
   [[[OMBFavoritesListConnection alloc] init] start];
 }
 
+- (void) fetchListingsWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBUserListingsConnection *conn = 
+    [[OMBUserListingsConnection alloc] initWithUser: self];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
 delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
@@ -645,6 +661,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   return _uid == [OMBUser currentUser].uid;
 }
 
+- (BOOL) isLandlord
+{
+  if (_userType && [_userType isEqualToString: OMBUserTypeLandlord])
+    return YES;
+  return NO;
+}
+
 - (BOOL) loggedIn
 {
   if ([OMBUser currentUser].accessToken && 
@@ -724,9 +747,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (NSArray *) paymentPayoutMethods
 {
+  // NSPredicate *predicate = 
+  //   [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
+  //     @"deposit", [NSNumber numberWithBool: NO], 
+  //       @"primary", [NSNumber numberWithBool: YES]];
   NSPredicate *predicate = 
     [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
-      @"deposit", [NSNumber numberWithBool: NO], 
+      @"payment", [NSNumber numberWithBool: YES], 
         @"primary", [NSNumber numberWithBool: YES]];
   return [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate];
 }
@@ -860,7 +887,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     NSArray *matches = [regex matchesInString: _imageURL.absoluteString
       options: 0 range: NSMakeRange(0, [_imageURL.absoluteString length])];
     if (![matches count])
-      count -= 1;
+      count += 1;
   }
   if ([_firstName length])
     count += 1;
@@ -1318,6 +1345,19 @@ withCompletion: (void (^) (NSError *error)) block
   }
 }
 
+- (NSArray *) residencesActive: (BOOL) active sortedWithKey: (NSString *) key 
+ascending: (BOOL) ascending
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %@",
+    @"inactive", active ? [NSNumber numberWithBool: NO] : 
+      [NSNumber numberWithBool: YES]];
+  NSArray *array = [[_residences objectForKey: @"residences"] allValues];
+  array = [array filteredArrayUsingPredicate: predicate];
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
+    ascending: ascending];
+  return [array sortedArrayUsingDescriptors: @[sort]];
+}
+
 - (NSArray *) residencesSortedWithKey: (NSString *) key 
 ascending: (BOOL) ascending
 {
@@ -1378,9 +1418,11 @@ ascending: (BOOL) ascending
 
 - (NSString *) shortName
 {
-  return [NSString stringWithFormat: @"%@ %@.",
-    [self.firstName capitalizedString], 
-      [[self.lastName substringToIndex: 1] capitalizedString]];
+  if (_firstName && [_firstName length] && _lastName && [_lastName length])
+    return [NSString stringWithFormat: @"%@ %@.",
+      [self.firstName capitalizedString], 
+        [[self.lastName substringToIndex: 1] capitalizedString]];
+  return @"";
 }
 
 - (CGFloat) heightForAboutTextWithWidth: (CGFloat) width

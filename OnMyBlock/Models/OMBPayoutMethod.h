@@ -20,6 +20,7 @@ typedef enum {
 @property (nonatomic) BOOL deposit;
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *payoutType;
+@property (nonatomic) BOOL payment;
 @property (nonatomic) BOOL primary;
 @property (nonatomic) NSInteger providerID;
 @property (nonatomic) NSTimeInterval updatedAt;

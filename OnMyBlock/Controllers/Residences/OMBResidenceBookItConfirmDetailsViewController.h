@@ -14,6 +14,17 @@
 @class OMBOffer;
 @class OMBResidence;
 
+typedef NS_ENUM(NSInteger, OMBResidenceBookItConfirmDetailsSection) {
+  OMBResidenceBookItConfirmDetailsSectionPlaceOffer,
+  OMBResidenceBookItConfirmDetailsSectionDates,
+  OMBResidenceBookItConfirmDetailsSectionPriceBreakdown,
+  OMBResidenceBookItConfirmDetailsSectionPayoutMethods,
+  OMBResidenceBookItConfirmDetailsSectionMonthlySchedule,
+  OMBResidenceBookItConfirmDetailsSectionRenterProfile,
+  OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes,
+  OMBResidenceBookItConfirmDetailsSectionSpacing
+};
+
 @interface OMBResidenceBookItConfirmDetailsViewController : 
   OMBTableViewController
 <UIAlertViewDelegate, UIScrollViewDelegate, UITextFieldDelegate, 

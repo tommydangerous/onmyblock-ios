@@ -33,7 +33,7 @@
 
 - (void) start
 {
-  [self startWithTimeoutInterval: 0 onMainRunLoop: YES];
+  [self startWithTimeoutInterval: 30 onMainRunLoop: YES];
 }
 
 #pragma mark - Protocol

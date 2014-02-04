@@ -272,17 +272,17 @@ float kResidenceDetailImagePercentage   = 0.5f;
   //   _countDownTimerLabel.frame.size.height + 1.0f, 
   //     (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
   _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
-    (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
+    (_bottomButtonView.frame.size.width - 1.0f) * 0.5, OMBStandardHeight);
   // _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
   //   _bottomButtonView.frame.size.width, 44.0f);
-  _contactMeButton.titleLabel.font = [UIFont fontWithName: 
-    @"HelveticaNeue-Light" size: 18];
+  _contactMeButton.titleLabel.font = [UIFont normalTextFontBold];
   [_contactMeButton addTarget: self action: @selector(contactMeButtonSelected)
     forControlEvents: UIControlEventTouchUpInside];
   [_contactMeButton setBackgroundImage: 
     [UIImage imageWithColor: [UIColor blueHighlighted]]
       forState: UIControlStateHighlighted];
-  [_contactMeButton setTitle: @"Contact Me" forState: UIControlStateNormal];
+  [_contactMeButton setTitle: @"Contact Landlord" 
+    forState: UIControlStateNormal];
   [_contactMeButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [_bottomButtonView addSubview: _contactMeButton];
@@ -297,6 +297,9 @@ float kResidenceDetailImagePercentage   = 0.5f;
   _bookItButton.titleLabel.font = _contactMeButton.titleLabel.font;
   [_bookItButton addTarget: self action: @selector(showPlaceOffer)
     forControlEvents: UIControlEventTouchUpInside];
+  [_bookItButton setBackgroundImage: 
+    [UIImage imageWithColor: [UIColor blueHighlighted]] 
+      forState: UIControlStateHighlighted];
   [_bookItButton setTitle: @"Place Offer" // @"Book It!" 
     forState: UIControlStateNormal];
   [_bookItButton setTitleColor: [UIColor whiteColor]
@@ -870,13 +873,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return kResidenceDetailCellSpacingHeight;
     }
     else if (indexPath.row == 1) {
-      NSInteger count = [[residence availableAmenities] count];
-      NSInteger rows  = count * 0.5f;
-      if (count % 2) {
-        rows += 1;
+      if ([[residence availableAmenities] count]) {
+        NSInteger count = [[residence availableAmenities] count];
+        NSInteger rows  = count * 0.5f;
+        if (count % 2) {
+          rows += 1;
+        }
+        return kResidenceDetailCellSpacingHeight + 
+          padding + (23.0f * rows) + padding;
       }
-      return kResidenceDetailCellSpacingHeight + 
-        padding + (23.0f * rows) + padding;
     }
   }
 
@@ -886,15 +891,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return kResidenceDetailCellSpacingHeight;
     }
     else if (indexPath.row == 1) {
-      NSAttributedString *aString = 
-        [residence.description attributedStringWithFont: 
-          [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] 
-            lineHeight: 23.0f];
-      CGRect rect = [aString boundingRectWithSize:
-        CGSizeMake(tableView.frame.size.width - (padding * 2), 9999.0f)
-          options: NSStringDrawingUsesLineFragmentOrigin context: nil];
-      return kResidenceDetailCellSpacingHeight +
-        padding + rect.size.height + padding;
+      if ([residence.description length]) {
+        NSAttributedString *aString = 
+          [residence.description attributedStringWithFont: 
+            [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] 
+              lineHeight: 23.0f];
+        CGRect rect = [aString boundingRectWithSize:
+          CGSizeMake(tableView.frame.size.width - (padding * 2), 9999.0f)
+            options: NSStringDrawingUsesLineFragmentOrigin context: nil];
+        return kResidenceDetailCellSpacingHeight +
+          padding + rect.size.height + padding;
+      }
     }
   }
 

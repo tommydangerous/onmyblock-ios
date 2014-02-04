@@ -66,7 +66,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     // Paypal
     else if (indexPath.row == 1) {
       cell.detailLabel.text = @"Arrives in 3-4 hours.\n"
-        @"Paypal charges a small fee.";
+        @"Paypal is completely free.";
       cell.iconImageView.image = [UIImage imageNamed: @"paypal_icon.png"];
       cell.iconView.backgroundColor = 
         cell.iconViewBackgroundColor = [UIColor paypalBlue];

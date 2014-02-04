@@ -57,6 +57,16 @@
   if ([dictionary objectForKey: @"email"] != [NSNull null])
     _email = [dictionary objectForKey: @"email"];
 
+  // Payment
+  if ([dictionary objectForKey: @"payment"] != [NSNull null]) {
+    if ([[dictionary objectForKey: @"payment"] intValue]) {
+      _payment = YES;
+    }
+    else {
+      _payment = NO;
+    }
+  }
+
   // Payout Type
   if ([dictionary objectForKey: @"payout_type"] != [NSNull null])
     _payoutType = [dictionary objectForKey: @"payout_type"];

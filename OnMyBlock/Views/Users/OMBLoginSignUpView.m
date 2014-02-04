@@ -292,6 +292,11 @@
   return height;
 }
 
+- (BOOL) isLandlord
+{
+  return isLandlord;
+}
+
 - (BOOL) isLogin
 {
   return isLogin;
