@@ -7,6 +7,7 @@
 //
 
 #import "OMBTableViewController.h"
+#import "MNCalendarView.h"
 
 @class OMBAlertView;
 @class OMBCenteredImageView;
@@ -16,7 +17,7 @@
 @interface OMBResidenceBookItConfirmDetailsViewController : 
   OMBTableViewController
 <UIAlertViewDelegate, UIScrollViewDelegate, UITextFieldDelegate, 
-  UITextViewDelegate>
+  UITextViewDelegate, MNCalendarViewDelegate>
 {
   OMBAlertView *alert;
   UIView *backView;
@@ -45,6 +46,8 @@
   UILabel *titleLabel;
   NSString *totalPriceNotes;
   CGSize totalPriceNotesSize;
+  // calendar
+  NSIndexPath *selectedIndexPath;
 }
 
 #pragma mark - Initializer
