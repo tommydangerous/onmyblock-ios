@@ -47,14 +47,16 @@ reuseIdentifier: (NSString *) reuseIdentifier
       }
     }];
   }
+  // Title
+  if (object.title && [object.title length])
+    topLabel.text = object.title;
+  else
+    topLabel.text = [object.address capitalizedString];
   // Address
-  topLabel.text = [object.address capitalizedString];
+  middleLabel.text = [object.address capitalizedString];
   // City, state
-  middleLabel.text = [NSString stringWithFormat: @"%@, %@", 
+  bottomLabel.text = [NSString stringWithFormat: @"%@, %@", 
     [object.city capitalizedString], object.state];
-
-  // This is for how much time is remaining in the auction
-  // bottomLabel.text = @"2d 5h remaining";
 }
 
 @end

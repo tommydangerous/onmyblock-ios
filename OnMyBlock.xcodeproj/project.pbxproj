@@ -93,6 +93,7 @@
 		AB0280831844540F0081B30F /* camera_flash_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB0280821844540F0081B30F /* camera_flash_image@2x.png */; };
 		AB034B151837D3DC00811074 /* OMBGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB034B141837D3DC00811074 /* OMBGradientView.m */; };
 		AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */; };
+		AB0BC54A18A2B4750067BFF7 /* OMBMovedInConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0BC54918A2B4750067BFF7 /* OMBMovedInConnection.m */; };
 		AB0C36AB1840652B006DC3AD /* OMBPaddleView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0C36AA1840652B006DC3AD /* OMBPaddleView.m */; };
 		AB0C36B218406779006DC3AD /* OMBStopwatchView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0C36B118406779006DC3AD /* OMBStopwatchView.m */; };
 		AB0C36B5184074A8006DC3AD /* OMBHouseGraphicView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0C36B4184074A8006DC3AD /* OMBHouseGraphicView.m */; };
@@ -767,6 +768,8 @@
 		AB034B141837D3DC00811074 /* OMBGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBGradientView.m; sourceTree = "<group>"; };
 		AB0BC54518A1D4570067BFF7 /* OMBAlertViewBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAlertViewBlur.h; sourceTree = "<group>"; };
 		AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAlertViewBlur.m; sourceTree = "<group>"; };
+		AB0BC54818A2B4750067BFF7 /* OMBMovedInConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMovedInConnection.h; sourceTree = "<group>"; };
+		AB0BC54918A2B4750067BFF7 /* OMBMovedInConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMovedInConnection.m; sourceTree = "<group>"; };
 		AB0C36A91840652B006DC3AD /* OMBPaddleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPaddleView.h; sourceTree = "<group>"; };
 		AB0C36AA1840652B006DC3AD /* OMBPaddleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPaddleView.m; sourceTree = "<group>"; };
 		AB0C36B018406779006DC3AD /* OMBStopwatchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBStopwatchView.h; sourceTree = "<group>"; };
@@ -2459,6 +2462,8 @@
 				AB9D6136188F495A00C9AC64 /* OMBOfferDecisionConnection.m */,
 				AB6CCE4418933BF6000ED5CE /* OMBConfirmedTenantsConnection.h */,
 				AB6CCE4518933BF6000ED5CE /* OMBConfirmedTenantsConnection.m */,
+				AB0BC54818A2B4750067BFF7 /* OMBMovedInConnection.h */,
+				AB0BC54918A2B4750067BFF7 /* OMBMovedInConnection.m */,
 			);
 			path = Offers;
 			sourceTree = "<group>";
@@ -3649,6 +3654,7 @@
 				AB63D2141821AB2C00D63800 /* OMBUser.m in Sources */,
 				AB026BC91822BE1200E72F53 /* OMBUserFacebookAuthenticationConnection.m in Sources */,
 				AB6155C4184EA34000A193C7 /* OMBUserUpdateProfileConnection.m in Sources */,
+				AB0BC54A18A2B4750067BFF7 /* OMBMovedInConnection.m in Sources */,
 				DE95E8D918A03B5500A2A341 /* MNFastDateEnumeration.m in Sources */,
 				AB70CB90186D353E0083DF4C /* OMBCreateListingPropertyTypeCell.m in Sources */,
 				AB01ED4318582A7A00333390 /* OMBLegalAnswerListConnection.m in Sources */,

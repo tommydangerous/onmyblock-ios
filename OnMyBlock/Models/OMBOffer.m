@@ -10,6 +10,7 @@
 
 #import "NSString+Extensions.h"
 #import "OMBAllResidenceStore.h"
+#import "OMBPayoutTransaction.h"
 #import "OMBResidence.h"
 #import "OMBUser.h"
 #import "OMBUserStore.h"
@@ -41,15 +42,31 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
 
 - (BOOL) isExpiredForLandlord
 {
-  if (!_accepted && !_declined && [self timeLeftForLandlord] < 0)
+  if (
+    !_accepted &&
+    !_acceptedDate &&
+    !_confirmed &&
+    !_declined &&
+    !_rejected &&
+    [self timeLeftForLandlord] < 0) {
+
     return YES;
+  }
   return NO;
 }
 
 - (BOOL) isExpiredForStudent
 {
-  if (_accepted && _acceptedDate && [self timeLeftForStudent] < 0)
+  if (
+    _accepted &&
+    _acceptedDate &&
+    !_confirmed &&
+    !_declined &&
+    !_rejected &&
+    [self timeLeftForStudent] < 0) {
+
     return YES;
+  }
   return NO;
 }
 
@@ -124,6 +141,15 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
     _onHold = YES;
   else
     _onHold = NO;
+
+  // Payout Transaction
+  if ([dictionary objectForKey: @"payout_transaction"] != [NSNull null]) {
+    OMBPayoutTransaction *object = [[OMBPayoutTransaction alloc] init];
+    [object readFromDictionary: 
+      [dictionary objectForKey: @"payout_transaction"]];
+    _payoutTransaction = object;
+  }
+
   // Rejected
   if ([[dictionary objectForKey: @"rejected"] intValue])
     _rejected = YES;
@@ -167,7 +193,17 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
     return OMBOfferStatusForLandlordRejected;
   }
   else if (_confirmed) {
-    return OMBOfferStatusForLandlordConfirmed;
+    if (_payoutTransaction) {
+      if (_payoutTransaction.paid) {
+        return OMBOfferStatusForLandlordOfferPaid;
+      }
+      else if (_payoutTransaction.expired) {
+        return OMBOfferStatusForLandlordOfferPaidExpired;
+      }
+    }
+    else {
+      return OMBOfferStatusForLandlordConfirmed;
+    }
   }
   else if (_accepted) {
     if ([self isExpiredForStudent]) {
@@ -195,7 +231,17 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
     return OMBOfferStatusForStudentRejected;
   }
   else if (_confirmed) {
-    return OMBOfferStatusForStudentConfirmed;
+    if (_payoutTransaction) {
+      if (_payoutTransaction.paid) {
+        return OMBOfferStatusForStudentOfferPaid;
+      }
+      else if (_payoutTransaction.expired) {
+        return OMBOfferStatusForStudentOfferPaidExpired;
+      }
+    }
+    else {
+      return OMBOfferStatusForStudentConfirmed;
+    }
   }
   else if (_accepted) {
     if ([self isExpiredForStudent]) {
@@ -225,7 +271,7 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
       break;
     }
     case OMBOfferStatusForLandlordConfirmed: {
-      return @"student confirmed";
+      return @"student confirmed - not paid";
       break;
     }
     case OMBOfferStatusForLandlordAccepted: {
@@ -248,6 +294,14 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
       return @"offer expired";
       break;
     }
+    case OMBOfferStatusForLandlordOfferPaid: {
+      return @"student confirmed - paid";
+      break;
+    }
+    case OMBOfferStatusForLandlordOfferPaidExpired: {
+      return @"student took too long to pay";
+      break;
+    }
     default:
       break;
   }
@@ -262,7 +316,7 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
       break;
     }
     case OMBOfferStatusForStudentConfirmed: {
-      return @"move-in confirmed";
+      return @"confirmed - not paid";
       break;
     }
     case OMBOfferStatusForStudentAccepted: {
@@ -283,6 +337,14 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
     }
     case OMBOfferStatusForStudentExpired: {
       return @"offer expired";
+      break;
+    }
+    case OMBOfferStatusForStudentOfferPaid: {
+      return @"confirmed - paid";
+      break;
+    }
+    case OMBOfferStatusForStudentOfferPaidExpired: {
+      return @"took too long to pay";
       break;
     }
     default:

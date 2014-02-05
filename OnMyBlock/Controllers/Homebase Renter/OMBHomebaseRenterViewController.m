@@ -337,6 +337,13 @@ float kHomebaseRenterImagePercentage = 0.3f;
     }];
     cameFromSettingUpPayoutMethods = NO;
   }
+
+  // Fetch confirmed tenants
+  [[OMBUser currentUser] fetchMovedInWithCompletion:
+    ^(NSError *error) {
+      [_activityTableView reloadData];
+    }
+  ];
 }
 
 #pragma mark - Protocol
@@ -537,8 +544,8 @@ float kHomebaseRenterImagePercentage = 0.3f;
   // Activity
   if (tableView == _activityTableView) {
     // Top Priority
-    // Recent Activity
-    return 1;
+    // Move In
+    return 2;
     // return 2;
   }
   // Payments
@@ -610,8 +617,48 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         return cell1;
       }
     }
-    // Recent Activity
+    // Moved In
     else if (indexPath.section == 1) {
+      // Blank space
+      if (indexPath.row == 0) {
+        static NSString *EmptyTenantsCellIdentifier = 
+          @"EmptyTenantsCellIdentifier";
+        OMBEmptyImageTwoLabelCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
+            EmptyTenantsCellIdentifier];
+        if (!cell1)
+          cell1 = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: 
+              EmptyTenantsCellIdentifier];
+        [cell1 setTopLabelText: @"Moved in places here"];
+        [cell1 setMiddleLabelText: @"After you confirm, pay, &"];
+        [cell1 setBottomLabelText: @"sign the lease."];
+        [cell1 setObjectImageViewImage: [UIImage imageNamed: 
+          @"group_icon.png"]];
+        return cell1;
+
+        // cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+        //   tableView.frame.size.width, 0.0f, 0.0f);
+      }
+      else {
+        static NSString *ConfirmedTenantIdentifier = 
+          @"ConfirmedTenantIdentifier";
+        OMBHomebaseLandlordOfferCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
+            ConfirmedTenantIdentifier];
+        if (!cell1) {
+          cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: 
+              ConfirmedTenantIdentifier];
+          // Account for empty row
+          [cell1 loadConfirmedTenant:
+            [[self movedIn] objectAtIndex: indexPath.row - 1]];
+        }
+        return cell1;
+      }
+    }
+    // Recent Activity
+    else if (indexPath.section == 99) {
       static NSString *NotificationCellIdentifier = 
         @"NotificationCellIdentifier";
       OMBHomebaseRenterNotificationCell *cell1 = 
@@ -665,8 +712,13 @@ numberOfRowsInSection: (NSInteger) section
       return 1 + [[[OMBUser currentUser].acceptedOffers allValues] count];
       // return 2;
     }
-    // Recent Activity
+    // Moved In
     else if (section == 1) {
+      // First row is for when there are no moved in
+      return 1 + [[OMBUser currentUser].movedIn count];
+    }
+    // Recent Activity
+    else if (section == 99) {
       return 0;
       // return 10;
     }
@@ -688,6 +740,7 @@ numberOfRowsInSection: (NSInteger) section
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (tableView == _activityTableView) {
+    // Offers
     if (indexPath.section == 0) {
       if (indexPath.row > 0) {
         OMBOffer *offer = [[self offers] objectAtIndex: 
@@ -696,6 +749,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
           [[OMBOfferInquiryViewController alloc] initWithOffer: offer]
             animated: YES];
       }
+    }
+    // Moved In
+    else if (indexPath.section == 1) {
+      [self.navigationController pushViewController:
+        [[OMBOfferInquiryViewController alloc] 
+          initWithOffer: [[self movedIn] objectAtIndex: 
+            indexPath.row - 1]] animated: YES];
     }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
@@ -739,8 +799,22 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         return [OMBHomebaseLandlordOfferCell heightForCell];
       }
     }
-    // Recent Activity
+    // Moved In
     else if (indexPath.section == 1) {
+      // Blank space
+      if (indexPath.row == 0) {
+        if ([[[OMBUser currentUser].movedIn allValues] count] == 0) {
+          return [OMBEmptyImageTwoLabelCell heightForCell];
+          // return tableView.frame.size.height - 
+          //   (tableView.tableHeaderView.frame.size.height + (13.0f * 2));
+        }
+      }
+      else {
+        return [OMBHomebaseLandlordOfferCell heightForCell];
+      }
+    }
+    // Recent Activity
+    else if (indexPath.section == 99) {
       return [OMBHomebaseRenterNotificationCell heightForCell];
     }
   }
@@ -777,7 +851,7 @@ viewForHeaderInSection: (NSInteger) section
       titleString = @"Top Priority";
     }
     else if (section == 1) {
-      titleString = @"Recent Activity";
+      titleString = @"Moved In";
     }
   }
   // Payments
@@ -995,6 +1069,11 @@ viewForHeaderInSection: (NSInteger) section
 - (void) hideAlert
 {
   [alert hideAlert];
+}
+
+- (NSArray *) movedIn
+{
+  return [[OMBUser currentUser].movedIn allValues];
 }
 
 - (NSArray *) offers

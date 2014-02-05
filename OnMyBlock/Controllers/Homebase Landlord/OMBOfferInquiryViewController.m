@@ -59,7 +59,12 @@
       self.title = @"Offer Expired";
     }
     else {
-      self.title = [[offer statusStringForStudent] capitalizedString];
+      if ([offer statusForStudent] == OMBOfferStatusForStudentOfferPaid) {
+        self.title = @"Moved In";
+      }
+      else {
+        self.title = [[offer statusStringForStudent] capitalizedString];
+      }
     }
   }
   // Landlord
@@ -69,7 +74,12 @@
       self.title = @"Offer Expired";
     }
     else {
-      self.title = [[offer statusStringForLandlord] capitalizedString];
+      if ([offer statusForLandlord] == OMBOfferStatusForLandlordOfferPaid) {
+        self.title = @"Confirmed Tenant";
+      }
+      else {
+        self.title = [[offer statusStringForLandlord] capitalizedString];
+      }
     }
   }
 
@@ -297,31 +307,19 @@
   [super viewDidDisappear: animated];
 }
 
-- (void) hideCountdownAndRespondButton
-{
-  countDownTimerLabel.alpha = 0.0f;
-  respondView.alpha = 0.0f;
-  _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
-    CGRectZero];
-  _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
-    CGRectZero];
-}
-
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
 
+  // Size for offer note
+  sizeForOfferNotes = [offer.note boundingRectWithSize: 
+    CGSizeMake(_offerTableView.frame.size.width - (OMBPadding * 2), 9999) 
+      font: [UIFont smallTextFont]].size;
+
   // Student
   if ([self offerBelongsToCurrentUser]) {
     switch ([offer statusForStudent]) {
-      case OMBOfferStatusForStudentRejected:
-      case OMBOfferStatusForStudentConfirmed:
-      case OMBOfferStatusForStudentOnHold:
-      case OMBOfferStatusForStudentDeclined:
-      case OMBOfferStatusForStudentExpired: {
-        [self hideCountdownAndRespondButton];
-        break;
-      }
+      // Accepted
       case OMBOfferStatusForStudentAccepted: {
         if ([offer isExpiredForStudent]) {
           [self hideCountdownAndRespondButton];
@@ -332,6 +330,7 @@
         }
         break;
       }
+      // Waiting for landlord
       case OMBOfferStatusForStudentWaitingForLandlordResponse: {
         respondButton.backgroundColor = [UIColor blueLight];
         respondButton.userInteractionEnabled = NO;
@@ -340,6 +339,7 @@
         break;
       }
       default: {
+        [self hideCountdownAndRespondButton];
         break;
       }
     }
@@ -347,15 +347,8 @@
   // Landlord
   else {
     switch ([offer statusForLandlord]) {
-      case OMBOfferStatusForLandlordRejected:
-      case OMBOfferStatusForLandlordConfirmed:
-      case OMBOfferStatusForStudentOnHold:
-      case OMBOfferStatusForStudentDeclined: 
-      case OMBOfferStatusForStudentExpired: {
-        [self hideCountdownAndRespondButton];
-        break;
-      }
-      case OMBOfferStatusForStudentAccepted: {
+      // Accepted
+      case OMBOfferStatusForLandlordAccepted: {
         if ([offer isExpiredForStudent]) {
           [self hideCountdownAndRespondButton];
         }
@@ -367,12 +360,14 @@
         }
         break;
       }
+      // Landlord needs to do something
       case OMBOfferStatusForLandlordResponseRequired: {
         [respondButton setTitle: @"Accept or Decline"
           forState: UIControlStateNormal];
         break;
       }
       default: {
+        [self hideCountdownAndRespondButton];
         break;
       }
     }
@@ -481,8 +476,7 @@
   [alertBlur hideQuestionButton];
   // Buttons
   [alertBlur setConfirmButtonTitle: @"Charging and Verifying"];
-  [alertBlur addTargetForConfirmButton: self
-    action: @selector(closeAlertBlur)];
+  [alertBlur addTargetForConfirmButton: self action: nil];
   [alertBlur showOnlyConfirmButton];
   [alertBlur animateChangeOfContent];
 
@@ -575,8 +569,9 @@
 - (UITableViewCell *) tableView: (UITableView *) tableView
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  CGFloat padding = 20.0f;
-  CGFloat standardHeight = 44.0f;
+  CGFloat padding        = OMBPadding;
+  CGFloat standardHeight = OMBStandardHeight;
+
   static NSString *CellIdentifier = @"CellIdentifier";
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
     CellIdentifier];
@@ -594,86 +589,165 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   cell.textLabel.textColor = [UIColor textColor];
   // Offer
   if (tableView == _offerTableView) {
-    // Residence
-    if (indexPath.row == 0) {
-      static NSString *ResidenceCellIdentifier = @"ResidenceCellIdentifier";
-      OMBOfferInquiryResidenceCell *cell1 = 
-        [tableView dequeueReusableCellWithIdentifier: ResidenceCellIdentifier];
-      if (!cell1)
-        cell1 = [[OMBOfferInquiryResidenceCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault
-            reuseIdentifier: ResidenceCellIdentifier];
-      [cell1 loadResidence: offer.residence];
-      return cell1;
-    }
-    // Offer
-    else if (indexPath.row == 1) {
-      cell.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
-        size: 27];
-      cell.detailTextLabel.text = [NSString numberToCurrencyString: 
-        (int) offer.amount];
-      cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
-        size: 27];
-      cell.textLabel.text = @"Offer";
-    }
-    // Move-in Date
-    else if (indexPath.row == 2) {
-      // NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-      // dateFormatter.dateFormat = @"MMMM d, yyyy";
-      // cell.detailTextLabel.text = [dateFormatter stringFromDate:
-      //   [NSDate dateWithTimeIntervalSince1970: offer.residence.moveInDate]];
-      // cell.textLabel.text = @"Move-in Date";
-      static NSString *DatesID = @"DatesID";
-      OMBResidenceConfirmDetailsDatesCell *cell1 =
-        [tableView dequeueReusableCellWithIdentifier: DatesID];
-      if (!cell1) {
-        cell1 = [[OMBResidenceConfirmDetailsDatesCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier: DatesID];
+    if (indexPath.section == OMBOfferInquirySectionOffer) {
+      // Residence
+      if (indexPath.row == OMBOfferInquirySectionOfferRowResidence) {
+        static NSString *ResidenceCellIdentifier = @"ResidenceCellIdentifier";
+        OMBOfferInquiryResidenceCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier: 
+            ResidenceCellIdentifier];
+        if (!cell1)
+          cell1 = [[OMBOfferInquiryResidenceCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault
+              reuseIdentifier: ResidenceCellIdentifier];
         [cell1 loadResidence: offer.residence];
-        NSDateFormatter *dateFormmater = [NSDateFormatter new];
-        dateFormmater.dateFormat = @"MMM d, yy";
-        [cell1.moveInDateLabel setTitle: 
-          [dateFormmater stringFromDate: 
-            [NSDate dateWithTimeIntervalSince1970: offer.residence.moveInDate]]
+        return cell1;
+      }
+      // Move-in date, move-out date, lease months
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowDates) {
+        static NSString *DatesID = @"DatesID";
+        OMBResidenceConfirmDetailsDatesCell *cell1 =
+          [tableView dequeueReusableCellWithIdentifier: DatesID];
+        if (!cell1) {
+          cell1 = [[OMBResidenceConfirmDetailsDatesCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier: DatesID];
+          [cell1 loadResidence: offer.residence];
+          NSDateFormatter *dateFormmater = [NSDateFormatter new];
+          dateFormmater.dateFormat = @"MMM d, yy";
+          [cell1.moveInDateLabel setTitle: 
+            [dateFormmater stringFromDate: 
+              [NSDate dateWithTimeIntervalSince1970: 
+                offer.residence.moveInDate]] forState: UIControlStateNormal];
+          NSDate *moveOutDate = [offer.residence moveOutDateDate];
+          if (offer.residence.moveOutDate)
+            moveOutDate = [NSDate dateWithTimeIntervalSince1970: 
+              offer.residence.moveOutDate];
+          [cell1.moveOutDateLabel setTitle: 
+            [dateFormmater stringFromDate: moveOutDate]
               forState: UIControlStateNormal];
-        NSDate *moveOutDate = [offer.residence moveOutDateDate];
-        if (offer.residence.moveOutDate)
-          moveOutDate = [NSDate dateWithTimeIntervalSince1970: 
-            offer.residence.moveOutDate];
-        [cell1.moveOutDateLabel setTitle: 
-          [dateFormmater stringFromDate: moveOutDate]
-            forState: UIControlStateNormal];
+        }
+        return cell1;
       }
-      return cell1;
-    }
-    // Move-out Date
-    else if (indexPath.row == 3) {
-      // cell.detailTextLabel.text = @"October 12, 2014";
-      // cell.textLabel.text = @"Move-out Date";
-      cell.backgroundColor = [UIColor grayUltraLight];
-    }
-    // Offer note
-    else if (indexPath.row == 4) {
-      static NSString *OfferNoteIdentifier = @"OfferNoteIdentifier";
-      UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
-        OfferNoteIdentifier];
-      if (!cell1) {
-        cell1 = [[UITableViewCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault reuseIdentifier: OfferNoteIdentifier];
-        UILabel *label = [UILabel new];
-        label.font = [UIFont smallTextFont];
-        label.numberOfLines = 0;
-        label.text = offer.note;
-        label.textColor = [UIColor textColor];
-        CGRect rect = [label.text boundingRectWithSize: 
-          CGSizeMake(tableView.frame.size.width - (padding * 2), 9999) 
-            font: label.font];
-        label.frame = CGRectMake(padding, padding, rect.size.width,
-          rect.size.height);
-        [cell1.contentView addSubview: label];
+      // Spacing below dates
+      else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowDates) {
+        cell.backgroundColor = [UIColor grayUltraLight];
+        cell.separatorInset  = UIEdgeInsetsMake(0.0f, 
+          tableView.frame.size.width, 0.0f, 0.0f);
       }
-      cell1.selectionStyle = UITableViewCellSelectionStyleNone;
-      return cell1;
+      // Price breakdown, security deposit, offer
+      else if (
+        indexPath.row == OMBOfferInquirySectionOfferRowPriceBreakdown ||
+        indexPath.row == OMBOfferInquirySectionOfferRowSecurityDeposit ||
+        indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
+        
+        static NSString *PriceCellIdentifier = @"PriceCellIdentifier";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+          PriceCellIdentifier];
+        if (!cell) {
+          cell = [[UITableViewCell alloc] initWithStyle:
+            UITableViewCellStyleValue1 reuseIdentifier: PriceCellIdentifier];
+        }
+        UIView *bor = [cell.contentView viewWithTag: 9999];
+        if (!bor) {
+          bor = [UIView new];
+          bor.backgroundColor = [UIColor grayLight];
+          bor.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 0.5f);
+          bor.tag = 9999;
+        }
+        cell.backgroundColor = [UIColor whiteColor];
+        cell.detailTextLabel.font = 
+          [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        if (indexPath.row == OMBOfferInquirySectionOfferRowPriceBreakdown) {
+          cell.textLabel.font = [UIFont normalTextFontBold];
+          [bor removeFromSuperview];
+          [cell.contentView addSubview: bor];
+        }
+        else
+          cell.textLabel.font = [UIFont normalTextFont];
+        cell.detailTextLabel.text = @"";
+        cell.detailTextLabel.textColor = [UIColor textColor];
+        cell.textLabel.textColor = [UIColor textColor];
+        if (indexPath.row == OMBOfferInquirySectionOfferRowPriceBreakdown) {
+          cell.textLabel.text = @"Price Breakdown";
+        }
+        else if (indexPath.row == 
+          OMBOfferInquirySectionOfferRowSecurityDeposit) {
+
+          CGFloat deposit = 0.0f;
+          if (offer.residence.deposit)
+            deposit = offer.residence.deposit;
+          cell.detailTextLabel.text = [NSString numberToCurrencyString: 
+            deposit];
+          cell.textLabel.text = @"Security Deposit";
+        }
+        else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
+          cell.detailTextLabel.text = [NSString numberToCurrencyString:
+            offer.amount];
+          cell.textLabel.text = @"Offer";
+        }
+        return cell;
+      }
+      // Total
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowTotal) {
+        static NSString *TotalCellIdentifier = @"TotalCellIdentifier";
+        UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
+          TotalCellIdentifier];
+        if (!cell1) {
+          cell1 = [[UITableViewCell alloc] initWithStyle:
+            UITableViewCellStyleValue1 reuseIdentifier: TotalCellIdentifier];
+          // Bottom border
+          UIView *bor = [UIView new];
+          bor.backgroundColor = [UIColor grayLight];
+          bor.frame = CGRectMake(0.0f, (padding + 36.0f + padding) - 0.5f,
+            tableView.frame.size.width, 0.5f);
+          [cell1.contentView addSubview: bor];
+        }
+        cell1.backgroundColor = [UIColor whiteColor];
+        cell1.detailTextLabel.font = 
+          [UIFont fontWithName: @"HelveticaNeue-Medium" size: 27];
+        cell1.detailTextLabel.text = [NSString numberToCurrencyString:
+          [offer totalAmount]];
+        cell1.detailTextLabel.textColor = [UIColor green];
+        cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell1.textLabel.font = 
+          [UIFont fontWithName: @"HelveticaNeue-Light" size: 27];
+        cell1.textLabel.text = @"Total";
+        cell1.textLabel.textColor = [UIColor textColor];
+        return cell1;
+      }
+      // Spacing below total
+      else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowTotal) {
+        cell.backgroundColor = [UIColor grayUltraLight];
+        cell.separatorInset  = UIEdgeInsetsMake(0.0f, 
+          tableView.frame.size.width, 0.0f, 0.0f);
+      }
+      // Notes
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowNotes) {
+        static NSString *OfferNoteIdentifier = @"OfferNoteIdentifier";
+        UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
+          OfferNoteIdentifier];
+        if (!cell1) {
+          cell1 = [[UITableViewCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: OfferNoteIdentifier];
+          UILabel *label = [UILabel new];
+          label.font = [UIFont smallTextFont];
+          label.numberOfLines = 0;
+          label.text = offer.note;
+          label.textColor = [UIColor textColor];
+          label.frame = CGRectMake(padding, padding, 
+            tableView.frame.size.width - (padding * 2), 
+              sizeForOfferNotes.height);
+          [cell1.contentView addSubview: label];
+
+          UIView *bor = [UIView new];
+          bor.backgroundColor = [UIColor grayLight];
+          bor.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 0.5f);
+          [cell1.contentView addSubview: bor];
+        }
+        cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell1;
+      }
     }
   }
   // Profile
@@ -857,12 +931,15 @@ numberOfRowsInSection: (NSInteger) section
   // Offer
   if (tableView == _offerTableView) {
     // Residence
+    // Dates
+    // Spacing below dates
+    // Price breakdown
+    // Security deposit
     // Offer
-    // Move-in Date
-    // Move-out Date
-    // Offer note
-    return 5;
-    // return 4;
+    // Total
+    // Spacing below total
+    // Notes
+    return 9;
   }
   // Profile
   else if (tableView == _profileTableView) {
@@ -907,11 +984,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // Offer
   if (tableView == _offerTableView) {
-    // Residence
-    if (indexPath.row == 0) {
-      [self.navigationController pushViewController: 
-        [[OMBResidenceDetailViewController alloc] initWithResidence: 
-          offer.residence] animated: YES];
+    if (indexPath.section == OMBOfferInquirySectionOffer) {
+      // Residence
+      if (indexPath.row == OMBOfferInquirySectionOfferRowResidence) {
+        [self.navigationController pushViewController: 
+          [[OMBResidenceDetailViewController alloc] initWithResidence: 
+            offer.residence] animated: YES];
+      }
     }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
@@ -933,33 +1012,48 @@ heightForHeaderInSection: (NSInteger) section
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGFloat padding        = OMBPadding;
-  CGFloat standardHeight = 44.0f;
+  CGFloat standardHeight = OMBStandardHeight;
   // Offer
   if (tableView == _offerTableView) {
-    // Residence
-    if (indexPath.row == 0) {
-      return [OMBOfferInquiryResidenceCell heightForCell];
-    }
-    // Offer
-    else if (indexPath.row == 1) {
-      return padding + 36.0f + padding;
-    }
-    // Move-in Date
-    else if (indexPath.row == 2) {
-      return [OMBResidenceConfirmDetailsDatesCell heightForCell];
-      // return standardHeight;
-    }
-    // Move-out Date
-    else if (indexPath.row == 3) {
-      // return 0.0f;
-      return standardHeight;
-    }
-    // Offer note
-    else if (indexPath.row == 4) {
-      CGRect rect = [offer.note boundingRectWithSize: 
-        CGSizeMake(tableView.frame.size.width - (padding * 2), 9999) 
-          font: [UIFont smallTextFont]];
-      return padding + rect.size.height + padding;
+    if (indexPath.section == OMBOfferInquirySectionOffer) {
+      // Residence
+      if (indexPath.row == OMBOfferInquirySectionOfferRowResidence) {
+        return [OMBOfferInquiryResidenceCell heightForCell];
+      }
+      // Move-in date, move-out date, lease months
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowDates) {
+        return [OMBResidenceConfirmDetailsDatesCell heightForCell];
+      }
+      // Spacing below dates
+      else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowDates) {
+        return standardHeight;
+      }
+      // Price breakdown
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowPriceBreakdown) {
+        return standardHeight;
+      }
+      // Security deposit
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowSecurityDeposit) {
+        return standardHeight;
+      }
+      // Offer
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
+        return standardHeight;
+      }
+      // Total
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowTotal) {
+        return padding + 36.0f + padding;
+      }
+      // Spacing below total
+      else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowTotal) {
+        return standardHeight;
+      }
+      // Notes
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowNotes) {
+        if (offer.note && [offer.note length]) {
+          return padding + sizeForOfferNotes.height + padding;
+        }
+      }
     }
   }
   // Profile
@@ -1455,7 +1549,68 @@ viewForHeaderInSection: (NSInteger) section
     }
     // Venmo
     else if ([payoutMethod type] == OMBPayoutMethodPayoutTypeVenmo) {
-      #warning VENMO
+      // If the total is over 3000
+      if ([offer totalAmount] > [OMBPayoutMethod maximumVenmoTransfer]) {
+        [alertBlur setTitle: @"Venmo Transfer Limit"];
+        [alertBlur setMessage: [NSString stringWithFormat: @"Venmo does not "
+          @"allow for payment transfers over %@ a week. Please choose another "
+          @"payment method.", [NSString numberToCurrencyString:
+            [OMBPayoutMethod maximumVenmoTransfer]]]];
+        [alertBlur resetQuestionDetails];
+        [alertBlur hideQuestionButton];
+        // Buttons
+        [alertBlur setConfirmButtonTitle: @"Select New Payment Method"];
+        [alertBlur addTargetForConfirmButton: self
+          action: @selector(setupPayoutMethod)];
+        [alertBlur showOnlyConfirmButton];
+        [alertBlur animateChangeOfContent];
+      }
+      // Charge Venmo
+      else {
+        [[OMBUser currentUser] confirmOffer: offer withCompletion:
+          ^(NSError *error) {
+            // Start spinning until it is done or incomplete
+            if (
+              offer.confirmed &&
+              offer.payoutTransaction && 
+              offer.payoutTransaction.charged && !error) {
+              // Congratulations
+              [alertBlur setTitle: @"Venmo Charge Created!"];
+              [alertBlur setMessage: [NSString stringWithFormat:
+                @"We have placed a charge on your Venmo account for a total "
+                @"of %@ for the 1st month's rent and deposit. Please log into "
+                @"Venmo and complete the charge to confirm payment.", 
+                  [NSString numberToCurrencyString: [offer totalAmount]]]];
+              [alertBlur resetQuestionDetails];
+              [alertBlur hideQuestionButton];
+              // Buttons
+              [alertBlur setConfirmButtonTitle: @"Celebrate"];
+              [alertBlur addTargetForConfirmButton: self
+                action: @selector(celebrateAfterPayment)];
+              [alertBlur showOnlyConfirmButton];
+              [alertBlur animateChangeOfContent];
+            }
+            else {
+              [self showAlertViewWithError: error];
+              // Try again
+              [self confirmOfferFinalAnswer];
+            }
+            [[self appDelegate].container stopSpinning];
+          }
+        ];
+        [[self appDelegate].container startSpinning];
+
+        [alertBlur setTitle: @"Confirming Payment"];
+        [alertBlur setMessage: 
+          @"One moment as we make the charge to your Venmo account."];
+        [alertBlur resetQuestionDetails];
+        [alertBlur hideQuestionButton];
+        // Buttons
+        [alertBlur setConfirmButtonTitle: @"Charging and Verifying"];
+        [alertBlur addTargetForConfirmButton: self action: nil];
+        [alertBlur showOnlyConfirmButton];
+        [alertBlur animateChangeOfContent];
+      }
     }
   }
   // If user has not set up a primary payout method
@@ -1558,6 +1713,16 @@ viewForHeaderInSection: (NSInteger) section
       [alertBlur close];
     }
   }];
+}
+
+- (void) hideCountdownAndRespondButton
+{
+  countDownTimerLabel.alpha = 0.0f;
+  respondView.alpha = 0.0f;
+  _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
+    CGRectZero];
+  _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
+    CGRectZero];
 }
 
 - (void) offerAcceptedConfirmed

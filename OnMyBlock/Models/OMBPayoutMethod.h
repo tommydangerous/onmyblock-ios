@@ -29,6 +29,10 @@ typedef enum {
 
 #pragma mark - Methods
 
+#pragma mark - Class Methods
+
++ (CGFloat) maximumVenmoTransfer;
+
 #pragma mark - Instance Methods
 
 - (void) readFromDictionary: (NSDictionary *) dictionary;

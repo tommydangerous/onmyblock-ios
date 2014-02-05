@@ -26,6 +26,7 @@
 #import "OMBMessage.h"
 #import "OMBMessageDetailConnection.h"
 #import "OMBMessagesUnviewedCountConnection.h"
+#import "OMBMovedInConnection.h"
 #import "OMBOffer.h"
 #import "OMBOfferDecisionConnection.h"
 #import "OMBOffersAcceptedConnection.h"
@@ -116,6 +117,7 @@ int kNotificationTimerInterval = 60;
   _favorites           = [NSMutableDictionary dictionary];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _messages            = [NSMutableDictionary dictionary];
+  _movedIn             = [NSMutableDictionary dictionary];
   _payoutMethods       = [NSMutableDictionary dictionary];
   _receivedOffers      = [NSMutableDictionary dictionary];
   _renterApplication   = [[OMBRenterApplication alloc] init];
@@ -294,6 +296,14 @@ withCompletion: (void (^) (NSError *error)) block
     [array addObject: message];
   }
   [_messages setObject: array forKey: number];
+}
+
+- (void) addMovedIn: (OMBOffer *) object
+{
+  NSNumber *key = [NSNumber numberWithInt: object.uid];
+  if (![_movedIn objectForKey: key])
+    [_movedIn setObject: object forKey: key];
+  NSLog(@"%@", _movedIn);
 }
 
 - (void) addPayoutMethod: (OMBPayoutMethod *) object
@@ -593,6 +603,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [conn start];
 }
 
+- (void) fetchMovedInWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBMovedInConnection *conn = [[OMBMovedInConnection alloc] init];
+  conn.completionBlock = block;
+  [conn start];
+}
+
 - (void) fetchNotificationCounts: (NSTimer *) timer
 {
   OMBMessagesUnviewedCountConnection *conn =
@@ -718,6 +735,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [OMBUser currentUser].imageURL = nil;
   // Messages
   [[OMBUser currentUser].messages removeAllObjects];
+  // Moved in
+  [[OMBUser currentUser].movedIn removeAllObjects];
   // Notification
   [[OMBUser currentUser].notificationFetchTimer invalidate];
   // Payout methods
@@ -1204,6 +1223,33 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     }
   }
   [_messages setObject: array forKey: [NSNumber numberWithInt: user.uid]];
+}
+
+- (void) readFromMovedInDictionary: (NSDictionary *) dictionary
+{
+  NSMutableSet *newSet = [NSMutableSet set];
+  for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
+    NSInteger oUID = [[dict objectForKey: @"id"] intValue];
+    OMBOffer *obj = [_movedIn objectForKey: [NSNumber numberWithInt: oUID]];
+    if (!obj) {
+      obj = [[OMBOffer alloc] init];
+      [obj readFromDictionary: dict];
+      [self addMovedIn: obj];
+    }
+    else {
+      [obj readFromDictionary: dict];
+    }
+
+    [newSet addObject: [NSNumber numberWithInt: obj.uid]];
+  }
+
+  // Remove the offers that are no longer suppose to be there
+  NSMutableSet *oldSet = [NSMutableSet setWithArray:
+    [[_movedIn allValues] valueForKey: @"uid"]];
+  [oldSet minusSet: newSet];
+  for (NSNumber *number in [oldSet allObjects]) {
+    [_movedIn removeObjectForKey: number];
+  }
 }
 
 - (void) readFromPayoutMethodsDictionary: (NSDictionary *) dictionary

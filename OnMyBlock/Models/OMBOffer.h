@@ -19,7 +19,9 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForLandlord) {
   OMBOfferStatusForLandlordOnHold,
   OMBOfferStatusForLandlordDeclined,
   OMBOfferStatusForLandlordResponseRequired,
-  OMBOfferStatusForLandlordExpired
+  OMBOfferStatusForLandlordExpired,
+  OMBOfferStatusForLandlordOfferPaid,
+  OMBOfferStatusForLandlordOfferPaidExpired
 };
 
 typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
@@ -29,7 +31,9 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
   OMBOfferStatusForStudentOnHold,
   OMBOfferStatusForStudentDeclined,
   OMBOfferStatusForStudentWaitingForLandlordResponse,
-  OMBOfferStatusForStudentExpired
+  OMBOfferStatusForStudentExpired,
+  OMBOfferStatusForStudentOfferPaid,
+  OMBOfferStatusForStudentOfferPaidExpired
 };
 
 @interface OMBOffer : NSObject
@@ -42,11 +46,11 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 @property (nonatomic) BOOL declined;
 @property (nonatomic, strong) NSString *note;
 @property (nonatomic) BOOL onHold;
+@property (nonatomic, strong) OMBPayoutTransaction *payoutTransaction;
 @property (nonatomic) BOOL rejected;
 @property (nonatomic) NSTimeInterval updatedAt;
 
 @property (nonatomic, strong) OMBUser *landlordUser;
-@property (nonatomic, strong) OMBPayoutTransaction *payoutTransaction;
 @property (nonatomic, strong) OMBResidence *residence;
 @property (nonatomic) NSInteger uid;
 @property (nonatomic, strong) OMBUser *user;

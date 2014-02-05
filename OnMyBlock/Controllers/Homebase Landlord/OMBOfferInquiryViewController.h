@@ -16,6 +16,23 @@
 @class OMBGradientView;
 @class OMBOffer;
 
+// Sections in the offer table
+typedef NS_ENUM(NSInteger, OMBOfferInquirySection) {
+  OMBOfferInquirySectionOffer
+};
+// Rows in the offer section in the offer table
+typedef NS_ENUM(NSInteger, OMBOfferInquirySectionOfferRow) {
+  OMBOfferInquirySectionOfferRowResidence,
+  OMBOfferInquirySectionOfferRowDates,
+  OMBOfferInquirySectionOfferSpacingBelowDates,
+  OMBOfferInquirySectionOfferRowPriceBreakdown,
+  OMBOfferInquirySectionOfferRowSecurityDeposit,
+  OMBOfferInquirySectionOfferRowOffer,
+  OMBOfferInquirySectionOfferRowTotal,
+  OMBOfferInquirySectionOfferSpacingBelowTotal,
+  OMBOfferInquirySectionOfferRowNotes
+};
+
 @interface OMBOfferInquiryViewController : OMBViewController
 <PayPalPaymentDelegate, UIScrollViewDelegate, UITableViewDataSource, 
   UITableViewDelegate>
@@ -42,6 +59,7 @@
   UIButton *respondButton;
   UIView *respondView;
   int selectedSegmentIndex;
+  CGSize sizeForOfferNotes;
   OMBCenteredImageView *userImageView;
 }
 

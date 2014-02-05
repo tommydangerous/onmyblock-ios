@@ -250,7 +250,7 @@ float kHomebaseLandlordImagePercentage = 0.4f;
     [_activityTableView reloadData];
   }];
 
-  // Fetch deposit payout transactions
+  // Fetch confirmed tenants
   [[OMBUser currentUser] fetchConfirmedTenantsWithCompletion:
     ^(NSError *error) {
       [_activityTableView reloadData];
@@ -414,13 +414,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         OMBHomebaseLandlordOfferCell *cell1 = 
           [tableView dequeueReusableCellWithIdentifier:
             ConfirmedTenantIdentifier];
-        if (!cell1)
+        if (!cell1) {
           cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle: 
             UITableViewCellStyleDefault reuseIdentifier: 
               ConfirmedTenantIdentifier];
-        // Account for empty row
-        [cell1 loadConfirmedTenant: 
-          [[self confirmedTenants] objectAtIndex: indexPath.row - 1]];
+          // Account for empty row
+          [cell1 loadConfirmedTenant: 
+            [[self confirmedTenants] objectAtIndex: indexPath.row - 1]];
+        }
         return cell1;
       }
     }
@@ -525,9 +526,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       // Account for the emtpy row
       if (indexPath.row > 0) {
         [self.navigationController pushViewController:
-          [[OMBHomebaseLandlordConfirmedTenantsViewController alloc] 
+          [[OMBOfferInquiryViewController alloc] 
             initWithOffer: [[self confirmedTenants] objectAtIndex: 
               indexPath.row - 1]] animated: YES];
+        // [self.navigationController pushViewController:
+        //   [[OMBHomebaseLandlordConfirmedTenantsViewController alloc] 
+        //     initWithOffer: [[self confirmedTenants] objectAtIndex: 
+        //       indexPath.row - 1]] animated: YES];
       }
     }
   }

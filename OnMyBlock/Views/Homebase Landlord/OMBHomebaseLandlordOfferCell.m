@@ -161,6 +161,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 - (void) loadConfirmedTenant: (OMBOffer *) object
 {
   _offer = object;
+  [countdownTimer invalidate];
   
   // Image
   if (_offer.user.image) {
@@ -175,44 +176,28 @@ reuseIdentifier: (NSString *) reuseIdentifier
   }
   // Name
   nameLabel.text = [_offer.user fullName];
+
+  // Time
+  timeLabel.hidden = YES;
+
+  // Address
+  addressLabel.text = [NSString stringWithFormat: @"%@ - %@",
+    [NSString numberToCurrencyString: _offer.amount],
+      [_offer.residence.address capitalizedString]];
+
   // Dates
   NSDateFormatter *dateFormatter = [NSDateFormatter new];
   dateFormatter.dateFormat = @"M/d/yy";
   NSDate *moveInDate = [NSDate dateWithTimeIntervalSince1970: 
     _offer.residence.moveInDate];
   NSDate *moveOutDate = [_offer.residence moveOutDateDate];
+  if (_offer.residence.moveOutDate)
+    moveOutDate = [NSDate dateWithTimeIntervalSince1970:
+      _offer.residence.moveOutDate];
   typeLabel.text = [NSString stringWithFormat: @"%@ - %@",
     [dateFormatter stringFromDate: moveInDate],
       [dateFormatter stringFromDate: moveOutDate]];
   typeLabel.textColor = [UIColor textColor];
-  // Address
-  addressLabel.text = [_offer.residence.address capitalizedString];
-  // Rent
-  rentLabel.text = [NSString numberToCurrencyString: _offer.amount];
-
-  // NSMutableAttributedString *rentAttributedString = 
-  //   [[NSMutableAttributedString alloc] initWithString: 
-  //     [NSString numberToCurrencyString: (int) _offer.amount] attributes: @{
-  //       NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Medium" 
-  //         size: 15],
-  //       NSForegroundColorAttributeName: [UIColor pink]
-  //     }
-  //   ];
-  // if ([_offer.residence.address length]) {
-  //   NSMutableAttributedString *addressAttributedString = 
-  //     [[NSMutableAttributedString alloc] initWithString: 
-  //       _offer.residence.address attributes: @{
-  //         NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Light" 
-  //           size: 15],
-  //         NSForegroundColorAttributeName: [UIColor textColor]
-  //       }
-  //     ];
-  //   NSMutableAttributedString *spacesString = 
-  //     [[NSMutableAttributedString alloc] initWithString: @"   "];
-  //   [rentAttributedString appendAttributedString: spacesString];
-  //   [rentAttributedString appendAttributedString: addressAttributedString];
-  // }
-  // rentLabel.attributedText = rentAttributedString;
 }
 
 - (void) loadOfferForLandlord: (OMBOffer *) object
@@ -244,11 +229,13 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // Status
   UIColor *color;
   switch ([_offer statusForLandlord]) {
-    case OMBOfferStatusForLandlordRejected: {
+    case OMBOfferStatusForLandlordRejected:
+    case OMBOfferStatusForLandlordOfferPaidExpired: {
       color = [UIColor red];
       break;
     }
-    case OMBOfferStatusForLandlordConfirmed: {
+    case OMBOfferStatusForLandlordConfirmed:
+    case OMBOfferStatusForLandlordOfferPaid: {
       color = [UIColor green];
       break;
     }
@@ -281,7 +268,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
       timeLabel.hidden = NO;
       break;
     }
-    case OMBOfferStatusForStudentExpired: {
+    case OMBOfferStatusForLandlordExpired: {
       color = [UIColor grayMedium];
       break;
     }
@@ -334,11 +321,13 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // Status
   UIColor *color;
   switch ([_offer statusForStudent]) {
-    case OMBOfferStatusForStudentRejected: {
+    case OMBOfferStatusForStudentRejected:
+    case OMBOfferStatusForStudentOfferPaidExpired: {
       color = [UIColor red];
       break;
     }
-    case OMBOfferStatusForStudentConfirmed: {
+    case OMBOfferStatusForStudentConfirmed:
+    case OMBOfferStatusForStudentOfferPaid: {
       color = [UIColor green];
       break;
     }
