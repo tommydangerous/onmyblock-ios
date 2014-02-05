@@ -14,6 +14,7 @@
 @class OMBAlertView;
 @class OMBBlurView;
 @class OMBCenteredImageView;
+@class OMBHomebaseRenterRoommateImageView;
 @class OMBOffer;
 @class OMBScrollView;
 
@@ -39,6 +40,7 @@
   OMBOffer *selectedOffer;
   int selectedSegmentIndex;
   UITapGestureRecognizer *tapGesture;
+  OMBHomebaseRenterRoommateImageView *userImageView;
 }
 
 // Tables

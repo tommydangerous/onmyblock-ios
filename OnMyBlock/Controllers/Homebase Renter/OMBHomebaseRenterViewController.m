@@ -22,11 +22,12 @@
 #import "OMBHomebaseRenterRentDepositInfoViewController.h"
 #import "OMBHomebaseRenterRoommateImageView.h"
 #import "OMBHomebaseRenterTopPriorityCell.h"
+#import "OMBOffer.h"
 #import "OMBOfferInquiryViewController.h"
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutTransaction.h"
 #import "OMBPayPalVerifyMobilePaymentConnection.h"
-#import "OMBOffer.h"
+#import "OMBRenterProfileViewController.h"
 #import "OMBResidence.h"
 #import "OMBScrollView.h"
 #import "OMBViewControllerContainer.h"
@@ -210,7 +211,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
     _activityTableView.frame.size.width, 
       ((backView.frame.origin.y + backView.frame.size.height) - 
       tableViewOriginY));
-  activityTableViewHeader.scrollView = imagesScrollView;
+  // activityTableViewHeader.scrollView = imagesScrollView;
   _activityTableView.tableHeaderView = activityTableViewHeader;
   // Footer view
   _activityTableView.tableFooterView = [[UIView alloc] initWithFrame: 
@@ -241,6 +242,20 @@ float kHomebaseRenterImagePercentage = 0.3f;
 
   alert = [[OMBAlertView alloc] init];
 
+  // User image view
+  CGFloat userImageSize = backView.frame.size.width / 3.0f;
+  CGRect userImageViewRect = CGRectMake(
+    (activityTableViewHeader.frame.size.width - userImageSize) * 0.5f,
+      (activityTableViewHeader.frame.size.height - userImageSize) * 0.5f,
+        userImageSize, userImageSize);
+  userImageView = [[OMBHomebaseRenterRoommateImageView alloc] initWithFrame:
+    userImageViewRect];
+  [activityTableViewHeader addSubview: userImageView];
+
+  tapGesture = [[UITapGestureRecognizer alloc] initWithTarget: self
+    action: @selector(showMyRenterProfile)];
+  [userImageView addGestureRecognizer: tapGesture];
+
   // Add/Remove Roommates button
   // addRemoveRoommatesButton = [UIButton new];
   // addRemoveRoommatesButton.frame = CGRectMake(
@@ -253,8 +268,8 @@ float kHomebaseRenterImagePercentage = 0.3f;
   //     forControlEvents: UIControlEventTouchUpInside];
   // [self.view addSubview: addRemoveRoommatesButton];
 
-  tapGesture = [[UITapGestureRecognizer alloc] initWithTarget: self
-    action: @selector(showAddRemoveRoommates)];
+  // tapGesture = [[UITapGestureRecognizer alloc] initWithTarget: self
+  //   action: @selector(showAddRemoveRoommates)];
 
   [self changeTableView];
 }
@@ -267,56 +282,73 @@ float kHomebaseRenterImagePercentage = 0.3f;
   // [self showAddRemoveRoommates];
 
   [backView refreshWithImage: 
-    [UIImage imageNamed: @"intro_still_image_slide_3_background.jpg"]];
+    [UIImage imageNamed: @"intro_still_image_slide_2_background.jpg"]];
 
-  [imageViewArray removeAllObjects];
-  [imagesScrollView.subviews enumerateObjectsUsingBlock: 
-    ^(id obj, NSUInteger idx, BOOL *stop) {
-      UIView *v = (UIView *) obj;
-      if (v.tag == 9999)
-        [v removeFromSuperview];
-    }
-  ];
+  // NSInteger tag = 9999;
+  // [imageViewArray removeAllObjects];
+  // [imagesScrollView.subviews enumerateObjectsUsingBlock: 
+  //   ^(id obj, NSUInteger idx, BOOL *stop) {
+  //     UIView *v = (UIView *) obj;
+  //     if (v.tag == tag)
+  //       [v removeFromSuperview];
+  //   }
+  // ];
 
-  CGFloat imageSize = backView.frame.size.width / 3.0f;
-  for (int i = 0; i < 1; i++) {
-    CGRect rect = CGRectMake(imageSize * i, 0.0f, imageSize, 
-      imagesScrollView.frame.size.height);
-    OMBHomebaseRenterRoommateImageView *imageView = 
-      [[OMBHomebaseRenterRoommateImageView alloc] initWithFrame: rect];
-    imageView.tag = 9999;
-    // if (i == 2) {
-    //   [imageView setupForAddRoommate];
-    // }
-    // else if (i % 2) {
-    //   imageView.imageView.image = [UIImage imageNamed: @"tommy_d.png"];
-    //   imageView.nameLabel.text = @"Tommy";
-    // }
-    // else {
-    //   imageView.imageView.image = [UIImage imageNamed: @"edward_d.jpg"];
-    //   imageView.nameLabel.text = @"Edward";
-    // }
-    if ([OMBUser currentUser].image) {
-      imageView.imageView.image = [OMBUser currentUser].image;
-      imageView.nameLabel.text  = 
-        [[OMBUser currentUser].firstName capitalizedString];
-    }
-    else {
-      [[OMBUser currentUser] downloadImageFromImageURLWithCompletion: 
-        ^(NSError *error) {
-          imageView.imageView.image = [OMBUser currentUser].image;
-        }
-      ];
-      imageView.imageView.image = 
-        [[UIImage imageNamed: @"user_icon_default.png"] negativeImage];
-    }
-    [imageViewArray addObject: imageView];
-    [imagesScrollView addSubview: imageView];
+  // CGFloat imageSize = backView.frame.size.width / 3.0f;
+  // for (int i = 0; i < 1; i++) {
+  //   CGRect rect = CGRectMake(imageSize * i, 0.0f, imageSize, 
+  //     imagesScrollView.frame.size.height);
+
+  //   OMBHomebaseRenterRoommateImageView *imageView = 
+  //     [[OMBHomebaseRenterRoommateImageView alloc] initWithFrame: rect];
+  //   imageView.tag = tag;
+  //   // if (i == 2) {
+  //   //   [imageView setupForAddRoommate];
+  //   // }
+  //   // else if (i % 2) {
+  //   //   imageView.imageView.image = [UIImage imageNamed: @"tommy_d.png"];
+  //   //   imageView.nameLabel.text = @"Tommy";
+  //   // }
+  //   // else {
+  //   //   imageView.imageView.image = [UIImage imageNamed: @"edward_d.jpg"];
+  //   //   imageView.nameLabel.text = @"Edward";
+  //   // }
+  //   if ([OMBUser currentUser].image) {
+  //     imageView.imageView.image = [OMBUser currentUser].image;
+  //     imageView.nameLabel.text  = 
+  //       [[OMBUser currentUser].firstName capitalizedString];
+  //   }
+  //   else {
+  //     [[OMBUser currentUser] downloadImageFromImageURLWithCompletion: 
+  //       ^(NSError *error) {
+  //         imageView.imageView.image = [OMBUser currentUser].image;
+  //       }
+  //     ];
+  //     imageView.imageView.image = 
+  //       [[UIImage imageNamed: @"user_icon_default.png"] negativeImage];
+  //   }
+  //   [imageViewArray addObject: imageView];
+  //   [imagesScrollView addSubview: imageView];
+  // }
+
+  if ([OMBUser currentUser].image) {
+    userImageView.imageView.image = [OMBUser currentUser].image;
   }
+  else {
+    [[OMBUser currentUser] downloadImageFromImageURLWithCompletion: 
+      ^(NSError *error) {
+        userImageView.imageView.image = [OMBUser currentUser].image;
+      }
+    ];
+    userImageView.imageView.image = 
+      [[UIImage imageNamed: @"user_icon_default.png"] negativeImage];
+  }
+  userImageView.nameLabel.text =
+    [[OMBUser currentUser].firstName capitalizedString];
 
-  imagesScrollView.contentSize = CGSizeMake(imageSize * (1 + 0), 
-    imagesScrollView.frame.size.height);
-  [imagesScrollView setContentOffset: CGPointZero animated: NO];
+  // imagesScrollView.contentSize = CGSizeMake(imageSize * (1 + 0), 
+  //   imagesScrollView.frame.size.height);
+  // [imagesScrollView setContentOffset: CGPointZero animated: NO];
   // [imagesScrollView setContentOffset: 
   //   CGPointMake(imagesScrollView.frame.size.width, 0.0f) animated: NO];
 
@@ -1225,6 +1257,14 @@ viewForHeaderInSection: (NSInteger) section
   [self.navigationController pushViewController: 
     [[OMBHomebaseRenterAddRemoveRoommatesViewController alloc] init] 
       animated: YES];
+}
+
+- (void) showMyRenterProfile
+{
+  OMBRenterProfileViewController *vc = 
+    [[OMBRenterProfileViewController alloc] init];
+  [vc loadUser: [OMBUser currentUser]];
+  [self.navigationController pushViewController: vc animated: YES];
 }
 
 - (void) showPayPalPayment
