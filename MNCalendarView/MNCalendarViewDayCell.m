@@ -68,6 +68,7 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
   }
   
   // Fechas no validas y seleccionables
+  
   self.titleLabel.textColor =
   self.enabled ? UIColor.blackColor : UIColor.whiteColor;
   if(self.selected)
@@ -76,6 +77,13 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
   self.backgroundColor =
   self.enabled ? UIColor.whiteColor : UIColor.whiteColor;
   
+}
+
+- (void)selectCell{
+  self.titleLabel.textColor = UIColor.whiteColor;
+  self.backgroundColor = [UIColor colorWithRed:(111/255.0) green:(174/255.0)
+                                          blue:(193/255.0) alpha:1.f];
+  NSLog(@"selected");
 }
 
 - (void)drawRect:(CGRect)rect {
