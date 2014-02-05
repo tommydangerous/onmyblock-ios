@@ -200,6 +200,9 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
       else if (_payoutTransaction.expired) {
         return OMBOfferStatusForLandlordOfferPaidExpired;
       }
+      else {
+        return OMBOfferStatusForLandlordConfirmed;  
+      }
     }
     else {
       return OMBOfferStatusForLandlordConfirmed;
@@ -237,6 +240,9 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
       }
       else if (_payoutTransaction.expired) {
         return OMBOfferStatusForStudentOfferPaidExpired;
+      }
+      else {
+        return OMBOfferStatusForStudentConfirmed;
       }
     }
     else {

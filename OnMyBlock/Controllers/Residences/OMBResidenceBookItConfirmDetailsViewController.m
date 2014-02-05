@@ -1166,9 +1166,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table beginUpdates];
   [self.table endUpdates];
   [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
-  [self.table scrollToRowAtIndexPath: 
-    [NSIndexPath indexPathForRow: 3 inSection: 4] 
-      atScrollPosition: UITableViewScrollPositionTop animated: YES];
+  
+  #warning Fix this, it crashes because of messed up indexes
+  // [self.table scrollToRowAtIndexPath: 
+  //   [NSIndexPath indexPathForRow: 3 inSection: 4] 
+  //     atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
 - (void) textViewDidChange: (UITextView *) textView
