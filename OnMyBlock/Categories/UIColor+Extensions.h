@@ -36,6 +36,8 @@
 + (UIColor *) greenDark;
 + (UIColor *) linkedinBlue;
 + (UIColor *) linkedinGray;
++ (UIColor *) orange;
++ (UIColor *) orangeAlpha: (CGFloat) value;
 + (UIColor *) paypalBlue;
 + (UIColor *) paypalBlueLight;
 + (UIColor *) pink;

@@ -12,6 +12,26 @@
 @class OMBResidence;
 @class OMBUser;
 
+typedef NS_ENUM(NSInteger, OMBOfferStatusForLandlord) {
+  OMBOfferStatusForLandlordRejected,
+  OMBOfferStatusForLandlordConfirmed,
+  OMBOfferStatusForLandlordAccepted,
+  OMBOfferStatusForLandlordOnHold,
+  OMBOfferStatusForLandlordDeclined,
+  OMBOfferStatusForLandlordResponseRequired,
+  OMBOfferStatusForLandlordExpired
+};
+
+typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
+  OMBOfferStatusForStudentRejected,
+  OMBOfferStatusForStudentConfirmed,
+  OMBOfferStatusForStudentAccepted,
+  OMBOfferStatusForStudentOnHold,
+  OMBOfferStatusForStudentDeclined,
+  OMBOfferStatusForStudentWaitingForLandlordResponse,
+  OMBOfferStatusForStudentExpired
+};
+
 @interface OMBOffer : NSObject
 
 @property (nonatomic) BOOL accepted;
@@ -35,6 +55,19 @@
 
 #pragma mark - Instance Methods
 
+- (BOOL) isExpiredForLandlord;
+- (BOOL) isExpiredForStudent;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
+- (OMBOfferStatusForLandlord) statusForLandlord;
+- (OMBOfferStatusForStudent) statusForStudent;
+- (NSString *) statusStringForLandlord;
+- (NSString *) statusStringForStudent;
+- (NSInteger) timeLeftForLandlord;
+- (NSInteger) timeLeftForStudent;
+- (CGFloat) timeLeftPercentageForLandlord;
+- (CGFloat) timeLeftPercentageForStudent;
+- (NSString *) timeLeftStringForLandlord;
+- (NSString *) timeLeftStringForStudent;
+- (CGFloat) totalAmount;
 
 @end

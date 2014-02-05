@@ -105,6 +105,7 @@ withCompletion: (void (^) (NSError *error)) block;
   completion: (void (^) (NSError *error)) block;
 - (void) createPayoutMethodWithDictionary: (NSDictionary *) dictionary
 withCompletion: (void (^) (NSError *error)) block;
+- (void) declineAndPutOtherOffersOnHold: (OMBOffer *) offer;
 - (void) declineOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
 - (NSArray *) depositPayoutMethods;

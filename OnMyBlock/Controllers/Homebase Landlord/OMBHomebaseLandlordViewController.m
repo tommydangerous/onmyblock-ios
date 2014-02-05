@@ -19,6 +19,7 @@
 #import "OMBHomebaseLandlordPaymentCell.h"
 #import "OMBHomebaseRenterViewController.h"
 #import "OMBInboxViewController.h"
+#import "OMBOffer.h"
 #import "OMBOfferInquiryViewController.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
@@ -397,9 +398,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell1 = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle: 
             UITableViewCellStyleDefault reuseIdentifier: 
               EmptyTenantsCellIdentifier];
-        [cell1 setTopLabelText: @"Confirmed tenants are here."];
-        [cell1 setMiddleLabelText: @"Tenants appear here"];
-        [cell1 setBottomLabelText: @"once they pay."];
+        [cell1 setTopLabelText: @"Confirmed tenants show here"];
+        [cell1 setMiddleLabelText: @"After the student pays and"];
+        [cell1 setBottomLabelText: @"signs the lease."];
         [cell1 setObjectImageViewImage: [UIImage imageNamed: 
           @"group_icon.png"]];
         return cell1;
@@ -566,6 +567,20 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         }
       }
       else {
+        OMBOffer *offer = [[self offers] objectAtIndex: indexPath.row - 1];
+        // If the status is response required
+        // and not expired
+        if (![offer isExpiredForLandlord] && [offer statusForLandlord] ==
+          OMBOfferStatusForLandlordResponseRequired) {
+          return [OMBHomebaseLandlordOfferCell heightForCellWithNotes];
+        }
+        else if (![offer isExpiredForStudent] && offer.accepted && 
+          !offer.confirmed && !offer.rejected) {
+          return [OMBHomebaseLandlordOfferCell heightForCellWithNotes];
+        }
+        else if ([offer statusForLandlord] == OMBOfferStatusForLandlordOnHold) {
+          return [OMBHomebaseLandlordOfferCell heightForCellWithNotes]; 
+        }
         return [OMBHomebaseLandlordOfferCell heightForCell];
       }
     }

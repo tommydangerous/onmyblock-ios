@@ -14,7 +14,9 @@
 @interface OMBHomebaseLandlordOfferCell : OMBTableViewCell
 {
   UILabel *addressLabel;
+  NSTimer *countdownTimer;
   UILabel *nameLabel;
+  UILabel *notesLabel;
   UILabel *rentLabel;
   UILabel *timeLabel;
   UILabel *typeLabel;
@@ -24,6 +26,10 @@
 @property (nonatomic, strong) OMBOffer *offer;
 
 #pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (CGFloat) heightForCellWithNotes;
 
 #pragma mark - Instance Methods
 

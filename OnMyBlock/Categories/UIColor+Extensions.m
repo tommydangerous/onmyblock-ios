@@ -163,6 +163,17 @@
     alpha: 1.0f];
 }
 
++ (UIColor *) orange
+{
+  return [UIColor orangeAlpha: 1.0f];
+}
+
++ (UIColor *) orangeAlpha: (CGFloat) value
+{
+  return [UIColor colorWithRed: 248/255.0f green: 143/255.0f blue: 18/255.0f
+    alpha: value];
+}
+
 + (UIColor *) paypalBlue
 {
   return [UIColor colorWithRed: 0.0f green: 69/255.0f blue: 124/255.0f

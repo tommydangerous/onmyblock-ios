@@ -15,9 +15,10 @@
   UIActivityIndicatorView *activityIndicatorView;
   UIView *circle;
   OMBCurvedLineView *line;
-  UIView *spinner;
-  UIView *spinnerView;
 }
+
+@property (nonatomic, strong) UIView *spinner;
+@property (nonatomic, strong) UIView *spinnerView;
 
 #pragma mark - Initializer
 

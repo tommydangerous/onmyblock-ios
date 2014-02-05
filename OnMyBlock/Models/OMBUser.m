@@ -472,6 +472,22 @@ withCompletion: (void (^) (NSError *error)) block
   [conn start];
 }
 
+- (void) declineAndPutOtherOffersOnHold: (OMBOffer *) offer;
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
+    @"residence.uid", offer.residence.uid];
+  NSArray *array = [[_receivedOffers allValues] filteredArrayUsingPredicate: 
+    predicate];
+  for (OMBOffer *o in array) {
+    if (o.uid != offer.uid) {
+      if (!o.declined) {
+        o.onHold  = YES;
+      }
+      o.declined = YES;
+    }
+  }
+}
+
 - (void) declineOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block
 {

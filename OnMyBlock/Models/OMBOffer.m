@@ -8,10 +8,14 @@
 
 #import "OMBOffer.h"
 
+#import "NSString+Extensions.h"
 #import "OMBAllResidenceStore.h"
 #import "OMBResidence.h"
 #import "OMBUser.h"
 #import "OMBUserStore.h"
+
+NSInteger kMaxHoursForLandlordToAccept = 24;
+NSInteger kMaxHoursForStudentToConfirm = 48;
 
 @implementation OMBOffer
 
@@ -34,6 +38,20 @@
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (BOOL) isExpiredForLandlord
+{
+  if (!_accepted && !_declined && [self timeLeftForLandlord] < 0)
+    return YES;
+  return NO;
+}
+
+- (BOOL) isExpiredForStudent
+{
+  if (_accepted && _acceptedDate && [self timeLeftForStudent] < 0)
+    return YES;
+  return NO;
+}
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
@@ -141,6 +159,182 @@
     }
     _user = user;
   }
+}
+
+- (OMBOfferStatusForLandlord) statusForLandlord
+{
+  if (_rejected) {
+    return OMBOfferStatusForLandlordRejected;
+  }
+  else if (_confirmed) {
+    return OMBOfferStatusForLandlordConfirmed;
+  }
+  else if (_accepted) {
+    if ([self isExpiredForStudent]) {
+      return OMBOfferStatusForLandlordExpired;
+    }
+    else {
+      return OMBOfferStatusForLandlordAccepted;
+    }
+  }
+  else if (_onHold) {
+    return OMBOfferStatusForLandlordOnHold;
+  }
+  else if (_declined) {
+    return OMBOfferStatusForLandlordDeclined;
+  }
+  else if ([self isExpiredForLandlord]) {
+    return OMBOfferStatusForLandlordExpired;
+  }
+  return OMBOfferStatusForLandlordResponseRequired;
+}
+
+- (OMBOfferStatusForStudent) statusForStudent
+{
+  if (_rejected) {
+    return OMBOfferStatusForStudentRejected;
+  }
+  else if (_confirmed) {
+    return OMBOfferStatusForStudentConfirmed;
+  }
+  else if (_accepted) {
+    if ([self isExpiredForStudent]) {
+      return OMBOfferStatusForStudentExpired;
+    }
+    else {
+      return OMBOfferStatusForStudentAccepted;
+    }
+  }
+  else if (_onHold) {
+    return OMBOfferStatusForStudentOnHold;
+  }
+  else if (_declined) {
+    return OMBOfferStatusForStudentDeclined;
+  }
+  else if ([self isExpiredForLandlord]) {
+    return OMBOfferStatusForStudentExpired;
+  }
+  return OMBOfferStatusForStudentWaitingForLandlordResponse;
+}
+
+- (NSString *) statusStringForLandlord
+{
+  switch ([self statusForStudent]) {
+    case OMBOfferStatusForLandlordRejected: {
+      return @"student rejected";
+      break;
+    }
+    case OMBOfferStatusForLandlordConfirmed: {
+      return @"student confirmed";
+      break;
+    }
+    case OMBOfferStatusForLandlordAccepted: {
+      return @"waiting for student response";
+      break;
+    }
+    case OMBOfferStatusForLandlordOnHold: {
+      return @"on hold";
+      break;
+    }
+    case OMBOfferStatusForLandlordDeclined: {
+      return @"declined";
+      break;
+    }
+    case OMBOfferStatusForLandlordResponseRequired: {
+      return @"response required";
+      break;
+    }
+    case OMBOfferStatusForLandlordExpired: {
+      return @"offer expired";
+      break;
+    }
+    default:
+      break;
+  }
+  return @"";
+}
+
+- (NSString *) statusStringForStudent
+{
+  switch ([self statusForStudent]) {
+    case OMBOfferStatusForStudentRejected: {
+      return @"rejected";
+      break;
+    }
+    case OMBOfferStatusForStudentConfirmed: {
+      return @"move-in confirmed";
+      break;
+    }
+    case OMBOfferStatusForStudentAccepted: {
+      return @"response required";
+      break;
+    }
+    case OMBOfferStatusForStudentOnHold: {
+      return @"on hold";
+      break;
+    }
+    case OMBOfferStatusForStudentDeclined: {
+      return @"landlord declined";
+      break;
+    }
+    case OMBOfferStatusForStudentWaitingForLandlordResponse: {
+      return @"waiting for landlord response";
+      break;
+    }
+    case OMBOfferStatusForStudentExpired: {
+      return @"offer expired";
+      break;
+    }
+    default:
+      break;
+  }
+  return @"";
+}
+
+- (NSInteger) timeLeftForLandlord
+{
+  NSInteger secondsInADay = 60 * 60 * kMaxHoursForLandlordToAccept;
+  NSInteger aDayFromCreatedAt = _createdAt + secondsInADay;
+  return aDayFromCreatedAt - [[NSDate date] timeIntervalSince1970];
+}
+
+- (NSInteger) timeLeftForStudent
+{
+  NSInteger secondsInADay = 60 * 60 * kMaxHoursForStudentToConfirm;
+  return (_acceptedDate + secondsInADay) - 
+    [[NSDate date] timeIntervalSince1970];
+}
+
+- (CGFloat) timeLeftPercentageForLandlord
+{
+  return [self timeLeftForLandlord] / 
+    (CGFloat) (60 * 60 * kMaxHoursForLandlordToAccept);
+}
+
+- (CGFloat) timeLeftPercentageForStudent
+{
+  return [self timeLeftForStudent] / 
+    (CGFloat) (60 * 60 * kMaxHoursForStudentToConfirm);
+}
+
+- (NSString *) timeLeftStringForLandlord
+{
+  return [NSString timeRemainingShortFormatWithAllUnitsInterval:
+    _createdAt + (60 * 60 * kMaxHoursForLandlordToAccept)];
+}
+
+- (NSString *) timeLeftStringForStudent
+{
+  return [NSString timeRemainingShortFormatWithAllUnitsInterval:
+    _acceptedDate + (60 * 60 * kMaxHoursForStudentToConfirm)];
+}
+
+- (CGFloat) totalAmount
+{
+  CGFloat deposit = 0.0f;
+  if (_residence.deposit)
+    deposit = _residence.deposit;
+  return _amount + deposit;
 }
 
 @end

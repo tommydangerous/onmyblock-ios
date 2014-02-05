@@ -723,6 +723,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         }
       }
       else {
+        OMBOffer *offer = [[self offers] objectAtIndex: indexPath.row - 1];
+        if (![offer isExpiredForLandlord] && [offer statusForStudent] ==
+          OMBOfferStatusForStudentWaitingForLandlordResponse) {
+          return [OMBHomebaseLandlordOfferCell heightForCellWithNotes];
+        }
+        else if ([offer statusForStudent] == OMBOfferStatusForStudentOnHold) {
+          return [OMBHomebaseLandlordOfferCell heightForCellWithNotes];
+        }
+        else if (![offer isExpiredForStudent] && [offer statusForStudent] ==
+          OMBOfferStatusForStudentAccepted) {
+          return [OMBHomebaseLandlordOfferCell heightForCellWithNotes]; 
+        }
         // return [OMBHomebaseRenterTopPriorityCell heightForCell];
         return [OMBHomebaseLandlordOfferCell heightForCell];
       }

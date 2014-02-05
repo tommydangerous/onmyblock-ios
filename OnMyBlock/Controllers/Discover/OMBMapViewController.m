@@ -13,6 +13,7 @@
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
 #import "OCMapView.h"
+#import "OMBActivityView.h"
 #import "OMBAnnotation.h"
 #import "OMBAnnotationCity.h"
 #import "OMBAnnotationView.h"
@@ -80,7 +81,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   self.view     = [[UIView alloc] initWithFrame: screen];
   CGFloat screenHeight = screen.size.height;
   CGFloat screenWidth = screen.size.width;
-  CGFloat padding = 20.0f;
+  CGFloat padding = OMBPadding;
 
   // Navigation item
   // Left bar button item
@@ -315,9 +316,24 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [propertyInfoView addGestureRecognizer: tap];
 
   // Activity indicator view
-  // activityIndicatorView = 
-  //   [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
-  //     UIActivityIndicatorViewStyleWhite];
+  activityIndicatorView = 
+    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
+      UIActivityIndicatorViewStyleWhiteLarge];
+  activityIndicatorView.frame = CGRectMake(
+    (screenWidth - activityIndicatorView.frame.size.width) * 0.5f,
+      screenHeight - (activityIndicatorView.frame.size.height * 2),
+        activityIndicatorView.frame.size.width,
+          activityIndicatorView.frame.size.height);
+  [_listViewContainer addSubview: activityIndicatorView];
+
+  activityView = [[OMBActivityView alloc] init];
+  [_listViewContainer addSubview: activityView];
+  activityView.spinnerView.backgroundColor = [UIColor clearColor];
+  CGRect spinRect = activityView.spinner.frame;
+  spinRect.origin.y = screenHeight - 
+    ((spinRect.size.height * 0.5f) + 
+      activityView.spinnerView.frame.size.height);
+  activityView.spinner.frame = spinRect;
 }
 
 - (void) viewDidAppear: (BOOL) animated
@@ -811,8 +827,10 @@ withTitle: (NSString *) title;
           _listView.contentSize.height <= _listView.frame.size.height)
           [self fetchResidencesForList];
       }
+      [activityView stopSpinning];
     }
   ];
+  [activityView startSpinning];
 }
 
 - (void) foundLocations: (NSArray *) locations
@@ -1015,7 +1033,7 @@ withTitle: (NSString *) title;
   // Recent
   else if (currentSortKey == OMBMapViewListSortKeyRecent) {
     return [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
-      @"createdAt" ascending: NO];
+      @"updatedAt" ascending: NO];
   }
   // Highest price
   else if (currentSortKey == OMBMapViewListSortKeyHighestPrice) {
