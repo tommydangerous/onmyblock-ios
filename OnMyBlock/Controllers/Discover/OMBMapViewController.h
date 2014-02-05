@@ -36,6 +36,7 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
   OMBActivityView *activityView;
   CLLocationCoordinate2D centerCoordinate;
   CGFloat currentDistanceOfScrolling;
+  NSArray *currentResidencesForList;
   UIButton *currentLocationButton;
   OMBMapViewListSortKey currentSortKey;
   BOOL fetching;

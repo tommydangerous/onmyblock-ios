@@ -752,10 +752,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Moved In
     else if (indexPath.section == 1) {
-      [self.navigationController pushViewController:
-        [[OMBOfferInquiryViewController alloc] 
-          initWithOffer: [[self movedIn] objectAtIndex: 
-            indexPath.row - 1]] animated: YES];
+      if (indexPath.row > 0) {
+        [self.navigationController pushViewController:
+          [[OMBOfferInquiryViewController alloc] 
+            initWithOffer: [[self movedIn] objectAtIndex: 
+              indexPath.row - 1]] animated: YES];
+      }
     }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
