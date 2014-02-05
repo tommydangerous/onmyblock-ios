@@ -10,6 +10,7 @@
 #import "MNCalendarView.h"
 
 @class OMBAlertView;
+@class OMBAlertViewBlur;
 @class OMBCenteredImageView;
 @class OMBOffer;
 @class OMBResidence;
@@ -31,9 +32,11 @@ typedef NS_ENUM(NSInteger, OMBResidenceBookItConfirmDetailsSection) {
   UITextViewDelegate, MNCalendarViewDelegate>
 {
   OMBAlertView *alert;
+  OMBAlertViewBlur *alertBlur;
   UIView *backView;
   UILabel *bedBathLabel;
   UILabel *currentOfferLabel;
+  NSDateFormatter *dateFormatter1;
   CGFloat deposit;
   BOOL hasOfferValue;
   UILabel *daysLabel;

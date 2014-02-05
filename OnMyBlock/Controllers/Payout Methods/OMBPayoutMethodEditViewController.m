@@ -373,7 +373,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   };
   [[self appDelegate].container startSpinning];
   [conn start];
-
 }
 
 @end
