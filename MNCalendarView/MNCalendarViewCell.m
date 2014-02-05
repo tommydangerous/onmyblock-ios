@@ -70,10 +70,8 @@ static NSArray *monthNames;
 
 - (void)drawRect:(CGRect)rect {
   CGContextRef context = UIGraphicsGetCurrentContext();
-  
   CGColorRef separatorColor = self.separatorColor.CGColor;
-  //  if(self.enabled)
-  //    separatorColor =  [[UIColor colorWithRed:0.f green:0.f blue:1.f alpha:1] CGColor];
+  
   CGFloat pixel = 1.f / [UIScreen mainScreen].scale;
   // LINEAS HORIZONTALES
   MNContextDrawLine(context,

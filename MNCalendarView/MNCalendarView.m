@@ -40,9 +40,15 @@
 - (void)commonInit {
   self.calendar   = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
   self.fromDate   = [NSDate.date mn_beginningOfDay:self.calendar];
-  // a year for now
-  self.toDate     = [self.fromDate dateByAddingTimeInterval: MN_YEAR * 1];
   self.daysInWeek = 7;
+  
+  // Get necessary date components
+  NSDateComponents *comps = [self.calendar components:NSYearCalendarUnit fromDate:self.fromDate];
+  [comps setDay   :31];
+  [comps setMonth :12];
+  [comps setYear  :[comps year]+ 1];
+  // 2014 2015
+  self.toDate = [self.calendar dateFromComponents:comps];
   
   self.weekdayCellClass = MNCalendarViewWeekdayCell.class;
   self.dayCellClass     = MNCalendarViewDayCell.class;
@@ -260,6 +266,10 @@
     return NO;
   }
   return [self canSelectItemAtIndexPath:indexPath];
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
+  return NO;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {

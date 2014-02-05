@@ -96,16 +96,6 @@ reuseIdentifier: (NSString *)reuseIdentifier
       screenWidth, 0.5f);
   [self.contentView addSubview: bottomLine];
 
-  _leaseMonthsLabel = [[UILabel alloc] init];
-  _leaseMonthsLabel.backgroundColor = [UIColor grayUltraLight];
-  _leaseMonthsLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
-    size: 15];
-  _leaseMonthsLabel.frame = CGRectMake(0.0f, bottomLine.frame.origin.y,
-    screenWidth, 44.0f);
-  _leaseMonthsLabel.textAlignment = NSTextAlignmentCenter;
-  _leaseMonthsLabel.textColor = [UIColor grayMedium];
-  [self.contentView insertSubview: _leaseMonthsLabel belowSubview: bottomLine];
-
   // CALayer *bottomBorder = [CALayer layer];
   // bottomBorder.backgroundColor = leftUnderline.backgroundColor;
   // bottomBorder.frame = CGRectMake(0.0f, _leaseMonthsLabel.frame.origin.y + 
@@ -122,7 +112,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 + (CGFloat) heightForCell
 {
   CGFloat padding = 20.0f;
-  return ((padding + 27.0f) * 2) + 44.0f;
+  return ((padding + 27.0f) * 2); // + 44.0f
 }
 
 #pragma mark - Instance Methods
@@ -131,22 +121,14 @@ reuseIdentifier: (NSString *)reuseIdentifier
 {
   NSDateFormatter *dateFormmater = [NSDateFormatter new];
   dateFormmater.dateFormat = @"MMM d, yy";
-// <<<<<<< HEAD
 
-//   _moveInDateLabel.text  = [dateFormmater stringFromDate: 
-//     [NSDate dateWithTimeIntervalSince1970: object.moveInDate]];
-//   _moveOutDateLabel.text = [dateFormmater stringFromDate: [object moveOutDateDate]];
-//   _leaseMonthsLabel.text = [NSString stringWithFormat: 
-// =======
   
-  [_moveInDateLabel setTitle:@"Select date" forState:UIControlStateNormal];
-  [_moveOutDateLabel setTitle:@"-" forState:UIControlStateNormal];
-//  [_moveInDateLabel setTitle:[dateFormmater stringFromDate:
-//    [NSDate dateWithTimeIntervalSince1970: object.moveInDate]] forState:UIControlStateNormal];
-//  [_moveOutDateLabel setTitle:[dateFormmater stringFromDate: [object moveOutDate]] forState:UIControlStateNormal];
-  _leaseMonthsLabel.text = [NSString stringWithFormat:
-// >>>>>>> cb7fd819c965a120fc9188315e308ea1cc0a3452
-    @"%i month lease", object.leaseMonths];
+//  [_moveInDateLabel setTitle:@"Select date" forState:UIControlStateNormal];
+//  [_moveOutDateLabel setTitle:@"-" forState:UIControlStateNormal];
+  [_moveInDateLabel setTitle:[dateFormmater stringFromDate:
+    [NSDate dateWithTimeIntervalSince1970: object.moveInDate]] forState:UIControlStateNormal];
+  [_moveOutDateLabel setTitle:[dateFormmater stringFromDate: [NSDate dateWithTimeIntervalSince1970: object.moveOutDate]] forState:UIControlStateNormal];
+
   
 }
 

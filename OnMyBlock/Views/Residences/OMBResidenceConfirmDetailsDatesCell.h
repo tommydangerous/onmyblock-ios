@@ -12,7 +12,6 @@
 
 @interface OMBResidenceConfirmDetailsDatesCell : OMBTableViewCell
 
-@property (nonatomic, strong) UILabel *leaseMonthsLabel;
 @property (nonatomic, strong) UIButton *moveInDateLabel;
 @property (nonatomic, strong) UIButton *moveOutDateLabel;
 

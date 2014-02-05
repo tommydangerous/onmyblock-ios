@@ -540,6 +540,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
                           UITableViewCellStyleDefault reuseIdentifier:
                           CalendarCellIdentifier];
         
+        int monthLease = [residence leaseMonths];
+        calendarCell.leaseMonthsLabel.text = [NSString stringWithFormat:@"%d %@ lease",monthLease,monthLease>1?@"months":@"month"];
         calendarCell.calendarView.delegate = self;
         return calendarCell;
       }
