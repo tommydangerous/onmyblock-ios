@@ -12,8 +12,8 @@
 
 @interface OMBResidenceConfirmDetailsDatesCell : OMBTableViewCell
 
-@property (nonatomic, strong) UIButton *moveInDateLabel;
-@property (nonatomic, strong) UIButton *moveOutDateLabel;
+@property (nonatomic, strong) UIButton *moveInDateButton;
+@property (nonatomic, strong) UIButton *moveOutDateButton;
 
 #pragma mark - Methods
 

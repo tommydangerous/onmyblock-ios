@@ -367,20 +367,19 @@
   
   if([calendarCell respondsToSelector:@selector(calendarView)]){
     if(!calendarCell.calendarView.selectedFirst){
-      [detailsCell.moveInDateLabel setTitle:[dateFormmater stringFromDate:date]
-                                   forState:UIControlStateNormal];
-      [detailsCell.moveOutDateLabel setTitle:@"-"
+      [detailsCell.moveInDateButton setTitle:[dateFormmater stringFromDate:date]
                                    forState:UIControlStateNormal];
       calendarCell.calendarView.selectedFirst = date;
       
       // update residence or offer
     }
     else{
-      [detailsCell.moveOutDateLabel setTitle:[dateFormmater stringFromDate: date]
+      [detailsCell.moveOutDateButton setTitle:[dateFormmater stringFromDate: date]
                                   forState:UIControlStateNormal];
       calendarCell.calendarView.selectedSecond = date;
       // update residence or offer
     }
+    [self distintionSelect];
   }
 }
 
@@ -521,8 +520,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell) {
         cell = [[OMBResidenceConfirmDetailsDatesCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: DateIdentifier];
-        [cell.moveInDateLabel addTarget:self action:@selector(showMoveInCalendar) forControlEvents:UIControlEventTouchUpInside];
-        [cell.moveOutDateLabel addTarget:self action:@selector(showMoveOutCalendar) forControlEvents:UIControlEventTouchUpInside];
+        [cell.moveInDateButton addTarget:self action:@selector(showMoveInCalendar) forControlEvents:UIControlEventTouchUpInside];
+        [cell.moveOutDateButton addTarget:self action:@selector(showMoveOutCalendar) forControlEvents:UIControlEventTouchUpInside];
         [cell loadResidence: residence];
       }
       return cell;
@@ -535,10 +534,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         static NSString *CalendarCellIdentifier = @"CalendarCellIdentifier";
         OMBResidenceBookItCalendarCell *calendarCell =
           [tableView dequeueReusableCellWithIdentifier: CalendarCellIdentifier];
-        if (!calendarCell)
+        if (!calendarCell){
           calendarCell = [[OMBResidenceBookItCalendarCell alloc] initWithStyle:
                           UITableViewCellStyleDefault reuseIdentifier:
                           CalendarCellIdentifier];
+          [self firstSelect];
+        }
         
         int monthLease = [residence leaseMonths];
         calendarCell.leaseMonthsLabel.text = [NSString stringWithFormat:@"%d %@ lease",monthLease,monthLease>1?@"months":@"month"];
@@ -1188,9 +1189,60 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
+- (void)distintionSelect{
+  
+  OMBResidenceBookItCalendarCell *calendarCell =
+  (OMBResidenceBookItCalendarCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 1 inSection: 1]];
+  OMBResidenceConfirmDetailsDatesCell *detailsCell =
+  (OMBResidenceConfirmDetailsDatesCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 0 inSection: 1]];
+  if (!calendarCell){
+    calendarCell = [[OMBResidenceBookItCalendarCell alloc] initWithStyle:
+                    UITableViewCellStyleDefault reuseIdentifier:
+                    @"CalendarCellIdentifier"];
+  }
+  if([calendarCell respondsToSelector:@selector(calendarView)]){
+    if(calendarCell.calendarView.selectedFirst){
+      if (!calendarCell.calendarView.selectedSecond) {
+        [detailsCell.moveOutDateButton setTitle:@"Select date"
+                                     forState:UIControlStateNormal];
+        [detailsCell.moveInDateButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [detailsCell.moveOutDateButton  setTitleColor:[UIColor blue] forState:UIControlStateNormal];
+      }else{
+        [detailsCell.moveInDateButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
+        [detailsCell.moveOutDateButton  setTitleColor:[UIColor blue] forState:UIControlStateNormal];
+      }
+    }else{
+        [detailsCell.moveInDateButton setTitle:@"Select date"
+                                  forState:UIControlStateNormal];
+        [detailsCell.moveOutDateButton setTitle:@"-"
+                                  forState:UIControlStateNormal];
+        [detailsCell.moveInDateButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
+        [detailsCell.moveOutDateButton  setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    }
+  }
+}
+
 - (void) done
 {
   [self.view endEditing: YES];
+}
+
+- (void)firstSelect{
+  
+  OMBResidenceBookItCalendarCell *calendarCell =
+  (OMBResidenceBookItCalendarCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 1 inSection: 1]];
+  OMBResidenceConfirmDetailsDatesCell *detailsCell =
+  (OMBResidenceConfirmDetailsDatesCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 0 inSection: 1]];
+  if (!calendarCell){
+    calendarCell = [[OMBResidenceBookItCalendarCell alloc] initWithStyle:
+                    UITableViewCellStyleDefault reuseIdentifier:
+                    @"CalendarCellIdentifier"];
+  }
+  
+  [detailsCell.moveInDateButton setTitle:@"Select date" forState:UIControlStateNormal];
+  [detailsCell.moveInDateButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
+  [detailsCell.moveOutDateButton setTitle:@"-" forState:UIControlStateNormal];
+  [detailsCell.moveOutDateButton  setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
 }
 
 - (void) hideAlert
@@ -1305,10 +1357,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       selectedIndexPath = nil;
       OMBResidenceBookItCalendarCell *calendarCell =
       [self.table dequeueReusableCellWithIdentifier: @"CalendarCellIdentifier"];
-      if (!calendarCell)
+      if (!calendarCell){
         calendarCell = [[OMBResidenceBookItCalendarCell alloc] initWithStyle:
                         UITableViewCellStyleDefault reuseIdentifier:
                         @"CalendarCellIdentifier"];
+      }
       if(calendarCell.calendarView.selectedSecond)
         calendarCell = nil;
     }
@@ -1319,6 +1372,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else {
     selectedIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
   }
+  
+  [self distintionSelect];
+
   [self.table reloadRowsAtIndexPaths: @[
                                         [NSIndexPath indexPathForRow:
                                          0 + 1 inSection:1]

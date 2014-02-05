@@ -59,40 +59,40 @@ reuseIdentifier: (NSString *)reuseIdentifier
         leftUnderline.frame.size.height);
   [moveOutLabel.layer addSublayer: rightUnderline];
 
-  _moveInDateLabel = [[UIButton alloc] init];
-  _moveInDateLabel.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
+  _moveInDateButton = [[UIButton alloc] init];
+  _moveInDateButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
     size: 18];
-  _moveInDateLabel.frame = CGRectMake(moveInLabel.frame.origin.x,
+  _moveInDateButton.frame = CGRectMake(moveInLabel.frame.origin.x,
     moveInLabel.frame.origin.y + moveInLabel.frame.size.height,
       moveInLabel.frame.size.width, moveInLabel.frame.size.height);
-  _moveInDateLabel.titleLabel.textAlignment = moveInLabel.textAlignment;
-  [_moveInDateLabel setTitleColor:[UIColor blue] forState:UIControlStateNormal];
-  [self.contentView addSubview: _moveInDateLabel];
+  _moveInDateButton.titleLabel.textAlignment = moveInLabel.textAlignment;
+  [_moveInDateButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
+  [self.contentView addSubview: _moveInDateButton];
 //  _contactMeButton.backgroundColor = [UIColor blueAlpha: 0.8f];
 //  [_contactMeButton addTarget: self action: @selector(contactMeButtonSelected)
 //             forControlEvents: UIControlEventTouchUpInside];
   
-  _moveOutDateLabel = [[UIButton alloc] init];
-  _moveOutDateLabel.titleLabel.font = _moveInDateLabel.titleLabel.font;
-  _moveOutDateLabel.frame = CGRectMake(moveOutLabel.frame.origin.x,
+  _moveOutDateButton = [[UIButton alloc] init];
+  _moveOutDateButton.titleLabel.font = _moveInDateButton.titleLabel.font;
+  _moveOutDateButton.frame = CGRectMake(moveOutLabel.frame.origin.x,
     moveOutLabel.frame.origin.y + moveOutLabel.frame.size.height,
       moveOutLabel.frame.size.width, moveOutLabel.frame.size.height);
-  _moveOutDateLabel.titleLabel.textAlignment = _moveInDateLabel.titleLabel.textAlignment;
-  [_moveOutDateLabel setTitleColor:[_moveInDateLabel titleColorForState:UIControlStateNormal] forState:UIControlStateNormal];
-  [self.contentView addSubview: _moveOutDateLabel];
+  _moveOutDateButton.titleLabel.textAlignment = _moveInDateButton.titleLabel.textAlignment;
+  [_moveOutDateButton setTitleColor:[_moveInDateButton titleColorForState:UIControlStateNormal] forState:UIControlStateNormal];
+  [self.contentView addSubview: _moveOutDateButton];
 
   UIView *middleLine = [[UIView alloc] init];
   middleLine.backgroundColor = [UIColor grayLight];
   middleLine.frame = CGRectMake((screenWidth - 0.5f) * 0.5, padding,
-    0.5f, _moveInDateLabel.frame.origin.y + 
-      _moveInDateLabel.frame.size.height - (padding * 2));
+    0.5f, _moveInDateButton.frame.origin.y +
+      _moveInDateButton.frame.size.height - (padding * 2));
   [self.contentView addSubview: middleLine];
 
   // Line above the lease months label
   UIView *bottomLine = [[UIView alloc] init];
   bottomLine.backgroundColor = middleLine.backgroundColor;
   bottomLine.frame = CGRectMake(0.0f, 
-    _moveInDateLabel.frame.origin.y + _moveInDateLabel.frame.size.height, 
+    _moveInDateButton.frame.origin.y + _moveInDateButton.frame.size.height,
       screenWidth, 0.5f);
   [self.contentView addSubview: bottomLine];
 
@@ -125,9 +125,9 @@ reuseIdentifier: (NSString *)reuseIdentifier
   
 //  [_moveInDateLabel setTitle:@"Select date" forState:UIControlStateNormal];
 //  [_moveOutDateLabel setTitle:@"-" forState:UIControlStateNormal];
-  [_moveInDateLabel setTitle:[dateFormmater stringFromDate:
+  [_moveInDateButton setTitle:[dateFormmater stringFromDate:
     [NSDate dateWithTimeIntervalSince1970: object.moveInDate]] forState:UIControlStateNormal];
-  [_moveOutDateLabel setTitle:[dateFormmater stringFromDate: [NSDate dateWithTimeIntervalSince1970: object.moveOutDate]] forState:UIControlStateNormal];
+  [_moveOutDateButton setTitle:[dateFormmater stringFromDate: [NSDate dateWithTimeIntervalSince1970: object.moveOutDate]] forState:UIControlStateNormal];
 
   
 }
