@@ -34,8 +34,8 @@ NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
 - (BOOL) application: (UIApplication *) application 
 didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
+  #warning Add these back when in production
   // [self setupTracking];
-
   // [self testFlightTakeOff];
     
   CGRect screen = [[UIScreen mainScreen] bounds];
@@ -56,7 +56,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // #warning Remove fake login
   // [OMBUser fakeLogin]; // Fake login
   // Use this to show whatever view controller you are working on
-  // [_container showManageListings];
+  // [_container showHomebaseRenter];
   // [_container showIntroAnimatedDissolve: NO];
 
   // Check to see if the user has a saved api key in the user defaults

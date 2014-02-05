@@ -61,6 +61,7 @@ extern NSString *const OMBUserTypeLandlord;
 @property (nonatomic, strong) NSMutableDictionary *imageSizeDictionary;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, strong) NSMutableDictionary *messages;
+@property (nonatomic, strong) NSMutableDictionary *movedIn;
 @property (nonatomic, strong) NSTimer *notificationFetchTimer;
 @property (nonatomic, strong) NSMutableDictionary *payoutMethods;
 @property (nonatomic, strong) NSMutableDictionary *receivedOffers;
@@ -105,6 +106,7 @@ withCompletion: (void (^) (NSError *error)) block;
   completion: (void (^) (NSError *error)) block;
 - (void) createPayoutMethodWithDictionary: (NSDictionary *) dictionary
 withCompletion: (void (^) (NSError *error)) block;
+- (void) declineAndPutOtherOffersOnHold: (OMBOffer *) offer;
 - (void) declineOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
 - (NSArray *) depositPayoutMethods;
@@ -115,6 +117,7 @@ withCompletion: (void (^) (NSError *error)) block;
 - (void) fetchConfirmedTenantsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchCurrentUserInfo;
 - (void) fetchEmploymentsWithCompletion: (void (^) (NSError *error)) block;
+- (void) fetchMovedInWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchPayoutMethodsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchDepositPayoutTransactionsWithCompletion:
   (void (^) (NSError *error)) block;
@@ -149,6 +152,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromFavoriteResidencesDictionary: (NSDictionary *) dictionary;
 - (void) readFromLegalAnswerDictionary: (NSDictionary *) dictionary;
 - (void) readFromMessagesDictionary: (NSDictionary *) dictionary;
+- (void) readFromMovedInDictionary: (NSDictionary *) dictionary;
 - (void) readFromPayoutMethodsDictionary: (NSDictionary *) dictionary;
 - (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary;
 - (void) readFromReceivedOffersDictionary: (NSDictionary *) dictionary;

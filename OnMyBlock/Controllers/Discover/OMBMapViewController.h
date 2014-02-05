@@ -14,6 +14,7 @@
 
 @class AMBlurView;
 @class OCMapView;
+@class OMBActivityView;
 @class OMBMapFilterViewController;
 @class OMBPropertyInfoView;
 
@@ -32,8 +33,10 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
   UITableViewDelegate>
 {
   UIActivityIndicatorView *activityIndicatorView;
+  OMBActivityView *activityView;
   CLLocationCoordinate2D centerCoordinate;
   CGFloat currentDistanceOfScrolling;
+  NSArray *currentResidencesForList;
   UIButton *currentLocationButton;
   OMBMapViewListSortKey currentSortKey;
   BOOL fetching;

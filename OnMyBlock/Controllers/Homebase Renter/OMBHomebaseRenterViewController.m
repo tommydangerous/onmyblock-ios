@@ -22,11 +22,12 @@
 #import "OMBHomebaseRenterRentDepositInfoViewController.h"
 #import "OMBHomebaseRenterRoommateImageView.h"
 #import "OMBHomebaseRenterTopPriorityCell.h"
+#import "OMBOffer.h"
 #import "OMBOfferInquiryViewController.h"
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutTransaction.h"
 #import "OMBPayPalVerifyMobilePaymentConnection.h"
-#import "OMBOffer.h"
+#import "OMBRenterProfileViewController.h"
 #import "OMBResidence.h"
 #import "OMBScrollView.h"
 #import "OMBViewControllerContainer.h"
@@ -210,7 +211,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
     _activityTableView.frame.size.width, 
       ((backView.frame.origin.y + backView.frame.size.height) - 
       tableViewOriginY));
-  activityTableViewHeader.scrollView = imagesScrollView;
+  // activityTableViewHeader.scrollView = imagesScrollView;
   _activityTableView.tableHeaderView = activityTableViewHeader;
   // Footer view
   _activityTableView.tableFooterView = [[UIView alloc] initWithFrame: 
@@ -241,6 +242,20 @@ float kHomebaseRenterImagePercentage = 0.3f;
 
   alert = [[OMBAlertView alloc] init];
 
+  // User image view
+  CGFloat userImageSize = backView.frame.size.width / 3.0f;
+  CGRect userImageViewRect = CGRectMake(
+    (activityTableViewHeader.frame.size.width - userImageSize) * 0.5f,
+      (activityTableViewHeader.frame.size.height - userImageSize) * 0.5f,
+        userImageSize, userImageSize);
+  userImageView = [[OMBHomebaseRenterRoommateImageView alloc] initWithFrame:
+    userImageViewRect];
+  [activityTableViewHeader addSubview: userImageView];
+
+  tapGesture = [[UITapGestureRecognizer alloc] initWithTarget: self
+    action: @selector(showMyRenterProfile)];
+  [userImageView addGestureRecognizer: tapGesture];
+
   // Add/Remove Roommates button
   // addRemoveRoommatesButton = [UIButton new];
   // addRemoveRoommatesButton.frame = CGRectMake(
@@ -253,8 +268,8 @@ float kHomebaseRenterImagePercentage = 0.3f;
   //     forControlEvents: UIControlEventTouchUpInside];
   // [self.view addSubview: addRemoveRoommatesButton];
 
-  tapGesture = [[UITapGestureRecognizer alloc] initWithTarget: self
-    action: @selector(showAddRemoveRoommates)];
+  // tapGesture = [[UITapGestureRecognizer alloc] initWithTarget: self
+  //   action: @selector(showAddRemoveRoommates)];
 
   [self changeTableView];
 }
@@ -267,56 +282,73 @@ float kHomebaseRenterImagePercentage = 0.3f;
   // [self showAddRemoveRoommates];
 
   [backView refreshWithImage: 
-    [UIImage imageNamed: @"intro_still_image_slide_3_background.jpg"]];
+    [UIImage imageNamed: @"intro_still_image_slide_2_background.jpg"]];
 
-  [imageViewArray removeAllObjects];
-  [imagesScrollView.subviews enumerateObjectsUsingBlock: 
-    ^(id obj, NSUInteger idx, BOOL *stop) {
-      UIView *v = (UIView *) obj;
-      if (v.tag == 9999)
-        [v removeFromSuperview];
-    }
-  ];
+  // NSInteger tag = 9999;
+  // [imageViewArray removeAllObjects];
+  // [imagesScrollView.subviews enumerateObjectsUsingBlock: 
+  //   ^(id obj, NSUInteger idx, BOOL *stop) {
+  //     UIView *v = (UIView *) obj;
+  //     if (v.tag == tag)
+  //       [v removeFromSuperview];
+  //   }
+  // ];
 
-  CGFloat imageSize = backView.frame.size.width / 3.0f;
-  for (int i = 0; i < 1; i++) {
-    CGRect rect = CGRectMake(imageSize * i, 0.0f, imageSize, 
-      imagesScrollView.frame.size.height);
-    OMBHomebaseRenterRoommateImageView *imageView = 
-      [[OMBHomebaseRenterRoommateImageView alloc] initWithFrame: rect];
-    imageView.tag = 9999;
-    // if (i == 2) {
-    //   [imageView setupForAddRoommate];
-    // }
-    // else if (i % 2) {
-    //   imageView.imageView.image = [UIImage imageNamed: @"tommy_d.png"];
-    //   imageView.nameLabel.text = @"Tommy";
-    // }
-    // else {
-    //   imageView.imageView.image = [UIImage imageNamed: @"edward_d.jpg"];
-    //   imageView.nameLabel.text = @"Edward";
-    // }
-    if ([OMBUser currentUser].image) {
-      imageView.imageView.image = [OMBUser currentUser].image;
-      imageView.nameLabel.text  = 
-        [[OMBUser currentUser].firstName capitalizedString];
-    }
-    else {
-      [[OMBUser currentUser] downloadImageFromImageURLWithCompletion: 
-        ^(NSError *error) {
-          imageView.imageView.image = [OMBUser currentUser].image;
-        }
-      ];
-      imageView.imageView.image = 
-        [[UIImage imageNamed: @"user_icon_default.png"] negativeImage];
-    }
-    [imageViewArray addObject: imageView];
-    [imagesScrollView addSubview: imageView];
+  // CGFloat imageSize = backView.frame.size.width / 3.0f;
+  // for (int i = 0; i < 1; i++) {
+  //   CGRect rect = CGRectMake(imageSize * i, 0.0f, imageSize, 
+  //     imagesScrollView.frame.size.height);
+
+  //   OMBHomebaseRenterRoommateImageView *imageView = 
+  //     [[OMBHomebaseRenterRoommateImageView alloc] initWithFrame: rect];
+  //   imageView.tag = tag;
+  //   // if (i == 2) {
+  //   //   [imageView setupForAddRoommate];
+  //   // }
+  //   // else if (i % 2) {
+  //   //   imageView.imageView.image = [UIImage imageNamed: @"tommy_d.png"];
+  //   //   imageView.nameLabel.text = @"Tommy";
+  //   // }
+  //   // else {
+  //   //   imageView.imageView.image = [UIImage imageNamed: @"edward_d.jpg"];
+  //   //   imageView.nameLabel.text = @"Edward";
+  //   // }
+  //   if ([OMBUser currentUser].image) {
+  //     imageView.imageView.image = [OMBUser currentUser].image;
+  //     imageView.nameLabel.text  = 
+  //       [[OMBUser currentUser].firstName capitalizedString];
+  //   }
+  //   else {
+  //     [[OMBUser currentUser] downloadImageFromImageURLWithCompletion: 
+  //       ^(NSError *error) {
+  //         imageView.imageView.image = [OMBUser currentUser].image;
+  //       }
+  //     ];
+  //     imageView.imageView.image = 
+  //       [[UIImage imageNamed: @"user_icon_default.png"] negativeImage];
+  //   }
+  //   [imageViewArray addObject: imageView];
+  //   [imagesScrollView addSubview: imageView];
+  // }
+
+  if ([OMBUser currentUser].image) {
+    userImageView.imageView.image = [OMBUser currentUser].image;
   }
+  else {
+    [[OMBUser currentUser] downloadImageFromImageURLWithCompletion: 
+      ^(NSError *error) {
+        userImageView.imageView.image = [OMBUser currentUser].image;
+      }
+    ];
+    userImageView.imageView.image = 
+      [[UIImage imageNamed: @"user_icon_default.png"] negativeImage];
+  }
+  userImageView.nameLabel.text =
+    [[OMBUser currentUser].firstName capitalizedString];
 
-  imagesScrollView.contentSize = CGSizeMake(imageSize * (1 + 0), 
-    imagesScrollView.frame.size.height);
-  [imagesScrollView setContentOffset: CGPointZero animated: NO];
+  // imagesScrollView.contentSize = CGSizeMake(imageSize * (1 + 0), 
+  //   imagesScrollView.frame.size.height);
+  // [imagesScrollView setContentOffset: CGPointZero animated: NO];
   // [imagesScrollView setContentOffset: 
   //   CGPointMake(imagesScrollView.frame.size.width, 0.0f) animated: NO];
 
@@ -337,6 +369,13 @@ float kHomebaseRenterImagePercentage = 0.3f;
     }];
     cameFromSettingUpPayoutMethods = NO;
   }
+
+  // Fetch confirmed tenants
+  [[OMBUser currentUser] fetchMovedInWithCompletion:
+    ^(NSError *error) {
+      [_activityTableView reloadData];
+    }
+  ];
 }
 
 #pragma mark - Protocol
@@ -537,8 +576,8 @@ float kHomebaseRenterImagePercentage = 0.3f;
   // Activity
   if (tableView == _activityTableView) {
     // Top Priority
-    // Recent Activity
-    return 1;
+    // Move In
+    return 2;
     // return 2;
   }
   // Payments
@@ -610,8 +649,48 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         return cell1;
       }
     }
-    // Recent Activity
+    // Moved In
     else if (indexPath.section == 1) {
+      // Blank space
+      if (indexPath.row == 0) {
+        static NSString *EmptyTenantsCellIdentifier = 
+          @"EmptyTenantsCellIdentifier";
+        OMBEmptyImageTwoLabelCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
+            EmptyTenantsCellIdentifier];
+        if (!cell1)
+          cell1 = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: 
+              EmptyTenantsCellIdentifier];
+        [cell1 setTopLabelText: @"Moved in places here"];
+        [cell1 setMiddleLabelText: @"After you confirm, pay, &"];
+        [cell1 setBottomLabelText: @"sign the lease."];
+        [cell1 setObjectImageViewImage: [UIImage imageNamed: 
+          @"group_icon.png"]];
+        return cell1;
+
+        // cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+        //   tableView.frame.size.width, 0.0f, 0.0f);
+      }
+      else {
+        static NSString *ConfirmedTenantIdentifier = 
+          @"ConfirmedTenantIdentifier";
+        OMBHomebaseLandlordOfferCell *cell1 = 
+          [tableView dequeueReusableCellWithIdentifier:
+            ConfirmedTenantIdentifier];
+        if (!cell1) {
+          cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle: 
+            UITableViewCellStyleDefault reuseIdentifier: 
+              ConfirmedTenantIdentifier];
+          // Account for empty row
+          [cell1 loadConfirmedTenant:
+            [[self movedIn] objectAtIndex: indexPath.row - 1]];
+        }
+        return cell1;
+      }
+    }
+    // Recent Activity
+    else if (indexPath.section == 99) {
       static NSString *NotificationCellIdentifier = 
         @"NotificationCellIdentifier";
       OMBHomebaseRenterNotificationCell *cell1 = 
@@ -665,8 +744,13 @@ numberOfRowsInSection: (NSInteger) section
       return 1 + [[[OMBUser currentUser].acceptedOffers allValues] count];
       // return 2;
     }
-    // Recent Activity
+    // Moved In
     else if (section == 1) {
+      // First row is for when there are no moved in
+      return 1 + [[OMBUser currentUser].movedIn count];
+    }
+    // Recent Activity
+    else if (section == 99) {
       return 0;
       // return 10;
     }
@@ -688,6 +772,7 @@ numberOfRowsInSection: (NSInteger) section
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (tableView == _activityTableView) {
+    // Offers
     if (indexPath.section == 0) {
       if (indexPath.row > 0) {
         OMBOffer *offer = [[self offers] objectAtIndex: 
@@ -695,6 +780,15 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         [self.navigationController pushViewController:
           [[OMBOfferInquiryViewController alloc] initWithOffer: offer]
             animated: YES];
+      }
+    }
+    // Moved In
+    else if (indexPath.section == 1) {
+      if (indexPath.row > 0) {
+        [self.navigationController pushViewController:
+          [[OMBOfferInquiryViewController alloc] 
+            initWithOffer: [[self movedIn] objectAtIndex: 
+              indexPath.row - 1]] animated: YES];
       }
     }
   }
@@ -723,12 +817,38 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         }
       }
       else {
+        OMBOffer *offer = [[self offers] objectAtIndex: indexPath.row - 1];
+        if (![offer isExpiredForLandlord] && [offer statusForStudent] ==
+          OMBOfferStatusForStudentWaitingForLandlordResponse) {
+          return [OMBHomebaseLandlordOfferCell heightForCellWithNotes];
+        }
+        else if ([offer statusForStudent] == OMBOfferStatusForStudentOnHold) {
+          return [OMBHomebaseLandlordOfferCell heightForCellWithNotes];
+        }
+        else if (![offer isExpiredForStudent] && [offer statusForStudent] ==
+          OMBOfferStatusForStudentAccepted) {
+          return [OMBHomebaseLandlordOfferCell heightForCellWithNotes]; 
+        }
         // return [OMBHomebaseRenterTopPriorityCell heightForCell];
         return [OMBHomebaseLandlordOfferCell heightForCell];
       }
     }
-    // Recent Activity
+    // Moved In
     else if (indexPath.section == 1) {
+      // Blank space
+      if (indexPath.row == 0) {
+        if ([[[OMBUser currentUser].movedIn allValues] count] == 0) {
+          return [OMBEmptyImageTwoLabelCell heightForCell];
+          // return tableView.frame.size.height - 
+          //   (tableView.tableHeaderView.frame.size.height + (13.0f * 2));
+        }
+      }
+      else {
+        return [OMBHomebaseLandlordOfferCell heightForCell];
+      }
+    }
+    // Recent Activity
+    else if (indexPath.section == 99) {
       return [OMBHomebaseRenterNotificationCell heightForCell];
     }
   }
@@ -765,7 +885,7 @@ viewForHeaderInSection: (NSInteger) section
       titleString = @"Top Priority";
     }
     else if (section == 1) {
-      titleString = @"Recent Activity";
+      titleString = @"Moved In";
     }
   }
   // Payments
@@ -985,6 +1105,11 @@ viewForHeaderInSection: (NSInteger) section
   [alert hideAlert];
 }
 
+- (NSArray *) movedIn
+{
+  return [[OMBUser currentUser].movedIn allValues];
+}
+
 - (NSArray *) offers
 {
   return [[OMBUser currentUser] sortedOffersType: OMBUserOfferTypeAccepted 
@@ -1132,6 +1257,14 @@ viewForHeaderInSection: (NSInteger) section
   [self.navigationController pushViewController: 
     [[OMBHomebaseRenterAddRemoveRoommatesViewController alloc] init] 
       animated: YES];
+}
+
+- (void) showMyRenterProfile
+{
+  OMBRenterProfileViewController *vc = 
+    [[OMBRenterProfileViewController alloc] init];
+  [vc loadUser: [OMBUser currentUser]];
+  [self.navigationController pushViewController: vc animated: YES];
 }
 
 - (void) showPayPalPayment

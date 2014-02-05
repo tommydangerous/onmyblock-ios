@@ -26,7 +26,6 @@
   return self;
 }
 
-
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
@@ -68,7 +67,6 @@
     }
     _payee = obj;
   }
-
 
   // Payer
   if ([dictionary objectForKey: @"payer"] != [NSNull null]) {

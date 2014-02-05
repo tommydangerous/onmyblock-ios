@@ -746,6 +746,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   else {
     _moveInDate = [[NSDate date] timeIntervalSince1970];
   }
+  
   // Move-out Date
   if ([dictionary objectForKey: @"move_out_date"] != [NSNull null] &&
     [[dictionary objectForKey: @"move_out_date"] length]) {
@@ -753,9 +754,10 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
       [dictionary objectForKey: @"move_out_date"]];
     _moveOutDate = [date timeIntervalSince1970];
   }
-  else {
-    _moveOutDate = [[NSDate date] timeIntervalSince1970];
-  }
+  // else {
+  //   _moveOutDate = [[NSDate date] timeIntervalSince1970];
+  // }
+
   // Phone
   if ([dictionary objectForKey: @"phone"] != [NSNull null])
     _phone = [dictionary objectForKey: @"phone"];

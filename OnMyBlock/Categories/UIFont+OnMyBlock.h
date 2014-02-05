@@ -22,6 +22,8 @@ extern NSString *const OMBFontNameBold;
 + (UIFont *) largeTextFontBold;
 + (UIFont *) mediumTextFont;
 + (UIFont *) mediumTextFontBold;
++ (UIFont *) mediumLargeTextFont;
++ (UIFont *) mediumLargeTextFontBold;
 + (UIFont *) normalTextFont;
 + (UIFont *) normalTextFontBold;
 + (UIFont *) smallTextFont;

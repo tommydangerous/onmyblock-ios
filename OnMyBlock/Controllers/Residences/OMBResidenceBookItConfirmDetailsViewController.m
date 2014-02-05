@@ -12,10 +12,13 @@
 #import "DRNRealTimeBlurView.h"
 #import "NSString+Extensions.h"
 #import "OMBAlertView.h"
+#import "OMBAlertViewBlur.h"
 #import "OMBCenteredImageView.h"
 #import "OMBGradientView.h"
 #import "OMBOffer.h"
+#import "OMBPayoutMethod.h"
 #import "OMBPayoutMethodListCell.h"
+#import "OMBPayoutMethodUpdateConnection.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBRenterProfileViewController.h"
 #import "OMBResidence.h"
@@ -38,6 +41,9 @@
 - (id) initWithResidence: (OMBResidence *) object
 {
   if (!(self = [super init])) return nil;
+
+  dateFormatter1 = [NSDateFormatter new];
+  dateFormatter1.dateFormat = @"MMM d, yyyy";
 
   residence = object;
   deposit = 0;
@@ -171,12 +177,12 @@
   submitOfferButton.frame = submitView.bounds;
   // submitOfferButton.layer.cornerRadius = 2.0f;
   submitOfferButton.titleLabel.font = [UIFont normalTextFontBold];
-  [submitOfferButton addTarget: self action: @selector(showAlert)
-    forControlEvents: UIControlEventTouchUpInside];
+  [submitOfferButton addTarget: self 
+    action: @selector(submitOfferButtonSelected)
+      forControlEvents: UIControlEventTouchUpInside];
   [submitOfferButton setBackgroundImage: 
     [UIImage imageWithColor: [UIColor blueHighlighted]] 
       forState: UIControlStateHighlighted];
-  [submitOfferButton setTitle: @"Submit Offer" forState: UIControlStateNormal];
   [submitOfferButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [submitView addSubview: submitOfferButton];
@@ -263,6 +269,9 @@
     forButton: alert.alertConfirm];
   [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
   [alert.alertConfirm setTitle: @"Submit" forState: UIControlStateNormal];
+
+  // Alert view blur
+  alertBlur = [[OMBAlertViewBlur alloc] init];
 }
 
 - (void) viewDidAppear: (BOOL) animated
@@ -349,6 +358,16 @@
     CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999) 
       options: NSStringDrawingUsesLineFragmentOrigin context: nil];
   submitOfferNotesSize = rect2.size;
+
+  // Submit button
+  if ([[OMBUser currentUser] primaryPaymentPayoutMethod]) {
+    [submitOfferButton setTitle: @"Submit Offer" 
+      forState: UIControlStateNormal];
+  }
+  else {
+    [submitOfferButton setTitle: @"Add a new payout method" 
+      forState: UIControlStateNormal];
+  }
 
   [self.table reloadData];
 }
@@ -721,6 +740,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       OMBPayoutMethod *payoutMethod = [[self payoutMethods] objectAtIndex: 
         indexPath.row];
       [cell loadPayoutMethod: payoutMethod];
+      if (indexPath.row == [[self payoutMethods] count] - 1) {
+        cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+          tableView.frame.size.width, 0.0f, 0.0f);
+      }
       return cell;
     }
     else {
@@ -731,9 +754,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[UITableViewCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: AddPayoutID];
         UILabel *label = [UILabel new];
+        label.font = [UIFont normalTextFont];
+        label.frame = CGRectMake(padding, 0.0f, 
+          tableView.frame.size.width - (padding * 2),
+            [OMBPayoutMethodListCell heightForCell]);
+        label.text = @"Add a new payout method";
+        label.textColor = [UIColor blue];
+        [cell.contentView addSubview: label];
       }
-      return cell;
       cell.backgroundColor = [UIColor grayUltraLight];
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.separatorInset = UIEdgeInsetsMake(0.0f, 
         tableView.frame.size.width, 0.0f, 0.0f);
       return cell;
@@ -1013,6 +1043,39 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         atScrollPosition: UITableViewScrollPositionTop animated: YES];
     }
   }
+  // Payout methods
+  else if (indexPath.section == 
+    OMBResidenceBookItConfirmDetailsSectionPayoutMethods) {
+    // Add a new payout method
+    if (indexPath.row == [[OMBUser currentUser].payoutMethods count]) {
+      [[self appDelegate].container showPayoutMethods];
+    }
+    // The other payout methods
+    else {
+      OMBPayoutMethod *payoutMethod = [[self payoutMethods] objectAtIndex: 
+        indexPath.row];
+      payoutMethod.primary = YES;
+      OMBPayoutMethodUpdateConnection *conn =
+        [[OMBPayoutMethodUpdateConnection alloc] initWithPayoutMethod:
+          payoutMethod attributes: @[@"primary"]];
+      conn.completionBlock = ^(NSError *error) {
+        if (payoutMethod.primary == YES && !error) {
+          // Make all other payout methods that are primary and the 
+          // same deposit (or payment) not primary
+          if (payoutMethod.primary)
+            [[OMBUser currentUser] changeOtherSamePrimaryPayoutMethods:
+              payoutMethod];
+          [self.table reloadData];
+        }
+        else {
+          [self showAlertViewWithError: error];
+        }
+        [[self appDelegate].container stopSpinning];
+      };
+      [[self appDelegate].container startSpinning];
+      [conn start];
+    }
+  }
   // Submit offer notes
   else if (indexPath.section == 
     OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes) {
@@ -1169,9 +1232,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table beginUpdates];
   [self.table endUpdates];
   [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
+  
   [self.table scrollToRowAtIndexPath: 
-    [NSIndexPath indexPathForRow: 3 inSection: 4] 
-      atScrollPosition: UITableViewScrollPositionTop animated: YES];
+    [NSIndexPath indexPathForRow: 0 inSection:
+      OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes] 
+        atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
 - (void) textViewDidChange: (UITextView *) textView
@@ -1189,6 +1254,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
+
+
+- (void) closeAlertBlur
+{
+  [alertBlur close];
+}
+
 - (void)distintionSelect{
   
   OMBResidenceBookItCalendarCell *calendarCell =
@@ -1204,7 +1276,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if(calendarCell.calendarView.selectedFirst){
       if (!calendarCell.calendarView.selectedSecond) {
         [detailsCell.moveOutDateButton setTitle:@"Select date"
-                                     forState:UIControlStateNormal];
+                                       forState:UIControlStateNormal];
         [detailsCell.moveInDateButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         [detailsCell.moveOutDateButton  setTitleColor:[UIColor blue] forState:UIControlStateNormal];
       }else{
@@ -1212,12 +1284,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         [detailsCell.moveOutDateButton  setTitleColor:[UIColor blue] forState:UIControlStateNormal];
       }
     }else{
-        [detailsCell.moveInDateButton setTitle:@"Select date"
-                                  forState:UIControlStateNormal];
-        [detailsCell.moveOutDateButton setTitle:@"-"
-                                  forState:UIControlStateNormal];
-        [detailsCell.moveInDateButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
-        [detailsCell.moveOutDateButton  setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+      [detailsCell.moveInDateButton setTitle:@"Select date"
+                                    forState:UIControlStateNormal];
+      [detailsCell.moveOutDateButton setTitle:@"-"
+                                     forState:UIControlStateNormal];
+      [detailsCell.moveInDateButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
+      [detailsCell.moveOutDateButton  setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
     }
   }
 }
@@ -1248,6 +1320,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) hideAlert
 {
   [alert hideAlert];
+}
+
+- (void) hideAlertBlurAndPopController
+{
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    alertBlur.alpha = 0.0f;
+  } completion: ^(BOOL finished) {
+    if (finished) {
+      [self.navigationController popViewControllerAnimated: YES];
+      [alertBlur close];
+    }
+  }];
 }
 
 - (void) keyboardWillHide: (NSNotification *) notification
@@ -1387,6 +1471,86 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 -(void) showMoveOutCalendar{
   [self showCalendar];
+}
+
+- (void) submitOfferButtonSelected
+{
+  if ([[OMBUser currentUser] primaryPaymentPayoutMethod]) {
+    [self submitOfferFinalAnswer];
+  }
+  else {
+    [[self appDelegate].container showPayoutMethods];
+  }
+}
+
+- (void) submitOfferFinalAnswer
+{
+  offer.amount = residence.minRent;
+  offer.note   = personalNote;
+  NSString *moveInDateString = [dateFormatter1 stringFromDate:
+      [NSDate dateWithTimeIntervalSince1970: offer.residence.moveInDate]];
+  NSDate *moveOutDate = [offer.residence moveOutDateDate];
+  if (offer.residence.moveOutDate)
+    moveOutDate = [NSDate dateWithTimeIntervalSince1970: 
+      offer.residence.moveOutDate];
+  NSString *moveOutDateString = [dateFormatter1 stringFromDate:
+    moveOutDate];
+
+  [alertBlur setTitle: @"Place Offer"];
+  [alertBlur setMessage: [NSString stringWithFormat: @"Are you sure you "
+    @"want to submit an offer to rent this place from %@ - %@ for %@/mo?",
+      moveInDateString, moveOutDateString, 
+        [NSString numberToCurrencyString: offer.amount]]];
+  [alertBlur resetQuestionDetails];
+  [alertBlur hideQuestionButton];
+
+  // Buttons
+  [alertBlur setCancelButtonTitle: @"Cancel"];
+  [alertBlur setConfirmButtonTitle: @"Submit"];
+
+  [alertBlur addTargetForCancelButton: self 
+    action: @selector(closeAlertBlur)];
+  [alertBlur addTargetForConfirmButton: self
+    action: @selector(submitOfferConfirmed)];
+
+  [alertBlur showInView: self.view];
+}
+
+- (void) submitOfferConfirmed
+{
+  [[OMBUser currentUser] createOffer: offer completion: ^(NSError *error) {
+    if (offer.uid && !error) {
+      NSString *userTypeString = @"landlord";
+      if ([residence.propertyType isEqualToString: @"sublet"])
+        userTypeString = @"subletter";
+      
+      [alertBlur setTitle: @"Offer Placed!"];
+      [alertBlur setMessage: [NSString stringWithFormat:
+        @"The %@ has been notified of your offer and will be getting back "
+        @"to you within 24 hours.\n\n"
+        @"If the %@ accepts your offer, you will have 48 hours to confirm "
+        @"and pay the 1st month's rent and deposit through your "
+        @"selected payment method. If the %@ for some reason rejects your "
+        @"offer, you will be notified immediately. You can improve "
+        @"your chances of being accepted by completing your renter profile!", 
+          userTypeString, userTypeString, userTypeString]];
+      [alertBlur resetQuestionDetails];
+      [alertBlur hideQuestionButton];
+      // Buttons
+      [alertBlur setConfirmButtonTitle: @"Okay"];
+      [alertBlur addTargetForConfirmButton: self
+        action: @selector(hideAlertBlurAndPopController)];
+      [alertBlur showOnlyConfirmButton];
+      [alertBlur animateChangeOfContent];
+    }
+    else {
+      [self showAlertViewWithError: error];
+      // Try again
+      [self submitOfferFinalAnswer];
+    }
+    [[self appDelegate].container stopSpinning];
+  }];
+  [[self appDelegate].container startSpinning];
 }
 
 - (void) submitOffer

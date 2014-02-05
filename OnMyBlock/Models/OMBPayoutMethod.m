@@ -23,8 +23,14 @@
   return self;
 }
 
-
 #pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (CGFloat) maximumVenmoTransfer
+{
+  return 3000.00;
+}
 
 #pragma mark - Instance Methods
 

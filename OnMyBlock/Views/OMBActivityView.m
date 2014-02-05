@@ -31,28 +31,28 @@
   self.userInteractionEnabled = NO;
 
   CGFloat spinnerViewSize = screenWidth * 0.3f;
-  spinnerView = [UIView new];
-  spinnerView.frame = CGRectMake((screenWidth - spinnerViewSize) * 0.5f,
+  _spinnerView = [UIView new];
+  _spinnerView.frame = CGRectMake((screenWidth - spinnerViewSize) * 0.5f,
     (screenHeight - spinnerViewSize) * 0.5f, spinnerViewSize, spinnerViewSize);
-  spinnerView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.5f];
-  spinnerView.layer.cornerRadius = 5.0f;
-  [self addSubview: spinnerView];
+  _spinnerView.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.5f];
+  _spinnerView.layer.cornerRadius = 5.0f;
+  [self addSubview: _spinnerView];
 
-  spinner = [UIView new];
-  spinner.frame = self.frame;
-  [self addSubview: spinner];
+  _spinner = [UIView new];
+  _spinner.frame = self.frame;
+  [self addSubview: _spinner];
 
-  CGFloat circleSize = spinner.frame.size.width * 0.05f;
+  CGFloat circleSize = _spinner.frame.size.width * 0.05f;
   circle = [UIView new];
-  circle.frame = CGRectMake((spinner.frame.size.width - circleSize) * 0.5f,
-    (spinner.frame.size.height - circleSize) * 0.5f, circleSize, circleSize);
+  circle.frame = CGRectMake((_spinner.frame.size.width - circleSize) * 0.5f,
+    (_spinner.frame.size.height - circleSize) * 0.5f, circleSize, circleSize);
   circle.layer.borderColor = [UIColor whiteColor].CGColor;
   circle.layer.borderWidth = 1.0f;
   circle.layer.cornerRadius = circle.frame.size.width * 0.5f;
-  [spinner addSubview: circle];
+  [_spinner addSubview: circle];
 
-  line = [[OMBCurvedLineView alloc] initWithFrame: spinner.frame];
-  [spinner addSubview: line];
+  line = [[OMBCurvedLineView alloc] initWithFrame: _spinner.frame];
+  [_spinner addSubview: line];
 
   return self;
 }
@@ -101,7 +101,7 @@
     animation.duration  = 0.8f;
     animation.toValue = [NSNumber numberWithFloat: DEGREES_TO_RADIANS(-360.0)];
     animation.repeatCount  = HUGE_VALF;
-    [[spinner layer] addAnimation: animation 
+    [[_spinner layer] addAnimation: animation 
       forKey: @"transformRotationAnimation"];
 
     CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:
@@ -120,7 +120,7 @@
   [UIView animateWithDuration: 0.1 animations: ^{
     self.alpha = 0.0f;
   } completion: ^(BOOL finished) {
-    [[spinner layer] removeAnimationForKey: @"transformRotationAnimation"];
+    [[_spinner layer] removeAnimationForKey: @"transformRotationAnimation"];
     [[circle layer] removeAnimationForKey: @"transformScaleAnimation"];
   }];
 }

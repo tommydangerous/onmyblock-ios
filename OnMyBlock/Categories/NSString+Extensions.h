@@ -18,6 +18,8 @@
 + (NSString *) stringFromDateForJSON: (NSDate *) date;
 + (NSString *) stripLower: (NSString *) string;
 + (NSString *) timeAgoInShortFormatWithTimeInterval: (NSTimeInterval) interval;
++ (NSString *) timeRemainingShortFormatWithAllUnitsInterval: 
+  (NSTimeInterval) interval;
 + (NSString *) timeRemainingShortFormatWithInterval: (NSTimeInterval) interval;
 
 #pragma mark - Instance Methods

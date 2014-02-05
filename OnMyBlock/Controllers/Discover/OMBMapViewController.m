@@ -13,6 +13,7 @@
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
 #import "OCMapView.h"
+#import "OMBActivityView.h"
 #import "OMBAnnotation.h"
 #import "OMBAnnotationCity.h"
 #import "OMBAnnotationView.h"
@@ -34,6 +35,9 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
+
+#define CLCOORDINATE_EPSILON 0.005f
+#define CLCOORDINATES_EQUAL2( coord1, coord2 ) (fabs(coord1.latitude - coord2.latitude) < CLCOORDINATE_EPSILON && fabs(coord1.longitude - coord2.longitude) < CLCOORDINATE_EPSILON)
 
 float const PropertyInfoViewImageHeightPercentage = 0.4;
 
@@ -80,7 +84,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   self.view     = [[UIView alloc] initWithFrame: screen];
   CGFloat screenHeight = screen.size.height;
   CGFloat screenWidth = screen.size.width;
-  CGFloat padding = 20.0f;
+  CGFloat padding = OMBPadding;
 
   // Navigation item
   // Left bar button item
@@ -315,9 +319,24 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [propertyInfoView addGestureRecognizer: tap];
 
   // Activity indicator view
-  // activityIndicatorView = 
-  //   [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
-  //     UIActivityIndicatorViewStyleWhite];
+  activityIndicatorView = 
+    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
+      UIActivityIndicatorViewStyleWhiteLarge];
+  activityIndicatorView.frame = CGRectMake(
+    (screenWidth - activityIndicatorView.frame.size.width) * 0.5f,
+      screenHeight - (activityIndicatorView.frame.size.height * 2),
+        activityIndicatorView.frame.size.width,
+          activityIndicatorView.frame.size.height);
+  [_listViewContainer addSubview: activityIndicatorView];
+
+  activityView = [[OMBActivityView alloc] init];
+  [_listViewContainer addSubview: activityView];
+  activityView.spinnerView.backgroundColor = [UIColor clearColor];
+  CGRect spinRect = activityView.spinner.frame;
+  spinRect.origin.y = screenHeight - 
+    ((spinRect.size.height * 0.5f) + 
+      activityView.spinnerView.frame.size.height);
+  activityView.spinner.frame = spinRect;
 }
 
 - (void) viewDidAppear: (BOOL) animated
@@ -441,8 +460,12 @@ didUpdateLocations: (NSArray *) locations
   [self deselectAnnotations];
   [self hidePropertyInfoView];
 
-  if (![self isOnList])
-    [self resetListViewResidences];
+  if (![self isOnList]) {
+    // If the center coordinate changed
+    if (!CLCOORDINATES_EQUAL2(map.centerCoordinate, centerCoordinate)) {
+      [self resetListViewResidences];
+    }
+  }
 }
 
 - (void) DONOTHINGmapView: (MKMapView *) map 
@@ -647,6 +670,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell = [[OMBResidenceCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
   }
+  OMBResidence *residence = [[self residencesForList] objectAtIndex: 
+    indexPath.row];
+  [cell loadResidenceData: residence];
   __weak OMBMapViewController *weakSelf = self;
   cell.residencePartialView.selected = 
     ^(OMBResidence *residence, NSInteger __unused imageIndex) {
@@ -660,7 +686,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  return [[OMBResidenceListStore sharedStore].residences count];
+  return [currentResidencesForList count];
+  // return [[OMBResidenceListStore sharedStore].residences count];
   // return [[self propertiesSortedBy: @"" ascending: NO] count];
 }
 
@@ -705,23 +732,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
   return screen.size.height * PropertyInfoViewImageHeightPercentage;
-}
-
-- (void) tableView: (UITableView *) tableView 
-willDisplayCell: (UITableViewCell *) cell 
-forRowAtIndexPath: (NSIndexPath *) indexPath
-{
-  if (tableView == _listView) {
-    if ([[self residencesForList] count] > 0) {
-      OMBResidence *residence = [[self residencesForList] objectAtIndex: 
-        indexPath.row];
-      [(OMBResidenceCell *) cell loadResidenceData: residence];
-    }
-  }
-  // NSArray *properties = [self propertiesSortedBy: @"" ascending: NO];
-  // if ([properties count] > 0)
-  //   [(OMBResidenceCell *) cell loadResidenceData: 
-  //     [properties objectAtIndex: indexPath.row]];
 }
 
 #pragma mark - Methods
@@ -810,9 +820,13 @@ withTitle: (NSString *) title;
         if (newCount == currentCount || 
           _listView.contentSize.height <= _listView.frame.size.height)
           [self fetchResidencesForList];
+
+        [self resetCurrentResidencesForList];
       }
+      [activityView stopSpinning];
     }
   ];
+  [activityView startSpinning];
 }
 
 - (void) foundLocations: (NSArray *) locations
@@ -995,9 +1009,43 @@ withTitle: (NSString *) title;
   }
 }
 
+- (void) resetCurrentResidencesForList
+{
+  // Sort
+  // Distance
+  if (currentSortKey == OMBMapViewListSortKeyDistance) {
+    currentResidencesForList = [[OMBResidenceListStore sharedStore] 
+      sortedResidencesByDistanceFromCoordinate: centerCoordinate];
+  }
+  // Recent
+  else if (currentSortKey == OMBMapViewListSortKeyRecent) {
+    currentResidencesForList = 
+      [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
+        @"updatedAt" ascending: NO];
+  }
+  // Highest price
+  else if (currentSortKey == OMBMapViewListSortKeyHighestPrice) {
+    currentResidencesForList = 
+      [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
+        @"minRent" ascending: NO];
+  }
+  // Lowest price
+  else if (currentSortKey == OMBMapViewListSortKeyLowestPrice) {
+    currentResidencesForList = 
+      [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
+        @"minRent" ascending: YES];
+  }
+  else {
+    currentResidencesForList = [[OMBResidenceListStore sharedStore] 
+      sortedResidencesByDistanceFromCoordinate: centerCoordinate];
+  }
+}
+
 - (void) resetListViewResidences
 {
+  currentResidencesForList = nil;
   [[OMBResidenceListStore sharedStore].residences removeAllObjects];
+  [_listView reloadData];
 
   centerCoordinate = _mapView.centerCoordinate;
   
@@ -1006,29 +1054,9 @@ withTitle: (NSString *) title;
 
 - (NSArray *) residencesForList
 {
-  // Sort
-  // Distance
-  if (currentSortKey == OMBMapViewListSortKeyDistance) {
-    return [[OMBResidenceListStore sharedStore] 
-      sortedResidencesByDistanceFromCoordinate: centerCoordinate];
-  }
-  // Recent
-  else if (currentSortKey == OMBMapViewListSortKeyRecent) {
-    return [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
-      @"createdAt" ascending: NO];
-  }
-  // Highest price
-  else if (currentSortKey == OMBMapViewListSortKeyHighestPrice) {
-    return [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
-      @"minRent" ascending: NO];
-  }
-  // Lowest price
-  else if (currentSortKey == OMBMapViewListSortKeyLowestPrice) {
-    return [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
-      @"minRent" ascending: YES];
-  }
-  return [[OMBResidenceListStore sharedStore] 
-      sortedResidencesByDistanceFromCoordinate: centerCoordinate];
+  if (!currentResidencesForList)
+    [self resetCurrentResidencesForList];
+  return currentResidencesForList;
 }
 
 - (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
@@ -1162,8 +1190,11 @@ withMiles: (int) miles animated: (BOOL) animated
 
 - (void) sortButtonSelected: (UIButton *) button
 {
-  currentSortKey = button.tag;
-  [_listView reloadData];
+  if (currentSortKey != button.tag) {
+    currentSortKey = button.tag;
+    [self resetCurrentResidencesForList];
+    [_listView reloadData];
+  }
   
   CGFloat slowestDuration = 0.5;
   CGFloat originalY = sortView.frame.origin.y + sortLabel.frame.origin.y + 

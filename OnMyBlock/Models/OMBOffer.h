@@ -12,6 +12,30 @@
 @class OMBResidence;
 @class OMBUser;
 
+typedef NS_ENUM(NSInteger, OMBOfferStatusForLandlord) {
+  OMBOfferStatusForLandlordRejected,
+  OMBOfferStatusForLandlordConfirmed,
+  OMBOfferStatusForLandlordAccepted,
+  OMBOfferStatusForLandlordOnHold,
+  OMBOfferStatusForLandlordDeclined,
+  OMBOfferStatusForLandlordResponseRequired,
+  OMBOfferStatusForLandlordExpired,
+  OMBOfferStatusForLandlordOfferPaid,
+  OMBOfferStatusForLandlordOfferPaidExpired
+};
+
+typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
+  OMBOfferStatusForStudentRejected,
+  OMBOfferStatusForStudentConfirmed,
+  OMBOfferStatusForStudentAccepted,
+  OMBOfferStatusForStudentOnHold,
+  OMBOfferStatusForStudentDeclined,
+  OMBOfferStatusForStudentWaitingForLandlordResponse,
+  OMBOfferStatusForStudentExpired,
+  OMBOfferStatusForStudentOfferPaid,
+  OMBOfferStatusForStudentOfferPaidExpired
+};
+
 @interface OMBOffer : NSObject
 
 @property (nonatomic) BOOL accepted;
@@ -20,13 +44,15 @@
 @property (nonatomic) BOOL confirmed;
 @property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic) BOOL declined;
+@property (nonatomic) NSTimeInterval moveInDate;
+@property (nonatomic) NSTimeInterval moveOutDate;
 @property (nonatomic, strong) NSString *note;
 @property (nonatomic) BOOL onHold;
+@property (nonatomic, strong) OMBPayoutTransaction *payoutTransaction;
 @property (nonatomic) BOOL rejected;
 @property (nonatomic) NSTimeInterval updatedAt;
 
 @property (nonatomic, strong) OMBUser *landlordUser;
-@property (nonatomic, strong) OMBPayoutTransaction *payoutTransaction;
 @property (nonatomic, strong) OMBResidence *residence;
 @property (nonatomic) NSInteger uid;
 @property (nonatomic, strong) OMBUser *user;
@@ -35,6 +61,19 @@
 
 #pragma mark - Instance Methods
 
+- (BOOL) isExpiredForLandlord;
+- (BOOL) isExpiredForStudent;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
+- (OMBOfferStatusForLandlord) statusForLandlord;
+- (OMBOfferStatusForStudent) statusForStudent;
+- (NSString *) statusStringForLandlord;
+- (NSString *) statusStringForStudent;
+- (NSInteger) timeLeftForLandlord;
+- (NSInteger) timeLeftForStudent;
+- (CGFloat) timeLeftPercentageForLandlord;
+- (CGFloat) timeLeftPercentageForStudent;
+- (NSString *) timeLeftStringForLandlord;
+- (NSString *) timeLeftStringForStudent;
+- (CGFloat) totalAmount;
 
 @end

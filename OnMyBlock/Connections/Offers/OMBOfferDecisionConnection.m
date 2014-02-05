@@ -40,9 +40,12 @@ decision: (OMBOfferDecisionConnectionType) type
   };
   [self setRequestWithString: string method: @"POST" parameters: params];
 
-  timeoutInterval = 60;
-
   return self;
+}
+
+- (void) start
+{
+  [self startWithTimeoutInterval: 120 onMainRunLoop: NO];
 }
 
 #pragma mark - Protocol

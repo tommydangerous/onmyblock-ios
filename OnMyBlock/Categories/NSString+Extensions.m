@@ -96,6 +96,50 @@
   return string;
 }
 
++ (NSString *) timeRemainingShortFormatWithAllUnitsInterval: 
+(NSTimeInterval) interval
+{
+  // 5d 2h 32m 5s
+  NSInteger secondsElapsed = interval - [[NSDate date] timeIntervalSince1970];
+
+  NSString *string = @"";
+  if (secondsElapsed > 0) {
+    // Days
+    NSInteger days = secondsElapsed / (60 * 60 * 24);
+    secondsElapsed -= days * 60 * 60 * 24;
+    NSString *daysString = [NSString stringWithFormat: @"%id", days];
+    // Hours
+    NSInteger hours = secondsElapsed / (60 * 60);
+    secondsElapsed -= hours * 60 * 60;
+    NSString *hoursString = [NSString stringWithFormat: @"%ih", hours];
+    // Minutes
+    NSInteger minutes = secondsElapsed / 60;
+    secondsElapsed -= minutes * 60;
+    NSString *minutesString = [NSString stringWithFormat: @"%im", minutes];
+    // Seconds
+    NSString *secondsString = [NSString stringWithFormat: @"%is", 
+      secondsElapsed];
+    if (days) {
+      string = [string stringByAppendingString: 
+        [NSString stringWithFormat: @" %@", daysString]];
+    }
+    if (hours) {
+      string = [string stringByAppendingString: 
+        [NSString stringWithFormat: @" %@", hoursString]];
+    }
+    if (minutes) {
+      string = [string stringByAppendingString: 
+        [NSString stringWithFormat: @" %@", minutesString]];
+    }
+    string = [string stringByAppendingString: 
+      [NSString stringWithFormat: @" %@", secondsString]];
+  }
+  else {
+    string = @"0s";
+  }
+  return string;
+}
+
 + (NSString *) timeRemainingShortFormatWithInterval: (NSTimeInterval) interval
 {
   // 5d 2h
@@ -103,7 +147,7 @@
   // 3m 12s
   NSInteger secondsElapsed = interval - [[NSDate date] timeIntervalSince1970];
 
-  NSString *string = @"";
+  NSString *string = @"0s";
   if (secondsElapsed > 0) {
     // Days
     NSInteger days = secondsElapsed / (60 * 60 * 24);

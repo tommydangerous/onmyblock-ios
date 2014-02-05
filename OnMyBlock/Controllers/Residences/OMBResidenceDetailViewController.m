@@ -419,6 +419,12 @@ float kResidenceDetailImagePercentage   = 0.5f;
     footerHeight = 0.0f;
     _bottomButtonView.hidden = YES;
   }
+  // Inactive
+  else if (residence.inactive) {
+    // Hide the table footer view and buttons at the bottom
+    footerHeight = 0.0f;
+    _bottomButtonView.hidden = YES;
+  }
   _table.tableFooterView = [[UIView alloc] initWithFrame: 
     CGRectMake(0.0f, 0.0f, _table.frame.size.width, footerHeight)];
 
@@ -1110,6 +1116,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // Download the seller's image if it doesn't exist
     if (!residence.user.image)
       [residence.user downloadImageFromImageURLWithCompletion: nil];
+  }
+
+  // Inactive
+  if (residence.inactive) {
+    // Hide the table footer view and buttons at the bottom
+    _bottomButtonView.hidden = YES;
+    _table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
   }
 
   // [self timerFireMethod: nil];

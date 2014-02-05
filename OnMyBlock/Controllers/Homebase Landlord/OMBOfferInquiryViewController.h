@@ -11,9 +11,27 @@
 #import "PayPalMobile.h"
 
 @class OMBAlertView;
+@class OMBAlertViewBlur;
 @class OMBCenteredImageView;
 @class OMBGradientView;
 @class OMBOffer;
+
+// Sections in the offer table
+typedef NS_ENUM(NSInteger, OMBOfferInquirySection) {
+  OMBOfferInquirySectionOffer
+};
+// Rows in the offer section in the offer table
+typedef NS_ENUM(NSInteger, OMBOfferInquirySectionOfferRow) {
+  OMBOfferInquirySectionOfferRowResidence,
+  OMBOfferInquirySectionOfferRowDates,
+  OMBOfferInquirySectionOfferSpacingBelowDates,
+  OMBOfferInquirySectionOfferRowPriceBreakdown,
+  OMBOfferInquirySectionOfferRowSecurityDeposit,
+  OMBOfferInquirySectionOfferRowOffer,
+  OMBOfferInquirySectionOfferRowTotal,
+  OMBOfferInquirySectionOfferSpacingBelowTotal,
+  OMBOfferInquirySectionOfferRowNotes
+};
 
 @interface OMBOfferInquiryViewController : OMBViewController
 <PayPalPaymentDelegate, UIScrollViewDelegate, UITableViewDataSource, 
@@ -22,12 +40,16 @@
   BOOL accepted;
   BOOL acceptedConfirmed;
   OMBAlertView *alert;
+  OMBAlertViewBlur *alertBlur;
   UIView *backView;
   CGFloat backViewOffsetY;
   UIView *buttonsView;
-  BOOL charging;
   BOOL cameFromSettingUpPayoutMethods;
+  BOOL charging;
   UIButton *contactButton;
+  NSTimer *countdownTimer;
+  UILabel *countDownTimerLabel;
+  NSDateFormatter *dateFormatter1;
   OMBGradientView *gradient;
   NSArray *legalQuestions;
   OMBOffer *offer;
@@ -37,6 +59,7 @@
   UIButton *respondButton;
   UIView *respondView;
   int selectedSegmentIndex;
+  CGSize sizeForOfferNotes;
   OMBCenteredImageView *userImageView;
 }
 

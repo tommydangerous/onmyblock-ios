@@ -92,6 +92,8 @@
 		AB0280811843FB200081B30F /* iphone_5s_image.png in Resources */ = {isa = PBXBuildFile; fileRef = AB0280801843FB200081B30F /* iphone_5s_image.png */; };
 		AB0280831844540F0081B30F /* camera_flash_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB0280821844540F0081B30F /* camera_flash_image@2x.png */; };
 		AB034B151837D3DC00811074 /* OMBGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB034B141837D3DC00811074 /* OMBGradientView.m */; };
+		AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */; };
+		AB0BC54A18A2B4750067BFF7 /* OMBMovedInConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0BC54918A2B4750067BFF7 /* OMBMovedInConnection.m */; };
 		AB0C36AB1840652B006DC3AD /* OMBPaddleView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0C36AA1840652B006DC3AD /* OMBPaddleView.m */; };
 		AB0C36B218406779006DC3AD /* OMBStopwatchView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0C36B118406779006DC3AD /* OMBStopwatchView.m */; };
 		AB0C36B5184074A8006DC3AD /* OMBHouseGraphicView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0C36B4184074A8006DC3AD /* OMBHouseGraphicView.m */; };
@@ -764,6 +766,10 @@
 		AB0280821844540F0081B30F /* camera_flash_image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera_flash_image@2x.png"; sourceTree = "<group>"; };
 		AB034B131837D3DC00811074 /* OMBGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBGradientView.h; sourceTree = "<group>"; };
 		AB034B141837D3DC00811074 /* OMBGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBGradientView.m; sourceTree = "<group>"; };
+		AB0BC54518A1D4570067BFF7 /* OMBAlertViewBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAlertViewBlur.h; sourceTree = "<group>"; };
+		AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAlertViewBlur.m; sourceTree = "<group>"; };
+		AB0BC54818A2B4750067BFF7 /* OMBMovedInConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMovedInConnection.h; sourceTree = "<group>"; };
+		AB0BC54918A2B4750067BFF7 /* OMBMovedInConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMovedInConnection.m; sourceTree = "<group>"; };
 		AB0C36A91840652B006DC3AD /* OMBPaddleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPaddleView.h; sourceTree = "<group>"; };
 		AB0C36AA1840652B006DC3AD /* OMBPaddleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPaddleView.m; sourceTree = "<group>"; };
 		AB0C36B018406779006DC3AD /* OMBStopwatchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBStopwatchView.h; sourceTree = "<group>"; };
@@ -2212,6 +2218,8 @@
 				ABF18BB81816D3F0002DD723 /* TextFieldPadding.h */,
 				ABF18BB91816D3F0002DD723 /* TextFieldPadding.m */,
 				ABB9115D189807EC0046611F /* Users */,
+				AB0BC54518A1D4570067BFF7 /* OMBAlertViewBlur.h */,
+				AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2454,6 +2462,8 @@
 				AB9D6136188F495A00C9AC64 /* OMBOfferDecisionConnection.m */,
 				AB6CCE4418933BF6000ED5CE /* OMBConfirmedTenantsConnection.h */,
 				AB6CCE4518933BF6000ED5CE /* OMBConfirmedTenantsConnection.m */,
+				AB0BC54818A2B4750067BFF7 /* OMBMovedInConnection.h */,
+				AB0BC54918A2B4750067BFF7 /* OMBMovedInConnection.m */,
 			);
 			path = Offers;
 			sourceTree = "<group>";
@@ -3644,6 +3654,7 @@
 				AB63D2141821AB2C00D63800 /* OMBUser.m in Sources */,
 				AB026BC91822BE1200E72F53 /* OMBUserFacebookAuthenticationConnection.m in Sources */,
 				AB6155C4184EA34000A193C7 /* OMBUserUpdateProfileConnection.m in Sources */,
+				AB0BC54A18A2B4750067BFF7 /* OMBMovedInConnection.m in Sources */,
 				DE95E8D918A03B5500A2A341 /* MNFastDateEnumeration.m in Sources */,
 				AB70CB90186D353E0083DF4C /* OMBCreateListingPropertyTypeCell.m in Sources */,
 				AB01ED4318582A7A00333390 /* OMBLegalAnswerListConnection.m in Sources */,
@@ -3713,6 +3724,7 @@
 				67E9481E188DF726007703FC /* OMBMapFilterDateAvailableCell.m in Sources */,
 				ABED5FEF189705ED00AD630C /* OMBMapViewViewController.m in Sources */,
 				ABCB36C1187CC229008A0EEF /* OMBHomebaseRenterAddRoommateFromEmailViewController.m in Sources */,
+				AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */,
 				AB9D611B188CEFDE00C9AC64 /* UIImageView+WebCache.m in Sources */,
 				AB1C217E18518C8000ED7C06 /* OMBCosignerCreateConnection.m in Sources */,
 				AB9D611A188CEFDE00C9AC64 /* UIImage+WebP.m in Sources */,
@@ -4114,7 +4126,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tommy Dang (ETDM478EZ7)";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4135,7 +4147,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
+				PROVISIONING_PROFILE = "2ED7A1E6-EF81-4010-9D06-A1A9BA08B8A1";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4147,7 +4159,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: On My Block LLC (4PZFNY43X2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
@@ -4167,7 +4179,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
+				PROVISIONING_PROFILE = "2ED7A1E6-EF81-4010-9D06-A1A9BA08B8A1";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

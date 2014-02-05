@@ -22,6 +22,9 @@
 
   offer = object;
 
+  NSDateFormatter *dateFormatter = [NSDateFormatter new];
+  dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
+
   NSString *string = [NSString stringWithFormat: @"%@/offers", OnMyBlockAPIURL];
   CGFloat amount = offer.amount;
   if (!amount)
@@ -32,13 +35,29 @@
   NSInteger residenceID = object.residence.uid;
   if (!residenceID)
     residenceID = 0;
-  NSDictionary *params = @{
-    @"access_token": [OMBUser currentUser].accessToken,
-    @"offer": @{
+  NSMutableDictionary *objectParams = 
+    [NSMutableDictionary dictionaryWithDictionary: @{
       @"amount": [NSNumber numberWithFloat: amount],
       @"note": note,
       @"residence_id": [NSNumber numberWithInt: residenceID]
-    }
+    }];
+
+  // Move-in date
+  if (offer.moveInDate) {
+    [objectParams setObject: [dateFormatter stringFromDate: 
+      [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]]
+        forKey: @"move_in_date"];
+  }
+  // Move-out date
+  if (offer.moveOutDate) {
+    [objectParams setObject: [dateFormatter stringFromDate: 
+      [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]]
+        forKey: @"move_out_date"];
+  }
+
+  NSDictionary *params = @{
+    @"access_token": [OMBUser currentUser].accessToken,
+    @"offer": objectParams
   };
   [self setRequestWithString: string method: @"POST" parameters: params];
 
