@@ -44,6 +44,8 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 @property (nonatomic) BOOL confirmed;
 @property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic) BOOL declined;
+@property (nonatomic) NSTimeInterval moveInDate;
+@property (nonatomic) NSTimeInterval moveOutDate;
 @property (nonatomic, strong) NSString *note;
 @property (nonatomic) BOOL onHold;
 @property (nonatomic, strong) OMBPayoutTransaction *payoutTransaction;

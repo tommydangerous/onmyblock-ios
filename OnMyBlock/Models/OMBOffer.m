@@ -133,6 +133,17 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
     [user readFromDictionary: userDict];
     _landlordUser = user;
   }
+
+  // Move in date
+  if ([dictionary objectForKey: @"move_in_date"] != [NSNull null])
+    _moveInDate = [[dateFormatter dateFromString:
+      [dictionary objectForKey: @"move_in_date"]] timeIntervalSince1970];
+
+  // Move out date
+  if ([dictionary objectForKey: @"move_out_date"] != [NSNull null])
+    _moveOutDate = [[dateFormatter dateFromString:
+      [dictionary objectForKey: @"move_out_date"]] timeIntervalSince1970];
+
   // Note
   if ([dictionary objectForKey: @"note"] != [NSNull null])
     _note = [dictionary objectForKey: @"note"];
