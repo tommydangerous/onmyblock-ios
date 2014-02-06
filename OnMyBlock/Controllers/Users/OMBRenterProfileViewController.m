@@ -169,13 +169,13 @@
   // Phone
   UIImage *phoneIcon = [UIImage image: [UIImage imageNamed: @"phone_icon.png"]
     size: CGSizeMake(22.0f, 22.0f)];
-  UIBarButtonItem *phoneBarButtonItem = 
+  phoneBarButtonItem = 
     [[UIBarButtonItem alloc] initWithImage: phoneIcon style:
       UIBarButtonItemStylePlain target: self action: @selector(phoneCallUser)];
   // Email
   UIImage *emailIcon = [UIImage image: [UIImage imageNamed: 
     @"messages_icon_white.png"] size: CGSizeMake(22.0f, 22.0f)];
-  UIBarButtonItem *emailBarButtonItem =
+  emailBarButtonItem =
     [[UIBarButtonItem alloc] initWithImage: emailIcon style:
       UIBarButtonItemStylePlain target: self action: @selector(emailUser)];
   // Right padding
@@ -369,7 +369,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.label.textColor = [UIColor textColor];
       }
       else {
-        cell.label.text = @"Your school";
+        if ([user isCurrentUser]) {
+          cell.label.text = @"Your school";
+        }
+        else {
+          cell.label.text = @"No school specified yet";
+        }
         cell.label.textColor = [UIColor grayMedium];
       }
     }
@@ -773,8 +778,26 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   CGFloat padding = OMBPadding;
   // User info
   if (indexPath.section == OMBRenterProfileSectionUserInfo) {
+    // Email
+    if (indexPath.row == OMBRenterProfileSectionUserInfoRowEmail) {
+      if (![user compareUser: [OMBUser currentUser]]) {
+        return 0.0f;
+      }
+    }
+    // School
+    else if (indexPath.row == OMBRenterProfileSectionUserInfoRowSchool) {
+      if (![user compareUser: [OMBUser currentUser]] && [user isLandlord]) {
+        return 0.0f;
+      }
+    }
+    // Phone
+    else if (indexPath.row == OMBRenterProfileSectionUserInfoRowPhone) {
+      if (![user compareUser: [OMBUser currentUser]]) {
+        return 0.0f;
+      }
+    }
     // About
-    if (indexPath.row == OMBRenterProfileSectionUserInfoRowAbout) {
+    else if (indexPath.row == OMBRenterProfileSectionUserInfoRowAbout) {
       CGFloat height = (padding * 0.5f) + [user heightForAboutTextWithWidth:
         [OMBRenterProfileUserInfoCell widthForLabel]] + padding;
       if (height < [OMBRenterProfileUserInfoCell heightForCell])
@@ -977,11 +1000,23 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) reloadData
 {
   // If this is the current user's renter profile
-  if (user.uid == [OMBUser currentUser].uid) {
+  if ([user compareUser: [OMBUser currentUser]]) {
     self.navigationItem.rightBarButtonItem = editBarButtonItem;
   }
   else {
     self.navigationItem.rightBarButtonItem = contactBarButtonItem;
+    // If no phone number
+    if (user.phone && [[user phoneString] length]) {
+      phoneBarButtonItem.enabled = YES;
+    }
+    else {
+      phoneBarButtonItem.enabled = NO;
+    }
+    // Email
+    if ([user emailContactPermission])
+      emailBarButtonItem.enabled = YES;
+    else
+      emailBarButtonItem.enabled = NO;
   }
   // Image
   backImageView.image = user.image;

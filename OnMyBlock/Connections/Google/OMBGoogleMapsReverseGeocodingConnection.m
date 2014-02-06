@@ -25,7 +25,7 @@ state: (NSString *) state
       @"address=%@&"
       @"components="
       @"country:%@|"
-      @"route:%@|"
+      @"locality:%@|"
       @"administrative_area:%@&"
       @"sensor=true", address, @"us", city, state];
 

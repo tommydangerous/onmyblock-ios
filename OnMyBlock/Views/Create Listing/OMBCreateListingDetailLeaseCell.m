@@ -27,7 +27,7 @@
                                           size: 15];
   _detailNameLabel.textAlignment = NSTextAlignmentCenter;
   _detailNameLabel.textColor = [UIColor grayMedium];
-  _detailNameLabel.frame = CGRectMake(0.0f, 0.0f, screen.size.width, 30.0f);
+  _detailNameLabel.frame = CGRectMake(0.0f, 0.0f, screen.size.width, 22.0f);
   [self.contentView addSubview: _detailNameLabel];
   
 	_lenghtLease = [[TextFieldPadding alloc] init];

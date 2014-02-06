@@ -70,7 +70,12 @@ reuseIdentifier: (NSString *) reuseIdentifier
     _label.textColor = [UIColor textColor];
   }
   else {
-    _label.text = @"A little about you...";
+    if ([object isCurrentUser]) {
+      _label.text = @"A little about you...";
+    }
+    else {
+      _label.text = @"Nothing about me yet";
+    }
     _label.textColor = [UIColor grayMedium];
   }
 }

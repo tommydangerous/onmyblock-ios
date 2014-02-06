@@ -240,7 +240,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
       break;
     }
     case OMBOfferStatusForLandlordAccepted: {
-      color = [UIColor yellow];
+      color = [UIColor orange];
       notesLabel.hidden = NO;
       notesLabel.text = @"The student has 48 hours to confirm the place "
         @"by signing the lease and paying the 1st month's rent and deposit";
@@ -261,7 +261,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
       break;
     }
     case OMBOfferStatusForLandlordResponseRequired: {
-      color = [UIColor orange];
+      color = [UIColor pink];
       notesLabel.hidden = NO;
       notesLabel.text = @"Once you have reviewed the offer and the student's "
         @"renter profile, please accept or decline the offer.";
@@ -332,7 +332,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
       break;
     }
     case OMBOfferStatusForStudentAccepted: {
-      color = [UIColor orange];
+      color = [UIColor pink];
       notesLabel.hidden = NO;
       notesLabel.text = @"You have 48 hours to confirm or reject. You may "
         @"confirm the place by signing the lease and paying the 1st month's "
@@ -353,7 +353,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
       break;
     }
     case OMBOfferStatusForStudentWaitingForLandlordResponse: {
-      color = [UIColor yellow];
+      color = [UIColor orange];
       notesLabel.hidden = NO;
       notesLabel.text = @"The landlord will have 24 hours to either accept or "
         @"decline your offer after reviewing your renter profile and offer.";

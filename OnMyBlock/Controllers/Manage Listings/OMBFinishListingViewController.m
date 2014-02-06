@@ -10,6 +10,7 @@
 
 #import "AMBlurView.h"
 #import "OMBActivityView.h"
+#import "OMBAlertViewBlur.h"
 #import "OMBCenteredImageView.h"
 #import "OMBFinishListingAddressViewController.h"
 #import "OMBFinishListingAmenitiesViewController.h"
@@ -46,7 +47,11 @@
   numberOfSteps = 7;
   residence = object;
 
-  self.screenName = self.title = @"Finish Listing";
+  if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
+    self.title = @"Finish Listing";
+  }
+  else
+    self.title = @"Edit Listing";
 
   return self;
 }
@@ -225,6 +230,9 @@
   // }
   // // Add it in front of everything
   // [stepsRemainingView addSubview: stepsBottomBorder];
+
+  // Alert view blur
+  alertBlur = [[OMBAlertViewBlur alloc] init];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -612,6 +620,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [conn start];
 }
 
+- (void) hideAlertBlurAndPopController
+{
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    alertBlur.alpha = 0.0f;
+  } completion: ^(BOOL finished) {
+    if (finished) {
+      [self.navigationController popViewControllerAnimated: YES];
+      [alertBlur close];
+    }
+  }];
+}
+
 - (void) preview
 {
   [self.navigationController pushViewController:
@@ -633,19 +653,28 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [alertView show];
   }
   else {
+    OMBResidence *newResidence = [[OMBResidence alloc] init];
     OMBResidencePublishConnection *conn = 
-      [[OMBResidencePublishConnection alloc] initWithResidence: residence];
+      [[OMBResidencePublishConnection alloc] initWithResidence: residence
+        newResidence: newResidence];
     conn.completionBlock = ^(NSError *error) {
-      if (!residence.inactive && !error) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-          @"Congratulations" message: @"Your place has been published." 
-          delegate: nil 
-            cancelButtonTitle: @"OK"
-              otherButtonTitles: nil];
-        [alertView show];
-        // [self.navigationController popViewControllerAnimated: YES];
+      if (!error && 
+        (newResidence.uid || 
+          ![residence isKindOfClass: [OMBTemporaryResidence class]])) {
+
         publishNowView.hidden = YES;
         unlistView.hidden     = NO;
+
+        [alertBlur setTitle: @"Published"];
+        [alertBlur setMessage: @"Your place has been published, "
+          @"now you can start accepting offers."];
+        // Buttons
+        [alertBlur setConfirmButtonTitle: @"Okay"];
+        [alertBlur addTargetForConfirmButton: self 
+          action: @selector(hideAlertBlurAndPopController)];
+        [alertBlur showInView: self.view];
+        [alertBlur showOnlyConfirmButton];
+        [alertBlur hideQuestionButton];
       }
       else {
         [self showAlertViewWithError: error];

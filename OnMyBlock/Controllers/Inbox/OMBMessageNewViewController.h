@@ -17,6 +17,7 @@
 {
   OMBActivityView *activityView;
   OMBMessageInputToolbar *bottomToolbar;
+  UIBarButtonItem *callBarButtonItem;
   OMBResidence *residence;
   UITextField *toTextField;
   OMBUser *user;

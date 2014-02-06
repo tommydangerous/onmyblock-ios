@@ -21,13 +21,14 @@
   NSString *string = [NSString stringWithFormat: 
     @"%@/auth/facebook/", OnMyBlockAPIURL];
   NSDictionary *params = @{
-    @"about":                 user.about,
-    @"email":                 user.email,
-    @"facebook_access_token": user.facebookAccessToken,
-    @"facebook_id":           user.facebookId,
-    @"first_name":            user.firstName,
-    @"last_name":             user.lastName,
-    @"school":                user.school,
+    @"about":                 user.about ? user.about : @"",
+    @"email":                 user.email ? user.email : @"",
+    @"facebook_access_token": user.facebookAccessToken ? 
+      user.facebookAccessToken : @"",
+    @"facebook_id":           user.facebookId ? user.facebookId : @"",
+    @"first_name":            user.firstName ? user.firstName : @"",
+    @"last_name":             user.lastName ? user.lastName : @"",
+    @"school":                user.school ? user.school : @"",
     @"user_type":             user.userType ? user.userType : @""
   };
   [self setRequestWithString: string method: @"POST" parameters: params];

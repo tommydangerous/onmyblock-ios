@@ -34,9 +34,25 @@ NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
 - (BOOL) application: (UIApplication *) application 
 didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
-  #warning Add these back when in production
-  // [self setupTracking];
-  // [self testFlightTakeOff];
+  switch (__ENVIRONMENT__) {
+    // Production
+    case 3: {
+      [self setupTracking];
+      break;
+    }
+    // Staging
+    case 2: {
+      [self testFlightTakeOff];
+      break;
+    }
+    // Development
+    case 1: {
+      break;
+    }
+    default: {
+      break;
+    }
+  }
     
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];

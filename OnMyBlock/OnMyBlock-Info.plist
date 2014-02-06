@@ -25,7 +25,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb1413564158856718</string>
+				<string>fb246041178762859</string>
 			</array>
 		</dict>
 		<dict>
@@ -42,9 +42,9 @@
 	<key>CFBundleVersion</key>
 	<string>1.0.4</string>
 	<key>FacebookAppID</key>
-	<string>1413564158856718</string>
+	<string>246041178762859</string>
 	<key>FacebookDisplayName</key>
-	<string>OnMyBlock Staging</string>
+	<string>OnMyBlock</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>

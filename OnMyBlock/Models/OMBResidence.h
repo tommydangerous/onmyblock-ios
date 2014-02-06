@@ -36,6 +36,7 @@ extern NSString *const OMBResidencePropertyTypeSublet;
 @property (nonatomic) BOOL inactive;
 @property (nonatomic) BOOL isAuction;
 @property (nonatomic, strong) NSString *landlordName;
+@property (nonatomic) NSInteger landlordUserID;
 @property (nonatomic) float latitude;
 @property (nonatomic) int leaseMonths;
 @property (nonatomic, strong) NSString *leaseType;
@@ -100,6 +101,7 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 forResidenceImage: (OMBResidenceImage *) residenceImage;
 - (UIImage *) imageForSizeKey: (NSString *) string 
 forResidenceImage: (OMBResidenceImage *) residenceImage;
+- (NSString *) leaseMonthsStringShort;
 - (NSDate *) moveOutDateDate;
 - (NSInteger) numberOfStepsLeft;
 - (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size;

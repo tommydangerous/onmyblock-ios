@@ -414,7 +414,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   CGFloat footerHeight = _bottomButtonView.frame.size.height;
   // If this residence belongs to the current user
   if ([[OMBUser currentUser] loggedIn] && 
-    residence.user.uid == [OMBUser currentUser].uid) {
+    residence.landlordUserID == [OMBUser currentUser].uid) {
     // Hide the table footer view and buttons at the bottom
     footerHeight = 0.0f;
     _bottomButtonView.hidden = YES;
@@ -637,9 +637,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *AddressCellIdentifier = @"AddressCellIdentifier";
       OMBResidenceDetailAddressCell *cell =
         [tableView dequeueReusableCellWithIdentifier: AddressCellIdentifier];
-      if (!cell)
+      if (!cell) {
         cell = [[OMBResidenceDetailAddressCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: AddressCellIdentifier];
+      }
+        
       // Address
       if ([residence.address length])
         cell.addressLabel.text = [residence.address capitalizedString];
@@ -648,8 +650,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           [residence.city capitalizedString], residence.state];
       // Bed / Bath/ Lease Months
       cell.bedBathLeaseMonthLabel.text = [NSString stringWithFormat:
-        @"%.0f bd  /  %.0f ba  /  %i mo lease", 
-          residence.bedrooms, residence.bathrooms, residence.leaseMonths];
+        @"%.0f bd  /  %.0f ba  /  %@", 
+          residence.bedrooms, residence.bathrooms, 
+            [residence leaseMonthsStringShort]];
       // Property Type - Move in Date
       NSString *propertyType = @"Property type";
       if ([[residence.propertyType stripWhiteSpace] length])
@@ -658,7 +661,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (residence.moveInDate) {
         if (residence.moveInDate > [[NSDate date] timeIntervalSince1970]) {
           NSDateFormatter *dateFormatter = [NSDateFormatter new];
-          dateFormatter.dateFormat = @"MMM d, yy";
+          dateFormatter.dateFormat = @"MMM d, yyyy";
           availableDateString = [NSString stringWithFormat: @"%@",
             [dateFormatter stringFromDate: 
               [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]]];
@@ -732,12 +735,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *SellerCellIdentifier = @"SellerCellIdentifier";
       OMBResidenceDetailSellerCell *cell = 
         [tableView dequeueReusableCellWithIdentifier: SellerCellIdentifier];
-      if (!cell)
+      if (!cell) {
         cell = [[OMBResidenceDetailSellerCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: SellerCellIdentifier];
-      // OMBUser *user = residence.user;
-      // if (!user || [user.firstName length] == 0)
-      //   user = [OMBUser landlordUser];
+      }
       [cell loadUserData: residence.user];
       return cell;
     }
@@ -903,7 +904,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return kResidenceDetailCellSpacingHeight;
     }
     else if (indexPath.row == 1) {
-      if ([residence.description length]) {
+      if (residence.description && [residence.description length]) {
         NSAttributedString *aString = 
           [residence.description attributedStringWithFont: 
             [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] 
@@ -1036,10 +1037,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // OMBUser *user = residence.user;
     // if (!user || [user.firstName length] == 0)
     //   user = [OMBUser landlordUser];
-    [[self appDelegate].container presentViewController: 
-      [[OMBNavigationController alloc] initWithRootViewController: 
-        [[OMBMessageNewViewController alloc] initWithUser: residence.user 
-          residence: residence]] animated: YES completion: nil];
+    if (residence.user) {
+      [[self appDelegate].container presentViewController: 
+        [[OMBNavigationController alloc] initWithRootViewController: 
+          [[OMBMessageNewViewController alloc] initWithUser: residence.user 
+            residence: residence]] animated: YES completion: nil];
+    }
   }
   else {
     [[self appDelegate].container showSignUp];
@@ -1110,8 +1113,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) refreshResidenceData
 {
-  [self.table reloadData];
-
   if (residence.user) {
     // Download the seller's image if it doesn't exist
     if (!residence.user.image)
@@ -1131,6 +1132,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // // NSRunLoopCommonModes, mode used for tracking events
   // [[NSRunLoop currentRunLoop] addTimer: countdownTimer
   //   forMode: NSRunLoopCommonModes];
+
+  [self.table reloadData];
 }
 
 - (void) shareButtonSelected

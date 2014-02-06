@@ -60,7 +60,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 - (void) setFramesForSubviewsWithSize: (CGSize) size
 {
   CGFloat padding      = 20.0f;
-  CGFloat detailHeight = 30.0f;
+  CGFloat detailHeight = 22.0f;
   CGFloat valueHeight  = size.height - 
     ((padding * 0.5) + detailHeight + padding);
   _detailNameLabel.frame = CGRectMake(0.0f, 0.0f, size.width, detailHeight);

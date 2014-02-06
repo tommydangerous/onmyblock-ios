@@ -15,6 +15,7 @@
 <UITextFieldDelegate>
 {
   TextFieldPadding *emailTextField;
+  BOOL isSaving;
 }
 
 @end

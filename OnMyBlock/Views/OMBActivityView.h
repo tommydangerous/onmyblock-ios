@@ -17,6 +17,7 @@
   OMBCurvedLineView *line;
 }
 
+@property (nonatomic) BOOL isSpinning;
 @property (nonatomic, strong) UIView *spinner;
 @property (nonatomic, strong) UIView *spinnerView;
 

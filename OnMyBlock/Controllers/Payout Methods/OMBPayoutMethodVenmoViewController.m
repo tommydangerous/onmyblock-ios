@@ -122,10 +122,17 @@ navigationType: (UIWebViewNavigationType) navigationType
                 [self.navigationController popToRootViewControllerAnimated: 
                   YES];
               }
-              else {
+              else {              
                 [self.navigationController popToViewController: 
                   [array objectAtIndex: 1] animated: YES];
               }
+            }
+            else {
+              UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+                @"Venmo Failed" message: 
+                  @"Authentication with Venmo was unsuccessful." delegate: nil
+                    cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+              [alertView show];
             }
           }
         }

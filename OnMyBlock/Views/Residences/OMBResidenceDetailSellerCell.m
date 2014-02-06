@@ -86,7 +86,12 @@ reuseIdentifier: (NSString *)reuseIdentifier
   }
 
   // About
-  _aboutLabel.attributedText = [user.about attributedStringWithFont:
+  NSString *string = user.about;
+  if (![string length]) {
+    string = @"Please contact me for more details or any questions, "
+      @"thank you.";
+  }
+  _aboutLabel.attributedText = [string attributedStringWithFont:
     _aboutLabel.font lineHeight: 23.0f];
   CGRect rect = [_aboutLabel.attributedText boundingRectWithSize:
     CGSizeMake(_aboutLabel.frame.size.width, _sellerImageView.frame.size.height)

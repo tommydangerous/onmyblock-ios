@@ -12,6 +12,7 @@
 
 @class AMBlurView;
 @class OMBActivityView;
+@class OMBAlertViewBlur;
 @class OMBCenteredImageView;
 @class OMBGradientView;
 @class OMBResidence;
@@ -21,6 +22,7 @@
   UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
   OMBActivityView *activityView;
+  OMBAlertViewBlur *alertBlur;
   UIView *cameraView;
   CGFloat headerImageOffsetY;
   OMBCenteredImageView *headerImageView;

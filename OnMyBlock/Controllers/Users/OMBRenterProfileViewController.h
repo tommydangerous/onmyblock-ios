@@ -62,9 +62,11 @@ typedef NS_ENUM(NSInteger, OMBRenterProfileSectionListingsRow) {
   UIButton *editButton;
   AMBlurView *editButtonView;
   OMBEditProfileViewController *editProfileViewController;
+  UIBarButtonItem *emailBarButtonItem;
   UILabel *fullNameLabel;
   UIView *nameView;
   CGFloat nameViewOriginY;
+  UIBarButtonItem *phoneBarButtonItem;
   OMBUser *user;
   OMBCenteredImageView *userIconView;
 }

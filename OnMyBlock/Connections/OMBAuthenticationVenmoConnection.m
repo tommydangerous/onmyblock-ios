@@ -28,6 +28,15 @@
   return self;
 }
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) start
+{
+  [self startWithTimeoutInterval: 30 onMainRunLoop: NO];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol NSURLConnectionDataDelegate
