@@ -675,7 +675,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 
   // Activity
   else if (indexPath.section == 1) {
-    if (indexPath.row == 0) {
+    // Offer Activity, not being used
+    if (indexPath.row == 999) {
       static NSString *ActivityCellIdentifier = @"ActivityCellIdentifier";
       UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier: ActivityCellIdentifier];
@@ -876,7 +877,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.section == 1) {
     if (indexPath.row == 0) {
       return 0.0f;
-      return kResidenceDetailCellSpacingHeight;
+      // return kResidenceDetailCellSpacingHeight;
     }
   }
 

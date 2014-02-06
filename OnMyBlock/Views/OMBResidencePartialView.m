@@ -299,6 +299,8 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) loadResidenceData: (OMBResidence *) object
 {
+  [_imagesFilmstrip reloadData];
+  
   _residence = object;
 
   // Bedrooms

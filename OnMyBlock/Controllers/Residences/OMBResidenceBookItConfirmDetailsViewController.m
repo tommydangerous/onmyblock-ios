@@ -695,8 +695,6 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       if (indexPath.row == 0) {
         cell.textLabel.font = [UIFont normalTextFontBold];
-        [bor removeFromSuperview];
-        [cell.contentView addSubview: bor];
       }
       else
         cell.textLabel.font =
