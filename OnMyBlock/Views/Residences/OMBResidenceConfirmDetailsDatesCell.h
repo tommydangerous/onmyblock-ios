@@ -22,6 +22,10 @@
 
 #pragma mark - Methods
 
+#pragma mark - Class Methods
+
++ (CGFloat) heightForCellWithNoLeaseMonthLabel;
+
 #pragma mark - Instance Methods
 
 - (void) highlightMoveInDate;

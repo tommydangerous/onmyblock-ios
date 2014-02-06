@@ -9,6 +9,7 @@
 #import "OMBResidenceConfirmDetailsDatesCell.h"
 
 #import "OMBResidence.h"
+#import "OMBViewController.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 
@@ -93,7 +94,8 @@ reuseIdentifier: (NSString *)reuseIdentifier
   UIView *bottomLine = [[UIView alloc] init];
   bottomLine.backgroundColor = middleLine.backgroundColor;
   bottomLine.frame = CGRectMake(0.0f, 
-    _moveInDateLabel.frame.origin.y + _moveInDateLabel.frame.size.height, 
+    _moveInDateLabel.frame.origin.y + 
+    _moveInDateLabel.frame.size.height - 0.5f, 
       screenWidth, 0.5f);
   [self.contentView addSubview: bottomLine];
 
@@ -122,8 +124,14 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 + (CGFloat) heightForCell
 {
-  CGFloat padding = 20.0f;
-  return ((padding + 27.0f) * 2) + 44.0f;
+  CGFloat padding = OMBPadding;
+  return ((padding + 27.0f) * 2) + OMBStandardHeight;
+}
+
++ (CGFloat) heightForCellWithNoLeaseMonthLabel
+{
+  return [OMBResidenceConfirmDetailsDatesCell heightForCell] - 
+    OMBStandardHeight;
 }
 
 #pragma mark - Instance Methods

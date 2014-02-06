@@ -611,20 +611,21 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         if (!cell1) {
           cell1 = [[OMBResidenceConfirmDetailsDatesCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier: DatesID];
-          [cell1 loadResidence: offer.residence];
+          // [cell1 loadResidence: offer.residence];
+          cell1.leaseMonthsLabel.text = [NSString stringWithFormat: 
+            @"%i month lease", [offer numberOfMonthsBetweenMovingDates]];
           NSDateFormatter *dateFormmater = [NSDateFormatter new];
           dateFormmater.dateFormat = @"MMM d, yy";
+          // Move in date
           [cell1.moveInDateLabel setTitle: 
             [dateFormmater stringFromDate: 
-              [NSDate dateWithTimeIntervalSince1970: 
-                offer.residence.moveInDate]] forState: UIControlStateNormal];
-          NSDate *moveOutDate = [offer.residence moveOutDateDate];
-          if (offer.residence.moveOutDate)
-            moveOutDate = [NSDate dateWithTimeIntervalSince1970: 
-              offer.residence.moveOutDate];
+              [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]] 
+                forState: UIControlStateNormal];
+          // Move out date
           [cell1.moveOutDateLabel setTitle: 
-            [dateFormmater stringFromDate: moveOutDate]
-              forState: UIControlStateNormal];
+            [dateFormmater stringFromDate: 
+              [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]]
+                forState: UIControlStateNormal];
         }
         return cell1;
       }

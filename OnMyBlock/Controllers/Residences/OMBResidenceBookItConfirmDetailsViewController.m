@@ -414,6 +414,8 @@ didSelectDate: (NSDate *) date
     calendarCell.calendarView.selectedDate = 
       [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate];
   }
+  detailsCell.leaseMonthsLabel.text = [NSString stringWithFormat: 
+    @"%i month lease", [offer numberOfMonthsBetweenMovingDates]];
 }
 
 - (BOOL) calendarView: (MNCalendarView *) calendarView
@@ -604,6 +606,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
             UIControlEventTouchUpInside];
 
         [cell loadResidence: residence];
+        cell.leaseMonthsLabel.hidden = YES;
       }
       return cell;
     }
@@ -618,6 +621,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBResidenceBookItCalendarCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: CalID];
       cell.calendarView.delegate = self;
+      cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+        tableView.frame.size.width, 0.0f, 0.0f);
       return cell;
 
       // if (selectedIndexPath &&
@@ -636,6 +641,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       //   return calendarCell;
       // }
     }
+    // View lease details
     else if (indexPath.row == 2) {
       static NSString *CellIdentifier = @"CellIdentifier";
       UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
@@ -651,11 +657,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         label.textAlignment = NSTextAlignmentRight;
         label.textColor = [UIColor blue];
         [cell.contentView addSubview: label];
-        UIView *bor = [UIView new];
-        bor.backgroundColor = [UIColor grayLight];
-        bor.frame = CGRectMake(0.0f, label.frame.size.height - 0.5f,
-                               cell.bounds.size.width, 0.5f);
-        [cell.contentView addSubview: bor];
+        // UIView *bor = [UIView new];
+        // bor.backgroundColor = [UIColor grayLight];
+        // bor.frame = CGRectMake(0.0f, label.frame.size.height - 0.5f,
+        //                        cell.bounds.size.width, 0.5f);
+        // [cell.contentView addSubview: bor];
       }
       cell.backgroundColor = [UIColor grayUltraLight];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -676,13 +682,22 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell)
         cell = [[UITableViewCell alloc] initWithStyle:
           UITableViewCellStyleValue1 reuseIdentifier: PriceCellIdentifier];
+      UIView *bor = [cell.contentView viewWithTag: 9999];
+      if (!bor) {
+        bor = [UIView new];
+        bor.backgroundColor = [UIColor grayLight];
+        bor.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 0.5f);
+        bor.tag = 9999;
+      }
       cell.backgroundColor = [UIColor whiteColor];
       cell.detailTextLabel.font = 
         [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      if (indexPath.row == 0)
-        cell.textLabel.font = [UIFont fontWithName: 
-          @"HelveticaNeue-Medium" size: 15];
+      if (indexPath.row == 0) {
+        cell.textLabel.font = [UIFont normalTextFontBold];
+        [bor removeFromSuperview];
+        [cell.contentView addSubview: bor];
+      }
       else
         cell.textLabel.font = 
           [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
@@ -1182,7 +1197,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
     // Move in, move out dates
     if (indexPath.row == 0) {
-      return [OMBResidenceConfirmDetailsDatesCell heightForCell];
+      return [OMBResidenceConfirmDetailsDatesCell 
+        heightForCellWithNoLeaseMonthLabel];
+      // return [OMBResidenceConfirmDetailsDatesCell heightForCell];
     }
     // Calendar
     else if (indexPath.row == 1){
@@ -1197,8 +1214,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       if (isShowingMoveInCalendar || isShowingMoveOutCalendar)
         return [OMBResidenceBookItCalendarCell heightForCell];
     }
+    // View lease details
     else if (indexPath.row == 2) {
-      return spacing;
+      return spacing * 2;
     }
   }
   // Price breakdown
@@ -1476,17 +1494,19 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
     calendarCell.calendarView.selectedDate = 
       [NSDate dateWithTimeIntervalSince1970: offer.moveInDate];
+
+    [calendarCell.calendarView.collectionView reloadData];
   }
   else if (isShowingMoveOutCalendar) {
     [detailsCell highlightMoveOutDate];
 
     calendarCell.calendarView.selectedDate = 
       [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate];
+    [calendarCell.calendarView.collectionView reloadData];
   }
-  else
+  else {
     [detailsCell highlightNothing];
-
-  [calendarCell.calendarView.collectionView reloadData];
+  }
 
   [self.table beginUpdates];
   [self.table endUpdates];
@@ -1551,13 +1571,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   offer.amount = residence.minRent;
   offer.note   = personalNote;
   NSString *moveInDateString = [dateFormatter1 stringFromDate:
-      [NSDate dateWithTimeIntervalSince1970: offer.residence.moveInDate]];
-  NSDate *moveOutDate = [offer.residence moveOutDateDate];
-  if (offer.residence.moveOutDate)
-    moveOutDate = [NSDate dateWithTimeIntervalSince1970: 
-      offer.residence.moveOutDate];
+    [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]];
   NSString *moveOutDateString = [dateFormatter1 stringFromDate:
-    moveOutDate];
+    [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
 
   [alertBlur setTitle: @"Place Offer"];
   [alertBlur setMessage: [NSString stringWithFormat: @"Are you sure you "
