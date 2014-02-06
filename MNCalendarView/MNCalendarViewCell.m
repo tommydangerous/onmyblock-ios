@@ -46,7 +46,7 @@ static NSArray *monthNames;
     self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue" size: 10];
     self.titleLabel.textColor = [UIColor darkTextColor];
-    self.titleLabel.highlightedTextColor = [UIColor whiteColor];
+    // self.titleLabel.highlightedTextColor = [UIColor whiteColor];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.userInteractionEnabled = NO;
     self.titleLabel.backgroundColor = [UIColor clearColor];
@@ -55,8 +55,9 @@ static NSArray *monthNames;
     
     self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.bounds];
     self.selectedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    self.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:(111/255.0) green:(174/255.0)
-                                                                   blue:(193/255.0) alpha:1.f];
+    
+    // self.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:(111/255.0) green:(174/255.0)
+    //                                                                blue:(193/255.0) alpha:1.f];
   }
   return self;
 }
@@ -70,8 +71,10 @@ static NSArray *monthNames;
 
 - (void)drawRect:(CGRect)rect {
   CGContextRef context = UIGraphicsGetCurrentContext();
-  CGColorRef separatorColor = self.separatorColor.CGColor;
   
+  CGColorRef separatorColor = self.separatorColor.CGColor;
+  //  if(self.enabled)
+  //    separatorColor =  [[UIColor colorWithRed:0.f green:0.f blue:1.f alpha:1] CGColor];
   CGFloat pixel = 1.f / [UIScreen mainScreen].scale;
   // LINEAS HORIZONTALES
   MNContextDrawLine(context,

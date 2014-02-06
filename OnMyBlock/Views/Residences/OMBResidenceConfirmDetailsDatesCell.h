@@ -11,14 +11,28 @@
 @class OMBResidence;
 
 @interface OMBResidenceConfirmDetailsDatesCell : OMBTableViewCell
+{
+  UILabel *moveInLabel;
+  UILabel *moveOutLabel;
+}
 
-@property (nonatomic, strong) UIButton *moveInDateButton;
-@property (nonatomic, strong) UIButton *moveOutDateButton;
+@property (nonatomic, strong) UILabel *leaseMonthsLabel;
+@property (nonatomic, strong) UIButton *moveInDateLabel;
+@property (nonatomic, strong) UIButton *moveOutDateLabel;
 
 #pragma mark - Methods
 
+#pragma mark - Class Methods
+
++ (CGFloat) heightForCellWithNoLeaseMonthLabel;
+
 #pragma mark - Instance Methods
 
+- (void) highlightMoveInDate;
+- (void) highlightMoveOutDate;
+- (void) highlightNothing;
 - (void) loadResidence: (OMBResidence *) object;
+- (void) setMoveInDateLabelText: (NSString *) string;
+- (void) setMoveOutDateLabelText: (NSString *) string;
 
 @end

@@ -336,9 +336,9 @@ forButton: (UIButton *) button
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenHeight = screen.size.height;
-  CGFloat screenWidth  = screen.size.width;
+  // CGFloat screenWidth  = screen.size.width;
   CGFloat padding      = OMBPadding;
-  CGFloat standardHeight = OMBStandardHeight;
+  // CGFloat standardHeight = OMBStandardHeight;
 
   // Alert view
   // Question button

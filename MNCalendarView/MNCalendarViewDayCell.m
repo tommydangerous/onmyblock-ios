@@ -54,36 +54,45 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
   [self setNeedsDisplay];
 }
 
-- (void)setEnabled:(BOOL)enabled {
+- (void) setEnabled: (BOOL) enabled
+{
   [super setEnabled:enabled];
   
-  NSDateComponents *components = [self.calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit fromDate:self.date];
+  // NSDateComponents *components = [self.calendar components:
+  //   NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit
+  //   fromDate:self.date];
   
-  NSDateComponents *monthComponents = [self.calendar components:NSMonthCalendarUnit
-                                                       fromDate:self.month];
-  if(components.month == monthComponents.month && !self.isEnabled){
+  // NSDateComponents *monthComponents = [self.calendar components:NSMonthCalendarUnit
+  //                                                      fromDate:self.month];
+  // if(components.month == monthComponents.month && !self.isEnabled){
+  //   self.titleLabel.textColor = UIColor.grayColor;
+  //   self.backgroundColor = [UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.7];
+  //   return;
+  // }
+  if(!self.isEnabled){
     self.titleLabel.textColor = UIColor.grayColor;
     self.backgroundColor = [UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.7];
     return;
   }
   
-  // Fechas no validas y seleccionables
+  // Enabled
+  if (self.enabled) {
+    self.titleLabel.textColor = [UIColor redColor];
+  }
+  else {
+    self.titleLabel.textColor = [UIColor greenColor];
+  }
   
-  self.titleLabel.textColor =
-  self.enabled ? UIColor.blackColor : UIColor.whiteColor;
-  if(self.selected)
-    self.titleLabel.textColor = UIColor.whiteColor;
+  // Selected
+  if (self.selected)
+    self.titleLabel.textColor = UIColor.redColor;
+  else
+    self.titleLabel.textColor = [UIColor blackColor];
+  
   // .. , UIColor.darkGrayColor
   self.backgroundColor =
   self.enabled ? UIColor.whiteColor : UIColor.whiteColor;
   
-}
-
-- (void)selectCell{
-  self.titleLabel.textColor = UIColor.whiteColor;
-  self.backgroundColor = [UIColor colorWithRed:(111/255.0) green:(174/255.0)
-                                          blue:(193/255.0) alpha:1.f];
-  NSLog(@"selected");
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -98,18 +107,18 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
   // if(self.enabled)
   // separatorColor =  [[UIColor colorWithRed:0.f green:0.f blue:1.f alpha:1] CGColor];
   
-//  NSDateComponents *dayComponent = [self.calendar components:NSCalendarUnitDay fromDate:self.date];
-//  NSDateComponents *lastDayOfMonthComponent = [self.calendar components:NSCalendarUnitMonth |NSCalendarUnitDay fromDate:[self.date mn_lastDateOfMonth:self.calendar]];
-//  
-//  if(dayComponent.day == lastDayOfMonthComponent.day && self.enabled){
-//    separatorColor = [[UIColor redColor] CGColor];
-//    CGFloat pixel = 1.f / [UIScreen mainScreen].scale;
-//    MNContextDrawLine(context,
-//                      CGPointMake(size.width - pixel - pixel, pixel),
-//                      CGPointMake(size.width - pixel - pixel, size.height),
-//                      separatorColor,
-//                      pixel);
-//  }
+  //  NSDateComponents *dayComponent = [self.calendar components:NSCalendarUnitDay fromDate:self.date];
+  //  NSDateComponents *lastDayOfMonthComponent = [self.calendar components:NSCalendarUnitMonth |NSCalendarUnitDay fromDate:[self.date mn_lastDateOfMonth:self.calendar]];
+  //
+  //  if(dayComponent.day == lastDayOfMonthComponent.day && self.enabled){
+  //    separatorColor = [[UIColor redColor] CGColor];
+  //    CGFloat pixel = 1.f / [UIScreen mainScreen].scale;
+  //    MNContextDrawLine(context,
+  //                      CGPointMake(size.width - pixel - pixel, pixel),
+  //                      CGPointMake(size.width - pixel - pixel, size.height),
+  //                      separatorColor,
+  //                      pixel);
+  //  }
   
   if (self.weekday != 7) {
     separatorColor = self.separatorColor.CGColor;
