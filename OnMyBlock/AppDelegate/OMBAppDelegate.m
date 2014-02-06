@@ -38,6 +38,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // Production
     case 3: {
       [self setupTracking];
+      // [self testFlightTakeOff];
       break;
     }
     // Staging
