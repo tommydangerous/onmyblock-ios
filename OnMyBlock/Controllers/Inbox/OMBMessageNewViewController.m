@@ -75,13 +75,14 @@
 	[[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain
 									target: self action:@selector(cancel)];
 	
-	if ([[[UIDevice currentDevice] model] isEqualToString:@"iPhone"] ||
-		[[[UIDevice currentDevice] model] isEqualToString:@"iPhone Simulator"])
-	{
-		self.navigationItem.rightBarButtonItem =
-		[[UIBarButtonItem alloc] initWithTitle: @"Call" style: UIBarButtonItemStylePlain
-										target: self action: @selector(call)];
-	}
+	// if ([[[UIDevice currentDevice] model] isEqualToString:@"iPhone"] ||
+	// 	[[[UIDevice currentDevice] model] isEqualToString:@"iPhone Simulator"])
+	// {	
+	// }
+
+  callBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Call" 
+    style: UIBarButtonItemStylePlain target: self action: @selector(call)];
+  self.navigationItem.rightBarButtonItem = callBarButtonItem;
 	
   // To view
   AMBlurView *toView = [AMBlurView new];
@@ -155,6 +156,13 @@
   }
   else
     [toTextField becomeFirstResponder];
+
+  if (user && user.phone && [user.phone length]) {
+    callBarButtonItem.enabled = YES;
+  }
+  else {
+    callBarButtonItem.enabled = NO;
+  }
 }
 
 #pragma mark - Protocol

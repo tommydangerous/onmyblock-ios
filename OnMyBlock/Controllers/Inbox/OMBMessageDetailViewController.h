@@ -19,6 +19,7 @@
   UIBarButtonItem *contactBarButtonItem;
   UIToolbar *contactToolbar;
   BOOL isEditing;
+  UIBarButtonItem *phoneBarButtonItem;
   CGPoint startingPoint;
   OMBUser *user;
 }

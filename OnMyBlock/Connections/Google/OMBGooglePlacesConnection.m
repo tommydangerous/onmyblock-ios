@@ -31,6 +31,7 @@
     @"key=%@",
     string, @"true", types, @"AIzaSyA6HO4l5aN8Cpkvp_oe6QbZVuvivvObs7E"];
 
+  NSLog(@"STRING: %@", urlString);
   [self setRequestWithString: urlString];
 
   return self;

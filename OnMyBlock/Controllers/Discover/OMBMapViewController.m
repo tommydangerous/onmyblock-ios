@@ -135,7 +135,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   sortLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
   sortLabel.frame = CGRectMake(padding, sortView.frame.size.height - 44.0f,
     0.0f, 44.0f);
-  sortLabel.text = @"Sort";
+  sortLabel.text = @"Sort by";
   sortLabel.textColor = [UIColor whiteColor];
   CGRect sortRect = [sortLabel.text boundingRectWithSize: 
     CGSizeMake(screenWidth, sortLabel.frame.size.height) 
@@ -651,8 +651,7 @@ willDecelerate: (BOOL) decelerate
     CGFloat contentHeight    = scrollView.contentSize.height;
     CGFloat totalContentOffset = contentHeight - scrollViewHeight;
     CGFloat limit = totalContentOffset - (scrollViewHeight / 1.0f);
-    if (!fetching && y > limit) {
-      fetching = YES;
+    if (y > limit) {
       [self fetchResidencesForList];
     }
   }
@@ -784,7 +783,18 @@ withTitle: (NSString *) title;
   // One degree of latitude is always approximately 111 kilometers (69 miles)
   // One degree of longitude is approximately 111 kilometers (69 miles)
 
+  if (fetching) {
+    return;
+  }
+  else {
+    fetching = YES;
+    if (!activityView.isSpinning)
+      [activityView startSpinning];
+  }
+
   _radiusInMiles += 4;
+
+  NSLog(@"RADIUS: %f", _radiusInMiles);
 
   CGFloat maxLatitude, maxLongitude, minLatitude, minLongitude;
 
@@ -806,27 +816,43 @@ withTitle: (NSString *) title;
     [self mapFilterParameters]];
   [params setObject: bounds forKey: @"bounds"];
 
-  CGFloat currentCount = [[OMBResidenceListStore sharedStore].residences count];
+  NSInteger currentCount = 
+    [[OMBResidenceListStore sharedStore].residences count];
   
   [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters: params 
     completion: ^(NSError *error) {
-      [self reloadTable];
       fetching = NO;
+      [self resetCurrentResidencesForList];
+      [self reloadTable];
+
       // Stop fetching residences after 100 mile radius
       if (_radiusInMiles < 100) {
-        CGFloat newCount = 
+        NSInteger newCount = 
           [[OMBResidenceListStore sharedStore].residences count];
+        NSLog(@"CURRENT COUNT: %i", currentCount);
+        NSLog(@"NEW COUNT: %i", newCount);
+
         // If the count never changed
         if (newCount == currentCount || 
-          _listView.contentSize.height <= _listView.frame.size.height)
+          _listView.contentSize.height <= _listView.frame.size.height) {
+          // Fetch again
           [self fetchResidencesForList];
-
-        [self resetCurrentResidencesForList];
+        }
+        // If new residences were found and added
+        else {
+          if (activityView.isSpinning)
+            [activityView stopSpinning];
+        }
       }
-      [activityView stopSpinning];
+      // Stop fetching if radius is more than 100 miles
+      else {
+        if (activityView.isSpinning)
+          [activityView stopSpinning];
+      }
+
+      [self reloadTable];
     }
   ];
-  [activityView startSpinning];
 }
 
 - (void) foundLocations: (NSArray *) locations

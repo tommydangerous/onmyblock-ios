@@ -232,6 +232,11 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 - (void) submit
 {
   if ([[emailTextField.text stripWhiteSpace] length]) {
+    if (isSaving)
+      return;
+    else
+      isSaving = YES;
+
     [[OMBUser currentUser] createPayoutMethodWithDictionary: @{
       // @"active":      [NSNumber numberWithBool: YES], 
       // @"deposit":     [NSNumber numberWithBool: deposit],
@@ -264,6 +269,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       else {
         [self showAlertViewWithError: error];
       }
+      isSaving = NO;
       [[self appDelegate].container stopSpinning];
     }];
     [[self appDelegate].container startSpinning];

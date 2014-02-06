@@ -108,7 +108,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   // Phone
   UIImage *phoneIcon = [UIImage image: [UIImage imageNamed: @"phone_icon.png"]
     size: CGSizeMake(22.0f, 22.0f)];
-  UIBarButtonItem *phoneBarButtonItem = 
+  phoneBarButtonItem = 
     [[UIBarButtonItem alloc] initWithImage: phoneIcon style:
       UIBarButtonItemStylePlain target: self action: @selector(phoneCallUser)];
   // Right padding
@@ -184,6 +184,14 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   [self assignMessages];
   [_collection reloadData];
   [self scrollToBottomAnimated: NO];
+
+  // If no phone number
+  if (user.phone && [[user phoneString] length]) {
+    phoneBarButtonItem.enabled = YES;
+  }
+  else {
+    phoneBarButtonItem.enabled = NO;
+  }
 
   [self reloadTable];
 }

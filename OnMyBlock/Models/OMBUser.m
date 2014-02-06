@@ -342,6 +342,7 @@ withCompletion: (void (^) (NSError *error)) block
   else {
     [dict setObject: residence forKey: key];
   }
+  NSLog(@"%@", residence);
 }
 
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence
@@ -434,6 +435,11 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
   }
 }
 
+- (BOOL) compareUser: (OMBUser *) user
+{
+  return _uid == user.uid;
+}
+
 - (void) confirmOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block
 {
@@ -524,6 +530,14 @@ withCompletion: (void (^) (NSError *error)) block
     [[OMBUserImageDownloader alloc] initWithUser: self];
   downloader.completionBlock = block;
   [downloader startDownload];
+}
+
+- (BOOL) emailContactPermission
+{
+  if ([[_email matchingResultsWithRegularExpression: 
+    @"(landlord_user_[0-9]+@gmail.com)"] count])
+    return NO;
+  return YES;
 }
 
 - (NSArray *) favoritesArray

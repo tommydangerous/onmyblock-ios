@@ -1842,20 +1842,18 @@ viewForHeaderInSection: (NSInteger) section
   // Landlord
   else {
     NSString *moveInDateString = [dateFormatter1 stringFromDate:
-                                  [NSDate dateWithTimeIntervalSince1970: offer.residence.moveInDate]];
-    NSDate *moveOutDate = [offer.residence moveOutDateDate];
-    if (offer.residence.moveOutDate)
-      moveOutDate = [NSDate dateWithTimeIntervalSince1970:
-                     offer.residence.moveOutDate];
+                                  [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]];
     NSString *moveOutDateString = [dateFormatter1 stringFromDate:
-                                   moveOutDate];
+                                   [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
     [alertBlur setTitle: @"Respond Now"];
     [alertBlur setMessage:
      [NSString stringWithFormat:
-      @"%@ would like to rent your place from %@ - %@ for %@.",
+      @"%@ would like to rent your place from %@ - %@ for %@/mo with a "
+      @"deposit of %@.",
       [offer.user.firstName capitalizedString], moveInDateString,
       moveOutDateString,
-      [NSString numberToCurrencyString: offer.amount]]];
+      [NSString numberToCurrencyString: offer.amount],
+      [NSString numberToCurrencyString: offer.residence.deposit]]];
     [alertBlur setQuestionDetails:
      @"Accept: Gives the student 48 hours to sign the lease and pay the "
      @"1st month's rent and deposit.\n\n"
@@ -1956,10 +1954,15 @@ viewForHeaderInSection: (NSInteger) section
   
   // Create a PayPalPayment
   PayPalPayment *payment = [[PayPalPayment alloc] init];
-#warning Change this to the actual amount eventually
-  payment.amount = [[NSDecimalNumber alloc] initWithString: @"0.01"];
-  // payment.amount = [[NSDecimalNumber alloc] initWithString: 
-  //   [NSString stringWithFormat: @"%0.2f", offer.amount]];
+  
+  if (__ENVIRONMENT__ == 3) {
+    payment.amount = [[NSDecimalNumber alloc] initWithString: 
+                      [NSString stringWithFormat: @"%0.2f", [offer totalAmount]]];
+  }
+  else {
+    payment.amount = [[NSDecimalNumber alloc] initWithString: @"0.01"];
+  }
+  
   payment.currencyCode     = @"USD";
   payment.shortDescription = 
   [offer.residence.address capitalizedString];

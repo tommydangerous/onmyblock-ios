@@ -650,7 +650,7 @@ viewForHeaderInSection: (NSInteger) section
   // Activity
   if (tableView == _activityTableView) {
     if (section == 0) {
-      titleString = @"Offers";
+      titleString = @"Top Priority";
     }
     else if (section == 1) {
       titleString = @"Confirmed Tenants";

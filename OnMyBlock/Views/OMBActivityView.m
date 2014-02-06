@@ -93,6 +93,7 @@
 
 - (void) startSpinning
 {
+  _isSpinning = YES;
   [UIView animateWithDuration: 0.1 animations: ^{
     self.alpha = 1.0f;
   } completion: ^(BOOL finished) {
@@ -117,6 +118,7 @@
 
 - (void) stopSpinning
 {
+  _isSpinning = NO;
   [UIView animateWithDuration: 0.1 animations: ^{
     self.alpha = 0.0f;
   } completion: ^(BOOL finished) {

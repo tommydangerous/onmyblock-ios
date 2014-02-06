@@ -342,6 +342,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         string = @"Move-out Date";
         cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell1.textField.userInteractionEnabled = NO;
+        cell1.textField.placeholder = @"optional";
         if (residence.moveOutDate) {
           cell1.textField.text = [dateFormatter stringFromDate:
             [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]];

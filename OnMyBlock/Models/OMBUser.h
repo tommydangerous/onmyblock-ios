@@ -96,6 +96,7 @@ extern NSString *const OMBUserTypeLandlord;
 depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block;
 - (void) changeOtherSamePrimaryPayoutMethods: (OMBPayoutMethod *) payoutMethod;
 - (void) checkForUserDefaultsAPIKey;
+- (BOOL) compareUser: (OMBUser *) user;
 - (void) confirmOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
 - (void) createAuthenticationForFacebookWithCompletion: 
@@ -112,6 +113,7 @@ withCompletion: (void (^) (NSError *error)) block;
 - (NSArray *) depositPayoutMethods;
 - (void) downloadImageFromImageURLWithCompletion: 
 (void (^) (NSError *error)) block;
+- (BOOL) emailContactPermission;
 - (NSArray *) favoritesArray;
 - (void) fetchAcceptedOffersWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchConfirmedTenantsWithCompletion: (void (^) (NSError *error)) block;

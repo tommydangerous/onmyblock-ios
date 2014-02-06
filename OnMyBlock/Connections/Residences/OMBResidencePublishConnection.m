@@ -35,31 +35,32 @@
   return self;
 }
 
+- (id) initWithResidence: (OMBResidence *) object
+newResidence: (OMBResidence *) object2
+{
+  newResidence = object2;
+  return [self initWithResidence: object];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol NSURLConnectionDataDelegate
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
+  // NSLog(@"OMBResidencePublishConnection\n%@", [self json]);
 
-  NSLog(@"OMBResidencePublishConnection\n%@", json);
-
-  if ([[json objectForKey: @"success"] intValue]) {
+  if ([self successful]) {
     // Copy the temporary residence
     if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
-      // OMBResidence *res = (OMBResidence *) residence;
       [[OMBUser currentUser] removeResidence: residence];
-      // [[OMBUser currentUser] addResidence: res];
-      // [[OMBUser currentUser].residences removeAllObjects];
+
+      [newResidence readFromResidenceDictionary: [self objectDictionary]];
+      [[OMBUser currentUser] addResidence: newResidence];
     }
     else {
       residence.inactive = NO;
     }
-    // Remove the temporary residence from the user's residence
-
-    // Add the new residence to the user's residence
   }
 
   [super connectionDidFinishLoading: connection];

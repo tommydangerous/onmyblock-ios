@@ -437,6 +437,14 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   NSLog(@"RESIDENCE FETCH OFFERS");
 }
 
+- (NSString *) leaseMonthsStringShort
+{
+  if (_leaseMonths) {
+    return [NSString stringWithFormat: @"%i mo lease", _leaseMonths];
+  }
+  return @"month to month";
+}
+
 - (NSDate *) moveOutDateDate
 {
   NSCalendar *calendar = [NSCalendar currentCalendar];
@@ -717,6 +725,11 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   // Landlord name
   if ([dictionary objectForKey: @"landlord_name"] != [NSNull null])
     _landlordName = [dictionary objectForKey: @"landlord_name"];
+
+  // Landlord user id
+  if ([dictionary objectForKey: @"landlord_user_id"] != [NSNull null])
+    _landlordUserID = [[dictionary objectForKey: @"landlord_user_id"] intValue];
+
   // Latitude
   if ([dictionary objectForKey: @"latitude"] != [NSNull null])
     _latitude = [[dictionary objectForKey: @"latitude"] floatValue];
@@ -795,8 +808,8 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
     OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
     if (!user) {
       user = [[OMBUser alloc] init];
-      [user readFromDictionary: userDict];
     }
+    [user readFromDictionary: userDict];
     _user = user;
   }
   // Zip

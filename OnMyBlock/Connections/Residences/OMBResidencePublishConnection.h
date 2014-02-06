@@ -12,11 +12,14 @@
 
 @interface OMBResidencePublishConnection : OMBConnection
 {
+  OMBResidence *newResidence;
   OMBResidence *residence;
 }
 
 #pragma mark - Initializer
 
 - (id) initWithResidence: (OMBResidence *) object;
+- (id) initWithResidence: (OMBResidence *) object
+newResidence: (OMBResidence *) object2;
 
 @end

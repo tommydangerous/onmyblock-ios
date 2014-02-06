@@ -978,6 +978,9 @@ completion: (void (^) (void)) block
 
 - (void) showCreateListing
 {
+  if (![[OMBUser currentUser] loggedIn])
+    return;
+
   [self presentViewController: 
     [[OMBNavigationController alloc] initWithRootViewController:
       [[OMBCreateListingViewController alloc] init]] animated: YES 
@@ -988,7 +991,7 @@ completion: (void (^) (void)) block
             [self presentDetailViewController: 
               _manageListingsNavigationController];
         }
-      ];  
+      ];
 }
 
 - (void) showDiscover
