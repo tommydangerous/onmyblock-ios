@@ -58,12 +58,12 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
 {
   [super setEnabled:enabled];
   
-  NSDateComponents *components = [self.calendar components:
-    NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit 
-    fromDate:self.date];
+  // NSDateComponents *components = [self.calendar components:
+  //   NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit 
+  //   fromDate:self.date];
   
-  NSDateComponents *monthComponents = [self.calendar components:NSMonthCalendarUnit
-                                                       fromDate:self.month];
+  // NSDateComponents *monthComponents = [self.calendar components:NSMonthCalendarUnit
+  //                                                      fromDate:self.month];
   // if(components.month == monthComponents.month && !self.isEnabled){
   //   self.titleLabel.textColor = UIColor.grayColor;
   //   self.backgroundColor = [UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.7];
