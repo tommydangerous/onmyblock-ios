@@ -40,10 +40,11 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
   
   if(components.day == 1){
     self.titleLabel.numberOfLines = 3;
+    // first day of a month
     self.titleLabel.text = [NSString stringWithFormat:@"%@\n%d\n ",[[[MNCalendarViewDayCell monthNames] objectAtIndex:components.month -1 ] uppercaseString],components.day];
-    
+    // first day of a year
     if(components.month == 1)
-      self.titleLabel.text = [self.titleLabel.text stringByAppendingString:[NSString stringWithFormat:@"%d ",components.year]];;
+      self.titleLabel.text = [self.titleLabel.text stringByAppendingString:[NSString stringWithFormat:@"%d ",components.year]];
     
   }else{
     self.titleLabel.text =  [NSString stringWithFormat:@"%d",components.day];

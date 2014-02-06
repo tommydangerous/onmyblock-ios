@@ -406,16 +406,29 @@
     
     calendarCell.calendarView.selectedDate =
     [NSDate dateWithTimeIntervalSince1970: offer.moveInDate];
+
+    if(offer.moveOutDate && [date compare:[NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]] == NSOrderedDescending){
+      offer.moveOutDate = [date timeIntervalSince1970];
+      [detailsCell setMoveOutDateLabelText: dateString];
+    }
   }
   else if (isShowingMoveOutCalendar) {
     offer.moveOutDate = [date timeIntervalSince1970];
     [detailsCell setMoveOutDateLabelText: dateString];
+    if(offer.moveInDate && [date compare:[NSDate dateWithTimeIntervalSince1970: offer.moveInDate]] == NSOrderedAscending){
+      offer.moveInDate = [date timeIntervalSince1970];
+      [detailsCell setMoveInDateLabelText: dateString];
+    }
     
     calendarCell.calendarView.selectedDate =
     [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate];
   }
-  detailsCell.leaseMonthsLabel.text = [NSString stringWithFormat:
-                                       @"%i month lease", [offer numberOfMonthsBetweenMovingDates]];
+  int monthsBetween = [offer numberOfMonthsBetweenMovingDates];
+  NSString *monthString = monthsBetween > 1 ? @"MONTHS":@"MONTH";
+  calendarCell.leaseMonthsLabel.text =
+        [NSString stringWithFormat: @"%i %@ LEASE",
+         (monthsBetween > 0 ? monthsBetween:0),
+          monthString];
 }
 
 - (BOOL) calendarView: (MNCalendarView *) calendarView
