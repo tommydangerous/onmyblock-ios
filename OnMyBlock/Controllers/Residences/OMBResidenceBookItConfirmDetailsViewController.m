@@ -1108,7 +1108,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.section ==
            OMBResidenceBookItConfirmDetailsSectionRenterProfile) {
     // My Renter Profile (No longer Renter application)
-    if (indexPath.row == 1) {
+    if (indexPath.row == 0 || indexPath.row == 1) {
       OMBRenterProfileViewController *vc =
       [[OMBRenterProfileViewController alloc] init];
       [vc loadUser: [OMBUser currentUser]];
