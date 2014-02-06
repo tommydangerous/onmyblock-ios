@@ -40,8 +40,12 @@
 - (void)commonInit {
   self.calendar   = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
   self.fromDate   = [NSDate.date mn_beginningOfDay:self.calendar];
-  // a year for now
-  self.toDate     = [self.fromDate dateByAddingTimeInterval: MN_YEAR * 1];
+  // last day of next year
+  NSDateComponents *comps = [self.calendar components:NSYearCalendarUnit fromDate:self.fromDate];
+  [comps setDay   :31];
+  [comps setMonth :12];
+  [comps setYear  :[comps year] +1];
+  self.toDate     = [self.calendar dateFromComponents:comps];
   self.daysInWeek = 7;
   
   self.weekdayCellClass = MNCalendarViewWeekdayCell.class;
