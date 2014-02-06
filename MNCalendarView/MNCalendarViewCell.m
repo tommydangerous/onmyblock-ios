@@ -46,7 +46,7 @@ static NSArray *monthNames;
     self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue" size: 10];
     self.titleLabel.textColor = [UIColor darkTextColor];
-    self.titleLabel.highlightedTextColor = [UIColor whiteColor];
+    // self.titleLabel.highlightedTextColor = [UIColor whiteColor];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.userInteractionEnabled = NO;
     self.titleLabel.backgroundColor = [UIColor clearColor];
@@ -55,8 +55,9 @@ static NSArray *monthNames;
     
     self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.bounds];
     self.selectedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    self.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:(111/255.0) green:(174/255.0)
-                                                                   blue:(193/255.0) alpha:1.f];
+    
+    // self.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:(111/255.0) green:(174/255.0)
+    //                                                                blue:(193/255.0) alpha:1.f];
   }
   return self;
 }

@@ -10,6 +10,7 @@
 
 #import "OMBResidence.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 
 @implementation OMBResidenceConfirmDetailsDatesCell
 
@@ -28,7 +29,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   self.selectionStyle = UITableViewCellSelectionStyleNone;
   self.separatorInset = UIEdgeInsetsMake(0.0f, screenWidth, 0.0f, 0.0f);
 
-  UILabel *moveInLabel = [[UILabel alloc] init];
+  moveInLabel = [[UILabel alloc] init];
   moveInLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 18];
   moveInLabel.frame = CGRectMake(0.0f, 0.0f, screenWidth * 0.5, padding + 27.0f);
@@ -42,7 +43,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
     moveInLabel.frame.size.width - padding, 0.5f);
   [moveInLabel.layer addSublayer: leftUnderline];
 
-  UILabel *moveOutLabel = [[UILabel alloc] init];
+  moveOutLabel = [[UILabel alloc] init];
   moveOutLabel.font = moveInLabel.font;
   moveOutLabel.frame = CGRectMake(screenWidth - moveInLabel.frame.size.width,
     moveInLabel.frame.origin.y, moveInLabel.frame.size.width,
@@ -127,6 +128,40 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 #pragma mark - Instance Methods
 
+- (void) highlightMoveInDate
+{
+  // moveInLabel.backgroundColor = _moveInDateLabel.backgroundColor = 
+  //   [UIColor blueLight]; 
+  // moveOutLabel.backgroundColor = _moveOutDateLabel.backgroundColor =
+  //   [UIColor whiteColor];
+  moveInLabel.font  = [UIFont mediumTextFontBold];
+  moveInLabel.textColor = [UIColor blueDark];
+  moveOutLabel.font = [UIFont mediumTextFont];
+  moveOutLabel.textColor = [UIColor textColor];
+}
+
+- (void) highlightMoveOutDate
+{
+  // moveInLabel.backgroundColor = _moveInDateLabel.backgroundColor = 
+  //   [UIColor whiteColor]; 
+  // moveOutLabel.backgroundColor = _moveOutDateLabel.backgroundColor =
+  //   [UIColor blueLight];
+  moveInLabel.font  = [UIFont mediumTextFont];
+  moveInLabel.textColor = [UIColor textColor];
+  moveOutLabel.font = [UIFont mediumTextFontBold];
+  moveOutLabel.textColor = [UIColor blueDark];
+}
+
+- (void) highlightNothing
+{
+  // moveInLabel.backgroundColor = _moveInDateLabel.backgroundColor = 
+  //   [UIColor whiteColor]; 
+  // moveOutLabel.backgroundColor = _moveOutDateLabel.backgroundColor =
+  //   [UIColor whiteColor];
+  moveInLabel.font = moveOutLabel.font = [UIFont mediumTextFont];
+  moveInLabel.textColor = moveOutLabel.textColor = [UIColor textColor];
+}
+
 - (void) loadResidence: (OMBResidence *) object
 {
   NSDateFormatter *dateFormmater = [NSDateFormatter new];
@@ -148,6 +183,16 @@ reuseIdentifier: (NSString *)reuseIdentifier
 // >>>>>>> cb7fd819c965a120fc9188315e308ea1cc0a3452
     @"%i month lease", object.leaseMonths];
   
+}
+
+- (void) setMoveInDateLabelText: (NSString *) string
+{
+  [_moveInDateLabel setTitle: string forState: UIControlStateNormal];
+}
+
+- (void) setMoveOutDateLabelText: (NSString *) string
+{
+  [_moveOutDateLabel setTitle: string forState: UIControlStateNormal];
 }
 
 @end

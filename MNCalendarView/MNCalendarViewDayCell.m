@@ -54,27 +54,44 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
   [self setNeedsDisplay];
 }
 
-- (void)setEnabled:(BOOL)enabled {
+- (void) setEnabled: (BOOL) enabled
+{
   [super setEnabled:enabled];
   
-  NSDateComponents *components = [self.calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit fromDate:self.date];
+  NSDateComponents *components = [self.calendar components:
+    NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit 
+    fromDate:self.date];
   
   NSDateComponents *monthComponents = [self.calendar components:NSMonthCalendarUnit
                                                        fromDate:self.month];
-  if(components.month == monthComponents.month && !self.isEnabled){
+  // if(components.month == monthComponents.month && !self.isEnabled){
+  //   self.titleLabel.textColor = UIColor.grayColor;
+  //   self.backgroundColor = [UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.7];
+  //   return;
+  // }
+  if(!self.isEnabled){
     self.titleLabel.textColor = UIColor.grayColor;
     self.backgroundColor = [UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:0.7];
     return;
   }
   
-  // Fechas no validas y seleccionables
-  self.titleLabel.textColor =
-  self.enabled ? UIColor.blackColor : UIColor.whiteColor;
-  if(self.selected)
-    self.titleLabel.textColor = UIColor.whiteColor;
+  // Enabled
+  if (self.enabled) {
+    self.titleLabel.textColor = [UIColor redColor];
+  }
+  else {
+    self.titleLabel.textColor = [UIColor greenColor];
+  }
+
+  // Selected
+  if (self.selected)
+    self.titleLabel.textColor = UIColor.redColor;
+  else
+    self.titleLabel.textColor = [UIColor blackColor];
+
   // .. , UIColor.darkGrayColor
   self.backgroundColor =
-  self.enabled ? UIColor.whiteColor : UIColor.whiteColor;
+    self.enabled ? UIColor.whiteColor : UIColor.whiteColor;
   
 }
 

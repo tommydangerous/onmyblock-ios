@@ -11,6 +11,10 @@
 @class OMBResidence;
 
 @interface OMBResidenceConfirmDetailsDatesCell : OMBTableViewCell
+{
+  UILabel *moveInLabel;
+  UILabel *moveOutLabel;
+}
 
 @property (nonatomic, strong) UILabel *leaseMonthsLabel;
 @property (nonatomic, strong) UIButton *moveInDateLabel;
@@ -20,6 +24,11 @@
 
 #pragma mark - Instance Methods
 
+- (void) highlightMoveInDate;
+- (void) highlightMoveOutDate;
+- (void) highlightNothing;
 - (void) loadResidence: (OMBResidence *) object;
+- (void) setMoveInDateLabelText: (NSString *) string;
+- (void) setMoveOutDateLabelText: (NSString *) string;
 
 @end

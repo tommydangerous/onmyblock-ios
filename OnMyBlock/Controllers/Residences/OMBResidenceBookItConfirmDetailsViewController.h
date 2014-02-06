@@ -26,6 +26,13 @@ typedef NS_ENUM(NSInteger, OMBResidenceBookItConfirmDetailsSection) {
   OMBResidenceBookItConfirmDetailsSectionSpacing
 };
 
+// Sections
+// Dates
+typedef NS_ENUM(NSInteger, OMBResidenceBookItConfirmDetailsSectionDatesRows) {
+  OMBResidenceBookItConfirmDetailsSectionDatesRowsMoveInMoveOut,
+  OMBResidenceBookItConfirmDetailsSectionDatesRowsCalendar
+};
+
 @interface OMBResidenceBookItConfirmDetailsViewController : 
   OMBTableViewController
 <UIAlertViewDelegate, UIScrollViewDelegate, UITextFieldDelegate, 
@@ -44,6 +51,8 @@ typedef NS_ENUM(NSInteger, OMBResidenceBookItConfirmDetailsSection) {
   BOOL isAddingAPersonalNote;
   BOOL isEditing;
   BOOL isShowingPriceBreakdown;
+  BOOL isShowingMoveInCalendar;
+  BOOL isShowingMoveOutCalendar;
   UILabel *minutesLabel;
   OMBOffer *offer;
   NSString *personalNote;

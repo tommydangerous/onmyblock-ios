@@ -197,60 +197,85 @@
   return self.daysInWeek + components.day + 1;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-
+- (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView
+cellForItemAtIndexPath: (NSIndexPath *) indexPath
+{
   if (indexPath.item < self.daysInWeek) {
-    // Sun, Mon, Tue
+    // Sun, Mon, Tue, Wed cells
     MNCalendarViewWeekdayCell *cell =
-      [collectionView dequeueReusableCellWithReuseIdentifier:MNCalendarViewWeekdayCellIdentifier
-                                                forIndexPath:indexPath];
-    
+      [collectionView dequeueReusableCellWithReuseIdentifier:
+        MNCalendarViewWeekdayCellIdentifier forIndexPath: indexPath];
     cell.backgroundColor = self.collectionView.backgroundColor;
     cell.titleLabel.text = self.weekdaySymbols[indexPath.item];
-    cell.separatorColor = self.separatorColor;
+    cell.separatorColor  = self.separatorColor;
+
     return cell;
   }
   
+  // 1, 2, 3, 4, 5, 6... days
   MNCalendarViewDayCell *cell =
-    [collectionView dequeueReusableCellWithReuseIdentifier:MNCalendarViewDayCellIdentifier
-                                              forIndexPath:indexPath];
+    [collectionView dequeueReusableCellWithReuseIdentifier:
+      MNCalendarViewDayCellIdentifier forIndexPath: indexPath];
   cell.separatorColor = self.separatorColor;
   
   NSDate *monthDate = self.monthDates[indexPath.section];
-  NSDate *firstDateInMonth = [self firstVisibleDateOfMonth:monthDate];
-
+  NSDate *firstDateInMonth = [self firstVisibleDateOfMonth: monthDate];
   NSUInteger day = indexPath.item - self.daysInWeek;
   
   NSDateComponents *components =
-    [self.calendar components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit
-                     fromDate:firstDateInMonth];
+    [self.calendar components: 
+      (NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit)
+        fromDate: firstDateInMonth];
   components.day += day;
   
-  NSDate *date = [self.calendar dateFromComponents:components];
-  [cell setDate:date
-          month:monthDate
-       calendar:self.calendar];
+  NSDate *date = [self.calendar dateFromComponents: components];
+
+  // This sets the title label text
+  [cell setDate: date month: monthDate calendar: self.calendar];
   
-  if (cell.enabled)
-    [cell setEnabled:[self dateEnabled:date]];
-  
-  if(self.selectedSecond && cell.enabled){
-    NSIndexPath *selection = [NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section];
-    [self.collectionView selectItemAtIndexPath:selection animated:YES scrollPosition:UICollectionViewScrollPositionNone];
+  // This sets the color of the text
+  if (cell.enabled) {
+    [cell setEnabled: [self dateEnabled: date]];
   }
+
+  if (_selectedDate && [date compare: _selectedDate] == NSOrderedSame) {
+    NSDateComponents *components2 = [self.calendar components: 
+      NSMonthCalendarUnit fromDate: date];
+    NSDateComponents *monthComponents = 
+      [self.calendar components: NSMonthCalendarUnit fromDate: monthDate];
+
+    if (components2.month == monthComponents.month) {
+      cell.titleLabel.textColor = [UIColor whiteColor];
+      cell.backgroundColor = [UIColor colorWithRed: 111/255.0f green: 174/255.0f
+        blue: 193/255.0f alpha: 1.0f];
+    }
+  }
+  
+  // if (self.selectedSecond && cell.enabled) {
+  //   NSIndexPath *selection = [NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section];
+  //   [self.collectionView selectItemAtIndexPath:selection animated:YES scrollPosition:UICollectionViewScrollPositionNone];
+  // }
+
+  // if (_selectedDate && [date compare: _selectedDate] == NSOrderedSame) {
+  //   NSLog(@"%@", _selectedDate);
+  //   NSIndexPath *selection = [NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section];
+  //   [self.collectionView selectItemAtIndexPath:selection animated:YES scrollPosition:UICollectionViewScrollPositionNone]; 
+  // }
   
   return cell;
 }
 
 #pragma mark - UICollectionViewDelegate
 
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-  if(self.selectedSecond){
-    self.collectionView.allowsSelection = NO;
-    return NO;
-  }
-  return [self canSelectItemAtIndexPath:indexPath];
+- (BOOL) collectionView: (UICollectionView *) collectionView
+shouldHighlightItemAtIndexPath: (NSIndexPath *) indexPath
+{
+  return YES;
+  // if(self.selectedSecond){
+  //   self.collectionView.allowsSelection = NO;
+  //   return NO;
+  // }
+  // return [self canSelectItemAtIndexPath:indexPath];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -261,22 +286,44 @@
   return [self canSelectItemAtIndexPath:indexPath];
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-  NSLog(@"didSelect");
-  MNCalendarViewCell *cell = (MNCalendarViewCell *)[self collectionView:collectionView cellForItemAtIndexPath:indexPath];
-  
-  if ([cell isKindOfClass:MNCalendarViewDayCell.class] && cell.enabled) {
-    MNCalendarViewDayCell *dayCell = (MNCalendarViewDayCell *)cell;
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:didSelectDate:)]) {
-      [self.delegate calendarView:self didSelectDate:dayCell.date];
+- (void) collectionView: (UICollectionView *) collectionView 
+didSelectItemAtIndexPath: (NSIndexPath *) indexPath
+{
+  NSLog(@"DID SELECT");
+
+  MNCalendarViewCell *cell = (MNCalendarViewCell *) 
+    [self collectionView: collectionView cellForItemAtIndexPath: indexPath];
+
+  NSLog(@"%@", cell.selected ? @"SELECTED" : @"NOT SELECTED");
+
+  if ([cell isKindOfClass: [MNCalendarViewCell class]] && cell.enabled) {
+    MNCalendarViewDayCell *dayCell = (MNCalendarViewDayCell *) cell;
+
+    if (self.delegate && [self.delegate respondsToSelector:
+      @selector(calendarView:didSelectDate:)]) {
+
+      [self.delegate calendarView: self didSelectDate: dayCell.date];
     }
-    
-    [cell setSelected:YES];
+
     [self.collectionView reloadData];
-    NSIndexPath *selection = [NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section];
-    [self.collectionView selectItemAtIndexPath:selection animated:YES scrollPosition:UICollectionViewScrollPositionNone];
   }
+
+
+  // if ([cell isKindOfClass:MNCalendarViewDayCell.class] && cell.enabled) {
+  //   MNCalendarViewDayCell *dayCell = (MNCalendarViewDayCell *)cell;
+    
+  //   if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:didSelectDate:)]) {
+  //     [self.delegate calendarView:self didSelectDate:dayCell.date];
+  //   }
+    
+  //   // [cell setSelected:YES];
+  //   [self.collectionView reloadData];
+
+  //   NSIndexPath *selection = [NSIndexPath indexPathForItem: indexPath.row 
+  //     inSection: indexPath.section];
+  //   [self.collectionView selectItemAtIndexPath: selection animated: YES 
+  //     scrollPosition: UICollectionViewScrollPositionNone];
+  // }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
