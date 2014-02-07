@@ -203,7 +203,7 @@
   _landlordButton.layer.borderWidth = 1.0f;
   _landlordButton.layer.cornerRadius = _landlordButton.frame.size.height * 0.5f;
   _landlordButton.titleLabel.font = [UIFont normalTextFont];
-  [_landlordButton setTitle: @"Landlords Here" 
+  [_landlordButton setTitle: @"Landlords Tap Here" 
     forState: UIControlStateNormal];
   [_landlordButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
