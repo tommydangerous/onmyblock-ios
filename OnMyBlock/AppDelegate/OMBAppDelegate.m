@@ -38,6 +38,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // Production
     case 3: {
       [self setupTracking];
+      // Remove this when submitting to the App Store
       // [self testFlightTakeOff];
       break;
     }

@@ -654,21 +654,24 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           residence.bedrooms, residence.bathrooms, 
             [residence leaseMonthsStringShort]];
       // Property Type - Move in Date
-      NSString *propertyType = @"Property type";
+      NSString *propertyType = @"";
       if ([[residence.propertyType stripWhiteSpace] length])
         propertyType = [residence.propertyType capitalizedString];
-      NSString *availableDateString = @"immediately";
+      NSString *availableDateString = @"";
       if (residence.moveInDate) {
         if (residence.moveInDate > [[NSDate date] timeIntervalSince1970]) {
           NSDateFormatter *dateFormatter = [NSDateFormatter new];
           dateFormatter.dateFormat = @"MMM d, yyyy";
-          availableDateString = [NSString stringWithFormat: @"%@",
+          availableDateString = [NSString stringWithFormat: @"- available %@",
             [dateFormatter stringFromDate: 
               [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]]];
         }
+        else {
+          availableDateString = @"- available immediately";
+        }
       }
       cell.propertyTypeLabel.text = [NSString stringWithFormat: 
-        @"%@ - available %@", propertyType, availableDateString];
+        @"%@ %@", propertyType, availableDateString];
       return cell;
     }
   }
@@ -733,15 +736,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Seller
   else if (indexPath.section == 4) {
     if (indexPath.row == 1) {
-      static NSString *SellerCellIdentifier = @"SellerCellIdentifier";
-      OMBResidenceDetailSellerCell *cell = 
-        [tableView dequeueReusableCellWithIdentifier: SellerCellIdentifier];
-      if (!cell) {
-        cell = [[OMBResidenceDetailSellerCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier: SellerCellIdentifier];
+      if (residence.user && residence.user.uid) {
+        static NSString *SellerCellIdentifier = @"SellerCellIdentifier";
+        OMBResidenceDetailSellerCell *cell = 
+          [tableView dequeueReusableCellWithIdentifier: SellerCellIdentifier];
+        if (!cell) {
+          cell = [[OMBResidenceDetailSellerCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier: SellerCellIdentifier];
+        }
+        [cell loadUserData: residence.user];
+        return cell;
       }
-      [cell loadUserData: residence.user];
-      return cell;
     }
   }
 
@@ -926,7 +931,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     else if (indexPath.row == 1) {
       // Only show this if there is a user for that residence
-      if (residence.user) {
+      if (residence.user && residence.user.uid) {
         return [OMBResidenceDetailSellerCell heightForCell];
       }
     }
