@@ -223,6 +223,11 @@ toImageSizeDictionaryWithSize: (CGSize) size
   return @"Soon";
 }
 
+- (void) cancelCoverPhotoDownload
+{
+  [coverPhotoURLConnection cancelConnection];
+}
+
 - (UIImage *) coverPhoto
 {
   if ([_images count] > 0) {
@@ -293,10 +298,10 @@ toImageSizeDictionaryWithSize: (CGSize) size
 
 - (void) downloadCoverPhotoWithCompletion: (void (^) (NSError *error)) block
 {
-  OMBResidenceCoverPhotoURLConnection *conn = 
+  coverPhotoURLConnection = 
     [[OMBResidenceCoverPhotoURLConnection alloc] initWithResidence: self];
-  conn.completionBlock = block;
-  [conn start];
+  coverPhotoURLConnection.completionBlock = block;
+  [coverPhotoURLConnection start];
 }
 
 - (void) downloadImagesWithCompletion: (void (^) (NSError *error)) block

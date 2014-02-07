@@ -9,9 +9,13 @@
 #import "OMBConnection.h"
 
 @class OMBResidence;
+@class OMBResidenceCoverPhotoDownloader;
+@class OMBResidenceGoogleStaticImageDownloader;
 
 @interface OMBResidenceCoverPhotoURLConnection : OMBConnection
 {
+  OMBResidenceCoverPhotoDownloader *coverPhotoDownloader;
+  OMBResidenceGoogleStaticImageDownloader *googleStaticImageDownloader;
   OMBResidence *residence;
 }
 

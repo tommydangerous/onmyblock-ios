@@ -22,6 +22,8 @@
 
 #pragma mark - Instance Methods
 
+- (void) cancelResidenceCoverPhotoDownload;
+- (void) downloadResidenceImages;
 - (void) loadResidenceData: (OMBResidence *) object;
 
 @end
