@@ -59,10 +59,10 @@
     }
     residence.coverPhotoURL = [NSURL URLWithString: string];
     // Download the residence cover photo from the cover photo url
-    OMBResidenceCoverPhotoDownloader *downloader = 
+    coverPhotoDownloader = 
       [[OMBResidenceCoverPhotoDownloader alloc] initWithResidence:
         residence];
-    downloader.completionBlock = ^(NSError *error) {
+    coverPhotoDownloader.completionBlock = ^(NSError *error) {
       [super connectionDidFinishLoading: connection];
     };
 
@@ -70,22 +70,36 @@
     if ([json objectForKey: @"position"] != [NSNull null])
       position = [[json objectForKey: @"position"] intValue];
     
-    downloader.originalString = originalString;
-    downloader.position       = position;
-    downloader.residenceImageUID = [[json objectForKey: @"id"] intValue];
-    [downloader startDownload];
+    coverPhotoDownloader.originalString = originalString;
+    coverPhotoDownloader.position       = position;
+    coverPhotoDownloader.residenceImageUID = 
+      [[json objectForKey: @"id"] intValue];
+    [coverPhotoDownloader startDownload];
   }
   // If residence is not a temporary residence
   else if (![residence isKindOfClass: [OMBTemporaryResidence class]]) {
     // If the residence has no image, show the Google Static street view
-    OMBResidenceGoogleStaticImageDownloader *downloader =
+     googleStaticImageDownloader =
       [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:
         residence url: [residence googleStaticStreetViewImageURL]];
-    downloader.completionBlock = ^(NSError *error) {
+    googleStaticImageDownloader.completionBlock = ^(NSError *error) {
       [super connectionDidFinishLoading: connection];
     };
-    [downloader startDownload];
+    [googleStaticImageDownloader startDownload];
   }
+}
+
+#pragma mark - Override
+
+#pragma mark - OMBConnection
+
+- (void) cancelConnection
+{
+  [super cancelConnection];
+  if (coverPhotoDownloader)
+    [coverPhotoDownloader cancelDownload];
+  if (googleStaticImageDownloader)
+    [googleStaticImageDownloader cancelDownload];
 }
 
 @end

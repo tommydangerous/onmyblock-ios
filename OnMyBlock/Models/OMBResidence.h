@@ -10,6 +10,7 @@
 
 @class OMBOffer;
 @class OMBOpenHouse;
+@class OMBResidenceCoverPhotoURLConnection;
 @class OMBResidenceImage;
 @class OMBUser;
 
@@ -18,6 +19,9 @@ extern NSString *const OMBResidencePropertyTypeHouse;
 extern NSString *const OMBResidencePropertyTypeSublet;
 
 @interface OMBResidence : NSObject
+{
+  OMBResidenceCoverPhotoURLConnection *coverPhotoURLConnection;
+}
 
 // Web app properties
 @property (nonatomic, strong) NSString *address;
@@ -85,6 +89,7 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 - (void) addResidenceImage: (OMBResidenceImage *) residenceImage;
 - (NSArray *) availableAmenities;
 - (NSString *) availableOnString;
+- (void) cancelCoverPhotoDownload;
 - (UIImage *) coverPhoto;
 - (UIImage *) coverPhotoForSize: (CGSize) size;
 - (UIImage *) coverPhotoForSizeKey: (NSString *) string;

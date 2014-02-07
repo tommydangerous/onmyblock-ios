@@ -43,6 +43,7 @@
 // #import "OMBResidence.h"
 // #import "OMBResidenceDetailViewController.h"
 
+CGFloat kBackgroundMaxScale = 5.0f;
 
 @implementation OMBViewControllerContainer
 // #warning Remove this
@@ -210,7 +211,7 @@
 
   // Scale the background larger so when they slide the menu, it "zooms"
   _backgroundBlurView.transform = CGAffineTransformScale(
-    CGAffineTransformIdentity, 2.0f, 2.0f);
+    CGAffineTransformIdentity, kBackgroundMaxScale, kBackgroundMaxScale);
   // backgroundImageView.transform = CGAffineTransformMakeScale(2, 2);
   // blurView.transform = CGAffineTransformMakeScale(2, 2);
 
@@ -671,7 +672,7 @@ completion: (void (^) (void)) block
 
     // Zoom into the background image view
     _backgroundBlurView.transform = CGAffineTransformScale(
-      CGAffineTransformIdentity, 2.0f, 2.0f);
+      CGAffineTransformIdentity, kBackgroundMaxScale, kBackgroundMaxScale);
     // blurView.transform = CGAffineTransformMakeScale(2, 2);
 
     // Hide the account image view

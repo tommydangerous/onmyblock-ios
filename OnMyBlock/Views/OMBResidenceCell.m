@@ -54,6 +54,18 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 #pragma mark - Instance Methods
 
+- (void) cancelResidenceCoverPhotoDownload
+{
+  if (_residencePartialView)
+    [_residencePartialView cancelResidenceCoverPhotoDownload];
+}
+
+- (void) downloadResidenceImages
+{
+  if (_residencePartialView)
+    [_residencePartialView downloadResidenceImages];
+}
+
 - (void) loadResidenceData: (OMBResidence *) object
 {
   _residence = object;

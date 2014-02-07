@@ -274,13 +274,28 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+- (void) cancelResidenceCoverPhotoDownload
+{
+  if (_residence)
+    [_residence cancelCoverPhotoDownload];
+}
+
 - (void) downloadResidenceImages
 {
-  if ([[_residence imagesArray] count] <= 1) {
-    [_residence downloadImagesWithCompletion: ^(NSError *error) {
-      [_imagesFilmstrip reloadData];
-    }];
-  }
+  if (isDownloadingResidenceImages)
+    return;
+  [_residence downloadImagesWithCompletion: ^(NSError *error) {
+    [_imagesFilmstrip reloadData];
+    isDownloadingResidenceImages = NO;
+  }];
+  isDownloadingResidenceImages = YES;
+  // NSLog(@"DOWNLOAD IMAGES: %i", _residence.uid);
+
+  // if ([[_residence imagesArray] count] <= 1) {
+  //   [_residence downloadImagesWithCompletion: ^(NSError *error) {
+  //     [_imagesFilmstrip reloadData];
+  //   }];
+  // }
 }
 
 //- (void) loadImageAnimated: (BOOL) animated
@@ -336,13 +351,13 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   // Cover photo
   if ([_residence coverPhoto]) {
     [_imagesFilmstrip reloadData];
-    [self downloadResidenceImages];
+    // [self downloadResidenceImages];
   }
   else {
     // Download cover photo
     [_residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
       [_imagesFilmstrip reloadData];
-      [self downloadResidenceImages];
+      // [self downloadResidenceImages];
       // [activityIndicatorView stopAnimating];
     }];
     // [activityIndicatorView startAnimating];

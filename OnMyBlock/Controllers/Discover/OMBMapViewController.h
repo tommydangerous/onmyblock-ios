@@ -43,8 +43,11 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
   UILabel *filterLabel;
   UIView *filterView;
   BOOL isDraggingListView;
+  BOOL isScrollingFast;
   BOOL isScrollingListViewDown;
   BOOL isShowingSortButtons;
+  CGPoint lastOffset;
+  NSTimeInterval lastOffsetCapture;
   CLLocationManager *locationManager;
   AMBlurView *navigationBarCover;
   CGFloat previousOffsetY;

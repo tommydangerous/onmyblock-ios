@@ -384,12 +384,19 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   if ([dictionary objectForKey: @"neighborhood"] != [NSNull null]) {
     OMBNeighborhood *neighborhood = [dictionary objectForKey: 
       @"neighborhood"];
-    centerCoordinate = neighborhood.coordinate;
-    [self setMapViewRegion: centerCoordinate withMiles: 4 animated: NO];
-    if ([self isOnList]) {
-      [self resetListViewResidences];
-      [self fetchResidencesForList];
+    
+    if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate)) {
+      centerCoordinate = neighborhood.coordinate;
+      [self setMapViewRegion: centerCoordinate withMiles: 4 animated: NO];
+      if ([self isOnList]) {
+        [self resetListViewResidences];
+        [self fetchResidencesForList];
+      }
     }
+    // Remove this object so that whenever the user comes back from the
+    // residence detail view, it doesn't refresh everything
+    // [[self appDelegate].container.mapFilterViewController.valuesDictionary 
+    //   removeObjectForKey: @"neighborhood"];
   }
   // If there are filter values, apply and search
   if ([self appDelegate].container.mapFilterViewController.shouldSearch) {
@@ -549,31 +556,54 @@ viewForAnnotation: (id <MKAnnotation>) annotation
 
 #pragma mark - Protocol UIScrollViewDelegate
 
+- (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView
+{
+  if (scrollView == _listView) {
+    [self downloadResidenceImagesForVisibleCells];
+  }
+}
+
 - (void) scrollViewDidEndDragging: (UIScrollView *) scrollView 
 willDecelerate: (BOOL) decelerate
 {
-  isDraggingListView = NO;
-  [self hideOrShowNavigationBarAndSortView];
+  if (scrollView == _listView) {
+    isDraggingListView = NO;
+    [self hideOrShowNavigationBarAndSortView];
+  }
+}
+
+- (void) scrollViewWillEndDragging: (UIScrollView *) scrollView 
+withVelocity: (CGPoint) velocity 
+targetContentOffset: (inout CGPoint *) targetContentOffset
+{
+  if (scrollView == _listView) {
+    if (velocity.y < 0.0001) {
+      [self downloadResidenceImagesForVisibleCells];
+    }
+  }
 }
 
 - (void) scrollViewWillBeginDragging: (UIScrollView *) scrollView
 {
-  isDraggingListView = YES;
-  previousOffsetY = scrollView.contentOffset.y;
-  currentDistanceOfScrolling = 0.0f;
-  if (isShowingSortButtons) {
-    [UIView animateWithDuration: 0.1 animations: ^{
-      sortArrow.transform = CGAffineTransformMakeRotation(-90 * M_PI / 180.0f);
-      for (UIButton *button in sortButtonArray) {
-        button.alpha = 0.0f;
-      }
-    } completion: ^(BOOL finished) {
-      for (UIButton *button in sortButtonArray) {
-        button.alpha  = 1.0f;
-        [self makeSortButtonsVisible: NO];
-      }
-    }];
-    isShowingSortButtons = NO;
+  if (scrollView == _listView) {
+    isDraggingListView = YES;
+    previousOffsetY = scrollView.contentOffset.y;
+    currentDistanceOfScrolling = 0.0f;
+    if (isShowingSortButtons) {
+      [UIView animateWithDuration: 0.1 animations: ^{
+        sortArrow.transform = 
+          CGAffineTransformMakeRotation(-90 * M_PI / 180.0f);
+        for (UIButton *button in sortButtonArray) {
+          button.alpha = 0.0f;
+        }
+      } completion: ^(BOOL finished) {
+        for (UIButton *button in sortButtonArray) {
+          button.alpha  = 1.0f;
+          [self makeSortButtonsVisible: NO];
+        }
+      }];
+      isShowingSortButtons = NO;
+    }
   }
 }
 
@@ -645,14 +675,39 @@ willDecelerate: (BOOL) decelerate
     }
   }
 
-  // Fetch more residences when scrolling down
   if (scrollView == _listView) {
+    // Fetch more residences when scrolling down
     CGFloat scrollViewHeight = scrollView.frame.size.height;
     CGFloat contentHeight    = scrollView.contentSize.height;
     CGFloat totalContentOffset = contentHeight - scrollViewHeight;
     CGFloat limit = totalContentOffset - (scrollViewHeight / 1.0f);
     if (y > limit) {
       [self fetchResidencesForList];
+    }
+
+    // Check the speed of scrolling,  if it is slow, download
+    // the rest of the images for the visible cells
+    CGPoint currentOffset = scrollView.contentOffset;
+    NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
+    NSTimeInterval timeDiff = currentTime - lastOffsetCapture;
+    if (timeDiff > 0.1) {
+      CGFloat distance = currentOffset.y - lastOffset.y;
+      // The multiply by 10, / 1000 isn't really necessary.......
+      // In pixels per millisecond
+      CGFloat scrollSpeedNotAbs = (distance * 10) / 1000; 
+      CGFloat scrollSpeed = fabsf(scrollSpeedNotAbs);
+
+      if (scrollSpeed > 0.3) {
+        isScrollingFast = YES;
+      }
+      else {
+        isScrollingFast = NO;
+      }
+      // if (!isScrollingFast)
+      //   [self downloadResidenceImagesForVisibleCells];
+
+      lastOffset = currentOffset;
+      lastOffsetCapture = currentTime;
     }
   }
 }
@@ -696,17 +751,13 @@ numberOfRowsInSection: (NSInteger) section
 didEndDisplayingCell: (UITableViewCell *) cell 
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  // if (tableView == _listView) {
-  //   if ([[self residencesForList] count] > indexPath.row) {
-  //     OMBResidence *residence = [[self residencesForList] objectAtIndex: 
-  //       indexPath.row];
-  //     if (!residence.coverPhotoForCell) {
-  //       OMBResidenceCell *c = (OMBResidenceCell *) cell;
-  //       c.imageView.image   = nil;
-  //       NSLog(@"DID END DISPLAY: %i", residence.uid);
-  //     }
-  //   }
-  // }
+  if (tableView == _listView) {
+    if ([[self residencesForList] count] > indexPath.row) {
+      // Cancel the download of the cover photo
+      if ([cell isKindOfClass: [OMBResidenceCell class]])
+        [(OMBResidenceCell *) cell cancelResidenceCoverPhotoDownload];
+    }
+  }
 }
 
 // - (void) tableView: (UITableView *) tableView
@@ -776,6 +827,16 @@ withTitle: (NSString *) title;
   }
 }
 
+- (void) downloadResidenceImagesForVisibleCells
+{
+  for (id obj in [_listView visibleCells]) {
+    if ([obj isKindOfClass: [OMBResidenceCell class]]) {
+      OMBResidenceCell *cell = (OMBResidenceCell *) obj;
+      [cell downloadResidenceImages];
+    }
+  }
+}
+
 - (void) fetchResidencesForList
 {
   // Fetch residences for list
@@ -818,19 +879,21 @@ withTitle: (NSString *) title;
 
   NSInteger currentCount = 
     [[OMBResidenceListStore sharedStore].residences count];
-  
+  NSLog(@"CURRENT COUNT: %i", currentCount);
   [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters: params 
     completion: ^(NSError *error) {
       fetching = NO;
       [self resetCurrentResidencesForList];
       [self reloadTable];
 
+      if (currentCount == 0)
+        [self downloadResidenceImagesForVisibleCells];
+
       // Stop fetching residences after 100 mile radius
       if (_radiusInMiles < 100) {
         NSInteger newCount = 
           [[OMBResidenceListStore sharedStore].residences count];
-        NSLog(@"CURRENT COUNT: %i", currentCount);
-        NSLog(@"NEW COUNT: %i", newCount);
+        NSLog(@"NEW COUNT:     %i", newCount);
 
         // If the count never changed
         if (newCount == currentCount || 
