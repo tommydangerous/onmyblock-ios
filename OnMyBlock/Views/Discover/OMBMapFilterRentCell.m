@@ -27,17 +27,17 @@ reuseIdentifier: (NSString *)reuseIdentifier
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat padding = 20.0f;
 
-  _minRentTextField = [[TextFieldPadding alloc] init];
-  _maxRentTextField = [[TextFieldPadding alloc] init];
+  _rentRangeTextField = [[TextFieldPadding alloc] init];
+//  _maxRentTextField = [[TextFieldPadding alloc] init];
 
-  NSArray *array = @[_minRentTextField, _maxRentTextField];
+  NSArray *array = @[_rentRangeTextField, /*_maxRentTextField*/];
 
   for (TextFieldPadding *textField in array) {
     textField.backgroundColor = [UIColor whiteColor];
     textField.clipsToBounds = YES;
     textField.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
       size: 15];
-    CGFloat width = (screen.size.width - (padding * 3)) * 0.5;
+    CGFloat width = (screen.size.width - (padding * (1 + array.count))) * 1 / array.count;
     textField.frame = CGRectMake(
       padding + ((padding + width) * [array indexOfObject: textField]), 
         0.0f, width, 44.0f);
@@ -55,8 +55,8 @@ reuseIdentifier: (NSString *)reuseIdentifier
     [self.contentView addSubview: textField];
   }
 
-  _minRentTextField.placeholder = @"Min rent";
-  _maxRentTextField.placeholder = @"Max rent";
+  _rentRangeTextField.placeholder = @"Rent Range";
+//  _maxRentTextField.placeholder = @"Max rent";
 
   return self;
 }
@@ -69,7 +69,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat padding = 20.0f;
-  return (screen.size.width - (padding * 3)) * 0.5;
+  return (screen.size.width - (padding)) * 0.5;
 }
 
 @end

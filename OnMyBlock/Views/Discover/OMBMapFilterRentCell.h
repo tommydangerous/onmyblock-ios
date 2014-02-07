@@ -12,8 +12,8 @@
 
 @interface OMBMapFilterRentCell : OMBTableViewCell
 
-@property (nonatomic, strong) TextFieldPadding *maxRentTextField;
-@property (nonatomic, strong) TextFieldPadding *minRentTextField;
+//@property (nonatomic, strong) TextFieldPadding *maxRentTextField;
+@property (nonatomic, strong) TextFieldPadding *rentRangeTextField;
 
 #pragma mark - Methods
 
