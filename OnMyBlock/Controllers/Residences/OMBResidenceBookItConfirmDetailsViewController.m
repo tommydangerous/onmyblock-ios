@@ -424,11 +424,12 @@
     [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate];
   }
   int monthsBetween = [offer numberOfMonthsBetweenMovingDates];
-  NSString *monthString = monthsBetween > 1 ? @"MONTHS":@"MONTH";
-  calendarCell.leaseMonthsLabel.text =
-        [NSString stringWithFormat: @"%i %@ LEASE",
-         (monthsBetween > 0 ? monthsBetween:0),
-          monthString];
+  if(monthsBetween > 0){
+    calendarCell.leaseMonthsLabel.text = [NSString stringWithFormat: @"%i %@ LEASE",
+                                          monthsBetween,monthsBetween > 1 ? @"MONTHS":@"MONTH"];
+  }else{
+    calendarCell.leaseMonthsLabel.text = @"MONTH TO MONTH";
+  }
 }
 
 - (BOOL) calendarView: (MNCalendarView *) calendarView
