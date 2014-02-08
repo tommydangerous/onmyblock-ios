@@ -49,7 +49,6 @@
 - (void) loadView
 {
   [super loadView];
-
   CGRect screen = [[UIScreen mainScreen] bounds];
 
   self.view = [[UIView alloc] initWithFrame: screen];
@@ -356,8 +355,8 @@
 - (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView
 {
   // Change the pages on the page control
-  float currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
-  _pageControl.currentPage = currentPage;
+  //float currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+  //_pageControl.currentPage = currentPage;
 }
 
 - (void) scrollViewDidScroll: (UIScrollView *) scrollView
@@ -372,7 +371,8 @@
   float width   = scrollView.frame.size.width;
   float x       = scrollView.contentOffset.x;
   float page    = x / width;
-
+  _pageControl.currentPage = (int)(page+0.5);
+  
   // Fade the background image views in and out
   for (UIView *bView in backgroundViewArray) {
     NSInteger index = [backgroundViewArray indexOfObject: bView];
@@ -587,8 +587,10 @@
 - (void) scrollToPage: (int) page
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
-  [_scroll setContentOffset: 
-    CGPointMake((page * screen.size.width), 0) animated: YES];
+  [UIView animateWithDuration:.3 animations:^{
+    [_scroll setContentOffset:
+     CGPointMake((page * screen.size.width), 0)];
+  }];
 }
 
 - (void) scrollToSignUp

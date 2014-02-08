@@ -145,7 +145,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   imageCollectionView.showsHorizontalScrollIndicator = NO;
   [self.view addSubview: imageCollectionView];
   // Tap gesture when user clicks the images
-  UITapGestureRecognizer *tapGesture = 
+  UITapGestureRecognizer *tapGesture =
     [[UITapGestureRecognizer alloc] initWithTarget: self 
       action: @selector(showImageSlides)];
   [imageCollectionView addGestureRecognizer: tapGesture];
@@ -314,7 +314,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   // The scroll view when users view images full screen
   imageScrollView = [UIScrollView new];
-  imageScrollView.bounces = NO;
+  imageScrollView.bounces = YES;
   imageScrollView.delegate = self;
   imageScrollView.frame = screen;
   imageScrollView.pagingEnabled = YES;
