@@ -56,7 +56,11 @@
   CGFloat screenHeight = screen.size.height;
   CGFloat screenWidth  = screen.size.width;
   CGFloat padding      = 20.0f;
-
+  
+  [[NSNotificationCenter defaultCenter]addObserver:self
+                                          selector:@selector(becomeActive)
+                                              name:UIApplicationDidBecomeActiveNotification
+                                            object:nil];
   NSArray *imageNames = @[
     @"intro_still_image_slide_1_background.jpg",
     @"intro_still_image_slide_2_background.jpg",
@@ -343,7 +347,7 @@
 - (void) viewWillDisappear: (BOOL) animated
 {
   [super viewWillDisappear: animated];
-
+  
   [[UIApplication sharedApplication] setStatusBarStyle:
     UIStatusBarStyleDefault];
 }
@@ -558,6 +562,11 @@
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+-(void) becomeActive
+{
+  [_activityView startSpinning];
+}
 
 - (void) close
 {

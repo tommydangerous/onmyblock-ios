@@ -52,7 +52,12 @@
   CGRect screen = [[UIScreen mainScreen] bounds];
 
   self.view = [[UIView alloc] initWithFrame: screen];
-
+  
+  [[NSNotificationCenter defaultCenter]addObserver:self
+                                          selector:@selector(becomeActive)
+                                              name:UIApplicationDidBecomeActiveNotification
+                                            object:nil];
+  
   // Login and sign up view
   _loginSignUpView = [[OMBLoginSignUpView alloc] init];
   // Close button
@@ -94,6 +99,11 @@
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+-(void) becomeActive
+{
+  [_activityView startSpinning];
+}
 
 - (void) close
 {
