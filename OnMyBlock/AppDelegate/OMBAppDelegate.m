@@ -97,6 +97,29 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   }
   [defaults synchronize];
 
+  // UIViewController *vc = [[UIViewController alloc] init];
+  // UIView *view = [[UIView alloc] initWithFrame: screen];
+  // vc.view = view;
+  // self.window.rootViewController = vc;
+
+  // //Create the container
+  //   CALayer *container = [CALayer layer];
+  //   container.frame = CGRectMake(0, 0, 640, 300);
+  //   [view.layer addSublayer:container];
+
+  //   CALayer *purplePlane = 
+  //           [self addPlaneToLayer:container
+  //           size:CGSizeMake(100, 100)
+  //           position:CGPointMake(100, 100)
+  //           color:[UIColor purpleColor]];
+
+  //           //Apply transformation to the PLANE
+  //   CATransform3D t = CATransform3DIdentity;
+  //   //Add the perspective!!!
+  //   t.m34 = 1.0/ 500;
+  //   t = CATransform3DRotate(t, 45.0f * M_PI / 180.0f, 0, 1, 0);
+  //   purplePlane.transform = t;
+
   return YES;
 }
 

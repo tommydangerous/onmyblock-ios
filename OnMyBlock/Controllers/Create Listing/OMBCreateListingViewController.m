@@ -958,7 +958,9 @@ replacementString: (NSString *) string
           [OMBUser currentUser].landlordType = landlordType;
           [[OMBUser currentUser] updateWithDictionary: @{
             @"landlordType": [OMBUser currentUser].landlordType
-          } completion: nil];
+          } completion: ^{
+            [OMBUser currentUser].landlordType = landlordType;
+          }];
           [[OMBUser currentUser] postLandlordTypeChangeNotification];
         }
         [[self appDelegate].container showManageListings];
