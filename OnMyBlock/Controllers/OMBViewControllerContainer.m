@@ -30,6 +30,7 @@
 #import "OMBMyRenterApplicationViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOfferAcceptedView.h"
+#import "OMBOtherUserProfileViewController.h"
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBRenterProfileViewController.h"
@@ -398,10 +399,13 @@ CGFloat kBackgroundMaxScale = 5.0f;
   float _accountViewPadding = (screenHeight * (1 - zoomScale)) * 0.5;
   // Half the difference of the image and the bottom part of the screen
   _accountViewPadding = (_accountViewPadding - accountImageSize) * 0.5;
+  // CGRect _accountViewRect = CGRectMake(
+  //   (screenWidth - (accountImageSize + _accountViewPadding)),
+  //     (screenHeight - (accountImageSize + _accountViewPadding)), 
+  //       accountImageSize, accountImageSize);
   CGRect _accountViewRect = CGRectMake(
-    (screenWidth - (accountImageSize + _accountViewPadding)),
-      (screenHeight - (accountImageSize + _accountViewPadding)), 
-        accountImageSize, accountImageSize);
+    screenWidth - (accountImageSize + _accountViewPadding),
+      _accountViewPadding, accountImageSize, accountImageSize);
   _accountView = [[OMBCenteredImageView alloc] initWithFrame: _accountViewRect];
   _accountView.alpha = 0.0;  
   _accountView.layer.borderColor = [UIColor whiteColor].CGColor;
@@ -439,11 +443,11 @@ animated: (BOOL) flag completion: (void (^)(void)) completion
 {
   [super presentViewController: viewControllerToPresent animated: flag
     completion: completion];
-  [UIView animateWithDuration: 0.25f animations: ^{
-    CGAffineTransform scale = CGAffineTransformScale(CGAffineTransformIdentity,
-      0.95f, 0.95f);
-    _detailView.transform = scale;
-  }];
+  // [UIView animateWithDuration: 0.25f animations: ^{
+  //   CGAffineTransform scale = CGAffineTransformScale(
+  //     CGAffineTransformIdentity, 0.95f, 0.95f);
+  //   _detailView.transform = scale;
+  // }];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -1088,8 +1092,9 @@ completion: (void (^) (void)) block
 - (void) showLogin
 {
   [_loginViewController showLogin];
+  [self presentLoginViewController];
   [self hideMenuWithFactor: 1.0f completion: ^{
-    [self presentLoginViewController];
+    // [self presentLoginViewController];
   }];
 }
 
@@ -1184,6 +1189,15 @@ completion: (void (^) (void)) block
   [offerAcceptedView show];
 }
 
+- (void) showOtherUserProfile
+{
+  OMBOtherUserProfileViewController *vc = 
+    [[OMBOtherUserProfileViewController alloc] initWithUser: 
+      [OMBUser currentUser]];
+  [self presentDetailViewController: 
+    [[OMBNavigationController alloc] initWithRootViewController: vc]];
+}
+
 - (void) showPayoutMethods
 {
   [_payoutMethodsViewController showCancelBarButtonItem];
@@ -1226,8 +1240,9 @@ completion: (void (^) (void)) block
 - (void) showSignUp
 {
   [_loginViewController showSignUp];
+  [self presentLoginViewController];
   [self hideMenuWithFactor: 1.0f completion: ^{
-    [self presentLoginViewController];
+    // [self presentLoginViewController];
   }];
 }
 

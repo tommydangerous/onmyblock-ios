@@ -15,7 +15,7 @@
 #import "OMBMessageDetailCollectionViewFlowLayout.h"
 #import "OMBMessageInputToolbar.h"
 #import "OMBMessageStore.h"
-#import "OMBRenterProfileViewController.h"
+#import "OMBOtherUserProfileViewController.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
 
@@ -645,9 +645,8 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showRenterProfile
 {
-  OMBRenterProfileViewController *vc = 
-    [[OMBRenterProfileViewController alloc] init];
-  [vc loadUser: user];
+  OMBOtherUserProfileViewController *vc =
+    [[OMBOtherUserProfileViewController alloc] initWithUser: user];
   [self.navigationController pushViewController: vc animated: YES];
 }
 

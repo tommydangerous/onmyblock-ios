@@ -35,7 +35,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   float width   = screenWidth - (originX * 2);
 
   companyNameLabel = [[UILabel alloc] init];
-  companyNameLabel.font = [UIFont normalTextFont];
+  companyNameLabel.font = [UIFont normalTextFontBold];
   companyNameLabel.frame = CGRectMake(originX, padding, width, height);
   companyNameLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: companyNameLabel];
@@ -57,11 +57,11 @@ reuseIdentifier: (NSString *)reuseIdentifier
   titleIncomeLabel.frame = CGRectMake(originX, 
     companyNameLabel.frame.origin.y + companyNameLabel.frame.size.height,
       width, height);
-  titleIncomeLabel.textColor = [UIColor grayMedium];
+  titleIncomeLabel.textColor = [UIColor blueDark];
   [self.contentView addSubview: titleIncomeLabel];
 
   startDateEndDateLabel = [[UILabel alloc] init];
-  startDateEndDateLabel.font = titleIncomeLabel.font;
+  startDateEndDateLabel.font = [UIFont smallTextFont];
   startDateEndDateLabel.frame = CGRectMake(originX,
     titleIncomeLabel.frame.origin.y + titleIncomeLabel.frame.size.height,
       width, height);
@@ -94,7 +94,9 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
   // Company name
   // companyNameLabel.text = [_employment.companyName capitalizedString];
-  companyNameLabel.text = _employment.companyName;
+  companyNameLabel.text = _employment.title;
+  // companyNameLabel.text = _employment.companyName;
+  
   // CGRect companyNameRect = [companyNameLabel.text boundingRectWithSize:
   //   CGSizeMake(width, companyNameLabel.frame.size.height)
   //     options: NSStringDrawingUsesLineFragmentOrigin
@@ -157,7 +159,8 @@ reuseIdentifier: (NSString *)reuseIdentifier
   //       startDateEndDateLabel.frame.size.width, 
   //         startDateEndDateLabel.frame.size.height);
   // }
-  titleIncomeLabel.text = _employment.title;
+  titleIncomeLabel.text = _employment.companyName;
+  // titleIncomeLabel.text = _employment.title;
 
   // Start date
   if (_employment.startDate) {

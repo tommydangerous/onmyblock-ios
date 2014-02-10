@@ -160,6 +160,7 @@
 - (void) showManageListings;
 - (void) showMyRenterApp;
 - (void) showOfferAccepted;
+- (void) showOtherUserProfile;
 - (void) showPayoutMethods;
 - (void) showRenterApplication;
 - (void) showRenterProfile;

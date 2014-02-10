@@ -312,6 +312,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       cell.textField.delegate  = self;
       cell.textField.indexPath = indexPath;
+      cell.textField.placeholder = [labelString lowercaseString];
       cell.textField.text = [valueDictionary objectForKey: key];
       cell.textFieldLabel.text = labelString;
       [cell.textField addTarget: self action: @selector(textFieldDidChange:)

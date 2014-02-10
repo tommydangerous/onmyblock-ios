@@ -86,11 +86,12 @@
   self.table.backgroundColor = [UIColor clearColor];
 
   // Publish Now view
+  CGFloat publishHeight = OMBStandardButtonHeight;
   publishNowView = [[AMBlurView alloc] init];
   publishNowView.blurTintColor = [UIColor blue];
   publishNowView.frame = CGRectMake(0.0f, 
-    screen.size.height - OMBStandardHeight, screen.size.width, 
-      OMBStandardHeight);
+    screen.size.height - publishHeight, screen.size.width, 
+      publishHeight);
   [self.view addSubview: publishNowView];
   // Publish Now button
   publishNowButton = [UIButton new];

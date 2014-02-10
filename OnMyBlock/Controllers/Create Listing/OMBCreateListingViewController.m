@@ -307,7 +307,7 @@
   nextView = [[AMBlurView alloc] init];
   nextView.blurTintColor = [UIColor blue];
   nextView.frame = CGRectMake(0.0f, screen.size.height,
-    screenWidth, 44.0f);
+    screenWidth, OMBStandardButtonHeight);
   [self.view addSubview: nextView];
   // Button
   nextButton = [UIButton new];
@@ -958,7 +958,7 @@ replacementString: (NSString *) string
           [OMBUser currentUser].landlordType = landlordType;
           [[OMBUser currentUser] updateWithDictionary: @{
             @"landlordType": [OMBUser currentUser].landlordType
-          } completion: ^{
+          } completion: ^(NSError *error) {
             [OMBUser currentUser].landlordType = landlordType;
           }];
           [[OMBUser currentUser] postLandlordTypeChangeNotification];

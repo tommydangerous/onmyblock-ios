@@ -28,13 +28,6 @@
 {
   if (!(self = [super init])) return nil;
 
-  imageNames = @[
-    @"intro_still_image_slide_5_background.jpg",
-    @"intro_still_image_slide_6_background.jpg",
-    @"intro_still_image_slide_7_background.jpg",
-    @"intro_still_image_slide_8_background.jpg"
-  ];
-
   self.screenName = @"Login View Controller";
   self.title      = @"Login";
 
@@ -52,7 +45,12 @@
   CGRect screen = [[UIScreen mainScreen] bounds];
 
   self.view = [[UIView alloc] initWithFrame: screen];
-
+  
+  [[NSNotificationCenter defaultCenter]addObserver:self
+                                          selector:@selector(becomeActive)
+                                              name:UIApplicationDidBecomeActiveNotification
+                                            object:nil];
+  
   // Login and sign up view
   _loginSignUpView = [[OMBLoginSignUpView alloc] init];
   // Close button
@@ -71,6 +69,17 @@
   // Activity spinner
   _activityView = [[OMBActivityView alloc] init];
   [self.view addSubview: _activityView];
+
+  imageNames = @[
+    @"intro_still_image_slide_5_background.jpg",
+    // @"intro_still_image_slide_6_background.jpg",
+    // @"intro_still_image_slide_7_background.jpg",
+    // @"intro_still_image_slide_8_background.jpg"
+  ];
+
+  int index = arc4random_uniform([imageNames count] - 1);
+  UIImage *image = [UIImage imageNamed: [imageNames objectAtIndex: index]];
+  [_loginSignUpView.blurView refreshWithImage: image];
 }
 
 - (void) viewDidDisappear: (BOOL) animated
@@ -84,9 +93,9 @@
 {
   [super viewWillAppear: animated];
 
-  int index = arc4random_uniform([imageNames count] - 1);
-  UIImage *image = [UIImage imageNamed: [imageNames objectAtIndex: index]];
-  [_loginSignUpView.blurView refreshWithImage: image];
+  // int index = arc4random_uniform([imageNames count] - 1);
+  // UIImage *image = [UIImage imageNamed: [imageNames objectAtIndex: index]];
+  // [_loginSignUpView.blurView refreshWithImage: image];
 
   [_activityView stopSpinning];
 }
@@ -94,6 +103,11 @@
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+-(void) becomeActive
+{
+  [_activityView startSpinning];
+}
 
 - (void) close
 {

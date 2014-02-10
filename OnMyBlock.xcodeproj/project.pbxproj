@@ -135,6 +135,7 @@
 		AB2613111818EC800053A8AA /* OMBResidenceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2613101818EC800053A8AA /* OMBResidenceCell.m */; };
 		AB26131718197D030053A8AA /* OMBCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB26131618197D030053A8AA /* OMBCollectionViewController.m */; };
 		AB26131E18198E570053A8AA /* OMBSpringFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */; };
+		AB2EA4C418A9692D00ACE53C /* document_icon_black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB2EA4C318A9692D00ACE53C /* document_icon_black@2x.png */; };
 		AB44986E189AC10100979B3B /* facebook_icon_blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */; };
 		AB44986F189AC10100979B3B /* facebook_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */; };
 		AB449872189AEFFF00979B3B /* OMBLoginSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */; };
@@ -307,6 +308,9 @@
 		ABA080831868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */; };
 		ABA080861868E76200C7B851 /* OMBTextViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080851868E76200C7B851 /* OMBTextViewViewController.m */; };
 		ABA0808C1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA0808B1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m */; };
+		ABA3D69818A92EF1006CE8C1 /* OMBOtherUserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA3D69718A92EF1006CE8C1 /* OMBOtherUserProfileViewController.m */; };
+		ABA3D69B18A9423D006CE8C1 /* OMBTestFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA3D69A18A9423D006CE8C1 /* OMBTestFlowLayout.m */; };
+		ABA3D69E18A944F0006CE8C1 /* OMBOtherUserProfileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA3D69D18A944F0006CE8C1 /* OMBOtherUserProfileCell.m */; };
 		ABA4F207187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA4F206187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m */; };
 		ABA4F20A187CF02600D725D4 /* OMBGooglePlacesConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA4F209187CF02600D725D4 /* OMBGooglePlacesConnection.m */; };
 		ABA4F20E187D18CD00D725D4 /* OMBCreateListingConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA4F20D187D18CD00D725D4 /* OMBCreateListingConnection.m */; };
@@ -842,6 +846,7 @@
 		AB26131618197D030053A8AA /* OMBCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCollectionViewController.m; sourceTree = "<group>"; };
 		AB26131C18198E570053A8AA /* OMBSpringFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSpringFlowLayout.h; sourceTree = "<group>"; };
 		AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSpringFlowLayout.m; sourceTree = "<group>"; };
+		AB2EA4C318A9692D00ACE53C /* document_icon_black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "document_icon_black@2x.png"; sourceTree = "<group>"; };
 		AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_blue@2x.png"; sourceTree = "<group>"; };
 		AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_white@2x.png"; sourceTree = "<group>"; };
 		AB449870189AEFFF00979B3B /* OMBLoginSignUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLoginSignUpView.h; sourceTree = "<group>"; };
@@ -1134,6 +1139,12 @@
 		ABA080851868E76200C7B851 /* OMBTextViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTextViewViewController.m; sourceTree = "<group>"; };
 		ABA0808A1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceAddPersonalNoteViewController.h; sourceTree = "<group>"; };
 		ABA0808B1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceAddPersonalNoteViewController.m; sourceTree = "<group>"; };
+		ABA3D69618A92EF1006CE8C1 /* OMBOtherUserProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBOtherUserProfileViewController.h; sourceTree = "<group>"; };
+		ABA3D69718A92EF1006CE8C1 /* OMBOtherUserProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBOtherUserProfileViewController.m; sourceTree = "<group>"; };
+		ABA3D69918A9423D006CE8C1 /* OMBTestFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTestFlowLayout.h; sourceTree = "<group>"; };
+		ABA3D69A18A9423D006CE8C1 /* OMBTestFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTestFlowLayout.m; sourceTree = "<group>"; };
+		ABA3D69C18A944F0006CE8C1 /* OMBOtherUserProfileCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBOtherUserProfileCell.h; sourceTree = "<group>"; };
+		ABA3D69D18A944F0006CE8C1 /* OMBOtherUserProfileCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBOtherUserProfileCell.m; sourceTree = "<group>"; };
 		ABA4F205187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBGoogleMapsReverseGeocodingConnection.h; sourceTree = "<group>"; };
 		ABA4F206187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBGoogleMapsReverseGeocodingConnection.m; sourceTree = "<group>"; };
 		ABA4F208187CF02600D725D4 /* OMBGooglePlacesConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBGooglePlacesConnection.h; sourceTree = "<group>"; };
@@ -1828,6 +1839,8 @@
 				AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */,
 				AB57EA1C186B7C3C001682DB /* OMBMessageDetailCollectionViewFlowLayout.h */,
 				AB57EA1D186B7C3C001682DB /* OMBMessageDetailCollectionViewFlowLayout.m */,
+				ABA3D69918A9423D006CE8C1 /* OMBTestFlowLayout.h */,
+				ABA3D69A18A9423D006CE8C1 /* OMBTestFlowLayout.m */,
 			);
 			path = Layouts;
 			sourceTree = "<group>";
@@ -2091,6 +2104,8 @@
 				AB8B7940186DFA8A005AB552 /* OMBActivityView.m */,
 				ABCB36AA187C7524008A0EEF /* OMBAlertView.h */,
 				ABCB36AB187C7524008A0EEF /* OMBAlertView.m */,
+				AB0BC54518A1D4570067BFF7 /* OMBAlertViewBlur.h */,
+				AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */,
 				AB9B26071811A74E00E6DAC4 /* OMBAnnotationView.h */,
 				AB9B26081811A74E00E6DAC4 /* OMBAnnotationView.m */,
 				AB02807D1843F2C30081B30F /* OMBBedroomView.h */,
@@ -2218,8 +2233,6 @@
 				ABF18BB81816D3F0002DD723 /* TextFieldPadding.h */,
 				ABF18BB91816D3F0002DD723 /* TextFieldPadding.m */,
 				ABB9115D189807EC0046611F /* Users */,
-				AB0BC54518A1D4570067BFF7 /* OMBAlertViewBlur.h */,
-				AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2586,6 +2599,7 @@
 			isa = PBXGroup;
 			children = (
 				ABB911CC1899A4750046611F /* linkedin_white_icon.png */,
+				AB2EA4C318A9692D00ACE53C /* document_icon_black@2x.png */,
 				ABB911CD1899A4750046611F /* linkedin_white_icon@2x.png */,
 				ABB9117E189857110046611F /* school_icon@2x.png */,
 				ABB9117C189856010046611F /* student_user_icon@2x.png */,
@@ -2959,6 +2973,8 @@
 				ABB91176189844300046611F /* OMBRenterProfileUserInfoCell.m */,
 				AB449870189AEFFF00979B3B /* OMBLoginSignUpView.h */,
 				AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */,
+				ABA3D69C18A944F0006CE8C1 /* OMBOtherUserProfileCell.h */,
+				ABA3D69D18A944F0006CE8C1 /* OMBOtherUserProfileCell.m */,
 			);
 			path = Users;
 			sourceTree = "<group>";
@@ -2972,6 +2988,8 @@
 				ABB91181189865880046611F /* OMBEditProfileViewController.m */,
 				ABB9118918994F980046611F /* OMBBecomeVerifiedViewController.h */,
 				ABB9118A18994F980046611F /* OMBBecomeVerifiedViewController.m */,
+				ABA3D69618A92EF1006CE8C1 /* OMBOtherUserProfileViewController.h */,
+				ABA3D69718A92EF1006CE8C1 /* OMBOtherUserProfileViewController.m */,
 			);
 			path = Users;
 			sourceTree = "<group>";
@@ -3408,6 +3426,7 @@
 				ABB911701898215B0046611F /* intro_still_image_slide_9_background@2x.jpg in Resources */,
 				ABB9116618980F430046611F /* student_icon.png in Resources */,
 				A685EFBF188F2AEE0074E336 /* 12.png in Resources */,
+				AB2EA4C418A9692D00ACE53C /* document_icon_black@2x.png in Resources */,
 				AB5B49CB1832CDC900ED96DC /* intro_map_faded@2x.png in Resources */,
 				A685EFCD188F2AEE0074E336 /* backgroundLoading.png in Resources */,
 				ABC00B3018374A1C0092364A /* gps_cursor.png in Resources */,
@@ -3746,13 +3765,16 @@
 				AB9B26391811B7ED00E6DAC4 /* OCAlgorithms.m in Sources */,
 				AB01ED3A1857DB5300333390 /* OMBLegalQuestion.m in Sources */,
 				AB1C216F1851436200ED7C06 /* OMBRenterApplication.m in Sources */,
+				ABA3D69E18A944F0006CE8C1 /* OMBOtherUserProfileCell.m in Sources */,
 				AB01ED371857D96800333390 /* OMBLegalQuestionStore.m in Sources */,
 				DE95E8D618A03B5500A2A341 /* MNCalendarViewDayCell.m in Sources */,
 				ABA4F207187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m in Sources */,
+				ABA3D69818A92EF1006CE8C1 /* OMBOtherUserProfileViewController.m in Sources */,
 				AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */,
 				ABBA58971870C59700E9BF4E /* ELCAssetTablePicker.m in Sources */,
 				ABBB18DD182453BF00211499 /* OMBAnnotationCity.m in Sources */,
 				ABABEC4C1864D56A008B6768 /* OMBMapViewController.m in Sources */,
+				ABA3D69B18A9423D006CE8C1 /* OMBTestFlowLayout.m in Sources */,
 				ABA080831868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m in Sources */,
 				DE95E8D418A03B5500A2A341 /* MNCalendarView.m in Sources */,
 				AB70CB68186CB9070083DF4C /* OMBTermsPrivacyViewController.m in Sources */,

@@ -22,6 +22,13 @@
 #import "UIColor+Extensions.h"
 
 float kStandardHeight = 44.0f;
+@interface OMBMapFilterViewController ()
+{
+	NSString *minRentString;
+	NSString *maxRentString;
+}
+
+@end
 
 @implementation OMBMapFilterViewController
 
@@ -230,7 +237,11 @@ float kStandardHeight = 44.0f;
   rentPickerView.backgroundColor = [UIColor whiteColor];
   rentPickerView.dataSource = self;
   rentPickerView.delegate   = self;
-  rentPickerView.frame = CGRectMake(0.0f, 
+	minRentString = [self pickerView:rentPickerView titleForRow:0 forComponent:0];
+	maxRentString = [self pickerView:rentPickerView titleForRow:([self pickerView:rentPickerView numberOfRowsInComponent:1]-1) forComponent:1];
+	[rentPickerView selectRow: 0 inComponent: 0 animated: NO];
+    [rentPickerView selectRow:([self pickerView:rentPickerView numberOfRowsInComponent:1]-1) inComponent: 1 animated: NO];
+  rentPickerView.frame = CGRectMake(0.0f,
     pickerViewHeader.frame.origin.y +
     pickerViewHeader.frame.size.height,
       rentPickerView.frame.size.width, rentPickerView.frame.size.height);
@@ -339,8 +350,8 @@ numberOfRowsInComponent: (NSInteger) component
 {
 	if (pickerView == rentPickerView)
 	{
-		// Any, 500, ... 9,500+
-		return 10000 / 500;
+		// Any, 500, ... 7,500+
+		return  8000 / 500 ;
 	}
 	else if (pickerView == availabilityPickerView)
 	{
@@ -364,15 +375,16 @@ inComponent: (NSInteger) component
 		NSString *string = [self pickerView: pickerView titleForRow: row
 							   forComponent: component];
 		if (component == 0) {
-			cell.minRentTextField.text = string;
+			minRentString = string;
 			[_valuesDictionary setObject: [NSNumber numberWithInt: 500 * row]
 								  forKey: @"minRent"];
 		}
 		else if (component == 1) {
-			cell.maxRentTextField.text = string;
+			maxRentString = string;
 			[_valuesDictionary setObject: [NSNumber numberWithInt: 500 * row]
 								  forKey: @"maxRent"];
 		}
+		cell.rentRangeTextField.text = [NSString stringWithFormat:@"%@ - %@", minRentString, maxRentString];
 	}
 	else if (pickerView == availabilityPickerView)
 	{
@@ -813,9 +825,10 @@ viewForHeaderInSection: (NSInteger) section
     OMBMapFilterRentCell *rentCell = (OMBMapFilterRentCell *)
       [self.table cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 1 inSection: 1]];
-    rentCell.minRentTextField.text = rentCell.maxRentTextField.text = @"";
+    rentCell.rentRangeTextField.text = @"";
     [rentPickerView selectRow: 0 inComponent: 0 animated: NO];
-    [rentPickerView selectRow: 0 inComponent: 1 animated: NO];
+    [rentPickerView selectRow:([self pickerView:rentPickerView numberOfRowsInComponent:1]-1) inComponent: 1 animated: NO];
+	  
     // Clear the bedroom buttons
     OMBMapFilterBedroomsCell *bedroomsCell = (OMBMapFilterBedroomsCell *)
       [self.table cellForRowAtIndexPath: 
@@ -856,11 +869,10 @@ viewForHeaderInSection: (NSInteger) section
 		OMBMapFilterRentCell *cell = (OMBMapFilterRentCell *)
 		  [self.table cellForRowAtIndexPath:
 		    [NSIndexPath indexPathForRow: 1 inSection: 1]];
-		cell.minRentTextField.text = cell.maxRentTextField.text = @"";
+		cell.rentRangeTextField.text = @"";
 		[rentPickerView selectRow: 0 inComponent: 0 animated: YES];
 		[rentPickerView selectRow: 0 inComponent: 1 animated: YES];
-    [_valuesDictionary setObject: [NSNull null] forKey: @"maxRent"];
-    [_valuesDictionary setObject: [NSNull null] forKey: @"minRent"];
+    [_valuesDictionary setObject: [NSNull null] forKey: @"rentRange"];
 	}
 	else if ([availabilityPickerView superview]) {
 		OMBMapFilterDateAvailableCell *cell = (OMBMapFilterDateAvailableCell *)

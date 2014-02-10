@@ -26,7 +26,7 @@
 #import "OMBMessageDetailViewController.h"
 #import "OMBMessageNewViewController.h"
 #import "OMBNavigationController.h"
-#import "OMBRenterProfileViewController.h"
+#import "OMBOtherUserProfileViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceBookItViewController.h"
 #import "OMBResidenceCell.h"
@@ -145,7 +145,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   imageCollectionView.showsHorizontalScrollIndicator = NO;
   [self.view addSubview: imageCollectionView];
   // Tap gesture when user clicks the images
-  UITapGestureRecognizer *tapGesture = 
+  UITapGestureRecognizer *tapGesture =
     [[UITapGestureRecognizer alloc] initWithTarget: self 
       action: @selector(showImageSlides)];
   [imageCollectionView addGestureRecognizer: tapGesture];
@@ -254,7 +254,8 @@ float kResidenceDetailImagePercentage   = 0.5f;
   // 27 = count down timer label height
   // 58 = contact me / book it button height
   float bottomButtonViewHeight = 23.0f + 44.0f + 1.0f;
-  bottomButtonViewHeight = 44.0f;
+  // bottomButtonViewHeight = 44.0f;
+  bottomButtonViewHeight = OMBStandardButtonHeight;
   _bottomButtonView.frame = CGRectMake(0.0f, 
     screenHeight - bottomButtonViewHeight, screenWidth, bottomButtonViewHeight);
   [self.view addSubview: _bottomButtonView];
@@ -278,10 +279,12 @@ float kResidenceDetailImagePercentage   = 0.5f;
   //   _countDownTimerLabel.frame.size.height + 1.0f, 
   //     (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
   _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
-    (_bottomButtonView.frame.size.width - 1.0f) * 0.5, OMBStandardHeight);
+    (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 
+      bottomButtonViewHeight);
   // _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
   //   _bottomButtonView.frame.size.width, 44.0f);
   _contactMeButton.titleLabel.font = [UIFont normalTextFontBold];
+  // _contactMeButton.titleLabel.font = [UIFont mediumTextFontBold];
   [_contactMeButton addTarget: self action: @selector(contactMeButtonSelected)
     forControlEvents: UIControlEventTouchUpInside];
   [_contactMeButton setBackgroundImage: 
@@ -314,7 +317,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   // The scroll view when users view images full screen
   imageScrollView = [UIScrollView new];
-  imageScrollView.bounces = NO;
+  imageScrollView.bounces = YES;
   imageScrollView.delegate = self;
   imageScrollView.frame = screen;
   imageScrollView.pagingEnabled = YES;
@@ -855,9 +858,9 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   if (indexPath.section == 4) {
     if (indexPath.row == 1) {
       if (residence.user) {
-        OMBRenterProfileViewController *vc = 
-          [[OMBRenterProfileViewController alloc] init];
-        [vc loadUser: residence.user];
+        OMBOtherUserProfileViewController *vc = 
+          [[OMBOtherUserProfileViewController alloc] initWithUser: 
+            residence.user];
         [self.navigationController pushViewController: vc animated: YES];
       }
     }
