@@ -61,6 +61,8 @@
                                           selector:@selector(becomeActive)
                                               name:UIApplicationDidBecomeActiveNotification
                                             object:nil];
+  animate = NO;
+  
   NSArray *imageNames = @[
     @"intro_still_image_slide_1_background.jpg",
     @"intro_still_image_slide_2_background.jpg",
@@ -350,6 +352,8 @@
   
   [[UIApplication sharedApplication] setStatusBarStyle:
     UIStatusBarStyleDefault];
+  
+  animate = NO;
 }
 
 #pragma mark - Protocol
@@ -565,7 +569,8 @@
 
 -(void) becomeActive
 {
-  [_activityView startSpinning];
+  if(animate)
+    [_activityView startSpinning];
 }
 
 - (void) close
@@ -644,6 +649,7 @@
 
 - (void) showFacebook
 {
+  animate = YES;
   [[self appDelegate] openSession];
 }
 

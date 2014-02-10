@@ -14,6 +14,7 @@
 @interface OMBLoginViewController : OMBViewController
 {
   NSArray *imageNames;
+  BOOL animate;
 }
 
 @property (nonatomic, strong) OMBActivityView *activityView;

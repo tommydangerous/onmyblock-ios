@@ -58,6 +58,8 @@
                                               name:UIApplicationDidBecomeActiveNotification
                                             object:nil];
   
+  animate = NO;
+  
   // Login and sign up view
   _loginSignUpView = [[OMBLoginSignUpView alloc] init];
   // Close button
@@ -81,7 +83,7 @@
 - (void) viewDidDisappear: (BOOL) animated
 {
   [super viewDidDisappear: animated];
-
+  animate = NO;
   [_loginSignUpView scrollToTop];
 }
 
@@ -102,7 +104,8 @@
 
 -(void) becomeActive
 {
-  [_activityView startSpinning];
+  if (animate)
+    [_activityView startSpinning];
 }
 
 - (void) close
@@ -153,6 +156,7 @@
   else {
     [OMBUser currentUser].userType = @"";
   }
+  animate = YES;
   [[self appDelegate] openSession];
   [_activityView startSpinning];
 }
