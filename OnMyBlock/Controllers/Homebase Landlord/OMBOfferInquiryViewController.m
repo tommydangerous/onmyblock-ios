@@ -241,7 +241,7 @@
   respondView.backgroundColor = [UIColor blueAlpha: 0.95f];
   respondView.clipsToBounds = YES;
   respondView.frame = CGRectMake(0.0f, screenHeight - respondHeight,
-                                 screenWidth, respondHeight);
+    screenWidth, respondHeight);
   // respondView.frame = CGRectMake(padding,
   //   screenHeight - (standardHeight + padding), screenWidth - (padding * 2),
   //     standardHeight);
@@ -253,7 +253,7 @@
   // Respond button
   respondButton = [UIButton new];
   respondButton.frame = CGRectMake(0.0f, 0.0f,
-                                   respondView.frame.size.width, respondView.frame.size.height);
+    respondView.frame.size.width, respondView.frame.size.height);
   respondButton.titleLabel.font =
   [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   [respondButton addTarget: self action: @selector(respond)
@@ -270,19 +270,23 @@
   countDownTimerLabel.backgroundColor = [UIColor greenAlpha: 0.8f];
   countDownTimerLabel.font = [UIFont normalTextFontBold];
   countDownTimerLabel.frame = CGRectMake(0.0f,
-                                         respondView.frame.origin.y - padding, screenWidth, padding);
+    respondView.frame.origin.y - padding, screenWidth, padding);
   countDownTimerLabel.textColor = [UIColor whiteColor];
   countDownTimerLabel.textAlignment = NSTextAlignmentCenter;
   [self.view addSubview: countDownTimerLabel];
   
   // Offer table footer view
   _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
-                                     CGRectMake(0.0f, 0.0f,
-                                                screenWidth, countDownTimerLabel.frame.size.height +
-                                                respondView.frame.size.height + padding)];
+   CGRectMake(0.0f, 0.0f, screenWidth, 
+    countDownTimerLabel.frame.size.height + respondView.frame.size.height)];
+  _offerTableView.tableFooterView.backgroundColor =
+    [UIColor grayUltraLight];
   // Profile table footer view
   _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
-                                       _offerTableView.tableFooterView.frame];
+    _offerTableView.tableFooterView.frame];
+  _profileTableView.tableFooterView.backgroundColor =
+    _offerTableView.tableFooterView.backgroundColor;
+
   previouslySelectedIndex = selectedSegmentIndex = 0;
   
   // Alert view
@@ -444,10 +448,10 @@
       
       [alertBlur setTitle: @"Payment Confirmed!"];
       [alertBlur setMessage: [NSString stringWithFormat:
-                              @"You have successfully paid a total of %@ for the 1st month's "
-                              @"rent and deposit. We will be emailing you a confirmation "
-                              @"of your payment and move-in details.",
-                              [NSString numberToCurrencyString: [offer totalAmount]]]];
+        @"You have successfully paid a total of %@ for the 1st month's "
+        @"rent and deposit. We will be emailing you a confirmation "
+        @"of your payment and move-in details.",
+        [NSString numberToCurrencyString: [offer totalAmount]]]];
       [alertBlur resetQuestionDetails];
       [alertBlur hideQuestionButton];
       // Buttons
@@ -676,7 +680,7 @@
         else if (indexPath.row ==
                  OMBOfferInquirySectionOfferRowSecurityDeposit) {
           
-          CGFloat deposit = 0.0f;
+          CGFloat deposit = offer.residence.minRent;
           if (offer.residence.deposit)
             deposit = offer.residence.deposit;
           cell.detailTextLabel.text = [NSString numberToCurrencyString:
@@ -1028,7 +1032,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // Spacing below dates
       else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowDates) {
-        return standardHeight;
+        // return standardHeight;
       }
       // Price breakdown
       else if (indexPath.row == OMBOfferInquirySectionOfferRowPriceBreakdown) {

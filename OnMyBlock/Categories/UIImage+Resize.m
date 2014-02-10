@@ -9,7 +9,7 @@
 #import "UIImage+Resize.h"
 
 CGFloat const MIN_RESOLUTION        = 640.0f * 320.0f;
-CGFloat const MAX_IMAGE_UPLOAD_SIZE = 200000.0f; // 200kbs
+CGFloat const MAX_IMAGE_UPLOAD_SIZE = 500 * 1000.0f; // 500kbs
 
 @implementation UIImage (Resize)
 

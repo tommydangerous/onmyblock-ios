@@ -434,7 +434,7 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
 
 - (CGFloat) totalAmount
 {
-  CGFloat deposit = 0.0f;
+  CGFloat deposit = _residence.minRent;
   if (_residence.deposit)
     deposit = _residence.deposit;
   return _amount + deposit;

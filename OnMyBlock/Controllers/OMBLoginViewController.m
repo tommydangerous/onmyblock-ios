@@ -116,29 +116,42 @@
 
 - (void) login
 {
-  NSString *emailString = _loginSignUpView.emailTextField.text;
+  NSString *emailString    = _loginSignUpView.emailTextField.text;
   NSString *passwordString = _loginSignUpView.passwordTextField.text;
-  if ([emailString length] && [passwordString length]) {
-    NSDictionary *params = @{
-      @"email":    emailString,
-      @"password": passwordString
-    };
-    OMBLoginConnection *conn =
-      [[OMBLoginConnection alloc] initWithParameters: params];
-    conn.completionBlock = ^(NSError *error) {
-      if ([[OMBUser currentUser] loggedIn]) {
-        [_loginSignUpView clearTextFields];
-      }
-      else {
-        _loginSignUpView.passwordTextField.text = @"";
-        [self showAlertViewWithError: error];
-      }
-      [_activityView stopSpinning];
-    };
-    [conn start];
-    [_activityView startSpinning];
-    [self.view endEditing: YES];
+
+  NSString *message;
+  if ([emailString length] == 0) {
+    message = @"Please enter your email.";
   }
+  else if ([passwordString length] == 0) {
+    message = @"Please enter your password.";
+  }
+  if ([emailString length] == 0 || [passwordString length] == 0) {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Login failed"
+      message: message delegate: nil cancelButtonTitle: @"Okay"
+        otherButtonTitles: nil];
+    [alertView show];
+    return;
+  }
+  NSDictionary *params = @{
+    @"email":    emailString,
+    @"password": passwordString
+  };
+  OMBLoginConnection *conn =
+    [[OMBLoginConnection alloc] initWithParameters: params];
+  conn.completionBlock = ^(NSError *error) {
+    if ([[OMBUser currentUser] loggedIn]) {
+      [_loginSignUpView clearTextFields];
+    }
+    else {
+      _loginSignUpView.passwordTextField.text = @"";
+      [self showAlertViewWithError: error];
+    }
+    [_activityView stopSpinning];
+  };
+  [conn start];
+  [_activityView startSpinning];
+  [self.view endEditing: YES];
 }
 
 - (void) loginOrSignUp
@@ -185,38 +198,56 @@
   NSString *firstNameString = _loginSignUpView.firstNameTextField.text;
   NSString *lastNameString = _loginSignUpView.lastNameTextField.text;
   NSString *passwordString = _loginSignUpView.passwordTextField.text;
-  if ([emailString length] && [firstNameString length] &&
-    [lastNameString length] && [passwordString length]) {
 
-    NSMutableDictionary *params = 
-      [NSMutableDictionary dictionaryWithDictionary: @{
-        @"email":      emailString,
-        @"first_name": firstNameString,
-        @"last_name":  lastNameString,
-        @"password":   passwordString
-      }];
-    NSString *userTypeKey = @"user_type";
-    if ([_loginSignUpView isLandlord]) {
-      [params setObject: OMBUserTypeLandlord forKey: userTypeKey];
+  NSString *message;
+  if ([firstNameString length] == 0) {
+    message = @"Please enter your first name.";
+  }
+  else if ([lastNameString length] == 0) {
+    message = @"Please enter your last name.";
+  }
+  else if ([emailString length] == 0) {
+    message = @"Please enter your email.";
+  }
+  else if ([passwordString length] == 0) {
+    message = @"Please enter a password.";
+  }
+  if ([message length]) {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+      @"Sign up failed" message: message delegate: nil 
+        cancelButtonTitle: @"Okay" otherButtonTitles: nil];
+    [alertView show];
+    return;
+  }
+
+  NSMutableDictionary *params = 
+    [NSMutableDictionary dictionaryWithDictionary: @{
+      @"email":      emailString,
+      @"first_name": firstNameString,
+      @"last_name":  lastNameString,
+      @"password":   passwordString
+    }];
+  NSString *userTypeKey = @"user_type";
+  if ([_loginSignUpView isLandlord]) {
+    [params setObject: OMBUserTypeLandlord forKey: userTypeKey];
+  }
+  else {
+    [params removeObjectForKey: userTypeKey];
+  }
+  OMBSignUpConnection *conn = 
+    [[OMBSignUpConnection alloc] initWithParameters: params];
+  conn.completionBlock = ^(NSError *error) {
+    if ([[OMBUser currentUser] loggedIn]) {
+      [_loginSignUpView clearTextFields];
     }
     else {
-      [params removeObjectForKey: userTypeKey];
+      [self showAlertViewWithError: error];
     }
-    OMBSignUpConnection *conn = 
-      [[OMBSignUpConnection alloc] initWithParameters: params];
-    conn.completionBlock = ^(NSError *error) {
-      if ([[OMBUser currentUser] loggedIn]) {
-        [_loginSignUpView clearTextFields];
-      }
-      else {
-        [self showAlertViewWithError: error];
-      }
-      [_activityView stopSpinning];
-    };
-    [conn start];
-    [_activityView startSpinning];
-    [self.view endEditing: YES];
-  } 
+    [_activityView stopSpinning];
+  };
+  [conn start];
+  [_activityView startSpinning];
+  [self.view endEditing: YES];
 }
 
 @end

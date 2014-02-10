@@ -46,7 +46,7 @@
   dateFormatter1.dateFormat = @"MMM d, yyyy";
   
   residence = object;
-  deposit = 0;
+  deposit   = residence.minRent;
   if (residence.deposit)
     deposit = residence.deposit;
   offer = [[OMBOffer alloc] init];
@@ -323,11 +323,11 @@
   
   // Total price notes
   totalPriceNotes = [NSString stringWithFormat:
-                     @"Your total of %@ will not be charged upfront\n"
-                     @"but will only be charged once the landlord\n"
-                     @"has accepted your offer and you\n"
-                     @"have signed the lease.",
-                     [NSString numberToCurrencyString: deposit + residence.minRent]];
+   @"Your total of %@ will not be charged upfront.\n"
+   @"It will only be charged when the landlord\n"
+   @"accepts your offer and the\n"
+   @"lease has been signed.",
+    [NSString numberToCurrencyString: deposit + residence.minRent]];
   CGRect rect = [totalPriceNotes boundingRectWithSize:
                  CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999)
                                                  font: [UIFont smallTextFont]];
@@ -372,7 +372,7 @@
                        forState: UIControlStateNormal];
   }
   else {
-    [submitOfferButton setTitle: @"Add a new payout method"
+    [submitOfferButton setTitle: @"Add payment method"
                        forState: UIControlStateNormal];
   }
   
@@ -1227,7 +1227,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // View lease details
     else if (indexPath.row == 2) {
-      return spacing * 2;
+      return spacing * 1;
     }
   }
   // Price breakdown
@@ -1616,14 +1616,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       
       [alertBlur setTitle: @"Offer Placed!"];
       [alertBlur setMessage: [NSString stringWithFormat:
-                              @"The %@ has been notified of your offer and will be getting back "
-                              @"to you within 24 hours.\n\n"
-                              @"If the %@ accepts your offer, you will have 48 hours to confirm "
-                              @"and pay the 1st month's rent and deposit through your "
-                              @"selected payment method. If the %@ for some reason rejects your "
-                              @"offer, you will be notified immediately. You can improve "
-                              @"your chances of being accepted by completing your renter profile!", 
-                              userTypeString, userTypeString, userTypeString]];
+        @"The %@ has been notified of your offer and will be getting back "
+        @"to you within 24 hours.\n\n"
+        @"If the %@ accepts your offer, you will have 48 hours to confirm "
+        @"and pay the 1st month's rent and deposit through your "
+        @"selected payment method. If the %@ for some reason rejects your "
+        @"offer, you will be notified immediately. You can improve "
+        @"your chances of being accepted by completing your renter profile!", 
+        userTypeString, userTypeString, userTypeString]];
       [alertBlur resetQuestionDetails];
       [alertBlur hideQuestionButton];
       // Buttons

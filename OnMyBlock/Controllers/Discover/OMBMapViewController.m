@@ -37,7 +37,7 @@
 #import "UIImage+Resize.h"
 
 #define CLCOORDINATE_EPSILON 0.005f
-#define CLCOORDINATES_EQUAL2( coord1, coord2 ) (fabs(coord1.latitude - coord2.latitude) < CLCOORDINATE_EPSILON && fabs(coord1.longitude - coord2.longitude) < CLCOORDINATE_EPSILON)
+#define CLCOORDINATES_EQUAL2(coord1, coord2) (fabs(coord1.latitude - coord2.latitude) < CLCOORDINATE_EPSILON && fabs(coord1.longitude - coord2.longitude) < CLCOORDINATE_EPSILON)
 
 float const PropertyInfoViewImageHeightPercentage = 0.4;
 
@@ -150,6 +150,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   sortSelectionLabel.font = sortLabel.font;
   sortSelectionLabel.frame = CGRectMake(0.0f, sortLabel.frame.origin.y, 
     screenWidth, sortLabel.frame.size.height);
+  sortSelectionLabel.text = @"Distance";
   sortSelectionLabel.textAlignment = NSTextAlignmentCenter;
   sortSelectionLabel.textColor = sortLabel.textColor;
   [sortView addSubview: sortSelectionLabel];
@@ -412,6 +413,10 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Check any filter values and display them
   [self updateFilterLabel];
+
+  // This is so that the spinner doesn't freeze and just stay there
+  fetching = NO;
+  [activityView stopSpinning];
 }
 
 #pragma mark - Protocol

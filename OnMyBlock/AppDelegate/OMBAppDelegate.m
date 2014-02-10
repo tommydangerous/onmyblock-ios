@@ -71,7 +71,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // If current session has a valid Facebook token
     [self openSession];
 
-  #warning Remove fake login
+  // #warning Remove fake login
   // [OMBUser fakeLogin]; // Fake login
   // Use this to show whatever view controller you are working on
   // [_container showOtherUserProfile];
