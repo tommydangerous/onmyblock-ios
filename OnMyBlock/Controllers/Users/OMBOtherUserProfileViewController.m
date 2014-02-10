@@ -13,6 +13,7 @@
 #import "OMBEmploymentCell.h"
 #import "OMBGradientView.h"
 #import "OMBManageListingsCell.h"
+#import "OMBMessageDetailViewController.h"
 #import "OMBOtherUserProfileCell.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidenceDetailViewController.h"
@@ -45,7 +46,13 @@
 - (void) loadView
 {
   [super loadView];
+
   [self setupForTable];
+
+  contactBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Contact"
+    style: UIBarButtonItemStylePlain target: self action: @selector(contact)];
+  doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
+    style: UIBarButtonItemStylePlain target: self action: @selector(done)];
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenHeight   = screen.size.height;
@@ -141,6 +148,61 @@
   userCollectionView.backgroundColor = [UIColor whiteColor];
   userCollectionView.dataSource = self;
   userCollectionView.delegate   = self;
+
+    // Contact bar button items
+  // Left padding
+  UIBarButtonItem *leftPadding = 
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+      UIBarButtonSystemItemFixedSpace target: nil action: nil];
+  // iOS 7 toolbar spacing is 16px; 20px on iPad
+  leftPadding.width = 4.0f;
+  // Send Message
+  UIBarButtonItem *messageBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithTitle: @"Send Message"
+      style: UIBarButtonItemStylePlain target: self
+        action: @selector(sendMessage)];
+  [messageBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: [UIFont normalTextFont],
+    NSForegroundColorAttributeName: [UIColor blue]
+  } forState: UIControlStateNormal];
+  // Spacing
+  UIBarButtonItem *flexibleSpace = 
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem: 
+      UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
+  // Phone
+  UIImage *phoneIcon = [UIImage image: [UIImage imageNamed: @"phone_icon.png"]
+    size: CGSizeMake(22.0f, 22.0f)];
+  phoneBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithImage: phoneIcon style:
+      UIBarButtonItemStylePlain target: self action: @selector(phoneCallUser)];
+  // Email
+  UIImage *emailIcon = [UIImage image: [UIImage imageNamed: 
+    @"messages_icon_white.png"] size: CGSizeMake(22.0f, 22.0f)];
+  emailBarButtonItem =
+    [[UIBarButtonItem alloc] initWithImage: emailIcon style:
+      UIBarButtonItemStylePlain target: self action: @selector(emailUser)];
+  // Right padding
+  UIBarButtonItem *rightPadding = 
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+      UIBarButtonSystemItemFixedSpace target: nil action: nil];
+  // iOS 7 toolbar spacing is 16px; 20px on iPad
+  rightPadding.width = 4.0f;
+
+  // Contact toolbar that drops down when you tap contact
+  contactToolbar = [UIToolbar new];
+  contactToolbar.clipsToBounds = YES;
+  contactToolbar.frame = CGRectMake(0.0f, padding, 
+    screenWidth, standardHeight);
+  contactToolbar.hidden = YES;
+  contactToolbar.items = @[leftPadding, messageBarButtonItem, flexibleSpace,
+    phoneBarButtonItem, rightPadding, emailBarButtonItem];
+  contactToolbar.tintColor = [UIColor blue];
+  [self.view addSubview: contactToolbar];
+  CALayer *bottomBorder = [CALayer layer];
+  bottomBorder.backgroundColor = [UIColor grayLight].CGColor;
+  bottomBorder.frame = CGRectMake(0.0f, contactToolbar.frame.size.height - 0.5f,
+    contactToolbar.frame.size.width, 0.5f);
+  [contactToolbar.layer addSublayer: bottomBorder];
 }
 
 - (void) viewDidLoad
@@ -154,6 +216,10 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
+
+  if (![user isCurrentUser]) {
+    self.navigationItem.rightBarButtonItem = contactBarButtonItem;
+  }
 
   [self updateData];
 
@@ -189,6 +255,14 @@
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol MFMailComposeViewControllerDelegate
+
+- (void) mailComposeController: (MFMailComposeViewController*) controller 
+didFinishWithResult: (MFMailComposeResult) result error: (NSError*) error
+{
+  [controller dismissViewControllerAnimated: YES completion: nil];
+}
 
 #pragma mark - Protocol UICollectionViewDataSource
 
@@ -291,6 +365,12 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
     CGAffineTransformIdentity, newScale, newScale);
 }
 
+- (void) scrollViewWillBeginDragging: (UIScrollView *) scrollView
+{
+  if (!contactToolbar.hidden)
+    [self done];
+}
+
 #pragma mark - Protocol UITableViewDataSource
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
@@ -335,8 +415,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           text = user.about;
         label.attributedText = [text attributedStringWithFont:
           [UIFont normalTextFont] lineHeight: 22.0f];
+        CGFloat height = 
+          [user heightForAboutTextWithWidth: width - (padding * 2)];
+        if (height < 22.0f)
+          height = 22.0f;
         label.frame = CGRectMake(padding, padding, width - (padding * 2), 
-          [user heightForAboutTextWithWidth: width - (padding * 2)]);
+          height);
         label.numberOfLines = 0;
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [UIColor textColor];
@@ -360,6 +444,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           UITableViewCellStyleDefault reuseIdentifier: AboutID];
         [cell.contentView addSubview: userCollectionView];
       }
+      cell.backgroundColor = [UIColor grayUltraLight];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.separatorInset  = maxInsets;
       return cell;
@@ -524,14 +609,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         [user heightForAboutTextWithWidth: width - (padding * 2)];
       if (height < 22.0f)
         height = 22.0f;
-      return padding + height + padding;
+      return padding + height + padding + OMBStandardHeight;
     }
   }
   // Stats
   else if (section == OMBOtherUserProfileSectionStats) {
     // Collection view
     if (row == OMBOtherUserProfileSectionStatsRowCollectionView) {
-      return userCollectionView.frame.size.height;
+      return userCollectionView.frame.size.height + OMBStandardHeight;
     }
   }
   // Employment
@@ -586,13 +671,92 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
+- (void) contact
+{
+  [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
+  contactToolbar.hidden = NO;
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    CGRect rect = contactToolbar.frame;
+    rect.origin.y = OMBPadding + OMBStandardHeight;
+    contactToolbar.frame = rect;
+  }];
+}
+
+- (void) done
+{
+  [self.navigationItem setRightBarButtonItem: contactBarButtonItem 
+    animated: YES];
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    CGRect rect = contactToolbar.frame;
+    rect.origin.y = OMBPadding;
+    contactToolbar.frame = rect;
+  } completion: ^(BOOL finished) {
+    if (finished)
+      contactToolbar.hidden = YES;
+  }];
+}
+
+- (void) emailUser
+{
+  if ([MFMailComposeViewController canSendMail]) {
+    MFMailComposeViewController *mailer = 
+      [[MFMailComposeViewController alloc] init];
+    mailer.mailComposeDelegate = self;
+    // Subject
+    [mailer setSubject: @"Hello"];
+    // Recipients
+    NSArray *toRecipients = @[user.email];
+    [mailer setToRecipients: toRecipients];
+    // Body
+    NSString *emailBody = @"";
+    [mailer setMessageBody: emailBody isHTML: NO];
+    [self presentViewController: mailer animated: YES completion: nil];
+  }
+}
+
 - (NSArray *) listings
 {
   return [user residencesActive: YES sortedWithKey: @"createdAt" ascending: NO];
 }
 
+- (void) phoneCallUser
+{
+  if ([user.phone length]) {
+    NSString *string = [@"telprompt:" stringByAppendingString: user.phone];
+    [[UIApplication sharedApplication] openURL: [NSURL URLWithString: string]];
+  }
+}
+
+- (void) sendMessage
+{
+  if ([user isCurrentUser])
+    return;
+  [self.navigationController pushViewController:
+    [[OMBMessageDetailViewController alloc] initWithUser: user] animated: YES];
+}
+
 - (void) updateData
 {
+  // If this is the current user's renter profile
+  if ([user compareUser: [OMBUser currentUser]]) {
+    // self.navigationItem.rightBarButtonItem = editBarButtonItem;
+  }
+  else {
+    self.navigationItem.rightBarButtonItem = contactBarButtonItem;
+    // If no phone number
+    if (user.phone && [[user phoneString] length]) {
+      phoneBarButtonItem.enabled = YES;
+    }
+    else {
+      phoneBarButtonItem.enabled = NO;
+    }
+    // Email
+    if ([user emailContactPermission])
+      emailBarButtonItem.enabled = YES;
+    else
+      emailBarButtonItem.enabled = NO;
+  }
+
   // User images
   backImageView.image     = user.image;
   userIconImageView.image = user.image;

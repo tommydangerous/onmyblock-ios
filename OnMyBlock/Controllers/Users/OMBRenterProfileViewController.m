@@ -18,6 +18,7 @@
 #import "OMBManageListingsCell.h"
 #import "OMBMessageDetailViewController.h"
 #import "OMBNavigationController.h"
+#import "OMBOtherUserProfileViewController.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterProfileUserInfoCell.h"
 #import "OMBResidenceDetailViewController.h"
@@ -56,12 +57,20 @@
   CGFloat padding        = OMBPadding;
   CGFloat standardHeight = OMBStandardHeight;
 
+  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
   contactBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Contact"
     style: UIBarButtonItemStylePlain target: self action: @selector(contact)];
   doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
     style: UIBarButtonItemStylePlain target: self action: @selector(done)];
   editBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Edit"
     style: UIBarButtonItemStylePlain target: self action: @selector(edit)];
+  [editBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+  } forState: UIControlStateNormal];
+  UIBarButtonItem *previewBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithTitle: @"Preview"
+      style: UIBarButtonItemStylePlain target: self action: @selector(preview)];
+  self.navigationItem.rightBarButtonItem = previewBarButtonItem;
 
   self.view.backgroundColor = self.table.backgroundColor = [UIColor clearColor];
 
@@ -127,8 +136,9 @@
   // Edit button
   editButtonView = [[AMBlurView alloc] init];
   editButtonView.blurTintColor = [UIColor blue];
-  editButtonView.frame = CGRectMake(0.0f, screenHeight - OMBStandardHeight,
-    screenWidth, OMBStandardHeight);
+  editButtonView.frame = CGRectMake(0.0f, 
+    screenHeight - OMBStandardButtonHeight,
+      screenWidth, OMBStandardButtonHeight);
   [self.view addSubview: editButtonView];
   // Button
   editButton = [UIButton new];
@@ -136,11 +146,13 @@
   editButton.titleLabel.font = [UIFont mediumTextFontBold];
   // [editButton addTarget: self action: @selector(edit)
   //   forControlEvents: UIControlEventTouchUpInside];
-  [editButton addTarget: self action: @selector(showBecomeVerified)
+  [editButton addTarget: self action: @selector(edit)
     forControlEvents: UIControlEventTouchUpInside];
   [editButton setBackgroundImage: [UIImage imageWithColor: 
     [UIColor blueHighlighted]] forState: UIControlStateHighlighted];
-  [editButton setTitle: @"Complete Your Renter Profile"
+  // [editButton setTitle: @"Complete Your Renter Profile"
+  //   forState: UIControlStateNormal];
+  [editButton setTitle: @"Edit Your Profile"
     forState: UIControlStateNormal];
   [editButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
@@ -200,6 +212,11 @@
   bottomBorder.frame = CGRectMake(0.0f, contactToolbar.frame.size.height - 0.5f,
     contactToolbar.frame.size.width, 0.5f);
   [contactToolbar.layer addSublayer: bottomBorder];
+
+  // Table footer view
+  self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectMake(
+    0.0f, 0.0f, self.table.frame.size.width, 
+      editButtonView.frame.size.height)];
 }
 
 - (void) viewDidDisappear: (BOOL) animated
@@ -215,14 +232,14 @@
   [super viewWillAppear: animated];
 
   // If the current user is looking at their own renter profile
-  if ([user isCurrentUser] && ![user isLandlord]) {
-    // Check to see if the edit button should be at the bottom
-    [self updateEditButton];
-  }
-  else {
-    editButtonView.hidden = YES;
-    self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
-  }
+  // if ([user isCurrentUser] && ![user isLandlord]) {
+  //   // Check to see if the edit button should be at the bottom
+  //   [self updateEditButton];
+  // }
+  // else {
+  //   editButtonView.hidden = YES;
+  //   self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
+  // }
 
   // We only want to show the menu icon if its the root view controller
   if ([self.navigationController.viewControllers count] == 1) {
@@ -340,12 +357,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell = [[OMBRenterProfileUserInfoCell alloc] initWithStyle: 
         UITableViewCellStyleDefault reuseIdentifier: UserInfoID];
     [cell reset];
-    UIView *bor = [cell.contentView viewWithTag: 9999];
-    if (!bor) {
-      bor = [UIView new];
-      bor.backgroundColor = tableView.separatorColor;
-      bor.tag = 9999;
-    }
+    // UIView *bor = [cell.contentView viewWithTag: 9999];
+    // if (!bor) {
+    //   bor = [UIView new];
+    //   bor.backgroundColor = tableView.separatorColor;
+    //   bor.tag = 9999;
+    // }
+    cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+      0.0f, 0.0f);
     CGSize imageSize = cell.iconImageView.bounds.size;
     // Name
     if (indexPath.row == OMBRenterProfileSectionUserInfoRowName) {
@@ -997,11 +1016,18 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+- (void) preview
+{
+  [self.navigationController pushViewController:
+    [[OMBOtherUserProfileViewController alloc] initWithUser: user]
+      animated: YES];
+}
+
 - (void) reloadData
 {
   // If this is the current user's renter profile
   if ([user compareUser: [OMBUser currentUser]]) {
-    self.navigationItem.rightBarButtonItem = editBarButtonItem;
+    // self.navigationItem.rightBarButtonItem = editBarButtonItem;
   }
   else {
     self.navigationItem.rightBarButtonItem = contactBarButtonItem;

@@ -86,8 +86,8 @@
   // Next
   nextView = [[AMBlurView alloc] init];
   nextView.blurTintColor = [UIColor blue];
-  nextView.frame = CGRectMake(0.0f, screenHeight - OMBStandardHeight,
-    screenWidth, OMBStandardHeight);
+  nextView.frame = CGRectMake(0.0f, screenHeight - OMBStandardButtonHeight,
+    screenWidth, OMBStandardButtonHeight);
   [self.view addSubview: nextView];
   // Button
   nextButton = [UIButton new];

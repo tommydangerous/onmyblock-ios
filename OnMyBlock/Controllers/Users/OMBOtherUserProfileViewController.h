@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
+#import <MessageUI/MessageUI.h>
+
 #import "OMBTableViewController.h"
 
 @class OMBCenteredImageView;
@@ -39,13 +41,18 @@ typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionListingsRow) {
 };
 
 @interface OMBOtherUserProfileViewController : OMBTableViewController
-<UICollectionViewDataSource, UICollectionViewDelegate, 
+<MFMailComposeViewControllerDelegate,
+  UICollectionViewDataSource, UICollectionViewDelegate, 
   UICollectionViewDelegateFlowLayout>
 {
   OMBCenteredImageView *backImageView;
   UIView *backView;
   CGFloat backViewOriginY;
+  UIBarButtonItem *contactBarButtonItem;
+  UIToolbar *contactToolbar;
+  UIBarButtonItem *emailBarButtonItem;
   OMBGradientView *gradient;
+  UIBarButtonItem *phoneBarButtonItem;
   UIView *scaleBackView;
   OMBUser *user;
   NSArray *userAttributes;
