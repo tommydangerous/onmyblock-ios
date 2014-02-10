@@ -361,7 +361,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
 {
   [super viewDidDisappear: animated];
   // Need to do this or an error occurs
-  _table.delegate = nil;
+  // _table.delegate = nil;
 }
 
 - (void) viewDidLoad
@@ -385,8 +385,8 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   // Need to set this again because when the view disappears, 
   // the _table.delegate is set to nil
-  if (!_table.delegate)
-    _table.delegate = self;
+  // if (!_table.delegate)
+  //   _table.delegate = self;
 
   // Fetch residence detail data
   [residence fetchDetailsWithCompletion: ^(NSError *error) {

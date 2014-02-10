@@ -59,7 +59,6 @@
   CGFloat screenWidth    = screen.size.width;
   CGFloat padding        = OMBPadding;
   CGFloat standardHeight = OMBStandardHeight;
-  CGFloat standardButtonHeight = OMBStandardButtonHeight;
 
   self.view.backgroundColor  = [UIColor grayUltraLight];
   self.table.backgroundColor = [UIColor clearColor];
