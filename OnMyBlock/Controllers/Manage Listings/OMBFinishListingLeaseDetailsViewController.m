@@ -180,8 +180,26 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     NSString *string = @"";
     // Month Lease
     if (selectedIndexPath.section == 0 && selectedIndexPath.row == 6) {
-      string = [monthLeaseOptions objectAtIndex: row];;
+      string = [monthLeaseOptions objectAtIndex: row];
       residence.leaseMonths = (int)row;
+      if(residence.moveInDate){
+        NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+        [dateComponents setMonth:row];
+        // add months to move in and set to move out
+        NSDate *auxDate = [[NSCalendar currentCalendar]
+                           dateByAddingComponents:dateComponents
+                           toDate:[NSDate dateWithTimeIntervalSince1970: residence.moveInDate] options:0];
+        if([[[NSCalendar currentCalendar] components:NSYearCalendarUnit fromDate:auxDate] year] >= 2016){
+          NSDateFormatter *df = [[NSDateFormatter alloc] init];
+          [df setDateFormat:@"dd-MM-yyyy"];
+          auxDate = [df dateFromString:@"31-12-2015"] ;
+        }
+        residence.moveOutDate = [auxDate timeIntervalSince1970];
+        OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
+          [self.table cellForRowAtIndexPath:
+            [NSIndexPath indexPathForItem:4 inSection:0]];
+        cell.textField.text = [dateFormatter stringFromDate: [NSDate dateWithTimeIntervalSince1970:residence.moveOutDate]];
+      }
     }
     // Lease Type
     else if (selectedIndexPath.section == 0 && selectedIndexPath.row == 9) {
@@ -368,6 +386,14 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
                                         action: @selector(datePickerChanged:)
                               forControlEvents: UIControlEventValueChanged];
           datePickerCell.datePicker.datePickerMode = UIDatePickerModeDate;
+          
+          // specify max date
+          NSDateFormatter *df = [[NSDateFormatter alloc] init];
+          [df setDateFormat:@"dd-MM-yyyy"];
+          NSDate *dateFromString = [[NSDate alloc] init];
+          dateFromString = [df dateFromString:@"31-12-2015"];
+          datePickerCell.datePicker.maximumDate = dateFromString;
+          
           if (residence.moveOutDate) {
             [datePickerCell.datePicker setDate:
              [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]
@@ -771,10 +797,35 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // Move-in Date
     if (selectedIndexPath.row == 2) {
       residence.moveInDate = [datePicker.date timeIntervalSince1970];
+      // compare if move out is earlier than move in
+      if([[NSDate dateWithTimeIntervalSince1970:residence.moveOutDate]
+          compare:datePicker.date] == NSOrderedAscending){
+        //change move out
+        residence.moveOutDate = [datePicker.date timeIntervalSince1970];
+        OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
+          [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:4 inSection:0]];
+        cell.textField.text = [dateFormatter stringFromDate: datePicker.date];
+      }
+      residence.leaseMonths = [self numberOfMonthsBetweenMovingDates];
     }
     else if (selectedIndexPath.row == 4) {
       residence.moveOutDate = [datePicker.date timeIntervalSince1970];
+      // compare if move in is later than move out
+      if([[NSDate dateWithTimeIntervalSince1970:residence.moveInDate]
+          compare:datePicker.date] == NSOrderedDescending){
+        //change move in
+        residence.moveInDate = [datePicker.date timeIntervalSince1970];
+        OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
+          [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:2 inSection:0]];
+        cell.textField.text = [dateFormatter stringFromDate: datePicker.date];
+      }
+      residence.leaseMonths = [self numberOfMonthsBetweenMovingDates];
     }
+    
+    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
+    [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:6 inSection:0]];
+    cell.textField.text = monthLeaseOptions[residence.leaseMonths];
+    
   }
 }
 
@@ -827,6 +878,35 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   return [NSIndexPath indexPathForRow:
           [self.table numberOfRowsInSection: [self.table numberOfSections] - 1] - 1
                             inSection: [self.table numberOfSections] - 1];
+}
+
+- (NSInteger) numberOfMonthsBetweenMovingDates
+{
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit |
+                          NSWeekdayCalendarUnit | NSYearCalendarUnit);
+  
+  NSDateComponents *moveInComps = [calendar components: unitFlags
+                                              fromDate: [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]];
+  [moveInComps setDay: 1];
+  NSDateComponents *moveOutComps = [calendar components: unitFlags
+                                               fromDate: [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]];
+  [moveOutComps setDay: 1];
+  
+  NSInteger moveInMonth  = [moveInComps month];
+  NSInteger moveOutMonth = [moveOutComps month];
+  
+  NSInteger yearDifference = [moveOutComps year] - [moveInComps year];
+  moveOutMonth += (12 * yearDifference);
+  
+  NSInteger monthDifference = moveOutMonth - moveInMonth;
+  NSLog(@"%d",monthDifference);
+  if(monthDifference < 0)
+    return 0;
+  else if (monthDifference > 12)
+    return 12;
+  
+  return monthDifference;
 }
 
 - (void) reloadForDatePickerAndPickerViewRowsAtIndexPath:

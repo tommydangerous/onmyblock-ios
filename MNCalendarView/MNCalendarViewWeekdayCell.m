@@ -19,7 +19,7 @@ NSString *const MNCalendarViewWeekdayCellIdentifier = @"MNCalendarViewWeekdayCel
     self.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
                                            size: 11]; // Sun, Mon ... etc
     self.enabled = NO;
-    self.titleLabel.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+    self.titleLabel.backgroundColor = [UIColor colorWithRed:0.98 green:0.98 blue:0.98 alpha:1.0];
   }
   return self;
 }

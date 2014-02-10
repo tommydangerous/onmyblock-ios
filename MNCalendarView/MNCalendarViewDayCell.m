@@ -40,10 +40,11 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
   
   if(components.day == 1){
     self.titleLabel.numberOfLines = 3;
+    // first day of a month
     self.titleLabel.text = [NSString stringWithFormat:@"%@\n%d\n ",[[[MNCalendarViewDayCell monthNames] objectAtIndex:components.month -1 ] uppercaseString],components.day];
-    
+    // first day of a year
     if(components.month == 1)
-      self.titleLabel.text = [self.titleLabel.text stringByAppendingString:[NSString stringWithFormat:@"%d ",components.year]];;
+      self.titleLabel.text = [self.titleLabel.text stringByAppendingString:[NSString stringWithFormat:@"%d ",components.year]];
     
   }else{
     self.titleLabel.text =  [NSString stringWithFormat:@"%d",components.day];
@@ -59,7 +60,7 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
   [super setEnabled:enabled];
   
   // NSDateComponents *components = [self.calendar components:
-  //   NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit 
+  //   NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit
   //   fromDate:self.date];
   
   // NSDateComponents *monthComponents = [self.calendar components:NSMonthCalendarUnit
@@ -82,16 +83,16 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
   else {
     self.titleLabel.textColor = [UIColor greenColor];
   }
-
+  
   // Selected
   if (self.selected)
     self.titleLabel.textColor = UIColor.redColor;
   else
     self.titleLabel.textColor = [UIColor blackColor];
-
+  
   // .. , UIColor.darkGrayColor
   self.backgroundColor =
-    self.enabled ? UIColor.whiteColor : UIColor.whiteColor;
+  self.enabled ? UIColor.whiteColor : UIColor.whiteColor;
   
 }
 
@@ -107,18 +108,18 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
   // if(self.enabled)
   // separatorColor =  [[UIColor colorWithRed:0.f green:0.f blue:1.f alpha:1] CGColor];
   
-//  NSDateComponents *dayComponent = [self.calendar components:NSCalendarUnitDay fromDate:self.date];
-//  NSDateComponents *lastDayOfMonthComponent = [self.calendar components:NSCalendarUnitMonth |NSCalendarUnitDay fromDate:[self.date mn_lastDateOfMonth:self.calendar]];
-//  
-//  if(dayComponent.day == lastDayOfMonthComponent.day && self.enabled){
-//    separatorColor = [[UIColor redColor] CGColor];
-//    CGFloat pixel = 1.f / [UIScreen mainScreen].scale;
-//    MNContextDrawLine(context,
-//                      CGPointMake(size.width - pixel - pixel, pixel),
-//                      CGPointMake(size.width - pixel - pixel, size.height),
-//                      separatorColor,
-//                      pixel);
-//  }
+  //  NSDateComponents *dayComponent = [self.calendar components:NSCalendarUnitDay fromDate:self.date];
+  //  NSDateComponents *lastDayOfMonthComponent = [self.calendar components:NSCalendarUnitMonth |NSCalendarUnitDay fromDate:[self.date mn_lastDateOfMonth:self.calendar]];
+  //
+  //  if(dayComponent.day == lastDayOfMonthComponent.day && self.enabled){
+  //    separatorColor = [[UIColor redColor] CGColor];
+  //    CGFloat pixel = 1.f / [UIScreen mainScreen].scale;
+  //    MNContextDrawLine(context,
+  //                      CGPointMake(size.width - pixel - pixel, pixel),
+  //                      CGPointMake(size.width - pixel - pixel, size.height),
+  //                      separatorColor,
+  //                      pixel);
+  //  }
   
   if (self.weekday != 7) {
     separatorColor = self.separatorColor.CGColor;

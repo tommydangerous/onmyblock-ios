@@ -33,10 +33,10 @@ typedef NS_ENUM(NSInteger, OMBResidenceBookItConfirmDetailsSectionDatesRows) {
   OMBResidenceBookItConfirmDetailsSectionDatesRowsCalendar
 };
 
-@interface OMBResidenceBookItConfirmDetailsViewController : 
-  OMBTableViewController
-<UIAlertViewDelegate, UIScrollViewDelegate, UITextFieldDelegate, 
-  UITextViewDelegate, MNCalendarViewDelegate>
+@interface OMBResidenceBookItConfirmDetailsViewController :
+OMBTableViewController
+<UIAlertViewDelegate, UIScrollViewDelegate, UITextFieldDelegate,
+UITextViewDelegate, MNCalendarViewDelegate>
 {
   OMBAlertView *alert;
   OMBAlertViewBlur *alertBlur;

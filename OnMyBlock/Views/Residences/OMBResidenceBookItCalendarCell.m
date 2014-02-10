@@ -21,17 +21,30 @@
                     reuseIdentifier: reuseIdentifier]))
     return nil;
   
+  float screenWidth = [UIScreen mainScreen].bounds.size.width;
   self.selectionStyle = UITableViewCellSelectionStyleNone;
+  self.separatorInset = UIEdgeInsetsMake(0.0f, screenWidth, 0.0f, 0.0f);
   self.backgroundColor = [UIColor grayUltraLight];
+  
   float sizeCalendar = 195.f;
-  CGRect boundsCalendarView = CGRectMake([UIScreen mainScreen].bounds.size.width * 0.08, 0 ,
-                                         [UIScreen mainScreen].bounds.size.width * 0.84 , sizeCalendar);
-  self.frame = CGRectMake(0, 0 ,
-                          [UIScreen mainScreen].bounds.size.width, sizeCalendar + 5.f);
+//  self.frame = CGRectMake(0, 0 ,
+//                          screenWidth, sizeCalendar + 44.f + 5.f);
+  CGRect boundsCalendarView = CGRectMake(screenWidth * 0.08, 0.f ,
+                                         screenWidth * 0.84 , sizeCalendar);
   _calendarView = [[MNCalendarView alloc] initWithFrame:boundsCalendarView];
-  _calendarView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
   _calendarView.backgroundColor = UIColor.whiteColor;
   [self addSubview: _calendarView];
+  
+  _leaseMonthsLabel = [[UILabel alloc] init];
+  _leaseMonthsLabel.backgroundColor = [UIColor grayLight];
+  _leaseMonthsLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
+                                           size: 15];
+  _leaseMonthsLabel.frame = CGRectMake(_calendarView.frame.origin.x, _calendarView.frame.origin.y + _calendarView.frame.size.height + 3.f,
+                                       _calendarView.frame.size.width, 30.0f);
+  _leaseMonthsLabel.textAlignment = NSTextAlignmentCenter;
+  _leaseMonthsLabel.text = @"0 MONTH LEASE";
+  _leaseMonthsLabel.textColor = [UIColor whiteColor];
+  [self.contentView insertSubview: _leaseMonthsLabel belowSubview: _calendarView];
   
   return self;
 }
@@ -42,7 +55,7 @@
 
 + (CGFloat) heightForCell
 {
-  return 200.0f;
+  return 195.f + 30.f + 5.f;
 }
 
 @end
