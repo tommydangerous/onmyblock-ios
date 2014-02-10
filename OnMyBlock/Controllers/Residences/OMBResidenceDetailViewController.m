@@ -540,6 +540,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     gradientView.frame = backRect;
 
     // Header view
+    backRect.size.height = imageCollectionView.frame.size.height - y + adjustment;
     headerView.frame = backRect;
 
     // Adjust the current offer label
