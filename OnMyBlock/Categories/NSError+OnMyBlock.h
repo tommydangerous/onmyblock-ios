@@ -13,16 +13,22 @@ typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainAuthenticationCode) {
   OMBConnectionErrorDomainAuthenticationCodeLinkedInFailed
 };
 
-// Messages
+// Message
 extern NSString *const OMBConnectionErrorDomainMessage;
 typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainMessageCode) {
   OMBConnectionErrorDomainMessageCodeCreateFailed
 };
 
-// Offers
+// Offer
 extern NSString *const OMBConnectionErrorDomainOffer;
 typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainOfferCode) {
   OMBConnectionErrorDomainOfferCodeAcceptFailed
+};
+
+// Residence
+extern NSString *const OMBConnectionErrorDomainResidence;
+typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainResidenceCode) {
+  OMBConnectionErrorDomainResidenceCodePublishFailed
 };
 
 // Session

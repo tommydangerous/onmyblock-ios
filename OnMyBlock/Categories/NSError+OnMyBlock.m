@@ -16,7 +16,10 @@ NSString *const OMBConnectionErrorDomainMessage =
   @"OMBConnectionErrorDomainMessage";
 // Offers
 NSString *const OMBConnectionErrorDomainOffer = 
-  @"OMBConnectionErrorDomainOffer";;
+  @"OMBConnectionErrorDomainOffer";
+// Residence
+NSString *const OMBConnectionErrorDomainResidence = 
+  @"OMBConnectionErrorDomainResidence";
 // Session
 NSString *const OMBConnectionErrorDomainSession = 
   @"OMBConnectionErrorDomainSession";

@@ -11,6 +11,7 @@
 #import "ELCImagePickerController.h"
 
 @class AMBlurView;
+@class LEffectLabel;
 @class OMBActivityView;
 @class OMBAlertViewBlur;
 @class OMBCenteredImageView;
@@ -24,6 +25,7 @@
   OMBActivityView *activityView;
   OMBAlertViewBlur *alertBlur;
   UIView *cameraView;
+  LEffectLabel *effectLabel;
   CGFloat headerImageOffsetY;
   OMBCenteredImageView *headerImageView;
   OMBGradientView *headerImageViewGradient;

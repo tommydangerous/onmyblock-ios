@@ -9,6 +9,7 @@
 #import "OMBFinishListingViewController.h"
 
 #import "AMBlurView.h"
+#import "LEffectLabel.h"
 #import "OMBActivityView.h"
 #import "OMBAlertViewBlur.h"
 #import "OMBCenteredImageView.h"
@@ -101,11 +102,24 @@
   [publishNowButton addTarget: self action: @selector(publishNow)
     forControlEvents: UIControlEventTouchUpInside];
   [publishNowButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor blueHighlighted]] 
+    [UIImage imageWithColor: [UIColor blueHighlightedAlpha: 0.3f]] 
       forState: UIControlStateHighlighted];
   [publishNowButton setTitleColor: [UIColor whiteColor] 
     forState: UIControlStateNormal];
   [publishNowView addSubview: publishNowButton];
+
+  // Effect label
+  effectLabel = [[LEffectLabel alloc] init];
+  effectLabel.effectColor = [UIColor grayMedium];
+  effectLabel.effectDirection = EffectDirectionLeftToRight;
+  effectLabel.font = [UIFont mediumTextFontBold];
+  effectLabel.frame = publishNowButton.frame;
+  effectLabel.sizeToFit = NO;
+  effectLabel.text = @"Publish Now";
+  effectLabel.textColor = [UIColor whiteColor];
+  effectLabel.textAlignment = NSTextAlignmentCenter;
+  [publishNowView insertSubview: effectLabel 
+    belowSubview: publishNowButton];
 
   // Unlist view
   unlistView = [[AMBlurView alloc] init];
@@ -269,11 +283,17 @@
   [self verifyPhotos];
 
   // Calculate how many steps are left
-  NSString *publishNowButtonTitle = @"Publish Now";
-  if ([residence numberOfStepsLeft] > 0)
+  NSString *publishNowButtonTitle;
+  if ([residence numberOfStepsLeft] > 0) {
+    effectLabel.hidden = YES;
     publishNowButtonTitle = [residence statusString];
+  }
+  else {
+    effectLabel.hidden = NO;
+  }
   [publishNowButton setTitle: publishNowButtonTitle 
     forState: UIControlStateNormal];
+  [effectLabel performEffectAnimation];
 
   // If the residence is a temporary residence
   if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {

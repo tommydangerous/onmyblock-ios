@@ -62,6 +62,10 @@ newResidence: (OMBResidence *) object2
       residence.inactive = NO;
     }
   }
+  else {
+    [self createInternalErrorWithDomain: OMBConnectionErrorDomainResidence
+      code: OMBConnectionErrorDomainResidenceCodePublishFailed];
+  }
 
   [super connectionDidFinishLoading: connection];
 }
