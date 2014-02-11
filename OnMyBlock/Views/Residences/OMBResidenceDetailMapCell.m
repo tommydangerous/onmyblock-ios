@@ -28,6 +28,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
   _segmentedControl = [[UISegmentedControl alloc] initWithItems:
                      @[@"Map", @"Street"]];
+  _segmentedControl.hidden = YES;
   _segmentedControl.selectedSegmentIndex = 0;
   CGRect segmentedFrame = CGRectMake( (screenWidth - _segmentedControl.frame.size.width) / 2, 44.0f + padding / 2,
                                      _segmentedControl.frame.size.width, _segmentedControl.frame.size.height);
