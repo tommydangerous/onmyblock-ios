@@ -10,6 +10,7 @@
 
 #import "AMBlurView.h"
 #import "DRNRealTimeBlurView.h"
+#import "LEffectLabel.h"
 #import "NSString+Extensions.h"
 #import "OMBAlertView.h"
 #import "OMBAlertViewBlur.h"
@@ -183,17 +184,29 @@
   //   screenWidth - (padding * 2), padding + 18.0f + padding);
   submitOfferButton.frame = submitView.bounds;
   // submitOfferButton.layer.cornerRadius = 2.0f;
-  submitOfferButton.titleLabel.font = [UIFont normalTextFontBold];
+  submitOfferButton.titleLabel.font = [UIFont mediumTextFontBold];
   [submitOfferButton addTarget: self
                         action: @selector(submitOfferButtonSelected)
               forControlEvents: UIControlEventTouchUpInside];
   [submitOfferButton setBackgroundImage:
-   [UIImage imageWithColor: [UIColor blueHighlighted]]
-                               forState: UIControlStateHighlighted];
+    [UIImage imageWithColor: [UIColor blueHighlightedAlpha: 0.3f]]
+      forState: UIControlStateHighlighted];
   [submitOfferButton setTitleColor: [UIColor whiteColor]
-                          forState: UIControlStateNormal];
+    forState: UIControlStateNormal];
   [submitView addSubview: submitOfferButton];
   // [footerView addSubview: submitOfferButton];
+
+  // Effect label
+  effectLabel = [[LEffectLabel alloc] init];
+  effectLabel.effectColor = [UIColor grayMedium];
+  effectLabel.effectDirection = EffectDirectionLeftToRight;
+  effectLabel.font = [UIFont mediumTextFontBold];
+  effectLabel.frame = submitOfferButton.frame;
+  effectLabel.sizeToFit = NO;
+  effectLabel.textColor = [UIColor whiteColor];
+  effectLabel.textAlignment = NSTextAlignmentCenter;
+  [submitView insertSubview: effectLabel 
+    belowSubview: submitOfferButton];
   
   // Blur view to go over the image
   DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
@@ -368,13 +381,16 @@
   
   // Submit button
   if ([[OMBUser currentUser] primaryPaymentPayoutMethod]) {
-    [submitOfferButton setTitle: @"Submit Offer"
-                       forState: UIControlStateNormal];
+    // [submitOfferButton setTitle: @"Submit Offer"
+    //                    forState: UIControlStateNormal];
+    effectLabel.text = @"Submit offer";
   }
   else {
-    [submitOfferButton setTitle: @"Add payment method"
-                       forState: UIControlStateNormal];
+    // [submitOfferButton setTitle: @"Add payment method"
+    //                    forState: UIControlStateNormal];
+    effectLabel.text = @"Add a payment method";
   }
+  [effectLabel performEffectAnimation];
   
   [self.table reloadData];
 }

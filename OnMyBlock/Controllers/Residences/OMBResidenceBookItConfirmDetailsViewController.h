@@ -9,6 +9,7 @@
 #import "OMBTableViewController.h"
 #import "MNCalendarView.h"
 
+@class LEffectLabel;
 @class OMBAlertView;
 @class OMBAlertViewBlur;
 @class OMBCenteredImageView;
@@ -49,6 +50,7 @@ UITextViewDelegate, MNCalendarViewDelegate>
   CGFloat deposit;
   BOOL hasOfferValue;
   UILabel *daysLabel;
+  LEffectLabel *effectLabel;
   UILabel *hoursLabel;
   BOOL isAddingAPersonalNote;
   BOOL isEditing;

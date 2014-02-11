@@ -10,6 +10,7 @@
 
 #import "PayPalMobile.h"
 
+@class LEffectLabel;
 @class OMBAlertView;
 @class OMBAlertViewBlur;
 @class OMBCenteredImageView;
@@ -50,6 +51,7 @@ typedef NS_ENUM(NSInteger, OMBOfferInquirySectionOfferRow) {
   NSTimer *countdownTimer;
   UILabel *countDownTimerLabel;
   NSDateFormatter *dateFormatter1;
+  LEffectLabel *effectLabel;
   OMBGradientView *gradient;
   NSArray *legalQuestions;
   OMBOffer *offer;

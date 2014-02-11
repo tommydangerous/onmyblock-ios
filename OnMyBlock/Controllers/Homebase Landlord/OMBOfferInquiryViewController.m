@@ -9,6 +9,7 @@
 #import "OMBOfferInquiryViewController.h"
 
 #import "AMBlurView.h"
+#import "LEffectLabel.h"
 #import "NSString+Extensions.h"
 #import "OMBAlertView.h"
 #import "OMBAlertViewBlur.h"
@@ -254,16 +255,26 @@
   respondButton = [UIButton new];
   respondButton.frame = CGRectMake(0.0f, 0.0f,
     respondView.frame.size.width, respondView.frame.size.height);
-  respondButton.titleLabel.font =
-  [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  respondButton.titleLabel.font = [UIFont mediumTextFontBold];
   [respondButton addTarget: self action: @selector(respond)
-          forControlEvents: UIControlEventTouchUpInside];
+    forControlEvents: UIControlEventTouchUpInside];
   [respondButton setBackgroundImage:
-   [UIImage imageWithColor: [UIColor blueHighlighted]]
-                           forState: UIControlStateHighlighted];
+    [UIImage imageWithColor: [UIColor blueHighlightedAlpha: 0.3f]]
+      forState: UIControlStateHighlighted];
   [respondButton setTitleColor: [UIColor whiteColor]
                       forState: UIControlStateNormal];
   [respondView addSubview: respondButton];
+
+  // Effect label
+  effectLabel = [[LEffectLabel alloc] init];
+  effectLabel.effectColor = [UIColor grayMedium];
+  effectLabel.effectDirection = EffectDirectionLeftToRight;
+  effectLabel.font = [UIFont mediumTextFontBold];
+  effectLabel.frame = respondButton.frame;
+  effectLabel.sizeToFit = NO;
+  effectLabel.textColor = [UIColor whiteColor];
+  effectLabel.textAlignment = NSTextAlignmentCenter;
+  [respondView addSubview: effectLabel];
   
   // Countdown timer label
   countDownTimerLabel = [[UILabel alloc] init];
@@ -330,8 +341,9 @@
           [self hideCountdownAndRespondButton];
         }
         else {
-          [respondButton setTitle: @"Confirm and Pay or Reject"
-                         forState: UIControlStateNormal];
+          // [respondButton setTitle: @"Confirm and Pay or Reject"
+            // forState: UIControlStateNormal];
+          effectLabel.text = @"Confirm and Pay or Reject";
         }
         break;
       }
@@ -339,8 +351,9 @@
       case OMBOfferStatusForStudentWaitingForLandlordResponse: {
         respondButton.backgroundColor = [UIColor blueLight];
         respondButton.userInteractionEnabled = NO;
-        [respondButton setTitle: @"Waiting for landlord response" forState:
-         UIControlStateNormal];
+        // [respondButton setTitle: @"Waiting for landlord response" forState:
+        //   UIControlStateNormal];
+        effectLabel.text = @"Waiting for landlord response";
         break;
       }
       default: {
@@ -360,15 +373,17 @@
         else {
           respondButton.backgroundColor = [UIColor blueLight];
           respondButton.userInteractionEnabled = NO;
-          [respondButton setTitle: @"Waiting for student response" forState:
-           UIControlStateNormal];
+          // [respondButton setTitle: @"Waiting for student response" forState:
+          //   UIControlStateNormal];
+          effectLabel.text = @"Waiting for student response";
         }
         break;
       }
         // Landlord needs to do something
       case OMBOfferStatusForLandlordResponseRequired: {
-        [respondButton setTitle: @"Accept or Decline"
-                       forState: UIControlStateNormal];
+        // [respondButton setTitle: @"Accept or Decline"
+        //   forState: UIControlStateNormal];
+        effectLabel.text = @"Accept or Decline";
         break;
       }
       default: {
@@ -377,6 +392,7 @@
       }
     }
   }
+  [effectLabel performEffectAnimation];
   
   // User image view
   if (offer.user.image) {
