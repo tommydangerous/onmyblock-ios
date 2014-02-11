@@ -376,6 +376,14 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 {
   [super viewWillAppear: animated];
 
+  // This is so that the spinner doesn't freeze and just stay there
+  if (fetching)
+    fetching = NO;
+  // Only stop the spinner if it is spinning and there is at least 1 residence
+  if (activityView.isSpinning && [[self residencesForList] count])
+    [activityView stopSpinning];
+
+  // This reloads the list view if it is visible
   [self reloadTable];
 
   NSDictionary *dictionary = (NSDictionary *)
@@ -413,10 +421,6 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Check any filter values and display them
   [self updateFilterLabel];
-
-  // This is so that the spinner doesn't freeze and just stay there
-  fetching = NO;
-  [activityView stopSpinning];
 }
 
 #pragma mark - Protocol
@@ -854,8 +858,9 @@ withTitle: (NSString *) title;
   }
   else {
     fetching = YES;
-    if (!activityView.isSpinning)
+    if (!activityView.isSpinning) {
       [activityView startSpinning];
+    }
   }
 
   _radiusInMiles += 4;

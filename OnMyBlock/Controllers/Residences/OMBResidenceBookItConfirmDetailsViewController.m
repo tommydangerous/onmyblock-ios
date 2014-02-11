@@ -309,7 +309,7 @@
   
   // Bed, bath
   bedBathLabel.text = [NSString stringWithFormat: @"%.0f bd  /  %.0f ba",
-                       residence.bedrooms, residence.bathrooms];
+    residence.bedrooms, residence.bathrooms];
   // Image
   residenceImageView.image = [residence coverPhoto];
   // Rent
@@ -323,16 +323,16 @@
   // Resize Title and rent
   CGFloat padding = bedBathLabel.frame.origin.x;
   CGRect rentRect = [rentLabel.text boundingRectWithSize:
-                     CGSizeMake(bedBathLabel.frame.size.width, rentLabel.frame.size.height)
-                                                    font: rentLabel.font];
+    CGSizeMake(bedBathLabel.frame.size.width, rentLabel.frame.size.height)
+      font: rentLabel.font];
   rentLabel.frame = CGRectMake(
-                               self.table.frame.size.width - (rentRect.size.width + padding),
-                               rentLabel.frame.origin.y, rentRect.size.width,
-                               rentLabel.frame.size.height);
+   self.table.frame.size.width - (rentRect.size.width + padding),
+    rentLabel.frame.origin.y, rentRect.size.width,
+      rentLabel.frame.size.height);
   titleLabel.frame = CGRectMake(titleLabel.frame.origin.x,
-                                titleLabel.frame.origin.y, self.table.frame.size.width -
-                                (padding + padding + rentLabel.frame.size.width + padding),
-                                titleLabel.frame.size.height);
+    titleLabel.frame.origin.y, self.table.frame.size.width -
+    (padding + padding + rentLabel.frame.size.width + padding),
+      titleLabel.frame.size.height);
   
   // Total price notes
   totalPriceNotes = [NSString stringWithFormat:
@@ -391,6 +391,11 @@
     effectLabel.text = @"Add a payment method";
   }
   [effectLabel performEffectAnimation];
+
+  // Fetch payout methods
+  [[OMBUser currentUser] fetchPayoutMethodsWithCompletion: ^(NSError *error) {
+    [self.table reloadData];
+  }];
   
   [self.table reloadData];
 }

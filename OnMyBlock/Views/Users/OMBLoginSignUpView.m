@@ -52,8 +52,9 @@
   [self addSubview: scroll];
 
   // Close button view
-  CGRect closeButtonRect = CGRectMake(screenWidth - (padding + padding),
-    padding + padding, padding, padding);
+  CGFloat closeButtonSize = 26.0f;
+  CGRect closeButtonRect = CGRectMake(screenWidth - (closeButtonSize + padding),
+    padding + padding, closeButtonSize, closeButtonSize);
   _closeButtonView = [[OMBCloseButtonView alloc] initWithFrame: closeButtonRect
     color: [UIColor colorWithWhite: 1.0f alpha: 0.8f]];
   [self addSubview: _closeButtonView];
@@ -366,31 +367,15 @@
 
 - (void) updateUserViews
 {
-  NSString *actionButtonString;
-  // Landlord
-  if (isLandlord) {
-    headerLabel.text = @"Landlords";
-    _emailTextField.placeholder = @"Landlord email";
-    if (isLogin)
-      actionButtonString = @"Login";
-    else
-      actionButtonString = @"Landlord Sign Up";
-    [_actionButton setTitle: actionButtonString
-      forState: UIControlStateNormal];
-    [userSwitchButton setTitle: @"Student?" forState: UIControlStateNormal];
-  }
-  // Student
-  else {
-    headerLabel.text = @"Students";
-    _emailTextField.placeholder = @"School email";
-    if (isLogin)
-      actionButtonString = @"Login";
-    else
-      actionButtonString = @"Student Sign Up";
-    [_actionButton setTitle: actionButtonString
-      forState: UIControlStateNormal];
-    [userSwitchButton setTitle: @"Landlord?" forState: UIControlStateNormal];
-  }
+  NSString *actionButtonString = isLogin ? @"Login" : @"Sign Up";
+  headerLabel.text = [NSString stringWithFormat: @"%@ %@",
+    isLandlord ? @"Landlords" : @"Students", actionButtonString];
+  _emailTextField.placeholder = [NSString stringWithFormat: @"%@ email",
+    isLandlord ? @"Landlord" : @"School"];
+  [_actionButton setTitle: actionButtonString
+    forState: UIControlStateNormal];
+  [userSwitchButton setTitle: [NSString stringWithFormat: @"Are you a %@?",
+    isLandlord ? @"student" : @"landlord"] forState: UIControlStateNormal];
 }
 
 - (void) updateViews
@@ -435,7 +420,7 @@
     // Action button
     [_actionButton setTitle: @"Login" forState: UIControlStateNormal];
     // Action switch button
-    [actionSwitchButton setTitle: @"Sign up" 
+    [actionSwitchButton setTitle: @"Sign Up" 
       forState: UIControlStateNormal];
   }
   // Sign up
@@ -473,18 +458,15 @@
     [_facebookButton setTitle: @"Sign up using Facebook"
       forState: UIControlStateNormal];
     // Action button
-    if (isLandlord) {
-      [_actionButton setTitle: @"Landlord Sign Up" 
-        forState: UIControlStateNormal];
-    }
-    else {
-      [_actionButton setTitle: @"Student Sign Up" 
-        forState: UIControlStateNormal];
-    }
+    [_actionButton setTitle: @"Sign Up" forState: UIControlStateNormal];
     // Action switch button
     [actionSwitchButton setTitle: @"Login" 
       forState: UIControlStateNormal];
   }
+  // Change the header label text
+  NSString *actionButtonString = isLogin ? @"Login" : @"Sign Up";
+  headerLabel.text = [NSString stringWithFormat: @"%@ %@",
+    isLandlord ? @"Landlords" : @"Students", actionButtonString];
   [self refreshContentSize];
 }
 

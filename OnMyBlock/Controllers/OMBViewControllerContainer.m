@@ -144,15 +144,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
       _renterProfileViewController];
 
   // Renter
-  // Search
-  _mapFilterViewController = [[OMBMapFilterViewController alloc] init];
-  _mapFilterNavigationController =
-    [[OMBNavigationController alloc] initWithRootViewController:
-      _mapFilterViewController];
-  // Discover
-  _mapNavigationController = 
-    [[OMBNavigationController alloc] initWithRootViewController: 
-      [[OMBMapViewController alloc] init]];
+  // Search and discover are in the method showDiscover
   // Favorites
   _favoritesNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController:
@@ -424,7 +416,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   activityView = [[OMBActivityView alloc] init];
   // [_detailView addSubview: activityView];
 
-  [self presentDetailViewController: _mapNavigationController];
+  // [self presentDetailViewController: _mapNavigationController];
   // [self presentDetailViewController: _accountNavigationController];
 
   // Set the frame for the buttons
@@ -1001,6 +993,17 @@ completion: (void (^) (void)) block
 
 - (void) showDiscover
 {
+  if (!_mapNavigationController) {
+    // Search
+    _mapFilterViewController = [[OMBMapFilterViewController alloc] init];
+    _mapFilterNavigationController =
+      [[OMBNavigationController alloc] initWithRootViewController:
+        _mapFilterViewController];
+    // Map, Discover
+    _mapNavigationController = 
+      [[OMBNavigationController alloc] initWithRootViewController: 
+        [[OMBMapViewController alloc] init]];
+  }
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: _mapNavigationController];
 }
@@ -1055,10 +1058,12 @@ completion: (void (^) (void)) block
   //   getStartedButtonRect;
   
   [_introViewController resetViews];
-  [self hideMenuWithFactor: 1.0f completion: ^{
-    [self presentViewController: _introViewController animated: animated
-      completion: nil];
-  }];
+  // [self hideMenuWithFactor: 1.0f completion: ^{
+  //   [self presentViewController: _introViewController animated: animated
+  //     completion: nil];
+  // }];
+  [self presentViewController: _introViewController animated: animated
+    completion: nil];
 }
 
 - (void) showIntroAnimatedDissolve: (BOOL) animated

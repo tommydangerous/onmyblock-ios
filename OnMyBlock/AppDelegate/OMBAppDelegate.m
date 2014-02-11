@@ -82,6 +82,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   // NSLog(@"%@", [defaults objectForKey: @"OMBUserDefaultsAPIKey"]);
+
+  BOOL shouldShowIntro = NO;
   
   id viewedIntro = [defaults objectForKey: OMBUserDefaultsViewedIntro];
   if (!viewedIntro) {
@@ -91,11 +93,16 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   NSNumber *number = [defaults objectForKey: OMBUserDefaultsViewedIntro];
   if (![number boolValue]) {
     if (![[OMBUser currentUser] loggedIn])
-      [_container showIntroAnimatedDissolve: NO];
+      shouldShowIntro = YES;
     [[NSUserDefaults standardUserDefaults] setObject:
       [NSNumber numberWithBool: YES] forKey: OMBUserDefaultsViewedIntro];
   }
   [defaults synchronize];
+
+  if (shouldShowIntro)
+    [_container showIntroAnimatedDissolve: NO];
+  else
+    [_container showDiscover];
 
   // UIViewController *vc = [[UIViewController alloc] init];
   // UIView *view = [[UIView alloc] initWithFrame: screen];

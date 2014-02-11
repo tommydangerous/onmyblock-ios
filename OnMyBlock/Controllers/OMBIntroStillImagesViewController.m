@@ -280,7 +280,9 @@
     skipButtonView.frame.size.height);
   closeButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
-  [closeButton addTarget: self action: @selector(close)
+  // [closeButton addTarget: self action: @selector(close)
+  //   forControlEvents: UIControlEventTouchUpInside];
+  [closeButton addTarget: self action: @selector(scrollToSignUp)
     forControlEvents: UIControlEventTouchUpInside];
   [closeButton setTitle: @"Skip" forState: UIControlStateNormal];
   [closeButton setTitleColor: [UIColor whiteColor] 
@@ -350,6 +352,12 @@
   
   [[UIApplication sharedApplication] setStatusBarStyle:
     UIStatusBarStyleDefault];
+
+  // If user first comes to the app and is shown the intro,
+  // we have this so that the map doesn't ask them for current location.
+  // Only after they dismiss the intro does it load the map/discover
+  if (![self appDelegate].container.currentDetailViewController)
+    [[self appDelegate].container showDiscover];
 }
 
 #pragma mark - Protocol

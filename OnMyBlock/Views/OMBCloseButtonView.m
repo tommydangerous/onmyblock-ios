@@ -35,6 +35,7 @@
     CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(45));
 
   _closeButton = [UIButton new];
+  // _closeButton.backgroundColor = [UIColor redColor];
   _closeButton.frame = CGRectMake(0.0f, 0.0f, self.frame.size.width,
     self.frame.size.height);
   [self addSubview: _closeButton];
