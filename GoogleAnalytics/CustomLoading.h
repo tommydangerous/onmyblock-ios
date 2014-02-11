@@ -13,6 +13,7 @@
 @property(nonatomic,retain)UIView *loadinAlert;
 @property(nonatomic,retain)UIImageView *imageView;
 @property(nonatomic,retain)UIImageView *loadingImage;
+@property(nonatomic)       int numImages;
 
 + (id)getInstance;
 - (void)clearInstance;

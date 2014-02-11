@@ -27,6 +27,7 @@ static CustomLoading *customLoading =nil;
 
 - (void)clearInstance{
     customLoading = nil;
+    _numImages = 0;
 }
 
 - (void)startAnimatingWithProgress:(int)progress withView:(UIView *)view{

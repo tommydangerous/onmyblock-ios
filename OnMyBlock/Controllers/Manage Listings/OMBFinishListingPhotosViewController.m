@@ -182,7 +182,10 @@
 - (void) elcImagePickerController: (ELCImagePickerController *) picker
 didFinishPickingMediaWithInfo: (NSArray *) info
 {
+  CustomLoading *custom = [CustomLoading getInstance];
+  custom.numImages = 0;
   for (NSDictionary *dict in info) {
+    custom.numImages++;
     [self createResidenceImageWithDictionary: dict];
   }
   [picker dismissViewControllerAnimated: YES completion: nil];
@@ -250,6 +253,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 - (void) imagePickerController: (UIImagePickerController *) picker 
 didFinishPickingMediaWithInfo: (NSDictionary *) info
 {
+  [[CustomLoading getInstance] setNumImages: 1];
   [self createResidenceImageWithDictionary: info];
 
   [picker dismissViewControllerAnimated: YES completion: nil];
@@ -270,8 +274,11 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     
     if(value == 1.0){
         //NSLog(@"equal...");
+      custom.numImages--;
+      if(custom.numImages <= 0){
         [custom stopAnimatingWithView:self.view];
         editBarButtonItem.enabled = YES;
+      }
     }else{
         //NSLog(@"less...");
         [custom startAnimatingWithProgress:(int)(value * 25) withView:self.view];

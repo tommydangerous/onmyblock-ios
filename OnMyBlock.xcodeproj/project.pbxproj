@@ -3343,7 +3343,7 @@
 				ORGANIZATIONNAME = OnMyBlock;
 				TargetAttributes = {
 					AB802E9918109E5200E04D11 = {
-						DevelopmentTeam = 4PZFNY43X2;
+						DevelopmentTeam = L6WEK9SB93;
 					};
 					AB802EB418109E5200E04D11 = {
 						TestTargetID = AB802E9918109E5200E04D11;
@@ -4126,7 +4126,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tommy Dang (ETDM478EZ7)";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4160,7 +4160,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: On My Block LLC (4PZFNY43X2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
