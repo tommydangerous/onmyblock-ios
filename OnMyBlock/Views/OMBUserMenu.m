@@ -13,6 +13,7 @@
 #import "OMBViewController.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 
 @implementation OMBUserMenu
@@ -45,8 +46,9 @@
   _headerButton.contentHorizontalAlignment =
     UIControlContentHorizontalAlignmentLeft;
   _headerButton.frame = CGRectMake(0, 0, rect.size.width, 100);
-  _headerButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
-    size: 27];
+  // _headerButton.titleLabel.font = [UIFont fontWithName: 
+  //   @"HelveticaNeue-Light" size: 27];
+  _headerButton.titleLabel.font = [UIFont mediumLargeTextFont];
   [_headerButton addTarget: self action: @selector(headerButtonSelected) 
     forControlEvents: UIControlEventTouchUpInside];
   [self addSubview: _headerButton];

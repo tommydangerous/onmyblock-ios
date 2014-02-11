@@ -211,7 +211,12 @@ CGFloat kBackgroundMaxScale = 5.0f;
   // Menu
   // Logged out
   _menuScroll = [[UIScrollView alloc] init];
-  _menuScroll.alwaysBounceVertical = YES;
+  // _menuScroll.alwaysBounceVertical = YES;
+  // Don't let it scroll because there are other buttons at the bottom
+  // and if it scrolls, the menu will intersect with those buttons;
+  // The two buttons at the bottom when logged out are 
+  // Create Listing and Sign Up
+  _menuScroll.alwaysBounceVertical = NO;
   _menuScroll.frame = CGRectMake(0, 0, menuWidth, screenHeight);
   _menuScroll.scrollsToTop = NO;
   _menuScroll.showsVerticalScrollIndicator = NO;
@@ -319,7 +324,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   [signUpButton addTarget: self action: @selector(showSignUp)
     forControlEvents: UIControlEventTouchUpInside];
   [signUpButton setTitle: @"Sign up" forState: UIControlStateNormal];
-  [buttonsLoggedOut addObject: signUpButton];
+  // [buttonsLoggedOut addObject: signUpButton];
   // Image view
   UIImageView *signUpImageView = [[UIImageView alloc] init];
   signUpImageView.frame = loginImageView.frame;
@@ -366,13 +371,46 @@ CGFloat kBackgroundMaxScale = 5.0f;
   // Create listing button at the bottom when the user hasn't
   // created a listing yet
   createListingButton = [UIButton new];
+  createListingButton.backgroundColor = [UIColor blueAlpha: 0.0f];
+  createListingButton.contentEdgeInsets = 
+    userMenu1.headerButton.contentEdgeInsets;
+  createListingButton.contentHorizontalAlignment =
+    userMenu1.headerButton.contentHorizontalAlignment;
+  // createListingButton.frame = CGRectMake(0.0f, 
+  //   screenHeight - userMenu1.headerButton.frame.size.height, 
+  //     userMenu1.headerButton.frame.size.width, 
+  //       userMenu1.headerButton.frame.size.height);
   createListingButton.frame = CGRectMake(0.0f, 
     screenHeight - userMenu1.headerButton.frame.size.height, 
-      userMenu1.headerButton.frame.size.width, 
-        userMenu1.headerButton.frame.size.height);
+      screenWidth * 0.5f, userMenu1.headerButton.frame.size.height);
+  createListingButton.titleLabel.font = userMenu1.headerButton.titleLabel.font;
   [createListingButton addTarget: self action: @selector(showCreateListing)
     forControlEvents: UIControlEventTouchUpInside];
+  [createListingButton setTitle: @"Create Listing" 
+    forState: UIControlStateNormal];
+  [createListingButton setTitleColor: [UIColor colorWithWhite: 1.0f alpha: 0.5f]
+    forState: UIControlStateNormal];
   [self.view addSubview: createListingButton];
+
+  // Sign up button at the bottom right corner when not logged in
+  signUpButtonBottom = [UIButton new];
+  signUpButtonBottom.backgroundColor = createListingButton.backgroundColor;
+  signUpButtonBottom.contentEdgeInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f,
+    createListingButton.contentEdgeInsets.left);
+  signUpButtonBottom.contentHorizontalAlignment = 
+    UIControlContentHorizontalAlignmentRight;
+  signUpButtonBottom.frame = CGRectMake(createListingButton.frame.origin.x +
+    createListingButton.frame.size.width, createListingButton.frame.origin.y,
+      createListingButton.frame.size.width, 
+        createListingButton.frame.size.height);
+  signUpButtonBottom.titleLabel.font = createListingButton.titleLabel.font;
+  [signUpButtonBottom addTarget: self action: @selector(showSignUp)
+    forControlEvents: UIControlEventTouchUpInside];
+  [signUpButtonBottom setTitle: @"Sign Up" forState: UIControlStateNormal];
+  [signUpButtonBottom setTitleColor: 
+    [createListingButton titleColorForState: UIControlStateNormal] 
+      forState: UIControlStateNormal];
+  [self.view addSubview: signUpButtonBottom];
 
   // Detail view
   _detailView = [[UIView alloc] initWithFrame: screen];
@@ -784,6 +822,13 @@ completion: (void (^) (void)) block
   }
 
   [self presentDetailViewController: _mapNavigationController];
+
+  // Hide the title for the create listing button
+  createListingButton.hidden = NO;
+  [createListingButton setTitle: @"Create Listing" 
+    forState: UIControlStateNormal];
+  // Hide the sign up button at the bottom
+  signUpButtonBottom.hidden = NO;
 }
 
 - (void) presentDetailViewController: (UIViewController *) viewController
@@ -965,6 +1010,11 @@ completion: (void (^) (void)) block
     [[OMBNavigationController alloc] initWithRootViewController: 
       [[OMBMyRenterApplicationViewController alloc] initWithUser:
         [OMBUser currentUser]]];
+
+  // Hide the title for the create listing button
+  [createListingButton setTitle: @"" forState: UIControlStateNormal];
+  // Hide the sign up button at the bottom
+  signUpButtonBottom.hidden = YES;
 }
 
 - (void) showAccount
@@ -975,20 +1025,22 @@ completion: (void (^) (void)) block
 
 - (void) showCreateListing
 {
-  if (![[OMBUser currentUser] loggedIn])
-    return;
-
-  [self presentViewController: 
-    [[OMBNavigationController alloc] initWithRootViewController:
-      [[OMBCreateListingViewController alloc] init]] animated: YES 
-        completion: ^{
-          [self hideMenuWithFactor: 1.0f];
-          // Only show the manage listings if user has created a listing
-          if ([[OMBUser currentUser] hasLandlordType])
-            [self presentDetailViewController: 
-              _manageListingsNavigationController];
-        }
-      ];
+  if ([[OMBUser currentUser] loggedIn]) {
+    [self presentViewController: 
+      [[OMBNavigationController alloc] initWithRootViewController:
+        [[OMBCreateListingViewController alloc] init]] animated: YES 
+          completion: ^{
+            [self hideMenuWithFactor: 1.0f];
+            // Only show the manage listings if user has created a listing
+            if ([[OMBUser currentUser] hasLandlordType])
+              [self presentDetailViewController: 
+                _manageListingsNavigationController];
+          }
+        ];
+  }
+  else {
+    [self showSignUp];
+  }
 }
 
 - (void) showDiscover

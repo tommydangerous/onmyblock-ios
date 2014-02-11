@@ -74,6 +74,7 @@
   UIButton *createListingButton;
   OMBExtendedHitAreaViewContainer *hitArea;
   OMBOfferAcceptedView *offerAcceptedView;
+  UIButton *signUpButtonBottom;
   UIView *viewForScrollingInfiniteScroll;
 }
 
