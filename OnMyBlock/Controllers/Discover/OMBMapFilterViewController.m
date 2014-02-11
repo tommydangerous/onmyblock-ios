@@ -906,7 +906,6 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) done
 {
-  [self hideNeighborhoodTableViewContainer];
   [self hidePickerView];
 
   // Select what is there already if they did move the scroller
@@ -958,6 +957,7 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) hidePickerView
 {
+  [self hideNeighborhoodTableViewContainer];
   CGRect rect = pickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{

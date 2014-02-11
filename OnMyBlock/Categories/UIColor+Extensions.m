@@ -24,14 +24,16 @@
 
 + (UIColor *) blue
 {
-  return [UIColor colorWithRed: (111/255.0) green: (174/255.0) 
-    blue: (193/255.0) alpha: 1];
+  return [UIColor blueAlpha: 1.0f];
 }
 
 + (UIColor *) blueAlpha: (float) value
 {
-  return [UIColor colorWithRed: (111/255.0) green: (174/255.0) 
-    blue: (193/255.0) alpha: value];
+  // 111, 174, 193 (old)
+  // 83, 203, 241  (not used)
+  // 41, 184, 229  (new)
+  return [UIColor colorWithRed: (41/255.0) green: (184/255.0) 
+    blue: (229/255.0) alpha: value];
 }
 
 + (UIColor *) blueHighlighted
@@ -41,20 +43,19 @@
 
 + (UIColor *) blueHighlightedAlpha: (CGFloat) value
 {
-  return [UIColor colorWithRed: (111 - 20)/255.0 green: (174 - 20)/255.0 
-    blue: (193 - 20)/255.0 alpha: value];
+  return [UIColor colorWithRed: (41 - 20)/255.0 green: (184 - 20)/255.0 
+    blue: (229 - 20)/255.0 alpha: value];
 }
 
 + (UIColor *) blueDark
 {
-  return [UIColor colorWithRed: (46/255.0) green: (112/255.0) 
-    blue: (159/255.0) alpha: 1.0f];
+  return [UIColor blueDarkAlpha: 1.0f];
 }
 
 + (UIColor *) blueDarkAlpha: (float) value
 {
-  return [UIColor colorWithRed: (46/255.0) green: (112/255.0) 
-    blue: (159/255.0) alpha: value];
+  return [UIColor colorWithRed: (41 - 65)/255.0 green: (184 - 62)/255.0
+    blue: (229 - 34)/255.0 alpha: value];
 }
 
 + (UIColor *) blueLight
@@ -64,8 +65,11 @@
 
 + (UIColor *) blueLightAlpha: (CGFloat) value
 {
-  return [UIColor colorWithRed: (174/255.0f) green: (197/255.0f) 
-    blue: (206/255.0f) alpha: value];
+  // Red:   +63
+  // Green: +23
+  // Blue:  +13
+  return [UIColor colorWithRed: (41 + 63)/255.0f green: (184 + 23)/255.0f
+    blue: (229 + 13)/255.0f alpha: value];
 }
 
 + (UIColor *) facebookBlue

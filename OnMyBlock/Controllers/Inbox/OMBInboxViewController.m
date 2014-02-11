@@ -56,7 +56,7 @@
 
   noMessagesView = [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame:
     screen];
-  noMessagesView.alpha = 0.0f;
+  noMessagesView.alpha = 1.0f;
   noMessagesView.imageView.image = [UIImage imageNamed: 
     @"speech_bubble_icon.png"];
   NSString *text = @"Your messages with other users appear here. "
@@ -197,21 +197,8 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 
     [[OMBConversationMessageStore sharedStore] fetchMessagesAtPage: i 
       completion: ^(NSError *error) {
-        if ([[self messages] count]) {
-          [self.table reloadData];
-          if (noMessagesView.alpha) {
-            [UIView animateWithDuration: OMBStandardDuration animations: ^{
-              noMessagesView.alpha = 0.0f;
-            }];
-          }
-        }
-        else {
-          if (!noMessagesView.alpha) {
-            [UIView animateWithDuration: OMBStandardDuration animations: ^{
-              noMessagesView.alpha = 1.0f;
-            }];
-          }
-        }
+        [self.table reloadData];
+        [self updateNoMessagesView];
         // NSInteger newCount = 
         //   [[[OMBConversationMessageStore sharedStore].messages 
         //     allKeys] count];
@@ -231,6 +218,27 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
         self.fetching = NO;
       }
     ];
+  }
+  [self updateNoMessagesView];
+}
+
+- (void) updateNoMessagesView
+{
+  if ([[self messages] count]) {      
+    if (noMessagesView.alpha) {
+      // [UIView animateWithDuration: OMBStandardDuration animations: ^{
+      //   noMessagesView.alpha = 0.0f;
+      // }];
+      noMessagesView.alpha = 0.0f;
+    }
+  }
+  else {
+    if (!noMessagesView.alpha) {
+      // [UIView animateWithDuration: OMBStandardDuration animations: ^{
+      //   noMessagesView.alpha = 1.0f;
+      // }];
+      noMessagesView.alpha = 1.0f;
+    }
   }
 }
 

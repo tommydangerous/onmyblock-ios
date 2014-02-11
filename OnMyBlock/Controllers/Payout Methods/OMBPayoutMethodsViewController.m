@@ -98,29 +98,34 @@
 
   // Add Payout Method
   UIButton *selectPayoutMethodButton = [[UIButton alloc] init];
-  selectPayoutMethodButton.backgroundColor = [UIColor colorWithWhite: 1.0f
-    alpha: 0.8f];
+  // selectPayoutMethodButton.backgroundColor = [UIColor colorWithWhite: 1.0f
+  //   alpha: 0.8f];
+  selectPayoutMethodButton.backgroundColor = [UIColor blue];
   selectPayoutMethodButton.clipsToBounds = YES;
+  // selectPayoutMethodButton.frame = CGRectMake(padding, 
+  //   screenHeight - (OMBStandardButtonHeight + padding), 
+  //     screenWidth - (padding * 2), OMBStandardButtonHeight);
   selectPayoutMethodButton.frame = CGRectMake(padding, 
-    screenHeight - (OMBStandardButtonHeight + padding), 
+    label2.frame.origin.y + label2.frame.size.height + (padding * 2), 
       screenWidth - (padding * 2), OMBStandardButtonHeight);
-  selectPayoutMethodButton.layer.borderColor = [UIColor blue].CGColor;
-  selectPayoutMethodButton.layer.borderWidth = 1.0f;
-  selectPayoutMethodButton.layer.cornerRadius = 
-    selectPayoutMethodButton.frame.size.height * 0.5f;
+  // selectPayoutMethodButton.layer.borderColor = [UIColor blue].CGColor;
+  // selectPayoutMethodButton.layer.borderWidth = 1.0f;
+  // selectPayoutMethodButton.layer.cornerRadius = 
+  //   selectPayoutMethodButton.frame.size.height * 0.5f;
+  selectPayoutMethodButton.layer.cornerRadius = 5.0f;
   selectPayoutMethodButton.titleLabel.font = [UIFont mediumTextFont];
   [selectPayoutMethodButton addTarget: self 
     action: @selector(selectPayoutMethod) 
       forControlEvents: UIControlEventTouchUpInside];
   [selectPayoutMethodButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor blue]] 
+    [UIImage imageWithColor: [UIColor blueHighlighted]] 
       forState: UIControlStateHighlighted];
   [selectPayoutMethodButton setTitle: @"Add Payout Method"
     forState: UIControlStateNormal];
-  [selectPayoutMethodButton setTitleColor: [UIColor blue]
-    forState: UIControlStateNormal];
   [selectPayoutMethodButton setTitleColor: [UIColor whiteColor]
-    forState: UIControlStateHighlighted];
+    forState: UIControlStateNormal];
+  // [selectPayoutMethodButton setTitleColor: [UIColor whiteColor]
+  //   forState: UIControlStateHighlighted];
   [self.view addSubview: selectPayoutMethodButton];
 }
 

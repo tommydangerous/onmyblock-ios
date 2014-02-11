@@ -552,8 +552,7 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
         annotationView.annotation.title];
     OMBResidence *residence = 
       [[OMBResidenceStore sharedStore].residences objectForKey: key];
-    [propertyInfoView loadResidenceData: residence];
-    [self showPropertyInfoView];
+    [self showPropertyInfoViewWithResidence: residence];
   }
 }
 
@@ -1234,10 +1233,11 @@ withMiles: (int) miles animated: (BOOL) animated
   }
 }
 
-- (void) showPropertyInfoView
-{  
+- (void) showPropertyInfoViewWithResidence: (OMBResidence *) residence
+{
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGRect frame = propertyInfoView.frame;
+  [propertyInfoView loadResidenceData: residence];
   void (^animations) (void) = ^(void) {
     propertyInfoView.frame = CGRectMake(frame.origin.x, 
       (screen.size.height - frame.size.height), frame.size.width, 

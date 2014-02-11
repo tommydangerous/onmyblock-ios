@@ -10,6 +10,7 @@
 
 #import "OMBCenteredImageView.h"
 #import "OMBUser.h"
+#import "UIFont+OnMyBlock.h"
 
 @implementation OMBResidenceConfirmDetailsBuyerCell
 
@@ -27,7 +28,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat screenWidth = screen.size.width;
 
   CGFloat padding   = 20.0f;
-  CGFloat imageSize = screenWidth * 0.3f;
+  CGFloat imageSize = screenWidth * 0.25f;
 
   imageView = [[OMBCenteredImageView alloc] init];
   // imageView.clipsToBounds = YES;
@@ -36,15 +37,21 @@ reuseIdentifier: (NSString *) reuseIdentifier
   [self.contentView addSubview: imageView];
 
   nameLabel = [UILabel new];
-  nameLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
+  // nameLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
+  nameLabel.font = [UIFont normalTextFontBold];
   nameLabel.frame = CGRectMake(
     imageView.frame.origin.x + imageView.frame.size.width + padding, 
       imageView.frame.origin.y, screenWidth - (padding + padding + 
-        imageView.frame.origin.x + imageView.frame.size.width), 27.0f);
+        imageView.frame.origin.x + imageView.frame.size.width), 22.0f);
   nameLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: nameLabel];
 
-  schoolLabel = [UILabel new];  
+  schoolLabel = [UILabel new];
+  schoolLabel.font = [UIFont normalTextFont];
+  schoolLabel.frame = CGRectMake(nameLabel.frame.origin.x,
+    nameLabel.frame.origin.y + nameLabel.frame.size.height,
+      nameLabel.frame.size.width,
+        imageView.frame.size.height - nameLabel.frame.size.height);
   schoolLabel.numberOfLines = 0;
   schoolLabel.textColor = [UIColor grayMedium];
   [self.contentView addSubview: schoolLabel];
@@ -62,7 +69,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat screenWidth = screen.size.width;
 
   CGFloat padding   = 20.0f;
-  CGFloat imageSize = screenWidth * 0.3f;
+  CGFloat imageSize = screenWidth * 0.25f;
 
   return padding + imageSize + padding;
 }
@@ -71,22 +78,29 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 - (void) loadUser: (OMBUser *) object
 {
-  CGFloat padding = 20.0f;
-  
   imageView.image = [OMBUser currentUser].image;
 
   nameLabel.text = [[OMBUser currentUser] fullName];
 
-  NSAttributedString *text = 
-    [[OMBUser currentUser].school attributedStringWithFont: 
-      [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] lineHeight: 27.0f];
-  CGRect textRect = [text boundingRectWithSize: 
-    CGSizeMake(nameLabel.frame.size.width, 9999) 
-      options: NSStringDrawingUsesLineFragmentOrigin 
-        context: nil];
-  schoolLabel.frame = CGRectMake(nameLabel.frame.origin.x, 
-    nameLabel.frame.origin.y + nameLabel.frame.size.height + (padding * 0.5), 
-      nameLabel.frame.size.width, textRect.size.height);
+  // schoolLabel.text = [OMBUser currentUser].school;
+
+  NSString *string = @"Your school goes here or a little bit about yourself...";
+  if ([[OMBUser currentUser].about length]) {
+    string = [OMBUser currentUser].about;
+  }
+  else if ([[OMBUser currentUser].school length]) {
+    string = [OMBUser currentUser].school;
+  }
+  NSAttributedString *text = [string attributedStringWithFont: 
+    [UIFont normalTextFont] lineHeight: 22.0f];
+  // CGRect textRect = [text boundingRectWithSize: 
+  //   CGSizeMake(nameLabel.frame.size.width, 9999) 
+  //     options: NSStringDrawingUsesLineFragmentOrigin 
+  //       context: nil];
+  // schoolLabel.frame = CGRectMake(nameLabel.frame.origin.x, 
+  //   nameLabel.frame.origin.y + nameLabel.frame.size.height + 
+  //   (padding * 0.5), 
+  //     nameLabel.http://onmyblock.com/frame.size.width, textRect.size.height);
   schoolLabel.attributedText = text;
 }
 

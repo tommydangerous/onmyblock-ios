@@ -63,7 +63,7 @@
   emptyBackgroundView = 
     [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame: 
       self.view.frame];
-  emptyBackgroundView.alpha = 0.0f;
+  emptyBackgroundView.alpha = 1.0f;
   emptyBackgroundView.backgroundColor = [UIColor backgroundColor];
   // emptyBackgroundView.imageView.alpha = 0.5f;
   emptyBackgroundView.imageView.image = [[UIImage imageNamed: 
@@ -183,7 +183,6 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
     [[OMBFavoritesListConnection alloc] init];
   connection.completionBlock = ^(NSError *error) {
     [self reloadTable];
-    [self updateEmptyBackgroundView];
   };
   connection.delegate = self;
   [connection start];
@@ -192,22 +191,25 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) reloadTable
 {
   [self.table reloadData];
+  [self updateEmptyBackgroundView];
 }
 
 - (void) updateEmptyBackgroundView
 {
   if ([[self favorites] count]) {
     if (emptyBackgroundView.alpha) {
-      [UIView animateWithDuration: OMBStandardDuration animations: ^{
-        emptyBackgroundView.alpha = 0.0f;
-      }];
+      // [UIView animateWithDuration: OMBStandardDuration animations: ^{
+      //   emptyBackgroundView.alpha = 0.0f;
+      // }];
+      emptyBackgroundView.alpha = 0.0f;
     }
   }
   else {
     if (!emptyBackgroundView.alpha) {
-      [UIView animateWithDuration: OMBStandardDuration animations: ^{
-        emptyBackgroundView.alpha = 1.0f;
-      }];
+      // [UIView animateWithDuration: OMBStandardDuration animations: ^{
+      //   emptyBackgroundView.alpha = 1.0f;
+      // }];
+      emptyBackgroundView.alpha = 1.0f;
     }
   }
 }

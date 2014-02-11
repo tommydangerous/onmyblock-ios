@@ -43,6 +43,7 @@
 {
   _residence = object;
   [_residencePartialView loadResidenceData: _residence];
+  [_residencePartialView downloadResidenceImages];
 }
 
 @end
