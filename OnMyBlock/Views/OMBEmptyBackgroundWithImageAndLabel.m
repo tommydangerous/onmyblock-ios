@@ -28,7 +28,6 @@
     (self.frame.size.height - imageSize) * 0.5f, imageSize, imageSize);
   [self addSubview: _imageView];
 
-
   _label = [UILabel new];
   _label.frame = CGRectMake(OMBPadding, 0.0f, 
     self.frame.size.width - (OMBPadding * 2), self.frame.size.height);

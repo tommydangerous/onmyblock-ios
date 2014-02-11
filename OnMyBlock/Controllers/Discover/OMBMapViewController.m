@@ -17,6 +17,7 @@
 #import "OMBAnnotation.h"
 #import "OMBAnnotationCity.h"
 #import "OMBAnnotationView.h"
+#import "OMBEmptyBackgroundWithImageAndLabel.h"
 #import "OMBMapFilterViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBNeighborhood.h"
@@ -34,6 +35,7 @@
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
+#import "UIImage+NegativeImage.h"
 #import "UIImage+Resize.h"
 
 #define CLCOORDINATE_EPSILON 0.005f
@@ -338,6 +340,22 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     ((spinRect.size.height * 0.5f) + 
       activityView.spinnerView.frame.size.height);
   activityView.spinner.frame = spinRect;
+
+  // Empty background
+  CGFloat emptyBackgroundHeight = screenHeight - sortView.frame.size.height;
+  CGRect emptyBackgroundRect = CGRectMake(0.0f, 
+    screenHeight - emptyBackgroundHeight,
+      screenWidth, emptyBackgroundHeight);
+  emptyBackground = [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame:
+    emptyBackgroundRect];
+  emptyBackground.alpha = 0.0f;
+  emptyBackground.imageView.alpha = 0.3f;
+  emptyBackground.imageView.image = [UIImage imageNamed: @"search_icon.png"];
+  emptyBackground.label.textColor = [UIColor whiteColor];
+  NSString *text = @"Sorry but we found no results near you. Please choose "
+    @"another location or change filters.";
+  [emptyBackground setLabelText: text];
+  [_listViewContainer addSubview: emptyBackground];
 }
 
 - (void) viewDidAppear: (BOOL) animated
@@ -921,6 +939,10 @@ withTitle: (NSString *) title;
       else {
         if (activityView.isSpinning)
           [activityView stopSpinning];
+        if ([[self residencesForList] count] == 0)
+          [UIView animateWithDuration: OMBStandardDuration animations: ^{
+            emptyBackground.alpha = 1.0f;
+          }];
       }
 
       [self reloadTable];

@@ -15,6 +15,7 @@
 @class AMBlurView;
 @class OCMapView;
 @class OMBActivityView;
+@class OMBEmptyBackgroundWithImageAndLabel;
 @class OMBMapFilterViewController;
 @class OMBPropertyInfoView;
 
@@ -39,6 +40,7 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
   NSArray *currentResidencesForList;
   UIButton *currentLocationButton;
   OMBMapViewListSortKey currentSortKey;
+  OMBEmptyBackgroundWithImageAndLabel *emptyBackground;
   BOOL fetching;
   UILabel *filterLabel;
   UIView *filterView;

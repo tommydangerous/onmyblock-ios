@@ -1573,15 +1573,15 @@ viewForHeaderInSection: (NSInteger) section
       if ([offer totalAmount] > [OMBPayoutMethod maximumVenmoTransfer]) {
         [alertBlur setTitle: @"Venmo Transfer Limit"];
         [alertBlur setMessage: [NSString stringWithFormat: @"Venmo does not "
-                                @"allow for payment transfers over %@ a week. Please choose another "
-                                @"payment method.", [NSString numberToCurrencyString:
-                                                     [OMBPayoutMethod maximumVenmoTransfer]]]];
+          @"allow for payment transfers over %@ a week. Please choose another "
+          @"payment method.", [NSString numberToCurrencyString:
+            [OMBPayoutMethod maximumVenmoTransfer]]]];
         [alertBlur resetQuestionDetails];
         [alertBlur hideQuestionButton];
         // Buttons
         [alertBlur setConfirmButtonTitle: @"Select New Payment Method"];
         [alertBlur addTargetForConfirmButton: self
-                                      action: @selector(setupPayoutMethod)];
+          action: @selector(setupPayoutMethod)];
         [alertBlur showOnlyConfirmButton];
         [alertBlur animateChangeOfContent];
       }
