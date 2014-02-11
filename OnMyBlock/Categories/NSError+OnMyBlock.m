@@ -14,6 +14,9 @@ NSString *const OMBConnectionErrorDomainAuthentication =
 // Messages
 NSString *const OMBConnectionErrorDomainMessage =
   @"OMBConnectionErrorDomainMessage";
+// Offers
+NSString *const OMBConnectionErrorDomainOffer = 
+  @"OMBConnectionErrorDomainOffer";;
 // Session
 NSString *const OMBConnectionErrorDomainSession = 
   @"OMBConnectionErrorDomainSession";

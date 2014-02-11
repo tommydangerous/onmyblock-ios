@@ -1656,16 +1656,19 @@ ascending: (BOOL) ascending
 }
 
 - (NSArray *) sortedOffersType: (OMBUserOfferType) type 
-withKey: (NSString *) key ascending: (BOOL) ascending
+withKeys: (NSArray *) keys ascending: (BOOL) ascending
 {
-  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
-    ascending: ascending];
+  NSMutableArray *arrayOfKeys = [NSMutableArray array];
+  for (NSString *key in keys) {
+    [arrayOfKeys addObject: [NSSortDescriptor sortDescriptorWithKey: key
+      ascending: ascending]];
+  }
   NSArray *array;
   if (type == OMBUserOfferTypeAccepted)
     array = [_acceptedOffers allValues];
   else if (type == OMBUserOfferTypeReceived)
     array = [_receivedOffers allValues];
-  return [array sortedArrayUsingDescriptors: @[sort]];
+  return [array sortedArrayUsingDescriptors: arrayOfKeys];
 }
 
 - (NSArray *) sortedPayoutMethodsWithKey: (NSString *) key

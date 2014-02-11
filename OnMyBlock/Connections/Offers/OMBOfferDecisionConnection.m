@@ -68,6 +68,10 @@ decision: (OMBOfferDecisionConnectionType) type
       offer.payoutTransaction = payoutTransaction;
     }
   }
+  else {
+    [self createInternalErrorWithDomain: OMBConnectionErrorDomainOffer
+      code: OMBConnectionErrorDomainOfferCodeAcceptFailed];
+  }
 
   [super connectionDidFinishLoading: connection];
 }

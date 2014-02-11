@@ -145,23 +145,25 @@ CGFloat const OMBStandardHeight       = 44.0f;
   NSString *message = @"Please try again.";
   NSString *title   = @"Unsuccessful";
   if (error) {
-    message = error.localizedDescription;
-    title   = @"Error";
-    if (error.userInfo) {
-      if ([error.userInfo objectForKey: @"message"] &&
-        [[error.userInfo objectForKey: @"message"] length]) {
+    // message = error.localizedDescription;
+    // title   = @"Error";
+    // if (error.userInfo) {
+    //   if ([error.userInfo objectForKey: @"message"] &&
+    //     [[error.userInfo objectForKey: @"message"] length]) {
         
-        message = [error.userInfo objectForKey: @"message"];
-      }
-      if ([error.userInfo objectForKey: @"title"] &&
-        [[error.userInfo objectForKey: @"title"] length]) {
+    //     message = [error.userInfo objectForKey: @"message"];
+    //   }
+    //   if ([error.userInfo objectForKey: @"title"] &&
+    //     [[error.userInfo objectForKey: @"title"] length]) {
 
-        title = [error.userInfo objectForKey: @"title"];
-      }
-    }
+    //     title = [error.userInfo objectForKey: @"title"];
+    //   }
+    // }
+    message = error.localizedFailureReason;
+    title   = error.localizedDescription;
   }
   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title
-    message: message delegate: nil cancelButtonTitle: @"Try again" 
+    message: message delegate: nil cancelButtonTitle: @"Okay" 
       otherButtonTitles: nil];
   [alertView show];
 }

@@ -274,7 +274,7 @@
   effectLabel.sizeToFit = NO;
   effectLabel.textColor = [UIColor whiteColor];
   effectLabel.textAlignment = NSTextAlignmentCenter;
-  [respondView addSubview: effectLabel];
+  [respondView insertSubview: effectLabel belowSubview: respondButton];
   
   // Countdown timer label
   countDownTimerLabel = [[UILabel alloc] init];
@@ -344,16 +344,17 @@
           // [respondButton setTitle: @"Confirm and Pay or Reject"
             // forState: UIControlStateNormal];
           effectLabel.text = @"Confirm and Pay or Reject";
+          respondView.backgroundColor = [UIColor blueAlpha: 0.95f];
         }
         break;
       }
         // Waiting for landlord
       case OMBOfferStatusForStudentWaitingForLandlordResponse: {
-        respondButton.backgroundColor = [UIColor blueLight];
-        respondButton.userInteractionEnabled = NO;
         // [respondButton setTitle: @"Waiting for landlord response" forState:
         //   UIControlStateNormal];
         effectLabel.text = @"Waiting for landlord response";
+        respondView.backgroundColor = [UIColor blueLight];
+        respondButton.userInteractionEnabled = NO;
         break;
       }
       default: {
@@ -371,11 +372,11 @@
           [self hideCountdownAndRespondButton];
         }
         else {
-          respondButton.backgroundColor = [UIColor blueLight];
-          respondButton.userInteractionEnabled = NO;
           // [respondButton setTitle: @"Waiting for student response" forState:
           //   UIControlStateNormal];
           effectLabel.text = @"Waiting for student response";
+          respondView.backgroundColor = [UIColor blueLightAlpha: 0.95f];
+          respondButton.userInteractionEnabled = NO;
         }
         break;
       }
@@ -384,6 +385,7 @@
         // [respondButton setTitle: @"Accept or Decline"
         //   forState: UIControlStateNormal];
         effectLabel.text = @"Accept or Decline";
+        respondView.backgroundColor = [UIColor blueAlpha: 0.95f];
         break;
       }
       default: {

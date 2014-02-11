@@ -1113,7 +1113,7 @@ viewForHeaderInSection: (NSInteger) section
 - (NSArray *) offers
 {
   return [[OMBUser currentUser] sortedOffersType: OMBUserOfferTypeAccepted 
-    withKey: @"acceptedDate" ascending: NO];
+    withKeys: @[@"acceptedDate", @"createdAt"] ascending: NO];
 }
 
 - (void) paymentAlertCancel

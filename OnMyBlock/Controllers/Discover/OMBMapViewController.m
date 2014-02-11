@@ -908,6 +908,7 @@ withTitle: (NSString *) title;
   NSInteger currentCount = 
     [[OMBResidenceListStore sharedStore].residences count];
   NSLog(@"CURRENT COUNT: %i", currentCount);
+
   [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters: params 
     completion: ^(NSError *error) {
       fetching = NO;
@@ -933,6 +934,8 @@ withTitle: (NSString *) title;
         else {
           if (activityView.isSpinning)
             [activityView stopSpinning];
+          if ([[self residencesForList] count])
+            emptyBackground.alpha = 0.0f;
         }
       }
       // Stop fetching if radius is more than 100 miles

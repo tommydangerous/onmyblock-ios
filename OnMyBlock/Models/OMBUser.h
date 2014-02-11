@@ -172,7 +172,7 @@ withCompletion: (void (^) (NSError *error)) block;
   ascending: (BOOL) ascending;
 - (NSString *) shortName;
 - (NSArray *) sortedOffersType: (OMBUserOfferType) type 
-withKey: (NSString *) key ascending: (BOOL) ascending;
+  withKeys: (NSArray *) keys ascending: (BOOL) ascending;
 - (NSArray *) sortedPayoutMethodsWithKey: (NSString *) key
 ascending: (BOOL) ascending;
 - (void) updateWithDictionary: (NSDictionary *) dictionary 

@@ -739,7 +739,7 @@ viewForHeaderInSection: (NSInteger) section
 - (NSArray *) offers
 {
   return [[OMBUser currentUser] sortedOffersType: OMBUserOfferTypeReceived
-    withKey: @"createdAt" ascending: NO];
+    withKeys: @[@"updatedAt"] ascending: NO];
 }
   
 - (void) segmentButtonSelected: (UIButton *) button

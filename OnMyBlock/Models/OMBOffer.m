@@ -18,6 +18,13 @@
 NSInteger kMaxHoursForLandlordToAccept = 24;
 NSInteger kMaxHoursForStudentToConfirm = 48;
 
+#if __ENVIRONMENT__ == 1
+  NSInteger kWebServerTimeOffsetInSeconds = 0;
+#else
+  // The web server's time is ahead
+  NSInteger kWebServerTimeOffsetInSeconds = 60 + 37;
+#endif
+
 @implementation OMBOffer
 
 #pragma mark - Initializer
@@ -396,16 +403,20 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
 
 - (NSInteger) timeLeftForLandlord
 {
-  NSInteger secondsInADay = 60 * 60 * kMaxHoursForLandlordToAccept;
-  NSInteger aDayFromCreatedAt = _createdAt + secondsInADay;
-  return aDayFromCreatedAt - [[NSDate date] timeIntervalSince1970];
+  NSInteger seconds  = 60 * 60 * kMaxHoursForLandlordToAccept;
+  NSInteger deadline = _createdAt + seconds;
+  // Account for the server being ahead 1 minute and 20 seconds
+  deadline -= kWebServerTimeOffsetInSeconds;
+  return deadline - [[NSDate date] timeIntervalSince1970];
 }
 
 - (NSInteger) timeLeftForStudent
 {
-  NSInteger secondsInADay = 60 * 60 * kMaxHoursForStudentToConfirm;
-  return (_acceptedDate + secondsInADay) - 
-    [[NSDate date] timeIntervalSince1970];
+  NSInteger seconds  = 60 * 60 * kMaxHoursForStudentToConfirm;
+  NSInteger deadline = _acceptedDate + seconds;
+  // Account for the server being ahead 1 minute and 20 seconds
+  deadline -= kWebServerTimeOffsetInSeconds;
+  return deadline - [[NSDate date] timeIntervalSince1970];
 }
 
 - (CGFloat) timeLeftPercentageForLandlord
@@ -422,14 +433,20 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
 
 - (NSString *) timeLeftStringForLandlord
 {
-  return [NSString timeRemainingShortFormatWithAllUnitsInterval:
-    _createdAt + (60 * 60 * kMaxHoursForLandlordToAccept)];
+  NSInteger seconds  = 60 * 60 * kMaxHoursForLandlordToAccept;
+  NSInteger deadline = _createdAt + seconds;
+  // Account for the server being ahead 1 minute and 20 seconds
+  deadline -= kWebServerTimeOffsetInSeconds;
+  return [NSString timeRemainingShortFormatWithAllUnitsInterval: deadline];
 }
 
 - (NSString *) timeLeftStringForStudent
 {
-  return [NSString timeRemainingShortFormatWithAllUnitsInterval:
-    _acceptedDate + (60 * 60 * kMaxHoursForStudentToConfirm)];
+  NSInteger seconds  = 60 * 60 * kMaxHoursForStudentToConfirm;
+  NSInteger deadline = _acceptedDate + seconds;
+  // Account for the server being ahead 1 minute and 20 seconds
+  deadline -= kWebServerTimeOffsetInSeconds;
+  return [NSString timeRemainingShortFormatWithAllUnitsInterval: deadline];
 }
 
 - (CGFloat) totalAmount

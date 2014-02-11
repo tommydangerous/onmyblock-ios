@@ -130,8 +130,8 @@ didFailWithError: (NSError *) error
 code: (NSInteger) code
 {
   internalError = [NSError errorWithDomain: domain code: code userInfo: @{
-    @"message": [self errorMessage],
-    @"title":   [self errorTitle]
+    NSLocalizedDescriptionKey:        [self errorTitle],
+    NSLocalizedFailureReasonErrorKey: [self errorMessage]
   }];
 }
 

@@ -28,6 +28,7 @@
   UIView *skipButtonView;
   NSArray *slides;
   OMBStudentOrLandlordView *studentLandlordView;
+  BOOL animate;
 }
 
 // Views that do not scroll
