@@ -136,6 +136,7 @@
 		AB26131718197D030053A8AA /* OMBCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB26131618197D030053A8AA /* OMBCollectionViewController.m */; };
 		AB26131E18198E570053A8AA /* OMBSpringFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */; };
 		AB2EA4C418A9692D00ACE53C /* document_icon_black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB2EA4C318A9692D00ACE53C /* document_icon_black@2x.png */; };
+		AB2EA4C818A9E79700ACE53C /* LEffectLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2EA4C718A9E79700ACE53C /* LEffectLabel.m */; };
 		AB44986E189AC10100979B3B /* facebook_icon_blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */; };
 		AB44986F189AC10100979B3B /* facebook_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */; };
 		AB449872189AEFFF00979B3B /* OMBLoginSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */; };
@@ -847,6 +848,8 @@
 		AB26131C18198E570053A8AA /* OMBSpringFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSpringFlowLayout.h; sourceTree = "<group>"; };
 		AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSpringFlowLayout.m; sourceTree = "<group>"; };
 		AB2EA4C318A9692D00ACE53C /* document_icon_black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "document_icon_black@2x.png"; sourceTree = "<group>"; };
+		AB2EA4C618A9E79700ACE53C /* LEffectLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEffectLabel.h; sourceTree = "<group>"; };
+		AB2EA4C718A9E79700ACE53C /* LEffectLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEffectLabel.m; sourceTree = "<group>"; };
 		AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_blue@2x.png"; sourceTree = "<group>"; };
 		AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_white@2x.png"; sourceTree = "<group>"; };
 		AB449870189AEFFF00979B3B /* OMBLoginSignUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLoginSignUpView.h; sourceTree = "<group>"; };
@@ -1845,6 +1848,15 @@
 			path = Layouts;
 			sourceTree = "<group>";
 		};
+		AB2EA4C518A9E79700ACE53C /* LEffectLabel */ = {
+			isa = PBXGroup;
+			children = (
+				AB2EA4C618A9E79700ACE53C /* LEffectLabel.h */,
+				AB2EA4C718A9E79700ACE53C /* LEffectLabel.m */,
+			);
+			path = LEffectLabel;
+			sourceTree = "<group>";
+		};
 		AB4ED2E118847772009AFB01 /* Open Houses */ = {
 			isa = PBXGroup;
 			children = (
@@ -1942,6 +1954,7 @@
 		AB802E9118109E5200E04D11 = {
 			isa = PBXGroup;
 			children = (
+				AB2EA4C518A9E79700ACE53C /* LEffectLabel */,
 				DE95E8C418A03B5500A2A341 /* MNCalendarView */,
 				ABB911AA18998FB20046611F /* AFNetworking */,
 				ABB9119818998CA80046611F /* IOSLinkedInAPI */,
@@ -3786,6 +3799,7 @@
 				ABF8EC9C182D3C570080B1E2 /* OMBIntroSearchView.m in Sources */,
 				AB131F371885E25B0057D769 /* OMBMyRenterApplicationViewController.m in Sources */,
 				ABE679BC18932E6900A494FB /* OMBPayoutTransactionListConnection.m in Sources */,
+				AB2EA4C818A9E79700ACE53C /* LEffectLabel.m in Sources */,
 				AB6155AF184D9A0A00A193C7 /* OMBGeneralInformationViewController.m in Sources */,
 				ABB911A518998CA80046611F /* LIALinkedInAuthorizationViewController.m in Sources */,
 				AB1A033A183E547C0016CD7B /* OMBResidenceImage.m in Sources */,

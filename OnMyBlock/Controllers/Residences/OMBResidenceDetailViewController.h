@@ -10,6 +10,7 @@
 
 #import "OMBViewController.h"
 
+@class LEffectLabel;
 @class OMBBlurView;
 @class OMBCloseButtonView;
 @class OMBCollectionView;
@@ -29,6 +30,7 @@
   OMBBlurView *blurView;
   NSTimer *countdownTimer;
   CGFloat currentOfferOriginY;
+  LEffectLabel *effectLabel;
   UIImage *favoritedImage;
   OMBGradientView *gradientView;
   OMBExtendedHitAreaViewContainer *headerView;

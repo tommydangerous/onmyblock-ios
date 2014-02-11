@@ -454,9 +454,9 @@ animated: (BOOL) flag completion: (void (^)(void)) completion
 {
   [super viewWillAppear: animated];
 
-  [UIView animateWithDuration: 0.25f animations: ^{
-    _detailView.transform = CGAffineTransformIdentity;
-  }];
+  // [UIView animateWithDuration: 0.25f animations: ^{
+  //   _detailView.transform = CGAffineTransformIdentity;
+  // }];
 }
 
 #pragma mark - Protocol
@@ -1093,9 +1093,9 @@ completion: (void (^) (void)) block
 {
   [_loginViewController showLogin];
   [self presentLoginViewController];
-  [self hideMenuWithFactor: 1.0f completion: ^{
-    // [self presentLoginViewController];
-  }];
+  // [self hideMenuWithFactor: 1.0f completion: ^{
+  //   // [self presentLoginViewController];
+  // }];
 }
 
 - (void) showLogout
@@ -1241,9 +1241,9 @@ completion: (void (^) (void)) block
 {
   [_loginViewController showSignUp];
   [self presentLoginViewController];
-  [self hideMenuWithFactor: 1.0f completion: ^{
-    // [self presentLoginViewController];
-  }];
+  // [self hideMenuWithFactor: 1.0f completion: ^{
+  //   // [self presentLoginViewController];
+  // }];
 }
 
 - (void) startSpinning

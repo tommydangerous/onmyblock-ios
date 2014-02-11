@@ -61,6 +61,9 @@ float kStandardHeight = 44.0f;
 {
   [super loadView];
 
+  // Any, 500... 7500+
+  rentPickerViewRows = 8000 / 500;
+
   // Navigation item
   doneBarButtonItem = 
     [[UIBarButtonItem alloc] initWithTitle: @"Done"
@@ -96,7 +99,7 @@ float kStandardHeight = 44.0f;
   [self.view addSubview: fadedBackground];
   UITapGestureRecognizer *tapGesture = 
     [[UITapGestureRecognizer alloc] initWithTarget: self 
-      action: @selector(done)];
+      action: @selector(hidePickerView)];
   [fadedBackground addGestureRecognizer: tapGesture];
 
   neighborhoodTableViewContainer = [[UIView alloc] init];
@@ -225,7 +228,7 @@ float kStandardHeight = 44.0f;
     (padding + rentDoneButtonRect.size.width), 0.0f,
       rentDoneButtonRect.size.width, pickerViewHeader.frame.size.height);
   [rentDoneButton addTarget: self 
-    action: @selector(hidePickerView) 
+    action: @selector(done) 
       forControlEvents: UIControlEventTouchUpInside];
   [rentDoneButton setTitle: @"Done" forState: UIControlStateNormal];
   [rentDoneButton setTitleColor: [UIColor blueDark] 
@@ -351,7 +354,7 @@ numberOfRowsInComponent: (NSInteger) component
 	if (pickerView == rentPickerView)
 	{
 		// Any, 500, ... 7,500+
-		return  8000 / 500 ;
+		return rentPickerViewRows;
 	}
 	else if (pickerView == availabilityPickerView)
 	{
@@ -682,7 +685,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         [NSIndexPath indexPathForRow: 0 inSection: indexPath.section] 
           atScrollPosition: UITableViewScrollPositionTop animated: YES];
       [self hideNeighborhoodTableViewContainer];
-		[self showPickerView:rentPickerView];
+		[self showPickerView: rentPickerView];
     }
   // Date available
 	else if (indexPath.section == 5 && indexPath.row == 1) {
@@ -905,6 +908,27 @@ viewForHeaderInSection: (NSInteger) section
 {
   [self hideNeighborhoodTableViewContainer];
   [self hidePickerView];
+
+  // Select what is there already if they did move the scroller
+  // but they clicked done
+  // Rent
+  if ([rentPickerView superview]) {
+    // Min rent
+    if ([_valuesDictionary objectForKey: @"minRent"] == [NSNull null]) {
+      [self pickerView: rentPickerView didSelectRow: 0 inComponent: 0];
+    }
+    // Max rent
+    if ([_valuesDictionary objectForKey: @"maxRent"] == [NSNull null]) {
+      [self pickerView: rentPickerView didSelectRow: rentPickerViewRows - 1
+        inComponent: 1];
+    }
+  }
+  // Dates Available
+  else if ([availabilityPickerView superview]) {
+    if ([_valuesDictionary objectForKey: @"moveInDate"] == [NSNull null])
+      [self pickerView: availabilityPickerView didSelectRow: 0 
+        inComponent: 0];
+  }
 }
 
 - (void) foundLocations: (NSArray *) locations
@@ -1063,15 +1087,8 @@ viewForHeaderInSection: (NSInteger) section
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 1.0f;
     pickerViewContainer.frame = rect;
-  } completion: ^(BOOL finished) {
-    if (finished)
-      if ([_valuesDictionary objectForKey: @"moveInDate"] == [NSNull null])
-        [self pickerView: availabilityPickerView didSelectRow: 0 
-          inComponent: 0];
   }];
 }
-
-
 
 - (void) showSearchBarButtonItem
 {

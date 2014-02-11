@@ -25,6 +25,7 @@
   UIView *neighborhoodTableViewContainer;
 	UILabel *pickerViewHeaderLabel;
 	UIPickerView *rentPickerView;
+  NSInteger rentPickerViewRows;
   UIView *pickerViewContainer;
   UIBarButtonItem *searchBarButtonItem;
   OMBNeighborhood *selectedNeighborhood;
