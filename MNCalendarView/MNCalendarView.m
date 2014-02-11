@@ -241,18 +241,38 @@
   if (cell.enabled) {
     [cell setEnabled: [self dateEnabled: date]];
   }
-  
-  if (_selectedDate && [date compare: _selectedDate] == NSOrderedSame) {
-    NSDateComponents *components2 = [self.calendar components:
-                                     NSMonthCalendarUnit fromDate: date];
-    NSDateComponents *monthComponents =
+
+  UIColor *blue = [UIColor colorWithRed: 111/255.0f green: 174/255.0f
+    blue: 193/255.0f alpha: 1.0f];
+
+  NSDateComponents *components2 = [self.calendar components:
+    NSMonthCalendarUnit fromDate: date];
+  NSDateComponents *monthComponents =
     [self.calendar components: NSMonthCalendarUnit fromDate: monthDate];
+  BOOL isInSameMonthCell = components2.month == monthComponents.month;
+  
+  // if (_selectedDate && [date compare: _selectedDate] == NSOrderedSame) {
+  if ((_moveInDate && [date compare: _moveInDate] == NSOrderedSame)
+    || (_moveOutDate && [date compare: _moveOutDate] == NSOrderedSame)) {
     
-    if (components2.month == monthComponents.month) {
-      cell.titleLabel.textColor = [UIColor whiteColor];
-      cell.backgroundColor = [UIColor colorWithRed: 111/255.0f green: 174/255.0f
-                                              blue: 193/255.0f alpha: 1.0f];
+    // If the date cell is within the same month section
+    if (isInSameMonthCell) {
+      if (_moveInDate && [date compare: _moveInDate] == NSOrderedSame) {
+        cell.titleLabel.textColor = [UIColor colorWithRed: (193/255.0) 
+          green: (25/255.0) blue: (120/255.0) alpha: 1];
+      }
+      else {
+        cell.titleLabel.textColor = [UIColor whiteColor];
+      }
+      cell.backgroundColor = blue;
     }
+  }
+  else if ((_moveInDate && [date compare: _moveInDate] == NSOrderedDescending)
+    && (_moveOutDate && [date compare: _moveOutDate] == NSOrderedAscending)
+    && isInSameMonthCell) {
+
+    cell.backgroundColor = blue;
+    cell.titleLabel.textColor = [UIColor whiteColor];
   }
   
   // if (self.selectedSecond && cell.enabled) {

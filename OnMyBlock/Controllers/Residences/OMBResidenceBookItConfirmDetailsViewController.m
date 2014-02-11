@@ -384,50 +384,54 @@
 #pragma mark - Protocol MNCalendarViewDelegate
 
 - (void) calendarView: (MNCalendarView *) calendarView
-        didSelectDate: (NSDate *) date
+  didSelectDate: (NSDate *) date
 {
-  OMBResidenceConfirmDetailsDatesCell *detailsCell =
-  (OMBResidenceConfirmDetailsDatesCell *)
-  [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow:
-                                      OMBResidenceBookItConfirmDetailsSectionDatesRowsMoveInMoveOut inSection:
-                                      OMBResidenceBookItConfirmDetailsSectionDates]];
-  
-  OMBResidenceBookItCalendarCell *calendarCell =
-  (OMBResidenceBookItCalendarCell *) [self.table cellForRowAtIndexPath:
-                                      [NSIndexPath indexPathForRow:
-                                       OMBResidenceBookItConfirmDetailsSectionDatesRowsCalendar inSection:
-                                       OMBResidenceBookItConfirmDetailsSectionDates]];
+  OMBResidenceBookItCalendarCell *calendarCell = [self calendarCell];
+  OMBResidenceConfirmDetailsDatesCell *datesCell = [self datesCell];
   
   NSString *dateString = [dateFormatter1 stringFromDate: date];
+  // Move-in
   if (isShowingMoveInCalendar) {
     offer.moveInDate = [date timeIntervalSince1970];
-    [detailsCell setMoveInDateLabelText: dateString];
-    
-    calendarCell.calendarView.selectedDate =
-    [NSDate dateWithTimeIntervalSince1970: offer.moveInDate];
-
-    if(offer.moveOutDate && [date compare:[NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]] == NSOrderedDescending){
+    datesCell.moveInDateLabel.text = dateString;
+    // If move-in date is greater than move-out date
+    if (offer.moveOutDate && [date compare:
+      [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]] == 
+        NSOrderedDescending) {
+      // Move-out date becomes the later date
       offer.moveOutDate = [date timeIntervalSince1970];
-      [detailsCell setMoveOutDateLabelText: dateString];
+      datesCell.moveOutDateLabel.text = dateString;
     }
+    // Switch to the move-out calendar
+    [self showMoveOutCalendar];
   }
+  // Move-out
   else if (isShowingMoveOutCalendar) {
     offer.moveOutDate = [date timeIntervalSince1970];
-    [detailsCell setMoveOutDateLabelText: dateString];
-    if(offer.moveInDate && [date compare:[NSDate dateWithTimeIntervalSince1970: offer.moveInDate]] == NSOrderedAscending){
+    datesCell.moveOutDateLabel.text = dateString;
+    // If move-out date is less than move-in date
+    if (offer.moveInDate && [date compare:
+      [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]] == 
+        NSOrderedAscending) {
       offer.moveInDate = [date timeIntervalSince1970];
-      [detailsCell setMoveInDateLabelText: dateString];
+      datesCell.moveInDateLabel.text = dateString;
     }
-    
-    calendarCell.calendarView.selectedDate =
-    [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate];
+    // Hide the calendar
+    [self hideCalendar];
   }
+  // Set the selected date for the calendar cell
+  calendarCell.calendarView.moveInDate =
+    [NSDate dateWithTimeIntervalSince1970: offer.moveInDate];
+  calendarCell.calendarView.moveOutDate =
+    [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate];
+  // Set the month lease
   int monthsBetween = [offer numberOfMonthsBetweenMovingDates];
-  if(monthsBetween > 0){
-    calendarCell.leaseMonthsLabel.text = [NSString stringWithFormat: @"%i %@ LEASE",
-                                          monthsBetween,monthsBetween > 1 ? @"MONTHS":@"MONTH"];
-  }else{
-    calendarCell.leaseMonthsLabel.text = @"MONTH TO MONTH";
+  if (monthsBetween > 0) {
+    calendarCell.leaseMonthsLabel.text = [NSString stringWithFormat: 
+      @"%i month lease", monthsBetween];
+  }
+  else {
+    calendarCell.leaseMonthsLabel.text = @"month to month";
   }
 }
 
@@ -441,61 +445,61 @@
   return YES;
 }
 
-- (void)oldcalendarView:(MNCalendarView *)calendarView didSelectDate:(NSDate *)date {
-  NSDateFormatter *dateFormmater = [NSDateFormatter new];
-  dateFormmater.dateFormat = @"MMM d, yyyy";
-  OMBResidenceBookItCalendarCell *calendarCell =
-  (OMBResidenceBookItCalendarCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 1 inSection: 1]];
-  OMBResidenceConfirmDetailsDatesCell *detailsCell =
-  (OMBResidenceConfirmDetailsDatesCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 0 inSection: 1]];
+// - (void)oldcalendarView:(MNCalendarView *)calendarView didSelectDate:(NSDate *)date {
+//   NSDateFormatter *dateFormmater = [NSDateFormatter new];
+//   dateFormmater.dateFormat = @"MMM d, yyyy";
+//   OMBResidenceBookItCalendarCell *calendarCell =
+//   (OMBResidenceBookItCalendarCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 1 inSection: 1]];
+//   OMBResidenceConfirmDetailsDatesCell *detailsCell =
+//   (OMBResidenceConfirmDetailsDatesCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 0 inSection: 1]];
   
-  if([calendarCell respondsToSelector:@selector(calendarView)]){
-    if(!calendarCell.calendarView.selectedFirst){
-      [detailsCell.moveInDateLabel setTitle:[dateFormmater stringFromDate:date]
-                                   forState:UIControlStateNormal];
-      [detailsCell.moveOutDateLabel setTitle:@"-"
-                                    forState:UIControlStateNormal];
-      calendarCell.calendarView.selectedFirst = date;
+//   if([calendarCell respondsToSelector:@selector(calendarView)]){
+//     if(!calendarCell.calendarView.selectedFirst){
+//       [detailsCell.moveInDateLabel setTitle:[dateFormmater stringFromDate:date]
+//                                    forState:UIControlStateNormal];
+//       [detailsCell.moveOutDateLabel setTitle:@"-"
+//                                     forState:UIControlStateNormal];
+//       calendarCell.calendarView.selectedFirst = date;
       
-      // update residence or offer
-      // residence.moveInDate || offer
-    }
-    else{
-      [detailsCell.moveOutDateLabel setTitle:[dateFormmater stringFromDate: date]
-                                    forState:UIControlStateNormal];
-      calendarCell.calendarView.selectedSecond = date;
-      // update residence or offer
-    }
-  }
-  NSLog(@"DID SELECT: %@", [dateFormmater stringFromDate: date]);
-}
+//       // update residence or offer
+//       // residence.moveInDate || offer
+//     }
+//     else{
+//       [detailsCell.moveOutDateLabel setTitle:[dateFormmater stringFromDate: date]
+//                                     forState:UIControlStateNormal];
+//       calendarCell.calendarView.selectedSecond = date;
+//       // update residence or offer
+//     }
+//   }
+//   NSLog(@"DID SELECT: %@", [dateFormmater stringFromDate: date]);
+// }
 
-- (BOOL)oldcalendarView:(MNCalendarView *)calendarView shouldSelectDate:(NSDate *)date {
+// - (BOOL)oldcalendarView:(MNCalendarView *)calendarView shouldSelectDate:(NSDate *)date {
   
-  OMBResidenceBookItCalendarCell *calendarCell = (OMBResidenceBookItCalendarCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 1
-                                                                                                                                         inSection: 1]];
-  //Set days it cannot be selected
+//   OMBResidenceBookItCalendarCell *calendarCell = (OMBResidenceBookItCalendarCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 1 inSection: 1]];
+                                      
+//   //Set days it cannot be selected
   
-  if([date timeIntervalSinceDate: [NSDate date]] < 0){
-    return NO;
-  }
+//   if([date timeIntervalSinceDate: [NSDate date]] < 0){
+//     return NO;
+//   }
   
-  if([calendarCell respondsToSelector:@selector(calendarView)]){
-    if(calendarCell.calendarView.selectedFirst){
-      NSTimeInterval timeInterval = [date timeIntervalSinceDate: calendarCell.calendarView.selectedFirst];
+//   if([calendarCell respondsToSelector:@selector(calendarView)]){
+//     if(calendarCell.calendarView.selectedFirst){
+//       NSTimeInterval timeInterval = [date timeIntervalSinceDate: calendarCell.calendarView.selectedFirst];
       
-      if(timeInterval < 0 || (timeInterval > MN_YEAR / 2)) // until 6 months
-        return NO;
+//       if(timeInterval < 0 || (timeInterval > MN_YEAR / 2)) // until 6 months
+//         return NO;
       
-      if(calendarCell.calendarView.selectedSecond){
-        if([date timeIntervalSinceDate: calendarCell.calendarView.selectedSecond] > 0)
-          return NO;
-      }
-    }
-  }
+//       if(calendarCell.calendarView.selectedSecond){
+//         if([date timeIntervalSinceDate: calendarCell.calendarView.selectedSecond] > 0)
+//           return NO;
+//       }
+//     }
+//   }
   
-  return YES;
-}
+//   return YES;
+// }
 
 #pragma mark - Protocol UIAlertViewDelegate
 
@@ -611,31 +615,44 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         cell = [[OMBResidenceConfirmDetailsDatesCell alloc] initWithStyle:
                 UITableViewCellStyleDefault reuseIdentifier: DateIdentifier];
         
-        [cell.moveInDateLabel addTarget: self
-                                 action: @selector(showMoveInCalendar) forControlEvents:
-         UIControlEventTouchUpInside];
-        [cell.moveOutDateLabel addTarget: self
-                                  action: @selector(showMoveOutCalendar) forControlEvents:
-         UIControlEventTouchUpInside];
-        
-        [cell loadResidence: residence];
+        // [cell loadResidence: residence];
         cell.leaseMonthsLabel.hidden = YES;
+        // Labels
+        cell.moveInDateLabel.text = [dateFormatter1 stringFromDate:
+          [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]];
+        cell.moveInDateLabel.textColor = [UIColor blue];
+        // cell.moveOutDateLabel.text = @"-";
+        cell.moveOutDateLabel.text = [dateFormatter1 stringFromDate:
+          [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
+
+        // Buttons
+        // Move-in date
+        [cell.moveInButton addTarget: self action: @selector(showMoveInCalendar)
+          forControlEvents: UIControlEventTouchUpInside];
+        // Move-out date
+        [cell.moveOutButton addTarget: self 
+          action: @selector(showMoveOutCalendar)
+            forControlEvents: UIControlEventTouchUpInside];
       }
       return cell;
     }
     // The calendar
     else if (indexPath.row ==
-             OMBResidenceBookItConfirmDetailsSectionDatesRowsCalendar) {
+      OMBResidenceBookItConfirmDetailsSectionDatesRowsCalendar) {
       
       static NSString *CalID = @"CalID";
       OMBResidenceBookItCalendarCell *cell =
       [tableView dequeueReusableCellWithIdentifier: CalID];
       if (!cell)
         cell = [[OMBResidenceBookItCalendarCell alloc] initWithStyle:
-                UITableViewCellStyleDefault reuseIdentifier: CalID];
+          UITableViewCellStyleDefault reuseIdentifier: CalID];
       cell.calendarView.delegate = self;
       cell.separatorInset = UIEdgeInsetsMake(0.0f,
-                                             tableView.frame.size.width, 0.0f, 0.0f);
+        tableView.frame.size.width, 0.0f, 0.0f);
+
+      cell.leaseMonthsLabel.text = [NSString stringWithFormat: 
+        @"%i month lease", [offer numberOfMonthsBetweenMovingDates]];
+
       return cell;
       
       // if (selectedIndexPath &&
@@ -1358,9 +1375,27 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
+- (OMBResidenceBookItCalendarCell *) calendarCell
+{
+  return (OMBResidenceBookItCalendarCell *) [self.table cellForRowAtIndexPath:
+    [NSIndexPath indexPathForRow:
+      OMBResidenceBookItConfirmDetailsSectionDatesRowsCalendar inSection:
+        OMBResidenceBookItConfirmDetailsSectionDates]];
+
+}
+
 - (void) closeAlertBlur
 {
   [alertBlur close];
+}
+
+- (OMBResidenceConfirmDetailsDatesCell *) datesCell
+{
+  return (OMBResidenceConfirmDetailsDatesCell *)
+    [self.table cellForRowAtIndexPath: 
+      [NSIndexPath indexPathForRow:
+        OMBResidenceBookItConfirmDetailsSectionDatesRowsMoveInMoveOut 
+          inSection: OMBResidenceBookItConfirmDetailsSectionDates]];
 }
 
 - (void) done
@@ -1383,6 +1418,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [alertBlur close];
     }
   }];
+}
+
+- (void) hideCalendar
+{
+  isShowingMoveInCalendar = isShowingMoveOutCalendar = NO;
+  [self showCalendar];
 }
 
 - (void) keyboardWillHide: (NSNotification *) notification
@@ -1488,69 +1529,35 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showCalendar
 {
-  OMBResidenceConfirmDetailsDatesCell *detailsCell =
-  (OMBResidenceConfirmDetailsDatesCell *)
-  [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow:
-                                      OMBResidenceBookItConfirmDetailsSectionDatesRowsMoveInMoveOut inSection:
-                                      OMBResidenceBookItConfirmDetailsSectionDates]];
-  
-  OMBResidenceBookItCalendarCell *calendarCell =
-  (OMBResidenceBookItCalendarCell *) [self.table cellForRowAtIndexPath:
-                                      [NSIndexPath indexPathForRow:
-                                       OMBResidenceBookItConfirmDetailsSectionDatesRowsCalendar inSection:
-                                       OMBResidenceBookItConfirmDetailsSectionDates]];
-  
-  if (isShowingMoveInCalendar) {
-    [detailsCell highlightMoveInDate];
+  OMBResidenceBookItCalendarCell *calendarCell = [self calendarCell];
+  OMBResidenceConfirmDetailsDatesCell *datesCell = [self datesCell];
     
-    calendarCell.calendarView.selectedDate =
-    [NSDate dateWithTimeIntervalSince1970: offer.moveInDate];
+  if (isShowingMoveInCalendar) {
+    [datesCell highlightMoveInDate];
+    
+    calendarCell.calendarView.moveInDate =
+      [NSDate dateWithTimeIntervalSince1970: offer.moveInDate];
     
     [calendarCell.calendarView.collectionView reloadData];
   }
   else if (isShowingMoveOutCalendar) {
-    [detailsCell highlightMoveOutDate];
+    [datesCell highlightMoveOutDate];
     
-    calendarCell.calendarView.selectedDate =
-    [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate];
+    calendarCell.calendarView.moveOutDate =
+      [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate];
+
     [calendarCell.calendarView.collectionView reloadData];
   }
   else {
-    [detailsCell highlightNothing];
+    [datesCell highlightNothing];
   }
   
   [self.table beginUpdates];
   [self.table endUpdates];
-  
-  // [calendarCell.calendarView.collectionView reloadData];
-  
-  // if (selectedIndexPath) {
-  //   if (selectedIndexPath.section == 1 && selectedIndexPath.row == 0) {
-  //     selectedIndexPath = nil;
-  //   OMBResidenceBookItCalendarCell *calendarCell =
-  //     [self.table dequeueReusableCellWithIdentifier: @"CalendarCellIdentifier"];
-  //     if (!calendarCell)
-  //       calendarCell = [[OMBResidenceBookItCalendarCell alloc] initWithStyle:
-  //         UITableViewCellStyleDefault reuseIdentifier:
-  //           @"CalendarCellIdentifier"];
-  //     if (calendarCell.calendarView.selectedSecond)
-  //       calendarCell = nil;
-  //   }
-  //   else {
-  //     selectedIndexPath = [NSIndexPath indexPathForRow: 0 inSection: 1];
-  //   }
-  // }
-  // else {
-  //   selectedIndexPath = [NSIndexPath indexPathForRow: 0 inSection: 1];
-  // }
-  // [self.table reloadRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 + 1
-  //   inSection: 1]] withRowAnimation: UITableViewRowAnimationFade];
 }
 
 - (void) showMoveInCalendar
 {
-  NSLog(@"SHOW MOVE IN CALENDAR");
-  
   isShowingMoveInCalendar  = !isShowingMoveInCalendar;
   isShowingMoveOutCalendar = NO;
   
@@ -1559,8 +1566,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showMoveOutCalendar
 {
-  NSLog(@"SHOW MOVE OUT CALENDAR");
-  
   isShowingMoveInCalendar  = NO;
   isShowingMoveOutCalendar = !isShowingMoveOutCalendar;
   

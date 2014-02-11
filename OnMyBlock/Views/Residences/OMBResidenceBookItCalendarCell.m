@@ -42,7 +42,7 @@
   _leaseMonthsLabel.frame = CGRectMake(_calendarView.frame.origin.x, _calendarView.frame.origin.y + _calendarView.frame.size.height + 3.f,
                                        _calendarView.frame.size.width, 30.0f);
   _leaseMonthsLabel.textAlignment = NSTextAlignmentCenter;
-  _leaseMonthsLabel.text = @"0 MONTH LEASE";
+  // _leaseMonthsLabel.text = @"0 MONTH LEASE";
   _leaseMonthsLabel.textColor = [UIColor whiteColor];
   [self.contentView insertSubview: _leaseMonthsLabel belowSubview: _calendarView];
   

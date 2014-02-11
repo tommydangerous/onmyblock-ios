@@ -17,8 +17,12 @@
 }
 
 @property (nonatomic, strong) UILabel *leaseMonthsLabel;
-@property (nonatomic, strong) UIButton *moveInDateLabel;
-@property (nonatomic, strong) UIButton *moveOutDateLabel;
+@property (nonatomic, strong) UIView *moveInBackground;
+@property (nonatomic, strong) UIButton *moveInButton;
+@property (nonatomic, strong) UILabel *moveInDateLabel;
+@property (nonatomic, strong) UIView *moveOutBackground;
+@property (nonatomic, strong) UIButton *moveOutButton;
+@property (nonatomic, strong) UILabel *moveOutDateLabel;
 
 #pragma mark - Methods
 
@@ -32,7 +36,5 @@
 - (void) highlightMoveOutDate;
 - (void) highlightNothing;
 - (void) loadResidence: (OMBResidence *) object;
-- (void) setMoveInDateLabelText: (NSString *) string;
-- (void) setMoveOutDateLabelText: (NSString *) string;
 
 @end

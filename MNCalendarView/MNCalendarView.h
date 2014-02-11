@@ -30,6 +30,8 @@
 
 @property (nonatomic, strong) NSDate *maximumDate;
 @property (nonatomic, strong) NSDate *minimumDate;
+@property (nonatomic, strong) NSDate *moveInDate;
+@property (nonatomic, strong) NSDate *moveOutDate;
 @property (nonatomic, strong) NSDate *selectedDate;
 
 @property(nonatomic,strong) UIColor *separatorColor UI_APPEARANCE_SELECTOR; // default is the standard separator gray

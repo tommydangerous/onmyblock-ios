@@ -51,6 +51,9 @@ NSString *const MNCalendarViewDayCellIdentifier = @"MNCalendarViewDayCellIdentif
   }
   
   self.enabled = monthComponents.month == components.month;
+
+  self.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
+    size: 10];
   
   [self setNeedsDisplay];
 }

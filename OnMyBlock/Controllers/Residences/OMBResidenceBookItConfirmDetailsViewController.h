@@ -14,6 +14,8 @@
 @class OMBCenteredImageView;
 @class OMBOffer;
 @class OMBResidence;
+@class OMBResidenceBookItCalendarCell;
+@class OMBResidenceConfirmDetailsDatesCell;
 
 typedef NS_ENUM(NSInteger, OMBResidenceBookItConfirmDetailsSection) {
   OMBResidenceBookItConfirmDetailsSectionPlaceOffer,
@@ -75,6 +77,8 @@ UITextViewDelegate, MNCalendarViewDelegate>
 
 #pragma mark - Initializer
 
+- (OMBResidenceBookItCalendarCell *) calendarCell;
+- (OMBResidenceConfirmDetailsDatesCell *) datesCell;
 - (id) initWithResidence: (OMBResidence *) object;
 
 @end

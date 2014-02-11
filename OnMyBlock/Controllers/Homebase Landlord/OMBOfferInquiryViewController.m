@@ -618,19 +618,15 @@
                    UITableViewCellStyleDefault reuseIdentifier: DatesID];
           // [cell1 loadResidence: offer.residence];
           cell1.leaseMonthsLabel.text = [NSString stringWithFormat:
-                                         @"%i month lease", [offer numberOfMonthsBetweenMovingDates]];
+            @"%i month lease", [offer numberOfMonthsBetweenMovingDates]];
           NSDateFormatter *dateFormmater = [NSDateFormatter new];
           dateFormmater.dateFormat = @"MMM d, yy";
           // Move in date
-          [cell1.moveInDateLabel setTitle:
-           [dateFormmater stringFromDate:
-            [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]]
-                                 forState: UIControlStateNormal];
+          cell1.moveInDateLabel.text = [dateFormmater stringFromDate:
+            [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]];
           // Move out date
-          [cell1.moveOutDateLabel setTitle:
-           [dateFormmater stringFromDate:
-            [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]]
-                                  forState: UIControlStateNormal];
+          cell1.moveOutDateLabel.text = [dateFormmater stringFromDate:
+            [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
         }
         return cell1;
       }
