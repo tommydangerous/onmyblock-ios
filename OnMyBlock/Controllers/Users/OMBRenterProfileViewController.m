@@ -851,11 +851,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         // Rental Info Header
         if (indexPath.row == 
           OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoHeader) {
+          return 0.0f;
           return padding + OMBStandardHeight + padding;
         }
         // Rental Info Note
         else if (indexPath.row ==
           OMBRenterProfileSectionRenterInfoRowPriorityRentalInfoNote) {
+          return 0.0f;
           if ([user isCurrentUser])
             return 22.0f * 3; // 22 is the line height for the label
           // return padding + (22.0f * 3) + padding;

@@ -1370,10 +1370,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table endUpdates];
   [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
   
-  [self.table scrollToRowAtIndexPath:
-   [NSIndexPath indexPathForRow: 0 inSection:
-    OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes]
-                    atScrollPosition: UITableViewScrollPositionTop animated: YES];
+  // If it scrolls to the submit offer notes section,
+  // it goes too far
+  [self.table scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: 1 inSection:
+    OMBResidenceBookItConfirmDetailsSectionRenterProfile]
+      atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
 - (void) textViewDidChange: (UITextView *) textView
@@ -1490,13 +1491,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [cell.yourOfferTextField becomeFirstResponder];
   CGFloat statusNavigationHeight = 20.0f + 44.0f;
   CGFloat contentOffsetY =
-  (self.table.tableHeaderView.frame.size.height +
-   [OMBResidenceConfirmDetailsPlaceOfferCell heightForCell]) -
-  ((self.table.frame.size.height - statusNavigationHeight) -
-   self.table.tableFooterView.frame.size.height);
+    (self.table.tableHeaderView.frame.size.height +
+    [OMBResidenceConfirmDetailsPlaceOfferCell heightForCell]) -
+      ((self.table.frame.size.height - statusNavigationHeight) -
+        self.table.tableFooterView.frame.size.height);
   contentOffsetY -= statusNavigationHeight;
   [self.table setContentOffset: CGPointMake(0.0f, contentOffsetY)
-                      animated: YES];
+    animated: YES];
 }
 
 - (void) setString: (NSString *) string forTimeUnit: (NSString *) unit

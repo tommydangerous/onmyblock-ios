@@ -132,12 +132,12 @@
   [userImageView setImage: [OMBUser currentUser].image];
 
   valueDictionary = [NSMutableDictionary dictionaryWithDictionary: @{
-    @"about":     user.about,
-    @"email":     user.email,
-    @"firstName": user.firstName,
-    @"lastName":  user.lastName,
-    @"phone":     user.phone,
-    @"school":    user.school
+    @"about":     user.about ? user.about : @"",
+    @"email":     user.email ? user.email : @"",
+    @"firstName": user.firstName ? user.firstName: @"",
+    @"lastName":  user.lastName ? user.lastName : @"",
+    @"phone":     user.phone ? user.phone : @"",
+    @"school":    user.school ? user.school : @""
   }];
 }
 
