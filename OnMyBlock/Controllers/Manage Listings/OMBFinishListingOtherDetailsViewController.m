@@ -122,7 +122,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   if (selectedIndexPath) {
     // Property Type
-    if (selectedIndexPath.section == 1 && selectedIndexPath.row == 4) {
+    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
       return 1; 
     }
   }
@@ -134,7 +134,7 @@ numberOfRowsInComponent: (NSInteger) component
 {
   if (selectedIndexPath) {
     // Property Type
-    if (selectedIndexPath.section == 1 && selectedIndexPath.row == 4) {
+    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
       return [propertyTypeOptions count];
     }
   }
@@ -149,7 +149,7 @@ inComponent: (NSInteger) component
   if (selectedIndexPath) {
     NSString *string = @"";
     // Property Type
-    if (selectedIndexPath.section == 1 && selectedIndexPath.row == 4) {
+    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
       NSString *propertyTypeString = [propertyTypeOptions objectAtIndex: row];
       string = [propertyTypeString capitalizedString];
       residence.propertyType = [propertyTypeString lowercaseString];
@@ -171,7 +171,7 @@ forComponent: (NSInteger) component reusingView: (UIView *) view
 {
   NSString *string = @"";
   // Property Type
-  if (selectedIndexPath.section == 1 && selectedIndexPath.row == 4) {
+  if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
     string = [[propertyTypeOptions objectAtIndex: row] capitalizedString];
   }
   if (view && [view isKindOfClass: [UILabel class]]) {
@@ -197,7 +197,7 @@ forComponent: (NSInteger) component reusingView: (UIView *) view
   // Listing Details
   // Delete Listing
   // Spacing for when typing
-  return 3;
+  return 4;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -226,7 +226,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       UITableViewCellStyleDefault reuseIdentifier: HeaderTitleCellIdentifier];
 
   // Listing Details
-  if (indexPath.section == 1) {
+  if (indexPath.section == 0) {
     // Spacing
     if (indexPath.row == 0) {
       cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
@@ -418,7 +418,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 numberOfRowsInSection: (NSInteger) section
 {
   // Listing Details
-  if (section == 1) {
+  if (section == 0) {
     // Spacing
     // Header title
     // Bedrooms
@@ -433,7 +433,7 @@ numberOfRowsInSection: (NSInteger) section
   else if (section == 2) {
     // Spacing
     // Delete Listing
-    // return 2;
+    return 2;
   }
   // Spacing for when typing
   else if (section == 3) {
@@ -450,7 +450,7 @@ numberOfRowsInSection: (NSInteger) section
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // Listing Details
-  if (indexPath.section == 1) {
+  if (indexPath.section == 0) {
     // Property Type
     if (indexPath.row == 4) {
       [self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
@@ -485,7 +485,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // If all the other sections
   else {
     // Listing Details
-    if (indexPath.section == 1) {
+    if (indexPath.section == 0) {
       // Property Type picker view
       if (indexPath.row == 5) {
         if (selectedIndexPath &&
@@ -632,7 +632,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) textFieldDidChange: (TextFieldPadding *) textField
 {
   // Listing Details
-  if (textField.indexPath.section == 1) {
+  if (textField.indexPath.section == 0) {
     // Bedrooms
     if (textField.indexPath.row == 2) {
       residence.bedrooms = [textField.text floatValue];
