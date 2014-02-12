@@ -508,8 +508,12 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 {
   // if (gestureRecognizer == panGesture)
   //   return NO;
-  if ([otherGestureRecognizer.view isKindOfClass: [UITableView class]] ||
-    [otherGestureRecognizer.view isKindOfClass: [UICollectionView class]])
+
+  // Need this or it gets super sticky!!!
+  if (
+    [otherGestureRecognizer.view isKindOfClass: [UITableView class]] ||
+    [otherGestureRecognizer.view isKindOfClass: [UICollectionView class]] ||
+    [otherGestureRecognizer.view isKindOfClass: [UIScrollView class]])
     return NO;
   return YES;
 }
