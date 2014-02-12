@@ -9,7 +9,6 @@
 #import "OMBFinishListingOtherDetailsViewController.h"
 
 #import "OMBActivityView.h"
-#import "OMBFinishListingAmenitiesViewController.h"
 #import "OMBHeaderTitleCell.h"
 #import "OMBLabelTextFieldCell.h"
 #import "OMBPickerViewCell.h"
@@ -19,7 +18,7 @@
 #import "OMBResidenceUpdateConnection.h"
 #import "OMBViewControllerContainer.h"
 
-float kKeyboardHeight = 216.0;
+float kKeyboardHeight = 196.0;
 
 // Tags
 // int kBottomBorderTag = 9999;
@@ -122,7 +121,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   if (selectedIndexPath) {
     // Property Type
-    if (selectedIndexPath.section == 1 && selectedIndexPath.row == 4) {
+    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
       return 1; 
     }
   }
@@ -134,7 +133,7 @@ numberOfRowsInComponent: (NSInteger) component
 {
   if (selectedIndexPath) {
     // Property Type
-    if (selectedIndexPath.section == 1 && selectedIndexPath.row == 4) {
+    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
       return [propertyTypeOptions count];
     }
   }
@@ -149,7 +148,7 @@ inComponent: (NSInteger) component
   if (selectedIndexPath) {
     NSString *string = @"";
     // Property Type
-    if (selectedIndexPath.section == 1 && selectedIndexPath.row == 4) {
+    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
       NSString *propertyTypeString = [propertyTypeOptions objectAtIndex: row];
       string = [propertyTypeString capitalizedString];
       residence.propertyType = [propertyTypeString lowercaseString];
@@ -171,7 +170,7 @@ forComponent: (NSInteger) component reusingView: (UIView *) view
 {
   NSString *string = @"";
   // Property Type
-  if (selectedIndexPath.section == 1 && selectedIndexPath.row == 4) {
+  if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
     string = [[propertyTypeOptions objectAtIndex: row] capitalizedString];
   }
   if (view && [view isKindOfClass: [UILabel class]]) {
@@ -197,7 +196,7 @@ forComponent: (NSInteger) component reusingView: (UIView *) view
   // Listing Details
   // Delete Listing
   // Spacing for when typing
-  return 3;
+  return 4;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -226,7 +225,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       UITableViewCellStyleDefault reuseIdentifier: HeaderTitleCellIdentifier];
 
   // Listing Details
-  if (indexPath.section == 1) {
+  if (indexPath.section == 0) {
     // Spacing
     if (indexPath.row == 0) {
       cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
@@ -236,40 +235,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     else if (indexPath.row == 1) {
       headerTitleCell.titleLabel.text = @"Listing Details";
       return headerTitleCell;
-    }
-    // Amenities
-    else if (indexPath.row == 7) {
-      static NSString *AmenitiesCellIdentifier = @"AmenitiesCellIdentifier";
-      UITableViewCell *amenitiesCell =
-      [tableView dequeueReusableCellWithIdentifier: AmenitiesCellIdentifier];
-      if (!amenitiesCell)
-        amenitiesCell = [[UITableViewCell alloc] initWithStyle:
-                         UITableViewCellStyleValue1 reuseIdentifier: AmenitiesCellIdentifier];
-      amenitiesCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-      amenitiesCell.backgroundColor = [UIColor whiteColor];
-      amenitiesCell.detailTextLabel.font = [UIFont fontWithName:
-                                            @"HelveticaNeue-Medium" size: 15];
-      
-      int numberOfAmenities = 0;
-      NSArray *amenities = [residence.amenities allValues];
-      for (NSNumber *number in amenities) {
-        numberOfAmenities += [number intValue];
-      }
-      amenitiesCell.detailTextLabel.text = [NSString stringWithFormat: @"%i",
-                                            numberOfAmenities];
-      
-      amenitiesCell.detailTextLabel.textColor = [UIColor blueDark];
-      amenitiesCell.textLabel.text = @"Pets & Amenities";
-      amenitiesCell.textLabel.font = [UIFont fontWithName:
-                                      @"HelveticaNeue-Light" size: 15];
-      amenitiesCell.textLabel.textColor = [UIColor textColor];
-      // Bottom border
-      CALayer *bottomBorder = [CALayer layer];
-      bottomBorder.backgroundColor = [UIColor grayLight].CGColor;
-      bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f,
-                                      tableView.frame.size.width, 0.5f);
-      [amenitiesCell.layer addSublayer: bottomBorder];
-      return amenitiesCell;
     }
     // Bedrooms, Bathrooms, Property Type, picker view, Square Footage
     else {
@@ -418,7 +383,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 numberOfRowsInSection: (NSInteger) section
 {
   // Listing Details
-  if (section == 1) {
+  if (section == 0) {
     // Spacing
     // Header title
     // Bedrooms
@@ -426,14 +391,13 @@ numberOfRowsInSection: (NSInteger) section
     // Property Type
     // - Picker view
     // Sq Footage
-    // Amenities
-    return 8;
+    return 7;
   }
   // Delete Listing
   else if (section == 2) {
     // Spacing
     // Delete Listing
-    // return 2;
+    return 2;
   }
   // Spacing for when typing
   else if (section == 3) {
@@ -450,21 +414,16 @@ numberOfRowsInSection: (NSInteger) section
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // Listing Details
-  if (indexPath.section == 1) {
+  if (indexPath.section == 0) {
     // Property Type
     if (indexPath.row == 4) {
       [self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
     }
-    // Amenities
-    else if (indexPath.row == 7) {
-      [self.navigationController pushViewController:
-       [[OMBFinishListingAmenitiesViewController alloc] initWithResidence:
-        residence] animated: YES];
-    }
   }
   // Delete Listing
   else if (indexPath.section == 2) {
-    [deleteActionSheet showInView: self.view];
+    if(indexPath.row == 1)
+      [deleteActionSheet showInView: self.view];
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
@@ -479,13 +438,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     else {
       if (isEditing)
-        return 216.0f;
+        return 196.0f;
     }
   }
   // If all the other sections
   else {
     // Listing Details
-    if (indexPath.section == 1) {
+    if (indexPath.section == 0) {
       // Property Type picker view
       if (indexPath.row == 5) {
         if (selectedIndexPath &&
@@ -632,7 +591,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) textFieldDidChange: (TextFieldPadding *) textField
 {
   // Listing Details
-  if (textField.indexPath.section == 1) {
+  if (textField.indexPath.section == 0) {
     // Bedrooms
     if (textField.indexPath.row == 2) {
       residence.bedrooms = [textField.text floatValue];

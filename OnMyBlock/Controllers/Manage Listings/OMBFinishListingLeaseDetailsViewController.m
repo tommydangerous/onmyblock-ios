@@ -36,7 +36,8 @@ float k2KeyboardHeight = 216.0;
   
   leaseTypeOptions = @[
                        @"OMB Standard Lease",
-                       @"Choose My Own"
+                       @"Choose My Own",
+                       @"No Lease"
                        ];
   
   if (!residence.leaseType || [residence.leaseType length] == 0)

@@ -787,10 +787,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
           dispatch_async(queue, ^{
             NSData *data = [NSData dataWithContentsOfURL:[residence googleStaticStreetViewImageURL]];
-            UIImage *image = [UIImage imageWithData:data];
-            dispatch_async(dispatch_get_main_queue(), ^{
-              cell.streetView.image = image;
-            });
+            if([data length] > 6000){
+              UIImage *image = [UIImage imageWithData:data];
+              dispatch_async(dispatch_get_main_queue(), ^{
+                [cell.segmentedControl setHidden:NO];
+                cell.streetView.image = image;
+              });
+            }
           });
         }
         // Tap
