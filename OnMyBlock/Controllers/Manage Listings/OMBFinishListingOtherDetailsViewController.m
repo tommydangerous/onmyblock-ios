@@ -9,7 +9,6 @@
 #import "OMBFinishListingOtherDetailsViewController.h"
 
 #import "OMBActivityView.h"
-#import "OMBFinishListingAmenitiesViewController.h"
 #import "OMBHeaderTitleCell.h"
 #import "OMBLabelTextFieldCell.h"
 #import "OMBPickerViewCell.h"
@@ -19,7 +18,7 @@
 #import "OMBResidenceUpdateConnection.h"
 #import "OMBViewControllerContainer.h"
 
-float kKeyboardHeight = 216.0;
+float kKeyboardHeight = 196.0;
 
 // Tags
 // int kBottomBorderTag = 9999;
@@ -237,40 +236,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       headerTitleCell.titleLabel.text = @"Listing Details";
       return headerTitleCell;
     }
-    // Amenities
-    else if (indexPath.row == 7) {
-      static NSString *AmenitiesCellIdentifier = @"AmenitiesCellIdentifier";
-      UITableViewCell *amenitiesCell =
-      [tableView dequeueReusableCellWithIdentifier: AmenitiesCellIdentifier];
-      if (!amenitiesCell)
-        amenitiesCell = [[UITableViewCell alloc] initWithStyle:
-                         UITableViewCellStyleValue1 reuseIdentifier: AmenitiesCellIdentifier];
-      amenitiesCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-      amenitiesCell.backgroundColor = [UIColor whiteColor];
-      amenitiesCell.detailTextLabel.font = [UIFont fontWithName:
-                                            @"HelveticaNeue-Medium" size: 15];
-      
-      int numberOfAmenities = 0;
-      NSArray *amenities = [residence.amenities allValues];
-      for (NSNumber *number in amenities) {
-        numberOfAmenities += [number intValue];
-      }
-      amenitiesCell.detailTextLabel.text = [NSString stringWithFormat: @"%i",
-                                            numberOfAmenities];
-      
-      amenitiesCell.detailTextLabel.textColor = [UIColor blueDark];
-      amenitiesCell.textLabel.text = @"Pets & Amenities";
-      amenitiesCell.textLabel.font = [UIFont fontWithName:
-                                      @"HelveticaNeue-Light" size: 15];
-      amenitiesCell.textLabel.textColor = [UIColor textColor];
-      // Bottom border
-      CALayer *bottomBorder = [CALayer layer];
-      bottomBorder.backgroundColor = [UIColor grayLight].CGColor;
-      bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f,
-                                      tableView.frame.size.width, 0.5f);
-      [amenitiesCell.layer addSublayer: bottomBorder];
-      return amenitiesCell;
-    }
     // Bedrooms, Bathrooms, Property Type, picker view, Square Footage
     else {
       static NSString *TextFieldCellIdentifier = @"TextFieldCellIdentifier";
@@ -426,8 +391,7 @@ numberOfRowsInSection: (NSInteger) section
     // Property Type
     // - Picker view
     // Sq Footage
-    // Amenities
-    return 8;
+    return 7;
   }
   // Delete Listing
   else if (section == 2) {
@@ -455,16 +419,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.row == 4) {
       [self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
     }
-    // Amenities
-    else if (indexPath.row == 7) {
-      [self.navigationController pushViewController:
-       [[OMBFinishListingAmenitiesViewController alloc] initWithResidence:
-        residence] animated: YES];
-    }
   }
   // Delete Listing
   else if (indexPath.section == 2) {
-    [deleteActionSheet showInView: self.view];
+    if(indexPath.row == 1)
+      [deleteActionSheet showInView: self.view];
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
@@ -479,7 +438,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     else {
       if (isEditing)
-        return 216.0f;
+        return 196.0f;
     }
   }
   // If all the other sections

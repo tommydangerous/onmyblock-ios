@@ -34,6 +34,9 @@
 {
   [super loadView];
 
+  saveBarButtonItem.enabled = YES;
+  self.navigationItem.rightBarButtonItem = saveBarButtonItem;
+  
   [self setupForTable];
 }
 

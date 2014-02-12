@@ -418,7 +418,7 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 - (void) scrollViewDidScroll: (UIScrollView *) scrollView
 {
   CGFloat y = scrollView.contentOffset.y;
-  CGFloat adjustment = y / 3.0f;
+  CGFloat adjustment = y / 2.1f;
   // Adjust the header image view
   CGRect headerImageFrame = headerImageView.frame;  
   headerImageFrame.origin.y = headerImageOffsetY - adjustment;
@@ -522,6 +522,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
   }
+  // Pets & Amenities
+  else if (indexPath.row == 6) {
+    string = @"Pets & Amenities";
+    cell.textLabel.textColor = [UIColor textColor];
+    //imageView.alpha = 1.0f;
+    //imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+    imageView.image = nil;
+  }
   cell.textLabel.text = string;
   return cell;
 }
@@ -536,7 +544,8 @@ numberOfRowsInSection: (NSInteger) section
   // Address
   // Lease Details
   // Listing Details
-  return 6;
+  // Pets & Amenities
+  return 7;
 }
 
 #pragma mark - Protocol UITableViewDelegate
@@ -578,6 +587,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.row == 5) {
     [self.navigationController pushViewController:
      [[OMBFinishListingOtherDetailsViewController alloc] initWithResidence:
+      residence] animated: YES];
+  }
+  // Pets & Amenities
+  else if (indexPath.row == 6) {
+    [self.navigationController pushViewController:
+     [[OMBFinishListingAmenitiesViewController alloc] initWithResidence:
       residence] animated: YES];
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
@@ -709,7 +724,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) reloadPhotosRow
 {
-  NSLog(@"reloadPhotosRow");
   [self.table reloadRowsAtIndexPaths: 
     @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
       withRowAnimation: UITableViewRowAnimationNone];
@@ -717,7 +731,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 }
 
 -(void)verifyPhotos{
-  NSLog(@"photos");
   UIImageView *checkImageView = (UIImageView *) [headerImageView viewWithTag: 8888];
   if ([residence.images count]) {
     checkImageView.alpha =  1.0f;
