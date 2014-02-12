@@ -429,6 +429,13 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   return image;
 }
 
+- (BOOL) isFromExternalSource
+{
+  if (_externalSource && [_externalSource length])
+    return YES;
+  return NO;
+}
+
 - (void) fetchDetailsWithCompletion: (void (^) (NSError *error)) block
 {
   OMBResidenceDetailConnection *conn =
@@ -705,6 +712,9 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   // Email
   if ([dictionary objectForKey: @"email"] != [NSNull null])
     _email = [dictionary objectForKey: @"email"];
+  // External Source
+  if ([dictionary objectForKey: @"external_source"] != [NSNull null])
+    _externalSource = [dictionary objectForKey: @"external_source"];
   // Inactive
   if  ([dictionary objectForKey: @"inactive"] != [NSNull null]) {
     if ([[dictionary objectForKey: @"inactive"] intValue]) {

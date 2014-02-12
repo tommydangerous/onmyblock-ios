@@ -31,6 +31,7 @@ extern NSString *const OMBEmptyResidencePartialViewCell;
   UILabel *rentLabel;
 }
 
+@property (nonatomic, copy) void (^completionBlock) (NSError *error);
 @property (nonatomic, strong) UICollectionView *imagesFilmstrip;
 @property (nonatomic, weak) OMBResidence *residence;
 @property (nonatomic, copy) 
@@ -43,6 +44,7 @@ extern NSString *const OMBEmptyResidencePartialViewCell;
 - (void) cancelResidenceCoverPhotoDownload;
 - (void) downloadResidenceImages;
 - (void) loadResidenceData: (OMBResidence *) object;
+- (void) loadResidenceDataForPropertyInfoView: (OMBResidence *) object;
 - (void) resetFilmstrip;
 
 @end

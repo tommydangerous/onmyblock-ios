@@ -161,7 +161,7 @@ float kHomebaseLandlordImagePercentage = 0.4f;
   _activityTableView.separatorColor       = [UIColor grayLight];
   _activityTableView.separatorInset = UIEdgeInsetsMake(0.0f, padding, 
     0.0f, 0.0f);
-  _activityTableView.showsVerticalScrollIndicator = NO;
+  // _activityTableView.showsVerticalScrollIndicator = NO;
   [self.view insertSubview: _activityTableView belowSubview: buttonsView];
   // Activity table header view
   UIView *activityTableViewHeader = [UIView new];
@@ -636,11 +636,12 @@ viewForHeaderInSection: (NSInteger) section
 {
   CGFloat padding = 20.0f;
   AMBlurView *blur = [[AMBlurView alloc] init];
-  blur.blurTintColor = [UIColor blueLight];
+  // blur.blurTintColor = [UIColor blueLight];
+  blur.blurTintColor = [UIColor grayLight];
   blur.frame = CGRectMake(0.0f, 0.0f, 
     tableView.frame.size.width, 13.0f * 2);
   UILabel *label = [UILabel new];
-  label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 13];
+  label.font = [UIFont smallTextFontBold];
   label.frame = CGRectMake(padding, 0.0f, 
     blur.frame.size.width - (padding * 2), blur.frame.size.height);
   label.textAlignment = NSTextAlignmentCenter;

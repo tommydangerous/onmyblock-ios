@@ -13,6 +13,7 @@
 #import "OMBAppDelegate.h"
 #import "OMBIntroStillImagesViewController.h"
 #import "OMBLoginViewController.h"
+#import "OMBNavigationController.h"
 #import "OMBViewControllerContainer.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"

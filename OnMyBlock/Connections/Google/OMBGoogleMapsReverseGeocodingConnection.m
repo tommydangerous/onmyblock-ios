@@ -20,14 +20,23 @@ state: (NSString *) state
 {
   if (!(self = [super init])) return nil;
 
+  // NSString *string = [NSString stringWithFormat: 
+  //   @"http://maps.googleapis.com/maps/api/geocode/json?" 
+  //   @"address=%@&"
+  //   @"components="
+  //   @"country:%@|"
+  //   @"locality:%@|"
+  //   @"administrative_area:%@&"
+  //   @"sensor=true", address, @"us", city, state];
+  
   NSString *string = [NSString stringWithFormat: 
     @"http://maps.googleapis.com/maps/api/geocode/json?" 
-      @"address=%@&"
-      @"components="
-      @"country:%@|"
-      @"locality:%@|"
-      @"administrative_area:%@&"
-      @"sensor=true", address, @"us", city, state];
+    @"address=%@&"
+    @"components="
+    @"country:%@|"
+    @"administrative_area:%@&"
+    @"sensor=true", 
+    address, @"us", state];
 
   NSLog(@"STRING: %@", string);
   [self setRequestWithString: string];

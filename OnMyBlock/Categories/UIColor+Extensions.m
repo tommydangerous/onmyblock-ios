@@ -68,8 +68,8 @@
   // Red:   +63
   // Green: +23
   // Blue:  +13
-  return [UIColor colorWithRed: (41 + 63)/255.0f green: (184 + 23)/255.0f
-    blue: (229 + 13)/255.0f alpha: value];
+  return [UIColor colorWithRed: (41 + 63 + 20)/255.0f 
+    green: (184 + 23 + 20)/255.0f blue: (229 + 13 + 20)/255.0f alpha: value];
 }
 
 + (UIColor *) facebookBlue
@@ -144,20 +144,20 @@
 
 + (UIColor *) green
 {
-  return [UIColor colorWithRed: (88/255.0) green: (209/255.0) 
-    blue: (136/255.0) alpha: 1];
+  return [UIColor greenAlpha: 1.0f];
 }
 
 + (UIColor *) greenAlpha: (float) value
 {
-  return [UIColor colorWithRed: (88/255.0) green: (209/255.0) 
-    blue: (136/255.0) alpha: value];
+  // 88, 209, 136 (current)
+  return [UIColor colorWithRed: (56/255.0) green: (224/255.0) 
+    blue: (45/255.0) alpha: value];
 }
 
 + (UIColor *) greenDark
 {
-  return [UIColor colorWithRed: (42/255.0) green: (186/255.0) 
-    blue: (100/255.0) alpha: 1];
+  return [UIColor colorWithRed: (75/255.0) green: (188/255.0) 
+    blue: (60/255.0) alpha: 1];
 }
 
 + (UIColor *) linkedinBlue

@@ -51,6 +51,11 @@
     [[OMBUser currentUser] readFromPayoutMethodsDictionary: @{
       @"objects": @[[self objectDictionary]]
     }];
+    // If the user added their first payout method
+    if ([[[OMBUser currentUser] paymentPayoutMethods] count] == 1) {
+      [[NSNotificationCenter defaultCenter] postNotificationName:
+        OMBPayoutMethodNotificationFirst object: nil];
+    }
   }
 
   [super connectionDidFinishLoading: connection];

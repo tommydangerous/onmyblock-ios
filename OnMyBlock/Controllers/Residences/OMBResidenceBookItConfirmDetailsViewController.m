@@ -16,10 +16,12 @@
 #import "OMBAlertViewBlur.h"
 #import "OMBCenteredImageView.h"
 #import "OMBGradientView.h"
+#import "OMBNavigationController.h"
 #import "OMBOffer.h"
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutMethodListCell.h"
 #import "OMBPayoutMethodUpdateConnection.h"
+#import "OMBPlaceOfferInformationStepsViewController.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBRenterProfileViewController.h"
 #import "OMBResidence.h"
@@ -34,6 +36,7 @@
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
+#import "UIImage+Resize.h"
 
 @implementation OMBResidenceBookItConfirmDetailsViewController
 
@@ -47,9 +50,21 @@
   dateFormatter1.dateFormat = @"MMM d, yyyy";
   
   residence = object;
-  deposit   = residence.minRent;
-  if (residence.deposit)
+  // Deposit
+  deposit = 0.0f;
+  // If residence came from an API
+  if ([residence isFromExternalSource]) {
+    // If there is a deposit
+    if (residence.deposit)
+      deposit = residence.deposit;
+    // Or else use the min rent
+    else
+      deposit = residence.minRent;
+  }
+  // If residence was manually created
+  else if (residence.deposit)
     deposit = residence.deposit;
+
   offer = [[OMBOffer alloc] init];
   offer.moveInDate = residence.moveInDate;
   if (residence.moveOutDate)
@@ -63,11 +78,15 @@
   self.screenName = self.title = @"Confirm Offer Details";
   
   [[NSNotificationCenter defaultCenter] addObserver: self
-                                           selector: @selector(keyboardWillShow:)
-                                               name: UIKeyboardWillShowNotification object: nil];
+    selector: @selector(keyboardWillShow:)
+      name: UIKeyboardWillShowNotification object: nil];
   [[NSNotificationCenter defaultCenter] addObserver: self
-                                           selector: @selector(keyboardWillHide:)
-                                               name: UIKeyboardWillHideNotification object: nil];
+    selector: @selector(keyboardWillHide:)
+      name: UIKeyboardWillHideNotification object: nil];
+
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(userAddedFirstPayoutMethod)
+      name: OMBPayoutMethodNotificationFirst object: nil];
   
   return self;
 }
@@ -81,10 +100,16 @@
   [super loadView];
   
   doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
-                                                       style: UIBarButtonItemStylePlain target: self action: @selector(done)];
+    style: UIBarButtonItemStylePlain target: self action: @selector(done)];
   [doneBarButtonItem setTitleTextAttributes: @{
-                                               NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
-                                               } forState: UIControlStateNormal];
+    NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
+  } forState: UIControlStateNormal];
+
+  infoBarButtonItem = [[UIBarButtonItem alloc] initWithImage: 
+    [UIImage image: [UIImage imageNamed: @"info_icon.png"]
+      size: CGSizeMake(26.0f, 26.0f)] style: UIBarButtonItemStylePlain 
+        target: self action: @selector(showPlaceOfferHowItWorks)];
+  self.navigationItem.rightBarButtonItem = infoBarButtonItem;
   
   [self setupForTable];
   
@@ -117,29 +142,29 @@
   // 22 = line height for address
   // 22 = line height for bed and bath
   headerView.frame = CGRectMake(0.0f, 0.0f, screenWidth,
-                                20 + 44 + padding + 22.0f + 22.0f + padding);
+    20 + 44 + padding + 22.0f + 22.0f + padding);
   self.table.tableHeaderView = headerView;
   
   // Title label
   titleLabel = [UILabel new];
   titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   titleLabel.frame = CGRectMake(padding, 20 + 44 + padding,
-                                screenWidth - (padding * 2), 22.0f);
+    screenWidth - (padding * 2), 22.0f);
   titleLabel.textColor = [UIColor whiteColor];
   [headerView addSubview: titleLabel];
   // Bed bath label
   bedBathLabel = [UILabel new];
-  bedBathLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  bedBathLabel.font = [UIFont normalTextFont];
   bedBathLabel.frame = CGRectMake(titleLabel.frame.origin.x,
-                                  titleLabel.frame.origin.y + titleLabel.frame.size.height,
-                                  titleLabel.frame.size.width, titleLabel.frame.size.height);
+    titleLabel.frame.origin.y + titleLabel.frame.size.height,
+      titleLabel.frame.size.width, titleLabel.frame.size.height);
   bedBathLabel.textColor = titleLabel.textColor;
   [headerView addSubview: bedBathLabel];
   // Rent label
   rentLabel = [UILabel new];
   rentLabel.frame = CGRectMake(titleLabel.frame.origin.x,
-                               titleLabel.frame.origin.y, titleLabel.frame.size.width,
-                               27.0f);
+    titleLabel.frame.origin.y, titleLabel.frame.size.width,
+      27.0f);
   rentLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 20];
   rentLabel.textAlignment = NSTextAlignmentRight;
   rentLabel.textColor = titleLabel.textColor;
@@ -159,8 +184,9 @@
   // Gradient
   OMBGradientView *gradient = [[OMBGradientView alloc] init];
   gradient.colors = @[
-                      [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.0],
-                      [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.8]];
+    [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.0],
+    [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.8]
+  ];
   gradient.frame = backView.bounds;
   [backView addSubview: gradient];
   
@@ -186,8 +212,8 @@
   // submitOfferButton.layer.cornerRadius = 2.0f;
   submitOfferButton.titleLabel.font = [UIFont mediumTextFontBold];
   [submitOfferButton addTarget: self
-                        action: @selector(submitOfferButtonSelected)
-              forControlEvents: UIControlEventTouchUpInside];
+    action: @selector(submitOfferButtonSelected)
+      forControlEvents: UIControlEventTouchUpInside];
   [submitOfferButton setBackgroundImage:
     [UIImage imageWithColor: [UIColor blueHighlightedAlpha: 0.3f]]
       forState: UIControlStateHighlighted];
@@ -222,11 +248,11 @@
   secondsLabel = [UILabel new];
   
   NSArray *array = @[
-                     daysLabel,
-                     hoursLabel,
-                     minutesLabel,
-                     secondsLabel
-                     ];
+    daysLabel,
+    hoursLabel,
+    minutesLabel,
+    secondsLabel
+  ];
   CGFloat labelSize = 58.0f;
   CGFloat spacing = (screenWidth - (labelSize * [array count])) /
   ([array count] + 1);
@@ -250,12 +276,12 @@
   // Current offer
   currentOfferLabel = [[UILabel alloc] init];
   currentOfferLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
-                                           size: 15];
+    size: 15];
   CGFloat currentOfferLabelSpacing = ((headerView.frame.size.height -
-                                       (daysLabel.frame.origin.y + daysLabel.frame.size.height)) - 44.0f) * 0.5;
+    (daysLabel.frame.origin.y + daysLabel.frame.size.height)) - 44.0f) * 0.5;
   currentOfferLabel.frame = CGRectMake(0.0f,
-                                       headerView.frame.size.height - (currentOfferLabelSpacing + 44.0f),
-                                       screenWidth, 44.0f);
+    headerView.frame.size.height - (currentOfferLabelSpacing + 44.0f),
+      screenWidth, 44.0f);
   currentOfferLabel.text = @"Current offer: $4,500";
   currentOfferLabel.textAlignment = NSTextAlignmentCenter;
   currentOfferLabel.textColor = [UIColor whiteColor];
@@ -892,7 +918,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         label.frame = CGRectMake(padding, 0.0f,
                                  tableView.frame.size.width - (padding * 2),
                                  [OMBPayoutMethodListCell heightForCell]);
-        label.text = @"Add a new payout method";
+        label.text = @"Add new payment method";
         label.textColor = [UIColor blue];
         [cell.contentView addSubview: label];
       }
@@ -1512,9 +1538,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   style.minimumLineHeight = 32.0f;
   NSMutableAttributedString *text =
   [[NSMutableAttributedString alloc] initWithString: string attributes: @{
-                                                                          NSParagraphStyleAttributeName: style
-                                                                          }
-   ];
+    NSParagraphStyleAttributeName: style
+  }];
   if ([unit isEqualToString: @"days"]) {
     daysLabel.attributedText = text;
     daysLabel.textAlignment  = NSTextAlignmentCenter;
@@ -1540,12 +1565,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   
   alert.alertTitle.text = @"Submit Offer";
   alert.alertMessage.text = [NSString stringWithFormat:
-                             @"Are you sure you want to submit an offer to rent "
-                             @"this place from %@ - %@ for %@/mo?",
-                             [dateFormmater stringFromDate:
-                              [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]],
-                             [dateFormmater stringFromDate: [residence moveOutDateDate]],
-                             [residence rentToCurrencyString]];
+    @"Are you sure you want to submit an offer to rent "
+    @"this place from %@ - %@ for %@/mo?",
+      [dateFormmater stringFromDate:
+        [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]],
+          [dateFormmater stringFromDate: [residence moveOutDateDate]],
+            [residence rentToCurrencyString]];
   [alert showAlert];
 }
 
@@ -1594,6 +1619,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self showCalendar];
 }
 
+- (void) showPlaceOfferHowItWorks
+{
+  [self presentViewController:
+    [[OMBNavigationController alloc] initWithRootViewController:
+      [[OMBPlaceOfferInformationStepsViewController alloc] init]]
+        animated: YES completion: nil];
+}
+
 - (void) submitOfferButtonSelected
 {
   if ([[OMBUser currentUser] primaryPaymentPayoutMethod]) {
@@ -1609,15 +1642,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   offer.amount = residence.minRent;
   offer.note   = personalNote;
   NSString *moveInDateString = [dateFormatter1 stringFromDate:
-                                [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]];
+    [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]];
   NSString *moveOutDateString = [dateFormatter1 stringFromDate:
-                                 [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
+    [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
   
   [alertBlur setTitle: @"Place Offer"];
   [alertBlur setMessage: [NSString stringWithFormat: @"Are you sure you "
-                          @"want to submit an offer to rent this place from %@ - %@ for %@/mo?",
-                          moveInDateString, moveOutDateString, 
-                          [NSString numberToCurrencyString: offer.amount]]];
+    @"want to submit an offer to rent this place (%@/mo + %@ deposit) "
+    @"from %@ - %@?", [NSString numberToCurrencyString: offer.amount],
+      [NSString numberToCurrencyString: deposit],
+        moveInDateString, moveOutDateString]];
   [alertBlur resetQuestionDetails];
   [alertBlur hideQuestionButton];
   
@@ -1626,9 +1660,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [alertBlur setConfirmButtonTitle: @"Submit"];
   
   [alertBlur addTargetForCancelButton: self 
-                               action: @selector(closeAlertBlur)];
+    action: @selector(closeAlertBlur)];
   [alertBlur addTargetForConfirmButton: self
-                                action: @selector(submitOfferConfirmed)];
+    action: @selector(submitOfferConfirmed)];
   
   [alertBlur showInView: self.view];
 }
@@ -1643,20 +1677,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       
       [alertBlur setTitle: @"Offer Placed!"];
       [alertBlur setMessage: [NSString stringWithFormat:
-        @"The %@ has been notified of your offer and will be getting back "
-        @"to you within 24 hours.\n\n"
-        @"If the %@ accepts your offer, you will have 48 hours to confirm "
-        @"and pay the 1st month's rent and deposit through your "
-        @"selected payment method. If the %@ for some reason rejects your "
-        @"offer, you will be notified immediately. You can improve "
-        @"your chances of being accepted by completing your renter profile!", 
-        userTypeString, userTypeString, userTypeString]];
+        @"If the %@ accepts your offer, you will receive a lease "
+        @"via email to e-sign. You will have 48 hours to confirm, "
+        @"sign the lease, and pay the 1st month's rent "
+        @"and deposit using your selected payment method.", userTypeString]];
       [alertBlur resetQuestionDetails];
       [alertBlur hideQuestionButton];
       // Buttons
       [alertBlur setConfirmButtonTitle: @"Okay"];
       [alertBlur addTargetForConfirmButton: self
-                                    action: @selector(hideAlertBlurAndPopController)];
+        action: @selector(submitOfferConfirmedOkay)];
       [alertBlur showOnlyConfirmButton];
       [alertBlur animateChangeOfContent];
     }
@@ -1670,6 +1700,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [[self appDelegate].container startSpinning];
 }
 
+- (void) submitOfferConfirmedOkay
+{
+  [[self appDelegate].container showHomebaseRenter];
+  [self hideAlertBlurAndPopController];
+}
+
 - (void) submitOffer
 {
   [alert hideAlert];
@@ -1681,17 +1717,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       if ([residence.propertyType isEqualToString: @"sublet"])
         userTypeString = @"subletter";
       NSString *message = [NSString stringWithFormat: 
-                           @"The %@ has been notified of your offer and "
-                           @"will be getting back to you shortly.\n\n"
-                           @"If the %@ accepts your offer, you will have 48 hours to confirm "
-                           @"and pay the 1st month's rent and deposit through your "
-                           @"selected payment method. If the %@ for some reason rejects your "
-                           @"offer, you will be notified immediately. You can improve "
-                           @"your chances of being accepted by completing your renter profile.",
-                           userTypeString, userTypeString, userTypeString];
+        @"The %@ has been notified of your offer and "
+        @"will be getting back to you shortly.\n\n"
+        @"If the %@ accepts your offer, you will have 48 hours to confirm "
+        @"and pay the 1st month's rent and deposit through your "
+        @"selected payment method. If the %@ for some reason rejects your "
+        @"offer, you will be notified immediately. You can improve "
+        @"your chances of being accepted by completing your renter profile.",
+          userTypeString, userTypeString, userTypeString];
       UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-                                @"Offer Placed!" message: message delegate: nil cancelButtonTitle: @"OK"
-                                                otherButtonTitles: nil];
+        @"Offer Placed!" message: message delegate: nil cancelButtonTitle: @"OK"
+          otherButtonTitles: nil];
       [alertView show];
       [self.navigationController popViewControllerAnimated: YES];
     }
@@ -1725,6 +1761,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table cellForRowAtIndexPath: 
    [NSIndexPath indexPathForRow: 0 inSection: 0]];
   return cell.yourOfferTextField;
+}
+
+- (void) userAddedFirstPayoutMethod
+{
+  UINavigationController *vc = (UINavigationController *)
+    [self appDelegate].container.payoutMethodsNavigationController;
+  if (vc.presentingViewController)
+    [vc dismissViewControllerAnimated: YES completion: nil];
 }
 
 @end

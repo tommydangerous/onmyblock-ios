@@ -241,6 +241,10 @@
 		AB80343F1889B06100C5B889 /* apartment_icon_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB80343B1889B06100C5B889 /* apartment_icon_2@2x.png */; };
 		AB8034401889B06100C5B889 /* house_icon_2.png in Resources */ = {isa = PBXBuildFile; fileRef = AB80343C1889B06100C5B889 /* house_icon_2.png */; };
 		AB8034411889B06100C5B889 /* house_icon_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB80343D1889B06100C5B889 /* house_icon_2@2x.png */; };
+		AB8642B918AB43B500995571 /* OMBInformationStepsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642B818AB43B500995571 /* OMBInformationStepsViewController.m */; };
+		AB8642BC18AB50A500995571 /* OMBInformationStepsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642BB18AB50A500995571 /* OMBInformationStepsCell.m */; };
+		AB8642BF18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642BE18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m */; };
+		AB8642C218AB5FF400995571 /* OMBInformationStepsFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642C118AB5FF400995571 /* OMBInformationStepsFlowLayout.m */; };
 		AB8B793E186DEF13005AB552 /* OMBCreateListingDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B793D186DEF13005AB552 /* OMBCreateListingDetailCell.m */; };
 		AB8B7941186DFA8A005AB552 /* OMBActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B7940186DFA8A005AB552 /* OMBActivityView.m */; };
 		AB8B7944186E0091005AB552 /* OMBFinishListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B7943186E0091005AB552 /* OMBFinishListingViewController.m */; };
@@ -1015,6 +1019,14 @@
 		AB80343B1889B06100C5B889 /* apartment_icon_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "apartment_icon_2@2x.png"; sourceTree = "<group>"; };
 		AB80343C1889B06100C5B889 /* house_icon_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = house_icon_2.png; sourceTree = "<group>"; };
 		AB80343D1889B06100C5B889 /* house_icon_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "house_icon_2@2x.png"; sourceTree = "<group>"; };
+		AB8642B718AB43B500995571 /* OMBInformationStepsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBInformationStepsViewController.h; sourceTree = "<group>"; };
+		AB8642B818AB43B500995571 /* OMBInformationStepsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBInformationStepsViewController.m; sourceTree = "<group>"; };
+		AB8642BA18AB50A500995571 /* OMBInformationStepsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBInformationStepsCell.h; sourceTree = "<group>"; };
+		AB8642BB18AB50A500995571 /* OMBInformationStepsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBInformationStepsCell.m; sourceTree = "<group>"; };
+		AB8642BD18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPlaceOfferInformationStepsViewController.h; sourceTree = "<group>"; };
+		AB8642BE18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPlaceOfferInformationStepsViewController.m; sourceTree = "<group>"; };
+		AB8642C018AB5FF400995571 /* OMBInformationStepsFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBInformationStepsFlowLayout.h; sourceTree = "<group>"; };
+		AB8642C118AB5FF400995571 /* OMBInformationStepsFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBInformationStepsFlowLayout.m; sourceTree = "<group>"; };
 		AB8B793C186DEF13005AB552 /* OMBCreateListingDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailCell.h; sourceTree = "<group>"; };
 		AB8B793D186DEF13005AB552 /* OMBCreateListingDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailCell.m; sourceTree = "<group>"; };
 		AB8B793F186DFA8A005AB552 /* OMBActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBActivityView.h; sourceTree = "<group>"; };
@@ -1844,6 +1856,8 @@
 				AB57EA1D186B7C3C001682DB /* OMBMessageDetailCollectionViewFlowLayout.m */,
 				ABA3D69918A9423D006CE8C1 /* OMBTestFlowLayout.h */,
 				ABA3D69A18A9423D006CE8C1 /* OMBTestFlowLayout.m */,
+				AB8642C018AB5FF400995571 /* OMBInformationStepsFlowLayout.h */,
+				AB8642C118AB5FF400995571 /* OMBInformationStepsFlowLayout.m */,
 			);
 			path = Layouts;
 			sourceTree = "<group>";
@@ -2246,6 +2260,8 @@
 				ABF18BB81816D3F0002DD723 /* TextFieldPadding.h */,
 				ABF18BB91816D3F0002DD723 /* TextFieldPadding.m */,
 				ABB9115D189807EC0046611F /* Users */,
+				AB8642BA18AB50A500995571 /* OMBInformationStepsCell.h */,
+				AB8642BB18AB50A500995571 /* OMBInformationStepsCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2878,6 +2894,8 @@
 				ABA080851868E76200C7B851 /* OMBTextViewViewController.m */,
 				ABED5FED189705EC00AD630C /* OMBMapViewViewController.h */,
 				ABED5FEE189705ED00AD630C /* OMBMapViewViewController.m */,
+				AB8642B718AB43B500995571 /* OMBInformationStepsViewController.h */,
+				AB8642B818AB43B500995571 /* OMBInformationStepsViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -3134,6 +3152,8 @@
 				ABDF175B1868D10F004E2755 /* OMBResidenceLeaseAgreementViewController.m */,
 				ABA0808A1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.h */,
 				ABA0808B1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m */,
+				AB8642BD18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.h */,
+				AB8642BE18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m */,
 			);
 			path = Residences;
 			sourceTree = "<group>";
@@ -3689,6 +3709,7 @@
 				AB0BC54A18A2B4750067BFF7 /* OMBMovedInConnection.m in Sources */,
 				DE95E8D918A03B5500A2A341 /* MNFastDateEnumeration.m in Sources */,
 				AB70CB90186D353E0083DF4C /* OMBCreateListingPropertyTypeCell.m in Sources */,
+				AB8642BF18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m in Sources */,
 				AB01ED4318582A7A00333390 /* OMBLegalAnswerListConnection.m in Sources */,
 				AB4F9D24181ABFA20086D618 /* OMBResidenceImageDownloader.m in Sources */,
 				AB4ED2E418847785009AFB01 /* OMBOpenHouseCreateConnection.m in Sources */,
@@ -3748,6 +3769,7 @@
 				ABE4FBDF18902B140009D643 /* OMBPayoutMethod.m in Sources */,
 				AB6155CB184F86F600A193C7 /* OMBUserMenu.m in Sources */,
 				AB9B26501811CE8E00E6DAC4 /* OMBPropertiesConnection.m in Sources */,
+				AB8642B918AB43B500995571 /* OMBInformationStepsViewController.m in Sources */,
 				ABF8ECA1182D504E0080B1E2 /* OMBIntroContactView.m in Sources */,
 				ABE2816918694AED00A5D14E /* OMBFavoriteResidenceCell.m in Sources */,
 				AB57EA24186C7662001682DB /* OMBMessageNewViewController.m in Sources */,
@@ -3905,6 +3927,7 @@
 				AB8B7947186E155F005AB552 /* OMBFinishListingOtherDetailsViewController.m in Sources */,
 				ABB7005C187B58AA005F0730 /* OMBOfferInquiryResidenceCell.m in Sources */,
 				AB0C36B5184074A8006DC3AD /* OMBHouseGraphicView.m in Sources */,
+				AB8642C218AB5FF400995571 /* OMBInformationStepsFlowLayout.m in Sources */,
 				AB9545761848FB58000513BE /* OMBAccountProfileViewController.m in Sources */,
 				ABB911C118998FB30046611F /* AFNetworkReachabilityManager.m in Sources */,
 				ABED5FEC1896FAED00AD630C /* DKLiveBlurView.m in Sources */,
@@ -3981,6 +4004,7 @@
 				ABB173BF189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m in Sources */,
 				ABDF174A1866396C004E2755 /* OMBResidenceBookItViewController.m in Sources */,
 				ABA5B42C1857B9E300F825E1 /* OMBEmploymentListConnection.m in Sources */,
+				AB8642BC18AB50A500995571 /* OMBInformationStepsCell.m in Sources */,
 				ABB91197189976060046611F /* OMBLinkedInButton.m in Sources */,
 				ABB911C018998FB30046611F /* AFHTTPSessionManager.m in Sources */,
 				ABB3C5821811789100DD91C9 /* OMBTabBarController.m in Sources */,

@@ -386,6 +386,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 {
   NSInteger timeLeft = 0;
   timeLabel.textColor = [UIColor blueDark];
+  timeLabel.textColor = [UIColor blue];
   // Waiting for the student
   if (_offer.accepted && !_offer.rejected && !_offer.confirmed) {
     timeLeft = [_offer timeLeftForStudent];

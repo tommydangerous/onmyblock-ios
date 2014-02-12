@@ -352,6 +352,8 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   if ([_residence coverPhoto]) {
     [_imagesFilmstrip reloadData];
     // [self downloadResidenceImages];
+    if (_completionBlock)
+      _completionBlock(nil);
   }
   else {
     // Download cover photo
@@ -359,6 +361,8 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
       [_imagesFilmstrip reloadData];
       // [self downloadResidenceImages];
       // [activityIndicatorView stopAnimating];
+      if (_completionBlock)
+        _completionBlock(nil);
     }];
     // [activityIndicatorView startAnimating];
   }
@@ -398,6 +402,15 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 
   // Add to favorites button image
   [self adjustFavoriteButton];
+}
+
+- (void) loadResidenceDataForPropertyInfoView: (OMBResidence *) object
+{
+  __weak typeof(self) weakSelf = self;
+  _completionBlock = ^(NSError *error) {
+    [weakSelf downloadResidenceImages];
+  };
+  [self loadResidenceData: object];
 }
 
 - (void) resetFilmstrip

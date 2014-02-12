@@ -10,4 +10,10 @@
 
 @interface OMBCollectionViewCell : UICollectionViewCell
 
+#pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (NSString *) reuseIdentifier;
+
 @end

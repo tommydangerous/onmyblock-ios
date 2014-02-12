@@ -42,8 +42,7 @@
 - (void) loadResidenceData: (OMBResidence *) object
 {
   _residence = object;
-  [_residencePartialView loadResidenceData: _residence];
-  [_residencePartialView downloadResidenceImages];
+  [_residencePartialView loadResidenceDataForPropertyInfoView: _residence];
 }
 
 @end
