@@ -10,22 +10,13 @@
 
 @implementation OMBCollectionViewCell
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
+#pragma mark - Methods
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+#pragma mark - Class Methods
+
++ (NSString *) reuseIdentifier
 {
-    // Drawing code
+  return NSStringFromClass([self class]);
 }
-*/
 
 @end

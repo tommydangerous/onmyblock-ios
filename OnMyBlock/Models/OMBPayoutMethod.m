@@ -10,6 +10,9 @@
 
 #import "NSDateFormatter+JSON.h"
 
+NSString *const OMBPayoutMethodNotificationFirst =
+  @"OMBPayoutMethodNotificationFirst";
+
 @implementation OMBPayoutMethod
 
 #pragma mark - Initializer

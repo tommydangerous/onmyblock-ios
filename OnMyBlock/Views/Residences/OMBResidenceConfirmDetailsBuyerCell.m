@@ -84,7 +84,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   // schoolLabel.text = [OMBUser currentUser].school;
 
-  NSString *string = @"Your school goes here or a little bit about yourself...";
+  NSString *string = @"College or University\n"
+    @"A little bit about you...";
   if ([[OMBUser currentUser].about length]) {
     string = [OMBUser currentUser].about;
   }

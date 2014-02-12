@@ -242,8 +242,10 @@
     [cell setEnabled: [self dateEnabled: date]];
   }
 
-  UIColor *blue = [UIColor colorWithRed: 111/255.0f green: 174/255.0f
-    blue: 193/255.0f alpha: 1.0f];
+  // UIColor *blue = [UIColor colorWithRed: 111/255.0f green: 174/255.0f
+  //   blue: 193/255.0f alpha: 1.0f];
+  UIColor *blue = [UIColor colorWithRed: (41/255.0) green: (184/255.0) 
+    blue: (229/255.0) alpha: 1.0f];
 
   NSDateComponents *components2 = [self.calendar components:
     NSMonthCalendarUnit fromDate: date];

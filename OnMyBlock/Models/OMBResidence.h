@@ -37,6 +37,7 @@ extern NSString *const OMBResidencePropertyTypeSublet;
 @property (nonatomic, strong) NSString *description;
 @property (nonatomic) BOOL dogs;
 @property (nonatomic, strong) NSString *email;
+@property (nonatomic, strong) NSString *externalSource;
 @property (nonatomic) BOOL inactive;
 @property (nonatomic) BOOL isAuction;
 @property (nonatomic, strong) NSString *landlordName;
@@ -103,9 +104,10 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 - (NSArray *) imagesArray;
 - (UIImage *) imageAtPosition: (int) position;
 - (UIImage *) imageForSize: (CGSize) size 
-forResidenceImage: (OMBResidenceImage *) residenceImage;
+  forResidenceImage: (OMBResidenceImage *) residenceImage;
 - (UIImage *) imageForSizeKey: (NSString *) string 
-forResidenceImage: (OMBResidenceImage *) residenceImage;
+  forResidenceImage: (OMBResidenceImage *) residenceImage;
+- (BOOL) isFromExternalSource;  
 - (NSString *) leaseMonthsStringShort;
 - (NSDate *) moveOutDateDate;
 - (NSInteger) numberOfStepsLeft;

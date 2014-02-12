@@ -52,6 +52,7 @@ UITextViewDelegate, MNCalendarViewDelegate>
   UILabel *daysLabel;
   LEffectLabel *effectLabel;
   UILabel *hoursLabel;
+  UIBarButtonItem *infoBarButtonItem;
   BOOL isAddingAPersonalNote;
   BOOL isEditing;
   BOOL isShowingPriceBreakdown;

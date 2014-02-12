@@ -1,3 +1,4 @@
+
 //
 //  OMBPayoutMethod.h
 //  OnMyBlock
@@ -7,6 +8,9 @@
 //
 
 #import <Foundation/Foundation.h>
+
+// Notifications
+extern NSString *const OMBPayoutMethodNotificationFirst;
 
 typedef enum {
   OMBPayoutMethodPayoutTypePayPal,

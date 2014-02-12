@@ -388,7 +388,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
     forControlEvents: UIControlEventTouchUpInside];
   [createListingButton setTitle: @"Create Listing" 
     forState: UIControlStateNormal];
-  [createListingButton setTitleColor: [UIColor colorWithWhite: 1.0f alpha: 0.5f]
+  [createListingButton setTitleColor: [UIColor colorWithWhite: 1.0f alpha: 1.0f]
     forState: UIControlStateNormal];
   [self.view addSubview: createListingButton];
 
@@ -506,7 +506,10 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 shouldRecognizeSimultaneouslyWithGestureRecognizer: 
 (UIGestureRecognizer *) otherGestureRecognizer
 {
-  if (gestureRecognizer == panGesture)
+  // if (gestureRecognizer == panGesture)
+  //   return NO;
+  if ([otherGestureRecognizer.view isKindOfClass: [UITableView class]] ||
+    [otherGestureRecognizer.view isKindOfClass: [UICollectionView class]])
     return NO;
   return YES;
 }
