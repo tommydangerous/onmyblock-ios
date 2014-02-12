@@ -358,7 +358,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   
   CGFloat width      = self.bounds.size.width;
   CGFloat itemWidth  = roundf(width / self.daysInWeek);
-  CGFloat itemHeight = indexPath.item < self.daysInWeek ? 20.0f : itemWidth; // 30.f
+  CGFloat itemHeight = indexPath.item < self.daysInWeek ? itemWidth * 0.5 : itemWidth; // 30.f
   
   // 0..6
   NSUInteger weekday = indexPath.item % self.daysInWeek;

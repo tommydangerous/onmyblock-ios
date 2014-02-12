@@ -296,6 +296,7 @@
   personalNoteTextView.font = [UIFont normalTextFont];
   personalNoteTextView.frame = CGRectMake(padding, padding,
                                           screenWidth - (padding * 2), padding * 5); // 5 times the line height
+  personalNoteTextView.returnKeyType = UIReturnKeyDone;
   personalNoteTextView.textColor = [UIColor textColor];
   
   // Personal note text view place holder
@@ -1394,12 +1395,23 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Protocol UITextViewDelegate
 
+- (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+  
+  if([text isEqualToString:@"\n"]) {
+    //[self done];
+    [textView resignFirstResponder];
+    return NO;
+  }
+  
+  return YES;
+}
+
 - (void) textViewDidBeginEditing: (UITextView *) textView
 {
   isEditing = YES;
   [self.table beginUpdates];
   [self.table endUpdates];
-  [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
+  //[self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
   
   // If it scrolls to the submit offer notes section,
   // it goes too far
