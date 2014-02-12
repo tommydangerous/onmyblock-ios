@@ -8,6 +8,7 @@
 
 #import "OMBEditProfileViewController.h"
 
+#import "CustomLoading.h"
 #import "NSString+Extensions.h"
 #import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
@@ -40,7 +41,9 @@
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(keyboardWillHide:)
       name: UIKeyboardWillHideNotification object: nil];
-
+  [[NSNotificationCenter defaultCenter] addObserver:self
+    selector:@selector(progressConnection:)
+      name: @"progressConnection" object:nil];
   return self;
 }
 
@@ -51,7 +54,9 @@
 - (void) loadView
 {
   [super loadView];
-
+  
+  [[CustomLoading getInstance] clearInstance];
+  
   UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
   cancelBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
     style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
@@ -185,6 +190,7 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
   UIImage *image = [info objectForKey: UIImagePickerControllerEditedImage];
   if (!image)
     image = [info objectForKey: UIImagePickerControllerOriginalImage];
+  [[CustomLoading getInstance] setNumImages: 1];
   [[OMBUser currentUser] uploadImage: image withCompletion: ^(NSError *error) {
     if ([OMBUser currentUser].image && !error) {
       // [backgroundBlurView refreshWithImage: [OMBUser currentUser].image];
@@ -193,9 +199,9 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     else {
       [self showAlertViewWithError: error];
     }
-    [[self appDelegate].container stopSpinning];
+    //[[self appDelegate].container stopSpinning];
   }];
-  [[self appDelegate].container startSpinning];
+  //[[self appDelegate].container startSpinning];
   [picker dismissViewControllerAnimated: YES completion: nil];
 }
 
@@ -452,9 +458,26 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
 }
 
+- (void)progressConnection:(NSNotification *)notification{
+  
+  float value = ([[notification object] floatValue]);
+  
+  CustomLoading *custom = [CustomLoading getInstance];
+  //editBarButtonItem.enabled = NO;
+  
+  if(value == 1.0){
+    custom.numImages--;
+    [custom stopAnimatingWithView:self.view];
+      //editBarButtonItem.enabled = YES;
+  }else{
+    [custom startAnimatingWithProgress:(int)(value * 25) withView:self.view];
+  }
+  
+}
+
 - (void) save
 {
-  [[OMBUser currentUser] updateWithDictionary: valueDictionary 
+  [[OMBUser currentUser] updateWithDictionary: valueDictionary
     completion: ^(NSError *error) {
       if (!error) {
         // Clear this because they updated their about
