@@ -16,6 +16,7 @@
 #import "OMBAlertViewBlur.h"
 #import "OMBCenteredImageView.h"
 #import "OMBGradientView.h"
+#import "OMBHelpPopUpView.h"
 #import "OMBNavigationController.h"
 #import "OMBOffer.h"
 #import "OMBPayoutMethod.h"
@@ -295,14 +296,14 @@
   personalNoteTextView.delegate = self;
   personalNoteTextView.font = [UIFont normalTextFont];
   personalNoteTextView.frame = CGRectMake(padding, padding,
-                                          screenWidth - (padding * 2), padding * 5); // 5 times the line height
+    screenWidth - (padding * 2), padding * 5); // 5 times the line height
   personalNoteTextView.textColor = [UIColor textColor];
   
   // Personal note text view place holder
   personalNoteTextViewPlaceholder = [UILabel new];
   personalNoteTextViewPlaceholder.font = personalNoteTextView.font;
   personalNoteTextViewPlaceholder.frame = CGRectMake(5.0f, 8.0f,
-                                                     personalNoteTextView.frame.size.width, 20.0f);
+    personalNoteTextView.frame.size.width, 20.0f);
   personalNoteTextViewPlaceholder.text = @"Write your personal note here...";
   personalNoteTextViewPlaceholder.textColor = [UIColor grayMedium];
   [personalNoteTextView addSubview: personalNoteTextViewPlaceholder];
@@ -310,14 +311,19 @@
   // Alert view
   alert = [[OMBAlertView alloc] init];
   [alert addTarget: self action: @selector(hideAlert)
-         forButton: alert.alertCancel];
+    forButton: alert.alertCancel];
   [alert addTarget: self action: @selector(submitOffer)
-         forButton: alert.alertConfirm];
+    forButton: alert.alertConfirm];
   [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
   [alert.alertConfirm setTitle: @"Submit" forState: UIControlStateNormal];
   
   // Alert view blur
   alertBlur = [[OMBAlertViewBlur alloc] init];
+
+  // Help pop up
+  helpPopUpView = [[OMBHelpPopUpView alloc] initWithFrame: CGRectMake(0.0f,
+    padding, screenWidth, OMBStandardHeight)];
+  [self.view addSubview: helpPopUpView];
 }
 
 - (void) viewDidAppear: (BOOL) animated
@@ -327,6 +333,12 @@
   // if (!hasOfferValue) {
   //   [self scrollToPlaceOffer];
   // }
+
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    CGRect rect = helpPopUpView.frame;
+    rect.origin.y = OMBPadding + OMBStandardHeight;
+    helpPopUpView.frame = rect;
+  }];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -376,10 +388,10 @@
   NSMutableAttributedString *string1 =
   [[NSMutableAttributedString alloc] initWithString:
    @"Tapping on \"Submit Offer\" means that you have read the "
-                                         attributes: @{
-                                                       NSFontAttributeName: [UIFont smallTextFont],
-                                                       NSForegroundColorAttributeName: [UIColor grayMedium]
-                                                       }
+   attributes: @{
+                 NSFontAttributeName: [UIFont smallTextFont],
+                 NSForegroundColorAttributeName: [UIColor grayMedium]
+                 }
    ];
   NSMutableAttributedString *string2 =
   [[NSMutableAttributedString alloc] initWithString: @"lease agreement"

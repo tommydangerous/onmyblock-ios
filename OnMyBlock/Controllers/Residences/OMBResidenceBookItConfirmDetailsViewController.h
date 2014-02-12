@@ -13,6 +13,7 @@
 @class OMBAlertView;
 @class OMBAlertViewBlur;
 @class OMBCenteredImageView;
+@class OMBHelpPopUpView;
 @class OMBOffer;
 @class OMBResidence;
 @class OMBResidenceBookItCalendarCell;
@@ -51,6 +52,7 @@ UITextViewDelegate, MNCalendarViewDelegate>
   BOOL hasOfferValue;
   UILabel *daysLabel;
   LEffectLabel *effectLabel;
+  OMBHelpPopUpView *helpPopUpView;
   UILabel *hoursLabel;
   UIBarButtonItem *infoBarButtonItem;
   BOOL isAddingAPersonalNote;

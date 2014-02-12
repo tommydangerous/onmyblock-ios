@@ -197,20 +197,21 @@
 
 + (UIColor *) pink
 {
-  return [UIColor colorWithRed: (193/255.0) green: (25/255.0) 
-    blue: (120/255.0) alpha: 1];
+  return [UIColor pinkAlpha: 1.0f];
 }
 
 + (UIColor *) pinkAlpha: (float) value
 {
-  return [UIColor colorWithRed: (193/255.0) green: (25/255.0) 
-    blue: (120/255.0) alpha: value];
+  // 193, 25, 120 (current)
+  // 233, 60, 236
+  return [UIColor colorWithRed: (233/255.0) green: (60/255.0) 
+    blue: (236/255.0) alpha: value];
 }
 
 + (UIColor *) pinkDark
 {
-  return [UIColor colorWithRed: (173/255.0) green: (5/255.0) 
-    blue: (100/255.0) alpha: 1];
+  return [UIColor colorWithRed: (233 - 20/255.0) green: (60 - 20/255.0) 
+    blue: (236 - 20/255.0) alpha: 1];
 }
 
 + (UIColor *) red

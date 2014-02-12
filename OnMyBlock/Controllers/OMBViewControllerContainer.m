@@ -510,13 +510,34 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   //   return NO;
 
   // Need this or it gets super sticky!!!
-  if (
-    [otherGestureRecognizer.view isKindOfClass: [UITableView class]] ||
-    [otherGestureRecognizer.view isKindOfClass: [UICollectionView class]] ||
-    [otherGestureRecognizer.view isKindOfClass: [UIScrollView class]])
-    return NO;
-  return YES;
+  // if (
+  //   [otherGestureRecognizer.view isKindOfClass: [UITableView class]] ||
+  //   [otherGestureRecognizer.view isKindOfClass: [UICollectionView class]] ||
+  //   [otherGestureRecognizer.view isKindOfClass: [UIScrollView class]]) {
+
+  //   return NO;
+  // }
+  return NO;
 }
+
+// - (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer 
+// shouldRequireFailureOfGestureRecognizer: 
+// (UIGestureRecognizer *) otherGestureRecognizer
+// {
+//   if (gestureRecognizer == panGesture &&
+//     [otherGestureRecognizer.view isKindOfClass: [UIScrollView class]]) {
+
+//     return YES;
+//   }
+//   return NO;
+// }
+
+// - (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer 
+// shouldBeRequiredToFailByGestureRecognizer: 
+// (UIGestureRecognizer *) otherGestureRecognizer
+// {
+//   return NO;
+// }
 
 #pragma mark - Protocol UIScrollViewDelegate
 
@@ -575,6 +596,9 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 
   CGPoint point    = [gesture locationInView: self.view];
   CGPoint velocity = [gesture velocityInView: self.view];
+
+  NSLog(@"%f, %f", point.x, point.y);
+  
   // Began
   if (gesture.state == UIGestureRecognizerStateBegan) {
     lastPointX = point.x;

@@ -246,6 +246,7 @@
 		AB8642BF18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642BE18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m */; };
 		AB8642C218AB5FF400995571 /* OMBInformationStepsFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642C118AB5FF400995571 /* OMBInformationStepsFlowLayout.m */; };
 		AB8642C518ABE66200995571 /* OMBHelpPopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642C418ABE66200995571 /* OMBHelpPopUpView.m */; };
+		AB8642C718AC04FE00995571 /* one_finger_icon_black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB8642C618AC04FE00995571 /* one_finger_icon_black@2x.png */; };
 		AB8B793E186DEF13005AB552 /* OMBCreateListingDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B793D186DEF13005AB552 /* OMBCreateListingDetailCell.m */; };
 		AB8B7941186DFA8A005AB552 /* OMBActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B7940186DFA8A005AB552 /* OMBActivityView.m */; };
 		AB8B7944186E0091005AB552 /* OMBFinishListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B7943186E0091005AB552 /* OMBFinishListingViewController.m */; };
@@ -1030,6 +1031,7 @@
 		AB8642C118AB5FF400995571 /* OMBInformationStepsFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBInformationStepsFlowLayout.m; sourceTree = "<group>"; };
 		AB8642C318ABE66200995571 /* OMBHelpPopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHelpPopUpView.h; sourceTree = "<group>"; };
 		AB8642C418ABE66200995571 /* OMBHelpPopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHelpPopUpView.m; sourceTree = "<group>"; };
+		AB8642C618AC04FE00995571 /* one_finger_icon_black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "one_finger_icon_black@2x.png"; sourceTree = "<group>"; };
 		AB8B793C186DEF13005AB552 /* OMBCreateListingDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailCell.h; sourceTree = "<group>"; };
 		AB8B793D186DEF13005AB552 /* OMBCreateListingDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailCell.m; sourceTree = "<group>"; };
 		AB8B793F186DFA8A005AB552 /* OMBActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBActivityView.h; sourceTree = "<group>"; };
@@ -2632,6 +2634,7 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				AB8642C618AC04FE00995571 /* one_finger_icon_black@2x.png */,
 				ABB911CC1899A4750046611F /* linkedin_white_icon.png */,
 				AB2EA4C318A9692D00ACE53C /* document_icon_black@2x.png */,
 				ABB911CD1899A4750046611F /* linkedin_white_icon@2x.png */,
@@ -3475,6 +3478,7 @@
 				AB1A0345183E6B220016CD7B /* menu_icon_staggered.png in Resources */,
 				AB1A0342183E64600016CD7B /* favorite_filled_white@2x.png in Resources */,
 				ABBA586B186EBE4800E9BF4E /* checkmark_outline@2x.png in Resources */,
+				AB8642C718AC04FE00995571 /* one_finger_icon_black@2x.png in Resources */,
 				AB6CCE51189416CB000ED5CE /* group_icon@2x.png in Resources */,
 				ABE2818D186A8E6500A5D14E /* contact_icon@2x.png in Resources */,
 				AB01ED571859166E00333390 /* venmo_icon@2x.png in Resources */,
