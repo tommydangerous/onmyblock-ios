@@ -296,7 +296,20 @@
   personalNoteTextView.font = [UIFont normalTextFont];
   personalNoteTextView.frame = CGRectMake(padding, padding,
                                           screenWidth - (padding * 2), padding * 5); // 5 times the line height
-  personalNoteTextView.returnKeyType = UIReturnKeyDone;
+  UIView *inputAccView = [UIView new];
+  inputAccView.backgroundColor = [UIColor colorWithWhite:0.92f alpha:1.f];
+  inputAccView.frame = CGRectMake(0.f, 0.0, screenWidth, 40.0);
+  UIButton *btnDone = [UIButton buttonWithType:UIButtonTypeCustom];
+  [btnDone addTarget:self
+    action:@selector(done)
+      forControlEvents:UIControlEventTouchUpInside];
+  [btnDone setTitle:@"Done" forState:UIControlStateNormal];
+  [btnDone setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+  btnDone.frame = CGRectMake(inputAccView.frame.size.width - 80.0f, 0.0f, 80.0f, 40.0f);
+  btnDone.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
+                                                 size: 18];
+  [inputAccView addSubview:btnDone];
+  personalNoteTextView.inputAccessoryView = inputAccView;
   personalNoteTextView.textColor = [UIColor textColor];
   
   // Personal note text view place holder
@@ -1394,17 +1407,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 }
 
 #pragma mark - Protocol UITextViewDelegate
-
-- (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-  
-  if([text isEqualToString:@"\n"]) {
-    //[self done];
-    [textView resignFirstResponder];
-    return NO;
-  }
-  
-  return YES;
-}
 
 - (void) textViewDidBeginEditing: (UITextView *) textView
 {
