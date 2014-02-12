@@ -9,11 +9,20 @@
 #import "OMBTableViewController.h"
 
 @interface OMBInformationStepsViewController : OMBTableViewController
-<UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
+<UICollectionViewDataSource, UICollectionViewDelegate, 
+  UIGestureRecognizerDelegate, UIScrollViewDelegate>
 {
+  CGPoint lastPoint;
   UICollectionView *pageCollectionView;
   UIScrollView *scroll;
 }
+
+@property (nonatomic, strong) UIDynamicAnimator *animator;
+@property (nonatomic, strong) UICollisionBehavior *collisionBehavior;
+@property (nonatomic, strong) UIDynamicItemBehavior *elasticityBehavior;
+@property (nonatomic, strong) UIGravityBehavior *gravityBehavior;
+@property (nonatomic, strong) UIDynamicItemBehavior *itemBehavior;
+@property (nonatomic, strong) UISnapBehavior *snapBehavior;
 
 #pragma mark - Initializer
 

@@ -21,7 +21,7 @@
 {
   if (!(self = [super initWithFrame: rect])) return nil;
 
-  CGFloat standardHeight = OMBStandardHeight;
+  // CGFloat standardHeight = OMBStandardHeight;
   CGFloat padding        = OMBPadding;
 
   self.backgroundColor = [UIColor blueLight];
@@ -69,6 +69,18 @@
 
 #pragma mark - Instance Methods
 
+- (void) initGestures
+{
+  self.userInteractionEnabled = YES;
+
+  UILongPressGestureRecognizer *pressRecognizer = 
+    [[UILongPressGestureRecognizer alloc] initWithTarget: self 
+      action: @selector(pressDetected:)];
+  pressRecognizer.numberOfTapsRequired = 0;
+  pressRecognizer.minimumPressDuration = 0.1f;
+  [self addGestureRecognizer: pressRecognizer];
+}
+
 - (void) loadInformation: (NSString *) information title: (NSString *) title
 step: (NSInteger) step
 {
@@ -76,6 +88,16 @@ step: (NSInteger) step
   titleLabel.text  = title;
   informationLabel.attributedText = [information attributedStringWithFont:
     informationLabel.font lineHeight: 27.0f];
+}
+
+- (void) pressDetected: (UILongPressGestureRecognizer *) gestureRecognizer
+{
+  if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+    NSLog(@"BEGIN");
+  }
+  if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+    NSLog(@"ENDED");
+  }
 }
 
 @end

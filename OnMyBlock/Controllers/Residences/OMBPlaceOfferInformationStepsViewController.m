@@ -10,6 +10,8 @@
 
 @implementation OMBPlaceOfferInformationStepsViewController
 
+#pragma mark - Initializer
+
 - (id) init
 {
   if (!(self = [super init])) return nil;

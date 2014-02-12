@@ -81,6 +81,14 @@
 
   [pageCollectionView addGestureRecognizer: scroll.panGestureRecognizer];
   pageCollectionView.panGestureRecognizer.enabled = NO;
+
+  UIPanGestureRecognizer *panRecognizer = 
+    [[UIPanGestureRecognizer alloc] initWithTarget: self 
+      action: @selector(panDetected:)];
+  panRecognizer.delegate = self;
+  [self.view addGestureRecognizer:panRecognizer];
+
+  _animator = [[UIDynamicAnimator alloc] initWithReferenceView: self.view];
 }
 
 - (void) viewDidLoad
@@ -118,6 +126,8 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
     [collectionView dequeueReusableCellWithReuseIdentifier:
       [OMBInformationStepsCell reuseIdentifier] forIndexPath: indexPath];
   NSDictionary *dictionary = [_informationArray objectAtIndex: indexPath.row];
+  cell.indexPath = indexPath;
+  [cell initGestures];
   [cell loadInformation: [dictionary objectForKey: @"information"] 
     title: [dictionary objectForKey: @"title"] step: indexPath.row + 1];
   return cell;
@@ -181,6 +191,94 @@ targetContentOffset: (inout CGPoint *) targetContentOffset
 - (void) done
 {
   [self dismissViewControllerAnimated: YES completion: nil];
+}
+
+- (void) panDetected: (UIPanGestureRecognizer *) gestureRecognizer
+{
+  CGPoint point = [gestureRecognizer locationInView: self.view];
+
+  CGFloat currentY = point.y;
+  CGFloat verticalDifference = currentY - lastPoint.y;
+
+  CGFloat translationY = 0.0f;
+
+  NSInteger index = scroll.contentOffset.x / scroll.frame.size.width;
+
+  OMBInformationStepsCell *cell = (OMBInformationStepsCell *)
+    [pageCollectionView cellForItemAtIndexPath: 
+      [NSIndexPath indexPathForRow: index inSection: 0]];
+
+  if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+    lastPoint = point;
+
+    // [_animator removeBehavior: _elasticityBehavior];
+    // [_animator removeBehavior: _gravityBehavior];
+    // [_animator removeBehavior: _snapBehavior];
+  }
+  else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
+    if (fabs(verticalDifference) > 0) {
+      translationY = verticalDifference;
+    }
+
+    if (verticalDifference != 0) {
+      // pageCollectionView.transform = CGAffineTransformTranslate(
+      //   CGAffineTransformIdentity, 0, translationY);
+      // CGRect rect = pageCollectionView.frame;
+      // rect.origin.y += verticalDifference;
+      // pageCollectionView.frame = rect;
+      // NSLog(@"%f", verticalDifference);
+      // verticalDifference = 0.0f;
+
+
+
+      CGPoint translation = [gestureRecognizer translationInView: self.view];
+      
+      // CGRect rect = cell.frame;
+      // rect.origin.y += translation.y;
+      // cell.frame = rect;
+
+      cell.transform = CGAffineTransformTranslate(cell.transform,
+        0.0f, translation.y);
+
+      [gestureRecognizer setTranslation: CGPointZero inView: self.view];
+    }
+  }
+  else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+    // NSLog(@"SNAP BACK");
+    
+    // _gravityBehavior = 
+    //   [[UIGravityBehavior alloc] initWithItems: @[cell]];
+    // _gravityBehavior.gravityDirection = CGVectorMake(0, 10);
+    // [_animator addBehavior: _gravityBehavior];
+
+    // // Snap the button in the middle
+    // CGPoint center = CGPointMake(cell.center.x, 
+    //   (OMBPadding * 1.0f) + self.view.center.y);
+    // _snapBehavior = [[UISnapBehavior alloc] initWithItem: cell 
+    //   snapToPoint: center];
+    // // We decrease the damping so the view has a little less spring.
+    // _snapBehavior.action = ^{
+    //   cell.transform = CGAffineTransformIdentity;
+    // };
+    // _snapBehavior.damping = 1.0f;
+    // // Add animator
+    // [_animator addBehavior: _snapBehavior];
+
+    // // More bouncing
+    // _elasticityBehavior = [[UIDynamicItemBehavior alloc] initWithItems: 
+    //   @[cell]];
+    // // _elasticityBehavior.allowsRotation = NO;
+    // // _elasticityBehavior.elasticity = 0.0f;
+    // // [_animator addBehavior: _elasticityBehavior];
+    // // cell.transform = CGAffineTransformIdentity;
+
+    [UIView animateWithDuration: OMBStandardDuration * 2 delay: 0.0
+      usingSpringWithDamping: 0.65 initialSpringVelocity: 0.5 options: 0
+        animations: ^{
+          cell.transform = CGAffineTransformIdentity;
+        }
+        completion: nil];
+  }
 }
 
 @end

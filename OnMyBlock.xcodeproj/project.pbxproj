@@ -245,6 +245,7 @@
 		AB8642BC18AB50A500995571 /* OMBInformationStepsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642BB18AB50A500995571 /* OMBInformationStepsCell.m */; };
 		AB8642BF18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642BE18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m */; };
 		AB8642C218AB5FF400995571 /* OMBInformationStepsFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642C118AB5FF400995571 /* OMBInformationStepsFlowLayout.m */; };
+		AB8642C518ABE66200995571 /* OMBHelpPopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642C418ABE66200995571 /* OMBHelpPopUpView.m */; };
 		AB8B793E186DEF13005AB552 /* OMBCreateListingDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B793D186DEF13005AB552 /* OMBCreateListingDetailCell.m */; };
 		AB8B7941186DFA8A005AB552 /* OMBActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B7940186DFA8A005AB552 /* OMBActivityView.m */; };
 		AB8B7944186E0091005AB552 /* OMBFinishListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B7943186E0091005AB552 /* OMBFinishListingViewController.m */; };
@@ -1027,6 +1028,8 @@
 		AB8642BE18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPlaceOfferInformationStepsViewController.m; sourceTree = "<group>"; };
 		AB8642C018AB5FF400995571 /* OMBInformationStepsFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBInformationStepsFlowLayout.h; sourceTree = "<group>"; };
 		AB8642C118AB5FF400995571 /* OMBInformationStepsFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBInformationStepsFlowLayout.m; sourceTree = "<group>"; };
+		AB8642C318ABE66200995571 /* OMBHelpPopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHelpPopUpView.h; sourceTree = "<group>"; };
+		AB8642C418ABE66200995571 /* OMBHelpPopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHelpPopUpView.m; sourceTree = "<group>"; };
 		AB8B793C186DEF13005AB552 /* OMBCreateListingDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailCell.h; sourceTree = "<group>"; };
 		AB8B793D186DEF13005AB552 /* OMBCreateListingDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailCell.m; sourceTree = "<group>"; };
 		AB8B793F186DFA8A005AB552 /* OMBActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBActivityView.h; sourceTree = "<group>"; };
@@ -2262,6 +2265,8 @@
 				ABB9115D189807EC0046611F /* Users */,
 				AB8642BA18AB50A500995571 /* OMBInformationStepsCell.h */,
 				AB8642BB18AB50A500995571 /* OMBInformationStepsCell.m */,
+				AB8642C318ABE66200995571 /* OMBHelpPopUpView.h */,
+				AB8642C418ABE66200995571 /* OMBHelpPopUpView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3815,6 +3820,7 @@
 				AB70CB68186CB9070083DF4C /* OMBTermsPrivacyViewController.m in Sources */,
 				ABABEC4B1864D56A008B6768 /* OMBMapFilterOldViewController.m in Sources */,
 				AB19A08C186123CB00F84DE9 /* OMBResidenceDetailCell.m in Sources */,
+				AB8642C518ABE66200995571 /* OMBHelpPopUpView.m in Sources */,
 				ABB911A718998CA80046611F /* NSString+LIAEncode.m in Sources */,
 				AB6155C1184DA35E00A193C7 /* OMBIntroWelcomeView.m in Sources */,
 				AB7A231118A02526004AC149 /* OMBUserProfileConnection.m in Sources */,
