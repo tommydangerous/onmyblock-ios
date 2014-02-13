@@ -12,6 +12,8 @@
 @class OMBResidence;
 @class OMBUser;
 
+extern NSInteger kMaxHoursForStudentToConfirm;
+
 extern NSString *const OMBOfferNotificationPaidWithVenmo;
 extern NSString *const OMBOfferNotificationProcessingWithServer;
 extern NSString *const OMBOfferNotificationVenmoAppSwitchCancelled;

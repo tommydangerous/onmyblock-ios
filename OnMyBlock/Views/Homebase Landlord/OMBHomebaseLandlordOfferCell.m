@@ -242,8 +242,10 @@ reuseIdentifier: (NSString *) reuseIdentifier
     case OMBOfferStatusForLandlordAccepted: {
       color = [UIColor orange];
       notesLabel.hidden = NO;
-      notesLabel.text = @"The student has 48 hours to confirm the place "
-        @"by signing the lease and paying the 1st month's rent and deposit";
+      notesLabel.text = [NSString stringWithFormat: @"Student has %i "
+        @"hours to confirm, pay, and sign the lease. Once the lease has been "
+        @"signed, we will send it to you via email.", 
+          kMaxHoursForStudentToConfirm];
       timeLabel.hidden = NO;
       break;
     }

@@ -114,7 +114,7 @@
   questionButton.layer.cornerRadius = questionButton.frame.size.height * 0.5f;
   [questionButton addTarget: self action: @selector(questionButtonSelected)
     forControlEvents: UIControlEventTouchUpInside];
-  [questionButton setTitle: @"?" forState: UIControlStateNormal];
+  [questionButton setTitle: @"i" forState: UIControlStateNormal];
   [questionButton setTitleColor: [UIColor blue] forState: UIControlStateNormal];
   [alertView addSubview: questionButton];
 
