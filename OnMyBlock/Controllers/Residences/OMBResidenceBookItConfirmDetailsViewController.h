@@ -60,6 +60,7 @@ UITextViewDelegate, MNCalendarViewDelegate>
   BOOL isShowingPriceBreakdown;
   BOOL isShowingMoveInCalendar;
   BOOL isShowingMoveOutCalendar;
+  UILabel *leaseMonthsLabel;
   UILabel *minutesLabel;
   OMBOffer *offer;
   NSString *personalNote;

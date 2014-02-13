@@ -261,6 +261,14 @@
   [self setString: @"49" forTimeUnit: @"minutes"];
   [self setString: @"34" forTimeUnit: @"seconds"];
   
+  leaseMonthsLabel = [UILabel new];
+  leaseMonthsLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 18];
+  leaseMonthsLabel.frame = CGRectMake(0.0f, 0.0f,
+                                      screenWidth, 30.f);
+  //label.text = @"0 MONTH LEASE";
+  leaseMonthsLabel.textAlignment = NSTextAlignmentCenter;
+  leaseMonthsLabel.textColor = [UIColor grayMedium];
+  
   // Current offer
   currentOfferLabel = [[UILabel alloc] init];
   currentOfferLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
@@ -506,11 +514,11 @@
   // Set the month lease
   int monthsBetween = [offer numberOfMonthsBetweenMovingDates];
   if (monthsBetween > 0) {
-    calendarCell.leaseMonthsLabel.text = [NSString stringWithFormat: 
+    leaseMonthsLabel.text = [NSString stringWithFormat:
       @"%i month lease", monthsBetween];
   }
   else {
-    calendarCell.leaseMonthsLabel.text = @"month to month";
+    leaseMonthsLabel.text = @"month to month";
   }
 }
 
@@ -729,7 +737,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell.separatorInset = UIEdgeInsetsMake(0.0f,
         tableView.frame.size.width, 0.0f, 0.0f);
 
-      cell.leaseMonthsLabel.text = [NSString stringWithFormat: 
+      leaseMonthsLabel.text = [NSString stringWithFormat:
         @"%i month lease", [offer numberOfMonthsBetweenMovingDates]];
 
       return cell;
@@ -750,8 +758,26 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       //   return calendarCell;
       // }
     }
-    // View lease details
+    // Lease months
     else if (indexPath.row == 2) {
+      static NSString *CellIdentifier = @"CellIdentifier";
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+                               CellIdentifier];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:
+                UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier];
+        [leaseMonthsLabel removeFromSuperview];
+        [cell.contentView addSubview: leaseMonthsLabel];
+        
+      }
+      cell.backgroundColor = [UIColor grayUltraLight];
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+                                             0.0f, 0.0f);
+      return cell;
+    }
+    // View lease details
+    else if (indexPath.row == 3) {
       static NSString *CellIdentifier = @"CellIdentifier";
       UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
                                CellIdentifier];
@@ -1131,7 +1157,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   else if (section == OMBResidenceBookItConfirmDetailsSectionDates) {
     // No top spacing
     // Move in, move out, lease months, view lease details
-    return 1 + 1 + 1;
+    return 1 + 1 + 1 + 1;
     // Spacing
     // return 1 + 1;
   }
@@ -1184,7 +1210,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   
   if (indexPath.section == OMBResidenceBookItConfirmDetailsSectionDates) {
     // View lease details
-    if (indexPath.row == 2) {
+    if (indexPath.row == 3) {
       [self.navigationController pushViewController:
        [[OMBResidenceLeaseAgreementViewController alloc] init] animated: YES];
     }
@@ -1321,8 +1347,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       if (isShowingMoveInCalendar || isShowingMoveOutCalendar)
         return [OMBResidenceBookItCalendarCell heightForCell];
     }
-    // View lease details
+    // Lease months
     else if (indexPath.row == 2) {
+      return 30.f;
+    }
+    // View lease details
+    else if (indexPath.row == 3) {
       return spacing * 1;
     }
   }
