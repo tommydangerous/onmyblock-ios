@@ -9,6 +9,13 @@
 
 #import <Foundation/Foundation.h>
 
+// Keys
+// PayPal
+extern NSString *const PayPalClientID;
+extern NSString *const PayPalReceiverEmail;
+// Venmo
+extern NSString *const VenmoClientID;
+extern NSString *const VenmoClientSecret;
 // Notifications
 extern NSString *const OMBPayoutMethodNotificationFirst;
 

@@ -9,6 +9,7 @@
 #import "OMBAlertViewBlur.h"
 
 #import "NSString+Extensions.h"
+#import "OMBActivityView.h"
 #import "OMBBlurView.h"
 #import "OMBCloseButtonView.h"
 #import "OMBViewController.h"
@@ -48,7 +49,7 @@
   [_backgroundBlurView addSubview: closeButton];
 
   CGFloat xSize = closeButton.frame.size.width * 0.5f;
-  OMBCloseButtonView *closeButtonView = 
+  closeButtonView = 
     [[OMBCloseButtonView alloc] initWithFrame: 
       CGRectMake((screenWidth - xSize) * 0.5f,
         closeButton.frame.origin.y + 
@@ -135,6 +136,9 @@
 
   _animator = [[UIDynamicAnimator alloc] initWithReferenceView: self];
 
+  activityView = [[OMBActivityView alloc] init];
+  [self addSubview: activityView];
+
   return self;
 }
 
@@ -200,6 +204,20 @@ forButton: (UIButton *) button
       isShowingQuestionDetails = NO;
       questionDetailsLabel.alpha = 0.0f;
       [self removeFromSuperview];
+      self.alpha = 1.0f;
+    }
+  }];
+}
+
+- (void) hideCloseButton
+{
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    closeButton.alpha     = 0.0f;
+    closeButtonView.alpha = 0.0f;
+  } completion: ^(BOOL finished) {
+    if (finished) {
+      closeButton.hidden     = YES;
+      closeButtonView.hidden = YES;
     }
   }];
 }
@@ -269,6 +287,15 @@ forButton: (UIButton *) button
       cancelButton.frame.size.width, cancelButton.frame.size.height);
 }
 
+- (void) showCloseButton
+{
+  closeButton.hidden     = NO;
+  closeButtonView.hidden = NO;
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    closeButton.alpha     = 1.0f;
+    closeButtonView.alpha = 1.0f;
+  }];
+}
 - (void) showInView: (UIView *) view
 {
   [_backgroundBlurView refreshWithView: view];
@@ -285,6 +312,11 @@ forButton: (UIButton *) button
   [self updateFrames];
 
   [self showBothButtons];
+
+  closeButton.alpha      = 1.0f;
+  closeButtonView.alpha  = 1.0f;
+  closeButton.hidden     = NO;
+  closeButtonView.hidden = NO;
 
   // Place the alert at the top of the screen
   alertView.frame = CGRectMake(
@@ -326,10 +358,26 @@ forButton: (UIButton *) button
 {
   cancelButton.hidden = YES;
   confirmButton.hidden = !cancelButton.hidden;
-  middleBorder.hidden = YES
-  ;
+  middleBorder.hidden = YES;
   confirmButton.frame = CGRectMake(0.0f, 0.0f,
     buttonView.frame.size.width, cancelButton.frame.size.height);
+}
+
+- (void) startSpinning
+{
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    alertView.alpha = 0.0f;
+  }];
+  [activityView startSpinning];
+  [self hideCloseButton];
+}
+
+- (void) stopSpinning
+{
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    alertView.alpha = 1.0f;
+  }];
+  [activityView stopSpinning];
 }
 
 - (void) updateFrames

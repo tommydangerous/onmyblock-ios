@@ -29,6 +29,8 @@ NSString *const OMBOfferNotificationPaidWithVenmo =
   @"OMBOfferNotificationPaidWithVenmo";
 NSString *const OMBOfferNotificationProcessingWithServer = 
   @"OMBOfferNotificationProcessingWithServer";
+NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
+  @"OMBOfferNotificationVenmoAppSwitchCancelled";
 
 @implementation OMBOffer
 

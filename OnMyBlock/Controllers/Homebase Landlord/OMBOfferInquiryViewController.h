@@ -11,6 +11,7 @@
 #import "PayPalMobile.h"
 
 @class LEffectLabel;
+@class OMBActivityView;
 @class OMBAlertView;
 @class OMBAlertViewBlur;
 @class OMBCenteredImageView;
@@ -40,6 +41,7 @@ typedef NS_ENUM(NSInteger, OMBOfferInquirySectionOfferRow) {
 {
   BOOL accepted;
   BOOL acceptedConfirmed;
+  OMBActivityView *activityView;
   OMBAlertView *alert;
   OMBAlertViewBlur *alertBlur;
   UIView *backView;
@@ -51,6 +53,7 @@ typedef NS_ENUM(NSInteger, OMBOfferInquirySectionOfferRow) {
   NSTimer *countdownTimer;
   UILabel *countDownTimerLabel;
   NSDateFormatter *dateFormatter1;
+  BOOL didCancelVenmoAppFromWebView;
   LEffectLabel *effectLabel;
   OMBGradientView *gradient;
   NSArray *legalQuestions;

@@ -14,6 +14,7 @@
 
 extern NSString *const OMBOfferNotificationPaidWithVenmo;
 extern NSString *const OMBOfferNotificationProcessingWithServer;
+extern NSString *const OMBOfferNotificationVenmoAppSwitchCancelled;
 
 typedef NS_ENUM(NSInteger, OMBOfferStatusForLandlord) {
   OMBOfferStatusForLandlordRejected,

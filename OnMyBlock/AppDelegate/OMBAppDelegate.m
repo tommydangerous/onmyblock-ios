@@ -18,6 +18,7 @@
 #import "OMBNavigationController.h"
 #import "OMBOffer.h"
 #import "OMBOfferVerifyVenmoConnection.h"
+#import "OMBPayoutMethod.h"
 #import "OMBViewControllerContainer.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
@@ -108,8 +109,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [_container showDiscover];
 
   // Venmo
-  _venmoClient = [VenmoClient clientWithAppId: @"1522" 
-    secret: @"gxjvjYcXZDWh3KGSx4m6HTSkmZ8zBHqf"];
+  _venmoClient = [VenmoClient clientWithAppId: VenmoClientID
+    secret: VenmoClientSecret];
 
   // VenmoTransaction *venmoTransaction = [[VenmoTransaction alloc] init];
   // venmoTransaction.type = VenmoTransactionTypePay;
@@ -184,6 +185,10 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
       if ([[params objectForKey: @"signed_request"] rangeOfString: 
         @"null"].location != NSNotFound) {
 
+        NSLog(@"CANCELLLLLED");
+        [[NSNotificationCenter defaultCenter] postNotificationName:
+          OMBOfferNotificationVenmoAppSwitchCancelled object: nil
+            userInfo: nil];
         return NO;
       }
     }

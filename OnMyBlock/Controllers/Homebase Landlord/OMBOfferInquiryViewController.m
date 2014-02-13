@@ -11,6 +11,7 @@
 #import "AMBlurView.h"
 #import "LEffectLabel.h"
 #import "NSString+Extensions.h"
+#import "OMBActivityView.h"
 #import "OMBAlertView.h"
 #import "OMBAlertViewBlur.h"
 #import "OMBCenteredImageView.h"
@@ -90,6 +91,9 @@
   [[NSNotificationCenter defaultCenter] addObserver: self 
     selector: @selector(offerProcessingWithServer:) 
       name: OMBOfferNotificationProcessingWithServer object: nil];
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(venmoAppSwitchCancelled:)
+      name: OMBOfferNotificationVenmoAppSwitchCancelled object: nil];
   
   return self;
 }
@@ -316,6 +320,9 @@
   
   // Alert view blur
   alertBlur = [[OMBAlertViewBlur alloc] init];
+
+  activityView = [[OMBActivityView alloc] init];
+  [self.view addSubview: activityView];
   
   [self changeTableView];
 }
@@ -480,7 +487,7 @@
       [alertBlur resetQuestionDetails];
       [alertBlur hideQuestionButton];
       // Buttons
-      [alertBlur setConfirmButtonTitle: @"Celebrate"];
+      [alertBlur setConfirmButtonTitle: @"Okay"];
       [alertBlur addTargetForConfirmButton: self
         action: @selector(celebrateAfterPayment)];
       [alertBlur showOnlyConfirmButton];
@@ -490,10 +497,13 @@
       [self showAlertViewWithError: error];
       // Try again
       [self confirmOfferFinalAnswer];
+      [alertBlur showCloseButton];
     }
-    [[self appDelegate].container stopSpinning];
+    // [[self appDelegate].container stopSpinning];
+    [alertBlur stopSpinning];
   };
-  [[self appDelegate].container startSpinning];
+  [alertBlur startSpinning];
+  // [[self appDelegate].container startSpinning];
   [conn start];
   
   // Dismiss the PayPalPaymentViewController.
@@ -508,6 +518,7 @@
   [alertBlur setConfirmButtonTitle: @"Charging and Verifying"];
   [alertBlur addTargetForConfirmButton: self action: nil];
   [alertBlur showOnlyConfirmButton];
+  [alertBlur hideCloseButton];
   [alertBlur animateChangeOfContent];
   
   // Send the entire confirmation dictionary
@@ -1598,52 +1609,6 @@ viewForHeaderInSection: (NSInteger) section
       // Charge Venmo
       else {
         [self launchVenmoApp];
-        return;
-
-        [[OMBUser currentUser] confirmOffer: offer withCompletion:
-         ^(NSError *error) {
-           // Start spinning until it is done or incomplete
-           if (
-               offer.confirmed &&
-               offer.payoutTransaction &&
-               offer.payoutTransaction.charged && !error) {
-             // Congratulations
-             [alertBlur setTitle: @"Venmo Charge Created!"];
-             [alertBlur setMessage: [NSString stringWithFormat:
-                @"We have placed a charge on your Venmo account for a total "
-                @"of %@ for the 1st month's rent and deposit. Please log into "
-                @"Venmo and complete the charge to confirm payment.",
-                  [NSString numberToCurrencyString: [offer totalAmount]]]];
-             [alertBlur resetQuestionDetails];
-             [alertBlur hideQuestionButton];
-             // Buttons
-             [alertBlur setConfirmButtonTitle: @"Okay"];
-             // [alertBlur addTargetForConfirmButton: self
-             //    action: @selector(celebrateAfterPayment)];
-              [alertBlur addTargetForConfirmButton: self
-                action: @selector(celebrateAfterPayment)];
-             [alertBlur showOnlyConfirmButton];
-             [alertBlur animateChangeOfContent];
-           }
-           else {
-             [self showAlertViewWithError: error];
-             // Try again
-             [self confirmOfferFinalAnswer];
-           }
-           [[self appDelegate].container stopSpinning];
-        }];
-        [[self appDelegate].container startSpinning];
-        
-        [alertBlur setTitle: @"Confirming Payment"];
-        [alertBlur setMessage:
-          @"One moment as we make the charge to your Venmo account."];
-        [alertBlur resetQuestionDetails];
-        [alertBlur hideQuestionButton];
-        // Buttons
-        [alertBlur setConfirmButtonTitle: @"Charging and Verifying"];
-        [alertBlur addTargetForConfirmButton: self action: nil];
-        [alertBlur showOnlyConfirmButton];
-        [alertBlur animateChangeOfContent];
       }
     }
   }
@@ -1663,74 +1628,55 @@ viewForHeaderInSection: (NSInteger) section
   }
 }
 
-- (void) launchVenmoApp
+- (void) chargeVenmoAccountWithoutApp
 {
-  [self appDelegate].currentOfferBeingPaidFor = offer;
-
-  VenmoTransaction *venmoTransaction = [[VenmoTransaction alloc] init];
-  venmoTransaction.type = VenmoTransactionTypePay;
-  venmoTransaction.amount = [NSDecimalNumber decimalNumberWithString: 
-    [NSString stringWithFormat: @"%f", [offer totalAmount]]];
-  venmoTransaction.note = [NSString stringWithFormat: @"From: %@, To: %@ - %@",
-    [[OMBUser currentUser] fullName], [offer.residence.user fullName],
-      [offer.residence.address capitalizedString]];
-  venmoTransaction.toUserHandle = @"OnMyBlock";
-
-  VenmoViewController *venmoViewController = 
-    [[self appDelegate].venmoClient viewControllerWithTransaction: 
-      venmoTransaction];
-  // Completion handler for when Venmo is presented in a web view
-  venmoViewController.completionHandler = 
-    ^(VenmoViewController *viewController, BOOL canceled) {
-      if (canceled) {
-        NSLog(@"CANCELLLLLED");
-      }
-      [viewController dismissViewControllerAnimated: YES
-        completion: nil];
-    };
-  if (venmoViewController)
-    [self presentViewController: venmoViewController animated: YES
-      completion: nil];
-}
-
-- (void) offerPaidWithVenmo: (NSNotification *) notification
-{
-  [[self appDelegate].container stopSpinning];
-
-  if (offer.payoutTransaction.verified) {
-    [alertBlur setTitle: @"Payment Successful!"];
-    [alertBlur setMessage: @"Your payment using Venmo is complete."];
-    [alertBlur resetQuestionDetails];
-    [alertBlur hideQuestionButton];
-    // Buttons
-    [alertBlur setConfirmButtonTitle: @"Okay"];
-    // [alertBlur addTargetForConfirmButton: self
-    //    action: @selector(celebrateAfterPayment)];
-    [alertBlur addTargetForConfirmButton: self
-      action: @selector(celebrateAfterPayment)];
-    [alertBlur showOnlyConfirmButton];
-    [alertBlur showInView: self.view];
-  }
-  else if ([[notification userInfo] objectForKey: @"error"] != [NSNull null]) {
-    [self showAlertViewWithError: 
-      (NSError *) [[notification userInfo] objectForKey: @"error"]];
-  }
-  else {
-    NSLog(@"OFFER PAYOUT TRANSACTION WAS NOT VERIFIED");
-  }
-}
-
-- (void) offerProcessingWithServer: (NSNotification *) notification
-{
-  [UIView animateWithDuration: OMBStandardDuration animations: ^{
-    alertBlur.alpha = 0.0f;
-  } completion: ^(BOOL finished) {
-    if (finished) {
-      [alertBlur close];
-      alertBlur.alpha = 1.0f;
-      [[self appDelegate].container startSpinning];
-    }
+  [[OMBUser currentUser] confirmOffer: offer withCompletion:
+   ^(NSError *error) {
+     // Start spinning until it is done or incomplete
+     if (
+         offer.confirmed &&
+         offer.payoutTransaction &&
+         offer.payoutTransaction.charged && !error) {
+       // Congratulations
+       [alertBlur setTitle: @"Venmo Charge Created!"];
+       [alertBlur setMessage: [NSString stringWithFormat:
+          @"We have placed a charge on your Venmo account for a total "
+          @"of %@ for the 1st month's rent and deposit. Please log into "
+          @"Venmo and complete the charge to confirm payment.",
+            [NSString numberToCurrencyString: [offer totalAmount]]]];
+       [alertBlur resetQuestionDetails];
+       [alertBlur hideQuestionButton];
+       // Buttons
+       [alertBlur setConfirmButtonTitle: @"Okay"];
+       // [alertBlur addTargetForConfirmButton: self
+       //    action: @selector(celebrateAfterPayment)];
+        [alertBlur addTargetForConfirmButton: self
+          action: @selector(celebrateAfterPayment)];
+       [alertBlur showOnlyConfirmButton];
+       [alertBlur animateChangeOfContent];
+     }
+     else {
+       [self showAlertViewWithError: error];
+       // Try again
+       [self confirmOfferFinalAnswer];
+       [alertBlur showCloseButton];
+     }
+     // [[self appDelegate].container stopSpinning];
+     [alertBlur stopSpinning];
   }];
+  [alertBlur startSpinning];
+  // [[self appDelegate].container startSpinning];
+  
+  // [alertBlur setTitle: @"Confirming Payment"];
+  // [alertBlur setMessage:
+  //   @"One moment as we make the charge to your Venmo account."];
+  // [alertBlur resetQuestionDetails];
+  // [alertBlur hideQuestionButton];
+  // // Buttons
+  // [alertBlur setConfirmButtonTitle: @"Charging and Verifying"];
+  // [alertBlur addTargetForConfirmButton: self action: nil];
+  // [alertBlur showOnlyConfirmButton];
+  // [alertBlur animateChangeOfContent];
 }
 
 - (void) confirmOfferFinalAnswer
@@ -1836,6 +1782,51 @@ viewForHeaderInSection: (NSInteger) section
     CGRectZero];
 }
 
+- (void) launchVenmoApp
+{
+  if (didCancelVenmoAppFromWebView) {
+    [self chargeVenmoAccountWithoutApp];
+    didCancelVenmoAppFromWebView = NO;
+    return;
+  }
+
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    alertBlur.alpha = 0.0f;
+  }];
+
+  [self appDelegate].currentOfferBeingPaidFor = offer;
+
+  VenmoTransaction *venmoTransaction = [[VenmoTransaction alloc] init];
+  venmoTransaction.type = VenmoTransactionTypePay;
+  venmoTransaction.amount = [NSDecimalNumber decimalNumberWithString: 
+    [NSString stringWithFormat: @"%f", [offer totalAmount]]];
+  venmoTransaction.note = [NSString stringWithFormat: @"From: %@, To: %@ - %@",
+    [[OMBUser currentUser] fullName], [offer.residence.user fullName],
+      [offer.residence.address capitalizedString]];
+  venmoTransaction.toUserHandle = @"OnMyBlock";
+
+  VenmoViewController *venmoViewController = 
+    [[self appDelegate].venmoClient viewControllerWithTransaction: 
+      venmoTransaction];
+  // Completion handler for when Venmo is presented in a web view
+  venmoViewController.completionHandler = 
+    ^(VenmoViewController *viewController, BOOL canceled) {
+      if (canceled) {
+        didCancelVenmoAppFromWebView = YES;
+        [UIView animateWithDuration: OMBStandardDuration animations: ^{
+          alertBlur.alpha = 1.0f;
+        }];
+      }
+      [viewController dismissViewControllerAnimated: YES
+        completion: nil];
+    };
+  if (venmoViewController)
+    [self presentViewController: venmoViewController animated: YES
+      completion: ^{
+        
+      }];
+}
+
 - (void) offerAcceptedConfirmed
 {
   [UIView animateWithDuration: OMBStandardDuration animations: ^{
@@ -1851,6 +1842,57 @@ viewForHeaderInSection: (NSInteger) section
 - (BOOL) offerBelongsToCurrentUser
 {
   return offer.user.uid == [OMBUser currentUser].uid;
+}
+
+- (void) offerPaidWithVenmo: (NSNotification *) notification
+{
+  // [[self appDelegate].container stopSpinning];
+  // [activityView stopSpinning];
+  [alertBlur stopSpinning];
+
+  if (offer.payoutTransaction.verified) {
+    [alertBlur setTitle: @"Payment Successful!"];
+    [alertBlur setMessage: @"Your payment using Venmo is complete."];
+    [alertBlur resetQuestionDetails];
+    [alertBlur hideQuestionButton];
+    // Buttons
+    [alertBlur setConfirmButtonTitle: @"Okay"];
+    [alertBlur addTargetForConfirmButton: self
+      action: @selector(celebrateAfterPayment)];
+    [alertBlur showOnlyConfirmButton];
+    [alertBlur animateChangeOfContent];
+    [alertBlur hideCloseButton];
+    // [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    //   alertBlur.alpha = 1.0f;
+    // }];
+  }
+  else if ([[notification userInfo] objectForKey: @"error"] != [NSNull null]) {
+    [alertBlur showCloseButton];
+    [self showAlertViewWithError: 
+      (NSError *) [[notification userInfo] objectForKey: @"error"]];
+  }
+  else {
+    NSLog(@"OFFER PAYOUT TRANSACTION WAS NOT VERIFIED");
+  }
+}
+
+- (void) offerProcessingWithServer: (NSNotification *) notification
+{
+  // [UIView animateWithDuration: OMBStandardDuration animations: ^{
+  //   alertBlur.alpha = 0.0f;
+  // } completion: ^(BOOL finished) {
+  //   if (finished) {
+  //     [alertBlur close];
+  //     [[self appDelegate].container startSpinning];
+  //   }
+  // }];
+  NSLog(@"OFFER PROCESSING WITH SERVER");
+  // [[self appDelegate].container startSpinning];
+  // [activityView startSpinning];
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    alertBlur.alpha = 1.0f;
+  }];
+  [alertBlur startSpinning];
 }
 
 - (void) rejectOffer
@@ -1943,10 +1985,11 @@ viewForHeaderInSection: (NSInteger) section
     [alertBlur setCancelButtonTitle: @"Reject"];
     [alertBlur setConfirmButtonTitle: @"Confirm"];
     [alertBlur addTargetForCancelButton: self
-                                 action: @selector(rejectOfferFinalAnswer)];
+      action: @selector(rejectOfferFinalAnswer)];
     [alertBlur addTargetForConfirmButton: self
-                                  action: @selector(confirmOfferFinalAnswer)];
+      action: @selector(confirmOfferFinalAnswer)];
     [alertBlur showInView: self.view];
+    didCancelVenmoAppFromWebView = NO;
   }
   // Landlord
   else {
@@ -2064,7 +2107,7 @@ viewForHeaderInSection: (NSInteger) section
   
   if (__ENVIRONMENT__ == 3) {
     payment.amount = [[NSDecimalNumber alloc] initWithString: 
-                      [NSString stringWithFormat: @"%0.2f", [offer totalAmount]]];
+      [NSString stringWithFormat: @"%0.2f", [offer totalAmount]]];
   }
   else {
     payment.amount = [[NSDecimalNumber alloc] initWithString: @"0.01"];
@@ -2085,15 +2128,11 @@ viewForHeaderInSection: (NSInteger) section
   // Provide a payerId that uniquely identifies a user 
   // within the scope of your system, such as an email address or user ID.
   NSString *aPayerId = [NSString stringWithFormat: @"user_%i",
-                        [OMBUser currentUser].uid];
+    [OMBUser currentUser].uid];
   
   // Create a PayPalPaymentViewController with the credentials and payerId, 
   // the PayPalPayment from the previous step, 
   // and a PayPalPaymentDelegate to handle the results.
-  
-  NSString *cliendId = 
-  @"AYF4PhAsNUDPRLYpTmTqtoo04_n7rmum1Q1fgpmApKJOF_eTrtxajPEFDK4Y";
-  NSString *receiverEmail = @"tommydangerouss@gmail.com";
   
   // Sandbox account
   // NSString *cliendId = 
@@ -2105,9 +2144,9 @@ viewForHeaderInSection: (NSInteger) section
   // [PayPalPaymentViewController setEnvironment: PayPalEnvironmentSandbox];
   
   PayPalPaymentViewController *paymentViewController = 
-  [[PayPalPaymentViewController alloc] initWithClientId: cliendId 
-                                          receiverEmail: receiverEmail payerId: aPayerId payment: payment 
-                                               delegate: self];
+    [[PayPalPaymentViewController alloc] initWithClientId: PayPalClientID 
+      receiverEmail: PayPalReceiverEmail payerId: aPayerId payment: payment 
+        delegate: self];
   
   // paymentViewController.defaultUserEmail = [OMBUser currentUser].email;
   // paymentViewController.defaultUserPhoneCountryCode = @"1";
@@ -2127,7 +2166,7 @@ viewForHeaderInSection: (NSInteger) section
   // This improves user experience
   // by preconnecting to PayPal to prepare the device for
   // processing payments
-  [PayPalPaymentViewController prepareForPaymentUsingClientId: cliendId];
+  [PayPalPaymentViewController prepareForPaymentUsingClientId: PayPalClientID];
   
   // Present the PayPalPaymentViewController.
   [self presentViewController: paymentViewController animated: YES 
@@ -2168,6 +2207,13 @@ viewForHeaderInSection: (NSInteger) section
       }
     }
   }
+}
+
+- (void) venmoAppSwitchCancelled: (NSNotification *) notification
+{
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    alertBlur.alpha = 1.0f;
+  }];
 }
 
 @end

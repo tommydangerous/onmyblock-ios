@@ -8,14 +8,18 @@
 
 #import "OMBView.h"
 
+@class OMBActivityView;
 @class OMBBlurView;
+@class OMBCloseButtonView;
 
 @interface OMBAlertViewBlur : OMBView
 {
+  OMBActivityView *activityView;
   UIView *alertView;
   UIView *buttonView;
   UIButton *cancelButton;
   UIButton *closeButton;
+  OMBCloseButtonView *closeButtonView;
   UIButton *confirmButton;
   BOOL isShowingQuestionDetails;
   UILabel *messageLabel;
@@ -43,6 +47,7 @@
 - (void) addTargetForConfirmButton: (id) target action: (SEL) action;
 - (void) animateChangeOfContent;
 - (void) close;
+- (void) hideCloseButton;
 - (void) hideQuestionButton;
 - (void) resetQuestionDetails;
 - (void) setCancelButtonTitle: (NSString *) string;
@@ -52,6 +57,9 @@
 - (void) setTitle: (NSString *) string;
 - (void) showBothButtons;
 - (void) showInView: (UIView *) view;
+- (void) showCloseButton;
 - (void) showOnlyConfirmButton;
+- (void) startSpinning;
+- (void) stopSpinning;
 
 @end
