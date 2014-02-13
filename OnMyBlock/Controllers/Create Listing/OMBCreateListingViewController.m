@@ -25,6 +25,7 @@
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Color.h"
+#import "UIImage+NegativeImage.h"
 #import "UIImage+Resize.h"
 
 @implementation OMBCreateListingViewController
@@ -382,25 +383,27 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       c = [[OMBCreateListingPropertyTypeCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: 
           PropertyTypeCellIdentifier];
-    UIImage *image;
+    NSString *imageName;
     NSString *string = @"";
     if (indexPath.row == 0) {
-      image  = [UIImage imageNamed: @"house_icon_2.png"];
+      imageName = @"house_icon_white.png";
       string = @"House";
     }
     else if (indexPath.row == 1) {
-      image  = [UIImage imageNamed: @"apartment_icon_2.png"];
+      imageName = @"apartment_icon_white.png";
       string = @"Apartment";
     }
     else if (indexPath.row == 2) {
-      image  = [UIImage imageNamed: @"sublet_icon.png"];
+      imageName = @"sublet_icon_white.png";
       string = @"Sublet/Room";
     }
     [c setFramesForSubviewsWithSize: CGSizeMake(tableView.frame.size.width,
       tableView.frame.size.height / 3.0f)];
-    c.propertyTypeImageView.alpha = 0.5f;
-    c.propertyTypeImageView.image = image;
-    c.propertyTypeLabel.text      = string;
+    c.propertyTypeImageView.alpha = 1.0f;
+    c.propertyTypeImageView.image = 
+      [UIImage changeColorForImage: [UIImage imageNamed: imageName]
+        toColor: [UIColor blue]];
+    c.propertyTypeLabel.text = string;
     return c;
   }
   // City
