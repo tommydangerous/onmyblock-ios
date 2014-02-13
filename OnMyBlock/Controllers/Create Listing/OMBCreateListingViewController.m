@@ -763,6 +763,9 @@ replacementString: (NSString *) string
   if (value < 0) {
     value = 0;
   }
+  else if (value > 10){
+    value = 10;
+  }
   [valuesDictionary setObject: [NSNumber numberWithInt: value]
     forKey: key];
   OMBCreateListingDetailCell *cell = (OMBCreateListingDetailCell *)
@@ -1063,10 +1066,14 @@ withMiles: (int) miles animated: (BOOL) animated
       typingTimer = [NSTimer scheduledTimerWithTimeInterval: 0.5f target: self 
         selector: @selector(startGooglePlacesConnection) userInfo: nil 
           repeats: NO];
+      cityTextField.clearButtonMode = UITextFieldViewModeAlways;
+      cityTextField.rightViewMode   = UITextFieldViewModeNever;
       // Show city table view
       cityTableView.hidden = NO;
     }
     else {
+      cityTextField.clearButtonMode = UITextFieldViewModeNever;
+      cityTextField.rightViewMode   = UITextFieldViewModeAlways;
       cityTableView.hidden = YES;
     }
     [valuesDictionary setObject: @"" forKey: @"city"];

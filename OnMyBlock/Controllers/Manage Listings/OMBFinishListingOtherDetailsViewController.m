@@ -261,8 +261,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       // Bathrooms
       else if (indexPath.row == 3) {
         string = @"Bathrooms";
-        cell1.textField.keyboardType = UIKeyboardTypeDecimalPad;
-        cell1.textField.text = [NSString stringWithFormat: @"%0.1f",
+        cell1.textField.keyboardType = UIKeyboardTypeNumberPad;
+        cell1.textField.text = [NSString stringWithFormat: @"%0.0f",
                                 residence.bathrooms];
       }
       // Property type
@@ -466,6 +466,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 }
 
 #pragma mark - Protocol UITextFieldDelegate
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+  
+  if([[textField.text stringByReplacingCharactersInRange:range withString:string] floatValue] > 10) {
+    return NO;
+  };
+  
+  return YES;
+}
 
 - (void) textFieldDidBeginEditing: (UITextField *) textField
 {

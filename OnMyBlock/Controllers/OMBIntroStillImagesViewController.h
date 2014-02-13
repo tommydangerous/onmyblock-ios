@@ -21,7 +21,9 @@
 {
   NSMutableArray *backgroundViewArray;
   UIView *bottomView;
+  UIButton *closeButton;
   OMBCloseButtonView *closeButtonView;
+  UIButton *doneButton;
   UIButton *loginButton;
   NSInteger numberOfPages;
   UIButton *signUpButton;
