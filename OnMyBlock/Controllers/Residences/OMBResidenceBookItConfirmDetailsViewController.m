@@ -51,20 +51,7 @@
   dateFormatter1.dateFormat = @"MMM d, yyyy";
   
   residence = object;
-  // Deposit
-  deposit = 0.0f;
-  // If residence came from an API
-  if ([residence isFromExternalSource]) {
-    // If there is a deposit
-    if (residence.deposit)
-      deposit = residence.deposit;
-    // Or else use the min rent
-    else
-      deposit = residence.minRent;
-  }
-  // If residence was manually created
-  else if (residence.deposit)
-    deposit = residence.deposit;
+  deposit   = [residence deposit];
 
   offer = [[OMBOffer alloc] init];
   offer.moveInDate = residence.moveInDate;

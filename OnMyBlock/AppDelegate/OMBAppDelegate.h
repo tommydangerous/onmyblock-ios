@@ -17,11 +17,13 @@ extern NSString *const OMBUserDefaultsAPIKeyAccessToken;
 extern NSString *const OMBUserDefaultsAPIKeyExpiresAt;
 extern NSString *const OMBUserDefaultsViewedIntro;
 
+@class OMBOffer;
 @class OMBViewControllerContainer;
 
 @interface OMBAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) OMBViewControllerContainer *container;
+@property (nonatomic, strong) OMBOffer *currentOfferBeingPaidFor;
 @property (nonatomic, strong) VenmoClient *venmoClient;
 @property (nonatomic, strong) UIWindow *window;
 

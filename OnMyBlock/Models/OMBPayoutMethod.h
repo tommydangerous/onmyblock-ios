@@ -39,6 +39,8 @@ typedef enum {
 
 #pragma mark - Instance Methods
 
+- (BOOL) isPayPal;
+- (BOOL) isVenmo;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (OMBPayoutMethodPayoutType) type;
 

@@ -11,7 +11,10 @@
 @interface OMBPayoutMethodsViewController : OMBTableViewController
 {
   UIBarButtonItem *addBarButtonItem;
+  UILabel *label1;
+  UILabel *label2;
   UIView *noPayoutMethodsView;
+  UIButton *selectPayoutMethodButton;
 }
 
 #pragma mark - Methods

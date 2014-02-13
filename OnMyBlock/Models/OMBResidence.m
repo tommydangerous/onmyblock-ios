@@ -290,6 +290,25 @@ toImageSizeDictionaryWithSize: (CGSize) size
     point: point];
 }
 
+- (CGFloat) deposit
+{
+  CGFloat d = 0.0f;
+  // If residence came from an API
+  if ([self isFromExternalSource]) {
+    // If there is a deposit
+    if (_deposit)
+      d = _deposit;
+    // Or else use the min rent
+    else
+      d = _minRent;
+  }
+  // If residence was manually created
+  else if (_deposit)
+    d = _deposit;
+
+  return d;
+}
+
 - (NSString *) dictionaryKey
 {
   return [NSString stringWithFormat: @"%f,%f-%@", _latitude, _longitude,

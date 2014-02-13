@@ -83,6 +83,13 @@
       }
     }
   }
+
+  [[NSNotificationCenter defaultCenter] addObserver: self 
+    selector: @selector(offerPaidWithVenmo:) 
+      name: OMBOfferNotificationPaidWithVenmo object: nil];
+  [[NSNotificationCenter defaultCenter] addObserver: self 
+    selector: @selector(offerProcessingWithServer:) 
+      name: OMBOfferNotificationProcessingWithServer object: nil];
   
   return self;
 }
@@ -329,8 +336,8 @@
   
   // Size for offer note
   sizeForOfferNotes = [offer.note boundingRectWithSize:
-                       CGSizeMake(_offerTableView.frame.size.width - (OMBPadding * 2), 9999)
-                                                  font: [UIFont smallTextFont]].size;
+    CGSizeMake(_offerTableView.frame.size.width - (OMBPadding * 2), 9999)
+      font: [UIFont smallTextFont]].size;
   
   // Student
   if ([self offerBelongsToCurrentUser]) {
@@ -343,7 +350,7 @@
         else {
           // [respondButton setTitle: @"Confirm and Pay or Reject"
             // forState: UIControlStateNormal];
-          effectLabel.text = @"Confirm and Pay or Reject";
+          effectLabel.text = @"Confirm or Reject";
           respondView.backgroundColor = [UIColor blueAlpha: 0.95f];
         }
         break;
@@ -475,7 +482,7 @@
       // Buttons
       [alertBlur setConfirmButtonTitle: @"Celebrate"];
       [alertBlur addTargetForConfirmButton: self
-                                    action: @selector(celebrateAfterPayment)];
+        action: @selector(celebrateAfterPayment)];
       [alertBlur showOnlyConfirmButton];
       [alertBlur animateChangeOfContent];
     }
@@ -640,11 +647,15 @@
           NSDateFormatter *dateFormmater = [NSDateFormatter new];
           dateFormmater.dateFormat = @"MMM d, yy";
           // Move in date
+          cell1.moveInBackground.backgroundColor  = [UIColor whiteColor];
           cell1.moveInDateLabel.text = [dateFormmater stringFromDate:
             [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]];
+          cell1.moveInDateLabel.textColor = [UIColor blue];
           // Move out date
           cell1.moveOutDateLabel.text = [dateFormmater stringFromDate:
             [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
+          cell1.moveOutDateLabel.textColor = [UIColor blue];
+          cell1.moveOutBackground.backgroundColor  = [UIColor whiteColor];
         }
         return cell1;
       }
@@ -692,13 +703,10 @@
           cell.textLabel.text = @"Price Breakdown";
         }
         else if (indexPath.row ==
-                 OMBOfferInquirySectionOfferRowSecurityDeposit) {
-          
-          CGFloat deposit = offer.residence.minRent;
-          if (offer.residence.deposit)
-            deposit = offer.residence.deposit;
+          OMBOfferInquirySectionOfferRowSecurityDeposit) {
+
           cell.detailTextLabel.text = [NSString numberToCurrencyString:
-                                       deposit];
+            [offer.residence deposit]];
           cell.textLabel.text = @"Security Deposit";
         }
         else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
@@ -1589,6 +1597,9 @@ viewForHeaderInSection: (NSInteger) section
       }
       // Charge Venmo
       else {
+        [self launchVenmoApp];
+        return;
+
         [[OMBUser currentUser] confirmOffer: offer withCompletion:
          ^(NSError *error) {
            // Start spinning until it is done or incomplete
@@ -1599,16 +1610,18 @@ viewForHeaderInSection: (NSInteger) section
              // Congratulations
              [alertBlur setTitle: @"Venmo Charge Created!"];
              [alertBlur setMessage: [NSString stringWithFormat:
-                                     @"We have placed a charge on your Venmo account for a total "
-                                     @"of %@ for the 1st month's rent and deposit. Please log into "
-                                     @"Venmo and complete the charge to confirm payment.",
-                                     [NSString numberToCurrencyString: [offer totalAmount]]]];
+                @"We have placed a charge on your Venmo account for a total "
+                @"of %@ for the 1st month's rent and deposit. Please log into "
+                @"Venmo and complete the charge to confirm payment.",
+                  [NSString numberToCurrencyString: [offer totalAmount]]]];
              [alertBlur resetQuestionDetails];
              [alertBlur hideQuestionButton];
              // Buttons
-             [alertBlur setConfirmButtonTitle: @"Celebrate"];
-             [alertBlur addTargetForConfirmButton: self
-                                           action: @selector(celebrateAfterPayment)];
+             [alertBlur setConfirmButtonTitle: @"Okay"];
+             // [alertBlur addTargetForConfirmButton: self
+             //    action: @selector(celebrateAfterPayment)];
+              [alertBlur addTargetForConfirmButton: self
+                action: @selector(celebrateAfterPayment)];
              [alertBlur showOnlyConfirmButton];
              [alertBlur animateChangeOfContent];
            }
@@ -1618,13 +1631,12 @@ viewForHeaderInSection: (NSInteger) section
              [self confirmOfferFinalAnswer];
            }
            [[self appDelegate].container stopSpinning];
-         }
-         ];
+        }];
         [[self appDelegate].container startSpinning];
         
         [alertBlur setTitle: @"Confirming Payment"];
         [alertBlur setMessage:
-         @"One moment as we make the charge to your Venmo account."];
+          @"One moment as we make the charge to your Venmo account."];
         [alertBlur resetQuestionDetails];
         [alertBlur hideQuestionButton];
         // Buttons
@@ -1645,32 +1657,111 @@ viewForHeaderInSection: (NSInteger) section
     // Buttons
     [alertBlur setConfirmButtonTitle: @"Set up payout method"];
     [alertBlur addTargetForConfirmButton: self
-                                  action: @selector(setupPayoutMethod)];
+      action: @selector(setupPayoutMethod)];
     [alertBlur showOnlyConfirmButton];
     [alertBlur animateChangeOfContent];
   }
 }
 
+- (void) launchVenmoApp
+{
+  [self appDelegate].currentOfferBeingPaidFor = offer;
+
+  VenmoTransaction *venmoTransaction = [[VenmoTransaction alloc] init];
+  venmoTransaction.type = VenmoTransactionTypePay;
+  venmoTransaction.amount = [NSDecimalNumber decimalNumberWithString: 
+    [NSString stringWithFormat: @"%f", [offer totalAmount]]];
+  venmoTransaction.note = [NSString stringWithFormat: @"From: %@, To: %@ - %@",
+    [[OMBUser currentUser] fullName], [offer.residence.user fullName],
+      [offer.residence.address capitalizedString]];
+  venmoTransaction.toUserHandle = @"OnMyBlock";
+
+  VenmoViewController *venmoViewController = 
+    [[self appDelegate].venmoClient viewControllerWithTransaction: 
+      venmoTransaction];
+  // Completion handler for when Venmo is presented in a web view
+  venmoViewController.completionHandler = 
+    ^(VenmoViewController *viewController, BOOL canceled) {
+      if (canceled) {
+        NSLog(@"CANCELLLLLED");
+      }
+      [viewController dismissViewControllerAnimated: YES
+        completion: nil];
+    };
+  if (venmoViewController)
+    [self presentViewController: venmoViewController animated: YES
+      completion: nil];
+}
+
+- (void) offerPaidWithVenmo: (NSNotification *) notification
+{
+  [[self appDelegate].container stopSpinning];
+
+  if (offer.payoutTransaction.verified) {
+    [alertBlur setTitle: @"Payment Successful!"];
+    [alertBlur setMessage: @"Your payment using Venmo is complete."];
+    [alertBlur resetQuestionDetails];
+    [alertBlur hideQuestionButton];
+    // Buttons
+    [alertBlur setConfirmButtonTitle: @"Okay"];
+    // [alertBlur addTargetForConfirmButton: self
+    //    action: @selector(celebrateAfterPayment)];
+    [alertBlur addTargetForConfirmButton: self
+      action: @selector(celebrateAfterPayment)];
+    [alertBlur showOnlyConfirmButton];
+    [alertBlur showInView: self.view];
+  }
+  else if ([[notification userInfo] objectForKey: @"error"] != [NSNull null]) {
+    [self showAlertViewWithError: 
+      (NSError *) [[notification userInfo] objectForKey: @"error"]];
+  }
+  else {
+    NSLog(@"OFFER PAYOUT TRANSACTION WAS NOT VERIFIED");
+  }
+}
+
+- (void) offerProcessingWithServer: (NSNotification *) notification
+{
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    alertBlur.alpha = 0.0f;
+  } completion: ^(BOOL finished) {
+    if (finished) {
+      [alertBlur close];
+      alertBlur.alpha = 1.0f;
+      [[self appDelegate].container startSpinning];
+    }
+  }];
+}
+
 - (void) confirmOfferFinalAnswer
 {
-  CGFloat deposit = 0.0f;
-  if (offer.residence.deposit)
-    deposit = offer.residence.deposit;
-  CGFloat total = offer.amount + deposit;
+  NSString *extraMessage;
+  NSString *paymentTypeName;
+  if ([[[OMBUser currentUser] primaryPaymentPayoutMethod] isPayPal]) {
+    paymentTypeName = @"PayPal";
+  }
+  else if ([[[OMBUser currentUser] primaryPaymentPayoutMethod] isVenmo]) {
+    paymentTypeName = @"Venmo";
+    extraMessage = @" You will not be charged until you have confirmed the "
+      @"charge by accepting it through the Venmo app.";
+  }
+  NSString *message = [NSString stringWithFormat: @"Ready to pay the 1st "
+    @"month's rent and deposit? If so we will charge the total amount of %@ "
+    @"from your %@ acount now.",
+      [NSString numberToCurrencyString: [offer totalAmount]], paymentTypeName];
+  if ([extraMessage length])
+    message = [message stringByAppendingString: extraMessage];
   [alertBlur setTitle: @"Confirm and Pay"];
-  [alertBlur setMessage: [NSString stringWithFormat: @"Ready to pay the "
-                          @"1st month's rent and deposit? If so, we will charge the total "
-                          @"amount of %@ from your primary payout method.",
-                          [NSString numberToCurrencyString: total]]];
+  [alertBlur setMessage: message];
   [alertBlur resetQuestionDetails];
   [alertBlur hideQuestionButton];
   // Buttons
   [alertBlur setCancelButtonTitle: @"No"];
   [alertBlur setConfirmButtonTitle: @"Yes"];
   [alertBlur addTargetForCancelButton: self
-                               action: @selector(confirmOfferCanceled)];
+    action: @selector(confirmOfferCanceled)];
   [alertBlur addTargetForConfirmButton: self
-                                action: @selector(confirmOfferConfirmed)];
+    action: @selector(confirmOfferConfirmed)];
   [alertBlur animateChangeOfContent];
 }
 
@@ -1682,22 +1773,22 @@ viewForHeaderInSection: (NSInteger) section
 - (void) declineOfferConfirmed
 {
   [[OMBUser currentUser] declineOffer: offer
-                       withCompletion: ^(NSError *error) {
-                         if (offer.declined && !error) {
-                           [UIView animateWithDuration: OMBStandardDuration animations: ^{
-                             alertBlur.alpha = 0.0f;
-                           } completion: ^(BOOL finished) {
-                             if (finished) {
-                               [self.navigationController popViewControllerAnimated: YES];
-                               [alertBlur close];
-                             }
-                           }];
-                         }
-                         else {
-                           [self showAlertViewWithError: error];
-                         }
-                         [[self appDelegate].container stopSpinning];
-                       }
+     withCompletion: ^(NSError *error) {
+       if (offer.declined && !error) {
+         [UIView animateWithDuration: OMBStandardDuration animations: ^{
+           alertBlur.alpha = 0.0f;
+         } completion: ^(BOOL finished) {
+           if (finished) {
+             [self.navigationController popViewControllerAnimated: YES];
+             [alertBlur close];
+           }
+         }];
+       }
+       else {
+         [self showAlertViewWithError: error];
+       }
+       [[self appDelegate].container stopSpinning];
+     }
    ];
   [[self appDelegate].container startSpinning];
 }
@@ -1730,10 +1821,8 @@ viewForHeaderInSection: (NSInteger) section
   [UIView animateWithDuration: OMBStandardDuration animations: ^{
     alertBlur.alpha = 0.0f;
   } completion: ^(BOOL finished) {
-    if (finished) {
-      [self.navigationController popViewControllerAnimated: YES];
-      [alertBlur close];
-    }
+    [alertBlur close];
+    [self.navigationController popViewControllerAnimated: YES];
   }];
 }
 
@@ -1742,9 +1831,9 @@ viewForHeaderInSection: (NSInteger) section
   countDownTimerLabel.alpha = 0.0f;
   respondView.alpha = 0.0f;
   _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
-                                     CGRectZero];
+    CGRectZero];
   _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
-                                       CGRectZero];
+    CGRectZero];
 }
 
 - (void) offerAcceptedConfirmed
@@ -1838,19 +1927,18 @@ viewForHeaderInSection: (NSInteger) section
 {
   // Student
   if ([self offerBelongsToCurrentUser]) {
-    CGFloat deposit = 0.0f;
-    if (offer.residence.deposit)
-      deposit = offer.residence.deposit;
-    CGFloat total = offer.amount + deposit;
+    NSString *paymentMethodName =
+      [[[OMBUser currentUser] primaryPaymentPayoutMethod].payoutType capitalizedString];
     [alertBlur setTitle: @"Confirm and Pay"];
     [alertBlur setMessage: @"The landlord has accepted your offer! "
-     @"You will be able to move-in after you pay and sign the lease we "
-     @"email you."];
+     @"To confirm this place, you must sign the lease we email you and "
+     @"pay the 1st month's rent and deposit by tapping Confirm below."];
     [alertBlur setQuestionDetails: [NSString stringWithFormat:
-                                    @"Confirm: Charges %@ for the 1st month's rent and deposit from "
-                                    @"your primary payout method.\n\n"
-                                    @"Reject: Tells the landlord that you are no longer interested",
-                                    [NSString numberToCurrencyString: total]]];
+      @"Confirm: Charges %@ (for the 1st month's rent and deposit) from "
+      @"your %@ account.\n\n"
+      @"Reject: Tells the landlord that you are no longer interested.",
+        [NSString numberToCurrencyString: [offer totalAmount]], 
+          paymentMethodName]];
     // Buttons
     [alertBlur setCancelButtonTitle: @"Reject"];
     [alertBlur setConfirmButtonTitle: @"Confirm"];
@@ -1863,18 +1951,16 @@ viewForHeaderInSection: (NSInteger) section
   // Landlord
   else {
     NSString *moveInDateString = [dateFormatter1 stringFromDate:
-                                  [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]];
+      [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]];
     NSString *moveOutDateString = [dateFormatter1 stringFromDate:
-                                   [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
+      [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
     [alertBlur setTitle: @"Respond Now"];
-    [alertBlur setMessage:
-     [NSString stringWithFormat:
+    [alertBlur setMessage: [NSString stringWithFormat:
       @"%@ would like to rent your place from %@ - %@ for %@/mo with a "
       @"deposit of %@.",
-      [offer.user.firstName capitalizedString], moveInDateString,
-      moveOutDateString,
-      [NSString numberToCurrencyString: offer.amount],
-      [NSString numberToCurrencyString: offer.residence.deposit]]];
+        [offer.user.firstName capitalizedString], moveInDateString,
+          moveOutDateString, [NSString numberToCurrencyString: offer.amount],
+            [NSString numberToCurrencyString: [offer.residence deposit]]]];
     [alertBlur setQuestionDetails:
      @"Accept: Gives the student 48 hours to sign the lease and pay the "
      @"1st month's rent and deposit.\n\n"

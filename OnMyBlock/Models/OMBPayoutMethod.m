@@ -37,6 +37,16 @@ NSString *const OMBPayoutMethodNotificationFirst =
 
 #pragma mark - Instance Methods
 
+- (BOOL) isPayPal
+{
+  return [self type] == OMBPayoutMethodPayoutTypePayPal;
+}
+
+- (BOOL) isVenmo
+{
+  return [self type] == OMBPayoutMethodPayoutTypeVenmo;
+}
+
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
   NSDateFormatter *dateFormatter = [NSDateFormatter JSONDateParser];
@@ -106,6 +116,9 @@ NSString *const OMBPayoutMethodNotificationFirst =
 {
   if ([[_payoutType lowercaseString] isEqualToString: @"paypal"]) {
     return OMBPayoutMethodPayoutTypePayPal;
+  }
+  else if ([[_payoutType lowercaseString] isEqualToString: @"venmo"]) {
+    return OMBPayoutMethodPayoutTypeVenmo;
   }
   return OMBPayoutMethodPayoutTypeVenmo;
 }

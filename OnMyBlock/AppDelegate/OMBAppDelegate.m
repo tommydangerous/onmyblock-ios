@@ -10,10 +10,14 @@
 #import "GAI.h"
 #import "TestFlight.h"
 
+#import "NSError+OnMyBlock.h"
+#import "NSString+Extensions.h"
 #import "OMBAppDelegate.h"
 #import "OMBIntroStillImagesViewController.h"
 #import "OMBLoginViewController.h"
 #import "OMBNavigationController.h"
+#import "OMBOffer.h"
+#import "OMBOfferVerifyVenmoConnection.h"
 #import "OMBViewControllerContainer.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
@@ -29,8 +33,6 @@ NSString *const OMBUserDefaultsAPIKeyExpiresAt =
 NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
 
 @implementation OMBAppDelegate
-
-@synthesize container = _container;
 
 - (BOOL) application: (UIApplication *) application 
 didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
@@ -105,6 +107,31 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   else
     [_container showDiscover];
 
+  // Venmo
+  _venmoClient = [VenmoClient clientWithAppId: @"1522" 
+    secret: @"gxjvjYcXZDWh3KGSx4m6HTSkmZ8zBHqf"];
+
+  // VenmoTransaction *venmoTransaction = [[VenmoTransaction alloc] init];
+  // venmoTransaction.type = VenmoTransactionTypePay;
+  // venmoTransaction.amount = [NSDecimalNumber decimalNumberWithString: 
+  //   @"0.01"];
+  // venmoTransaction.note = [NSString stringWithFormat: @"%@", [NSDate date]];
+  // venmoTransaction.toUserHandle = @"tommy@onmyblock.com";
+
+  // VenmoViewController *venmoViewController = 
+  //   [_venmoClient viewControllerWithTransaction: venmoTransaction];
+  // venmoViewController.completionHandler = 
+  //   ^(VenmoViewController *viewController, BOOL canceled) {
+  //     if (canceled) {
+  //       NSLog(@"CANCELLLLLED");
+  //     }
+  //     [viewController dismissViewControllerAnimated: YES
+  //       completion: nil];
+  //   };
+  // if (venmoViewController)
+  //   [_container presentViewController: venmoViewController animated: YES
+  //     completion: nil];
+
   // UIViewController *vc = [[UIViewController alloc] init];
   // UIView *view = [[UIView alloc] initWithFrame: screen];
   // vc.view = view;
@@ -138,35 +165,88 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
   // that handles the incoming URL
   // [[NSNotificationCenter defaultCenter] postNotificationName:
   //   OMBActivityIndicatorViewStartAnimatingNotification object: nil];
-  return [FBSession.activeSession handleOpenURL: url];
 
-  // Venmo App Switch
-  // NSLog(@"openURL: %@", url);
-  // return [_venmoClient openURL: url completionHandler:
-  //   ^(VenmoTransaction *transaction, NSError *error) {
-  //     if (transaction) {
-  //       NSString *success = (transaction.success ? @"Success" : @"Failure");
-  //       NSString *title = [@"Transaction " stringByAppendingString: success];
-  //       NSString *message = [@"payment_id: " stringByAppendingFormat:
-  //         @"%@. %@ %@ %@ (%@) $%@ %@",
-  //          transaction.transactionID,
-  //          transaction.fromUserID,
-  //          transaction.typeStringPast,
-  //          transaction.toUserHandle,
-  //          transaction.toUserID,
-  //          transaction.amountString,
-  //          transaction.note];
-  //       UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title 
-  //         message: message delegate: nil cancelButtonTitle: @"OK"
-  //           otherButtonTitles: nil];
-  //       [alertView show];
-  //     }
-  //     // Error
-  //     else {
-  //       NSLog(@"transaction error code: %i", error.code);
-  //     }
-  //   }
-  // ];
+  // NSLog(@"Open URL: %@", url);
+  // NSLog(@"Source Application: %@", sourceApplication);
+  // NSLog(@"Annotation: %@", annotation);
+
+  // Facebook
+  if ([[url absoluteString] rangeOfString: @"facebook"].location != 
+    NSNotFound) {
+
+    return [FBSession.activeSession handleOpenURL: url];
+  }
+
+  // Venmo
+  if ([[url absoluteString] rangeOfString: @"venmo"].location != NSNotFound) {
+    NSDictionary *params = [[url absoluteString] dictionaryFromString];
+    if ([params objectForKey: @"signed_request"]) {
+      if ([[params objectForKey: @"signed_request"] rangeOfString: 
+        @"null"].location != NSNotFound) {
+
+        return NO;
+      }
+    }
+    return [_venmoClient openURL: url completionHandler:
+      ^(VenmoTransaction *transaction, NSError *error) {
+        UINavigationController *nav =
+          (UINavigationController *) _container.currentDetailViewController;
+        if (transaction) {
+          if (transaction.success && _currentOfferBeingPaidFor) {
+            // If there is no transactionID,
+            // then the user charged instead of paid
+            if (transaction.transactionID) {
+              OMBOfferVerifyVenmoConnection *conn =
+                [[OMBOfferVerifyVenmoConnection alloc] initWithOffer:
+                  _currentOfferBeingPaidFor dictionary: @{
+                    @"amount": transaction.amountString,
+                    @"note":   transaction.note,
+                    @"transactionID": transaction.transactionID
+                  }
+                ];
+              conn.completionBlock = ^(NSError *error) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:
+                  OMBOfferNotificationPaidWithVenmo object: nil 
+                    userInfo: @{
+                      @"error": error ? error : [NSNull null]
+                    }];
+                // [_container stopSpinning];
+              };
+              // [_container startSpinning];
+              [conn start];
+              [[NSNotificationCenter defaultCenter] postNotificationName:
+                OMBOfferNotificationProcessingWithServer object: nil
+                  userInfo: nil];
+            }
+            // The current user charged OnMyBlock instead of paid
+            else {
+              error = [NSError errorWithDomain: VenmoErrorDomain 
+                code: VenmoErrorDomainCodeTransactionTypeIncorrect userInfo: @{
+                  NSLocalizedDescriptionKey: @"Venmo Payment Failed",
+                  NSLocalizedFailureReasonErrorKey: 
+                    @"You made a charge instead of a payment."
+                }
+              ];
+            }
+          }
+          // The transaction was not successful
+          else {
+            error = [NSError errorWithDomain: VenmoErrorDomain 
+              code: VenmoErrorDomainCodeTransactionUnsuccessful userInfo: @{
+                NSLocalizedDescriptionKey: @"Venmo Payment Failed",
+                NSLocalizedFailureReasonErrorKey: 
+                  @"The transaction was not successful."
+              }
+            ];
+          }  
+        }
+        if (error)
+          [(OMBViewController *) nav.topViewController showAlertViewWithError: 
+            error];
+      }
+    ];
+  }
+  return YES;
 }
 
 - (void) applicationWillResignActive: (UIApplication *) application
