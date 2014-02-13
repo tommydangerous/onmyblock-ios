@@ -1675,9 +1675,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   ];
 
-  [(OMBNavigationController *) self.navigationController pushViewController:
+  OMBInformationHowItWorksViewController *vc =
     [[OMBInformationHowItWorksViewController alloc] initWithInformationArray:
-      array] animated: YES completion: ^{
+      array];
+  vc.title = @"How Placing an Offer Works";
+  [(OMBNavigationController *) self.navigationController pushViewController:
+    vc animated: YES completion: ^{
         helpPopUpView.hidden = YES;
       }
     ];
