@@ -17,12 +17,12 @@
 #import "OMBCenteredImageView.h"
 #import "OMBGradientView.h"
 #import "OMBHelpPopUpView.h"
+#import "OMBInformationHowItWorksViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOffer.h"
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutMethodListCell.h"
 #import "OMBPayoutMethodUpdateConnection.h"
-#import "OMBPlaceOfferInformationStepsViewController.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBRenterProfileViewController.h"
 #import "OMBResidence.h"
@@ -1654,12 +1654,36 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showPlaceOfferHowItWorks
 {
-  [self presentViewController:
-    [[OMBNavigationController alloc] initWithRootViewController:
-      [[OMBPlaceOfferInformationStepsViewController alloc] init]]
-        animated: YES completion: ^{
-          helpPopUpView.hidden = YES;
-        }];
+  NSArray *array = @[
+    @{
+      @"title": @"Authorize",
+      @"information": @"Review your offer and add "
+        @"a payment method. You will NOT be charged until the landlord "
+        @"accepts your offer. Only then can you confirm and pay for the place."
+    },
+    @{
+      @"title": @"Review",
+      @"information": @"The landlord or subletter will review your offer and "
+        @"renter profile. They will have 24 hours to confirm your offer at "
+        @"which point you will be notified."
+    },
+    @{
+      @"title": @"Sign & Pay",
+      @"information": @"Once accepted, you will receive a lease to e-sign via "
+        @"email. You will have 48 hours to confirm, sign the lease, and pay "
+        @"the 1st month’s rent and deposit using your selected payment method."
+    }
+  ];
+
+  OMBInformationHowItWorksViewController *vc =
+    [[OMBInformationHowItWorksViewController alloc] initWithInformationArray:
+      array];
+  vc.title = @"How Placing an Offer Works";
+  [(OMBNavigationController *) self.navigationController pushViewController:
+    vc animated: YES completion: ^{
+        helpPopUpView.hidden = YES;
+      }
+    ];
 }
 
 - (void) submitOfferButtonSelected

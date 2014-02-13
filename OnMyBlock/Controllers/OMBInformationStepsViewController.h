@@ -21,13 +21,12 @@
 @property (nonatomic, strong) UICollisionBehavior *collisionBehavior;
 @property (nonatomic, strong) UIDynamicItemBehavior *elasticityBehavior;
 @property (nonatomic, strong) UIGravityBehavior *gravityBehavior;
+@property (nonatomic, strong) NSArray *informationArray;
 @property (nonatomic, strong) UIDynamicItemBehavior *itemBehavior;
 @property (nonatomic, strong) UISnapBehavior *snapBehavior;
 
 #pragma mark - Initializer
 
 - (id) initWithInformationArray: (NSArray *) array;
-
-@property (nonatomic, strong) NSArray *informationArray;
 
 @end

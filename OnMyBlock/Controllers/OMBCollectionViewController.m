@@ -8,35 +8,20 @@
 
 #import "OMBCollectionViewController.h"
 
-#import "OMBResidenceCollectionViewCell.h"
-#import "OMBSpringFlowLayout.h"
-
 @implementation OMBCollectionViewController
-
-static NSString * CellIdentifier = @"CellIdentifier";
-
-@synthesize collectionView       = _collectionView;
-@synthesize collectionViewLayout = _collectionViewLayout;
 
 - (void) loadView
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
 
-  _collectionViewLayout = [[OMBSpringFlowLayout alloc] init];
-  _collectionView = [[UICollectionView alloc] initWithFrame: screen
-    collectionViewLayout: _collectionViewLayout];
+  self.view = [[UIView alloc] initWithFrame: screen];
+
+  _collectionViewFlowLayout = [[OMBCollectionViewFlowLayout alloc] init];
+  _collectionView = [[OMBCollectionView alloc] initWithFrame: screen
+    collectionViewLayout: _collectionViewFlowLayout];
   _collectionView.dataSource = self;
   _collectionView.delegate   = self;
-  self.view = _collectionView;
-}
-
-- (void) viewDidLoad 
-{
-  [super viewDidLoad];
-    
-  [_collectionView registerClass: [OMBResidenceCollectionViewCell class] 
-    forCellWithReuseIdentifier: CellIdentifier];
-  _collectionView.backgroundColor = [UIColor blueColor];
+  [self.view addSubview: _collectionView];
 }
 
 #pragma mark - Protocol
@@ -47,28 +32,66 @@ static NSString * CellIdentifier = @"CellIdentifier";
 cellForItemAtIndexPath: (NSIndexPath *) indexPath 
 {
   UICollectionViewCell *cell = 
-    [collectionView dequeueReusableCellWithReuseIdentifier: CellIdentifier 
-      forIndexPath: indexPath];
-
-  CGRect screen = [[UIScreen mainScreen] bounds];
-
-  cell.backgroundColor = [UIColor redColor];
-
-  UIView *mainView = [[UIView alloc] init];
-  mainView.backgroundColor = [UIColor blueColor];
-  mainView.frame = CGRectMake(0, 0, screen.size.width, 40);
-  [cell.contentView addSubview: mainView];
-
+    [collectionView dequeueReusableCellWithReuseIdentifier: 
+      @"UICollectionViewCellReuseIdentifier" forIndexPath: indexPath];
   return cell;
 }
-
 
 - (NSInteger) collectionView: (UICollectionView *) collectionView 
 numberOfItemsInSection: (NSInteger) section 
 {
-  return 100;
+  return 0;
+}
+
+- (NSInteger) numberOfSectionsInCollectionView: 
+(UICollectionView *) collectionView
+{
+  return 1;
 }
 
 #pragma mark - Protocol UICollectionViewDelegate
+
+- (void) collectionView: (UICollectionView *) collectionView 
+didSelectItemAtIndexPath: (NSIndexPath *) indexPath
+{
+  // Subclasses implement this
+}
+
+#pragma mark - Protocol UICollectionViewDelegateFlowLayout
+
+- (CGSize) collectionView: (UICollectionView *) collectionView 
+layout: (UICollectionViewLayout *) collectionViewLayout 
+referenceSizeForFooterInSection: (NSInteger) section
+{
+  return CGSizeZero;
+}
+
+- (UIEdgeInsets) collectionView: (UICollectionView *) collectionView 
+layout: (UICollectionViewLayout*) collectionViewLayout 
+insetForSectionAtIndex: (NSInteger) section
+{
+  return UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+}
+
+- (CGFloat) collectionView: (UICollectionView *) collectionView 
+layout: (UICollectionViewLayout*) collectionViewLayout 
+minimumInteritemSpacingForSectionAtIndex: (NSInteger) section
+{
+  return 0.0f;
+}
+
+- (CGFloat) collectionView: (UICollectionView *) collectionView 
+layout: (UICollectionViewLayout*) collectionViewLayout 
+minimumLineSpacingForSectionAtIndex: (NSInteger) section
+{
+  return 0.0f;
+}
+
+- (CGSize) collectionView: (UICollectionView * ) collectionView 
+layout: (UICollectionViewLayout*) collectionViewLayout 
+sizeForItemAtIndexPath: (NSIndexPath *) indexPath
+{
+  return CGSizeZero;
+}
 
 @end
