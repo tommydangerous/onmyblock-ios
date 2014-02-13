@@ -9,5 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @interface OMBNavigationController : UINavigationController
+<UINavigationControllerDelegate>
+
+@property (nonatomic, strong) dispatch_block_t completionBlock;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) pushViewController: (UIViewController *) viewController
+animated: (BOOL) animated completion: (dispatch_block_t) completion;
 
 @end

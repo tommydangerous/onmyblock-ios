@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+#import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
+
 @interface OMBCollectionViewCell : UICollectionViewCell
 
 #pragma mark - Methods

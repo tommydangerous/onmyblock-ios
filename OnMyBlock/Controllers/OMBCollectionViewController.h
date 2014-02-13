@@ -8,10 +8,14 @@
 
 #import "OMBViewController.h"
 
+#import "OMBCollectionView.h"
+#import "OMBCollectionViewFlowLayout.h"
+
 @interface OMBCollectionViewController : OMBViewController
 <UICollectionViewDataSource, UICollectionViewDelegate>
 
-@property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) UICollectionViewLayout *collectionViewLayout;
+@property (nonatomic, strong) OMBCollectionView *collectionView;
+@property (nonatomic, strong) 
+  OMBCollectionViewFlowLayout *collectionViewFlowLayout;
 
 @end
