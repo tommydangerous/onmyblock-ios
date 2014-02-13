@@ -297,6 +297,7 @@
   personalNoteTextView.font = [UIFont normalTextFont];
   personalNoteTextView.frame = CGRectMake(padding, padding,
     screenWidth - (padding * 2), padding * 5); // 5 times the line height
+  personalNoteTextView.returnKeyType = UIReturnKeyDone;
   personalNoteTextView.textColor = [UIColor textColor];
   
   // Personal note text view place holder
@@ -321,8 +322,14 @@
   alertBlur = [[OMBAlertViewBlur alloc] init];
 
   // Help pop up
-  helpPopUpView = [[OMBHelpPopUpView alloc] initWithFrame: CGRectMake(0.0f,
-    padding, screenWidth, OMBStandardHeight)];
+  CGFloat helpHeight = OMBStandardButtonHeight + padding;
+  helpPopUpView = [[OMBHelpPopUpView alloc] initWithFrame: CGRectMake(
+    0.0f, -helpHeight, screenWidth, helpHeight)];
+  [helpPopUpView setLabelText: @"Placing an offer?\n"
+    @"Tap here to see how it works."];
+  [helpPopUpView.button addTarget: self 
+    action: @selector(showPlaceOfferHowItWorks)
+      forControlEvents: UIControlEventTouchUpInside];
   [self.view addSubview: helpPopUpView];
 }
 
@@ -334,11 +341,22 @@
   //   [self scrollToPlaceOffer];
   // }
 
-  [UIView animateWithDuration: OMBStandardDuration animations: ^{
-    CGRect rect = helpPopUpView.frame;
-    rect.origin.y = OMBPadding + OMBStandardHeight;
-    helpPopUpView.frame = rect;
-  }];
+  if (![[OMBUser currentUser] primaryPaymentPayoutMethod]) {
+    [UIView animateWithDuration: OMBStandardDuration * 2 delay: 0.0
+      usingSpringWithDamping: 0.65 initialSpringVelocity: 0.5 options: 0
+        animations: ^{
+          CGRect rect = helpPopUpView.frame;
+          rect.origin.y = OMBPadding + OMBStandardHeight;
+          // rect.origin.x = 0.0f;
+          helpPopUpView.frame = rect;
+        }
+        completion: nil];
+  }
+}
+
+- (void) viewDidDisappear: (BOOL) animated
+{
+  [super viewDidDisappear: animated];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -770,7 +788,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
                                PriceCellIdentifier];
       if (!cell)
         cell = [[UITableViewCell alloc] initWithStyle:
-                UITableViewCellStyleValue1 reuseIdentifier: PriceCellIdentifier];
+          UITableViewCellStyleValue1 reuseIdentifier: PriceCellIdentifier];
       UIView *bor = [cell.contentView viewWithTag: 9999];
       if (!bor) {
         bor = [UIView new];
@@ -809,10 +827,10 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     else if (indexPath.row == 3) {
       static NSString *TotalCellIdentifier = @"TotalCellIdentifier";
       UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
-                               TotalCellIdentifier];
+        TotalCellIdentifier];
       if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:
-                UITableViewCellStyleValue1 reuseIdentifier: TotalCellIdentifier];
+          UITableViewCellStyleValue1 reuseIdentifier: TotalCellIdentifier];
         // Bottom border
         UIView *bor = [UIView new];
         bor.backgroundColor = [UIColor grayLight];
@@ -1400,18 +1418,30 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (textField == [self yourOfferTextField]) {
     [self scrollToPlaceOffer];
-    [self.navigationItem setRightBarButtonItem: reviewBarButton animated: YES];
+    // [self.navigationItem setRightBarButtonItem: reviewBarButton 
+    //   animated: YES];
   }
 }
 
 #pragma mark - Protocol UITextViewDelegate
+
+- (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+  
+  if([text isEqualToString:@"\n"]) {
+    //[self done];
+    [textView resignFirstResponder];
+    return NO;
+  }
+  
+  return YES;
+}
 
 - (void) textViewDidBeginEditing: (UITextView *) textView
 {
   isEditing = YES;
   [self.table beginUpdates];
   [self.table endUpdates];
-  [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
+  //[self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
   
   // If it scrolls to the submit offer notes section,
   // it goes too far
@@ -1491,7 +1521,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   isEditing = NO;
   [self.table beginUpdates];
   [self.table endUpdates];
-  [self.navigationItem setRightBarButtonItem: nil animated: YES];
+  // [self.navigationItem setRightBarButtonItem: nil animated: YES];
 }
 
 - (void) keyboardWillShow: (NSNotification *) notification
@@ -1513,7 +1543,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [UIView animateWithDuration: 0.15 animations: ^{
       submitOfferButton.alpha = 1.0f;
     }];
-    [self.navigationItem setRightBarButtonItem: nil animated: YES];
+    // [self.navigationItem setRightBarButtonItem: nil animated: YES];
   }
   else {
     hasOfferValue = NO;
@@ -1636,7 +1666,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self presentViewController:
     [[OMBNavigationController alloc] initWithRootViewController:
       [[OMBPlaceOfferInformationStepsViewController alloc] init]]
-        animated: YES completion: nil];
+        animated: YES completion: ^{
+          helpPopUpView.hidden = YES;
+        }];
 }
 
 - (void) submitOfferButtonSelected

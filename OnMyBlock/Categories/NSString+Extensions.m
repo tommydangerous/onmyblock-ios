@@ -189,7 +189,7 @@
 lineHeight: (CGFloat) lineHeight
 {
   NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-  style.maximumLineHeight = lineHeight;
+  // style.maximumLineHeight = lineHeight;
   style.minimumLineHeight = lineHeight;
   return [[NSMutableAttributedString alloc] initWithString: self attributes: 
     @{

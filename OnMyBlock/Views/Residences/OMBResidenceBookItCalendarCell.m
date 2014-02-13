@@ -27,10 +27,8 @@
   self.backgroundColor = [UIColor grayUltraLight];
   
   float sizeCalendar = 195.f;
-//  self.frame = CGRectMake(0, 0 ,
-//                          screenWidth, sizeCalendar + 44.f + 5.f);
-  CGRect boundsCalendarView = CGRectMake(screenWidth * 0.08, 0.f ,
-                                         screenWidth * 0.84 , sizeCalendar);
+  CGRect boundsCalendarView = CGRectMake(0.f, 0.f ,
+                                         screenWidth , sizeCalendar);
   _calendarView = [[MNCalendarView alloc] initWithFrame:boundsCalendarView];
   _calendarView.backgroundColor = UIColor.whiteColor;
   [self addSubview: _calendarView];

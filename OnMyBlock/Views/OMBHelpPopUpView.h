@@ -17,7 +17,13 @@
   NSArray *rectsArray;
 }
 
+@property (nonatomic, strong) UIButton *button;
+@property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) UIImageView *pointerImageView;
+
 - (id) initWithFrame: (CGRect) frame
 backgroundColor: (UIColor*) color andTransparentRects: (NSArray*) rects;
+
+- (void) setLabelText: (NSString *) string;
 
 @end

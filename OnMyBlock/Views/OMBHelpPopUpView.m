@@ -8,6 +8,7 @@
 
 #import "OMBHelpPopUpView.h"
 
+#import "NSString+Extensions.h"
 #import "OMBCloseButtonView.h"
 #import "OMBViewController.h"
 #import "UIColor+Extensions.h"
@@ -36,15 +37,29 @@ andTransparentRects: (NSArray *) rects
 
   CGFloat padding = OMBPadding;
 
-  self.backgroundColor = [UIColor blueLightAlpha: 0.95f];
+  self.backgroundColor = [UIColor blueAlpha: 0.95f];
 
-  CGFloat buttonSize = self.frame.size.height * 0.5f;
+  CGFloat buttonSize = self.frame.size.height * 0.3f;
   CGFloat spacing = (self.frame.size.height - buttonSize) * 0.5f;
   closeButtonView = [[OMBCloseButtonView alloc] initWithFrame:
-    CGRectMake(self.frame.size.width - (buttonSize + spacing), 
+    CGRectMake(self.frame.size.width - (buttonSize + padding), 
       spacing, buttonSize, buttonSize) 
-        color: [UIColor textColor]];
+        color: [UIColor colorWithWhite: 1.0f alpha: 0.5f]];
   [self addSubview: closeButtonView];
+
+  _label = [UILabel new];
+  _label.font = [UIFont mediumTextFont];
+  // The 27.0f * 0.1f is to move it a bit higher to make up for the line height
+  _label.frame = CGRectMake(padding, 27.0f * -0.1f, 
+    self.frame.size.width - (padding + buttonSize + padding), 
+      self.frame.size.height);
+  _label.numberOfLines = 0;
+  _label.textColor = [UIColor whiteColor];
+  [self addSubview: _label];
+
+  _button = [UIButton new];
+  _button.frame = self.bounds;
+  [self addSubview: _button];
 
   return self;
 }
@@ -66,5 +81,11 @@ andTransparentRects: (NSArray *) rects
 //     }
 
 // }
+
+- (void) setLabelText: (NSString *) string
+{
+  _label.attributedText = [string attributedStringWithFont: _label.font
+    lineHeight: 27.0f];
+}
 
 @end

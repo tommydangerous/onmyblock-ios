@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>C536BFF1-DB6D-448F-A3DD-093A7816DCE8</string>
+	<string>8AD99FCA-2792-488C-A7B1-89723AC0E4D3</string>
 	<key>IDESourceControlProjectName</key>
 	<string>OnMyBlock</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>744B5166-D0AD-4914-ADF3-BE7C9C9E48A7</key>
-		<string>https://github.com/QuantumVenturess/onmyblock-ios.git</string>
+		<key>D395A3D7-6330-4CF2-94A2-7831E06D274C</key>
+		<string>https://github.com/QuantumVenturess/onmyblock-ios</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>OnMyBlock.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>744B5166-D0AD-4914-ADF3-BE7C9C9E48A7</key>
+		<key>D395A3D7-6330-4CF2-94A2-7831E06D274C</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/QuantumVenturess/onmyblock-ios.git</string>
+	<string>https://github.com/QuantumVenturess/onmyblock-ios</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>744B5166-D0AD-4914-ADF3-BE7C9C9E48A7</string>
+	<string>D395A3D7-6330-4CF2-94A2-7831E06D274C</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>744B5166-D0AD-4914-ADF3-BE7C9C9E48A7</string>
+			<string>D395A3D7-6330-4CF2-94A2-7831E06D274C</string>
 			<key>IDESourceControlWCCName</key>
-			<string>onmyblock-ios</string>
+			<string>OnMyBlock</string>
 		</dict>
 	</array>
 </dict>

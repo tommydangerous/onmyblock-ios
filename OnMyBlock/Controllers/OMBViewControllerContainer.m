@@ -520,17 +520,17 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   return NO;
 }
 
-// - (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer 
-// shouldRequireFailureOfGestureRecognizer: 
-// (UIGestureRecognizer *) otherGestureRecognizer
-// {
-//   if (gestureRecognizer == panGesture &&
-//     [otherGestureRecognizer.view isKindOfClass: [UIScrollView class]]) {
+- (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer 
+shouldRequireFailureOfGestureRecognizer: 
+(UIGestureRecognizer *) otherGestureRecognizer
+{
+  if (gestureRecognizer == panGesture &&
+    [otherGestureRecognizer.view isKindOfClass: [UIScrollView class]]) {
 
-//     return YES;
-//   }
-//   return NO;
-// }
+    return YES;
+  }
+  return NO;
+}
 
 // - (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer 
 // shouldBeRequiredToFailByGestureRecognizer: 
