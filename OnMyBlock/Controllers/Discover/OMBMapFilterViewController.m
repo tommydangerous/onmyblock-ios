@@ -248,6 +248,15 @@ float kStandardHeight = 44.0f;
     pickerViewHeader.frame.origin.y +
     pickerViewHeader.frame.size.height,
       rentPickerView.frame.size.width, rentPickerView.frame.size.height);
+  UILabel *hyphenLabel = [[UILabel alloc] init];
+  hyphenLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 18];
+  float sizeHyphen = 70.f;
+  hyphenLabel.frame = CGRectMake((rentPickerView.frame.size.width - sizeHyphen) * 0.5f, (rentPickerView.frame.size.height - sizeHyphen) * 0.5f,
+                            sizeHyphen, sizeHyphen);
+  hyphenLabel.text = @"-";
+  hyphenLabel.textAlignment = NSTextAlignmentCenter;
+  hyphenLabel.textColor = [UIColor textColor];
+  [rentPickerView addSubview:hyphenLabel];
   
 	// Date Available scroller
 	availabilityPickerView = [[UIPickerView alloc] init];
