@@ -142,6 +142,12 @@
 		AB3396F518AD4F1700F49064 /* OMBCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3396F418AD4F1700F49064 /* OMBCollectionViewLayout.m */; };
 		AB3396F818AD4F3100F49064 /* OMBCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3396F718AD4F3100F49064 /* OMBCollectionViewFlowLayout.m */; };
 		AB3396FB18AD52FC00F49064 /* OMBInformationHowItWorksCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3396FA18AD52FC00F49064 /* OMBInformationHowItWorksCell.m */; };
+		AB33970218AD7D6900F49064 /* apartment_icon_white.png in Resources */ = {isa = PBXBuildFile; fileRef = AB3396FC18AD7D6900F49064 /* apartment_icon_white.png */; };
+		AB33970318AD7D6900F49064 /* apartment_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB3396FD18AD7D6900F49064 /* apartment_icon_white@2x.png */; };
+		AB33970418AD7D6900F49064 /* house_icon_white.png in Resources */ = {isa = PBXBuildFile; fileRef = AB3396FE18AD7D6900F49064 /* house_icon_white.png */; };
+		AB33970518AD7D6900F49064 /* house_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB3396FF18AD7D6900F49064 /* house_icon_white@2x.png */; };
+		AB33970618AD7D6900F49064 /* sublet_icon_white.png in Resources */ = {isa = PBXBuildFile; fileRef = AB33970018AD7D6900F49064 /* sublet_icon_white.png */; };
+		AB33970718AD7D6900F49064 /* sublet_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB33970118AD7D6900F49064 /* sublet_icon_white@2x.png */; };
 		AB44986E189AC10100979B3B /* facebook_icon_blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */; };
 		AB44986F189AC10100979B3B /* facebook_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */; };
 		AB449872189AEFFF00979B3B /* OMBLoginSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */; };
@@ -871,6 +877,12 @@
 		AB3396F718AD4F3100F49064 /* OMBCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		AB3396F918AD52FC00F49064 /* OMBInformationHowItWorksCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBInformationHowItWorksCell.h; sourceTree = "<group>"; };
 		AB3396FA18AD52FC00F49064 /* OMBInformationHowItWorksCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBInformationHowItWorksCell.m; sourceTree = "<group>"; };
+		AB3396FC18AD7D6900F49064 /* apartment_icon_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apartment_icon_white.png; sourceTree = "<group>"; };
+		AB3396FD18AD7D6900F49064 /* apartment_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "apartment_icon_white@2x.png"; sourceTree = "<group>"; };
+		AB3396FE18AD7D6900F49064 /* house_icon_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = house_icon_white.png; sourceTree = "<group>"; };
+		AB3396FF18AD7D6900F49064 /* house_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "house_icon_white@2x.png"; sourceTree = "<group>"; };
+		AB33970018AD7D6900F49064 /* sublet_icon_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sublet_icon_white.png; sourceTree = "<group>"; };
+		AB33970118AD7D6900F49064 /* sublet_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sublet_icon_white@2x.png"; sourceTree = "<group>"; };
 		AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_blue@2x.png"; sourceTree = "<group>"; };
 		AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_white@2x.png"; sourceTree = "<group>"; };
 		AB449870189AEFFF00979B3B /* OMBLoginSignUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLoginSignUpView.h; sourceTree = "<group>"; };
@@ -2657,6 +2669,12 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				AB3396FC18AD7D6900F49064 /* apartment_icon_white.png */,
+				AB3396FD18AD7D6900F49064 /* apartment_icon_white@2x.png */,
+				AB3396FE18AD7D6900F49064 /* house_icon_white.png */,
+				AB3396FF18AD7D6900F49064 /* house_icon_white@2x.png */,
+				AB33970018AD7D6900F49064 /* sublet_icon_white.png */,
+				AB33970118AD7D6900F49064 /* sublet_icon_white@2x.png */,
 				AB8642C618AC04FE00995571 /* one_finger_icon_black@2x.png */,
 				ABB911CC1899A4750046611F /* linkedin_white_icon.png */,
 				AB2EA4C318A9692D00ACE53C /* document_icon_black@2x.png */,
@@ -3427,7 +3445,7 @@
 				ORGANIZATIONNAME = OnMyBlock;
 				TargetAttributes = {
 					AB802E9918109E5200E04D11 = {
-						DevelopmentTeam = L6WEK9SB93;
+						DevelopmentTeam = 4PZFNY43X2;
 					};
 					AB802EB418109E5200E04D11 = {
 						TestTargetID = AB802E9918109E5200E04D11;
@@ -3458,6 +3476,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB33970518AD7D6900F49064 /* house_icon_white@2x.png in Resources */,
 				A685EFC2188F2AEE0074E336 /* 15.png in Resources */,
 				AB02806E1843D1070081B30F /* house_image.png in Resources */,
 				AB756AB2185A1C8A001AF572 /* intro_still_image_slide_1_background@2x.jpg in Resources */,
@@ -3613,6 +3632,7 @@
 				AB6155D2184FD76900A193C7 /* create_listing_icon@2x.png in Resources */,
 				ABF8ECAE182D7A370080B1E2 /* intro_favorites_view_background.jpg in Resources */,
 				AB95458118491C7D000513BE /* default_user_image@2x.png in Resources */,
+				AB33970418AD7D6900F49064 /* house_icon_white.png in Resources */,
 				ABF18BC418170F43002DD723 /* list_segmented_control.png in Resources */,
 				A685EFC0188F2AEE0074E336 /* 13.png in Resources */,
 				AB9B2602181196F400E6DAC4 /* location.gpx in Resources */,
@@ -3621,8 +3641,10 @@
 				ABAF227E185241320041BF60 /* slash_icon@2x.png in Resources */,
 				ABAF228418525E1C0041BF60 /* checkmark_icon.png in Resources */,
 				ABE28190186A998100A5D14E /* phone_icon.png in Resources */,
+				AB33970218AD7D6900F49064 /* apartment_icon_white.png in Resources */,
 				ABBA589A1870C59700E9BF4E /* ELCAssetPicker.xib in Resources */,
 				DE96E4B7189019A30081D69F /* close_white.png in Resources */,
+				AB33970718AD7D6900F49064 /* sublet_icon_white@2x.png in Resources */,
 				A685EFC7188F2AEE0074E336 /* 20.png in Resources */,
 				AB1A0341183E64600016CD7B /* favorite_filled_white.png in Resources */,
 				AB6155D1184FD76900A193C7 /* create_listing_icon.png in Resources */,
@@ -3693,6 +3715,7 @@
 				AB1A033C183E63E60016CD7B /* favorite_outline_white@2x.png in Resources */,
 				ABB06AFB18472260009CBBEA /* notifications_icon.png in Resources */,
 				ABF18BA41816BC53002DD723 /* marker_circle_deselected.png in Resources */,
+				AB33970318AD7D6900F49064 /* apartment_icon_white@2x.png in Resources */,
 				ABB06B0C1847C866009CBBEA /* tommy_d@2x.png in Resources */,
 				AB0269CF18229DD800E72F53 /* login_icon@2x.png in Resources */,
 				A685EFBA188F2AEE0074E336 /* 7.png in Resources */,
@@ -3701,6 +3724,7 @@
 				ABBA58C81876000900E9BF4E /* discover_icon@2x.png in Resources */,
 				A685EFB7188F2AEE0074E336 /* 4.png in Resources */,
 				AB756AB6185A2335001AF572 /* logo_white@2x.png in Resources */,
+				AB33970618AD7D6900F49064 /* sublet_icon_white.png in Resources */,
 				ABB173BC189C684F0010D28F /* speech_bubble_icon@2x.png in Resources */,
 				ABE7068418860DB4007A4E29 /* user_icon_white.png in Resources */,
 				ABBA58C71876000900E9BF4E /* discover_icon.png in Resources */,
@@ -4226,8 +4250,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Tommy Dang (ETDM478EZ7)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tommy Dang (ETDM478EZ7)";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4260,8 +4284,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: On My Block LLC (4PZFNY43X2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: On My Block LLC (4PZFNY43X2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
@@ -4281,7 +4305,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B89BC80C-79A0-4E13-8100-505806920F0F";
+				PROVISIONING_PROFILE = "1D67A8C8-C7C1-4C92-A4E9-21CDCC070DC3";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
