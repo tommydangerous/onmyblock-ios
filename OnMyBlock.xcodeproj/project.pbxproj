@@ -137,6 +137,7 @@
 		AB26131E18198E570053A8AA /* OMBSpringFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */; };
 		AB2EA4C418A9692D00ACE53C /* document_icon_black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB2EA4C318A9692D00ACE53C /* document_icon_black@2x.png */; };
 		AB2EA4C818A9E79700ACE53C /* LEffectLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2EA4C718A9E79700ACE53C /* LEffectLabel.m */; };
+		AB3396EF18ACA69C00F49064 /* OMBOfferVerifyVenmoConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3396EE18ACA69C00F49064 /* OMBOfferVerifyVenmoConnection.m */; };
 		AB44986E189AC10100979B3B /* facebook_icon_blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */; };
 		AB44986F189AC10100979B3B /* facebook_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */; };
 		AB449872189AEFFF00979B3B /* OMBLoginSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */; };
@@ -856,6 +857,8 @@
 		AB2EA4C318A9692D00ACE53C /* document_icon_black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "document_icon_black@2x.png"; sourceTree = "<group>"; };
 		AB2EA4C618A9E79700ACE53C /* LEffectLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEffectLabel.h; sourceTree = "<group>"; };
 		AB2EA4C718A9E79700ACE53C /* LEffectLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEffectLabel.m; sourceTree = "<group>"; };
+		AB3396ED18ACA69C00F49064 /* OMBOfferVerifyVenmoConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBOfferVerifyVenmoConnection.h; sourceTree = "<group>"; };
+		AB3396EE18ACA69C00F49064 /* OMBOfferVerifyVenmoConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBOfferVerifyVenmoConnection.m; sourceTree = "<group>"; };
 		AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_blue@2x.png"; sourceTree = "<group>"; };
 		AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_white@2x.png"; sourceTree = "<group>"; };
 		AB449870189AEFFF00979B3B /* OMBLoginSignUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLoginSignUpView.h; sourceTree = "<group>"; };
@@ -2513,6 +2516,8 @@
 				AB6CCE4518933BF6000ED5CE /* OMBConfirmedTenantsConnection.m */,
 				AB0BC54818A2B4750067BFF7 /* OMBMovedInConnection.h */,
 				AB0BC54918A2B4750067BFF7 /* OMBMovedInConnection.m */,
+				AB3396ED18ACA69C00F49064 /* OMBOfferVerifyVenmoConnection.h */,
+				AB3396EE18ACA69C00F49064 /* OMBOfferVerifyVenmoConnection.m */,
 			);
 			path = Offers;
 			sourceTree = "<group>";
@@ -3894,6 +3899,7 @@
 				AB8C8C131815784B00A1B087 /* OMBImageDownloader.m in Sources */,
 				ABE679AF1891C30300A494FB /* OMBPayoutTransaction.m in Sources */,
 				AB1C216C1851417800ED7C06 /* OMBRenterApplicationSectionViewController.m in Sources */,
+				AB3396EF18ACA69C00F49064 /* OMBOfferVerifyVenmoConnection.m in Sources */,
 				AB4F9D1E181AAAED0086D618 /* OMBMenuViewController.m in Sources */,
 				ABE706A018889713007A4E29 /* OMBResidenceListConnection.m in Sources */,
 				ABABEC4F1864D6E1008B6768 /* OMBMapFilterViewController.m in Sources */,
@@ -4218,7 +4224,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
+				PROVISIONING_PROFILE = "B89BC80C-79A0-4E13-8100-505806920F0F";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4251,7 +4257,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
+				PROVISIONING_PROFILE = "B89BC80C-79A0-4E13-8100-505806920F0F";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

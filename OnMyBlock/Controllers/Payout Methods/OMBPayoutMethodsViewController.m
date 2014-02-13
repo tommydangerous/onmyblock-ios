@@ -62,7 +62,7 @@
   noPayoutMethodsView.hidden = YES;
   [self.view addSubview: noPayoutMethodsView];
 
-  UILabel *label2 = [[UILabel alloc] init];
+  label2 = [[UILabel alloc] init];
   label2.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
   label2.frame = CGRectMake(padding, 
     (screenHeight - (22.0f * 3)) * 0.5, 
@@ -84,7 +84,7 @@
   label2.textColor = [UIColor grayMedium];
   [noPayoutMethodsView addSubview: label2];
 
-  UILabel *label1 = [[UILabel alloc] init];
+  label1 = [[UILabel alloc] init];
   label1.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 27];
   label1.frame = CGRectMake(padding, 
     label2.frame.origin.y - ((padding * 2) + (33.0f * 2)), 
@@ -97,7 +97,7 @@
   [noPayoutMethodsView addSubview: label1];
 
   // Add Payout Method
-  UIButton *selectPayoutMethodButton = [[UIButton alloc] init];
+  selectPayoutMethodButton = [[UIButton alloc] init];
   // selectPayoutMethodButton.backgroundColor = [UIColor colorWithWhite: 1.0f
   //   alpha: 0.8f];
   selectPayoutMethodButton.backgroundColor = [UIColor blue];
@@ -151,6 +151,21 @@
     }
     [self.table reloadData];
   }];
+  [self updateSelectPayoutMethodButton];
+}
+
+- (void) updateSelectPayoutMethodButton
+{
+  CGRect rect = selectPayoutMethodButton.frame;
+  if ([[OMBUser currentUser].payoutMethods count]) {
+    rect.origin.y = self.view.frame.size.height - 
+      (rect.size.height + rect.origin.x);
+  }
+  else {
+    rect.origin.y = label2.frame.origin.y + label2.frame.size.height + 
+      (rect.origin.x * 2);
+  }
+  selectPayoutMethodButton.frame = rect;
 }
 
 #pragma mark - Protocol

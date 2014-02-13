@@ -25,6 +25,11 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
   NSInteger kWebServerTimeOffsetInSeconds = 60 + 37;
 #endif
 
+NSString *const OMBOfferNotificationPaidWithVenmo = 
+  @"OMBOfferNotificationPaidWithVenmo";
+NSString *const OMBOfferNotificationProcessingWithServer = 
+  @"OMBOfferNotificationProcessingWithServer";
+
 @implementation OMBOffer
 
 #pragma mark - Initializer
@@ -368,7 +373,7 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
       break;
     }
     case OMBOfferStatusForStudentAccepted: {
-      return @"response required";
+      return @"confirmation required";
       break;
     }
     case OMBOfferStatusForStudentOnHold: {
@@ -451,10 +456,7 @@ NSInteger kMaxHoursForStudentToConfirm = 48;
 
 - (CGFloat) totalAmount
 {
-  CGFloat deposit = _residence.minRent;
-  if (_residence.deposit)
-    deposit = _residence.deposit;
-  return _amount + deposit;
+  return _amount + [_residence deposit];
 }
 
 @end

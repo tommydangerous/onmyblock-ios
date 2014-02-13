@@ -662,9 +662,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell1 = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle: 
             UITableViewCellStyleDefault reuseIdentifier: 
               EmptyTenantsCellIdentifier];
-        [cell1 setTopLabelText: @"Moved in places here"];
-        [cell1 setMiddleLabelText: @"After you confirm, pay, &"];
-        [cell1 setBottomLabelText: @"sign the lease."];
+        [cell1 setTopLabelText: @"Places you're moving into will"];
+        [cell1 setMiddleLabelText: @"appear here after you have"];
+        [cell1 setBottomLabelText: @"paid and signed the lease."];
         [cell1 setObjectImageViewImage: [UIImage imageNamed: 
           @"group_icon.png"]];
         return cell1;
@@ -886,7 +886,7 @@ viewForHeaderInSection: (NSInteger) section
       titleString = @"Top Priority";
     }
     else if (section == 1) {
-      titleString = @"Moved In";
+      titleString = @"Confirmed Places";
     }
   }
   // Payments

@@ -12,6 +12,9 @@
 @class OMBResidence;
 @class OMBUser;
 
+extern NSString *const OMBOfferNotificationPaidWithVenmo;
+extern NSString *const OMBOfferNotificationProcessingWithServer;
+
 typedef NS_ENUM(NSInteger, OMBOfferStatusForLandlord) {
   OMBOfferStatusForLandlordRejected,
   OMBOfferStatusForLandlordConfirmed,

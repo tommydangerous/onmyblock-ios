@@ -506,8 +506,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 shouldRecognizeSimultaneouslyWithGestureRecognizer: 
 (UIGestureRecognizer *) otherGestureRecognizer
 {
-  // if (gestureRecognizer == panGesture)
-  //   return NO;
+  if (gestureRecognizer == panGesture)
+    return NO;
 
   // Need this or it gets super sticky!!!
   // if (
@@ -517,20 +517,20 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 
   //   return NO;
   // }
-  return NO;
+  return YES;
 }
 
-- (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer 
-shouldRequireFailureOfGestureRecognizer: 
-(UIGestureRecognizer *) otherGestureRecognizer
-{
-  if (gestureRecognizer == panGesture &&
-    [otherGestureRecognizer.view isKindOfClass: [UIScrollView class]]) {
+// - (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer 
+// shouldRequireFailureOfGestureRecognizer: 
+// (UIGestureRecognizer *) otherGestureRecognizer
+// {
+//   if (gestureRecognizer == panGesture &&
+//     [otherGestureRecognizer.view isKindOfClass: [UIScrollView class]]) {
 
-    return YES;
-  }
-  return NO;
-}
+//     return YES;
+//   }
+//   return NO;
+// }
 
 // - (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer 
 // shouldBeRequiredToFailByGestureRecognizer: 

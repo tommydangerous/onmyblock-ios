@@ -44,6 +44,14 @@ typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainUserCode) {
   OMBConnectionErrorDomainUserCodeSignUpFailed
 };
 
+// Venmo
+extern NSString *const VenmoErrorDomain;
+typedef NS_ENUM(NSInteger, VenmoErrorDomainCode) {
+  VenmoErrorDomainCodeTransactionWebServerGenericError,
+  VenmoErrorDomainCodeTransactionTypeIncorrect,
+  VenmoErrorDomainCodeTransactionUnsuccessful
+};
+
 @interface NSError (OnMyBlock)
 
 @end

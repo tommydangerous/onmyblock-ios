@@ -25,6 +25,8 @@ NSString *const OMBConnectionErrorDomainSession =
   @"OMBConnectionErrorDomainSession";
 // User
 NSString *const OMBConnectionErrorDomainUser = @"OMBConnectionErrorDomainUser";
+// Venmo
+NSString *const VenmoErrorDomain = @"VenmoErrorDomain";
 
 @implementation NSError (OnMyBlock)
 
