@@ -277,13 +277,11 @@
   skipButtonView.layer.borderWidth = 1.0f;
   skipButtonView.layer.cornerRadius = skipButtonView.frame.size.height * 0.5;
   [self.view addSubview: skipButtonView];
-  UIButton *closeButton = [[UIButton alloc] init];
+  closeButton = [[UIButton alloc] init];
   closeButton.frame = CGRectMake(0, 0, skipButtonView.frame.size.width,
     skipButtonView.frame.size.height);
   closeButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
-  // [closeButton addTarget: self action: @selector(close)
-  //   forControlEvents: UIControlEventTouchUpInside];
   [closeButton addTarget: self action: @selector(scrollToSignUp)
     forControlEvents: UIControlEventTouchUpInside];
   [closeButton setTitle: @"Skip" forState: UIControlStateNormal];
@@ -292,7 +290,19 @@
   [closeButton setTitleColor: [UIColor whiteColor] 
     forState: UIControlStateHighlighted];
   [skipButtonView addSubview: closeButton];
-
+  doneButton = [[UIButton alloc] init];
+  doneButton.frame = closeButton.frame;
+  doneButton.titleLabel.font = closeButton.titleLabel.font;
+  [doneButton addTarget: self action: @selector(close)
+    forControlEvents: UIControlEventTouchUpInside];
+  [doneButton setTitle: @"Done" forState: UIControlStateNormal];
+  [doneButton setTitleColor: [UIColor whiteColor]
+                   forState: UIControlStateNormal];
+  [doneButton setTitleColor: [UIColor whiteColor]
+                   forState: UIControlStateHighlighted];
+  [skipButtonView addSubview: doneButton];
+  doneButton.hidden = YES;
+  
   // Close button for get started view
   CGFloat closeButtonPadding = padding * 0.5f;
   CGFloat closeButtonViewHeight = 26.0f;
@@ -636,6 +646,8 @@
   _scroll.contentSize = CGSizeMake(
     (_scroll.frame.size.width * _pageControl.numberOfPages), 
       _scroll.frame.size.height);
+  closeButton.hidden = YES;
+  doneButton.hidden = NO;
 }
 
 - (void) setupForLoggedOutUser
@@ -653,6 +665,8 @@
   _scroll.contentSize = CGSizeMake(
     _scroll.frame.size.width * _pageControl.numberOfPages,
       _scroll.frame.size.height);
+  closeButton.hidden = NO;
+  doneButton.hidden = YES;
 }
 
 - (void) showFacebook
