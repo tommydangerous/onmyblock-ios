@@ -262,7 +262,7 @@
   [self setString: @"34" forTimeUnit: @"seconds"];
   
   leaseMonthsLabel = [UILabel new];
-  leaseMonthsLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 18];
+  leaseMonthsLabel.font = [UIFont normalTextFontBold];
   leaseMonthsLabel.frame = CGRectMake(0.0f, 0.0f,
                                       screenWidth, 30.f);
   //label.text = @"0 MONTH LEASE";
