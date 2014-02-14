@@ -110,6 +110,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         if (residence.cats)
           value = YES;
       }
+      else if (indexPath.row == 3){
+        [imageView removeFromSuperview];
+        cell.textLabel.text = @"None";
+        if(!residence.dogs && !residence.cats)
+          value = YES;
+      }
       if (value) {
         cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
                                               size: 15];
@@ -162,8 +168,8 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Pets
   if (section == 0){
-    // +1 for header
-    return 1 + 2;
+    // +2 for header and none option
+    return 1 + 2 + 1;
   }
   // Amenities
   else if (section == 1) {
@@ -191,6 +197,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       reload = YES;
       residence.cats = !residence.cats;
     }
+    // None
+    else if (indexPath.row == 3) {
+      reload = YES;
+      residence.cats = residence.dogs = NO;
+    }
   }
   // Amenities
   else if (indexPath.section == 1) {
@@ -210,9 +221,10 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
                             forKey: string];
     }
   }
-  if(reload)
-    [tableView reloadRowsAtIndexPaths: @[indexPath] withRowAnimation:
-     UITableViewRowAnimationNone];
+//  if(reload)
+//    [tableView reloadRowsAtIndexPaths: @[indexPath] withRowAnimation:
+//     UITableViewRowAnimationNone];
+  [tableView reloadData];
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 

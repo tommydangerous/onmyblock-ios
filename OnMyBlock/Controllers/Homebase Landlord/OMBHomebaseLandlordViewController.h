@@ -21,6 +21,7 @@
   UIView *buttonsView;
   UIBarButtonItem *inboxBarButtonItem;
   UIButton *paymentsButton;
+  UIRefreshControl *refreshControl;
   int selectedSegmentIndex;
   UIView *welcomeView;
 }
