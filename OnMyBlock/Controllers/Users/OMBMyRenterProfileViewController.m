@@ -8,9 +8,11 @@
 
 #import "OMBMyRenterProfileViewController.h"
 
+#import "CustomLoading.h"
 #import "LIALinkedInApplication.h"
 #import "LIALinkedInHttpClient.h"
 #import "OMBCenteredImageView.h"
+#import "OMBEmploymentCell.h"
 #import "OMBLabelTextFieldCell.h"
 #import "OMBPickerViewCell.h"
 #import "OMBRenterApplication.h"
@@ -40,9 +42,9 @@
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(keyboardWillHide:)
       name: UIKeyboardWillHideNotification object: nil];
-  // [[NSNotificationCenter defaultCenter] addObserver:self
-  //   selector:@selector(progressConnection:)
-  //     name: @"progressConnection" object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self
+    selector: @selector(progressConnection:)
+      name: @"progressConnection" object:nil];
 
   // After coming back from Facebook upon verifying
   [[NSNotificationCenter defaultCenter] addObserver: self
@@ -60,6 +62,8 @@
 {
   [super loadView];
   [super setupForTable];
+
+  [[CustomLoading getInstance] clearInstance];
 
   self.navigationItem.rightBarButtonItem = saveBarButtonItem;
 
@@ -112,9 +116,84 @@
   }];
 
   [self.table reloadData];
+
+  // If user is the landlord
+  if ([user isLandlord]) {
+    // Fetch listings
+    [user fetchListingsWithCompletion: ^(NSError *error) {
+      [self.table reloadData];
+    }];
+  }
+  else {
+    // Fetch the information about the user, specifically the renter application
+    [user fetchUserProfileWithCompletion: ^(NSError *error) {
+      [self.table reloadData];
+    }];
+    // Fetch the employments
+    [user fetchEmploymentsWithCompletion: ^(NSError *error) {
+      [self.table reloadData];
+    }];
+  }
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol UIActionSheetDelegate
+
+- (void) actionSheet: (UIActionSheet *) actionSheet 
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  // Image picker controller
+  UIImagePickerController *imagePickerController = 
+    [[UIImagePickerController alloc] init];
+  imagePickerController.allowsEditing = YES;
+  imagePickerController.delegate = self;
+  if (buttonIndex == 0) {
+    if ([UIImagePickerController isSourceTypeAvailable: 
+      UIImagePickerControllerSourceTypeCamera]) {
+
+      imagePickerController.sourceType = 
+        UIImagePickerControllerSourceTypeCamera;
+      imagePickerController.cameraDevice = 
+        UIImagePickerControllerCameraDeviceFront;
+    }
+    else {
+      imagePickerController.sourceType = 
+        UIImagePickerControllerSourceTypePhotoLibrary;
+    }
+  }
+  else if (buttonIndex == 1) {
+    imagePickerController.sourceType = 
+      UIImagePickerControllerSourceTypePhotoLibrary;
+  }
+  if (buttonIndex == 0 || buttonIndex == 1) {
+    [self presentViewController: imagePickerController animated: YES
+      completion: nil];
+  }
+}
+
+#pragma mark - Protocol UIImagePickerControllerDelegate
+
+- (void) imagePickerController: (UIImagePickerController *) picker 
+didFinishPickingMediaWithInfo: (NSDictionary *) info
+{
+  UIImage *image = [info objectForKey: UIImagePickerControllerEditedImage];
+  if (!image)
+    image = [info objectForKey: UIImagePickerControllerOriginalImage];
+  [[CustomLoading getInstance] setNumImages: 1];
+  [[OMBUser currentUser] uploadImage: image withCompletion: ^(NSError *error) {
+    if ([OMBUser currentUser].image && !error) {
+      // [backgroundBlurView refreshWithImage: [OMBUser currentUser].image];
+      // [userImageView setImage: [OMBUser currentUser].image];
+    }
+    else {
+      [self showAlertViewWithError: error];
+    }
+    //[[self appDelegate].container stopSpinning];
+  }];
+  //[[self appDelegate].container startSpinning];
+  [picker dismissViewControllerAnimated: YES completion: nil];
+}
 
 #pragma mark - Protocol UIPickerViewDataSource
 
@@ -135,19 +214,10 @@
 - (void) pickerView: (UIPickerView *) pickerView 
 didSelectRow: (NSInteger) row inComponent: (NSInteger) component
 {
-  OMBRenterProfileUserInfoCell *cell = [self coapplicantsCell];
-  cell.valueLabel.text = [NSString stringWithFormat: @"%i", row + 1];
-  NSLog(@"%i", row);
-  NSLog(@"%@", cell);
-  NSLog(@"%@", cell.valueLabel.text);
-}
-
-- (OMBRenterProfileUserInfoCell *) coapplicantsCell
-{
-  return (OMBRenterProfileUserInfoCell *) [self tableView: self.table
-    cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 
-      OMBMyRenterProfileSectionRentalInfoRowCoapplicants 
-        inSection: OMBMyRenterProfileSectionRentalInfo]];
+  [valueDictionary setObject: [NSNumber numberWithInt: row + 1]
+    forKey: @"coapplicantCount"];
+  [self.table reloadData];
+  [self updateRenterApplication];
 }
 
 - (CGFloat) pickerView: (UIPickerView *) pickerView
@@ -195,6 +265,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *ImageID = @"ImageID";
       UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
         ImageID];
+      NSInteger imageViewTag = 9999;
+      NSInteger labelTag     = 9998;
       if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: ImageID];
@@ -202,8 +274,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         OMBCenteredImageView *imageView = [[OMBCenteredImageView alloc] init];
         imageView.frame = CGRectMake(padding, padding, OMBStandardButtonHeight,
           OMBStandardButtonHeight);
-        imageView.image = user.image;
         imageView.layer.cornerRadius = imageView.frame.size.width * 0.5f;
+        imageView.tag = imageViewTag;
         [cell.contentView addSubview: imageView];
         // Name
         CGFloat originX = 
@@ -213,9 +285,20 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         label.frame = CGRectMake(originX, imageView.frame.origin.y,
           tableRect.size.width - (originX + padding), 
             imageView.frame.size.height);
-        label.text = [user shortName];
+        label.tag = labelTag;
         label.textColor = [UIColor textColor];
         [cell.contentView addSubview: label];
+      }
+      // Image view
+      if ([cell viewWithTag: imageViewTag]) {
+        OMBCenteredImageView *imageView = 
+          (OMBCenteredImageView *) [cell viewWithTag: imageViewTag];
+        imageView.image = user.image;
+      }
+      // Name label
+      if ([cell viewWithTag: labelTag]) {
+        UILabel *label = (UILabel *) [cell viewWithTag: labelTag];
+        label.text = [user shortName];
       }
       return cell;
     }
@@ -323,8 +406,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (row == OMBMyRenterProfileSectionRentalInfoRowCoapplicants) {
       image = [UIImage imageNamed: @"group_icon.png"];
       string = @"Co-applicants";
-      // valueString = [NSString stringWithFormat: @"%i",
-      //   [[valueDictionary objectForKey: @"coapplicantCount"] intValue]];
+      valueString = [NSString stringWithFormat: @"%i",
+        [[valueDictionary objectForKey: @"coapplicantCount"] intValue]];
     }
     // Co-signer
     else if (row == OMBMyRenterProfileSectionRentalInfoRowCosigners) {
@@ -368,6 +451,19 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell.valueLabel.text = valueString;
     return cell;
   }
+  else if (section == OMBMyRenterProfileSectionEmployments) {
+    static NSString *EmploymentCellID = @"EmploymentCellID";
+    OMBEmploymentCell *cell = [tableView dequeueReusableCellWithIdentifier:
+      EmploymentCellID];
+    if (!cell)
+      cell = [[OMBEmploymentCell alloc] initWithStyle: 
+        UITableViewCellStyleDefault reuseIdentifier: EmploymentCellID];
+    [cell loadData: 
+      [[user.renterApplication employmentsSortedByStartDate] 
+        objectAtIndex: indexPath.row]];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    return cell;
+  }
 
   return emptyCell;
 }
@@ -380,6 +476,10 @@ numberOfRowsInSection: (NSInteger) section
   }
   else if (section == OMBMyRenterProfileSectionRentalInfo) {
     return 5;
+  }
+  // Employments
+  else if (section == OMBMyRenterProfileSectionEmployments) {
+    return [[user.renterApplication employmentsSortedByStartDate] count];
   }
   else if (section == OMBMyRenterProfileSectionSpacing) {
     return 1;
@@ -395,8 +495,15 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
 
+  // User info
+  if (section == OMBMyRenterProfileSectionUserInfo) {
+    // Image
+    if (row == OMBMyRenterProfileSectionUserInfoRowImage) {
+      [uploadActionSheet showInView: self.view];
+    }
+  }
   // Rental info
-  if (section == OMBMyRenterProfileSectionRentalInfo) {
+  else if (section == OMBMyRenterProfileSectionRentalInfo) {
     // Co-applicants
     if (row == OMBMyRenterProfileSectionRentalInfoRowCoapplicants) {
       [self reloadPickerViewRowAtIndexPath: indexPath];
@@ -408,6 +515,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       [valueDictionary setObject: [NSNumber numberWithBool: !coSigners]
         forKey: @"hasCosigner"];
       [self.table reloadData];
+      [self updateRenterApplication];
     }
     // Facebook
     else if (row == OMBMyRenterProfileSectionRentalInfoRowFacebook) {
@@ -420,6 +528,15 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   [self.table deselectRowAtIndexPath: indexPath animated: YES];
+}
+
+- (CGFloat) tableView: (UITableView *) tableView 
+heightForHeaderInSection: (NSInteger) section
+{
+  if (section == OMBMyRenterProfileSectionEmployments) {
+    return OMBStandardHeight;
+  }
+  return 0.0f;
 }
 
 - (CGFloat) tableView: (UITableView *) tableView
@@ -453,6 +570,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     return [OMBRenterProfileUserInfoCell heightForCell];
   }
+  // Employments
+  else if (OMBMyRenterProfileSectionEmployments) {
+    return [OMBEmploymentCell heightForCell];
+  }
   // Spacing
   else if (section == OMBMyRenterProfileSectionSpacing) {
     if (isEditing) {
@@ -460,6 +581,27 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   return 0.0f;
+}
+
+- (UIView *) tableView: (UITableView *) tableView 
+viewForHeaderInSection: (NSInteger) section
+{
+  NSString *string;
+  if (section == OMBMyRenterProfileSectionEmployments)
+    string = @"Work History";
+  UIView *v = [UIView new];
+  v.backgroundColor = [UIColor grayUltraLightAlpha: 0.95f];
+  v.frame = CGRectMake(0.0f, 0.0f, 
+    tableView.frame.size.width, OMBStandardHeight);
+  UILabel *label = [UILabel new];
+  label.font = [UIFont normalTextFont];
+  label.frame = CGRectMake(OMBPadding, 0.0f, 
+    v.frame.size.width - (OMBPadding * 2), v.frame.size.height);
+  label.text = string;
+  label.textColor = [UIColor grayMedium];
+  label.textAlignment = NSTextAlignmentCenter;
+  [v addSubview: label];
+  return v;
 }
 
 #pragma mark - Protocol UITextFieldDelegate
@@ -586,6 +728,24 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   user = object;
 }
 
+- (void) progressConnection: (NSNotification *) notification
+{
+  float value = ([[notification object] floatValue]);
+  
+  CustomLoading *custom = [CustomLoading getInstance];
+  //editBarButtonItem.enabled = NO;
+
+  if (value == 1.0) {
+    custom.numImages--;
+    [custom stopAnimatingWithView: self.view];
+      //editBarButtonItem.enabled = YES;
+  }
+  else {
+    [custom startAnimatingWithProgress: (int)(value * 25) withView: self.view];
+  }
+}
+
+
 - (void) reloadPickerViewRowAtIndexPath: (NSIndexPath *) indexPath
 {
   isEditing = NO;
@@ -621,6 +781,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         // Clear this because they updated their about
         // so the sizes need to change
         [[OMBUser currentUser].heightForAboutTextDictionary removeAllObjects];
+        [self.table reloadData];
       }
       else {
         [self showAlertViewWithError: error];
@@ -657,6 +818,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (row == OMBMyRenterProfileSectionUserInfoRowPhone) {
     [valueDictionary setObject: textField.text forKey: @"phone"];
   }
+}
+
+- (void) updateRenterApplication
+{
+  [user.renterApplication updateWithDictionary: valueDictionary
+    completion: ^(NSError *error) {
+      if (error)
+        [self showAlertViewWithError: error];
+      // [[self appDelegate].container stopSpinning];
+    }
+  ];
+  // [[self appDelegate].container startSpinning];
 }
 
 @end
