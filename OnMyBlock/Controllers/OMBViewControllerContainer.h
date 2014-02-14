@@ -16,6 +16,7 @@
 @class OMBIntroStillImagesViewController;
 @class OMBLoginViewController;
 @class OMBMapFilterViewController;
+@class OMBMyRenterProfileViewController;
 @class OMBNavigationController;
 @class OMBOfferAcceptedView;
 @class OMBPayoutMethodsViewController;
@@ -127,6 +128,11 @@
   *renterProfileViewController;
 @property (nonatomic, strong) OMBNavigationController
   *renterProfileNavigationController;
+// My Renter Profile
+@property (nonatomic, strong) 
+  OMBMyRenterProfileViewController *myRenterProfileViewController;
+@property (nonatomic, strong) 
+  OMBNavigationController *myRenterProfileNavigationController;
 
 // Seller
 
@@ -160,6 +166,7 @@
 - (void) showLogout;
 - (void) showManageListings;
 - (void) showMyRenterApp;
+- (void) showMyRenterProfile;
 - (void) showOfferAccepted;
 - (void) showOtherUserProfile;
 - (void) showPayoutMethods;

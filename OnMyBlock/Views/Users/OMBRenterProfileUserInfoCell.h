@@ -12,6 +12,7 @@
 
 @interface OMBRenterProfileUserInfoCell : OMBTableViewCell
 
+@property (nonatomic, strong) UIImageView *checkmarkImageView;
 @property (nonatomic, strong) UIImageView *iconImageView;
 @property (nonatomic, strong) UILabel *label;
 @property (nonatomic, strong) UILabel *valueLabel;
@@ -24,7 +25,9 @@
 
 #pragma mark - Instance Methods
 
+- (void) fillCheckmark;
 - (void) loadUserAbout: (OMBUser *) object;
 - (void) reset;
+- (void) resetWithCheckmark;
 
 @end

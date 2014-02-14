@@ -77,9 +77,6 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 
   // #warning Remove fake login
   // [OMBUser fakeLogin]; // Fake login
-  // Use this to show whatever view controller you are working on
-  // [_container showOtherUserProfile];
-  // [_container showIntroAnimatedDissolve: NO];
 
   // Check to see if the user has a saved api key in the user defaults
   [[OMBUser currentUser] checkForUserDefaultsAPIKey];
@@ -105,8 +102,14 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 
   if (shouldShowIntro)
     [_container showIntroAnimatedDissolve: NO];
-  else
-    [_container showDiscover];
+  // else
+  //   [_container showDiscover];
+
+  // Use this to show whatever view controller you are working on
+  // [_container showMyRenterProfile];
+  // [_container showMyRenterApp];
+  // [_container showOtherUserProfile];
+  // [_container showIntroAnimatedDissolve: NO];
 
   // Venmo
   _venmoClient = [VenmoClient clientWithAppId: VenmoClientID

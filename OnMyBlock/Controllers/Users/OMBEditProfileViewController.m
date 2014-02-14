@@ -364,7 +364,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     else if (indexPath.row == OMBEditProfileSectionMainRowAbout) {
       return OMBPadding + (22.0f * 5) + OMBPadding;
     }
-    return [OMBLabelTextFieldCell heightForCell]; 
+    return [OMBLabelTextFieldCell heightForCell];
   }
   // Spacing
   else if (indexPath.section == OMBEditProfileSectionSpacing) {

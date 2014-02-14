@@ -24,6 +24,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   self.selectionStyle = UITableViewCellSelectionStyleNone;
 
+  _checkmarkImageView = [UIImageView new];
+  [self.contentView addSubview: _checkmarkImageView];
+
   _iconImageView = [UIImageView new];
   [self.contentView addSubview: _iconImageView];
 
@@ -55,6 +58,13 @@ reuseIdentifier: (NSString *) reuseIdentifier
 }
 
 #pragma mark - Instance Methods
+
+- (void) fillCheckmark
+{
+  _checkmarkImageView.alpha = 1.0f;
+  _checkmarkImageView.image = [UIImage imageNamed: 
+    @"checkmark_outline_filled.png"];
+}
 
 - (void) loadUserAbout: (OMBUser *) object
 {
@@ -103,6 +113,31 @@ reuseIdentifier: (NSString *) reuseIdentifier
   _valueLabel.frame = _label.frame;
   _valueLabel.textColor = [UIColor blueDark];
   _valueLabel.textAlignment = NSTextAlignmentRight;
+
+  _checkmarkImageView.hidden = YES;
+}
+
+- (void) resetWithCheckmark
+{
+  [self reset];
+
+  CGRect screen = [[UIScreen mainScreen] bounds];
+
+  CGFloat checkmarkSize = 20.0f;
+  CGFloat padding = OMBPadding;
+  CGFloat height = [OMBRenterProfileUserInfoCell heightForCell];
+
+  _checkmarkImageView.alpha = 0.2f;
+  _checkmarkImageView.frame = CGRectMake(
+    screen.size.width - (checkmarkSize + padding), 
+      (height - checkmarkSize) * 0.5f, checkmarkSize, checkmarkSize);
+  _checkmarkImageView.hidden = NO;
+  _checkmarkImageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
+
+  _valueLabel.frame = CGRectMake(_checkmarkImageView.frame.origin.x - 
+    (_valueLabel.frame.size.width + padding), 
+      _valueLabel.frame.origin.y, _valueLabel.frame.size.width,
+        _valueLabel.frame.size.height);
 }
 
 @end

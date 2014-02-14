@@ -28,6 +28,7 @@
 #import "OMBMapFilterViewController.h"
 #import "OMBMapViewController.h"
 #import "OMBMyRenterApplicationViewController.h"
+#import "OMBMyRenterProfileViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOfferAcceptedView.h"
 #import "OMBOtherUserProfileViewController.h"
@@ -142,6 +143,12 @@ CGFloat kBackgroundMaxScale = 5.0f;
   _renterProfileNavigationController = 
     [[OMBNavigationController alloc] initWithRootViewController:
       _renterProfileViewController];
+  // My renter profile
+  _myRenterProfileViewController = 
+    [[OMBMyRenterProfileViewController alloc] init];
+  _myRenterProfileNavigationController = 
+    [[OMBNavigationController alloc] initWithRootViewController:
+      _myRenterProfileViewController];
 
   // Renter
   // Search and discover are in the method showDiscover
@@ -168,7 +175,6 @@ CGFloat kBackgroundMaxScale = 5.0f;
   _manageListingsNavigationController =
     [[OMBNavigationController alloc] initWithRootViewController:
       [[OMBManageListingsViewController alloc] init]];
-
 
   // Background blur view
   _backgroundBlurView = [[OMBBlurView alloc] initWithFrame: self.view.frame];
@@ -840,7 +846,7 @@ completion: (void (^) (void)) block
     // Renter
     _mapFilterNavigationController,
     _mapNavigationController,
-    _myRenterAppNavigationController,
+    // _myRenterAppNavigationController,
     _favoritesNavigationController,
     _homebaseRenterNavigationController,
     _inboxNavigationController,
@@ -1268,6 +1274,13 @@ completion: (void (^) (void)) block
 {
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: _myRenterAppNavigationController];
+}
+
+- (void) showMyRenterProfile
+{
+  [self hideMenuWithFactor: 1.0f];
+  [_myRenterProfileViewController loadUser: [OMBUser currentUser]];
+  [self presentDetailViewController: _myRenterProfileNavigationController];
 }
 
 - (void) showOfferAccepted
