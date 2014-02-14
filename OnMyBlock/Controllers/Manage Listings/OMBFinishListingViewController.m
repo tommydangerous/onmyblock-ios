@@ -526,9 +526,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.row == 6) {
     string = @"Pets & Amenities";
     cell.textLabel.textColor = [UIColor textColor];
-    //imageView.alpha = 1.0f;
-    //imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
-    imageView.image = nil;
+    imageView.alpha = 1.0f;
+    imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
   }
   cell.textLabel.text = string;
   return cell;
