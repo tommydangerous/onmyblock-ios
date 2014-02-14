@@ -36,6 +36,7 @@
   NSMutableArray *imageViewArray;
   UIView *middleDivider; // For the buttons view
   UIButton *paymentsButton;
+  UIRefreshControl *refreshControl;
   OMBCenteredImageView *residenceImageView;
   OMBOffer *selectedOffer;
   int selectedSegmentIndex;

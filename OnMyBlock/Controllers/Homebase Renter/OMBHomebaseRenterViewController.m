@@ -240,6 +240,11 @@ float kHomebaseRenterImagePercentage = 0.3f;
   _paymentsTableView.tableFooterView = [[UIView alloc] initWithFrame: 
     CGRectZero];
 
+  refreshControl = [UIRefreshControl new];
+  [refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+  refreshControl.tintColor = [UIColor lightTextColor];
+  [_activityTableView addSubview:refreshControl];
+  
   alert = [[OMBAlertView alloc] init];
 
   // User image view
@@ -1140,6 +1145,21 @@ viewForHeaderInSection: (NSInteger) section
     [alert.alertConfirm setTitle: @"Pay" forState: UIControlStateNormal];
     [alert showAlert];
   }
+}
+
+- (void) refresh
+{
+  // Fetch accepted offers
+  [[OMBUser currentUser] fetchAcceptedOffersWithCompletion: ^(NSError *error) {
+    [_activityTableView reloadData];
+    [refreshControl endRefreshing];
+  }];
+  
+  // Fetch confirmed tenants
+  [[OMBUser currentUser] fetchMovedInWithCompletion: ^(NSError *error) {
+     [_activityTableView reloadData];
+     [refreshControl endRefreshing];
+   }];
 }
 
 - (void) rejectOfferConfirm

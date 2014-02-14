@@ -195,6 +195,11 @@ float kHomebaseLandlordImagePercentage = 0.4f;
   _paymentsTableView.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectZero];
 
+  refreshControl = [UIRefreshControl new];
+  [refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+  refreshControl.tintColor = [UIColor lightTextColor];
+  [_activityTableView addSubview:refreshControl];
+  
   // Welcome view
   welcomeView = [UIView new];
   // welcomeView.frame = CGRectMake(0.0f, backViewOffsetY,
@@ -742,7 +747,22 @@ viewForHeaderInSection: (NSInteger) section
   return [[OMBUser currentUser] sortedOffersType: OMBUserOfferTypeReceived
     withKeys: @[@"updatedAt"] ascending: NO];
 }
+
+- (void) refresh
+{
+  // Fetch received offers
+  [[OMBUser currentUser] fetchReceivedOffersWithCompletion: ^(NSError *error) {
+    [_activityTableView reloadData];
+    [refreshControl endRefreshing];
+  }];
   
+  // Fetch confirmed tenants
+  [[OMBUser currentUser] fetchConfirmedTenantsWithCompletion: ^(NSError *error) {
+    [_activityTableView reloadData];
+    [refreshControl endRefreshing];
+   }];
+}
+
 - (void) segmentButtonSelected: (UIButton *) button
 {
   if (selectedSegmentIndex != button.tag) {
