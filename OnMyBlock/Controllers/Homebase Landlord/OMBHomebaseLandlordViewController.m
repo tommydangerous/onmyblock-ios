@@ -14,6 +14,7 @@
 #import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBEmptyImageTwoLabelCell.h"
+#import "OMBExtendedHitAreaViewContainer.h"
 #import "OMBHomebaseLandlordConfirmedTenantsViewController.h"
 #import "OMBHomebaseLandlordOfferCell.h"
 #import "OMBHomebaseLandlordPaymentCell.h"
@@ -162,7 +163,8 @@ float kHomebaseLandlordImagePercentage = 0.4f;
   _activityTableView.separatorInset = UIEdgeInsetsMake(0.0f, padding, 
     0.0f, 0.0f);
   // _activityTableView.showsVerticalScrollIndicator = NO;
-  [self.view insertSubview: _activityTableView belowSubview: buttonsView];
+  // [self.view insertSubview: _activityTableView belowSubview: buttonsView];
+  [self.view addSubview: _activityTableView];
   // Activity table header view
   UIView *activityTableViewHeader = [UIView new];
   activityTableViewHeader.frame = CGRectMake(0.0f, 0.0f,
@@ -170,6 +172,11 @@ float kHomebaseLandlordImagePercentage = 0.4f;
       (backView.frame.origin.y + backView.frame.size.height) -
       (tableViewOriginY + backViewOffsetY));
   _activityTableView.tableHeaderView = activityTableViewHeader;
+  // OMBExtendedHitAreaViewContainer *extendedHeader =
+  //   [[OMBExtendedHitAreaViewContainer alloc] init];
+  // extendedHeader.frame = activityTableViewHeader.bounds;
+  // extendedHeader.scrollView = _activityTableView;
+  // [activityTableViewHeader addSubview: extendedHeader];
   // Footer view
   _activityTableView.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectZero];
@@ -188,7 +195,8 @@ float kHomebaseLandlordImagePercentage = 0.4f;
     _activityTableView.showsVerticalScrollIndicator;
   [self.view insertSubview: _paymentsTableView belowSubview: buttonsView];
   // Payment table header view
-  UIView *paymentTableViewHeader = [UIView new];
+  OMBExtendedHitAreaViewContainer *paymentTableViewHeader = 
+    [OMBExtendedHitAreaViewContainer new];
   paymentTableViewHeader.frame = activityTableViewHeader.frame;
   _paymentsTableView.tableHeaderView = paymentTableViewHeader;
   // Footer view
@@ -206,7 +214,7 @@ float kHomebaseLandlordImagePercentage = 0.4f;
   //   screenWidth, buttonsView.frame.origin.y - (padding + standardHeight));
   welcomeView.frame = CGRectMake(0.0f, _activityTableView.frame.origin.y,
     screenWidth, paymentTableViewHeader.frame.size.height);
-  [self.view addSubview: welcomeView];
+  [self.view insertSubview: welcomeView belowSubview: _activityTableView];
 
   CGFloat totalLabelHeights = 27.0f + (22.0f * 2);
 
