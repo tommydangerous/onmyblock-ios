@@ -102,8 +102,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 
   if (shouldShowIntro)
     [_container showIntroAnimatedDissolve: NO];
-  // else
-  //   [_container showDiscover];
+  else
+    [_container showDiscover];
 
   // Use this to show whatever view controller you are working on
   // [_container showMyRenterProfile];
