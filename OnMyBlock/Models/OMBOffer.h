@@ -13,6 +13,7 @@
 @class OMBUser;
 
 extern NSInteger kMaxHoursForStudentToConfirm;
+extern NSInteger kWebServerTimeOffsetInSeconds;
 
 extern NSString *const OMBOfferNotificationPaidWithVenmo;
 extern NSString *const OMBOfferNotificationProcessingWithServer;

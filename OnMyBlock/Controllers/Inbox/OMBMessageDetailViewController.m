@@ -16,6 +16,7 @@
 #import "OMBMessageInputToolbar.h"
 #import "OMBMessagesLastFetchedWithUserConnection.h"
 #import "OMBMessageStore.h"
+#import "OMBOffer.h"
 #import "OMBOtherUserProfileViewController.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Resize.h"
@@ -23,6 +24,7 @@
 @implementation OMBMessageDetailViewController
 
 static NSString *CellIdentifier   = @"CellIdentifier";
+static NSString *EmptyCellID      = @"EmptyCellID";
 static NSString *FooterIdentifier = @"FooterIdentifier";
 static NSString *HeaderIdentifier = @"HeaderIdentifier";
 
@@ -39,13 +41,6 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 
   self.screenName  = @"Message Detail";
   self.title       = [user fullName];
-
-  [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(keyboardWillShow:)
-      name: UIKeyboardWillShowNotification object: nil];
-  [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(keyboardWillHide:)
-      name: UIKeyboardWillHideNotification object: nil];
 
   return self;
 }
@@ -70,10 +65,9 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   CGFloat toolbarHeight = 44.0f;
 
   // Collection view
-  _collection = [[UICollectionView alloc] initWithFrame: CGRectMake(0.0f, 0.0f,
-    screen.size.width, screen.size.height - toolbarHeight)
-      collectionViewLayout: 
-        [[OMBMessageDetailCollectionViewFlowLayout alloc] init]];
+  _collection = [[UICollectionView alloc] initWithFrame: screen
+    collectionViewLayout: 
+      [[OMBMessageDetailCollectionViewFlowLayout alloc] init]];
   _collection.alwaysBounceVertical = YES;
   _collection.clipsToBounds = NO;
   UIView *backgroundView = [[UIView alloc] initWithFrame: _collection.frame];
@@ -146,11 +140,6 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 //  bottomToolbar.cameraBarButtonItem.target = self;
   bottomToolbar.sendBarButtonItem.action   = @selector(send);
   bottomToolbar.sendBarButtonItem.target   = self;
-
-  timer = [NSTimer timerWithTimeInterval: 1 target: self
-    selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
-  // NSRunLoopCommonModes, mode used for tracking events
-  [[NSRunLoop currentRunLoop] addTimer: timer forMode: NSRunLoopCommonModes];
 }
 
 - (void) viewDidLoad
@@ -162,6 +151,8 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   // Register a class for use in creating new collection view cells
   [_collection registerClass: [OMBMessageCollectionViewCell class]
     forCellWithReuseIdentifier: CellIdentifier];
+  [_collection registerClass: [UICollectionViewCell class]
+    forCellWithReuseIdentifier: EmptyCellID];
 
   [_collection registerClass: [UICollectionViewCell class]
     forCellWithReuseIdentifier: HeaderIdentifier];
@@ -189,9 +180,21 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 {
   [super viewWillAppear: animated];
 
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(keyboardWillShow:)
+      name: UIKeyboardWillShowNotification object: nil];
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(keyboardWillHide:)
+      name: UIKeyboardWillHideNotification object: nil];
+
+  timer = [NSTimer timerWithTimeInterval: 1 target: self
+    selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
+  // NSRunLoopCommonModes, mode used for tracking events
+  [[NSRunLoop currentRunLoop] addTimer: timer forMode: NSRunLoopCommonModes];
+
   [self assignMessages];
   [_collection reloadData];
-  [self scrollToBottomAnimated: NO];
+  [self scrollToBottomAnimatedViewWillAppear: NO];
 
   // If no phone number
   if (user.phone && [[user phoneString] length]) {
@@ -207,6 +210,8 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 - (void) viewWillDisappear: (BOOL) animated
 {
   [super viewWillDisappear: animated];
+
+  [bottomToolbar.messageContentTextView resignFirstResponder];
 
   [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
@@ -236,12 +241,24 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
   //   }
   //   return cell;
   // }
+
+  // Last row, empty row
+  // if (indexPath.row == [_messages count]) {
+  //   UICollectionViewCell *emptyCell = 
+  //     [collectionView dequeueReusableCellWithReuseIdentifier: 
+  //       EmptyCellID forIndexPath: indexPath];
+  //   emptyCell.backgroundColor = [UIColor redColor];
+  //   return emptyCell;
+  // }
+
   OMBMessageCollectionViewCell *cell = 
     [collectionView dequeueReusableCellWithReuseIdentifier: CellIdentifier 
       forIndexPath: indexPath];
+  // cell.backgroundColor = [UIColor redColor];
   OMBMessage *message = [self messageAtIndexPath: indexPath];
   [cell loadMessageData: message];
   
+  // Minus 1, account for the last empty row
   if (indexPath.row != 
     [collectionView numberOfItemsInSection: indexPath.section] - 1) {
     OMBMessage *nextMessage = [self messageAtIndexPath: 
@@ -265,6 +282,8 @@ numberOfItemsInSection: (NSInteger) section
 {
   // Load Earlier Messages
   // return 1 + [_messages count];
+
+  // Empty cell at the end
   return [_messages count];
 }
 
@@ -328,8 +347,12 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 layout: (UICollectionViewLayout *) collectionViewLayout 
 referenceSizeForFooterInSection: (NSInteger) section
 {
+  // Returning some size makes it so that the 1st message doesn't show up
+  // when sending it
+  // return CGSizeZero;
+
   CGFloat height = 0.0f;
-  if (isEditing)
+  if (isEditing && [_messages count] > 1)
     height = 216.0f;
   return CGSizeMake(collectionView.frame.size.width, height);
 }
@@ -347,7 +370,8 @@ insetForSectionAtIndex: (NSInteger) section
 {
   // The margins used to lay out content in a section
   // return UIEdgeInsetsMake(30.0f, 10.0f, 10.0f, 10.0f);
-  return UIEdgeInsetsMake(OMBPadding, 0.0f, 0.0f, 0.0f);
+  return UIEdgeInsetsMake(OMBPadding, 0.0f, 
+    bottomToolbar.frame.size.height, 0.0f);
 }
 
 - (CGFloat) collectionView: (UICollectionView *) collectionView 
@@ -371,6 +395,14 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
 layout: (UICollectionViewLayout*) collectionViewLayout 
 sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 {
+  // Last row, empty row
+  // if (indexPath.row == [_messages count]) {
+  //   CGFloat height = 0.0f;
+  //   if (isEditing)
+  //     height = OMBKeyboardHeight;
+  //   return CGSizeMake(collectionView.frame.size.width, height);
+  // }
+
   // Load Earlier Messages
   // if (indexPath.row == 0) {
   //   CGFloat height = 58.0f;
@@ -400,6 +432,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
     message.sizeForMessageCell.height);
 
   CGFloat spacing = padding;
+  // Minus 1, account for the last empty row
   if (indexPath.row != 
     [collectionView numberOfItemsInSection: indexPath.section] - 1) {
     OMBMessage *nextMessage = [self messageAtIndexPath: 
@@ -413,7 +446,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
       }
     }
   }
-
+  // NSLog(@"%f", rect.size.height);
   return CGSizeMake(screen.size.width, 
     padding + rect.size.height + padding + (padding * 0.5) + spacing);
 }
@@ -489,6 +522,9 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
     @"createdAt" ascending: YES];
   _messages = [[[OMBUser currentUser] messagesWithUser: 
     user] sortedArrayUsingDescriptors: @[sort]];
+  // OMBMessage *message = [_messages lastObject];
+  // NSLog(@"%@ - %@", message.content, [NSDate dateWithTimeIntervalSince1970:
+  //   message.createdAt]);
 }
 
 - (void) done
@@ -608,6 +644,20 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   CGFloat bottom = 
     [_collection.collectionViewLayout collectionViewContentSize].height -
       _collection.frame.size.height;
+  if (bottom < 0)
+    bottom = 0;
+  [_collection setContentOffset: CGPointMake(0.0f, bottom) animated: animated];
+}
+
+- (void) scrollToBottomAnimatedViewWillAppear: (BOOL) animated
+{
+  // Use this scroll method only when the view will appear
+  CGFloat bottom = 
+    [_collection.collectionViewLayout collectionViewContentSize].height -
+      _collection.frame.size.height;
+  bottom += OMBPadding + bottomToolbar.frame.size.height;
+  if (bottom < 0)
+    bottom = 0;
   [_collection setContentOffset: CGPointMake(0.0f, bottom) animated: animated];
 }
 
@@ -615,11 +665,14 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   OMBMessage *message = [[OMBMessage alloc] init];
   message.content   = bottomToolbar.messageContentTextView.text;
-  message.createdAt = [[NSDate date] timeIntervalSince1970];
+  // Server time is ahead by X + 11 seconds
+  message.createdAt = [[NSDate date] timeIntervalSince1970] +
+    kWebServerTimeOffsetInSeconds + 11;
   message.recipient = user;
   message.sender    = [OMBUser currentUser];
-  message.uid       = 9999 + arc4random_uniform(100);
-  message.updatedAt = [[NSDate date] timeIntervalSince1970];
+  message.uid       = -999 + arc4random_uniform(100);
+  message.updatedAt = [[NSDate date] timeIntervalSince1970] +
+    kWebServerTimeOffsetInSeconds + 11;
   [[OMBUser currentUser] addMessage: message];
 
   [self assignMessages];
@@ -639,6 +692,11 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   [self textViewDidChange: bottomToolbar.messageContentTextView];
 
   [[[OMBMessageCreateConnection alloc] initWithMessage: message] start];
+
+  // NSLog(@"%@ - %@", message.content, [NSDate dateWithTimeIntervalSince1970:
+  //   message.createdAt]);
+
+  // NSLog(@"%@", _messages);
 }
 
 - (void) showContactMore

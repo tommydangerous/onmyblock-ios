@@ -48,7 +48,12 @@
   // NSLog(@"OMBMessageCreateConnection\n%@", [self json]);
 
   if ([self successful]) {
-    [message readFromDictionary: [self objectDictionary]];
+    // Do not read the created at from the server;
+    // the server's time is different than user's time by about 1 minute
+    // 40 seconds
+    NSInteger uid = [[[self objectDictionary] objectForKey: @"id"] intValue];
+    message.uid = uid;
+    // [message readFromDictionary: [self objectDictionary]];
   }
   else {
     [self createInternalErrorWithDomain: OMBConnectionErrorDomainMessage
