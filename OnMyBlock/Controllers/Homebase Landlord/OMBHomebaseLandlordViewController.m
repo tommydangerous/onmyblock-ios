@@ -251,6 +251,13 @@ float kHomebaseLandlordImagePercentage = 0.4f;
   //   [NSIndexPath indexPathForRow: 0 inSection: 0]];
 }
 
+- (void) viewDidDisappear: (BOOL) animated
+{
+  [super viewDidDisappear: animated];
+
+  [refreshControl endRefreshing];
+}
+
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
@@ -276,7 +283,6 @@ float kHomebaseLandlordImagePercentage = 0.4f;
 -(void)viewWillDisappear:(BOOL)animated
 {
   [super viewWillDisappear: animated];
-  [refreshControl endRefreshing];
 }
 
 #pragma mark - Protocol

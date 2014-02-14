@@ -279,6 +279,13 @@ float kHomebaseRenterImagePercentage = 0.3f;
   [self changeTableView];
 }
 
+- (void) viewDidDisappear: (BOOL) animated
+{
+  [super viewDidDisappear: animated];
+
+  [refreshControl endRefreshing];
+}
+
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
@@ -386,7 +393,6 @@ float kHomebaseRenterImagePercentage = 0.3f;
 -(void)viewWillDisappear:(BOOL)animated
 {
   [super viewWillDisappear: animated];
-  [refreshControl endRefreshing];
 }
 
 #pragma mark - Protocol
