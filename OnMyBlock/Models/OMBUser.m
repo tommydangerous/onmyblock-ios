@@ -176,7 +176,7 @@ int kNotificationTimerInterval = 60;
   [OMBUser currentUser].phone     = @"4088581234";
   [OMBUser currentUser].school    = @"University of California - Berkeley";
   [OMBUser currentUser].image     = [UIImage imageNamed: @"edward_d.jpg"];
-  [OMBUser currentUser].userType  = OMBUserTypeLandlord;
+  // [OMBUser currentUser].userType  = OMBUserTypeLandlord;
   [OMBUser currentUser].uid       = 61;
 
   [OMBUser currentUser].renterApplication.cats = YES;

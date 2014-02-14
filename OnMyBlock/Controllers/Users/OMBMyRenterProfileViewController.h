@@ -15,6 +15,7 @@
 typedef NS_ENUM(NSInteger, OMBMyRenterProfileSection) {
   OMBMyRenterProfileSectionUserInfo,
   OMBMyRenterProfileSectionRentalInfo,
+  OMBMyRenterProfileSectionEmployments,
   OMBMyRenterProfileSectionSpacing
 };
 
