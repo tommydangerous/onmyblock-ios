@@ -383,6 +383,12 @@ float kHomebaseRenterImagePercentage = 0.3f;
   ];
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+  [super viewWillDisappear: animated];
+  [refreshControl endRefreshing];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol PayPalPaymentDelegate

@@ -273,6 +273,12 @@ float kHomebaseLandlordImagePercentage = 0.4f;
   [_activityTableView reloadData];
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+  [super viewWillDisappear: animated];
+  [refreshControl endRefreshing];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol UIScrollViewDelegate
