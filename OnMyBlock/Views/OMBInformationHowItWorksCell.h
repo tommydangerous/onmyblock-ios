@@ -8,6 +8,8 @@
 
 #import "OMBCollectionViewCell.h"
 
+extern CGFloat kInformationHowItWorksCellInformationLineHeight;
+
 @interface OMBInformationHowItWorksCell : OMBCollectionViewCell
 {
   UILabel *numberLabel;

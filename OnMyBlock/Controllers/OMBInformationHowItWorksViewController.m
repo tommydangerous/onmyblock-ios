@@ -54,11 +54,15 @@
   [super viewWillAppear: animated];
   
   for (NSDictionary *dictionary in _informationArray) {
-    CGSize size = 
-      [[dictionary objectForKey: @"information"] boundingRectWithSize: 
-        CGSizeMake(
-          self.collectionView.frame.size.width - (OMBPadding * 2), 9999) 
-            font: fontForInformationText].size;
+    NSAttributedString *aString = 
+      [[dictionary objectForKey: @"information"] attributedStringWithFont: 
+        fontForInformationText lineHeight: 
+          kInformationHowItWorksCellInformationLineHeight];
+    CGFloat sideInset = [self collectionView: self.collectionView 
+      layout: self.collectionViewFlowLayout insetForSectionAtIndex: 0].left;
+    CGSize size = [aString boundingRectWithSize: 
+      CGSizeMake(self.view.frame.size.width - (sideInset * 2), 9999) options:
+        NSStringDrawingUsesLineFragmentOrigin context: nil].size;
     [informationSizeArray addObject: [NSValue valueWithCGSize: size]];
   }
   [self.collectionView reloadData];

@@ -905,12 +905,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (void) postLandlordTypeChangeNotification
 {
+  NSLog(@"POST!!!!");
   [[NSNotificationCenter defaultCenter] postNotificationName:
     OMBCurrentUserLandlordTypeChangeNotification object: nil
       userInfo: @{
         @"landlordType": _landlordType ? _landlordType : [NSNull null]
       }
     ];
+  NSLog(@"POST: %@", _landlordType);
 }
 
 - (OMBPayoutMethod *) primaryDepositPayoutMethod

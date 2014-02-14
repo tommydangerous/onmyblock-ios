@@ -688,7 +688,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
           cancelButtonTitle: @"Continue" otherButtonTitles: nil];
     [alertView show];
   }
-  else {
+  else if (!isPublishing) {
+    isPublishing = YES;
+
     OMBResidence *newResidence = [[OMBResidence alloc] init];
     OMBResidencePublishConnection *conn = 
       [[OMBResidencePublishConnection alloc] initWithResidence: residence
@@ -711,6 +713,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         [alertBlur showInView: self.view];
         [alertBlur showOnlyConfirmButton];
         [alertBlur hideQuestionButton];
+
+        isPublishing = NO;
       }
       else {
         [self showAlertViewWithError: error];

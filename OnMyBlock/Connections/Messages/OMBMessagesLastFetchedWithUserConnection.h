@@ -10,4 +10,9 @@
 
 @interface OMBMessagesLastFetchedWithUserConnection : OMBConnection
 
+#pragma mark - Initializer
+
+- (id) initWithLastFetched: (NSTimeInterval) lastFetched 
+otherUser: (OMBUser *) otherUser;
+
 @end

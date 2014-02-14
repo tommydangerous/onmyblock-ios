@@ -57,9 +57,8 @@
     0.0f, screenWidth, padding + OMBStandardButtonHeight + padding)];
 
   noPayoutMethodsView = [[UIView alloc] init];
-  noPayoutMethodsView.frame = CGRectMake(0.0f, 0.0f, screenWidth,
-    screenHeight);
-  noPayoutMethodsView.hidden = YES;
+  noPayoutMethodsView.frame = CGRectMake(0.0f, 0.0f, 
+    screenWidth, screenHeight);
   [self.view addSubview: noPayoutMethodsView];
 
   label2 = [[UILabel alloc] init];
@@ -138,16 +137,12 @@
     if ([[OMBUser currentUser].payoutMethods count]) {
       [UIView animateWithDuration: 0.25f animations: ^{
         noPayoutMethodsView.alpha = 0.0f;  
-      } completion: ^(BOOL finished) {
-        if (finished)
-          noPayoutMethodsView.hidden = YES;
       }];
       // [self.navigationItem setRightBarButtonItem: addBarButtonItem
       //   animated: YES];
     }
     else {
       noPayoutMethodsView.alpha = 1.0f;
-      noPayoutMethodsView.hidden = NO;
     }
     [self.table reloadData];
   }];

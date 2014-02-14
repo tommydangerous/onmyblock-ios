@@ -44,10 +44,9 @@
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
   if ([self successful]) {
-    NSDictionary *dict = @{
+    [[OMBUser currentUser] readFromPayoutMethodsDictionary: @{
       @"objects": @[[self objectDictionary]]
-    };
-    [[OMBUser currentUser] readFromPayoutMethodsDictionary: dict];
+    }];
   }
   [super connectionDidFinishLoading: connection];
 }

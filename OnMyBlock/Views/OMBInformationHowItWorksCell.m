@@ -49,8 +49,8 @@ CGFloat kInformationHowItWorksCellInformationLineHeight = 27.0f;
   informationLabel = [UILabel new];
   informationLabel.font = [UIFont mediumTextFont];
   informationLabel.frame = CGRectMake(0.0f, titleLabel.frame.origin.y +
-    titleLabel.frame.size.height - 
-    (kInformationHowItWorksCellInformationLineHeight * 0.3f), 
+    titleLabel.frame.size.height, // - 
+    // (kInformationHowItWorksCellInformationLineHeight * 0.3f), 
       self.frame.size.width, 0.0f);
   informationLabel.numberOfLines = 0;
   informationLabel.textColor = [UIColor textColor];

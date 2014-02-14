@@ -105,35 +105,50 @@ navigationType: (UIWebViewNavigationType) navigationType
             [self showAlertViewWithError: error];
           }
           else {
-            [webViewController close];
-            OMBPayoutMethod *payoutMethod = 
-              [[OMBUser currentUser] primaryPaymentPayoutMethod];
-            if (!payoutMethod)
-              payoutMethod = [[OMBUser currentUser] primaryDepositPayoutMethod];
-            if (payoutMethod && 
-              [[payoutMethod.payoutType lowercaseString] isEqualToString: 
-                @"venmo"]) {
-              // Only pop to the root view controller
-              // if this was presented modally (via OMBViewControllerContainer)
-              NSArray *array = self.navigationController.viewControllers;
-              if ([[array firstObject] isKindOfClass: 
-                [OMBPayoutMethodsViewController class]] || [array count] < 2) {
+            // [webViewController close];
+            [webViewController.navigationController 
+              dismissViewControllerAnimated: YES completion: ^{
 
-                [self.navigationController popToRootViewControllerAnimated: 
-                  YES];
+              OMBPayoutMethod *payoutMethod = 
+                [[OMBUser currentUser] primaryPaymentPayoutMethod];
+              if (!payoutMethod) {
+
               }
-              else {              
-                [self.navigationController popToViewController: 
-                  [array objectAtIndex: 1] animated: YES];
+
+              if (payoutMethod && 
+                [[payoutMethod.payoutType lowercaseString] isEqualToString: 
+                  @"venmo"]) {
+                // Only pop to the root view controller
+                // if this was presented modally 
+                // (via OMBViewControllerContainer)
+                NSArray *array = self.navigationController.viewControllers;
+                if ([[array firstObject] isKindOfClass: 
+                  [OMBPayoutMethodsViewController class]] || 
+                  [array count] < 2) {
+
+                  // [self.navigationController 
+                    // popToRootViewControllerAnimated: YES];
+                  // If the user added their first payout method
+                  if ([[[OMBUser currentUser] paymentPayoutMethods] count] == 
+                    1) {
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:
+                      OMBPayoutMethodNotificationFirst object: nil];
+                  }
+                }
+                else {              
+                  [self.navigationController popToViewController: 
+                    [array objectAtIndex: 1] animated: YES];
+                }
               }
-            }
-            else {
-              UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-                @"Venmo Failed" message: 
-                  @"Authentication with Venmo was unsuccessful." delegate: nil
-                    cancelButtonTitle: @"Try again" otherButtonTitles: nil];
-              [alertView show];
-            }
+              else {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+                  @"Venmo Failed" message: 
+                    @"Authentication with Venmo was unsuccessful." delegate: nil
+                      cancelButtonTitle: @"Try again" otherButtonTitles: nil];
+                [alertView show];
+              }
+            }];
           }
         }
       ];

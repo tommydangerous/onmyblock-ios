@@ -185,7 +185,6 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
       if ([[params objectForKey: @"signed_request"] rangeOfString: 
         @"null"].location != NSNotFound) {
 
-        NSLog(@"CANCELLLLLED");
         [[NSNotificationCenter defaultCenter] postNotificationName:
           OMBOfferNotificationVenmoAppSwitchCancelled object: nil
             userInfo: nil];

@@ -148,6 +148,7 @@
 		AB33970518AD7D6900F49064 /* house_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB3396FF18AD7D6900F49064 /* house_icon_white@2x.png */; };
 		AB33970618AD7D6900F49064 /* sublet_icon_white.png in Resources */ = {isa = PBXBuildFile; fileRef = AB33970018AD7D6900F49064 /* sublet_icon_white.png */; };
 		AB33970718AD7D6900F49064 /* sublet_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB33970118AD7D6900F49064 /* sublet_icon_white@2x.png */; };
+		AB33970A18AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB33970918AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m */; };
 		AB44986E189AC10100979B3B /* facebook_icon_blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */; };
 		AB44986F189AC10100979B3B /* facebook_icon_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */; };
 		AB449872189AEFFF00979B3B /* OMBLoginSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */; };
@@ -883,6 +884,8 @@
 		AB3396FF18AD7D6900F49064 /* house_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "house_icon_white@2x.png"; sourceTree = "<group>"; };
 		AB33970018AD7D6900F49064 /* sublet_icon_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sublet_icon_white.png; sourceTree = "<group>"; };
 		AB33970118AD7D6900F49064 /* sublet_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sublet_icon_white@2x.png"; sourceTree = "<group>"; };
+		AB33970818AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMessagesLastFetchedWithUserConnection.h; sourceTree = "<group>"; };
+		AB33970918AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMessagesLastFetchedWithUserConnection.m; sourceTree = "<group>"; };
 		AB44986C189AC10100979B3B /* facebook_icon_blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_blue@2x.png"; sourceTree = "<group>"; };
 		AB44986D189AC10100979B3B /* facebook_icon_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook_icon_white@2x.png"; sourceTree = "<group>"; };
 		AB449870189AEFFF00979B3B /* OMBLoginSignUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLoginSignUpView.h; sourceTree = "<group>"; };
@@ -3318,6 +3321,8 @@
 				ABE7069C188863B3007A4E29 /* OMBMessageCreateConnection.m */,
 				ABE706A41889984D007A4E29 /* OMBMessagesUnviewedCountConnection.h */,
 				ABE706A51889984D007A4E29 /* OMBMessagesUnviewedCountConnection.m */,
+				AB33970818AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.h */,
+				AB33970918AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -3993,6 +3998,7 @@
 				AB9545761848FB58000513BE /* OMBAccountProfileViewController.m in Sources */,
 				ABB911C118998FB30046611F /* AFNetworkReachabilityManager.m in Sources */,
 				ABED5FEC1896FAED00AD630C /* DKLiveBlurView.m in Sources */,
+				AB33970A18AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m in Sources */,
 				ABB3C57F1811781C00DD91C9 /* MFSideMenuContainerViewController.m in Sources */,
 				AB6155B5184D9A2F00A193C7 /* OMBPetsViewController.m in Sources */,
 				ABDF17591868C67A004E2755 /* OMBResidenceMonthlyPaymentScheduleViewController.m in Sources */,

@@ -1396,10 +1396,12 @@ completion: (void (^) (void)) block
   id landlordType = [[notification userInfo] objectForKey: @"landlordType"];
   // If there is a landlord type of any sort, enable the scroll,
   // and hide the create listing button box
+  NSLog(@"%@", landlordType);
   createListingButton.hidden    = NO;
   hitArea.scrollView            = nil;
   _infiniteScroll.scrollEnabled = NO;
-  if (landlordType != [NSNull null]) {
+  // if (landlordType != [NSNull null]) {
+  if ([[OMBUser currentUser].landlordType length]) {
     if ([(NSString *) landlordType length]) {
       createListingButton.hidden    = YES;
       hitArea.scrollView            = _infiniteScroll;

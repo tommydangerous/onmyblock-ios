@@ -14,6 +14,7 @@
 #import "OMBMessageCreateConnection.h"
 #import "OMBMessageDetailCollectionViewFlowLayout.h"
 #import "OMBMessageInputToolbar.h"
+#import "OMBMessagesLastFetchedWithUserConnection.h"
 #import "OMBMessageStore.h"
 #import "OMBOtherUserProfileViewController.h"
 #import "UIColor+Extensions.h"
@@ -145,6 +146,11 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 //  bottomToolbar.cameraBarButtonItem.target = self;
   bottomToolbar.sendBarButtonItem.action   = @selector(send);
   bottomToolbar.sendBarButtonItem.target   = self;
+
+  timer = [NSTimer timerWithTimeInterval: 1 target: self
+    selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
+  // NSRunLoopCommonModes, mode used for tracking events
+  [[NSRunLoop currentRunLoop] addTimer: timer forMode: NSRunLoopCommonModes];
 }
 
 - (void) viewDidLoad
@@ -172,6 +178,8 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 - (void) viewDidDisappear: (BOOL) animated
 {
   [super viewDidDisappear: animated];
+
+  [timer invalidate];
 
   // _collection.dataSource = nil;
   // _collection.delegate = nil;
@@ -339,7 +347,7 @@ insetForSectionAtIndex: (NSInteger) section
 {
   // The margins used to lay out content in a section
   // return UIEdgeInsetsMake(30.0f, 10.0f, 10.0f, 10.0f);
-  return UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+  return UIEdgeInsetsMake(OMBPadding, 0.0f, 0.0f, 0.0f);
 }
 
 - (CGFloat) collectionView: (UICollectionView *) collectionView 
@@ -578,6 +586,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
       [self assignMessages];
       [_collection reloadData];
       if (firstTime) {
+        lastFetched = [[NSDate date] timeIntervalSince1970];
         [self scrollToBottomAnimated: NO];
       }
     }
@@ -586,14 +595,19 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) scrollToBottomAnimated: (BOOL) animated
 {
+  // CGFloat bottom = 
+  //   [_collection.collectionViewLayout collectionViewContentSize].height
+  //     - (_collection.frame.size.height - 
+  //       (bottomToolbar.frame.size.height + 20.0f));
+  // if (isEditing)
+  //   bottom -= bottomToolbar.frame.size.height + 20.0f;
+  // else
+  //   bottom -= bottomToolbar.frame.size.height;
+  // if (bottom < 0)
+  //   bottom = 0;
   CGFloat bottom = 
-    [_collection.collectionViewLayout collectionViewContentSize].height
-      - (_collection.frame.size.height - 
-        (bottomToolbar.frame.size.height + 20.0f));
-  if (isEditing)
-    bottom -= bottomToolbar.frame.size.height + 20.0f;
-  if (bottom < 0)
-    bottom = 0;
+    [_collection.collectionViewLayout collectionViewContentSize].height -
+      _collection.frame.size.height;
   [_collection setContentOffset: CGPointMake(0.0f, bottom) animated: animated];
 }
 
@@ -648,6 +662,31 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   OMBOtherUserProfileViewController *vc =
     [[OMBOtherUserProfileViewController alloc] initWithUser: user];
   [self.navigationController pushViewController: vc animated: YES];
+}
+
+- (void) timerFireMethod: (NSTimer *) timer
+{
+  NSInteger currentCount = [_messages count];
+  
+  if (!isFetching) {
+    OMBMessagesLastFetchedWithUserConnection *conn = 
+      [[OMBMessagesLastFetchedWithUserConnection alloc] initWithLastFetched:
+        lastFetched otherUser: user];
+    conn.completionBlock = ^(NSError *error) {
+      [self assignMessages];
+
+      CGFloat newCount = [_messages count];
+
+      if (currentCount != newCount) {
+        [_collection reloadData];
+        [self scrollToBottomAnimated: YES];
+      }
+
+      isFetching = NO;
+      lastFetched = [[NSDate date] timeIntervalSince1970];
+    };
+    [conn start];
+  }
 }
 
 @end

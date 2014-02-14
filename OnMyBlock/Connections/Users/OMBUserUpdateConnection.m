@@ -50,7 +50,7 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBUserUpdateConnection\n%@", [self json]);
+  // NSLog(@"OMBUserUpdateConnection\n%@", [self json]);
 
   if ([self successful]) {
     [[OMBUser currentUser] readFromDictionary: [self objectDictionary]];

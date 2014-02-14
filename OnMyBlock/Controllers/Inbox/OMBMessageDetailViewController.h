@@ -19,8 +19,11 @@
   UIBarButtonItem *contactBarButtonItem;
   UIToolbar *contactToolbar;
   BOOL isEditing;
+  BOOL isFetching;
+  NSTimeInterval lastFetched;
   UIBarButtonItem *phoneBarButtonItem;
   CGPoint startingPoint;
+  NSTimer *timer;
   OMBUser *user;
 }
 

@@ -45,7 +45,7 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBMessageCreateConnection\n%@", [self json]);
+  // NSLog(@"OMBMessageCreateConnection\n%@", [self json]);
 
   if ([self successful]) {
     [message readFromDictionary: [self objectDictionary]];

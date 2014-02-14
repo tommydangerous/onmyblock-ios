@@ -29,6 +29,7 @@
   CGFloat headerImageOffsetY;
   OMBCenteredImageView *headerImageView;
   OMBGradientView *headerImageViewGradient;
+  BOOL isPublishing;
   int numberOfSteps;
   UIBarButtonItem *previewBarButtonItem;
   UIButton *publishNowButton;

@@ -62,6 +62,8 @@ code: (NSInteger) code;
 - (void) setPostRequestWithString: (NSString *) string
 withParameters: (NSDictionary *) dictionary;
 - (void) setRequestWithString: (NSString *) requestString;
+- (void) setRequestWithString: (NSString *) requestString
+  parameters: (NSDictionary *) dictionary;
 - (void) setRequestWithString: (NSString *) string method: (NSString *) method
 parameters: (NSDictionary *) dictionary;
 - (void) startWithTimeoutInterval: (NSTimeInterval) interval

@@ -952,6 +952,7 @@ replacementString: (NSString *) string
         // Check to see what type of property it is and then
         // change the user's landlord type
         // Only if the user doesn't already have a landlord type
+
         if (![[OMBUser currentUser] hasLandlordType]) {
           NSString *landlordType;
           if ([_temporaryResidence.propertyType isEqualToString: 
@@ -962,13 +963,13 @@ replacementString: (NSString *) string
             landlordType = @"landlord";
           }
           [OMBUser currentUser].landlordType = landlordType;
-          [[OMBUser currentUser] updateWithDictionary: @{
-            @"landlordType": [OMBUser currentUser].landlordType
-          } completion: ^(NSError *error) {
-            [OMBUser currentUser].landlordType = landlordType;
-          }];
-          [[OMBUser currentUser] postLandlordTypeChangeNotification];
         }
+        [[OMBUser currentUser] postLandlordTypeChangeNotification];
+        [[OMBUser currentUser] updateWithDictionary: @{
+          @"landlordType": [OMBUser currentUser].landlordType
+        } completion: ^(NSError *error) {
+          
+        }];
         [[self appDelegate].container showManageListings];
         [[self appDelegate].container.manageListingsNavigationController 
           pushViewController:
