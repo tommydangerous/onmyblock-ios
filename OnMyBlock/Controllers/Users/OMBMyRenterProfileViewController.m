@@ -14,6 +14,7 @@
 #import "OMBCenteredImageView.h"
 #import "OMBEmploymentCell.h"
 #import "OMBLabelTextFieldCell.h"
+#import "OMBOtherUserProfileViewController.h"
 #import "OMBPickerViewCell.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterProfileUserInfoCell.h"
@@ -65,7 +66,10 @@
 
   [[CustomLoading getInstance] clearInstance];
 
-  self.navigationItem.rightBarButtonItem = saveBarButtonItem;
+  previewBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithTitle: @"Preview"
+      style: UIBarButtonItemStylePlain target: self action: @selector(preview)];
+  self.navigationItem.rightBarButtonItem = previewBarButtonItem;
 
   CGRect screen       = [[UIScreen mainScreen] bounds];
   CGFloat screenWidth = screen.size.width;
@@ -94,12 +98,46 @@
     cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil 
       otherButtonTitles: @"Take Photo", @"Choose Existing", nil];
   [self.view addSubview: uploadActionSheet];
+
+  // Spacing
+  UIBarButtonItem *flexibleSpace = 
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem: 
+      UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
+  // Save
+  UIBarButtonItem *saveBarButtonItemForTextFieldToolbar =
+    [[UIBarButtonItem alloc] initWithTitle: @"Save" 
+      style: UIBarButtonItemStylePlain target: self 
+        action: @selector(saveFromInputAccessoryView)];
+  // Right padding
+  UIBarButtonItem *rightPadding = 
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+      UIBarButtonSystemItemFixedSpace target: nil action: nil];
+  // iOS 7 toolbar spacing is 16px; 20px on iPad
+  rightPadding.width = 4.0f;
+
+  textFieldToolbar = [UIToolbar new];
+  textFieldToolbar.clipsToBounds = YES;
+  textFieldToolbar.frame = CGRectMake(0.0f, 0.0f, 
+    screenWidth, OMBStandardHeight);
+  textFieldToolbar.items = @[flexibleSpace, 
+    saveBarButtonItemForTextFieldToolbar, rightPadding];
+  textFieldToolbar.tintColor = [UIColor blue];
+  aboutTextView.inputAccessoryView = textFieldToolbar;
+}
+
+- (void) viewDidDisappear: (BOOL) animated
+{
+  [super viewDidDisappear: animated];
+
+  [self done];
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-  user = [OMBUser currentUser];
+
+  if (!user)
+    user = [OMBUser currentUser];
 
   valueDictionary = [NSMutableDictionary dictionaryWithDictionary: @{
     @"about":     user.about ? user.about : @"",
@@ -127,6 +165,10 @@
   else {
     // Fetch the information about the user, specifically the renter application
     [user fetchUserProfileWithCompletion: ^(NSError *error) {
+      [valueDictionary setObject: [NSNumber numberWithInt: 
+        user.renterApplication.coapplicantCount] forKey: @"coapplicantCount"];
+      [valueDictionary setObject: [NSNumber numberWithBool: 
+        user.renterApplication.hasCosigner] forKey: @"hasCosigner"];
       [self.table reloadData];
     }];
     // Fetch the employments
@@ -134,6 +176,13 @@
       [self.table reloadData];
     }];
   }
+}
+
+- (void) viewWillDisappear: (BOOL) animated
+{
+  [super viewWillDisappear: animated];
+
+  [self save];
 }
 
 #pragma mark - Protocol
@@ -206,7 +255,6 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
  numberOfRowsInComponent: (NSInteger) component
 {
   return 10;
-  return 0;
 }
 
 #pragma mark - Protocol UIPickerViewDelegate
@@ -238,8 +286,9 @@ titleForRow: (NSInteger) row forComponent: (NSInteger) component
 {
   // User info
   // Rental info
+  // Employments
   // Spacing
-  return 3;
+  return 4;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -337,8 +386,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // cell.backgroundColor = transparentWhite;
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.textField.font = [UIFont normalTextFontBold];
       cell.textField.textColor = [UIColor blueDark];
-      cell.textFieldLabel.font = [UIFont normalTextFontBold];
+      cell.textFieldLabel.font = [UIFont normalTextFont];
       NSString *key;
       NSString *labelString;
       // First name
@@ -534,7 +584,10 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 heightForHeaderInSection: (NSInteger) section
 {
   if (section == OMBMyRenterProfileSectionEmployments) {
-    return OMBStandardHeight;
+    if (![user isLandlord]) {
+      if ([[user.renterApplication employmentsSortedByStartDate] count])
+        return OMBStandardHeight;
+    }
   }
   return 0.0f;
 }
@@ -545,9 +598,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
 
+  // User info
   if (section == OMBMyRenterProfileSectionUserInfo) {
+    // Image
     if (row == OMBMyRenterProfileSectionUserInfoRowImage) {
       return OMBPadding + OMBStandardButtonHeight + OMBPadding;
+    }
+    // School
+    else if (row == OMBMyRenterProfileSectionUserInfoRowSchool) {
+      if ([user isLandlord]) {
+        return 0.0f;
+      }
     }
     // About
     else if (row == OMBMyRenterProfileSectionUserInfoRowAbout) {
@@ -557,8 +618,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Rental info
   else if (section == OMBMyRenterProfileSectionRentalInfo) {
+    // Co-applicants
+    if (row == OMBMyRenterProfileSectionRentalInfoRowCoapplicants) {
+      if ([user isLandlord]) {
+        return 0.0f;
+      }
+    }
     // Co-applicants picker view
-    if (row == OMBMyRenterProfileSectionRentalInfoRowCoapplicantsPickerView) {
+    else if (row == 
+      OMBMyRenterProfileSectionRentalInfoRowCoapplicantsPickerView) {
       if (section == selectedIndexPath.section && 
         row == selectedIndexPath.row + 1) {
 
@@ -568,11 +636,19 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         return 0.0f;
       }
     }
+    // Co-signers
+    else if (row == OMBMyRenterProfileSectionRentalInfoRowCosigners) {
+      if ([user isLandlord]) {
+        return 0.0f;
+      }
+    }
     return [OMBRenterProfileUserInfoCell heightForCell];
   }
   // Employments
-  else if (OMBMyRenterProfileSectionEmployments) {
-    return [OMBEmploymentCell heightForCell];
+  else if (section == OMBMyRenterProfileSectionEmployments) {
+    if (![user isLandlord]) {
+      return [OMBEmploymentCell heightForCell];
+    }
   }
   // Spacing
   else if (section == OMBMyRenterProfileSectionSpacing) {
@@ -608,6 +684,8 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) textFieldDidBeginEditing: (TextFieldPadding *) textField
 {
+  textField.inputAccessoryView = textFieldToolbar;
+
   isEditing = YES;
   [self.table beginUpdates];
   [self.table endUpdates];
@@ -625,6 +703,8 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) textViewDidBeginEditing: (UITextView *) textView
 {
+  textView.inputAccessoryView = textFieldToolbar;
+
   isEditing = YES;
   [self.table beginUpdates];
   [self.table endUpdates];
@@ -679,12 +759,14 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) keyboardWillHide: (NSNotification *) notification
 {
-  [self.navigationItem setRightBarButtonItem: saveBarButtonItem animated: YES];
+  // [self.navigationItem setRightBarButtonItem: saveBarButtonItem 
+  //   animated: YES];
 }
 
 - (void) keyboardWillShow: (NSNotification *) notification
 {
-  [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
+  // [self.navigationItem setRightBarButtonItem: doneBarButtonItem 
+  //   animated: YES];
 }
 
 - (void) linkedInButtonSelected
@@ -726,6 +808,18 @@ viewForHeaderInSection: (NSInteger) section
 - (void) loadUser: (OMBUser *) object
 {
   user = object;
+
+  if ([user isLandlord])
+    self.title = @"My Landlord Profile";
+  else
+    self.title = @"My Renter Profile";
+}
+
+- (void) preview
+{
+  [self.navigationController pushViewController:
+    [[OMBOtherUserProfileViewController alloc] initWithUser: user]
+      animated: YES];
 }
 
 - (void) progressConnection: (NSNotification *) notification
@@ -744,7 +838,6 @@ viewForHeaderInSection: (NSInteger) section
     [custom startAnimatingWithProgress: (int)(value * 25) withView: self.view];
   }
 }
-
 
 - (void) reloadPickerViewRowAtIndexPath: (NSIndexPath *) indexPath
 {
@@ -782,14 +875,21 @@ viewForHeaderInSection: (NSInteger) section
         // so the sizes need to change
         [[OMBUser currentUser].heightForAboutTextDictionary removeAllObjects];
         [self.table reloadData];
+        // [self.navigationController popViewControllerAnimated: YES];
       }
       else {
         [self showAlertViewWithError: error];
       }
-      [[self appDelegate].container stopSpinning];
+      // [[self appDelegate].container stopSpinning];
     }
   ];
-  [[self appDelegate].container startSpinning];
+  // [[self appDelegate].container startSpinning];
+}
+
+- (void) saveFromInputAccessoryView
+{
+  [self save];
+  [self done];
 }
 
 - (void) scrollToRowAtIndexPath: (NSIndexPath *) indexPath

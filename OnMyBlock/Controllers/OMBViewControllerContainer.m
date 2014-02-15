@@ -1315,8 +1315,9 @@ completion: (void (^) (void)) block
 - (void) showRenterProfile
 {
   [self hideMenuWithFactor: 1.0f];
-  [_renterProfileViewController loadUser: [OMBUser currentUser]];
-  [self presentDetailViewController: _renterProfileNavigationController]; 
+  [self showMyRenterProfile];
+  // [_renterProfileViewController loadUser: [OMBUser currentUser]];
+  // [self presentDetailViewController: _renterProfileNavigationController];
 }
 
 - (void) showSearch

@@ -8,6 +8,7 @@
 
 #import "OMBAccountViewController.h"
 
+#import "OMBMyRenterProfileViewController.h"
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBPrivacyPolicyViewController.h"
 #import "OMBRenterApplicationViewController.h"
@@ -87,7 +88,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell.textLabel.textColor = [UIColor textColor];
     if (indexPath.section == 0) {
       if (indexPath.row == 1) {
-        cell.textLabel.text = @"My Renter Profile";
+        cell.textLabel.text = @"My Profile";
       }
       else if (indexPath.row == 2) {
         cell.textLabel.text = @"My Renter Application";
@@ -159,8 +160,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   if (indexPath.section == 0) {
     // Profile
     if (indexPath.row == 1) {
-      OMBRenterProfileViewController *vc =
-        [[OMBRenterProfileViewController alloc] init];
+      OMBMyRenterProfileViewController *vc = 
+        [[OMBMyRenterProfileViewController alloc] init];
       [vc loadUser: [OMBUser currentUser]];
       [self.navigationController pushViewController: vc animated: YES];
     }

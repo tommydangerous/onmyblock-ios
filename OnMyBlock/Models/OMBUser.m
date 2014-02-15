@@ -176,7 +176,7 @@ int kNotificationTimerInterval = 60;
   [OMBUser currentUser].phone     = @"4088581234";
   [OMBUser currentUser].school    = @"University of California - Berkeley";
   [OMBUser currentUser].image     = [UIImage imageNamed: @"edward_d.jpg"];
-  // [OMBUser currentUser].userType  = OMBUserTypeLandlord;
+  [OMBUser currentUser].userType  = OMBUserTypeLandlord;
   [OMBUser currentUser].uid       = 61;
 
   [OMBUser currentUser].renterApplication.cats = YES;
@@ -1128,9 +1128,12 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     _school = @"";
   // User type
   _userType = [dictionary objectForKey: @"user_type"];
+
   // Renter application
-  [_renterApplication readFromDictionary: 
-    [dictionary objectForKey: @"renter_application"]];
+  if ([dictionary objectForKey: @"renter_application"]) {
+    [_renterApplication readFromDictionary: 
+      [dictionary objectForKey: @"renter_application"]];
+  }
 
   // Add to the OMBUserStore
   [[OMBUserStore sharedStore] addUser: self];

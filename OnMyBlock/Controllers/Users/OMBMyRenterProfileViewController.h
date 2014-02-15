@@ -48,7 +48,9 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRentalInfoRow) {
   UITextView *aboutTextView;
   BOOL isEditing;
   LIALinkedInHttpClient *linkedInClient;
+  UIBarButtonItem *previewBarButtonItem;
   NSIndexPath *selectedIndexPath;
+  UIToolbar *textFieldToolbar;
   UIActionSheet *uploadActionSheet;
   OMBUser *user;
   NSMutableDictionary *valueDictionary;

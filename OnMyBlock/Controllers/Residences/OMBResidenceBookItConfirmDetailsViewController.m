@@ -18,6 +18,7 @@
 #import "OMBGradientView.h"
 #import "OMBHelpPopUpView.h"
 #import "OMBInformationHowItWorksViewController.h"
+#import "OMBMyRenterProfileViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOffer.h"
 #import "OMBPayoutMethod.h"
@@ -1242,8 +1243,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
            OMBResidenceBookItConfirmDetailsSectionRenterProfile) {
     // My Renter Profile (No longer Renter application)
     if (indexPath.row == 0 || indexPath.row == 1) {
-      OMBRenterProfileViewController *vc =
-      [[OMBRenterProfileViewController alloc] init];
+      OMBMyRenterProfileViewController *vc = 
+        [[OMBMyRenterProfileViewController alloc] init];
       [vc loadUser: [OMBUser currentUser]];
       [self.navigationController pushViewController: vc animated: YES];
     }
