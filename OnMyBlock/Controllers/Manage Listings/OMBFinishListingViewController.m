@@ -688,8 +688,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [alertView show];
   }
   else if (!isPublishing) {
-    isPublishing = YES;
-
     OMBResidence *newResidence = [[OMBResidence alloc] init];
     OMBResidencePublishConnection *conn = 
       [[OMBResidencePublishConnection alloc] initWithResidence: residence
@@ -712,15 +710,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         [alertBlur showInView: self.view];
         [alertBlur showOnlyConfirmButton];
         [alertBlur hideQuestionButton];
-
-        isPublishing = NO;
       }
       else {
         [self showAlertViewWithError: error];
       }
       [[self appDelegate].container stopSpinning];
+      isPublishing = NO;
     };
     [[self appDelegate].container startSpinning];
+    isPublishing = YES;
     [conn start];
   }
 }

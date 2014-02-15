@@ -21,6 +21,9 @@ reuseIdentifier: (NSString *)reuseIdentifier
   if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
     return nil;
 
+  _iconImageView = [UIImageView new];
+  [self.contentView addSubview: _iconImageView];
+
   _textFieldLabel = [UILabel new];
   _textFieldLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
     size: 15];
@@ -45,7 +48,30 @@ reuseIdentifier: (NSString *)reuseIdentifier
   return OMBStandardHeight;
 }
 
++ (CGFloat) heightForCellWithIconImageView
+{
+  return OMBStandardButtonHeight;
+}
+
 #pragma mark - Instance Methods
+
+- (void) setFrameUsingIconImageView
+{
+  CGRect screen       = [[UIScreen mainScreen] bounds];
+  CGFloat screenWidth = screen.size.width;
+  CGFloat padding = OMBPadding;
+  CGFloat height = [OMBLabelTextFieldCell heightForCellWithIconImageView];
+
+  CGFloat iconSize = height * 0.5f;
+  _iconImageView.alpha = 0.3f;
+  _iconImageView.frame = CGRectMake(padding, (height - iconSize) * 0.5f,
+    iconSize, iconSize);
+
+  CGFloat originX = _iconImageView.frame.origin.x +
+    _iconImageView.frame.size.width + padding;
+  _textField.frame = CGRectMake(originX, 0.0f, 
+    screenWidth - (originX + padding), height);
+}
 
 - (void) setFrameUsingSize: (CGSize) size
 {

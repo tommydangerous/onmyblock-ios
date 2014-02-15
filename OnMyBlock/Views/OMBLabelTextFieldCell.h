@@ -10,13 +10,19 @@
 
 @interface OMBLabelTextFieldCell : OMBTableViewCell
 
+@property (nonatomic, strong) UIImageView *iconImageView;
 @property (nonatomic, strong) TextFieldPadding *textField;
 @property (nonatomic, strong) UILabel *textFieldLabel;
 
 #pragma mark - Methods
 
+#pragma mark - Class Methods
+
++ (CGFloat) heightForCellWithIconImageView;
+
 #pragma mark - Instance Methods
 
+- (void) setFrameUsingIconImageView;
 - (void) setFrameUsingSize: (CGSize) size;
 - (void) setFramesUsingString: (NSString *) string;
 

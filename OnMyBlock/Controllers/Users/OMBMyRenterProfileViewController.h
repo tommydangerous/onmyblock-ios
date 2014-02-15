@@ -9,6 +9,8 @@
 #import "OMBTableViewController.h"
 
 @class LIALinkedInHttpClient;
+@class OMBCenteredImageView;
+@class OMBGradientView;
 @class OMBUser;
 
 // Sections
@@ -46,13 +48,22 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRentalInfoRow) {
 {
   UILabel *aboutTextViewPlaceholder;
   UITextView *aboutTextView;
+  OMBCenteredImageView *backImageView;
+  UIView *backView;
+  CGFloat backViewOriginY;
+  UILabel *fullNameLabel;
+  OMBGradientView *gradient;
   BOOL isEditing;
   LIALinkedInHttpClient *linkedInClient;
+  UIView *nameView;
+  CGFloat nameViewOriginY;
   UIBarButtonItem *previewBarButtonItem;
+  UIView *scaleBackView;
   NSIndexPath *selectedIndexPath;
   UIToolbar *textFieldToolbar;
   UIActionSheet *uploadActionSheet;
   OMBUser *user;
+  OMBCenteredImageView *userIconView;
   NSMutableDictionary *valueDictionary;
 }
 

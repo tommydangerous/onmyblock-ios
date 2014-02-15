@@ -608,14 +608,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         [user heightForAboutTextWithWidth: width - (padding * 2)];
       if (height < 22.0f)
         height = 22.0f;
-      return padding + height + padding + OMBStandardHeight;
+      return padding + height + padding;
     }
   }
   // Stats
   else if (section == OMBOtherUserProfileSectionStats) {
     // Collection view
     if (row == OMBOtherUserProfileSectionStatsRowCollectionView) {
-      return userCollectionView.frame.size.height + OMBStandardHeight;
+      return userCollectionView.frame.size.height;
     }
   }
   // Employment
