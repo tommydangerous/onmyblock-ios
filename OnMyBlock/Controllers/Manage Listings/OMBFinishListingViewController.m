@@ -667,6 +667,34 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }];
 }
 
+- (NSString *) incompleteStepString
+{
+  NSString *string;
+  // Photos
+  if (![residence.images count])
+    string = @"Please upload at least 1 photo.";
+  // Title
+  else if (![residence.title length])
+    string = @"Please give your place a title.";
+  // Description
+  else if (![residence.description length])
+    string = @"Please write short description about your place.";
+  // Rent / Auction Details
+  else if (!residence.minRent)
+    string = @"Please set a price for monthly rent.";
+  // Address
+  else if (![residence.address length] || ![residence.city length] || 
+    ![residence.state length] || ![residence.zip length])
+    string = @"Please specify an address for your place.";
+  // Lease Details
+  else if (!residence.moveInDate)
+    string = @"Please set the move-in date.";
+  // Listing Details
+  else if (!residence.bedrooms >= 0)
+    string = @"Please set the number of bedrooms.";
+  return string;
+}
+
 - (void) preview
 {
   [self.navigationController pushViewController:
@@ -678,13 +706,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger numberOfStepsLeft = [residence numberOfStepsLeft];
   if (numberOfStepsLeft) {
-    NSString *stepsString = @"steps";
-    if (numberOfStepsLeft == 1)
-      stepsString = @"step";
+    // NSString *stepsString = @"steps";
+    // if (numberOfStepsLeft == 1)
+    //   stepsString = @"step";
+    // UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+    //   @"Almost Finished" message: [NSString stringWithFormat: 
+    //     @"%i more %@ to go.", numberOfStepsLeft, stepsString] delegate: nil 
+    //       cancelButtonTitle: @"Continue" otherButtonTitles: nil];
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-      @"Almost Finished" message: [NSString stringWithFormat: 
-        @"%i more %@ to go.", numberOfStepsLeft, stepsString] delegate: nil 
-          cancelButtonTitle: @"Continue" otherButtonTitles: nil];
+      @"Almost Finished" message: [self incompleteStepString] delegate: nil 
+        cancelButtonTitle: @"Continue" otherButtonTitles: nil];
     [alertView show];
   }
   else if (!isPublishing) {
@@ -727,16 +758,19 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   [self.table reloadRowsAtIndexPaths: 
     @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
-      withRowAnimation: UITableViewRowAnimationNone];
-  
+      withRowAnimation: UITableViewRowAnimationNone]; 
 }
 
--(void)verifyPhotos{
-  UIImageView *checkImageView = (UIImageView *) [headerImageView viewWithTag: 8888];
+- (void) verifyPhotos
+{
+  UIImageView *checkImageView = (UIImageView *) [headerImageView viewWithTag: 
+    8888];
   if ([residence.images count]) {
     checkImageView.alpha =  1.0f;
-    checkImageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
-  }else{
+    checkImageView.image = [UIImage imageNamed: 
+      @"checkmark_outline_filled.png"];
+  }
+  else{
     checkImageView.alpha =  0.2f;
     checkImageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
   }

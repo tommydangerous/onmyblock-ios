@@ -47,6 +47,7 @@ typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionListingsRow) {
 {
   OMBCenteredImageView *backImageView;
   UIView *backView;
+  NSArray *backViewImageArray;
   CGFloat backViewOriginY;
   UIBarButtonItem *contactBarButtonItem;
   UIToolbar *contactToolbar;

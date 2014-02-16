@@ -34,6 +34,17 @@
 
   user = object;
 
+  backViewImageArray = @[
+    @"neighborhood_downtown.jpg",
+    // @"neighborhood_hillcrest.jpg",
+    @"neighborhood_la_jolla.jpg",
+    @"neighborhood_mission_beach.jpg",
+    @"neighborhood_mission_valley.jpg",
+    @"neighborhood_ocean_beach.jpg",
+    @"neighborhood_pacific_beach.jpg",
+    @"neighborhood_university_towne_center.jpg",
+  ];
+
   self.title = [user fullName];
 
   return self;
@@ -82,14 +93,17 @@
   gradient = [[OMBGradientView alloc] init];
   gradient.colors = @[
     [UIColor colorWithWhite: 0.0f alpha: 0.0f],
-    [UIColor colorWithWhite: 0.0f alpha: 0.3f]
+    [UIColor colorWithWhite: 0.0f alpha: 0.8f]
   ];
-  gradient.frame = backImageView.bounds;
+  gradient.frame = CGRectMake(backImageView.frame.origin.x,
+    backImageView.frame.origin.y, backImageView.frame.size.width,
+      backImageView.frame.size.height * 1.5f);
   [scaleBackView addSubview: gradient];
 
   // Table header view
   CGFloat userIconSize = backImageView.frame.size.width * 0.3f;
   CGFloat userViewHeight = (userIconSize * 0.5f) + 33.0f + 27.0f + padding;
+  userViewHeight = padding + 33.0f + 27.0f + padding;
   UIView *tableHeaderView = [UIView new];
   // tableHeaderView.backgroundColor = [UIColor blueAlpha: 0.5f];
   tableHeaderView.frame = CGRectMake(0.0f, 0.0f, screenWidth, 
@@ -112,14 +126,16 @@
       -1 * (userIconSize * 0.5f), userIconSize, userIconSize);
   userIconImageView.layer.cornerRadius = 
     userIconImageView.frame.size.height * 0.5f;
-  [userView addSubview: userIconImageView];
+  // [userView addSubview: userIconImageView];
 
   // User name label
   userNameLabel = [UILabel new];
   userNameLabel.font = [UIFont mediumLargeTextFontBold];
-  userNameLabel.frame = CGRectMake(0.0f, 
-    userIconImageView.frame.origin.y + userIconImageView.frame.size.height, 
-      userView.frame.size.width, 33.0f);
+  // userNameLabel.frame = CGRectMake(0.0f, 
+  //   userIconImageView.frame.origin.y + userIconImageView.frame.size.height, 
+  //     userView.frame.size.width, 33.0f);
+  userNameLabel.frame = CGRectMake(0.0f, padding, 
+    userView.frame.size.width, 33.0f);
   userNameLabel.textAlignment = NSTextAlignmentCenter;
   userNameLabel.textColor = [UIColor textColor];
   [userView addSubview: userNameLabel];
@@ -479,7 +495,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         headLabel.font = [UIFont mediumTextFont];
         headLabel.frame = CGRectMake(originX, padding, 
           width - (originX + (padding * 0.5f)), labelHeight);
-        headLabel.text = @"Experience";
+        headLabel.text = @"Work Experience";
         headLabel.textColor = [UIColor grayMedium];
         [cell.contentView addSubview: headLabel];
       }
@@ -757,8 +773,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // User images
-  backImageView.image     = user.image;
-  userIconImageView.image = user.image;
+  backImageView.image = user.image;
+  // NSInteger index = user.uid % [backViewImageArray count];
+  // backImageView.image = [UIImage imageNamed: 
+  //   [backViewImageArray objectAtIndex: index]];
+  // userIconImageView.image = user.image;
   // User name
   userNameLabel.text = [user fullName];
   // User scrool
