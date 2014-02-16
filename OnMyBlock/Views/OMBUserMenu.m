@@ -26,10 +26,16 @@
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(updateLandlordType:)
       name: OMBCurrentUserLandlordTypeChangeNotification object: nil];
+  
   // Messages badge
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(updateMessagesUnviewedCount:) 
       name: OMBMessagesUnviewedCountNotification object: nil];
+
+  // When user logs out
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(userLogout:)
+      name: OMBUserLoggedOutNotification object: nil];
 
   _renterButtons = [NSMutableArray array];
   _sellerButtons = [NSMutableArray array];
@@ -447,6 +453,12 @@ withNumber: (NSNumber *) number
   NSNumber *count = [[notification userInfo] objectForKey: @"count"];
   [self updateNotificationBadgeLabel: _inboxNotificationBadge
     withNumber: count];
+}
+
+- (void) userLogout: (NSNotification *) notification
+{
+  // Inbox
+  [self updateNotificationBadgeLabel: _inboxNotificationBadge withNumber: @0]; 
 }
 
 @end

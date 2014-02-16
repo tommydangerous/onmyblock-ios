@@ -19,6 +19,7 @@
 #import "OMBOffer.h"
 #import "OMBOtherUserProfileViewController.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 
 @implementation OMBMessageDetailViewController
@@ -136,10 +137,11 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   bottomToolbar.messageContentTextView.delegate = self;
   [self.view addSubview: bottomToolbar];
 
-//  bottomToolbar.cameraBarButtonItem.action = @selector(addImage);
-//  bottomToolbar.cameraBarButtonItem.target = self;
-  bottomToolbar.sendBarButtonItem.action   = @selector(send);
-  bottomToolbar.sendBarButtonItem.target   = self;
+  // bottomToolbar.cameraBarButtonItem.action = @selector(addImage);
+  // bottomToolbar.cameraBarButtonItem.target = self;
+  bottomToolbar.sendBarButtonItem.action  = @selector(send);
+  bottomToolbar.sendBarButtonItem.enabled = NO;
+  bottomToolbar.sendBarButtonItem.target  = self;
 }
 
 - (void) viewDidLoad
@@ -470,14 +472,16 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) textViewDidChange: (UITextView *) textView
 {
-  UIFont *sendFont = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  UIFont *sendFont = [UIFont normalTextFontBold];
   if ([[textView.text stripWhiteSpace] length]) {
     [bottomToolbar.sendBarButtonItem setTitleTextAttributes: @{
       NSFontAttributeName: sendFont,
       NSForegroundColorAttributeName: [UIColor blueDark]
     } forState: UIControlStateNormal];
+    bottomToolbar.sendBarButtonItem.enabled = YES;
   }
   else {
+    bottomToolbar.sendBarButtonItem.enabled = NO;
     [bottomToolbar.sendBarButtonItem setTitleTextAttributes: @{
       NSFontAttributeName: sendFont,
       NSForegroundColorAttributeName: [UIColor grayMedium]

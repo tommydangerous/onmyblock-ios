@@ -79,6 +79,13 @@
 
   [self.table reloadData];
   [self reloadTable];
+
+  // Update the menu badge count for inbox
+  [[NSNotificationCenter defaultCenter] postNotificationName:
+    OMBMessagesUnviewedCountNotification object: nil userInfo: @{
+      @"count": @0
+    }
+  ];
 }
 
 - (void) viewWillDisappear: (BOOL) animated

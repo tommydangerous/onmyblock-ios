@@ -11,6 +11,7 @@
 #import "PayPalMobile.h"
 
 @class DRNRealTimeBlurView;
+@class OMBActivityViewFullScreen;
 @class OMBAlertView;
 @class OMBBlurView;
 @class OMBCenteredImageView;
@@ -23,6 +24,7 @@
   UITableViewDelegate>
 {
   UIButton *activityButton;
+  OMBActivityViewFullScreen *activityViewFullScreen;
   UIButton *addRemoveRoommatesButton;
   OMBAlertView *alert;
   OMBBlurView *backView;

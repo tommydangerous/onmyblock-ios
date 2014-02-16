@@ -227,8 +227,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
 - (void) logout
 {
-  [[NSNotificationCenter defaultCenter] postNotificationName:
-    OMBCurrentUserLogoutNotification object: nil];
+  // [[NSNotificationCenter defaultCenter] postNotificationName:
+  //   OMBCurrentUserLogoutNotification object: nil];
 }
 
 - (void) showFavorites

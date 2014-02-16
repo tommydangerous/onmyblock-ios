@@ -9,12 +9,14 @@
 #import "OMBViewController.h"
 
 @class DRNRealTimeBlurView;
+@class OMBActivityViewFullScreen;
 @class OMBBlurView;
 
 @interface OMBHomebaseLandlordViewController : OMBViewController
 <UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
 {
   UIButton *activityButton;
+  OMBActivityViewFullScreen *activityViewFullScreen;
   OMBBlurView *backView;
   CGFloat backViewOffsetY;
   DRNRealTimeBlurView *blurView;

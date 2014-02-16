@@ -934,6 +934,10 @@ viewForHeaderInSection: (NSInteger) section
             if (!error) {
               user.renterApplication.linkedinAuthenticated = YES;
               [self updateData];
+              // Fetch the employments
+              [user fetchEmploymentsWithCompletion: ^(NSError *error) {
+                [self updateData];
+              }];
             }
             else {
               [self showAlertViewWithError: error];

@@ -65,8 +65,9 @@ NSString *const OMBCurrentUserChangedFavorite =
 NSString *const OMBCurrentUserLandlordTypeChangeNotification =
   @"OMBCurrentUserLandlordTypeChangeNotification";
 // Menu view controller posts this, and user listens for it
-NSString *const OMBCurrentUserLogoutNotification = 
-  @"OMBCurrentUserLogoutNotification";
+// Unused
+// NSString *const OMBCurrentUserLogoutNotification = 
+//   @"OMBCurrentUserLogoutNotification";
 NSString *const OMBCurrentUserUploadedImage = @"OMBCurrentUserUploadedImage";
 // When authenticating with Facebook while logged in
 NSString *const OMBUserCreateAuthenticationForFacebookNotification =
@@ -93,15 +94,16 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   // Student
   // NSString *const OMBFakeUserAccessToken = 
   //   @"6591173fc1a1f1ac409c0efb3a0a05b1";
+    int kNotificationTimerInterval = 1;
 #elif __ENVIRONMENT__ == 2
   // Staging server
   NSString *const OMBFakeUserAccessToken = @"60721b1691403ed9037b52f8816e351e";
+  int kNotificationTimerInterval = 30;
 #elif __ENVIRONMENT__ == 3
   // Production server
   NSString *const OMBFakeUserAccessToken = @"";
+  int kNotificationTimerInterval = 60;
 #endif
-
-int kNotificationTimerInterval = 60;
 
 @implementation OMBUser
 

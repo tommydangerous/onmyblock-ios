@@ -11,6 +11,7 @@
 #import "AMBlurView.h"
 #import "DRNRealTimeBlurView.h"
 #import "NSString+Extensions.h"
+#import "OMBActivityViewFullScreen.h"
 #import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBEmptyImageTwoLabelCell.h"
@@ -204,7 +205,8 @@ float kHomebaseLandlordImagePercentage = 0.4f;
     CGRectZero];
 
   refreshControl = [UIRefreshControl new];
-  [refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+  [refreshControl addTarget:self action:@selector(refresh) forControlEvents:
+    UIControlEventValueChanged];
   refreshControl.tintColor = [UIColor lightTextColor];
   [_activityTableView addSubview:refreshControl];
   
@@ -242,6 +244,9 @@ float kHomebaseLandlordImagePercentage = 0.4f;
   [welcomeView addSubview: label2];
 
   [self changeTableView];
+
+  activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
+  [self.view addSubview: activityViewFullScreen];
 }
 
 - (void) viewDidAppear: (BOOL) animated
@@ -268,7 +273,9 @@ float kHomebaseLandlordImagePercentage = 0.4f;
   // Fetch received offers
   [[OMBUser currentUser] fetchReceivedOffersWithCompletion: ^(NSError *error) {
     [_activityTableView reloadData];
+    [activityViewFullScreen stopSpinning];
   }];
+  [activityViewFullScreen startSpinning];
 
   // Fetch confirmed tenants
   [[OMBUser currentUser] fetchConfirmedTenantsWithCompletion:

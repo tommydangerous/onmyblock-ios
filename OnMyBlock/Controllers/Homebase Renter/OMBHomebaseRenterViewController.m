@@ -10,6 +10,7 @@
 
 #import "AMBlurView.h"
 #import "DRNRealTimeBlurView.h"
+#import "OMBActivityViewFullScreen.h"
 #import "OMBAlertView.h"
 #import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
@@ -241,7 +242,8 @@ float kHomebaseRenterImagePercentage = 0.3f;
     CGRectZero];
 
   refreshControl = [UIRefreshControl new];
-  [refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+  [refreshControl addTarget:self action:@selector(refresh) forControlEvents:
+    UIControlEventValueChanged];
   refreshControl.tintColor = [UIColor lightTextColor];
   [_activityTableView addSubview:refreshControl];
   
@@ -277,6 +279,9 @@ float kHomebaseRenterImagePercentage = 0.3f;
   //   action: @selector(showAddRemoveRoommates)];
 
   [self changeTableView];
+
+  activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
+  [self.view addSubview: activityViewFullScreen];
 }
 
 - (void) viewDidDisappear: (BOOL) animated
@@ -343,6 +348,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
   //   [imagesScrollView addSubview: imageView];
   // }
 
+  // User image
   if ([OMBUser currentUser].image) {
     userImageView.imageView.image = [OMBUser currentUser].image;
   }
@@ -355,6 +361,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
     userImageView.imageView.image = 
       [[UIImage imageNamed: @"user_icon_default.png"] negativeImage];
   }
+  // Name for the image
   userImageView.nameLabel.text =
     [[OMBUser currentUser].firstName capitalizedString];
 
@@ -365,12 +372,15 @@ float kHomebaseRenterImagePercentage = 0.3f;
   //   CGPointMake(imagesScrollView.frame.size.width, 0.0f) animated: NO];
 
   // Fetch accepted offers
-  if (!charging)
+  if (!charging) {
     [[OMBUser currentUser] fetchAcceptedOffersWithCompletion: 
       ^(NSError *error) {
         [_activityTableView reloadData];
+        [activityViewFullScreen stopSpinning];
       }
     ];
+    [activityViewFullScreen startSpinning];
+  }
 
   // If user just came back from setting up payment method
   if (selectedOffer && cameFromSettingUpPayoutMethods) {
