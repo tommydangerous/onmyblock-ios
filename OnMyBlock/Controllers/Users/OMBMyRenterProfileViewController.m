@@ -210,8 +210,6 @@
 - (void) viewDidDisappear: (BOOL) animated
 {
   [super viewDidDisappear: animated];
-
-  [self done];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -263,7 +261,7 @@
 - (void) viewWillDisappear: (BOOL) animated
 {
   [super viewWillDisappear: animated];
-
+  [self done];
   [self save];
 }
 
