@@ -379,6 +379,13 @@
     residence.bedrooms, residence.bathrooms];
   // Image
   residenceImageView.image = [residence coverPhoto];
+  // Move In & Out preferences
+  NSDictionary *dates = [OMBUser currentUser].movedInOut;
+  if([dates objectForKey:[NSNumber numberWithInt:offer.residence.uid]]){
+    OMBOffer *preference = (OMBOffer *)[dates objectForKey:[NSNumber numberWithInt:offer.residence.uid]];
+    offer.moveInDate = preference.moveInDate;
+    offer.moveOutDate = preference.moveOutDate;
+  }
   // Rent
   rentLabel.text = [residence rentToCurrencyString];
   // Title, address
@@ -1577,6 +1584,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table endUpdates];
 }
 
+- (void) saveDatePreferences
+{
+  [[OMBUser currentUser] addMovedInOutDates:offer];
+}
+
 - (void) scrollToPlaceOffer
 {
   OMBResidenceConfirmDetailsPlaceOfferCell *cell =
@@ -1761,6 +1773,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   [[OMBUser currentUser] createOffer: offer completion: ^(NSError *error) {
     if (offer.uid && !error) {
+      // save move in & move out preferences
+      [self saveDatePreferences];
+      
       NSString *userTypeString = @"landlord";
       if ([residence.propertyType isEqualToString: @"sublet"])
         userTypeString = @"subletter";
