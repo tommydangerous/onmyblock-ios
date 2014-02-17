@@ -250,19 +250,43 @@ float kHomebaseRenterImagePercentage = 0.3f;
   alert = [[OMBAlertView alloc] init];
 
   // User image view
-  CGFloat userImageSize = backView.frame.size.width / 3.0f;
-  CGRect userImageViewRect = CGRectMake(
-    (activityTableViewHeader.frame.size.width - userImageSize) * 0.5f,
-      (activityTableViewHeader.frame.size.height - userImageSize) * 0.5f,
-        userImageSize, userImageSize);
-  userImageView = [[OMBHomebaseRenterRoommateImageView alloc] initWithFrame:
-    userImageViewRect];
-  [activityTableViewHeader addSubview: userImageView];
+  //CGFloat userImageSize = backView.frame.size.width / 3.0f;
+  //CGRect userImageViewRect = CGRectMake(
+  //  (activityTableViewHeader.frame.size.width - userImageSize) * 0.5f,
+  //    (activityTableViewHeader.frame.size.height - userImageSize) * 0.5f,
+  //      userImageSize, userImageSize);
+  //userImageView = [[OMBHomebaseRenterRoommateImageView alloc] initWithFrame:
+  //  userImageViewRect];
+  //[activityTableViewHeader addSubview: userImageView];
 
-  tapGesture = [[UITapGestureRecognizer alloc] initWithTarget: self
-    action: @selector(showMyRenterProfile)];
-  [userImageView addGestureRecognizer: tapGesture];
+  //tapGesture = [[UITapGestureRecognizer alloc] initWithTarget: self
+  //  action: @selector(showMyRenterProfile)];
+  //[userImageView addGestureRecognizer: tapGesture];
 
+  CGFloat totalLabelHeights = 27.0f + (22.0f * 2);
+  UILabel *welcomeLabel = [UILabel new];
+  welcomeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 18];
+  welcomeLabel.frame = CGRectMake(0.0f,
+                            (activityTableViewHeader.frame.size.height - totalLabelHeights) * 0.5f,
+                            activityTableViewHeader.frame.size.width, 27.0f);
+  welcomeLabel.text = @"Welcome to your Homebase.";
+  welcomeLabel.textAlignment = NSTextAlignmentCenter;
+  welcomeLabel.textColor = [UIColor whiteColor];
+  [activityTableViewHeader addSubview: welcomeLabel];
+  
+  UILabel *descriptionLabel = [UILabel new];
+  NSString *descriptionString = @"Review all your offers and\n"
+    @"payments here.";
+  descriptionLabel.attributedText = [descriptionString attributedStringWithFont:
+                           [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] lineHeight: 22.0f];
+  descriptionLabel.frame = CGRectMake(0.0f,
+                            welcomeLabel.frame.origin.y + welcomeLabel.frame.size.height,
+                            activityTableViewHeader.frame.size.width, 22.0f * 2);
+  descriptionLabel.numberOfLines = 2;
+  descriptionLabel.textColor = welcomeLabel.textColor;
+  descriptionLabel.textAlignment = welcomeLabel.textAlignment;
+  [activityTableViewHeader addSubview: descriptionLabel];
+  
   // Add/Remove Roommates button
   // addRemoveRoommatesButton = [UIButton new];
   // addRemoveRoommatesButton.frame = CGRectMake(
