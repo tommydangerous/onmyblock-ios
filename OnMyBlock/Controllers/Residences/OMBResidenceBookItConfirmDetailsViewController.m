@@ -386,6 +386,10 @@
     offer.moveInDate = preference.moveInDate;
     offer.moveOutDate = preference.moveOutDate;
   }
+  
+  // Landlord Preferred Date
+  isLandlordPreferredDate = YES;
+  
   // Rent
   rentLabel.text = [residence rentToCurrencyString];
   // Title, address
@@ -528,6 +532,8 @@
   else {
     leaseMonthsLabel.text = @"month to month";
   }
+  
+  [self verifyLandlordPreference];
 }
 
 - (BOOL) calendarView: (MNCalendarView *) calendarView
@@ -1352,8 +1358,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       // else {
       //   return 0.0f;
       // }
-      if (isShowingMoveInCalendar || isShowingMoveOutCalendar)
-        return [OMBResidenceBookItCalendarCell heightForCell];
+      if (isShowingMoveInCalendar || isShowingMoveOutCalendar){
+        if(isLandlordPreferredDate)
+          return [OMBResidenceBookItCalendarCell heightForCell];
+        else
+          return [OMBResidenceBookItCalendarCell heightForCellWithAlert];
+      }
     }
     // Lease months
     else if (indexPath.row == 2) {
@@ -1876,4 +1886,25 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [vc dismissViewControllerAnimated: YES completion: nil];
 }
 
+- (void) verifyLandlordPreference
+{
+  // (move-out date = move-in date + lease months)
+  isLandlordPreferredDate = YES;
+  
+  if([[NSDate dateWithTimeIntervalSince1970: offer.moveInDate]
+      compare:[NSDate dateWithTimeIntervalSince1970: residence.moveInDate]] == NSOrderedAscending)
+    isLandlordPreferredDate = NO;
+  
+  NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+  [dateComponents setMonth:residence.leaseMonths];
+  NSDate *preferredMoveOut = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents
+                                                                           toDate:[NSDate dateWithTimeIntervalSince1970: residence.moveInDate ] options:0];
+  
+  if([[NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]
+      compare:preferredMoveOut] == NSOrderedDescending)
+    isLandlordPreferredDate = NO;
+  
+  [self.table beginUpdates];
+  [self.table endUpdates];
+}
 @end
