@@ -54,6 +54,12 @@
     10.0f + (screen.size.width * 0.2) + 10.0f, 0.0f, 0.0f);
   self.table.showsVerticalScrollIndicator = YES;
 
+  refreshControl = [UIRefreshControl new];
+  [refreshControl addTarget:self action:@selector(refresh) forControlEvents:
+   UIControlEventValueChanged];
+  refreshControl.tintColor = [UIColor grayMedium];
+  [self.table addSubview:refreshControl];
+  
   noMessagesView = [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame:
     screen];
   noMessagesView.alpha = 1.0f;
@@ -93,6 +99,13 @@
   [super viewWillDisappear: animated];
 
   self.fetching = YES;
+}
+
+- (void) viewDidDisappear: (BOOL) animated
+{
+  [super viewDidDisappear: animated];
+  
+  [refreshControl endRefreshing];
 }
 
 #pragma mark - Protocol
@@ -193,6 +206,11 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
         animated: YES completion: nil];
 }
 
+- (void) refresh
+{
+  [self reloadTable];
+}
+
 - (void) reloadTable
 {
   [super reloadTable];
@@ -223,6 +241,7 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
         //   [self.table endUpdates];
         // }
         self.fetching = NO;
+        [refreshControl endRefreshing];
       }
     ];
   }

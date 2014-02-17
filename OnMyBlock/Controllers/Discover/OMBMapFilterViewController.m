@@ -764,6 +764,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // Property Type
     if (indexPath.section == 4)
       return 0.0f;
+    
+    // Date Available
+    if (indexPath.section == 5)
+      return 0.0f;
 
     // Header labels
     if (indexPath.row == 0) {

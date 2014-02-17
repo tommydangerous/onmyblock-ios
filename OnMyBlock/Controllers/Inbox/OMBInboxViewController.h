@@ -15,6 +15,7 @@
 {
   OMBMessageDetailViewController *messageDetailViewController;
   OMBEmptyBackgroundWithImageAndLabel *noMessagesView;
+  UIRefreshControl *refreshControl;
 }
 
 @property (nonatomic, strong) UIAlertView *alertView;
