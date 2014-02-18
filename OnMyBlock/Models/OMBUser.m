@@ -79,8 +79,10 @@ NSString *const OMBUserLoggedInNotification  = @"OMBUserLoggedInNotification";
 // User posts this after sending current user logout message to itself
 NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
-NSString *const OMBMessagesUnviewedCountNotification =
-  @"OMBMessagesUnviewedCountNotification";
+NSString *const OMBMessagesUnviewedCountNotification = @"OMBMessagesUnviewedCountNotification";
+
+NSString *const OMBOffersLandordPendingCountNotification = @"OMBOffersLandordPendingCountNotification";
+NSString *const OMBOffersRenterAcceptedCountNotification = @"OMBOffersRenterAcceptedCountNotification";
 
 NSString *const OMBUserTypeLandlord = @"landlord";
 
@@ -631,6 +633,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   OMBMessagesUnviewedCountConnection *conn =
     [[OMBMessagesUnviewedCountConnection alloc] init];
   [conn start];
+    [[[OMBOffersReceivedConnection alloc] init] start];
+    [[[OMBOffersAcceptedConnection alloc] init] start];
 }
 
 - (void) fetchPayoutMethodsWithCompletion: (void (^) (NSError *error)) block
@@ -985,6 +989,18 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   for (NSNumber *number in [oldSet allObjects]) {
     [_acceptedOffers removeObjectForKey: number];
   }
+    
+    if (_acceptedOffers.count > 0) {
+        NSArray *offers = [_acceptedOffers allValues];
+        __block int waitingOffers = 0;
+        [offers enumerateObjectsUsingBlock:^(OMBOffer *obj, NSUInteger idx, BOOL *stop) {
+            if ( obj.accepted == YES && !(obj.onHold || obj.confirmed || obj.rejected || obj.declined)) {
+                waitingOffers++;
+            }
+        }];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:OMBOffersRenterAcceptedCountNotification object:@(waitingOffers)];
+    }
 }
 
 - (void) readFromConfirmedTenantsDictionary: (NSDictionary *) dictionary
@@ -1337,6 +1353,17 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   for (NSNumber *number in [oldSet allObjects]) {
     [_receivedOffers removeObjectForKey: number];
   }
+    if (_receivedOffers.count > 0) {
+        NSArray *offers = [_receivedOffers allValues];
+        __block int waitingOffers = 0;
+        [offers enumerateObjectsUsingBlock:^(OMBOffer *obj, NSUInteger idx, BOOL *stop) {
+            if (!(obj.accepted || obj.onHold || obj.confirmed || obj.rejected || obj.declined)) {
+                waitingOffers++;
+            }
+        }];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:OMBOffersLandordPendingCountNotification object:@(waitingOffers)];
+    }
 }
 
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;

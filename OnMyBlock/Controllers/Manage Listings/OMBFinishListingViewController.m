@@ -100,7 +100,7 @@
     publishNowView.frame.size.height);
   publishNowButton.titleLabel.font = [UIFont mediumTextFontBold];
   [publishNowButton addTarget: self action: @selector(publishNow)
-    forControlEvents: UIControlEventTouchUpInside];
+    forControlEvents:UIControlEventTouchUpInside];
   [publishNowButton setBackgroundImage: 
     [UIImage imageWithColor: [UIColor blueHighlightedAlpha: 0.3f]] 
       forState: UIControlStateHighlighted];

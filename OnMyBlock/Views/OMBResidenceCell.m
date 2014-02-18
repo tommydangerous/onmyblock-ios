@@ -26,11 +26,6 @@ reuseIdentifier: (NSString *) reuseIdentifier
     return nil;
 
   _residencePartialView = [[OMBResidencePartialView alloc] init];
-
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  self.contentView.frame = CGRectMake(_residencePartialView.frame.origin.x,
-    screen.size.height, _residencePartialView.frame.size.width,
-      _residencePartialView.frame.size.height);
   self.selectionStyle = UITableViewCellSelectionStyleNone;
   [self.contentView addSubview: _residencePartialView];
 

@@ -34,8 +34,7 @@ extern NSString *const OMBEmptyResidencePartialViewCell;
 @property (nonatomic, copy) void (^completionBlock) (NSError *error);
 @property (nonatomic, strong) UICollectionView *imagesFilmstrip;
 @property (nonatomic, weak) OMBResidence *residence;
-@property (nonatomic, copy) 
-  void (^selected) (OMBResidence *residence, NSInteger imageIndex);
+@property (nonatomic, copy) void (^selected) (OMBResidence *residence, NSInteger imageIndex);
 
 #pragma mark - Methods
 

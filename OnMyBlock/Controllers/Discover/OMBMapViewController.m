@@ -253,7 +253,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   _listView.dataSource                   = self;
   _listView.delegate                     = self;
   _listView.frame                        = screen;
-  _listView.separatorColor               = [UIColor clearColor];
+  _listView.separatorColor               = nil;
   _listView.separatorStyle               = UITableViewCellSeparatorStyleNone;
   // _listView.showsVerticalScrollIndicator = NO;
   _listView.tableHeaderView = [[UIView alloc] initWithFrame: 
@@ -278,7 +278,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // View
   filterView = [[UIView alloc] init];
   filterView.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
-  filterView.frame = CGRectMake(0.0f, screenHeight - 20.0f, screenWidth, 20.0f);
+  filterView.frame = CGRectMake(0.0f, /*screenHeight - 20.0f*/64.0f, screenWidth, 20.0f);
   filterView.hidden = YES;
   [self.view addSubview: filterView];
   // Label
@@ -1398,6 +1398,9 @@ withMiles: (int) miles animated: (BOOL) animated
       _listViewContainer.alpha = 0.0;
       _mapView.alpha           = 1.0;
       [self mapView: _mapView regionDidChangeAnimated: NO];
+        [UIView animateWithDuration:0.5f animations:^{
+            filterView.transform = CGAffineTransformIdentity;
+        }];
       break;
     }
     // Show list
@@ -1405,6 +1408,9 @@ withMiles: (int) miles animated: (BOOL) animated
       _listViewContainer.alpha = 1.0;
       _mapView.alpha           = 0.0;     
       [self fetchResidencesForList];
+        [UIView animateWithDuration:0.5f animations:^{
+            filterView.transform = CGAffineTransformMakeTranslation(0.0f, self.view.bounds.size.height - 20.0f - 64.0f);
+        }];
       break;
     }
     default:
@@ -1497,6 +1503,8 @@ withMiles: (int) miles animated: (BOOL) animated
     filterView.hidden = NO;
   else
     filterView.hidden = YES;
+    
+    [self switchViews:segmentedControl];
 }
 
 - (void) zoomClusterAtAnnotation: (OCAnnotation *) cluster
