@@ -549,9 +549,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.textField.indexPath = indexPath;
       cell.textField.placeholder = [labelString capitalizedString];
       cell.textField.text = [valueDictionary objectForKey: key];
-      if (row == OMBMyRenterProfileSectionUserInfoRowFirstName ||
-        row == OMBMyRenterProfileSectionUserInfoRowLastName) {
-        cell.textField.text = [cell.textField.text capitalizedString];
+      if (row == OMBMyRenterProfileSectionUserInfoRowFirstName) {
+        if ([cell.textField.text length]) {
+          cell.textField.text = [cell.textField.text stringByAppendingString:@" "];
+        }
+        key = @"lastName";
+        cell.textField.text = [[cell.textField.text
+          stringByAppendingString:[valueDictionary objectForKey: key]]
+            capitalizedString];
       }
       cell.textFieldLabel.text = labelString;
       [cell.textField addTarget: self action: @selector(textFieldDidChange:)
@@ -740,6 +745,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return 0.0f;
       return OMBPadding + OMBStandardButtonHeight + OMBPadding;
     }
+    // Last Name
+    else if (row == OMBMyRenterProfileSectionUserInfoRowLastName)
+      return 0.0f;
     // School
     else if (row == OMBMyRenterProfileSectionUserInfoRowSchool) {
       if ([user isLandlord]) {
@@ -1064,8 +1072,18 @@ viewForHeaderInSection: (NSInteger) section
 {
   NSInteger row = textField.indexPath.row;
   if (row == OMBMyRenterProfileSectionUserInfoRowFirstName) {
-    if ([textField.text length])
-      [valueDictionary setObject: textField.text forKey: @"firstName"];
+    if ([[textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length]){
+      NSArray *comps = [[textField.text stringByTrimmingCharactersInSet:
+        [NSCharacterSet whitespaceCharacterSet]]
+           componentsSeparatedByString:@" "];
+      [valueDictionary setObject: comps[0] forKey: @"firstName"];
+      
+      NSString *lastName = @"";
+      for(int i = 1; i < comps.count;i++)
+        lastName = [NSString stringWithFormat:@"%@%@ ",lastName,comps[i]];
+      [valueDictionary setObject:[lastName stringByTrimmingCharactersInSet:
+        [NSCharacterSet whitespaceCharacterSet]] forKey: @"lastName"];
+    }
   }
   else if (row == OMBMyRenterProfileSectionUserInfoRowLastName) {
     if ([textField.text length])
