@@ -46,17 +46,18 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 @interface OMBOffer : NSObject
 
 @property (nonatomic) BOOL accepted;
-@property (nonatomic) NSTimeInterval acceptedDate;
-@property (nonatomic) CGFloat amount;
+@property (nonatomic) BOOL onHold;
 @property (nonatomic) BOOL confirmed;
-@property (nonatomic) NSTimeInterval createdAt;
+@property (nonatomic) BOOL rejected;
 @property (nonatomic) BOOL declined;
+@property (nonatomic) NSTimeInterval acceptedDate;
+@property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic) NSTimeInterval moveInDate;
 @property (nonatomic) NSTimeInterval moveOutDate;
+@property (nonatomic) CGFloat amount;
 @property (nonatomic, strong) NSString *note;
-@property (nonatomic) BOOL onHold;
 @property (nonatomic, strong) OMBPayoutTransaction *payoutTransaction;
-@property (nonatomic) BOOL rejected;
+
 @property (nonatomic) NSTimeInterval updatedAt;
 
 @property (nonatomic, strong) OMBUser *landlordUser;

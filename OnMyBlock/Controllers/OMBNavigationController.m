@@ -16,7 +16,8 @@
 
 - (id) initWithRootViewController: (UIViewController *) viewController
 {
-  if (!([super initWithRootViewController: viewController])) return nil;
+    self = [super initWithRootViewController:viewController];
+    if (!self) return nil;
   
   self.delegate = self;
   // self.navigationBar.barTintColor = [UIColor backgroundColor];
@@ -31,8 +32,8 @@
 #pragma mark - Protocol UINavigationController
 
 - (void) navigationController: (UINavigationController *) navigationController
-didShowViewController: (UIViewController *) viewController
-animated: (BOOL) animated
+        didShowViewController: (UIViewController *) viewController
+                     animated: (BOOL) animated
 {
   if (_completionBlock) {
     _completionBlock();

@@ -140,28 +140,11 @@ CGFloat const OMBStandardHeight       = 44.0f;
   self.navigationItem.leftBarButtonItem = menuBarButtonItem;
 }
 
-- (void) showAlertViewWithError: (NSError *) error
+- (void) showAlertViewWithError:(NSError *) error
 {
-  NSString *message = @"Please try again.";
-  NSString *title   = @"Unsuccessful";
-  if (error) {
-    // message = error.localizedDescription;
-    // title   = @"Error";
-    // if (error.userInfo) {
-    //   if ([error.userInfo objectForKey: @"message"] &&
-    //     [[error.userInfo objectForKey: @"message"] length]) {
-        
-    //     message = [error.userInfo objectForKey: @"message"];
-    //   }
-    //   if ([error.userInfo objectForKey: @"title"] &&
-    //     [[error.userInfo objectForKey: @"title"] length]) {
+    NSString *message = error.localizedFailureReason != (id)[NSNull null] ? error.localizedFailureReason : @"Please try again.";
+  NSString *title   =  error.localizedDescription != (id)[NSNull null] ? error.localizedDescription : @"Unsuccessful";
 
-    //     title = [error.userInfo objectForKey: @"title"];
-    //   }
-    // }
-    message = error.localizedFailureReason;
-    title   = error.localizedDescription;
-  }
   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title
     message: message delegate: nil cancelButtonTitle: @"Okay" 
       otherButtonTitles: nil];
