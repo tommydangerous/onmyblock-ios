@@ -454,12 +454,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
                 UITableViewCellStyleDefault reuseIdentifier:
                 PropertyTypeCellIdentifier];
       cell.detailNameLabel.text = @"Length of lease";
-      
+      [cell setFramesForSubviewsWithSize:CGSizeMake(tableView.frame.size.width,
+        tableView.frame.size.height * 0.3f)];
 			return cell;
     }
     
     [c setFramesForSubviewsWithSize: CGSizeMake(tableView.frame.size.width,
-      tableView.frame.size.height / 3.0f)];
+      tableView.frame.size.height * 0.3f)];
     c.detailNameLabel.text = string;
     c.minusButton.tag = indexPath.row;
     c.plusButton.tag = indexPath.row;
@@ -542,7 +543,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Details
   else if (tableView == detailsTableView) {
-    return (tableView.frame.size.height - nextView.frame.size.height) / 3.0f;
+    return (tableView.frame.size.height - nextView.frame.size.height) * 0.3f;
   }
   return 0.0f;
 }
