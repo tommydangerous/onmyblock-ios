@@ -311,9 +311,8 @@ withCompletion: (void (^) (NSError *error)) block
 
 - (void) addMovedInOutDates: (OMBOffer *) object;
 {
-  NSNumber *key = [NSNumber numberWithInt: object.residence.uid];
-  [_movedInOut setObject: object forKey: key];
-  NSLog(@"%@", [_movedInOut description]);
+  //NSNumber *key = [NSNumber numberWithInt: object.residence.uid];
+  [_movedInOut setObject: object forKey: @1];
 }
 
 - (void) addPayoutMethod: (OMBPayoutMethod *) object
