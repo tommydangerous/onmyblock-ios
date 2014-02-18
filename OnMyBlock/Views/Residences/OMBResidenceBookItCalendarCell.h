@@ -12,6 +12,7 @@
 
 @interface OMBResidenceBookItCalendarCell : OMBTableViewCell
 
+// used for alert that the dates chosen are outside the landlord’s preferred dates
 @property (nonatomic, strong) UILabel *leaseMonthsLabel;
 @property (nonatomic, strong) MNCalendarView *calendarView;
 
@@ -20,5 +21,5 @@
 #pragma mark - Class Methods
 
 + (CGFloat) heightForCell;
-
++ (CGFloat) heightForCellWithAlert;
 @end

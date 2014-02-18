@@ -120,6 +120,7 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   _imageSizeDictionary = [NSMutableDictionary dictionary];
   _messages            = [NSMutableDictionary dictionary];
   _movedIn             = [NSMutableDictionary dictionary];
+  _movedInOut          = [NSMutableDictionary dictionary];
   _payoutMethods       = [NSMutableDictionary dictionary];
   _receivedOffers      = [NSMutableDictionary dictionary];
   _renterApplication   = [[OMBRenterApplication alloc] init];
@@ -306,6 +307,13 @@ withCompletion: (void (^) (NSError *error)) block
   if (![_movedIn objectForKey: key])
     [_movedIn setObject: object forKey: key];
   NSLog(@"%@", _movedIn);
+}
+
+- (void) addMovedInOutDates: (OMBOffer *) object;
+{
+  NSNumber *key = [NSNumber numberWithInt: object.residence.uid];
+  [_movedInOut setObject: object forKey: key];
+  NSLog(@"%@", [_movedInOut description]);
 }
 
 - (void) addPayoutMethod: (OMBPayoutMethod *) object

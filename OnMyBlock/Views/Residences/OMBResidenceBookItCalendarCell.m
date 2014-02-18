@@ -26,7 +26,7 @@
   self.separatorInset = UIEdgeInsetsMake(0.0f, screenWidth, 0.0f, 0.0f);
   self.backgroundColor = [UIColor grayUltraLight];
   
-  float sizeCalendar = 225.f;
+  float sizeCalendar = 215.f;
   CGRect boundsCalendarView = CGRectMake(0.f, 0.f ,
                                          screenWidth , sizeCalendar);
   _calendarView = [[MNCalendarView alloc] initWithFrame:boundsCalendarView];
@@ -37,12 +37,12 @@
   _leaseMonthsLabel.backgroundColor = [UIColor grayLight];
   _leaseMonthsLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
                                            size: 15];
-  _leaseMonthsLabel.frame = CGRectMake(_calendarView.frame.origin.x, _calendarView.frame.origin.y + _calendarView.frame.size.height + 3.f,
-                                       _calendarView.frame.size.width, 30.0f);
+  _leaseMonthsLabel.frame = CGRectMake(_calendarView.frame.origin.x, _calendarView.frame.origin.y + _calendarView.frame.size.height,
+                                       _calendarView.frame.size.width, 28.0f);
   _leaseMonthsLabel.textAlignment = NSTextAlignmentCenter;
-  // _leaseMonthsLabel.text = @"0 MONTH LEASE";
+  _leaseMonthsLabel.text = @"Not Landlord´s Preferred dates";
   _leaseMonthsLabel.textColor = [UIColor whiteColor];
-  //[self.contentView insertSubview: _leaseMonthsLabel belowSubview: _calendarView];
+  [self.contentView insertSubview: _leaseMonthsLabel belowSubview: _calendarView];
   
   return self;
 }
@@ -53,7 +53,12 @@
 
 + (CGFloat) heightForCell
 {
-  return 225.f + 5.f;
+  return 215.f;
+}
+
++ (CGFloat) heightForCellWithAlert
+{
+  return 215.f + 28.f;
 }
 
 @end
