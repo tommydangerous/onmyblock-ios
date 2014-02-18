@@ -381,8 +381,8 @@
   residenceImageView.image = [residence coverPhoto];
   // Move In & Out preferences
   NSDictionary *dates = [OMBUser currentUser].movedInOut;
-  if([dates objectForKey:[NSNumber numberWithInt:offer.residence.uid]]){
-    OMBOffer *preference = (OMBOffer *)[dates objectForKey:[NSNumber numberWithInt:offer.residence.uid]];
+  if([dates objectForKey:@1]){
+    OMBOffer *preference = (OMBOffer *)[dates objectForKey:@1];
     offer.moveInDate = preference.moveInDate;
     offer.moveOutDate = preference.moveOutDate;
   }
