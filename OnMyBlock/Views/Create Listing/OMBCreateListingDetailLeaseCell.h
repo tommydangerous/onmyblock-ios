@@ -14,4 +14,6 @@
 @property (nonatomic, strong) UILabel *detailNameLabel;
 @property (nonatomic, strong) TextFieldPadding *lenghtLease;
 
+- (void) setFramesForSubviewsWithSize: (CGSize) size;
+
 @end
