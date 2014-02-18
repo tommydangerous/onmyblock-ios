@@ -37,7 +37,7 @@
   [self.contentView addSubview: _firstTextField];
   
   _secondIconImageView = [UIImageView new];
-  [self.contentView addSubview: _secondIconImageView];
+  //[self.contentView addSubview: _secondIconImageView];
   
   _secondTextFieldLabel = [UILabel new];
   _secondTextFieldLabel.font = _firstTextFieldLabel.font;
@@ -75,24 +75,20 @@
   CGFloat screenWidth = screen.size.width;
   CGFloat padding = OMBPadding;
   CGFloat height = [OMBTwoLabelTextFieldCell heightForCellWithIconImageView];
-  
   CGFloat iconSize = height * 0.5f;
   _firstIconImageView.alpha = 0.3f;
   _firstIconImageView.frame = CGRectMake(padding, (height - iconSize) * 0.5f,
                                     iconSize, iconSize);
   
+  CGFloat textWidth = (screenWidth - 4 * padding - iconSize) * 0.5;
   CGFloat originX1 = _firstIconImageView.frame.origin.x +
   _firstIconImageView.frame.size.width + padding;
   _firstTextField.frame = CGRectMake(originX1, 0.0f,
-                                     (screenWidth * 0.5) - originX1 , height);
+                                     textWidth, height);
   
-  _secondIconImageView.alpha = _firstIconImageView.alpha;
-  _secondIconImageView.frame = CGRectMake((screenWidth + padding) * 0.5, (height - iconSize) * 0.5f,
-                                         iconSize, iconSize);
-  CGFloat originX2 = _secondIconImageView.frame.origin.x +
-  _secondIconImageView.frame.size.width + padding;
+  CGFloat originX2 = _firstTextField.frame.origin.x + _firstTextField.frame.size.width + padding;
   _secondTextField.frame = CGRectMake(originX2, 0.0f,
-                                     (screenWidth * 0.5) - originX1, height);
+                                     textWidth, height);
 }
 
 
