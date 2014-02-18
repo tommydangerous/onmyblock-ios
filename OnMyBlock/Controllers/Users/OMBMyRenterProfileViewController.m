@@ -19,6 +19,7 @@
 #import "OMBPickerViewCell.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterProfileUserInfoCell.h"
+#import "OMBTwoLabelTextFieldCell.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
@@ -515,8 +516,51 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       // First name
       if (row == OMBMyRenterProfileSectionUserInfoRowFirstName) {
         imageName = @"user_icon.png";
-        key         = @"firstName";
-        labelString = @"First name";
+        NSString *nameLabelString = @"First name";
+        NSString *lastNameLabelString = @"Last name";
+        
+        static NSString *LabelTextCellID = @"TwoLabelTextCellID";
+        OMBTwoLabelTextFieldCell *cell =
+        [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
+        if (!cell) {
+          cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
+                  UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
+          [cell setFrameUsingIconImageView];
+        }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.firstTextField.font = [UIFont normalTextFont];
+        cell.firstTextField.textColor = [UIColor blueDark];
+        cell.firstTextFieldLabel.font = [UIFont normalTextFont];
+        cell.firstIconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
+                                             size: cell.firstIconImageView.frame.size];
+        cell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        cell.firstTextField.delegate  = self;
+        cell.firstTextField.indexPath = indexPath;
+        cell.firstTextField.placeholder = [nameLabelString capitalizedString];
+        cell.firstTextField.text = [valueDictionary objectForKey: @"firstName"];
+        cell.firstTextField.text = [cell.firstTextField.text capitalizedString];
+        cell.firstTextFieldLabel.text = nameLabelString;
+        [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
+                 forControlEvents: UIControlEventEditingChanged];
+        
+        cell.secondTextField.font = cell.firstTextField.font;
+        cell.secondTextField.textColor = cell.firstTextField.textColor;
+        cell.secondTextFieldLabel.font = cell.firstTextFieldLabel.font;
+        cell.secondIconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
+                                                   size: cell.secondIconImageView.frame.size];
+        cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        cell.secondTextField.delegate  = self;
+        cell.secondTextField.indexPath =
+          [NSIndexPath indexPathForRow:OMBMyRenterProfileSectionUserInfoRowLastName
+            inSection:indexPath.section] ;
+        cell.secondTextField.placeholder = [lastNameLabelString capitalizedString];
+        cell.secondTextField.text = [valueDictionary objectForKey: @"lastName"];
+        cell.secondTextField.text = [cell.secondTextField.text capitalizedString];
+        cell.secondTextFieldLabel.text = lastNameLabelString;
+        [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
+                       forControlEvents: UIControlEventEditingChanged];
+        return cell;
+        
       }
       // Last name
       else if (row == OMBMyRenterProfileSectionUserInfoRowLastName) {
@@ -549,15 +593,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.textField.indexPath = indexPath;
       cell.textField.placeholder = [labelString capitalizedString];
       cell.textField.text = [valueDictionary objectForKey: key];
-      if (row == OMBMyRenterProfileSectionUserInfoRowFirstName) {
-        if ([cell.textField.text length]) {
-          cell.textField.text = [cell.textField.text stringByAppendingString:@" "];
-        }
-        key = @"lastName";
-        cell.textField.text = [[cell.textField.text
-          stringByAppendingString:[valueDictionary objectForKey: key]]
-            capitalizedString];
-      }
       cell.textFieldLabel.text = labelString;
       [cell.textField addTarget: self action: @selector(textFieldDidChange:)
         forControlEvents: UIControlEventEditingChanged];
@@ -837,7 +872,11 @@ viewForHeaderInSection: (NSInteger) section
   [self.table beginUpdates];
   [self.table endUpdates];
 
-  [self scrollToRectAtIndexPath: textField.indexPath];
+  if(textField.indexPath.row == OMBMyRenterProfileSectionUserInfoRowLastName)
+    [self scrollToRectAtIndexPath:[NSIndexPath indexPathForRow:OMBMyRenterProfileSectionUserInfoRowFirstName
+       inSection:textField.indexPath.section]];
+  else
+    [self scrollToRectAtIndexPath: textField.indexPath];
   // [self.table scrollToRowAtIndexPath: textField.indexPath
   //   atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
@@ -1072,18 +1111,8 @@ viewForHeaderInSection: (NSInteger) section
 {
   NSInteger row = textField.indexPath.row;
   if (row == OMBMyRenterProfileSectionUserInfoRowFirstName) {
-    if ([[textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length]){
-      NSArray *comps = [[textField.text stringByTrimmingCharactersInSet:
-        [NSCharacterSet whitespaceCharacterSet]]
-           componentsSeparatedByString:@" "];
-      [valueDictionary setObject: comps[0] forKey: @"firstName"];
-      
-      NSString *lastName = @"";
-      for(int i = 1; i < comps.count;i++)
-        lastName = [NSString stringWithFormat:@"%@%@ ",lastName,comps[i]];
-      [valueDictionary setObject:[lastName stringByTrimmingCharactersInSet:
-        [NSCharacterSet whitespaceCharacterSet]] forKey: @"lastName"];
-    }
+    if ([textField.text length])
+      [valueDictionary setObject: textField.text forKey: @"firstName"];
   }
   else if (row == OMBMyRenterProfileSectionUserInfoRowLastName) {
     if ([textField.text length])
