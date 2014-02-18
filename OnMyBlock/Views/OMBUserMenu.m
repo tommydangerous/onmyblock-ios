@@ -36,11 +36,18 @@
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(userLogout:)
       name: OMBUserLoggedOutNotification object: nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(updateLandlordOffersPendingCount:)
+                                                 name: OMBOffersLandordPendingCountNotification object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(updateRenterOffersAcceptedCount:)
+                                                 name: OMBOffersRenterAcceptedCountNotification object: nil];
 
   _renterButtons = [NSMutableArray array];
   _sellerButtons = [NSMutableArray array];
 
-  float imageSize = 22;
+    float imageSize = 22;
   float leftPad   = 25;
   // CGFloat buttonHeight = 10.0f + 40.0f + 10.0f;
   CGFloat buttonHeight = OMBStandardButtonHeight;
@@ -455,10 +462,26 @@ withNumber: (NSNumber *) number
     withNumber: count];
 }
 
+- (void)updateLandlordOffersPendingCount:(NSNotification*)noti {
+    NSNumber *number = noti.object;
+    [self updateNotificationBadgeLabel:_sellerHomebaseNotificationBadge
+                            withNumber:number];
+}
+
+- (void)updateRenterOffersAcceptedCount:(NSNotification*)noti {
+    NSNumber *number = noti.object;
+    [self updateNotificationBadgeLabel:_renterHomebaseNotificationBadge
+                            withNumber:number];
+}
+
 - (void) userLogout: (NSNotification *) notification
 {
   // Inbox
-  [self updateNotificationBadgeLabel: _inboxNotificationBadge withNumber: @0]; 
+  [self updateNotificationBadgeLabel: _inboxNotificationBadge withNumber: @0];
+    [self updateNotificationBadgeLabel:_renterHomebaseNotificationBadge
+                            withNumber:@0];
+    [self updateNotificationBadgeLabel:_sellerHomebaseNotificationBadge
+                            withNumber:@0];
 }
 
 @end

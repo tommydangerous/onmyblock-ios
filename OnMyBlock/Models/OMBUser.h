@@ -25,6 +25,8 @@ extern NSString *const OMBUserCreateAuthenticationForFacebookNotification;
 extern NSString *const OMBUserLoggedInNotification;
 extern NSString *const OMBUserLoggedOutNotification;
 extern NSString *const OMBUserTypeLandlord;
+extern NSString *const OMBOffersLandordPendingCountNotification;
+extern NSString *const OMBOffersRenterAcceptedCountNotification;
 
 @class OMBCosigner;
 @class OMBEmployment;

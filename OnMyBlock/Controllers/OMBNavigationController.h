@@ -18,6 +18,7 @@
 #pragma mark - Instance Methods
 
 - (void) pushViewController: (UIViewController *) viewController
-animated: (BOOL) animated completion: (dispatch_block_t) completion;
+                   animated: (BOOL) animated
+                 completion: (dispatch_block_t) completion;
 
 @end
