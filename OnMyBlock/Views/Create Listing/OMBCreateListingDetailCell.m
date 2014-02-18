@@ -70,7 +70,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   _valueLabel.frame = CGRectMake(padding + valueHeight, 
     _detailNameLabel.frame.origin.y + 
-    _detailNameLabel.frame.size.height + (padding * 0.5),
+    _detailNameLabel.frame.size.height + (padding * 0.25),
       size.width - ((padding * 2) + (valueHeight * 2)), valueHeight);
   CALayer *topBorder = [CALayer layer];
   topBorder.backgroundColor = _minusButton.layer.borderColor;
