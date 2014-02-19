@@ -543,7 +543,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Details
   else if (tableView == detailsTableView) {
-    return (tableView.frame.size.height - nextView.frame.size.height) * 0.3f;
+    return (tableView.frame.size.height - nextView.frame.size.height) / 3.0f;
   }
   return 0.0f;
 }

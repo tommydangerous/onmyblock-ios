@@ -55,7 +55,7 @@
   if (valueHeight > 58.0f)
     valueHeight = 58.0f;
   _lenghtLease.frame = CGRectMake(padding,_detailNameLabel.frame.origin.y +
-    _detailNameLabel.frame.size.height + (padding * 0.5),
+    _detailNameLabel.frame.size.height + (padding * 0.25),
       size.width - (padding * 2), valueHeight);
   
 	_lenghtLease.paddingX = padding;

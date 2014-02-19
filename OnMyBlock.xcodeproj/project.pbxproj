@@ -438,6 +438,7 @@
 		DE93158D18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */; };
 		DE93158F1891E05800111CF6 /* OMBCreateListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */; };
 		DE939CF918933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE939CF818933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m */; };
+		DE93BE2B18B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93BE2A18B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.m */; };
 		DE95E8C318A03AF700A2A341 /* OMBResidenceBookItCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8C218A03AF700A2A341 /* OMBResidenceBookItCalendarCell.m */; };
 		DE95E8D418A03B5500A2A341 /* MNCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8C718A03B5500A2A341 /* MNCalendarView.m */; };
 		DE95E8D518A03B5500A2A341 /* MNCalendarViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8C918A03B5500A2A341 /* MNCalendarViewCell.m */; };
@@ -1283,6 +1284,8 @@
 		DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingViewController.m; sourceTree = "<group>"; };
 		DE939CF718933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingLeaseDetailsViewController.h; sourceTree = "<group>"; };
 		DE939CF818933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFinishListingLeaseDetailsViewController.m; sourceTree = "<group>"; };
+		DE93BE2918B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTwoLabelTextFieldCell.h; sourceTree = "<group>"; };
+		DE93BE2A18B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTwoLabelTextFieldCell.m; sourceTree = "<group>"; };
 		DE95E8C118A03AF700A2A341 /* OMBResidenceBookItCalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceBookItCalendarCell.h; sourceTree = "<group>"; };
 		DE95E8C218A03AF700A2A341 /* OMBResidenceBookItCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceBookItCalendarCell.m; sourceTree = "<group>"; };
 		DE95E8C518A03B5500A2A341 /* MNCalendarView-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MNCalendarView-Prefix.pch"; sourceTree = "<group>"; };
@@ -1840,6 +1843,8 @@
 				AB3396FA18AD52FC00F49064 /* OMBInformationHowItWorksCell.m */,
 				AB3DA22518B0605900B0EE1D /* OMBActivityViewFullScreen.h */,
 				AB3DA22618B0605900B0EE1D /* OMBActivityViewFullScreen.m */,
+				DE93BE2918B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.h */,
+				DE93BE2A18B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2990,6 +2995,7 @@
 				AB01ED371857D96800333390 /* OMBLegalQuestionStore.m in Sources */,
 				DE95E8D618A03B5500A2A341 /* MNCalendarViewDayCell.m in Sources */,
 				AB3396F818AD4F3100F49064 /* OMBCollectionViewFlowLayout.m in Sources */,
+				DE93BE2B18B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.m in Sources */,
 				ABA4F207187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m in Sources */,
 				ABA3D69818A92EF1006CE8C1 /* OMBOtherUserProfileViewController.m in Sources */,
 				AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */,
@@ -3380,7 +3386,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3402,7 +3408,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "06651389-7892-433C-9EDE-4980F52DBEA4";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3414,7 +3420,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3435,7 +3441,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
