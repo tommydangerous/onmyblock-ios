@@ -186,7 +186,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     sortButtonLowestPrice
   ]];
   CGFloat sortButtonViewHeight = sortView.frame.size.height + 
-    ((1 + 44) * [sortButtonArray count]);
+    ((1 + 40) * [sortButtonArray count]);
   sortButtonsView = [[UIView alloc] init];
   sortButtonsView.frame = CGRectMake(0.0f, sortView.frame.origin.y, 
     sortView.frame.size.width, sortButtonViewHeight);
@@ -215,7 +215,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   for (UIButton *button in sortButtonArray) {
     button.backgroundColor = [UIColor colorWithWhite: 255/255.0 alpha: 0.95];
     button.frame = CGRectMake(0.0f, 20.0f,
-      sortButtonsView.frame.size.width, 44.0f);
+      sortButtonsView.frame.size.width, 40.0f);
     button.hidden = YES;
     NSString *string = @"";
     if (button == sortButtonPopular) {
@@ -232,7 +232,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       string = @"Lowest Price";
     }
     button.tag = [sortButtonArray indexOfObject: button];
-    button.titleLabel.font = sortLabel.font;
+    button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 14];;
     [button addTarget: self action: @selector(sortButtonSelected:)
       forControlEvents: UIControlEventTouchUpInside];
     [button setBackgroundImage: [UIImage imageWithColor: [UIColor blue]]
@@ -1277,7 +1277,7 @@ withMiles: (int) miles animated: (BOOL) animated
     CGFloat index    = [sortButtonArray indexOfObject: button];
     CGFloat duration = slowestDuration - (0.1 * index);
     CGFloat originY  = sortView.frame.size.height + 1 + 
-      ((1.0f + 44.0f) * index);
+      ((1.0f + 40.0f) * index);
     if (isShowingSortButtons)
       originY = 20.0f;
     [UIView animateWithDuration: duration animations: ^{
@@ -1324,7 +1324,7 @@ withMiles: (int) miles animated: (BOOL) animated
   CGFloat originalY = sortView.frame.origin.y + sortLabel.frame.origin.y + 
     ((sortLabel.frame.size.height - sortArrow.frame.size.height) * 0.5);
   NSInteger index = [sortButtonArray indexOfObject: button];
-  CGFloat originY = originalY + ((1 + 44.0f) * (index + 1));
+  CGFloat originY = originalY + ((1 + 40.0f) * (index + 1));
   sortArrow.frame = CGRectMake(sortArrow.frame.origin.x, originalY,
     sortArrow.frame.size.width, sortArrow.frame.size.height);
   sortArrow.image = [UIImage imageNamed: @"arrow_left.png"];
