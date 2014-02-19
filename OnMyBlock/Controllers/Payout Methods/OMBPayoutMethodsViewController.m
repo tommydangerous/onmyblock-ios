@@ -57,6 +57,7 @@
     0.0f, screenWidth, padding + OMBStandardButtonHeight + padding)];
 
   noPayoutMethodsView = [[UIView alloc] init];
+  noPayoutMethodsView.alpha = 0.0f;
   noPayoutMethodsView.frame = CGRectMake(0.0f, 0.0f, 
     screenWidth, screenHeight);
   [self.view addSubview: noPayoutMethodsView];
@@ -135,11 +136,12 @@
   // Fetch payout methods
   [[OMBUser currentUser] fetchPayoutMethodsWithCompletion: ^(NSError *error) {
     if ([[OMBUser currentUser].payoutMethods count]) {
-      [UIView animateWithDuration: 0.25f animations: ^{
-        noPayoutMethodsView.alpha = 0.0f;  
-      }];
+      // [UIView animateWithDuration: 0.25f animations: ^{
+      //   noPayoutMethodsView.alpha = 0.0f;
+      // }];
       // [self.navigationItem setRightBarButtonItem: addBarButtonItem
       //   animated: YES];
+      noPayoutMethodsView.alpha = 0.0f;
     }
     else {
       noPayoutMethodsView.alpha = 1.0f;
