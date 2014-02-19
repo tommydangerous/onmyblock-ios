@@ -60,7 +60,6 @@
         OnMyBlockAPI] objectAtIndex: 0];
       string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
     }
-    residence.coverPhotoURL = [NSURL URLWithString: string];
 //    // Download the residence cover photo from the cover photo url
 //    coverPhotoDownloader = 
 //      [[OMBResidenceCoverPhotoDownloader alloc] initWithResidence:
@@ -85,6 +84,7 @@
       residenceImage.position = 0;
       residenceImage.uid      = -9999 + arc4random_uniform(1000);
       [residence addResidenceImage: residenceImage];
+      
 //    // If the residence has no image, show the Google Static street view
 //     googleStaticImageDownloader =
 //      [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:
@@ -94,6 +94,7 @@
 //    };
 //    [googleStaticImageDownloader startDownload];
   }
+    residence.coverPhotoURL = residenceImage.imageURL;
     [residence addResidenceImage:residenceImage];
     [super connectionDidFinishLoading:connection];
 }

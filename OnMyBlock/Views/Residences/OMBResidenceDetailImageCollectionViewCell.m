@@ -1,4 +1,4 @@
-//
+    //
 //  OMBResidenceDetailImageCollectionViewCell.m
 //  OnMyBlock
 //
@@ -10,6 +10,7 @@
 
 #import "OMBCenteredImageView.h"
 #import "OMBResidenceImage.h"
+#import "UIImageView+WebCache.h"
 
 @implementation OMBResidenceDetailImageCollectionViewCell
 
@@ -19,8 +20,8 @@
 {
   if (!(self = [super initWithFrame: rect])) return nil;
 
-  _imageView = [[OMBCenteredImageView alloc] initWithFrame: self.bounds];
-  [self addSubview: _imageView];
+  self.centeredImageView = [[OMBCenteredImageView alloc] initWithFrame: self.bounds];
+  [self addSubview:self.centeredImageView];
 
   return self;
 }
@@ -38,7 +39,19 @@
 
 - (void) loadResidenceImage: (OMBResidenceImage *) residenceImage
 {
-  _imageView.image = residenceImage.image;
+    __weak typeof (self.centeredImageView) weakImageView = self.centeredImageView;
+    [self.centeredImageView.imageView setImageWithURL:residenceImage.imageURL
+                   placeholderImage:nil
+                            options:SDWebImageRetryFailed
+                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                              if (error) {
+                                  NSLog(@"%@", error);
+                                  NSLog(@"%@", residenceImage.imageURL);
+                              }
+                              else {
+                                  weakImageView.image = image;
+                              }
+                          }];
 }
 
 @end

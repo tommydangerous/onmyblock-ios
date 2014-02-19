@@ -13,7 +13,7 @@
 
 @interface OMBResidenceDetailImageCollectionViewCell : OMBCollectionViewCell
 
-@property (nonatomic, strong) OMBCenteredImageView *imageView;
+@property (nonatomic, strong) OMBCenteredImageView *centeredImageView;
 
 #pragma mark - Methods
 

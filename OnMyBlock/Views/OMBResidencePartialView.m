@@ -190,7 +190,7 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
       [[_residence imagesArray] objectAtIndex: indexPath.row];
       NSLog(@"%@", residenceImage.imageURL);
       [cell.imageView setImageWithURL:residenceImage.imageURL
-                     placeholderImage:nil 
+                     placeholderImage:nil
                               options:SDWebImageRetryFailed | SDWebImageDownloaderProgressiveDownload
                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                                 NSLog(@"%@", image);

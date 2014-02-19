@@ -39,6 +39,7 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
+#import "UIImageView+WebCache.h"
 
 @implementation OMBResidenceBookItConfirmDetailsViewController
 
@@ -378,7 +379,14 @@
   bedBathLabel.text = [NSString stringWithFormat: @"%.0f bd  /  %.0f ba",
     residence.bedrooms, residence.bathrooms];
   // Image
-  residenceImageView.image = [residence coverPhoto];
+    __weak typeof (residenceImageView) weakImageView = residenceImageView;
+  [residenceImageView.imageView setImageWithURL:residence.coverPhotoURL
+                               placeholderImage:nil
+                                      completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                                          if (!error) {
+                                              weakImageView.image = image;
+                                          }
+                                      }];
   // Move In & Out preferences
   NSDictionary *dates = [OMBUser currentUser].movedInOut;
   if([dates objectForKey:@1]){
