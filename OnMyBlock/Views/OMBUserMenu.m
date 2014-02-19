@@ -247,7 +247,7 @@
     _sellerHomebaseNotificationBadge
   ];
   for (UILabel *label in badgeArray) {
-    label.backgroundColor = [UIColor pink];
+    label.backgroundColor = [UIColor blue];
     label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
     label.frame = CGRectMake(
       discoverImageView.frame.origin.x - (padding * 0.5f), 

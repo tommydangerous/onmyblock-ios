@@ -14,5 +14,6 @@
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic) int position;
 @property (nonatomic) int uid;
+@property (nonatomic, strong) NSURL *imageURL;
 
 @end

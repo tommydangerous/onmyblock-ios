@@ -16,7 +16,7 @@
 #import "OMBResidenceImageDownloader.h"
 #import "OMBTemporaryResidence.h"
 #import "UIImage+Resize.h"
-
+#import "OMBResidenceImage.h"
 @implementation OMBResidenceImagesConnection
 
 #pragma mark - Initializer
@@ -73,15 +73,23 @@
           OnMyBlockAPI] objectAtIndex: 0];
       string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
     }
+      OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
+      residenceImage.absoluteString = originalString;
+      residenceImage.imageURL = [NSURL URLWithString:string];
+      residenceImage.position       = position;
+      residenceImage.uid            = [[dict objectForKey: @"id"] intValue];
+      
+      [residence addResidenceImage:residenceImage];
+      
     // Download image
-    OMBResidenceImageDownloader *downloader = 
-      [[OMBResidenceImageDownloader alloc] initWithResidence: residence];
-    downloader.completionBlock = self.completionBlock;
-    downloader.imageURL       = [NSURL URLWithString: string];
-    downloader.originalString = originalString;
-    downloader.position       = position;
-    downloader.residenceImageUID = [[dict objectForKey: @"id"] intValue];
-    [downloader startDownload];
+//    OMBResidenceImageDownloader *downloader = 
+//      [[OMBResidenceImageDownloader alloc] initWithResidence: residence];
+//    downloader.completionBlock = self.completionBlock;
+//    downloader.imageURL       = [NSURL URLWithString: string];
+//    downloader.originalString = originalString;
+//    downloader.position       = position;
+//    downloader.residenceImageUID = [[dict objectForKey: @"id"] intValue];
+//    [downloader startDownload];
   }
   if ([array count] == 0) {
     // If the residence has no image, show the Google Static street view

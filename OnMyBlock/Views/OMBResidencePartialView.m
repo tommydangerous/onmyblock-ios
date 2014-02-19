@@ -22,6 +22,7 @@
 #import "UIImage+Resize.h"
 #import "OMBFilmstripImageCell.h"
 #import "OMBResidenceImage.h"
+#import "UIImageView+WebCache.h"
 
 NSString *const OMBEmptyResidencePartialViewCell = 
   @"OMBEmptyResidencePartialViewCell";
@@ -187,7 +188,17 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
     // Don't resize images or else it hurts performance
     OMBResidenceImage *residenceImage = 
       [[_residence imagesArray] objectAtIndex: indexPath.row];
-    cell.imageView.image = residenceImage.image;
+      NSLog(@"%@", residenceImage.imageURL);
+      [cell.imageView setImageWithURL:residenceImage.imageURL
+                     placeholderImage:nil 
+                              options:SDWebImageRetryFailed | SDWebImageDownloaderProgressiveDownload
+                            completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                                NSLog(@"%@", image);
+                                if (error) {
+                                    NSLog(@"%@", error);
+                                    NSLog(@"%@", residenceImage.imageURL);
+                                }
+                            }];
     return cell;
   }
   return [collectionView dequeueReusableCellWithReuseIdentifier:
@@ -348,6 +359,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   bedBathLabel.text = [NSString stringWithFormat: @"%@ / %@", beds, baths];
 
   // Images
+    [_imagesFilmstrip reloadData];
   // Cover photo
   if ([_residence coverPhoto]) {
     [_imagesFilmstrip reloadData];
