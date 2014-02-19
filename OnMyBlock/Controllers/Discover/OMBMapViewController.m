@@ -126,7 +126,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   sortView = [[AMBlurView alloc] init];
   sortView.blurTintColor = [UIColor blue];
   sortView.frame = CGRectMake(0.0f, 44.0f, 
-    _listViewContainer.frame.size.width, 20.0f + 44.0f);
+    _listViewContainer.frame.size.width, 20.0f + 40.0f);
   [_listViewContainer addSubview: sortView];
   UITapGestureRecognizer *sortViewTap = 
     [[UITapGestureRecognizer alloc] initWithTarget: self 
@@ -134,9 +134,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [sortView.toolbar addGestureRecognizer: sortViewTap];
   // Sort label
   sortLabel = [[UILabel alloc] init];
-  sortLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  sortLabel.frame = CGRectMake(padding, sortView.frame.size.height - 44.0f,
-    0.0f, 44.0f);
+  sortLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 14];
+  sortLabel.frame = CGRectMake(padding, sortView.frame.size.height - 40.0f,
+    0.0f, 40.0f);
   sortLabel.text = @"Sort by";
   sortLabel.textColor = [UIColor whiteColor];
   CGRect sortRect = [sortLabel.text boundingRectWithSize: 
@@ -232,7 +232,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       string = @"Lowest Price";
     }
     button.tag = [sortButtonArray indexOfObject: button];
-    button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 14];;
+    button.titleLabel.font = sortLabel.font;
     [button addTarget: self action: @selector(sortButtonSelected:)
       forControlEvents: UIControlEventTouchUpInside];
     [button setBackgroundImage: [UIImage imageWithColor: [UIColor blue]]
