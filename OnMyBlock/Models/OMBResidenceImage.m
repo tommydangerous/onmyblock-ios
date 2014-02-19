@@ -10,4 +10,10 @@
 
 @implementation OMBResidenceImage
 
+//- (NSURL*)imageURL {
+//    return [NSURL URLWithString:
+//            [self.absoluteString stringByAddingPercentEscapesUsingEncoding:
+//             NSUTF8StringEncoding]];
+//}
+
 @end

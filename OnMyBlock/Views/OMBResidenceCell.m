@@ -36,14 +36,14 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 #pragma mark - Override UITableViewCell
 
-- (void) prepareForReuse
-{
-  [super prepareForReuse];
-
-	[_residencePartialView resetFilmstrip];
-  if (_connection)
-    [_connection cancelConnection];
-}
+//- (void) prepareForReuse
+//{
+//  [super prepareForReuse];
+//
+//	[_residencePartialView resetFilmstrip];
+//  if (_connection)
+//    [_connection cancelConnection];
+//}
 
 #pragma mark - Methods
 
