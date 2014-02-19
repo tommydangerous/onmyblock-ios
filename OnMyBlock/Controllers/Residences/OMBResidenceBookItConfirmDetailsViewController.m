@@ -985,14 +985,26 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:
                 UITableViewCellStyleDefault reuseIdentifier: AddPayoutID];
-        UILabel *label = [UILabel new];
-        label.font = [UIFont normalTextFont];
-        label.frame = CGRectMake(padding, 0.0f,
-                                 tableView.frame.size.width - (padding * 2),
-                                 [OMBPayoutMethodListCell heightForCell]);
-        label.text = @"Add new payment method";
-        label.textColor = [UIColor blue];
-        [cell.contentView addSubview: label];
+        
+        UIButton *button = [UIButton new];
+        button.backgroundColor = [UIColor blue];
+        button.frame = CGRectMake(padding, padding,
+          tableView.frame.size.width - (padding * 2),
+            OMBStandardHeight);
+        button.layer.cornerRadius = 5;
+        button.titleLabel.font = [UIFont normalTextFontBold];
+        button.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [button addTarget:self
+          action:@selector(showPayoutMethods)
+            forControlEvents:UIControlEventTouchUpInside];
+        [button setBackgroundImage:
+         [UIImage imageWithColor: [UIColor blueHighlightedAlpha: 0.3f]]
+           forState: UIControlStateHighlighted];
+        [button setTitle: @"Add new payment method"
+          forState:UIControlStateNormal];
+        [button setTitleColor: UIColor.whiteColor
+          forState:UIControlStateNormal];
+        [cell.contentView addSubview: button];
       }
       cell.backgroundColor = [UIColor grayUltraLight];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -1280,7 +1292,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
            OMBResidenceBookItConfirmDetailsSectionPayoutMethods) {
     // Add a new payout method
     if (indexPath.row == [[OMBUser currentUser].payoutMethods count]) {
-      [[self appDelegate].container showPayoutMethods];
+      //[[self appDelegate].container showPayoutMethods];
     }
     // The other payout methods
     else {
@@ -1703,6 +1715,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   isShowingMoveOutCalendar = !isShowingMoveOutCalendar;
   
   [self showCalendar];
+}
+
+- (void) showPayoutMethods
+{
+  [[self appDelegate].container showPayoutMethods];
 }
 
 - (void) showPlaceOfferHowItWorks
