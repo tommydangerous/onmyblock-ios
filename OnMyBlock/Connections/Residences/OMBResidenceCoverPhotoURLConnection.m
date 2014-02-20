@@ -71,7 +71,7 @@
       int position = (id)postionValue != [NSNull null] ? [postionValue intValue] : 1;
 
       residenceImage.absoluteString = originalString;
-      residenceImage.imageURL = residence.coverPhotoURL;
+      residenceImage.imageURL = [NSURL URLWithString:string];
       residenceImage.position       = position;
       residenceImage.uid            = [[json objectForKey: @"id"] intValue];
 
