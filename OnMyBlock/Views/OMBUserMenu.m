@@ -429,7 +429,7 @@
 
 - (void) showSearch
 {
-  [self changeTitleLabelColor:_searchButton];
+  [self changeTitleLabelColor:_discoverButton];
   [[self container] showSearchAndSwitchToList: YES];
 }
 

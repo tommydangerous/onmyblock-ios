@@ -948,6 +948,7 @@ completion: (void (^) (void)) block
 
 - (void) logout
 {
+  [self changeTitleLabelColor:discoverButton];
   // This is received by OMBUser and 
   // then OMBUser posts OMBUserLoggedOutNotification
   // [[NSNotificationCenter defaultCenter] postNotificationName:
@@ -1463,7 +1464,7 @@ completion: (void (^) (void)) block
 
 - (void) showSearch
 {
-  [self changeTitleLabelColor:searchButton];
+  [self changeTitleLabelColor:discoverButton];
   [self showSearchAndSwitchToList: YES];
 }
 
