@@ -21,16 +21,19 @@
 {
   if (!(self = [super initWithFrame: rect])) return nil;
 
-  CGFloat imageSize = self.frame.size.width * 0.8f;
+  CGFloat imageSize = self.frame.size.width * 0.3f;
   _imageView = [UIImageView new];
-  _imageView.alpha = 0.1f;
+  _imageView.alpha = 0.2f;
   _imageView.frame = CGRectMake((self.frame.size.width - imageSize) * 0.5f, 
-    (self.frame.size.height - imageSize) * 0.5f, imageSize, imageSize);
+    (self.frame.size.height * 0.5f) - imageSize, imageSize, imageSize);
   [self addSubview: _imageView];
-
+  
+  CGFloat labelOriginY = self.frame.size.height * 0.5f + OMBPadding;
+  CGFloat labelWidth = self.frame.size.width - (OMBPadding * 2);
   _label = [UILabel new];
-  _label.frame = CGRectMake(OMBPadding, 0.0f, 
-    self.frame.size.width - (OMBPadding * 2), self.frame.size.height);
+  _label.frame =
+    CGRectMake((self.frame.size.width - labelWidth) * 0.5f, labelOriginY,
+      labelWidth, self.frame.size.height - (labelOriginY));
   _label.numberOfLines = 0;
   _label.textColor = [UIColor grayMedium];
   [self addSubview: _label];
@@ -45,8 +48,9 @@
 - (void) setLabelText: (NSString *) string
 {
   _label.attributedText = [string attributedStringWithFont: 
-    [UIFont mediumTextFontBold] lineHeight: 27.0f];
+    [UIFont fontWithSize: 16 bold: YES] lineHeight: 26.0f];
   _label.textAlignment = NSTextAlignmentCenter;
+  [_label sizeToFit];
 }
 
 @end

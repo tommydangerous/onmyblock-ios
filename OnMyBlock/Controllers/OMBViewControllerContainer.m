@@ -710,6 +710,14 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
     _menuScroll.contentSize = CGSizeMake(menuWidth, height);
 }
 
+- (void) changeTitleLabelColor:(UIButton *)button
+{
+  for(UIButton *button in currentMenuButtons){
+    [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+  }
+  [button setTitleColor: [UIColor blue] forState: UIControlStateNormal];
+}
+
 - (void) drag: (UIPanGestureRecognizer *) gesture
 {
     // CGRect screen      = [[UIScreen mainScreen] bounds];
@@ -1177,34 +1185,48 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 
 - (void) showAccount
 {
-    [self hideMenuWithFactor: 1.0f];
-    [self presentDetailViewController: self.accountNavigationController];
+  [self changeTitleLabelColor:nil];
+  [self hideMenuWithFactor: 1.0f];
+  [self presentDetailViewController: self.accountNavigationController];
 }
 
 - (void) showCreateListing
 {
-    if ([[OMBUser currentUser] loggedIn]) {
-        [self presentViewController:
-         [[OMBNavigationController alloc] initWithRootViewController:
-          [[OMBCreateListingViewController alloc] init]] animated: YES
-                         completion: ^{
-                             [self hideMenuWithFactor: 1.0f];
-                             // Only show the manage listings if user has created a listing
-                             if ([[OMBUser currentUser] hasLandlordType])
-                                 [self presentDetailViewController:
-                                  self.manageListingsNavigationController];
-                         }
-         ];
-    }
-    else {
-        [self showSignUp];
-    }
+  [self changeTitleLabelColor: nil];
+  if ([[OMBUser currentUser] loggedIn]) {
+    [self presentViewController: 
+      [[OMBNavigationController alloc] initWithRootViewController:
+        [[OMBCreateListingViewController alloc] init]] animated: YES 
+          completion: ^{
+            [self hideMenuWithFactor: 1.0f];
+            // Only show the manage listings if user has created a listing
+            if ([[OMBUser currentUser] hasLandlordType])
+              [self presentDetailViewController: 
+                self.manageListingsNavigationController];
+          }
+        ];
+  }
+  else {
+    [self showSignUp];
+  }
 }
 
 - (void) showDiscover
 {
-    [self hideMenuWithFactor: 1.0f];
-    [self presentDetailViewController: self.mapNavigationController];
+  [self changeTitleLabelColor:discoverButton];
+  // if (!_mapNavigationController) {
+  //   // Search
+  //   _mapFilterViewController = [[OMBMapFilterViewController alloc] init];
+  //   _mapFilterNavigationController =
+  //     [[OMBNavigationController alloc] initWithRootViewController:
+  //       _mapFilterViewController];
+  //   // Map, Discover
+  //   _mapNavigationController = 
+  //     [[OMBNavigationController alloc] initWithRootViewController: 
+  //       [[OMBMapViewController alloc] init]];
+  // }
+  [self hideMenuWithFactor: 1.0f];
+  [self presentDetailViewController: self.mapNavigationController];
 }
 
 - (void) showFavorites
@@ -1295,11 +1317,12 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 
 - (void) showLogin
 {
-    [_loginViewController showLogin];
-    [self presentLoginViewController];
-    // [self hideMenuWithFactor: 1.0f completion: ^{
-    //   // [self presentLoginViewController];
-    // }];
+  [self changeTitleLabelColor: loginButton];
+  [_loginViewController showLogin];
+  [self presentLoginViewController];
+  // [self hideMenuWithFactor: 1.0f completion: ^{
+  //   // [self presentLoginViewController];
+  // }];
 }
 
 - (void) showLogout
@@ -1432,7 +1455,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 
 - (void) showSearch
 {
-    [self showSearchAndSwitchToList: YES];
+  [self changeTitleLabelColor:searchButton];
+  [self showSearchAndSwitchToList: YES];
 }
 
 - (void) showSearchAndSwitchToList: (BOOL) switchToList
@@ -1451,11 +1475,12 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 
 - (void) showSignUp
 {
-    [_loginViewController showSignUp];
-    [self presentLoginViewController];
-    // [self hideMenuWithFactor: 1.0f completion: ^{
-    //   // [self presentLoginViewController];
-    // }];
+  [self changeTitleLabelColor: signUpButton];
+  [_loginViewController showSignUp];
+  [self presentLoginViewController];
+  // [self hideMenuWithFactor: 1.0f completion: ^{
+  //   // [self presentLoginViewController];
+  // }];
 }
 
 - (void) startSpinning

@@ -68,8 +68,8 @@
   // emptyBackgroundView.imageView.alpha = 0.5f;
   emptyBackgroundView.imageView.image = [[UIImage imageNamed: 
     @"favorites_icon.png"] negativeImage];
-  NSString *text = @"Places that you favorited appear here. "
-    @"Add your favorite places by tapping the heart on a place.";
+  NSString *text = @"Places that you favorite appear here. "
+    @"Add your favorite places by tapping the heart.";
   // emptyBackgroundView.label.textColor = [UIColor colorWithWhite: 1.0f 
   //   alpha: 0.8f];
   [emptyBackgroundView setLabelText: text];

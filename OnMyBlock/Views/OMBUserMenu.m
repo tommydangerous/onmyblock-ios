@@ -234,7 +234,7 @@
       leftPad + imageSize + leftPad, 0.0f, padding);
     button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-      size: 15];
+      size: 17];
     [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
     [button setTitleColor: [UIColor grayLight] 
       forState: UIControlStateHighlighted];
@@ -276,6 +276,14 @@
 - (OMBAppDelegate *) appDelegate
 {
   return [UIApplication sharedApplication].delegate;
+}
+
+- (void) changeTitleLabelColor:(UIButton *)button
+{
+  for(UIButton *button in _currentButtons){
+    [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+  }
+  [button setTitleColor: [UIColor blue] forState: UIControlStateNormal];
 }
 
 - (OMBViewControllerContainer *) container
@@ -373,46 +381,55 @@
 
 - (void) showCreateListing
 {
+  [self changeTitleLabelColor:_createListingButton];
   [[self container] showCreateListing];
 }
 
 - (void) showDiscover
 {
+  [self changeTitleLabelColor:_discoverButton];
   [[self container] showDiscover];
 }
 
 - (void) showFavorites
 {
+  [self changeTitleLabelColor:_favoritesButton];
   [[self container] showFavorites];
 }
 
 - (void) showHomebaseLandlord
 {
+  [self changeTitleLabelColor:_sellerHomebaseButton];
   [[self container] showHomebaseLandlord];
 }
 
 - (void) showHomebaseRenter
 {
+  [self changeTitleLabelColor:_renterHomebaseButton];
   [[self container] showHomebaseRenter];
 }
 
 - (void) showInbox
 {
+  [self changeTitleLabelColor:_inboxButton];
   [[self container] showInbox];
 }
 
 - (void) showManageListings
 {
+  [self changeTitleLabelColor:_manageListingsButton];
   [[self container] showManageListings];
 }
 
 - (void) showMyRenterApp
 {
+  [self changeTitleLabelColor:_myRenterAppButton];
   [[self container] showMyRenterApp];
 }
 
 - (void) showSearch
 {
+  [self changeTitleLabelColor:_searchButton];
   [[self container] showSearchAndSwitchToList: YES];
 }
 
