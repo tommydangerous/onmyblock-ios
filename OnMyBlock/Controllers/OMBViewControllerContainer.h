@@ -80,7 +80,7 @@
 }
 
 @property (nonatomic, strong) OMBCenteredImageView *accountView;
-@property (nonatomic, strong) OMBBlurView *backgroundBlurView;
+//@property (nonatomic, strong) OMBBlurView *backgroundBlurView;
 @property (nonatomic, strong) UIViewController *currentDetailViewController;
 @property (nonatomic, strong) UIView *detailView;
 @property (nonatomic, strong) UIView *detailViewOverlay;

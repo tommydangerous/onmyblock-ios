@@ -56,6 +56,185 @@ CGFloat kBackgroundMaxScale = 5.0f;
 //       [OMBResidence fakeResidence]] animated: YES];
 // }
 
+#pragma mark - Setter & Getters
+// Both
+//Account
+- (OMBNavigationController*)accountNavigationController {
+    if (!_accountNavigationController) {
+        _accountNavigationController =
+        [[OMBNavigationController alloc] initWithRootViewController:
+         [[OMBAccountViewController alloc] init]];
+    }
+    return _accountNavigationController;
+}
+
+// Intro
+- (OMBIntroStillImagesViewController*)introViewController {
+    if (!_introViewController) {
+        _introViewController = [[OMBIntroStillImagesViewController alloc] init];
+    }
+    return _introViewController;
+}
+// Login
+- (OMBLoginViewController*)loginViewController {
+    if (!_loginViewController) {
+        _loginViewController = [[OMBLoginViewController alloc] init];
+    }
+    return _loginViewController;
+}
+// Payout Methods
+- (OMBPayoutMethodsViewController*)payoutMethodsViewController {
+    if (!_payoutMethodsViewController) {
+        _payoutMethodsViewController = [[OMBPayoutMethodsViewController alloc] init];
+    }
+    return _payoutMethodsViewController;
+}
+
+- (OMBNavigationController*)payoutMethodsNavigationController {
+    if (!_payoutMethodsNavigationController) {
+        _payoutMethodsNavigationController = [[OMBNavigationController alloc] initWithRootViewController:_payoutMethodsViewController];
+    }
+    return _payoutMethodsNavigationController;
+}
+// Renter Application
+- (OMBRenterApplicationViewController*)renterApplicationViewController {
+    if (!_renterApplicationViewController) {
+        _renterApplicationViewController =_renterApplicationViewController =
+        [[OMBRenterApplicationViewController alloc] init];
+    }
+    return _renterApplicationViewController;
+}
+
+// Renter profile
+- (OMBRenterProfileViewController*)renterProfileViewController {
+    if (!_renterProfileViewController) {
+        _renterProfileViewController = [[OMBRenterProfileViewController alloc] init];
+    }
+    return _renterProfileViewController;
+}
+
+- (OMBNavigationController*)renterProfileNavigationController {
+    if (!_renterProfileNavigationController) {
+        _renterProfileNavigationController = [[OMBNavigationController alloc] initWithRootViewController:
+         _renterProfileViewController];
+    }
+    return _renterProfileNavigationController;
+}
+
+// My renter profile
+- (OMBMyRenterProfileViewController*)myRenterProfileViewController {
+    if (!_myRenterProfileViewController) {
+        _myRenterProfileViewController =
+        [[OMBMyRenterProfileViewController alloc] init];
+    }
+    return _myRenterProfileViewController;
+}
+
+- (OMBNavigationController*)myRenterProfileNavigationController {
+    if (!_myRenterProfileNavigationController) {
+        _myRenterProfileNavigationController = [[OMBNavigationController alloc] initWithRootViewController:
+         _myRenterProfileViewController];
+    }
+    return _myRenterProfileNavigationController;
+}
+
+// Renter
+// Search and discover are in the method showDiscover
+- (OMBNavigationController*)mapNavigationController {
+    if (!_mapNavigationController){
+//        // Search
+//        _mapFilterViewController = [[OMBMapFilterViewController alloc] init];
+//        _mapFilterNavigationController =
+//        [[OMBNavigationController alloc] initWithRootViewController:
+//         _mapFilterViewController];
+        // Map, Discover
+        _mapNavigationController =
+        [[OMBNavigationController alloc] initWithRootViewController:
+         [[OMBMapViewController alloc] init]];
+    }
+    return _mapNavigationController;
+}
+
+// Search
+- (OMBMapFilterViewController*)mapFilterViewController {
+    if (!_mapFilterViewController){
+        _mapFilterViewController = [[OMBMapFilterViewController alloc] init];
+    }
+    return _mapFilterViewController;
+}
+
+- (OMBNavigationController*)mapFilterNavigationController {
+    if (!_mapFilterNavigationController){
+        _mapFilterNavigationController =
+        [[OMBNavigationController alloc] initWithRootViewController:
+         _mapFilterViewController];
+    }
+    return _mapFilterNavigationController;
+}
+
+// Favorites
+- (OMBNavigationController*)favoritesNavigationController {
+    if (!_favoritesNavigationController){
+        _favoritesNavigationController =
+        [[OMBNavigationController alloc] initWithRootViewController:
+         [[OMBFavoritesListViewController alloc] init]];
+    }
+    return _favoritesNavigationController;
+}
+
+// Homebase
+- (OMBNavigationController*)homebaseRenterNavigationController {
+    if (!_homebaseRenterNavigationController){
+        // Homebase
+        _homebaseRenterNavigationController =
+        [[OMBNavigationController alloc] initWithRootViewController:
+         [[OMBHomebaseRenterViewController alloc] init]];
+    }
+    return _homebaseRenterNavigationController;
+}
+
+// Inbox
+- (OMBNavigationController*)inboxNavigationController {
+    if (!_inboxNavigationController){
+        _inboxNavigationController =
+        [[OMBNavigationController alloc] initWithRootViewController:
+         [[OMBInboxViewController alloc] init]];
+    }
+    return _inboxNavigationController;
+}
+
+// Seller
+// Create Listing
+// Homebase
+- (OMBNavigationController*)homebaseLandlordNavigationController {
+    if (!_homebaseLandlordNavigationController){
+        _homebaseLandlordNavigationController =
+        [[OMBNavigationController alloc] initWithRootViewController:
+         [[OMBHomebaseLandlordViewController alloc] init]];
+    }
+    return _homebaseLandlordNavigationController;
+}
+
+// Manage Listings
+- (OMBNavigationController*)manageListingsNavigationController {
+    if (!_manageListingsNavigationController){
+        _manageListingsNavigationController =
+        [[OMBNavigationController alloc] initWithRootViewController:
+         [[OMBManageListingsViewController alloc] init]];
+    }
+    return _manageListingsNavigationController;
+}
+
+
+
+//- (<#paramName#>*)<#paramName#> {
+//    if (!<#paramName#>){
+//        
+//    }
+//    return <#paramName#>;
+//}
+
+#pragma mark - Initializer
 - (id) init
 {
   if (!(self = [super init])) return nil;
@@ -119,82 +298,24 @@ CGFloat kBackgroundMaxScale = 5.0f;
   panGesture.maximumNumberOfTouches = 1;
   [self.view addGestureRecognizer: panGesture];
 
-  // View Controllers
-
-  // Both
-  // Account
-  _accountNavigationController = 
-    [[OMBNavigationController alloc] initWithRootViewController:
-      [[OMBAccountViewController alloc] init]];
-  // Intro  
-  _introViewController = [[OMBIntroStillImagesViewController alloc] init];
-  // Login
-  _loginViewController = [[OMBLoginViewController alloc] init];
-  // Payout Methods
-  _payoutMethodsViewController = [[OMBPayoutMethodsViewController alloc] init];
-  _payoutMethodsNavigationController = 
-    [[OMBNavigationController alloc] initWithRootViewController: 
-      _payoutMethodsViewController];
-  // Renter Application
-  _renterApplicationViewController = 
-    [[OMBRenterApplicationViewController alloc] init];
-  // Renter profile
-  _renterProfileViewController = [[OMBRenterProfileViewController alloc] init];
-  _renterProfileNavigationController = 
-    [[OMBNavigationController alloc] initWithRootViewController:
-      _renterProfileViewController];
-  // My renter profile
-  _myRenterProfileViewController = 
-    [[OMBMyRenterProfileViewController alloc] init];
-  _myRenterProfileNavigationController = 
-    [[OMBNavigationController alloc] initWithRootViewController:
-      _myRenterProfileViewController];
-
-  // Renter
-  // Search and discover are in the method showDiscover
-  // Favorites
-  _favoritesNavigationController = 
-    [[OMBNavigationController alloc] initWithRootViewController:
-      [[OMBFavoritesListViewController alloc] init]];
-  // Homebase
-  _homebaseRenterNavigationController = 
-    [[OMBNavigationController alloc] initWithRootViewController:
-      [[OMBHomebaseRenterViewController alloc] init]];
-  // Inbox
-  _inboxNavigationController =
-    [[OMBNavigationController alloc] initWithRootViewController:
-      [[OMBInboxViewController alloc] init]];
-
-  // Seller
-  // Create Listing
-  // Homebase
-  _homebaseLandlordNavigationController =
-    [[OMBNavigationController alloc] initWithRootViewController:
-      [[OMBHomebaseLandlordViewController alloc] init]];
-  // Manage Listings
-  _manageListingsNavigationController =
-    [[OMBNavigationController alloc] initWithRootViewController:
-      [[OMBManageListingsViewController alloc] init]];
-
   // Background blur view
-  _backgroundBlurView = [[OMBBlurView alloc] initWithFrame: self.view.frame];
-  _backgroundBlurView.blurRadius = 10.0f;
-  _backgroundBlurView.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.5f];
-  [_backgroundBlurView refreshWithImage: 
-    [UIImage imageNamed: @"menu_background.jpg"]];
-  [self.view addSubview: _backgroundBlurView];
-
+//  _backgroundBlurView = [[UIView alloc] initWithFrame:self.view.frame];
+//  _backgroundBlurView.blurRadius = 10.0f;
+//  _backgroundBlurView.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.5f];
+//  [_backgroundBlurView refreshWithImage:
+//    [UIImage imageNamed: @"menu_background.jpg"]];
+//  [self.view addSubview: _backgroundBlurView];
   // Background view
-  // backgroundView = [[UIView alloc] initWithFrame: self.view.frame];
-  // [self.view addSubview: backgroundView];
+  backgroundView = [[UIView alloc] initWithFrame: self.view.frame];
+  [self.view addSubview:backgroundView];
 
   // Background image
-  // backgroundImageView = [[UIImageView alloc] init];
-  // backgroundImageView.contentMode  = UIViewContentModeScaleAspectFill;
-  // backgroundImageView.frame        = backgroundView.frame;
-  // backgroundImageView.image = 
-  //   [UIImage imageNamed: @"menu_background.jpg"];
-  // [backgroundView addSubview: backgroundImageView];
+   backgroundImageView = [[UIImageView alloc] init];
+   backgroundImageView.contentMode  = UIViewContentModeScaleAspectFill;
+   backgroundImageView.frame        = backgroundView.frame;
+   backgroundImageView.image =
+     [UIImage imageNamed: @"menuBackground.jpg"];
+  [backgroundView addSubview: backgroundImageView];
 
   // Black tint
   // UIView *colorView = [[UIView alloc] init];
@@ -209,8 +330,8 @@ CGFloat kBackgroundMaxScale = 5.0f;
   // [backgroundView addSubview: blurView];
 
   // Scale the background larger so when they slide the menu, it "zooms"
-  _backgroundBlurView.transform = CGAffineTransformScale(
-    CGAffineTransformIdentity, kBackgroundMaxScale, kBackgroundMaxScale);
+//  _backgroundBlurView.transform = CGAffineTransformScale(
+//    CGAffineTransformIdentity, kBackgroundMaxScale, kBackgroundMaxScale);
   // backgroundImageView.transform = CGAffineTransformMakeScale(2, 2);
   // blurView.transform = CGAffineTransformMakeScale(2, 2);
 
@@ -662,7 +783,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
     if (horizontalDifference != 0) {
       _detailView.transform = CGAffineTransformConcat(
         transformScale, transformTranslation);
-      _backgroundBlurView.transform = CGAffineTransformMakeScale(
+        backgroundView.transform = CGAffineTransformMakeScale(
         newBlurViewScale, newBlurViewScale);
 
       // Animate current set of menu buttons
@@ -742,7 +863,7 @@ completion: (void (^) (void)) block
       transformScale, transformTranslation);
 
     // Zoom into the background image view
-    _backgroundBlurView.transform = CGAffineTransformScale(
+    backgroundView.transform = CGAffineTransformScale(
       CGAffineTransformIdentity, kBackgroundMaxScale, kBackgroundMaxScale);
     // blurView.transform = CGAffineTransformMakeScale(2, 2);
 
@@ -841,24 +962,24 @@ completion: (void (^) (void)) block
   // Pop every navigation controller to the root view
   NSArray *array = @[
     // Both
-    _accountNavigationController,
-    _payoutMethodsNavigationController,
+    self.accountNavigationController,
+    self.payoutMethodsNavigationController,
     // Renter
-    _mapFilterNavigationController,
-    _mapNavigationController,
-    // _myRenterAppNavigationController,
-    _favoritesNavigationController,
-    _homebaseRenterNavigationController,
-    _inboxNavigationController,
+    self.mapFilterNavigationController,
+    self.mapNavigationController,
+    // self.myRenterAppNavigationController,
+    self.favoritesNavigationController,
+    self.homebaseRenterNavigationController,
+    self.inboxNavigationController,
     // Landlord
-    _homebaseLandlordNavigationController,
-    _manageListingsNavigationController
+    self.homebaseLandlordNavigationController,
+    self.manageListingsNavigationController
   ];
   for (OMBNavigationController *nav in array) {
     [nav popToRootViewControllerAnimated: NO];
   }
 
-  [self presentDetailViewController: _mapNavigationController];
+  [self presentDetailViewController: self.mapNavigationController];
 
   // Hide the title for the create listing button
   createListingButton.hidden = NO;
@@ -887,7 +1008,7 @@ completion: (void (^) (void)) block
 
 - (void) presentLoginViewController
 {
-  [self presentViewController: _loginViewController 
+  [self presentViewController: self.loginViewController 
     animated: YES completion: nil];
 }
 
@@ -1057,7 +1178,7 @@ completion: (void (^) (void)) block
 - (void) showAccount
 {
   [self hideMenuWithFactor: 1.0f];
-  [self presentDetailViewController: _accountNavigationController];
+  [self presentDetailViewController: self.accountNavigationController];
 }
 
 - (void) showCreateListing
@@ -1071,7 +1192,7 @@ completion: (void (^) (void)) block
             // Only show the manage listings if user has created a listing
             if ([[OMBUser currentUser] hasLandlordType])
               [self presentDetailViewController: 
-                _manageListingsNavigationController];
+                self.manageListingsNavigationController];
           }
         ];
   }
@@ -1082,31 +1203,20 @@ completion: (void (^) (void)) block
 
 - (void) showDiscover
 {
-  if (!_mapNavigationController) {
-    // Search
-    _mapFilterViewController = [[OMBMapFilterViewController alloc] init];
-    _mapFilterNavigationController =
-      [[OMBNavigationController alloc] initWithRootViewController:
-        _mapFilterViewController];
-    // Map, Discover
-    _mapNavigationController = 
-      [[OMBNavigationController alloc] initWithRootViewController: 
-        [[OMBMapViewController alloc] init]];
-  }
   [self hideMenuWithFactor: 1.0f];
-  [self presentDetailViewController: _mapNavigationController];
+  [self presentDetailViewController: self.mapNavigationController];
 }
 
 - (void) showFavorites
 {
   [self hideMenuWithFactor: 1.0f];
-  [self presentDetailViewController: _favoritesNavigationController];
+  [self presentDetailViewController: self.favoritesNavigationController];
 }
 
 - (void) showFinishListing
 {
   [self hideMenuWithFactor: 1.0f];
-  [self presentDetailViewController: _manageListingsNavigationController];
+  [self presentDetailViewController: self.manageListingsNavigationController];
   [_manageListingsNavigationController pushViewController:
     [[OMBFinishListingViewController alloc] initWithResidence: nil] 
       animated: YES];
@@ -1115,19 +1225,19 @@ completion: (void (^) (void)) block
 - (void) showHomebaseLandlord
 {
   [self hideMenuWithFactor: 1.0f];
-  [self presentDetailViewController: _homebaseLandlordNavigationController];
+  [self presentDetailViewController: self.homebaseLandlordNavigationController];
 }
 
 - (void) showHomebaseRenter
 {
   [self hideMenuWithFactor: 1.0f];
-  [self presentDetailViewController: _homebaseRenterNavigationController];
+  [self presentDetailViewController: self.homebaseRenterNavigationController];
 }
 
 - (void) showInbox
 {
   [self hideMenuWithFactor: 1.0f];
-  [self presentDetailViewController: _inboxNavigationController];
+  [self presentDetailViewController: self.inboxNavigationController];
 }
 
 - (void) showIntroVertical
@@ -1148,10 +1258,10 @@ completion: (void (^) (void)) block
   
   [_introViewController resetViews];
   // [self hideMenuWithFactor: 1.0f completion: ^{
-  //   [self presentViewController: _introViewController animated: animated
+  //   [self presentViewController: self.introViewController animated: animated
   //     completion: nil];
   // }];
-  [self presentViewController: _introViewController animated: animated
+  [self presentViewController: self.introViewController animated: animated
     completion: nil];
 }
 
@@ -1204,7 +1314,7 @@ completion: (void (^) (void)) block
 - (void) showManageListings
 {
   [self hideMenuWithFactor: 1.0f];
-  [self presentDetailViewController: _manageListingsNavigationController];
+  [self presentDetailViewController: self.manageListingsNavigationController];
 }
 
 - (void) showMenuWithFactor: (float) factor
@@ -1228,7 +1338,7 @@ completion: (void (^) (void)) block
       transformScale, transformTranslation);
 
     // Zoom into the background image view
-    _backgroundBlurView.transform = CGAffineTransformIdentity;
+    backgroundView.transform = CGAffineTransformIdentity;
     // blurView.transform = CGAffineTransformMakeScale(1, 1);
 
     // Hide the account image view
@@ -1273,14 +1383,14 @@ completion: (void (^) (void)) block
 - (void) showMyRenterApp
 {
   [self hideMenuWithFactor: 1.0f];
-  [self presentDetailViewController: _myRenterAppNavigationController];
+  [self presentDetailViewController: self.myRenterAppNavigationController];
 }
 
 - (void) showMyRenterProfile
 {
   [self hideMenuWithFactor: 1.0f];
   [_myRenterProfileViewController loadUser: [OMBUser currentUser]];
-  [self presentDetailViewController: _myRenterProfileNavigationController];
+  [self presentDetailViewController: self.myRenterProfileNavigationController];
 }
 
 - (void) showOfferAccepted
@@ -1302,13 +1412,13 @@ completion: (void (^) (void)) block
 - (void) showPayoutMethods
 {
   [_payoutMethodsViewController showCancelBarButtonItem];
-  [self presentViewController: _payoutMethodsNavigationController
+  [self presentViewController: self.payoutMethodsNavigationController
     animated: YES completion: nil];
 }
 
 - (void) showRenterApplication
 {
-  [self presentViewController: _renterApplicationViewController 
+  [self presentViewController: self.renterApplicationViewController 
     animated: YES completion: nil];
 }
 
@@ -1317,7 +1427,7 @@ completion: (void (^) (void)) block
   [self hideMenuWithFactor: 1.0f];
   [self showMyRenterProfile];
   // [_renterProfileViewController loadUser: [OMBUser currentUser]];
-  // [self presentDetailViewController: _renterProfileNavigationController];
+  // [self presentDetailViewController: self.renterProfileNavigationController];
 }
 
 - (void) showSearch
@@ -1327,7 +1437,7 @@ completion: (void (^) (void)) block
 
 - (void) showSearchAndSwitchToList: (BOOL) switchToList
 {
-  [self presentViewController: _mapFilterNavigationController
+  [self presentViewController: self.mapFilterNavigationController
     animated: YES completion: ^{
       OMBMapViewController *mapViewController = (OMBMapViewController *)
         [_mapNavigationController.viewControllers firstObject];
@@ -1335,7 +1445,7 @@ completion: (void (^) (void)) block
       if (switchToList)
         [mapViewController switchToListView];
       [self hideMenuWithFactor: 1.0f];
-      [self presentDetailViewController: _mapNavigationController];
+      [self presentDetailViewController: self.mapNavigationController];
     }];
 }
 

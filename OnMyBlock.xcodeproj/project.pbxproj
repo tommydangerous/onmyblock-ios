@@ -24,7 +24,6 @@
 		AB01ED6D185966B500333390 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB01ED6C185966B500333390 /* AVFoundation.framework */; };
 		AB01ED6F185966BD00333390 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB01ED6E185966BD00333390 /* CFNetwork.framework */; };
 		AB01ED71185966C800333390 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB01ED70185966C800333390 /* MessageUI.framework */; };
-		AB0269B71822155900E72F53 /* menu_background@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB0269B61822155900E72F53 /* menu_background@2x.jpg */; };
 		AB0269B9182292F500E72F53 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0269B8182292F500E72F53 /* CoreImage.framework */; };
 		AB0269BD182293DC00E72F53 /* UIImage+NegativeImage.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0269BC182293DC00E72F53 /* UIImage+NegativeImage.m */; };
 		AB0269D61822A12600E72F53 /* AMBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0269D51822A12600E72F53 /* AMBlurView.m */; };
@@ -434,6 +433,9 @@
 		ABF8ECAC182D78280080B1E2 /* OMBIntroFavoritesView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF8ECAB182D78280080B1E2 /* OMBIntroFavoritesView.m */; };
 		ABF8ECAE182D7A370080B1E2 /* intro_favorites_view_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ABF8ECAD182D7A370080B1E2 /* intro_favorites_view_background.jpg */; };
 		ABF8ECB9182D84170080B1E2 /* OMBSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF8ECB8182D84170080B1E2 /* OMBSignUpView.m */; };
+		B484A9BF18B55A2F005DEBBE /* menuBackground.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B484A9BD18B55A2F005DEBBE /* menuBackground.jpg */; };
+		B484A9C018B55A2F005DEBBE /* menuBackground@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B484A9BE18B55A2F005DEBBE /* menuBackground@2x.jpg */; };
+		B484A9C218B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = B484A9C118B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DE93158718916D1800111CF6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE93158618916D1800111CF6 /* FacebookSDK.framework */; };
 		DE93158D18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */; };
 		DE93158F1891E05800111CF6 /* OMBCreateListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */; };
@@ -490,7 +492,6 @@
 		AB01ED6C185966B500333390 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		AB01ED6E185966BD00333390 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		AB01ED70185966C800333390 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		AB0269B61822155900E72F53 /* menu_background@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "menu_background@2x.jpg"; sourceTree = "<group>"; };
 		AB0269B8182292F500E72F53 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		AB0269BB182293DC00E72F53 /* UIImage+NegativeImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+NegativeImage.h"; sourceTree = "<group>"; };
 		AB0269BC182293DC00E72F53 /* UIImage+NegativeImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+NegativeImage.m"; sourceTree = "<group>"; };
@@ -1278,6 +1279,9 @@
 		ABF8ECAD182D7A370080B1E2 /* intro_favorites_view_background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = intro_favorites_view_background.jpg; sourceTree = "<group>"; };
 		ABF8ECB7182D84170080B1E2 /* OMBSignUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSignUpView.h; sourceTree = "<group>"; };
 		ABF8ECB8182D84170080B1E2 /* OMBSignUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSignUpView.m; sourceTree = "<group>"; };
+		B484A9BD18B55A2F005DEBBE /* menuBackground.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = menuBackground.jpg; sourceTree = "<group>"; };
+		B484A9BE18B55A2F005DEBBE /* menuBackground@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "menuBackground@2x.jpg"; sourceTree = "<group>"; };
+		B484A9C118B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSPDFUIKitMainThreadGuard.m; sourceTree = "<group>"; };
 		DE93158618916D1800111CF6 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		DE93158B18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailLeaseCell.h; sourceTree = "<group>"; };
 		DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailLeaseCell.m; sourceTree = "<group>"; };
@@ -1560,6 +1564,7 @@
 				ABB022D4182491FD00F98544 /* GoogleAnalytics */,
 				AB0269D31822A12600E72F53 /* iOS-Blur */,
 				AB9B2601181196F400E6DAC4 /* location.gpx */,
+				B484A9C118B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m */,
 				ABB3C57B1811781C00DD91C9 /* MFSideMenu */,
 				AB9B262E1811B7ED00E6DAC4 /* OCMapView */,
 				AB802EA318109E5200E04D11 /* OnMyBlock */,
@@ -2212,6 +2217,8 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				B484A9BD18B55A2F005DEBBE /* menuBackground.jpg */,
+				B484A9BE18B55A2F005DEBBE /* menuBackground@2x.jpg */,
 				AB3DA21518AFFF1900B0EE1D /* neighborhood_downtown.jpg */,
 				AB3DA21618AFFF1900B0EE1D /* neighborhood_hillcrest.jpg */,
 				AB3DA21718AFFF1900B0EE1D /* neighborhood_la_jolla.jpg */,
@@ -2233,7 +2240,6 @@
 				ABB911571897F7DE0046611F /* intro_still_image_slide_7_background@2x.jpg */,
 				ABB911581897F7DE0046611F /* intro_still_image_slide_8_background@2x.jpg */,
 				ABB9116F1898215B0046611F /* intro_still_image_slide_9_background@2x.jpg */,
-				AB0269B61822155900E72F53 /* menu_background@2x.jpg */,
 				A685EF96188F2A9E0074E336 /* Progress Indicator Frames */,
 				ABB700111879FDFC005F0730 /* residence_fake@2x.jpg */,
 			);
@@ -2834,6 +2840,7 @@
 				ABE2817E186A187E00A5D14E /* release_notes.md in Resources */,
 				AB756ABA185A2483001AF572 /* intro_still_image_slide_2_background@2x.jpg in Resources */,
 				AB3DA22118AFFF1900B0EE1D /* neighborhood_mission_valley.jpg in Resources */,
+				B484A9BF18B55A2F005DEBBE /* menuBackground.jpg in Resources */,
 				AB3DA22218AFFF1900B0EE1D /* neighborhood_ocean_beach.jpg in Resources */,
 				ABE28189186A486E00A5D14E /* edward_d@2x.jpg in Resources */,
 				ABB911701898215B0046611F /* intro_still_image_slide_9_background@2x.jpg in Resources */,
@@ -2852,11 +2859,11 @@
 				AB3DA21D18AFFF1900B0EE1D /* neighborhood_downtown.jpg in Resources */,
 				ABF8ECAE182D7A370080B1E2 /* intro_favorites_view_background.jpg in Resources */,
 				AB9B2602181196F400E6DAC4 /* location.gpx in Resources */,
+				B484A9C018B55A2F005DEBBE /* menuBackground@2x.jpg in Resources */,
 				ABBA589A1870C59700E9BF4E /* ELCAssetPicker.xib in Resources */,
 				ABBA58991870C59700E9BF4E /* ELCAlbumPickerController.xib in Resources */,
 				AB802EB018109E5200E04D11 /* Images.xcassets in Resources */,
 				ABB9115A1897F7DE0046611F /* intro_still_image_slide_6_background@2x.jpg in Resources */,
-				AB0269B71822155900E72F53 /* menu_background@2x.jpg in Resources */,
 				AB3DA21F18AFFF1900B0EE1D /* neighborhood_la_jolla.jpg in Resources */,
 				ABB9115B1897F7DE0046611F /* intro_still_image_slide_7_background@2x.jpg in Resources */,
 				AB756ABC185A24F5001AF572 /* intro_still_image_slide_3_background@2x.jpg in Resources */,
@@ -2913,6 +2920,7 @@
 				AB9012A618568206003153A2 /* OMBPreviousRentalCreateConnection.m in Sources */,
 				ABE4FBFD18907E820009D643 /* OMBPayoutMethodCreateConnection.m in Sources */,
 				AB02805A184396F40081B30F /* OMBIntroDiscoverView.m in Sources */,
+				B484A9C218B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m in Sources */,
 				ABB3C585181178AE00DD91C9 /* OMBNavigationController.m in Sources */,
 				ABCB36B2187CA156008A0EEF /* OMBHomebaseRenterAddRemoveRoommatesViewController.m in Sources */,
 				AB9B26471811CB1300E6DAC4 /* NSString+Extensions.m in Sources */,
@@ -3386,7 +3394,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: FJ Venegas (8FESS49WA6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3408,7 +3416,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
+				PROVISIONING_PROFILE = "06651389-7892-433C-9EDE-4980F52DBEA4";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3420,7 +3428,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: FJ Venegas (8FESS49WA6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3441,7 +3449,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
+				PROVISIONING_PROFILE = "06651389-7892-433C-9EDE-4980F52DBEA4";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
