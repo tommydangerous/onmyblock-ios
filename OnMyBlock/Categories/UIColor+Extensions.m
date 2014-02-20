@@ -150,8 +150,10 @@
 + (UIColor *) greenAlpha: (float) value
 {
   // 88, 209, 136 (current)
-  return [UIColor colorWithRed: (56/255.0) green: (224/255.0) 
-    blue: (45/255.0) alpha: value];
+  // 56, 224, 45 (too bright)
+  // 44, 217, 23
+  return [UIColor colorWithRed: (44/255.0) green: (217/255.0) 
+    blue: (23/255.0) alpha: value];
 }
 
 + (UIColor *) greenDark
