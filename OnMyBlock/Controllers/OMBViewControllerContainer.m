@@ -589,6 +589,14 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   _menuScroll.contentSize = CGSizeMake(menuWidth, height);
 }
 
+- (void) changeTitleLabelColor:(UIButton *)button
+{
+  for(UIButton *button in currentMenuButtons){
+    [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+  }
+  [button setTitleColor: [UIColor blue] forState: UIControlStateNormal];
+}
+
 - (void) drag: (UIPanGestureRecognizer *) gesture
 {
   // CGRect screen      = [[UIScreen mainScreen] bounds];
@@ -968,7 +976,7 @@ completion: (void (^) (void)) block
     button.contentHorizontalAlignment = 
       UIControlContentHorizontalAlignmentLeft;
     button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-      size: 15];
+      size: 17];
     [button setTitleColor: [UIColor whiteColor] 
       forState: UIControlStateNormal];
     [button setTitleColor: [UIColor grayMedium] 
@@ -1056,12 +1064,14 @@ completion: (void (^) (void)) block
 
 - (void) showAccount
 {
+  [self changeTitleLabelColor:nil];
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: _accountNavigationController];
 }
 
 - (void) showCreateListing
 {
+  [self changeTitleLabelColor:nil];
   if ([[OMBUser currentUser] loggedIn]) {
     [self presentViewController: 
       [[OMBNavigationController alloc] initWithRootViewController:
@@ -1082,6 +1092,7 @@ completion: (void (^) (void)) block
 
 - (void) showDiscover
 {
+  [self changeTitleLabelColor:discoverButton];
   if (!_mapNavigationController) {
     // Search
     _mapFilterViewController = [[OMBMapFilterViewController alloc] init];
@@ -1185,6 +1196,7 @@ completion: (void (^) (void)) block
 
 - (void) showLogin
 {
+  [self changeTitleLabelColor:loginButton];
   [_loginViewController showLogin];
   [self presentLoginViewController];
   // [self hideMenuWithFactor: 1.0f completion: ^{
@@ -1322,6 +1334,7 @@ completion: (void (^) (void)) block
 
 - (void) showSearch
 {
+  [self changeTitleLabelColor:searchButton];
   [self showSearchAndSwitchToList: YES];
 }
 
@@ -1341,6 +1354,7 @@ completion: (void (^) (void)) block
 
 - (void) showSignUp
 {
+  [self changeTitleLabelColor:signUpButton];
   [_loginViewController showSignUp];
   [self presentLoginViewController];
   // [self hideMenuWithFactor: 1.0f completion: ^{

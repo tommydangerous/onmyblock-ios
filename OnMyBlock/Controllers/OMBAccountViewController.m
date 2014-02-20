@@ -67,7 +67,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 
   static NSString *CellIdentifier = @"CellIdentifier";
   UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle: 
-    UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+    UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier];
   // If first row, it is the blank row used for spacing
   if (indexPath.row == 0) {
     cell.contentView.backgroundColor = self.table.backgroundColor;
@@ -88,6 +88,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell.textLabel.textColor = [UIColor textColor];
     if (indexPath.section == 0) {
       if (indexPath.row == 1) {
+        cell.detailTextLabel.font = cell.textLabel.font;
+        NSInteger percentage = [[OMBUser currentUser] profilePercentage];
+        cell.detailTextLabel.text = [NSString stringWithFormat:
+                                     @"%i%% complete", percentage];
+        UIColor *color = [UIColor red];
+        if (percentage >= 90)
+          color = [UIColor green];
+        else if (percentage >= 50)
+          color = [UIColor yellow];
+        cell.detailTextLabel.textColor = color;
         cell.textLabel.text = @"My Profile";
       }
       else if (indexPath.row == 2) {

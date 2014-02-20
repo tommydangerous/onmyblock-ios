@@ -172,7 +172,7 @@
   aboutTextViewPlaceholder.font = aboutTextView.font;
   aboutTextViewPlaceholder.frame = CGRectMake(5.0f, 8.0f, 
     aboutTextView.frame.size.width, 20.0f);
-  aboutTextViewPlaceholder.text = @"Talk about how cool you are...";
+  aboutTextViewPlaceholder.text = @"Share a little about you…";
   aboutTextViewPlaceholder.textColor = [UIColor grayMedium];
   [aboutTextView addSubview: aboutTextViewPlaceholder];
 

@@ -349,7 +349,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   emptyBackground = [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame:
     emptyBackgroundRect];
   emptyBackground.alpha = 0.0f;
-  emptyBackground.imageView.alpha = 0.3f;
+  emptyBackground.imageView.alpha = 0.9f;
   emptyBackground.imageView.image = [UIImage imageNamed: @"search_icon.png"];
   emptyBackground.label.textColor = [UIColor whiteColor];
   NSString *text = @"Sorry but we found no results near you. Please choose "
