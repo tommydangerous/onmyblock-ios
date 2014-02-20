@@ -173,6 +173,7 @@ NSString *const OMBEmptyResidencePartialViewCell =
 - (NSInteger) collectionView: (UICollectionView *) collectionView 
 numberOfItemsInSection: (NSInteger) section
 {
+  NSLog(@"%i", [_residence imagesArray].count);
   if ([_residence imagesArray].count)
     return [_residence imagesArray].count;
   return 1;
@@ -188,17 +189,17 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
     // Don't resize images or else it hurts performance
     OMBResidenceImage *residenceImage = 
       [[_residence imagesArray] objectAtIndex: indexPath.row];
-      NSLog(@"%@", residenceImage.imageURL);
-      [cell.imageView setImageWithURL:residenceImage.imageURL
-                     placeholderImage:nil
-                              options:SDWebImageRetryFailed | SDWebImageDownloaderProgressiveDownload
-                            completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                                NSLog(@"%@", image);
-                                if (error) {
-                                    NSLog(@"%@", error);
-                                    NSLog(@"%@", residenceImage.imageURL);
-                                }
-                            }];
+      
+    [cell.imageView setImageWithURL: residenceImage.imageURL
+      placeholderImage: nil options: (SDWebImageRetryFailed | 
+        SDWebImageDownloaderProgressiveDownload)
+        completed:
+          ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if (error) {
+              NSLog(@"Error: %@, for: %@", error, residenceImage.imageURL);
+            }
+          }
+        ];
     return cell;
   }
   return [collectionView dequeueReusableCellWithReuseIdentifier:
@@ -295,9 +296,11 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 {
   if (isDownloadingResidenceImages)
     return;
+  NSLog(@"DOWNLOAD RESIDENCE IMAGES");
   [_residence downloadImagesWithCompletion: ^(NSError *error) {
     [_imagesFilmstrip reloadData];
     isDownloadingResidenceImages = NO;
+    NSLog(@"DOWNLOAD RESIDENCE IMAGES COMPLETION");
   }];
   isDownloadingResidenceImages = YES;
   // NSLog(@"DOWNLOAD IMAGES: %i", _residence.uid);
@@ -418,6 +421,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) loadResidenceDataForPropertyInfoView: (OMBResidence *) object
 {
+  _residence = object;
   __weak typeof(self) weakSelf = self;
   _completionBlock = ^(NSError *error) {
     [weakSelf downloadResidenceImages];

@@ -73,15 +73,14 @@
           OnMyBlockAPI] objectAtIndex: 0];
       string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
     }
-      OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
-      residenceImage.absoluteString = originalString;
-      residenceImage.imageURL = [NSURL URLWithString:string];
-      residenceImage.position       = position;
-      residenceImage.uid            = [[dict objectForKey: @"id"] intValue];
+    OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
+    residenceImage.absoluteString = originalString;
+    residenceImage.imageURL = [NSURL URLWithString:string];
+    residenceImage.position = position;
+    residenceImage.uid      = [[dict objectForKey: @"id"] intValue];
+    [residence addResidenceImage: residenceImage];
       
-      [residence addResidenceImage:residenceImage];
-      
-    // Download image
+// Download image
 //    OMBResidenceImageDownloader *downloader = 
 //      [[OMBResidenceImageDownloader alloc] initWithResidence: residence];
 //    downloader.completionBlock = self.completionBlock;
@@ -102,7 +101,8 @@
     // [downloader startDownload];
   }
   else {
-    self.completionBlock = nil;
+    // Why was this here?!
+    // self.completionBlock = nil;
   }
   [super connectionDidFinishLoading: connection];
 }

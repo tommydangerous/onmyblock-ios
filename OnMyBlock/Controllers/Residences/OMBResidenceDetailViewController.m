@@ -46,6 +46,7 @@
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
+#import "UIImageView+WebCache.h"
 
 float kResidenceDetailCellSpacingHeight = 40.0f;
 float kResidenceDetailImagePercentage   = 0.5f;
@@ -60,11 +61,15 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   residence = object;
 
-  _imageSlideViewController = 
-    [[OMBResidenceImageSlideViewController alloc] initWithResidence: residence];
-  _imageSlideViewController.modalTransitionStyle = 
-    UIModalTransitionStyleCrossDissolve;
-  _imageSlideViewController.residenceDetailViewController = self;
+  // Do not need this anymore because clicking the image in the slides
+  // will show a view with the images
+
+  // _imageSlideViewController = 
+  //   [[OMBResidenceImageSlideViewController alloc] initWithResidence: 
+  //     residence];
+  // _imageSlideViewController.modalTransitionStyle = 
+  //   UIModalTransitionStyleCrossDissolve;
+  // _imageSlideViewController.residenceDetailViewController = self;
 
   self.screenName = [NSString stringWithFormat:
     @"Residence Detail View Controller - Residence ID: %i", residence.uid];
@@ -1185,17 +1190,39 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [imageScrollView insertSubview: scroll belowSubview: 
       imageScrollViewCloseButton];
 
-    UIImage *image         = residenceImage.image;
-    UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
-    imageView.image = image;
-    [scroll addSubview: imageView];
+    // UIImage *image         = residenceImage.image;
+    // imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
+    // imageView.image = image;
 
-    scroll.minimumZoomScale = rect.size.width / image.size.width;
-    scroll.maximumZoomScale = 1.0;
-    scroll.showsHorizontalScrollIndicator = NO;
-    scroll.showsVerticalScrollIndicator   = NO;
-    scroll.zoomScale = scroll.minimumZoomScale;
+    __weak typeof(scroll) weakScroll = scroll;
+    [scroll.imageView setImageWithURL: residenceImage.imageURL
+      placeholderImage: nil options: SDWebImageRetryFailed
+        completed: 
+          ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if (error) {
+              NSLog(@"Error: %@, For: %@", error, residenceImage.imageURL);
+            }
+            else {
+              // Image view
+              weakScroll.imageView.frame = CGRectMake(0.0f, 0.0f, 
+                image.size.width, image.size.height);
+              // Scroll
+              weakScroll.minimumZoomScale = 
+                rect.size.width / weakScroll.imageView.image.size.width;
+              weakScroll.maximumZoomScale = 1.0;
+              weakScroll.showsHorizontalScrollIndicator = NO;
+              weakScroll.showsVerticalScrollIndicator   = NO;
+              weakScroll.zoomScale = weakScroll.minimumZoomScale;
+            }
+          }
+        ];
+    // [scroll addSubview: imageView];
+
+    // scroll.minimumZoomScale = rect.size.width / imageView.image.size.width;
+    // scroll.maximumZoomScale = 1.0;
+    // scroll.showsHorizontalScrollIndicator = NO;
+    // scroll.showsVerticalScrollIndicator   = NO;
+    // scroll.zoomScale = scroll.minimumZoomScale;
   }
   // Set content size
   imageScrollView.contentSize = CGSizeMake(rect.size.width * [array count],
@@ -1205,7 +1232,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   CGPoint point = CGPointMake(
     rect.size.width * ([self currentPageOfImages] - 1), 0.0f);
   [imageScrollView setContentOffset: point animated: NO];
-
 
   // Blur
   blurView.alpha = 0.0f;
@@ -1219,7 +1245,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [[[UIApplication sharedApplication] keyWindow] addSubview: 
     imageScrollView];
 
-  [UIView animateWithDuration: 0.25f animations: ^{
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
     blurView.alpha = 1.0f;
     imageScrollView.alpha = 1.0f;
     imageScrollView.transform = CGAffineTransformIdentity;

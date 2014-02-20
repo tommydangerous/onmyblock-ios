@@ -10,13 +10,14 @@
 
 @implementation OMBImageScrollView
 
-@synthesize imageView = _imageView;
-
 #pragma mark - Initializer
 
 - (id) init
 {
   if (!(self = [super init])) return nil;
+
+  _imageView = [[UIImageView alloc] init];
+  [self addSubview: _imageView];
 
   UITapGestureRecognizer *tapGestureRecognizer =
     [[UITapGestureRecognizer alloc] initWithTarget: self 

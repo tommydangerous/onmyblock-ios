@@ -39,19 +39,18 @@
 
 - (void) loadResidenceImage: (OMBResidenceImage *) residenceImage
 {
-    __weak typeof (self.centeredImageView) weakImageView = self.centeredImageView;
-    [self.centeredImageView.imageView setImageWithURL:residenceImage.imageURL
-                   placeholderImage:nil
-                            options:SDWebImageRetryFailed
-                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                              if (error) {
-                                  NSLog(@"%@", error);
-                                  NSLog(@"%@", residenceImage.imageURL);
-                              }
-                              else {
-                                  weakImageView.image = image;
-                              }
-                          }];
+  __weak typeof (self.centeredImageView) weakImageView = self.centeredImageView;
+  [self.centeredImageView.imageView setImageWithURL: residenceImage.imageURL
+    placeholderImage: nil options: SDWebImageRetryFailed
+      completed: ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (error) {
+          NSLog(@"Error: %@, For: %@", error, residenceImage.imageURL);
+        }
+        else {
+          weakImageView.image = image;
+        }
+    }
+  ];
 }
 
 @end
