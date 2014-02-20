@@ -27,56 +27,56 @@
 @interface OMBViewControllerContainer : OMBViewController
 <UIAlertViewDelegate, UIGestureRecognizerDelegate, UIScrollViewDelegate>
 {
-    // Array to hold buttons
-    NSMutableArray *buttonsLoggedIn;
-    NSMutableArray *buttonsLoggedOut;
-    NSArray *currentMenuButtons;
-    
-    // Buttons on the left that go in the menu scroll
-    // Logged in
-    NSMutableArray *userMenuArray;
-    OMBUserMenu *userMenu1;
-    OMBUserMenu *userMenu2;
-    OMBUserMenu *userMenu3;
-    OMBUserMenu *userMenu4;
-    OMBUserMenu *userMenu5;
-    OMBUserMenu *userMenu6;
-    
-    // Logged out
-    UIButton *searchButton;
-    UIButton *discoverButton;
-    UIButton *howItWorksButton;
-    UIButton *loginButton;
-    UIButton *signUpButton;
-    // Bottom right button
-    // Logged in
-    UIButton *accountButton;
-    
-    // Values used when hiding and showing the menu
-    float buttonSpeedFactor;
-    float currentDetailViewOffsetX;
-    float defaultDurationOfMenuAnimation;
-    float lastPointX;
-    float menuIsVisible;
-    float menuOffsetXThreshold;
-    float menuSpeedThreshold;
-    float menuWidth;
-    float zoomScale;
-    
-    // Gestures
-    UIPanGestureRecognizer *panGesture;
-    UITapGestureRecognizer *tapGesture;
-    
-    // Views
-    OMBActivityView *activityView;
-    UIImageView *backgroundImageView;
-    UIView *backgroundView;
-    DRNRealTimeBlurView *blurView;
-    UIButton *createListingButton;
-    OMBExtendedHitAreaViewContainer *hitArea;
-    OMBOfferAcceptedView *offerAcceptedView;
-    UIButton *signUpButtonBottom;
-    UIView *viewForScrollingInfiniteScroll;
+  // Array to hold buttons
+  NSMutableArray *buttonsLoggedIn;
+  NSMutableArray *buttonsLoggedOut;
+  NSArray *currentMenuButtons;
+  
+  // Buttons on the left that go in the menu scroll
+  // Logged in
+  NSMutableArray *userMenuArray;
+  OMBUserMenu *userMenu1;
+  OMBUserMenu *userMenu2;
+  OMBUserMenu *userMenu3;
+  OMBUserMenu *userMenu4;
+  OMBUserMenu *userMenu5;
+  OMBUserMenu *userMenu6;
+
+  // Logged out
+  UIButton *searchButton;
+  UIButton *discoverButton;
+  UIButton *howItWorksButton;
+  UIButton *loginButton;
+  UIButton *signUpButton;
+  // Bottom right button
+  // Logged in
+  UIButton *accountButton;
+
+  // Values used when hiding and showing the menu
+  float buttonSpeedFactor;
+  float currentDetailViewOffsetX;
+  float defaultDurationOfMenuAnimation;
+  float lastPointX;
+  float menuIsVisible;
+  float menuOffsetXThreshold;
+  float menuSpeedThreshold;
+  float menuWidth;
+  float zoomScale;
+
+  // Gestures
+  UIPanGestureRecognizer *panGesture;
+  UITapGestureRecognizer *tapGesture;
+
+  // Views
+  OMBActivityView *activityView;
+  UIImageView *backgroundImageView;
+  UIView *backgroundView;
+  DRNRealTimeBlurView *blurView;
+  UIButton *createListingButton;
+  OMBExtendedHitAreaViewContainer *hitArea;
+  OMBOfferAcceptedView *offerAcceptedView;
+  UIButton *signUpButtonBottom;
+  UIView *viewForScrollingInfiniteScroll;
 }
 
 @property (nonatomic, strong) OMBCenteredImageView *accountView;
@@ -90,59 +90,59 @@
 // View controllers
 
 // Both
-@property (nonatomic, strong)
-OMBNavigationController *accountNavigationController;
-@property (nonatomic, strong)
-OMBIntroStillImagesViewController *introViewController;
-@property (nonatomic, strong) OMBLoginViewController *loginViewController;
-@property (nonatomic, strong)
-OMBNavigationController *payoutMethodsNavigationController;
-@property (nonatomic, strong)
-OMBPayoutMethodsViewController *payoutMethodsViewController;
-@property (nonatomic, strong)
-OMBRenterApplicationViewController *renterApplicationViewController;
+@property (nonatomic, weak) 
+  OMBNavigationController *accountNavigationController;
+@property (nonatomic, weak) 
+  OMBIntroStillImagesViewController *introViewController;
+@property (nonatomic, weak) OMBLoginViewController *loginViewController;
+@property (nonatomic, weak)
+  OMBNavigationController *payoutMethodsNavigationController;
+@property (nonatomic, weak)
+  OMBPayoutMethodsViewController *payoutMethodsViewController;
+@property (nonatomic, weak) 
+  OMBRenterApplicationViewController *renterApplicationViewController;
 
 // Renter
 
 // Search
-@property (nonatomic, strong)
-OMBNavigationController *mapFilterNavigationController;
-@property (nonatomic, strong)
-OMBMapFilterViewController *mapFilterViewController;
+@property (nonatomic, weak) 
+  OMBNavigationController *mapFilterNavigationController;
+@property (nonatomic, weak)
+  OMBMapFilterViewController *mapFilterViewController;
 // Discover
-@property (nonatomic, strong) OMBNavigationController *mapNavigationController;
+@property (nonatomic, weak) OMBNavigationController *mapNavigationController;
 // My Renter App
-@property (nonatomic, strong)
-OMBNavigationController *myRenterAppNavigationController;
+@property (nonatomic, weak) 
+  OMBNavigationController *myRenterAppNavigationController;
 // Favorites
-@property (nonatomic, strong)
-OMBNavigationController *favoritesNavigationController;
+@property (nonatomic, weak) 
+  OMBNavigationController *favoritesNavigationController;
 // Homebase
-@property (nonatomic, strong) OMBNavigationController
-*homebaseRenterNavigationController;
+  @property (nonatomic, weak) OMBNavigationController
+  *homebaseRenterNavigationController;
 // Inbox
-@property (nonatomic, strong) OMBNavigationController
-*inboxNavigationController;
+@property (nonatomic, weak) OMBNavigationController 
+  *inboxNavigationController;
 // Renter Profile
-@property (nonatomic, strong) OMBRenterProfileViewController
-*renterProfileViewController;
-@property (nonatomic, strong) OMBNavigationController
-*renterProfileNavigationController;
+@property (nonatomic, weak) OMBRenterProfileViewController
+  *renterProfileViewController;
+@property (nonatomic, weak) OMBNavigationController
+  *renterProfileNavigationController;
 // My Renter Profile
-@property (nonatomic, strong)
-OMBMyRenterProfileViewController *myRenterProfileViewController;
-@property (nonatomic, strong)
-OMBNavigationController *myRenterProfileNavigationController;
+@property (nonatomic, weak) 
+  OMBMyRenterProfileViewController *myRenterProfileViewController;
+@property (nonatomic, weak) 
+  OMBNavigationController *myRenterProfileNavigationController;
 
 // Seller
 
 // Create Listing
 // Homebase
-@property (nonatomic, strong) OMBNavigationController
-*homebaseLandlordNavigationController;
+@property (nonatomic, weak) OMBNavigationController
+  *homebaseLandlordNavigationController;
 // Manage Listings
-@property (nonatomic, strong) OMBNavigationController
-*manageListingsNavigationController;
+@property (nonatomic, weak) OMBNavigationController 
+  *manageListingsNavigationController;
 
 #pragma mark - Methods
 
