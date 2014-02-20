@@ -67,7 +67,7 @@
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view = [[UIView alloc] initWithFrame: screen];
-
+  
   CGFloat padding = [OMBMessageCollectionViewCell paddingForCell];
   CGFloat toolbarHeight = 44.0f;
 
@@ -268,7 +268,6 @@
   // Use an activity view within the view controller if
   // view controller presented modally
   // [[self appDelegate].container startSpinning];
-  
 
   OMBMessage *message = [[OMBMessage alloc] init];
   message.content   = bottomToolbar.messageContentTextView.text;
@@ -280,12 +279,24 @@
 
   if (residence && residence.uid)
     message.residenceUID = residence.uid;
-
-  OMBMessageCreateConnection *conn = 
+  
+  [message calculateSizeForMessageCell];
+  
+  CGRect rect = CGRectMake(0.0f, 20.f + 44.0f * 2 + 20.0f, message.sizeForMessageCell.width, message.sizeForMessageCell.height);
+  OMBMessageCollectionViewCell *cell =
+    [[OMBMessageCollectionViewCell alloc] initWithFrame:rect];
+  [cell loadMessageData: message];
+  [cell setupForLastMessageFromSameUser];
+  [self.view insertSubview:cell belowSubview:activityView];
+  bottomToolbar.hidden = YES;
+  
+  OMBMessageCreateConnection *conn =
     [[OMBMessageCreateConnection alloc] initWithMessage: message];
   conn.completionBlock = ^(NSError *error) {
     // [[self appDelegate].container stopSpinning];
     if (error) {
+      [cell removeFromSuperview];
+      bottomToolbar.hidden = NO;
       [self showAlertViewWithError: error];
     }
     else {
