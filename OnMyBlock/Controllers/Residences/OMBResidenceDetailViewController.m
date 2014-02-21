@@ -1023,6 +1023,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) closeImageSlides
 {
+  [[UIApplication sharedApplication] setStatusBarHidden:NO];
   [UIView animateWithDuration: 0.25f animations: ^{
     blurView.alpha = 0.0f;
     imageScrollView.alpha = 0.0f;
@@ -1178,7 +1179,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) showImageSlides
 {
   CGRect rect = imageScrollView.frame;
-
+  [[UIApplication sharedApplication] setStatusBarHidden:YES];
   NSArray *array = [residence imagesArray];
   for (OMBResidenceImage *residenceImage in array) {
     OMBImageScrollView *scroll = [[OMBImageScrollView alloc] init];
