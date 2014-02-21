@@ -40,6 +40,7 @@
 
 #pragma mark - Instance Methods
 
+- (void) changeTitleLabelColor: (UIButton *) button;
 - (void) setHeaderActive;
 - (void) setHeaderInactive;
 - (void) setup;

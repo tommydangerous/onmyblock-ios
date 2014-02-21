@@ -280,9 +280,8 @@
 
 - (void) changeTitleLabelColor:(UIButton *)button
 {
-  for(UIButton *button in _currentButtons){
-    [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
-  }
+  // there are six OMBUserMenu in container
+  [[self container] setTitleColorWhite];
   [button setTitleColor: [UIColor blue] forState: UIControlStateNormal];
 }
 
@@ -381,7 +380,7 @@
 
 - (void) showCreateListing
 {
-  [self changeTitleLabelColor:_createListingButton];
+  [self changeTitleLabelColor:_manageListingsButton];
   [[self container] showCreateListing];
 }
 
@@ -423,7 +422,6 @@
 
 - (void) showMyRenterApp
 {
-  [self changeTitleLabelColor:_myRenterAppButton];
   [[self container] showMyRenterApp];
 }
 
@@ -493,6 +491,7 @@ withNumber: (NSNumber *) number
 
 - (void) userLogout: (NSNotification *) notification
 {
+  [self changeTitleLabelColor:nil];
   // Inbox
   [self updateNotificationBadgeLabel: _inboxNotificationBadge withNumber: @0];
     [self updateNotificationBadgeLabel:_renterHomebaseNotificationBadge
