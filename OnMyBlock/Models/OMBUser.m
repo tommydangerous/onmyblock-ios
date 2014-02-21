@@ -640,8 +640,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   OMBMessagesUnviewedCountConnection *conn =
     [[OMBMessagesUnviewedCountConnection alloc] init];
   [conn start];
-    [[[OMBOffersReceivedConnection alloc] init] start];
-    [[[OMBOffersAcceptedConnection alloc] init] start];
+  // [[[OMBOffersReceivedConnection alloc] init] start];
+  // [[[OMBOffersAcceptedConnection alloc] init] start];
 }
 
 - (void) fetchPayoutMethodsWithCompletion: (void (^) (NSError *error)) block
