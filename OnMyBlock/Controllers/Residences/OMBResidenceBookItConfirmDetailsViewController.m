@@ -57,10 +57,16 @@
 
   offer = [[OMBOffer alloc] init];
   offer.moveInDate = residence.moveInDate;
-  if (residence.moveOutDate)
-    offer.moveOutDate = residence.moveOutDate;
-  else
+  if (residence.leaseMonths != 0){
     offer.moveOutDate = [[residence moveOutDateDate] timeIntervalSince1970];
+  }else{
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    [dateComponents setMonth:1];
+    NSDate *defaultMoveOut =
+      [[NSCalendar currentCalendar] dateByAddingComponents: dateComponents
+        toDate:[NSDate dateWithTimeIntervalSince1970: residence.moveInDate] options:0];
+    offer.moveOutDate = [defaultMoveOut timeIntervalSince1970];
+  }
   
   offer.residence = residence;
   offer.user = [OMBUser currentUser];
@@ -266,7 +272,7 @@
   leaseMonthsLabel = [UILabel new];
   leaseMonthsLabel.font = [UIFont normalTextFontBold];
   leaseMonthsLabel.frame = CGRectMake(0.0f, 0.0f,
-                                      screenWidth, 30.f);
+                                      screenWidth, 27.f);
   //label.text = @"0 MONTH LEASE";
   leaseMonthsLabel.textAlignment = NSTextAlignmentCenter;
   leaseMonthsLabel.textColor = [UIColor grayMedium];
@@ -759,8 +765,12 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell.separatorInset = UIEdgeInsetsMake(0.0f,
         tableView.frame.size.width, 0.0f, 0.0f);
 
-      leaseMonthsLabel.text = [NSString stringWithFormat:
-        @"%i month lease", [offer numberOfMonthsBetweenMovingDates]];
+      int monthsBetween = [offer numberOfMonthsBetweenMovingDates];
+      if (monthsBetween > 0)
+        leaseMonthsLabel.text = [NSString stringWithFormat:
+          @"%i month lease", monthsBetween];
+      else
+        leaseMonthsLabel.text = @"month to month";
 
       return cell;
       
@@ -809,7 +819,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         UILabel *label = [UILabel new];
         label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
         label.frame = CGRectMake(20.0f, 0.0f,
-                                 tableView.frame.size.width - (20 * 2), cell.bounds.size.height);
+                                 tableView.frame.size.width - (20 * 2), 24.f);
         label.text = @"View Lease Details";
         label.textAlignment = NSTextAlignmentRight;
         label.textColor = [UIColor blue];
@@ -1157,7 +1167,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       UILabel *label = [UILabel new];
       label.attributedText = submitOfferNotes;
       label.font = [UIFont smallTextFont];
-      label.frame = CGRectMake(padding, (padding * 2),
+      label.frame = CGRectMake(padding, padding,
                                tableView.frame.size.width - (padding * 2),
                                submitOfferNotesSize.height);
       label.numberOfLines = 0;
@@ -1387,11 +1397,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Lease months
     else if (indexPath.row == 2) {
-      return 30.f;
+      return 27.f;
     }
     // View lease details
     else if (indexPath.row == 3) {
-      return spacing * 1;
+      return 27.f;
     }
   }
   // Price breakdown
@@ -1472,7 +1482,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // Submit offer notes
   else if (indexPath.section ==
            OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes) {
-    return (padding * 2) + submitOfferNotesSize.height + (padding * 2);
+    return padding + submitOfferNotesSize.height + padding;
   }
   // Spacing
   else if (indexPath.section ==
