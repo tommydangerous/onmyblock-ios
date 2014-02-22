@@ -74,10 +74,42 @@ float kResidenceDetailImagePercentage   = 0.5f;
   self.screenName = [NSString stringWithFormat:
     @"Residence Detail View Controller - Residence ID: %i", residence.uid];
 
-  if ([residence.title length])
-    self.title = residence.title;
-  else
+  if ([residence.title length]){
+    UIView *labelView = [UIView new];
+    labelView.frame = CGRectMake( -OMBPadding, 0,
+      [[UIScreen mainScreen] bounds].size.width - (4 * OMBPadding), 39.f);
+    
+    UILabel *label =
+      [[UILabel alloc] initWithFrame: CGRectMake( 0, 0,
+        labelView.frame.size.width, 21.f)];
+    label.backgroundColor = [UIColor clearColor];
+    label.font = [UIFont fontWithName: @"HelveticaNeue"
+                                 size: 14];
+    label.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+    label.shadowOffset    = CGSizeMake(0, 0);
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor textColor];
+    label.text = residence.title;
+    [labelView addSubview:label];
+    
+    UILabel *label2 =
+      [[UILabel alloc] initWithFrame:CGRectMake( 0, label.frame.size.height,
+        label.frame.size.width, 18.f)];
+    label2.backgroundColor = label.backgroundColor;
+    label2.font = [UIFont fontWithName: @"HelveticaNeue-Light"
+                                  size: 12];
+    label2.shadowColor = label.shadowColor;
+    label2.shadowOffset    = label.shadowOffset;
+    label2.textAlignment = label.textAlignment;
+    label2.textColor = label.textColor;
+    label2.text = [residence.address capitalizedString];
+    [labelView addSubview:label2];
+    //self.title = residence.title;
+    self.navigationItem.titleView = labelView;
+  }else{
     self.title = [residence.address capitalizedString];
+  }
+  NSLog(@"%@", NSStringFromCGRect([self.navigationItem.titleView frame]));
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(currentUserLogout) name: OMBUserLoggedOutNotification 
@@ -1057,10 +1089,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // if (!user || [user.firstName length] == 0)
     //   user = [OMBUser landlordUser];
     if (residence.user) {
-      [[self appDelegate].container presentViewController: 
+      /*[[self appDelegate].container presentViewController:
         [[OMBNavigationController alloc] initWithRootViewController: 
           [[OMBMessageNewViewController alloc] initWithUser: residence.user 
-            residence: residence]] animated: YES completion: nil];
+            residence: residence]] animated: YES completion: nil];*/
+      
+      [self.navigationController pushViewController:
+        [[OMBMessageNewViewController alloc] initWithUser: residence.user
+          residence: residence] animated: YES];
     }
   }
   else {

@@ -13,15 +13,23 @@
 @class OMBResidence;
 
 @interface OMBMessageNewViewController : OMBTableViewController
-<UITextFieldDelegate, UITextViewDelegate>
+<UICollectionViewDataSource, UICollectionViewDelegate,
+UICollectionViewDelegateFlowLayout, UITextFieldDelegate, UITextViewDelegate>
 {
   OMBActivityView *activityView;
   OMBMessageInputToolbar *bottomToolbar;
   UIBarButtonItem *callBarButtonItem;
+  BOOL isEditing;
+  BOOL isFetching;
+  NSTimeInterval lastFetched;
   OMBResidence *residence;
+  NSTimer *timer;
   UITextField *toTextField;
   OMBUser *user;
 }
+
+@property (nonatomic, strong) UICollectionView *collection;
+@property (nonatomic, strong) NSArray *messages;
 
 #pragma mark - Initializer
 
