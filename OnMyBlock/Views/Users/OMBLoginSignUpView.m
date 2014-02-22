@@ -198,7 +198,7 @@
   [userSwitchButton setTitle: @"Landlord?" forState: UIControlStateNormal];
   [userSwitchButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
-  [bottomView addSubview: userSwitchButton];
+  //[bottomView addSubview: userSwitchButton];
 
   // Action switch button
   actionSwitchButton = [UIButton new];
@@ -465,8 +465,9 @@
   }
   // Change the header label text
   NSString *actionButtonString = isLogin ? @"Login" : @"Sign Up";
-  headerLabel.text = [NSString stringWithFormat: @"%@ %@",
-    isLandlord ? @"Landlords" : @"Students", actionButtonString];
+  //headerLabel.text = [NSString stringWithFormat: @"%@ %@",
+  //  isLandlord ? @"Landlords" : @"Students", actionButtonString];
+  headerLabel.text = actionButtonString;
   [self refreshContentSize];
 }
 
