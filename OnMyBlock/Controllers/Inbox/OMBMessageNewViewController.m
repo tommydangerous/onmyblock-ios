@@ -229,8 +229,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   }
   
   timer = [NSTimer timerWithTimeInterval: 1 target: self
-                                selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
-  // NSRunLoopCommonModes, mode used for tracking events
+    selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
   [[NSRunLoop currentRunLoop] addTimer: timer forMode: NSRunLoopCommonModes];
   
   [self assignMessages];
@@ -528,12 +527,10 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
 - (void) assignMessages
 {
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:
-                            @"createdAt" ascending: YES];
+    @"createdAt" ascending: YES];
   _messages = [[[OMBUser currentUser] messagesWithUser:
-                user] sortedArrayUsingDescriptors: @[sort]];
-  // OMBMessage *message = [_messages lastObject];
-  // NSLog(@"%@ - %@", message.content, [NSDate dateWithTimeIntervalSince1970:
-  //   message.createdAt]);
+    user] sortedArrayUsingDescriptors: @[sort]];
+
 }
 
 - (void) call
@@ -591,22 +588,22 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
 - (void) reloadTable
 {
   BOOL firstTime = NO;
-  // if ([_messages count] == 0)
-  //   firstTime = YES;
+  
   if ([[[OMBUser currentUser] messagesWithUser: user] count] == 0)
     firstTime = YES;
   
   [[OMBUser currentUser] fetchMessagesAtPage: 1 withUser: user
-                                    delegate: self completion: ^(NSError *error) {
-                                      [self assignMessages];
-                                      [_collection reloadData];
-                                      if (firstTime) {
-                                        lastFetched = [[NSDate date] timeIntervalSince1970];
-                                        [self scrollToBottomAnimated: NO];
-                                      }
-                                    }
+    delegate: self completion: ^(NSError *error) {
+      [self assignMessages];
+      [_collection reloadData];
+      if (firstTime) {
+        lastFetched = [[NSDate date] timeIntervalSince1970];
+        [self scrollToBottomAnimated: NO];
+      }
+    }
    ];
 }
+
 - (void) scrollToBottomAnimated: (BOOL) animated
 {
   CGFloat bottom =
@@ -646,20 +643,11 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
   if (residence && residence.uid)
     message.residenceUID = residence.uid;
   
-  //[message calculateSizeForMessageCell];
-  
-  
-  
   [[OMBUser currentUser] addMessage: message];
   
   [self assignMessages];
   [_collection reloadData];
-  /*CGRect rect = CGRectMake(0.0f, 20.f + 44.0f * 2 + 20.0f, message.sizeForMessageCell.width, message.sizeForMessageCell.height);
-  OMBMessageCollectionViewCell *cell =
-    [[OMBMessageCollectionViewCell alloc] initWithFrame:rect];
-  [cell loadMessageData: message];
-  [cell setupForLastMessageFromSameUser];
-  [self.view insertSubview:cell belowSubview:activityView];*/
+  
   bottomToolbar.hidden = YES;
   
   OMBMessageCreateConnection *conn =
