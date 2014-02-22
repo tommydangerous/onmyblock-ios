@@ -47,7 +47,7 @@
   _renterButtons = [NSMutableArray array];
   _sellerButtons = [NSMutableArray array];
 
-    float imageSize = 22;
+  float imageSize = 22;
   float leftPad   = 25;
   // CGFloat buttonHeight = 10.0f + 40.0f + 10.0f;
   CGFloat buttonHeight = OMBStandardButtonHeight;
