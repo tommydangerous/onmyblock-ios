@@ -74,22 +74,24 @@ float kResidenceDetailImagePercentage   = 0.5f;
   self.screenName = [NSString stringWithFormat:
     @"Residence Detail View Controller - Residence ID: %i", residence.uid];
 
-  if ([residence.title length]){
+  NSLog(@"%@,%@,%@, \n %@",residence.address,residence.city,residence.state,residence.title);
+  
+  if ([residence.address length]){
     UIView *labelView = [UIView new];
     labelView.frame = CGRectMake( -OMBPadding, 0,
-      [[UIScreen mainScreen] bounds].size.width - (4 * OMBPadding), 39.f);
+      [[UIScreen mainScreen] bounds].size.width - (4 * OMBPadding), 36.f);
     
     UILabel *label =
       [[UILabel alloc] initWithFrame: CGRectMake( 0, 0,
-        labelView.frame.size.width, 21.f)];
+        labelView.frame.size.width, 18.f)];
     label.backgroundColor = [UIColor clearColor];
     label.font = [UIFont fontWithName: @"HelveticaNeue"
-                                 size: 14];
+      size: 14];
     label.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
     label.shadowOffset    = CGSizeMake(0, 0);
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor textColor];
-    label.text = residence.title;
+    label.text = residence.address;
     [labelView addSubview:label];
     
     UILabel *label2 =
@@ -97,19 +99,17 @@ float kResidenceDetailImagePercentage   = 0.5f;
         label.frame.size.width, 18.f)];
     label2.backgroundColor = label.backgroundColor;
     label2.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-                                  size: 12];
+      size: 13];
     label2.shadowColor = label.shadowColor;
     label2.shadowOffset    = label.shadowOffset;
     label2.textAlignment = label.textAlignment;
-    label2.textColor = label.textColor;
-    label2.text = [residence.address capitalizedString];
+    label2.textColor = [UIColor grayMedium];
+    label2.text = [NSString stringWithFormat:@"%@, %@",residence.city,residence.state];
     [labelView addSubview:label2];
-    //self.title = residence.title;
     self.navigationItem.titleView = labelView;
   }else{
-    self.title = [residence.address capitalizedString];
+    self.title = residence.title;
   }
-  NSLog(@"%@", NSStringFromCGRect([self.navigationItem.titleView frame]));
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(currentUserLogout) name: OMBUserLoggedOutNotification 
