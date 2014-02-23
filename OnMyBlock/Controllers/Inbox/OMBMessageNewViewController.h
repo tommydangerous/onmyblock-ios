@@ -29,6 +29,8 @@ UICollectionViewDelegateFlowLayout, UITextFieldDelegate, UITextViewDelegate>
 }
 
 @property (nonatomic, strong) UICollectionView *collection;
+@property (nonatomic) NSInteger currentPage;
+@property (nonatomic) NSInteger maxPages;
 @property (nonatomic, strong) NSArray *messages;
 
 #pragma mark - Initializer

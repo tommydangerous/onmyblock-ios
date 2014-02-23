@@ -53,6 +53,8 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   residence = res;
   user      = object;
   
+  self.currentPage = self.maxPages = 1;
+  
   host = (user.firstName.length && [user.firstName caseInsensitiveCompare:
     @"Land"] != NSOrderedSame) ?
   [NSString stringWithFormat:@" %@",[user.firstName capitalizedString]] :
@@ -180,7 +182,6 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   [super viewDidDisappear: animated];
   
   [timer invalidate];
-  
 }
 
 - (void) viewDidLoad
@@ -197,11 +198,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   
   [_collection registerClass: [UICollectionViewCell class]
   forCellWithReuseIdentifier: HeaderIdentifier];
-  
-  // [_collection registerClass: [UICollectionReusableView class]
-  //   forSupplementaryViewOfKind: UICollectionElementKindSectionHeader
-  //     withReuseIdentifier: HeaderIdentifier];
-  
+
   [_collection registerClass: [UICollectionReusableView class]
   forSupplementaryViewOfKind: UICollectionElementKindSectionFooter
          withReuseIdentifier: FooterIdentifier];
@@ -235,6 +232,8 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   [self assignMessages];
   [_collection reloadData];
   [self scrollToBottomAnimatedViewWillAppear: NO];
+  
+  [self reloadTable];
 }
 
 #pragma mark - Protocol
@@ -246,38 +245,11 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 - (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView
                    cellForItemAtIndexPath: (NSIndexPath *) indexPath
 {
-  // if (indexPath.row == 0) {
-  //   UICollectionViewCell *cell =
-  //     [collectionView dequeueReusableCellWithReuseIdentifier:
-  //       HeaderIdentifier
-  //       forIndexPath: indexPath];
-  //   UILabel *label = (UILabel *) [cell viewWithTag: 9999];
-  //   if (!label) {
-  //     label = [[UILabel alloc] initWithFrame: CGRectMake(0.0f, 0.0f,
-  //       collectionView.frame.size.width, 58.0f)];
-  //     label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  //     label.tag  = 9999;
-  //     label.text = @"Load Earlier Messages";
-  //     label.textAlignment = NSTextAlignmentCenter;
-  //     label.textColor = [UIColor blue];
-  //     [cell addSubview: label];
-  //   }
-  //   return cell;
-  // }
-  
-  // Last row, empty row
-  // if (indexPath.row == [_messages count]) {
-  //   UICollectionViewCell *emptyCell =
-  //     [collectionView dequeueReusableCellWithReuseIdentifier:
-  //       EmptyCellID forIndexPath: indexPath];
-  //   emptyCell.backgroundColor = [UIColor redColor];
-  //   return emptyCell;
-  // }
   
   OMBMessageCollectionViewCell *cell =
   [collectionView dequeueReusableCellWithReuseIdentifier: CellIdentifier
                                             forIndexPath: indexPath];
-  // cell.backgroundColor = [UIColor redColor];
+  
   OMBMessage *message = [self messageAtIndexPath: indexPath];
   [cell loadMessageData: message];
   
@@ -315,32 +287,14 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
             viewForSupplementaryElementOfKind: (NSString *) kind
                                   atIndexPath: (NSIndexPath *) indexPath
 {
-  // UICollectionReusableView *reusableView =
-  //   [collectionView dequeueReusableSupplementaryViewOfKind:
-  //     UICollectionElementKindSectionHeader
-  //     withReuseIdentifier: HeaderIdentifier forIndexPath: indexPath];
-  
-  // if (!reusableView) {
-  //   reusableView = [[UICollectionReusableView alloc] initWithFrame:
-  //     CGRectMake(0.0f, 0.0f, collectionView.frame.size.width, 44.0f)];
-  // }
-  // reusableView.backgroundColor = [UIColor redColor];
-  // UILabel *label = [[UILabel alloc] initWithFrame: CGRectMake(0.0f, 0.0f,
-  //   reusableView.frame.size.width, reusableView.frame.size.height)];
-  // label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  // label.tag  = 9999;
-  // label.text = @"Load Earlier Messages";
-  // label.textAlignment = NSTextAlignmentCenter;
-  // label.textColor = [UIColor blue];
-  // [reusableView addSubview: label];
-  // return reusableView;
+
   if ([kind isEqualToString: UICollectionElementKindSectionFooter]) {
     UICollectionReusableView *reusableView =
     [collectionView dequeueReusableSupplementaryViewOfKind: kind
-                                       withReuseIdentifier: FooterIdentifier forIndexPath: indexPath];
+       withReuseIdentifier: FooterIdentifier forIndexPath: indexPath];
     if (!reusableView) {
       reusableView = [[UICollectionReusableView alloc] initWithFrame:
-                      CGRectMake(0.0f, 0.0f, collectionView.frame.size.width, 216.0f)];
+        CGRectMake(0.0f, 0.0f, collectionView.frame.size.width, 216.0f)];
     }
     return reusableView;
   }
@@ -415,33 +369,14 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
 }
 
 - (CGSize) collectionView: (UICollectionView * ) collectionView
-                   layout: (UICollectionViewLayout*) collectionViewLayout
+   layout: (UICollectionViewLayout*) collectionViewLayout
    sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 {
-  // Last row, empty row
-  // if (indexPath.row == [_messages count]) {
-  //   CGFloat height = 0.0f;
-  //   if (isEditing)
-  //     height = OMBKeyboardHeight;
-  //   return CGSizeMake(collectionView.frame.size.width, height);
-  // }
   
-  // Load Earlier Messages
-  // if (indexPath.row == 0) {
-  //   CGFloat height = 58.0f;
-  //   if (_currentPage == _maxPages)
-  //     height = 0.0f;
-  //   return CGSizeMake(collectionView.frame.size.width, height);
-  // }
   OMBMessage *message = [self messageAtIndexPath: indexPath];
-  // NSAttributedString *aString = [message.content attributedStringWithFont:
-  //   [UIFont fontWithName: @"HelveticaNeue-Light" size: 15]
-  //     lineHeight: 22.0f];
   
   CGRect screen    = [[UIScreen mainScreen] bounds];
   CGFloat padding  = [OMBMessageCollectionViewCell paddingForCell];
-  // CGFloat maxWidth =
-  //   [OMBMessageCollectionViewCell maxWidthForMessageContentView];
   
   // THIS IS SLOWING IT DOWN TREMENDOUSLY
   // CGRect rect = [aString boundingRectWithSize:
@@ -452,15 +387,15 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
     [message calculateSizeForMessageCell];
   }
   CGRect rect = CGRectMake(0.0f, 0.0f, message.sizeForMessageCell.width,
-                           message.sizeForMessageCell.height);
+    message.sizeForMessageCell.height);
   
   CGFloat spacing = padding;
   // Minus 1, account for the last empty row
   if (indexPath.row !=
-      [collectionView numberOfItemsInSection: indexPath.section] - 1) {
+    [collectionView numberOfItemsInSection: indexPath.section] - 1) {
     OMBMessage *nextMessage = [self messageAtIndexPath:
-                               [NSIndexPath indexPathForRow: indexPath.row + 1
-                                                  inSection: indexPath.section]];
+      [NSIndexPath indexPathForRow: indexPath.row + 1
+         inSection: indexPath.section]];
     // If 2 consecutive messages are from the same person
     if (message.sender.uid == nextMessage.sender.uid) {
       // If 2 consecutive messages are within 60 seconds of each other
@@ -471,7 +406,7 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
   }
   // NSLog(@"%f", rect.size.height);
   return CGSizeMake(screen.size.width, 
-                    padding + rect.size.height + padding + (padding * 0.5) + spacing);
+    padding + rect.size.height + padding + (padding * 0.5) + spacing);
 }
 
 #pragma mark - Protocol UITextViewDelegate
@@ -592,7 +527,7 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
   if ([[[OMBUser currentUser] messagesWithUser: user] count] == 0)
     firstTime = YES;
   
-  [[OMBUser currentUser] fetchMessagesAtPage: 1 withUser: user
+  [[OMBUser currentUser] fetchMessagesAtPage: self.currentPage withUser: user
     delegate: self completion: ^(NSError *error) {
       [self assignMessages];
       [_collection reloadData];
