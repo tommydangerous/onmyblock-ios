@@ -47,18 +47,18 @@ reuseIdentifier: (NSString *)reuseIdentifier
   _bedBathLeaseMonthLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 14];
   _bedBathLeaseMonthLabel.frame = CGRectMake(_addressLabel.frame.origin.x,
-    _addressLabel.frame.origin.y + _addressLabel.frame.size.height,
-      _addressLabel.frame.size.width, 23.0f);
+     _addressLabel.frame.origin.y + _addressLabel.frame.size.height,
+        _addressLabel.frame.size.width, 23.0f);
   _bedBathLeaseMonthLabel.textColor = _addressLabel.textColor;
   [self.contentView addSubview: _bedBathLeaseMonthLabel];
 
   _propertyTypeLabel = [[UILabel alloc] init];
   _propertyTypeLabel.font = _bedBathLeaseMonthLabel.font;
   _propertyTypeLabel.frame = CGRectMake(_addressLabel.frame.origin.x,
-    _bedBathLeaseMonthLabel.frame.origin.y + 
-    _bedBathLeaseMonthLabel.frame.size.height,
-      _bedBathLeaseMonthLabel.frame.size.width, 
-        _bedBathLeaseMonthLabel.frame.size.height);
+    _bedBathLeaseMonthLabel.frame.origin.y +
+      _bedBathLeaseMonthLabel.frame.size.height,
+        _bedBathLeaseMonthLabel.frame.size.width,
+          _bedBathLeaseMonthLabel.frame.size.height);
   _propertyTypeLabel.textColor = [UIColor grayMedium];
   [self.contentView addSubview: _propertyTypeLabel];
 
@@ -76,4 +76,24 @@ reuseIdentifier: (NSString *)reuseIdentifier
   return (20.0f * 0.8) + 23.0f + 23.0f + 23.0f + 23.0f + 20.0f;
 }
 
+#pragma mark - Instance Methods
+
+- (void) resize {
+  // Address label
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  float screeWidth = screen.size.width;
+  float padding = 20.0f;
+  
+  _addressLabel.font  = [UIFont fontWithName: @"HelveticaNeue" size: 16];
+  _addressLabel.frame = CGRectMake((20.0f * 0.8),
+    padding * 0.8, screeWidth - (padding * 2), 23.0f);
+  _bedBathLeaseMonthLabel.frame = CGRectMake(_addressLabel.frame.origin.x,
+     _addressLabel.frame.origin.y + _addressLabel.frame.size.height,
+        _addressLabel.frame.size.width, 23.0f);
+  _propertyTypeLabel.frame = CGRectMake(_addressLabel.frame.origin.x,
+    _bedBathLeaseMonthLabel.frame.origin.y +
+        _bedBathLeaseMonthLabel.frame.size.height,
+           _bedBathLeaseMonthLabel.frame.size.width,
+              _bedBathLeaseMonthLabel.frame.size.height);
+}
 @end
