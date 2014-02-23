@@ -398,7 +398,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [cell1 setMiddleLabelText: @"You will be able to accept"];
         [cell1 setBottomLabelText: @"or decline them."];
         [cell1 setObjectImageViewImage: [UIImage imageNamed: 
-          @"money_icon.png"]];
+          @"moneybag_icon.png"]];
         return cell1;
 
         // cell.separatorInset = UIEdgeInsetsMake(0.0f, 
@@ -434,7 +434,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [cell1 setMiddleLabelText: @"After the student pays and"];
         [cell1 setBottomLabelText: @"signs the lease."];
         [cell1 setObjectImageViewImage: [UIImage imageNamed: 
-          @"group_icon.png"]];
+          @"confirm_tenant_icon.png"]];
         return cell1;
 
         // cell.separatorInset = UIEdgeInsetsMake(0.0f, 

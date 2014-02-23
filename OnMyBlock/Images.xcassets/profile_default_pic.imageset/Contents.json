@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "checkmark_icon.png"
+      "filename" : "profile_default_pic.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "checkmark_icon@2x.png"
+      "filename" : "profile_default_pic@2x.png"
     }
   ],
   "info" : {

@@ -156,7 +156,7 @@
   [_inboxButton setTitle: @"Inbox" forState: UIControlStateNormal];
   UIImageView *inboxImageView = [UIImageView new];
   inboxImageView.frame = discoverImageView.frame;
-  inboxImageView.image = [UIImage image: [UIImage imageNamed: @"inbox_icon.png"]
+  inboxImageView.image = [UIImage image: [UIImage imageNamed: @"message_icon.png"]
     size: inboxImageView.frame.size];
   [_inboxButton addSubview: inboxImageView];
   [_renterButtons addObject: _inboxButton];

@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "inbox_icon.png"
+      "filename" : "moneybag_icon.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "inbox_icon@2x.png"
+      "filename" : "moneybag_icon@2x.png"
     }
   ],
   "info" : {

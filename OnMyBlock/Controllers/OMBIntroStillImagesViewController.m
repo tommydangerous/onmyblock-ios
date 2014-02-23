@@ -157,7 +157,7 @@
     slide3.frame.size.width, slide3.frame.size.height);
   // slide3.imageView.image = [UIImage imageNamed: @"book_icon.png"];
   slide3.imageView.image = 
-    [[UIImage imageNamed: @"bookmark_icon.png"] negativeImage];
+    [UIImage imageNamed: @"book_it_icon.png"];
   // slide3.secondDetailLabel.text = @"When your offer is accepted...";
   slide3.titleLabel.text = @"Book";
   // [slide3 setDetailLabelText: @"Bid on your favorite rentals\n" 
