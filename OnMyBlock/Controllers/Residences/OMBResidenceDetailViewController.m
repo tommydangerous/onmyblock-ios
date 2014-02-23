@@ -681,7 +681,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           UITableViewCellStyleDefault reuseIdentifier: AddressCellIdentifier];
       }
       // Main Label
-      cell.mainLabel.text = residence.title;
+      if([[residence.title stripWhiteSpace] length])
+        cell.mainLabel.text = residence.title;
+      else{
+        [cell.mainLabel removeFromSuperview];
+        [cell resize];
+      }
       // Address
       if ([residence.address length])
         cell.addressLabel.text = [residence.address capitalizedString];
@@ -917,7 +922,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   if (indexPath.section == 0) {
     // Address
     if (indexPath.row == 0) {
-      return [OMBResidenceDetailAddressCell heightForCell];
+      if([[residence.title stripWhiteSpace] length])
+        return [OMBResidenceDetailAddressCell heightForCell];
+      else
+        return [OMBResidenceDetailAddressCell heightForCell] - 23.0f;
     }
   }
 
