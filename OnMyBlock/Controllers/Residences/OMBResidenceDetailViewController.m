@@ -73,8 +73,6 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   self.screenName = [NSString stringWithFormat:
     @"Residence Detail View Controller - Residence ID: %i", residence.uid];
-
-  NSLog(@"%@,%@,%@, \n %@",residence.address,residence.city,residence.state,residence.title);
   
   if ([residence.address length]){
     UIView *labelView = [UIView new];
@@ -682,7 +680,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBResidenceDetailAddressCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: AddressCellIdentifier];
       }
-        
+      // Main Label
+      cell.mainLabel.text = residence.title;
       // Address
       if ([residence.address length])
         cell.addressLabel.text = [residence.address capitalizedString];

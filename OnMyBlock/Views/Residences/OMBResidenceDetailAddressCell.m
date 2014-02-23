@@ -26,17 +26,26 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
   [self.titleLabel removeFromSuperview];
 
+  // Title Label
+  _mainLabel       = [[UILabel alloc] init];
+  _mainLabel.font  = [UIFont fontWithName: @"HelveticaNeue" size: 16];
+  _mainLabel.frame = CGRectMake(padding, padding * 0.8,
+    screeWidth - (padding * 2), 23.0f);
+  _mainLabel.textColor = [UIColor textColor];
+  [self.contentView addSubview: _mainLabel];
+  
   // Address label
   _addressLabel       = [[UILabel alloc] init];
-  _addressLabel.font  = [UIFont fontWithName: @"HelveticaNeue-Light" size: 22];
-  _addressLabel.frame = CGRectMake(padding, padding * 0.8, 
-    screeWidth - (padding * 2), 33.0f);
-  _addressLabel.textColor = [UIColor textColor];
+  _addressLabel.font  = [UIFont fontWithName: @"HelveticaNeue-Light" size: 14];
+  _addressLabel.frame = CGRectMake(_mainLabel.frame.origin.x,
+    _mainLabel.frame.origin.y + _mainLabel.frame.size.height,
+       _mainLabel.frame.size.width, 23.0f);
+  _addressLabel.textColor = _mainLabel.textColor;
   [self.contentView addSubview: _addressLabel];
 
   _bedBathLeaseMonthLabel = [[UILabel alloc] init];
   _bedBathLeaseMonthLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-    size: 15];
+    size: 14];
   _bedBathLeaseMonthLabel.frame = CGRectMake(_addressLabel.frame.origin.x,
     _addressLabel.frame.origin.y + _addressLabel.frame.size.height,
       _addressLabel.frame.size.width, 23.0f);
@@ -64,7 +73,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 {
   // Padding top of address, address height, bed height, property type height
   // padding bottom
-  return (20.0f * 0.8) + 33.0f + 23.0f + 23.0f + 20.0f;
+  return (20.0f * 0.8) + 23.0f + 23.0f + 23.0f + 23.0f + 20.0f;
 }
 
 @end

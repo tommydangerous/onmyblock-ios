@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) UILabel *addressLabel;
 @property (nonatomic, strong) UILabel *bedBathLeaseMonthLabel;
+@property (nonatomic, strong) UILabel *mainLabel;
 @property (nonatomic, strong) UILabel *propertyTypeLabel;
 
 @end
