@@ -186,12 +186,27 @@
   UIBarButtonItem *flexibleSpace = 
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem: 
       UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
-  // Save
-  UIBarButtonItem *saveBarButtonItemForTextFieldToolbar =
-    [[UIBarButtonItem alloc] initWithTitle: @"Save" 
+		
+	// Left padding
+	UIBarButtonItem *leftPadding =
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+	 UIBarButtonSystemItemFixedSpace target: nil action: nil];
+	// iOS 7 toolbar spacing is 16px; 20px on iPad
+	leftPadding.width = 4.0f;
+	
+	// Cancel
+	UIBarButtonItem *cancelBarButtonItemForTextFieldToolbar =
+    [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
+									 style: UIBarButtonItemStylePlain target: self
+									action: @selector(cancelFromInputAccessoryView)];
+	
+	// Done
+  UIBarButtonItem *doneBarButtonItemForTextFieldToolbar =
+    [[UIBarButtonItem alloc] initWithTitle: @"Done"
       style: UIBarButtonItemStylePlain target: self 
         action: @selector(saveFromInputAccessoryView)];
-  // Right padding
+
+	// Right padding
   UIBarButtonItem *rightPadding = 
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
       UIBarButtonSystemItemFixedSpace target: nil action: nil];
@@ -202,8 +217,11 @@
   textFieldToolbar.clipsToBounds = YES;
   textFieldToolbar.frame = CGRectMake(0.0f, 0.0f, 
     screenWidth, OMBStandardHeight);
-  textFieldToolbar.items = @[flexibleSpace, 
-    saveBarButtonItemForTextFieldToolbar, rightPadding];
+  textFieldToolbar.items = @[leftPadding,
+							 cancelBarButtonItemForTextFieldToolbar,
+							 flexibleSpace,
+							 doneBarButtonItemForTextFieldToolbar,
+							 rightPadding];
   textFieldToolbar.tintColor = [UIColor blue];
   aboutTextView.inputAccessoryView = textFieldToolbar;
 }
@@ -832,7 +850,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Spacing
   else if (section == OMBMyRenterProfileSectionSpacing) {
-    if (isEditing) {
+    if (editingTextView || editingTextField) {
       return 216.0f;
     }
   }
@@ -868,7 +886,8 @@ viewForHeaderInSection: (NSInteger) section
 {
   textField.inputAccessoryView = textFieldToolbar;
 
-  isEditing = YES;
+	editingTextField = textField;
+	savedTextString = textField.text;
   [self.table beginUpdates];
   [self.table endUpdates];
 
@@ -893,7 +912,8 @@ viewForHeaderInSection: (NSInteger) section
 {
   textView.inputAccessoryView = textFieldToolbar;
 
-  isEditing = YES;
+	editingTextView = textView;
+	savedTextString = textView.text;
   [self.table beginUpdates];
   [self.table endUpdates];
 
@@ -925,7 +945,9 @@ viewForHeaderInSection: (NSInteger) section
 - (void) done
 {
   [self.view endEditing: YES];
-  isEditing = NO;
+	editingTextView = nil;
+	editingTextField = nil;
+	savedTextString = nil;
   [self.table beginUpdates];
   [self.table endUpdates];
 }
@@ -1038,7 +1060,9 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) reloadPickerViewRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  isEditing = NO;
+	editingTextField = nil;
+	editingTextView = nil;
+	savedTextString = nil;
   [self.view endEditing: YES];
 
   if (selectedIndexPath) {
@@ -1081,6 +1105,17 @@ viewForHeaderInSection: (NSInteger) section
     }
   ];
   // [[self appDelegate].container startSpinning];
+}
+
+- (void) cancelFromInputAccessoryView
+{
+	if (editingTextField)
+		editingTextField.text = savedTextString;
+	
+	if (editingTextView)
+		editingTextView.text = savedTextString;
+	
+	[self done];
 }
 
 - (void) saveFromInputAccessoryView

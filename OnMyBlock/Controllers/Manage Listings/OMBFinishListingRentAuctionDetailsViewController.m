@@ -61,12 +61,6 @@
 {
   [super loadView];
 
-  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
-  doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
-    style: UIBarButtonItemStylePlain target: self action: @selector(done)];
-  [doneBarButtonItem setTitleTextAttributes: @{
-    NSFontAttributeName: boldFont
-  } forState: UIControlStateNormal];
   saveBarButtonItem.enabled = YES;
   self.navigationItem.rightBarButtonItem = saveBarButtonItem;
 
@@ -80,20 +74,20 @@
   self.table            = nil;
 
   // Segmented control
-  segmentedControl = [[UISegmentedControl alloc] initWithItems: 
-    @[@"Monthly Rental Price"]];
-  // segmentedControl = [[UISegmentedControl alloc] initWithItems: 
-  //   @[@"Rental Auction", @"Fixed Rental Price"]];
-  // segmentedControl = [[UISegmentedControl alloc] initWithItems: 
-  //   @[@"Fixed Rental Price"]];
-  segmentedControl.backgroundColor = [UIColor whiteColor];
-  segmentedControl.frame = CGRectMake(padding, 20.0f + 44.0f + padding,
-    screenWidth - (padding * 2), segmentedControl.frame.size.height);
-  segmentedControl.selectedSegmentIndex = 0;
-  segmentedControl.tintColor = [UIColor blue];
-  [segmentedControl addTarget: self action: @selector(segmentedControlChanged:)
-    forControlEvents: UIControlEventValueChanged];
-  [self.view addSubview: segmentedControl];
+//  segmentedControl = [[UISegmentedControl alloc] initWithItems: 
+//    @[@"Monthly Rental Price"]];
+//  // segmentedControl = [[UISegmentedControl alloc] initWithItems: 
+//  //   @[@"Rental Auction", @"Fixed Rental Price"]];
+//  // segmentedControl = [[UISegmentedControl alloc] initWithItems: 
+//  //   @[@"Fixed Rental Price"]];
+//  segmentedControl.backgroundColor = [UIColor whiteColor];
+//  segmentedControl.frame = CGRectMake(padding, 20.0f + 44.0f + padding,
+//    screenWidth - (padding * 2), segmentedControl.frame.size.height);
+//  segmentedControl.selectedSegmentIndex = 0;
+//  segmentedControl.tintColor = [UIColor blue];
+//  [segmentedControl addTarget: self action: @selector(segmentedControlChanged:)
+//    forControlEvents: UIControlEventValueChanged];
+//  [self.view addSubview: segmentedControl];
 
   UIView *segmentedControlBorder = [UIView new];
   segmentedControlBorder.backgroundColor = [UIColor grayLight];
@@ -103,11 +97,9 @@
       screenWidth, 0.5f);
   [self.view addSubview: segmentedControlBorder];
 
-  CGFloat tableViewHeight = screen.size.height -
-    (segmentedControl.frame.origin.y + segmentedControl.frame.size.height +
-      padding);
-  auctionTableView = [[UITableView alloc] initWithFrame: CGRectMake(0.0f,
-    screen.size.height - tableViewHeight, screenWidth, tableViewHeight)
+	CGFloat tableViewY = (20.0f + 44.0f);
+  CGFloat tableViewHeight = screen.size.height - tableViewY;
+  auctionTableView = [[UITableView alloc] initWithFrame: CGRectMake(0.0f, tableViewY, screenWidth, tableViewHeight)
       style: UITableViewStylePlain];
   auctionTableView.backgroundColor = [UIColor grayUltraLight];
   auctionTableView.dataSource = self;
@@ -143,6 +135,7 @@
   fixedRentalPriceTextField.layer.borderColor = [UIColor grayLight].CGColor;
   fixedRentalPriceTextField.layer.borderWidth = 1.0f;
   fixedRentalPriceTextField.layer.cornerRadius = 5.0f;
+	
   // Left view
   UILabel *leftView = [UILabel new];
   leftView.font = fixedRentalPriceTextField.font;
@@ -176,6 +169,60 @@
   fixedRentalPriceLabel.textAlignment = NSTextAlignmentCenter;
   fixedRentalPriceLabel.textColor = [UIColor grayMedium];
   [fixedRentalPriceView addSubview: fixedRentalPriceLabel];
+	
+	// Spacing
+	UIBarButtonItem *flexibleSpace =
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+	 UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
+	
+	// Left padding
+	UIBarButtonItem *leftPadding =
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+	 UIBarButtonSystemItemFixedSpace target: nil action: nil];
+	// iOS 7 toolbar spacing is 16px; 20px on iPad
+	leftPadding.width = 4.0f;
+	
+	// Cancel
+	UIBarButtonItem *cancelBarButtonItemForTextFieldToolbar =
+    [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
+									 style: UIBarButtonItemStylePlain target: self
+									action: @selector(cancelFromInputAccessoryView)];
+	
+	// Done
+	UIBarButtonItem *doneBarButtonItemForTextFieldToolbar =
+    [[UIBarButtonItem alloc] initWithTitle: @"Done"
+									 style: UIBarButtonItemStylePlain target: self
+									action: @selector(saveFromInputAccessoryView)];
+	
+	// Right padding
+	UIBarButtonItem *rightPadding =
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+	 UIBarButtonSystemItemFixedSpace target: nil action: nil];
+	// iOS 7 toolbar spacing is 16px; 20px on iPad
+	rightPadding.width = 4.0f;
+	
+	textFieldToolbar = [UIToolbar new];
+	textFieldToolbar.clipsToBounds = YES;
+	textFieldToolbar.frame = CGRectMake(0.0f, 0.0f,
+										screenWidth, OMBStandardHeight);
+	textFieldToolbar.items = @[leftPadding,
+							   cancelBarButtonItemForTextFieldToolbar,
+							   flexibleSpace,
+							   doneBarButtonItemForTextFieldToolbar,
+							   rightPadding];
+	textFieldToolbar.tintColor = [UIColor blue];
+	
+}
+
+- (void) cancelFromInputAccessoryView
+{
+	editingTextField.text = savedTextFieldString;
+	[self done];
+}
+
+- (void) saveFromInputAccessoryView
+{
+	[self done];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -314,6 +361,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           UITableViewCellStyleDefault reuseIdentifier: CellIdentifier0];
       cell1.textField.delegate  = self;
       cell1.textField.indexPath = indexPath;
+		cell1.textField.inputAccessoryView = textFieldToolbar;
       // if (residence.isAuction && residence.minRent)
       //   cell1.textField.text = [NSString stringWithFormat: @"%.2f",
       //     residence.minRent];
@@ -341,6 +389,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (residence.deposit)
         cell1.textField.text = [NSString stringWithFormat: @"%.2f",
           residence.deposit];
+		cell1.textField.inputAccessoryView = textFieldToolbar;
       [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
         forControlEvents: UIControlEventEditingChanged];
       return cell1;
@@ -512,7 +561,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Duration
     // Start Date
     if (indexPath.row == 2 || indexPath.row == 4) {
-      isEditing = NO;
+		editingTextField = nil;
+		savedTextFieldString = nil;
       if (selectedIndexPath) {
         if (selectedIndexPath.section == indexPath.section &&
           selectedIndexPath.row == indexPath.row) {
@@ -632,7 +682,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   else if (indexPath.section == [tableView numberOfSections] - 1) {
-    if (isEditing) {
+    if (editingTextField) {
       return 216.0f;
     }
   }
@@ -643,8 +693,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) textFieldDidBeginEditing: (UITextField *) textField
 {
-  isEditing = YES;
-
+	editingTextField = textField;
+	savedTextFieldString = textField.text;
+	
   if (selectedIndexPath) {
     NSIndexPath *previousIndexPath = selectedIndexPath;
     selectedIndexPath = nil;
@@ -686,10 +737,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [auctionTableView scrollToRowAtIndexPath: tf.indexPath
       atScrollPosition: UITableViewScrollPositionTop animated: YES];
   }
-
-  if (textField != fixedRentalPriceTextField) {
-    [self.navigationItem setRightBarButtonItem: doneBarButtonItem];
-  }
 }
 
 #pragma mark - Methods
@@ -720,10 +767,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) done
 {
-  [self.navigationItem setRightBarButtonItem: saveBarButtonItem animated: YES];
   [self.view endEditing: YES];
-  isEditing = NO;
-  [auctionTableView reloadRowsAtIndexPaths: 
+	editingTextField = nil;
+	savedTextFieldString = nil;
+  [auctionTableView reloadRowsAtIndexPaths:
     @[[NSIndexPath indexPathForRow: 0 inSection: 1]] 
       withRowAnimation: UITableViewRowAnimationFade];
 }
