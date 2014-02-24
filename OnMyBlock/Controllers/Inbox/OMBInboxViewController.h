@@ -8,11 +8,13 @@
 
 #import "OMBTableViewController.h"
 
+@class OMBActivityView;
 @class OMBEmptyBackgroundWithImageAndLabel;
 @class OMBMessageDetailViewController;
 
 @interface OMBInboxViewController : OMBTableViewController
 {
+  OMBActivityView *activityView;
   OMBMessageDetailViewController *messageDetailViewController;
   OMBEmptyBackgroundWithImageAndLabel *noMessagesView;
   UIRefreshControl *refreshControl;
