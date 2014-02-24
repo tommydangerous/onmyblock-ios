@@ -11,13 +11,18 @@
 @interface OMBFinishListingLeaseDetailsViewController :
   OMBFinishListingSectionViewController
 <UIActionSheetDelegate, UIPickerViewDataSource,
-UIPickerViewDelegate, UITextFieldDelegate>
+UIPickerViewDelegate>
 {
   NSDateFormatter *dateFormatter;
   UIActionSheet *deleteActionSheet;
+  UIView *fadedBackground;
   NSArray *monthLeaseOptions;
   NSArray *leaseTypeOptions;
-  NSIndexPath *selectedIndexPath;
+  UIView *pickerViewContainer;
+	UILabel *pickerViewHeaderLabel;
+	UIDatePicker *moveInPicker;
+	UIPickerView *monthLeasePicker;
+	UIPickerView *leaseTypePicker;
 }
 
 @end
