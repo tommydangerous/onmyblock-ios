@@ -248,7 +248,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // List view
   _listView = [[UITableView alloc] init];
-  _listView.backgroundColor              = [UIColor blackColor];
+  _listView.backgroundColor              = [UIColor grayUltraLight];
   _listView.canCancelContentTouches      = YES;
   _listView.dataSource                   = self;
   _listView.delegate                     = self;
