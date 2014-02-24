@@ -380,7 +380,7 @@
 
 - (void) showCreateListing
 {
-  [self changeTitleLabelColor:_manageListingsButton];
+  [self changeTitleLabelColor:_createListingButton];
   [[self container] showCreateListing];
 }
 

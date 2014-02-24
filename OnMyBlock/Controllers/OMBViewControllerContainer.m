@@ -1213,7 +1213,11 @@ completion: (void (^) (void)) block
 - (void) showCreateListing
 {
   if ([[OMBUser currentUser] loggedIn]) {
-    [self presentViewController: 
+    [self hideMenuWithFactor: 1.0f];
+    [self presentDetailViewController:
+      [[OMBNavigationController alloc] initWithRootViewController:
+        [[OMBCreateListingViewController alloc] init]]];
+    /*[self presentViewController:
       [[OMBNavigationController alloc] initWithRootViewController:
         [[OMBCreateListingViewController alloc] init]] animated: YES 
           completion: ^{
@@ -1223,7 +1227,7 @@ completion: (void (^) (void)) block
               [self presentDetailViewController: 
                 self.manageListingsNavigationController];
           }
-        ];
+        ];*/
   }
   else {
     [self showSignUp];
