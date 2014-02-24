@@ -167,12 +167,11 @@
   cityTextField.frame = CGRectMake(padding, 0.0f, 
     screenWidth - (padding * 2), 44.0f);
   cityTextField.layer.cornerRadius = 2.0f;
-  cityTextField.leftPaddingX = padding * 0.5f;
-  cityTextField.paddingX = padding * 0.5f;
+  cityTextField.leftPaddingX = padding * 0.75f;
   cityTextField.placeholderColor = [UIColor grayMedium];
   cityTextField.placeholder = @"City";
   cityTextField.returnKeyType = UIReturnKeyDone;
-  cityTextField.rightPaddingX = padding;
+  cityTextField.rightPaddingX = padding * 1.5f;
   cityTextField.rightViewMode = UITextFieldViewModeAlways;
   cityTextField.textColor = [UIColor textColor];
   [cityTextField addTarget: self action: @selector(textFieldDidChange:)
