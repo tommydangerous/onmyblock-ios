@@ -400,6 +400,9 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
              [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]
                                       animated: NO];
           }
+			if (residence.moveInDate) {
+				datePickerCell.datePicker.minimumDate = [NSDate dateWithTimeIntervalSince1970: residence.moveInDate + 60 * 60 * 24];
+			}
           return datePickerCell;
         }
       }

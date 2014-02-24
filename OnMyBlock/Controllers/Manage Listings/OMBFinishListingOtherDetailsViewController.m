@@ -55,12 +55,14 @@ float kKeyboardHeight = 196.0;
 
   [self setupForTable];
 
-  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
-  doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
-    style: UIBarButtonItemStylePlain target: self action: @selector(done)];
-  [doneBarButtonItem setTitleTextAttributes: @{
-    NSFontAttributeName: boldFont
-  } forState: UIControlStateNormal];
+//  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
+//  doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
+//    style: UIBarButtonItemStylePlain target: self action: @selector(done)];
+//  [doneBarButtonItem setTitleTextAttributes: @{
+//    NSFontAttributeName: boldFont
+//  } forState: UIControlStateNormal];
+	
+	
   saveBarButtonItem.enabled = YES;
   self.navigationItem.rightBarButtonItem = saveBarButtonItem;
 
@@ -68,6 +70,55 @@ float kKeyboardHeight = 196.0;
     cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"Delete Listing"
       otherButtonTitles: nil];
   [self.view addSubview: deleteActionSheet];
+	
+	
+	// Spacing
+	UIBarButtonItem *flexibleSpace =
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+	 UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
+	
+	// Left padding
+	UIBarButtonItem *leftPadding =
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+	 UIBarButtonSystemItemFixedSpace target: nil action: nil];
+	// iOS 7 toolbar spacing is 16px; 20px on iPad
+	leftPadding.width = 4.0f;
+	
+	// Cancel
+	UIBarButtonItem *cancelBarButtonItemForTextFieldToolbar =
+    [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
+									 style: UIBarButtonItemStylePlain target: self
+									action: @selector(cancelFromInputAccessoryView)];
+	
+	// Done
+	UIBarButtonItem *doneBarButtonItemForTextFieldToolbar =
+    [[UIBarButtonItem alloc] initWithTitle: @"Done"
+									 style: UIBarButtonItemStylePlain target: self
+									action: @selector(done)];
+	
+	// Right padding
+	UIBarButtonItem *rightPadding =
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+	 UIBarButtonSystemItemFixedSpace target: nil action: nil];
+	// iOS 7 toolbar spacing is 16px; 20px on iPad
+	rightPadding.width = 4.0f;
+	
+	textFieldToolbar = [UIToolbar new];
+	textFieldToolbar.clipsToBounds = YES;
+	textFieldToolbar.frame = CGRectMake(0.0f, 0.0f,
+										[[UIScreen mainScreen] bounds].size.width, OMBStandardHeight);
+	textFieldToolbar.items = @[leftPadding,
+							   cancelBarButtonItemForTextFieldToolbar,
+							   flexibleSpace,
+							   doneBarButtonItemForTextFieldToolbar,
+							   rightPadding];
+	textFieldToolbar.tintColor = [UIColor blue];
+}
+
+- (void) cancelFromInputAccessoryView
+{
+	editingTextField.text = savedTextFieldString;
+	[self done];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -250,6 +301,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell1.textField.placeholderColor = [UIColor grayLight];
       cell1.textField.placeholder = @"required";
       cell1.textField.userInteractionEnabled = YES;
+		cell1.textField.inputAccessoryView = textFieldToolbar;
       NSString *string = @"";
       // Bedrooms
       if (indexPath.row == 2) {
@@ -437,7 +489,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return 44.0f;
     }
     else {
-      if (isEditing)
+      if (editingTextField)
         return 196.0f;
     }
   }
@@ -478,7 +530,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) textFieldDidBeginEditing: (UITextField *) textField
 {
-  isEditing = YES;
+	editingTextField = textField;
+	savedTextFieldString = textField.text;
 
   if (selectedIndexPath) {
     NSIndexPath *previousIndexPath = selectedIndexPath;
@@ -497,13 +550,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [self scrollToRowAtIndexPath: tf.indexPath];
     }
   }
-
-  [self.navigationItem setRightBarButtonItem: doneBarButtonItem];
 }
 
 - (BOOL) textFieldShouldReturn: (UITextField *) textField
 {
-  isEditing = NO;
+	editingTextField = nil;
+	savedTextFieldString = nil;
   [textField resignFirstResponder];
   [self.table beginUpdates];
   [self.table endUpdates];
@@ -551,10 +603,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) done
 {
-  [self.navigationItem setRightBarButtonItem: saveBarButtonItem animated: YES];
   [self.view endEditing: YES];
-  isEditing = NO;
-  [self.table reloadRowsAtIndexPaths: @[[self indexPathForSpacing]] 
+	editingTextField = nil;
+	savedTextFieldString = nil;
+  [self.table reloadRowsAtIndexPaths: @[[self indexPathForSpacing]]
     withRowAnimation: UITableViewRowAnimationFade];
 }
 
@@ -568,7 +620,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) reloadForDatePickerAndPickerViewRowsAtIndexPath: 
 (NSIndexPath *) indexPath
 {
-  isEditing = NO;
+	editingTextField = nil;
+	savedTextFieldString = nil;
   [self.view endEditing: YES];
 
   if (selectedIndexPath) {

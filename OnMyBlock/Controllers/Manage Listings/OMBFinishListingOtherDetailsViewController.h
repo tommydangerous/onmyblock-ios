@@ -16,6 +16,9 @@ UIPickerViewDelegate, UITextFieldDelegate>
   UIActionSheet *deleteActionSheet;
   NSArray *propertyTypeOptions;
   NSIndexPath *selectedIndexPath;
+	UIToolbar *textFieldToolbar;
+	UITextField *editingTextField;
+	NSString *savedTextFieldString;
 }
 
 @end
