@@ -167,10 +167,12 @@
   cityTextField.frame = CGRectMake(padding, 0.0f, 
     screenWidth - (padding * 2), 44.0f);
   cityTextField.layer.cornerRadius = 2.0f;
+  cityTextField.leftPaddingX = padding * 0.5f;
   cityTextField.paddingX = padding * 0.5f;
   cityTextField.placeholderColor = [UIColor grayMedium];
   cityTextField.placeholder = @"City";
   cityTextField.returnKeyType = UIReturnKeyDone;
+  cityTextField.rightPaddingX = padding;
   cityTextField.rightViewMode = UITextFieldViewModeAlways;
   cityTextField.textColor = [UIColor textColor];
   [cityTextField addTarget: self action: @selector(textFieldDidChange:)
@@ -179,7 +181,7 @@
   // Current location button
   currentLocationButton = [UIButton new];
   currentLocationButton.frame = CGRectMake(0.0f, 0.0f,
-    cityTextField.frame.size.height, cityTextField.frame.size.height);
+    padding * 1.5f, cityTextField.frame.size.height);
   UIImage *currentLocationButtonImage = [UIImage image: [UIImage imageNamed: 
     @"gps_cursor_blue.png"] size: CGSizeMake(padding, padding)];
   [currentLocationButton addTarget: self action: @selector(useCurrentLocation)
