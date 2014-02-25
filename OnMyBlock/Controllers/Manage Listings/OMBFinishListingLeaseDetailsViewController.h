@@ -13,6 +13,8 @@
 <UIActionSheetDelegate, UIPickerViewDataSource,
 UIPickerViewDelegate>
 {
+  int auxRow;
+  int auxMonthLease;
   NSDateFormatter *dateFormatter;
   UIActionSheet *deleteActionSheet;
   UIView *fadedBackground;
@@ -21,6 +23,7 @@ UIPickerViewDelegate>
   UIView *pickerViewContainer;
 	UILabel *pickerViewHeaderLabel;
 	UIDatePicker *moveInPicker;
+	UIDatePicker *moveOutPicker;
 	UIPickerView *monthLeasePicker;
 	UIPickerView *leaseTypePicker;
 }
