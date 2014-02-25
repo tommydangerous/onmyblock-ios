@@ -18,6 +18,7 @@ UIPickerViewDelegate>
   NSDateFormatter *dateFormatter;
   UIActionSheet *deleteActionSheet;
   UIView *fadedBackground;
+  BOOL isShowPicker;
   NSArray *monthLeaseOptions;
   NSArray *leaseTypeOptions;
   UIView *pickerViewContainer;

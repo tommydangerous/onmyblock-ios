@@ -52,7 +52,10 @@ float kKeyboardHeight = 196.0;
 - (void) loadView
 {
   [super loadView];
-
+  
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGFloat padding = 20.0f;
+  
   [self setupForTable];
 
 //  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
@@ -71,7 +74,8 @@ float kKeyboardHeight = 196.0;
       otherButtonTitles: nil];
   [self.view addSubview: deleteActionSheet];
 	
-	
+	isShowPicker = NO;
+  
 	// Spacing
 	UIBarButtonItem *flexibleSpace =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
@@ -113,6 +117,83 @@ float kKeyboardHeight = 196.0;
 							   doneBarButtonItemForTextFieldToolbar,
 							   rightPadding];
 	textFieldToolbar.tintColor = [UIColor blue];
+  
+  fadedBackground = [[UIView alloc] init];
+  fadedBackground.alpha = 0.0f;
+  fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
+  fadedBackground.frame = screen;
+  [self.view addSubview: fadedBackground];
+  UITapGestureRecognizer *tapGesture =
+  [[UITapGestureRecognizer alloc] initWithTarget: self
+    action: @selector(hidePickerView)];
+  [fadedBackground addGestureRecognizer: tapGesture];
+  
+  // Picker view container
+  pickerViewContainer = [UIView new];
+  [self.view addSubview: pickerViewContainer];
+  
+  // Header for picker view with cancel and done button
+  UIView *pickerViewHeader = [[UIView alloc] init];
+  pickerViewHeader.backgroundColor = [UIColor grayUltraLight];
+  pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
+                                      screen.size.width, 44.0f);
+  [pickerViewContainer addSubview: pickerViewHeader];
+  
+  pickerViewHeaderLabel = [[UILabel alloc] init];
+  pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  pickerViewHeaderLabel.frame = pickerViewHeader.frame;
+  pickerViewHeaderLabel.text = @"XD";
+  pickerViewHeaderLabel.textAlignment = NSTextAlignmentCenter;
+  pickerViewHeaderLabel.textColor = [UIColor textColor];
+  [pickerViewHeader addSubview: pickerViewHeaderLabel];
+  // Cancel button
+  UIButton *cancelButton = [UIButton new];
+  cancelButton.titleLabel.font = [UIFont fontWithName:
+                                  @"HelveticaNeue-Medium" size: 15];
+  CGRect neighborhoodCancelButtonRect = [@"Cancel" boundingRectWithSize:
+                                         CGSizeMake(pickerViewHeader.frame.size.width, pickerViewHeader.frame.size.height)
+                                                                   font: cancelButton.titleLabel.font];
+  cancelButton.frame = CGRectMake(padding, 0.0f,
+                                  neighborhoodCancelButtonRect.size.width, pickerViewHeader.frame.size.height);
+  [cancelButton addTarget: self
+                   action: @selector(cancelPicker)
+         forControlEvents: UIControlEventTouchUpInside];
+  [cancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
+  [cancelButton setTitleColor: [UIColor blueDark]
+                     forState: UIControlStateNormal];
+  [pickerViewHeader addSubview: cancelButton];
+  // Done button
+  UIButton *doneButton = [UIButton new];
+  doneButton.titleLabel.font = cancelButton.titleLabel.font;
+  CGRect doneButtonRect = [@"Done" boundingRectWithSize:
+                           CGSizeMake(pickerViewHeader.frame.size.width,
+                                      pickerViewHeader.frame.size.height)
+                                                   font: doneButton.titleLabel.font];
+  doneButton.frame = CGRectMake(pickerViewHeader.frame.size.width -
+                                (padding + doneButtonRect.size.width), 0.0f,
+                                doneButtonRect.size.width, pickerViewHeader.frame.size.height);
+  [doneButton addTarget: self
+                 action: @selector(donePicker)
+       forControlEvents: UIControlEventTouchUpInside];
+  [doneButton setTitle: @"Done" forState: UIControlStateNormal];
+  [doneButton setTitleColor: [UIColor blueDark]
+                   forState: UIControlStateNormal];
+  [pickerViewHeader addSubview: doneButton];
+
+  // Lease type picker
+  propertyTypePicker = [[UIPickerView alloc] init];
+  propertyTypePicker.backgroundColor = [UIColor whiteColor];
+  propertyTypePicker.dataSource = self;
+  propertyTypePicker.delegate   = self;
+  propertyTypePicker.frame = CGRectMake(0.0f,
+    pickerViewHeader.frame.origin.y +
+      pickerViewHeader.frame.size.height,
+        propertyTypePicker.frame.size.width, propertyTypePicker.frame.size.height);
+  
+  pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
+    propertyTypePicker.frame.size.width,
+      pickerViewHeader.frame.size.height +
+        propertyTypePicker.frame.size.height);
 }
 
 - (void) cancelFromInputAccessoryView
@@ -130,6 +211,20 @@ float kKeyboardHeight = 196.0;
     [[OMBResidenceOpenHouseListConnection alloc] initWithResidence:
       residence];*/
 
+  // Property type picker
+  NSUInteger passingIndex =
+  [propertyTypeOptions indexOfObjectPassingTest:
+   ^BOOL (id obj, NSUInteger idx, BOOL *stop){
+     return [obj isEqualToString:
+       [residence.propertyType lowercaseString]];
+   }
+   ];
+  if (passingIndex == NSNotFound)
+    passingIndex = 0;
+  [propertyTypePicker selectRow: passingIndex
+                    inComponent: 0 animated: NO];
+
+  
   [self.table reloadData];
 }
 
@@ -170,24 +265,16 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
 - (NSInteger) numberOfComponentsInPickerView: (UIPickerView *) pickerView
 {
-  if (selectedIndexPath) {
-    // Property Type
-    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
-      return 1; 
-    }
-  }
-  return 0;
+  return 1;
 }
 
 - (NSInteger) pickerView: (UIPickerView *) pickerView
 numberOfRowsInComponent: (NSInteger) component
 {
-  if (selectedIndexPath) {
-    // Property Type
-    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
-      return [propertyTypeOptions count];
-    }
-  }
+  // Property type
+  if (pickerView == propertyTypePicker)
+    return [propertyTypeOptions count];
+  
   return 0;
 }
 
@@ -196,17 +283,9 @@ numberOfRowsInComponent: (NSInteger) component
 - (void) pickerView: (UIPickerView *) pickerView didSelectRow: (NSInteger) row
 inComponent: (NSInteger) component
 {
-  if (selectedIndexPath) {
-    NSString *string = @"";
-    // Property Type
-    if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
-      NSString *propertyTypeString = [propertyTypeOptions objectAtIndex: row];
-      string = [propertyTypeString capitalizedString];
-      residence.propertyType = [propertyTypeString lowercaseString];
-    }
-    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *) 
-      [self.table cellForRowAtIndexPath: selectedIndexPath];
-    cell.textField.text = string;
+  // Property type
+  if (pickerView == propertyTypePicker && isShowPicker) {
+    auxRow = (int)row;
   }
 }
 
@@ -220,8 +299,8 @@ rowHeightForComponent: (NSInteger) component
 forComponent: (NSInteger) component reusingView: (UIView *) view
 {
   NSString *string = @"";
-  // Property Type
-  if (selectedIndexPath.section == 0 && selectedIndexPath.row == 4) {
+  // Property type
+  if (pickerView == propertyTypePicker) {
     string = [[propertyTypeOptions objectAtIndex: row] capitalizedString];
   }
   if (view && [view isKindOfClass: [UILabel class]]) {
@@ -327,35 +406,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // Picker view
       else if (indexPath.row == 5) {
-        if (selectedIndexPath &&
-            selectedIndexPath.section == indexPath.section &&
-            selectedIndexPath.row == indexPath.row - 1) {
-          
-          static NSString *PickerCellIdentifier = @"PickerCellIdentifier";
-          OMBPickerViewCell *pickerCell =
-          [tableView dequeueReusableCellWithIdentifier: PickerCellIdentifier];
-          if (!pickerCell)
-            pickerCell = [[OMBPickerViewCell alloc] initWithStyle:
-                          UITableViewCellStyleDefault reuseIdentifier:
-                          PickerCellIdentifier];
-          pickerCell.pickerView.dataSource = self;
-          pickerCell.pickerView.delegate   = self;
-          
-          // Select the correct property type
-          NSUInteger passingIndex =
-          [propertyTypeOptions indexOfObjectPassingTest:
-           ^BOOL (id obj, NSUInteger idx, BOOL *stop){
-             return [obj isEqualToString:
-                     [residence.propertyType lowercaseString]];
-           }
-           ];
-          if (passingIndex == NSNotFound)
-            passingIndex = 0;
-          [pickerCell.pickerView selectRow: passingIndex
-                               inComponent: 0 animated: NO];
-          
-          return pickerCell;
-        }
+        
       }
       // Square footage
       else if (indexPath.row == 6) {
@@ -469,7 +520,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   if (indexPath.section == 0) {
     // Property Type
     if (indexPath.row == 4) {
-      [self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
+      //[self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
+      [self showPickerView: propertyTypePicker];
     }
   }
   // Delete Listing
@@ -502,8 +554,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         if (selectedIndexPath &&
             selectedIndexPath.section == indexPath.section &&
             selectedIndexPath.row == indexPath.row - 1) {
-          
-          return kKeyboardHeight;
+          return 0.0;
         }
         else {
           return 0.0f;
@@ -566,6 +617,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
+- (void) cancelPicker
+{
+  [self updatePicker];
+  [self hidePickerView];
+}
+
 - (void) deleteListing
 {
   [[self appDelegate].container startSpinning];
@@ -610,38 +667,41 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     withRowAnimation: UITableViewRowAnimationFade];
 }
 
+
+- (void) donePicker
+{
+  [self hidePickerView];
+  
+  // Property type
+  if ([propertyTypePicker superview]) {
+    NSString *string = [propertyTypeOptions objectAtIndex: auxRow];
+    residence.propertyType = string;
+    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
+      [self.table cellForRowAtIndexPath:
+        [NSIndexPath indexPathForItem:4 inSection:0]];
+    cell.textField.text = [string capitalizedString];
+  }
+  
+  [self updatePicker];
+}
+
+- (void) hidePickerView
+{
+  isShowPicker = NO;
+  CGRect rect = pickerViewContainer.frame;
+  rect.origin.y = self.view.frame.size.height;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 0.0f;
+    pickerViewContainer.frame = rect;
+  }];
+  //[self showSearchBarButtonItem];
+}
+
 - (NSIndexPath *) indexPathForSpacing
 {
   return [NSIndexPath indexPathForRow: 
       [self.table numberOfRowsInSection: [self.table numberOfSections] - 1] - 1
         inSection: [self.table numberOfSections] - 1];
-}
-
-- (void) reloadForDatePickerAndPickerViewRowsAtIndexPath: 
-(NSIndexPath *) indexPath
-{
-	editingTextField = nil;
-	savedTextFieldString = nil;
-  [self.view endEditing: YES];
-
-  if (selectedIndexPath) {
-    if (selectedIndexPath.section == indexPath.section &&
-      selectedIndexPath.row == indexPath.row) {
-
-      selectedIndexPath = nil;
-    }
-    else {
-      selectedIndexPath = indexPath;
-    }
-  }
-  else {
-    selectedIndexPath = indexPath;
-  }
-  [self.table reloadRowsAtIndexPaths: @[
-    [NSIndexPath indexPathForRow: 
-      indexPath.row + 1 inSection: indexPath.section]
-    ] withRowAnimation: UITableViewRowAnimationFade];
-  [self.navigationItem setRightBarButtonItem: saveBarButtonItem];
 }
 
 - (void) scrollToRowAtIndexPath: (NSIndexPath *) indexPath
@@ -667,6 +727,41 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       residence.squareFeet = [textField.text intValue];
     }
   }
+}
+
+
+- (void) showPickerView:(UIPickerView *)pickerView
+{
+  NSString *titlePicker = @"";
+  if (propertyTypePicker == pickerView) {
+		titlePicker = @"Property Type";
+		[pickerViewContainer addSubview:propertyTypePicker];
+	}
+	pickerViewHeaderLabel.text = titlePicker;
+  isShowPicker = YES;
+  CGRect rect = pickerViewContainer.frame;
+  rect.origin.y = self.view.frame.size.height -
+  pickerViewContainer.frame.size.height;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 1.0f;
+    pickerViewContainer.frame = rect;
+  }];
+}
+
+- (void) updatePicker
+{
+  // Property type picker
+  NSUInteger passingIndex =
+  [propertyTypeOptions indexOfObjectPassingTest:
+   ^BOOL (id obj, NSUInteger idx, BOOL *stop){
+     return [obj isEqualToString:
+             [residence.propertyType lowercaseString]];
+   }
+   ];
+  if (passingIndex == NSNotFound)
+    passingIndex = 0;
+  [propertyTypePicker selectRow: passingIndex
+    inComponent: 0 animated: NO];
 }
 
 @end

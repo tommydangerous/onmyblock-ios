@@ -83,6 +83,8 @@ float k2KeyboardHeight = 216.0;
                                          otherButtonTitles: nil];
   [self.view addSubview: deleteActionSheet];
   
+	isShowPicker = NO;
+  
   fadedBackground = [[UIView alloc] init];
   fadedBackground.alpha = 0.0f;
   fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
@@ -310,11 +312,11 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         inComponent: (NSInteger) component
 {
   // Month Lease
-  if (pickerView == monthLeasePicker) {
+  if (pickerView == monthLeasePicker && isShowPicker) {
     auxRow = (int)row;
   }
   
-  if (pickerView == leaseTypePicker) {
+  if (pickerView == leaseTypePicker && isShowPicker) {
     auxRow = (int)row;
   }
 }
@@ -745,60 +747,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
-
 - (void) cancelPicker
 {
   [self updatePicker];
   [self hidePickerView];
-}
-
-- (void) datePickerChanged: (UIDatePicker *) datePicker
-{
-    // Move-in Date
-    if (datePicker == moveInPicker) {
-      OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-      [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:2 inSection:0]];
-      residence.moveInDate = [datePicker.date timeIntervalSince1970];
-      cell.textField.text = [dateFormatter stringFromDate: datePicker.date];
-      // compare if move out is earlier than move in
-      if([[NSDate dateWithTimeIntervalSince1970:residence.moveOutDate]
-          compare:datePicker.date] == NSOrderedAscending){
-        //change move out
-        residence.moveOutDate = [datePicker.date timeIntervalSince1970];
-        OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-          [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:4 inSection:0]];
-        cell.textField.text = [dateFormatter stringFromDate: datePicker.date];
-        [moveOutPicker setDate:
-         [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]
-                     animated: NO];
-      }
-      residence.leaseMonths = [self numberOfMonthsBetweenMovingDates];
-    }
-    // Move-out Date
-    else if (datePicker == moveOutPicker) {
-      OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-      [self.table cellForRowAtIndexPath:[NSIndexPath indexPathForItem:4 inSection:0]];
-      cell.textField.text = [dateFormatter stringFromDate: datePicker.date];
-      residence.moveOutDate = [datePicker.date timeIntervalSince1970];
-      // compare if move in is later than move out
-      if([[NSDate dateWithTimeIntervalSince1970:residence.moveInDate]
-          compare:datePicker.date] == NSOrderedDescending){
-        //change move in
-        residence.moveInDate = [datePicker.date timeIntervalSince1970];
-        OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-          [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:2 inSection:0]];
-        cell.textField.text = [dateFormatter stringFromDate: datePicker.date];
-        [moveInPicker setDate:
-         [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]
-                     animated: NO];
-      }
-      residence.leaseMonths = [self numberOfMonthsBetweenMovingDates];
-    }
-    
-    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-    [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:6 inSection:0]];
-    cell.textField.text = monthLeaseOptions[residence.leaseMonths];
-  
 }
 
 - (void) deleteListing
@@ -925,6 +877,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) hidePickerView
 {
   //[self hideNeighborhoodTableViewContainer];
+  isShowPicker = NO;
   CGRect rect = pickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
@@ -978,6 +931,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [moveInPicker removeFromSuperview];
   [moveOutPicker removeFromSuperview];
 }
+
 - (void) showPickerView:(UIPickerView *)pickerView
 {
   NSString *titlePicker = @"";
@@ -999,7 +953,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 		[pickerViewContainer addSubview:leaseTypePicker];
 	}
 	pickerViewHeaderLabel.text = titlePicker;
-  
+  isShowPicker = YES;
   CGRect rect = pickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height -
   pickerViewContainer.frame.size.height;
