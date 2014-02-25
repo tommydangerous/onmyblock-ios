@@ -156,7 +156,7 @@
   [_inboxButton setTitle: @"Inbox" forState: UIControlStateNormal];
   UIImageView *inboxImageView = [UIImageView new];
   inboxImageView.frame = discoverImageView.frame;
-  inboxImageView.image = [UIImage image: [UIImage imageNamed: @"inbox_icon.png"]
+  inboxImageView.image = [UIImage image: [UIImage imageNamed: @"message_icon.png"]
     size: inboxImageView.frame.size];
   [_inboxButton addSubview: inboxImageView];
   [_renterButtons addObject: _inboxButton];
@@ -280,9 +280,8 @@
 
 - (void) changeTitleLabelColor:(UIButton *)button
 {
-  for(UIButton *button in _currentButtons){
-    [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
-  }
+  // there are six OMBUserMenu in container
+  [[self container] setTitleColorWhite];
   [button setTitleColor: [UIColor blue] forState: UIControlStateNormal];
 }
 
@@ -423,13 +422,12 @@
 
 - (void) showMyRenterApp
 {
-  [self changeTitleLabelColor:_myRenterAppButton];
   [[self container] showMyRenterApp];
 }
 
 - (void) showSearch
 {
-  [self changeTitleLabelColor:_searchButton];
+  [self changeTitleLabelColor:_discoverButton];
   [[self container] showSearchAndSwitchToList: YES];
 }
 
@@ -493,6 +491,7 @@ withNumber: (NSNumber *) number
 
 - (void) userLogout: (NSNotification *) notification
 {
+  [self changeTitleLabelColor:nil];
   // Inbox
   [self updateNotificationBadgeLabel: _inboxNotificationBadge withNumber: @0];
     [self updateNotificationBadgeLabel:_renterHomebaseNotificationBadge

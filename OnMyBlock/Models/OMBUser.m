@@ -223,7 +223,7 @@ NSString *const OMBUserTypeLandlord = @"landlord";
     user.firstName   = @"land";
     user.lastName    = @"lord";
     user.phone       = @"6504555789";
-    user.image       = [UIImage imageNamed: @"user_icon_default.png"];
+    user.image       = [UIImage imageNamed: @"profile_default_pic.png"];
     user.uid         = 31;
   }
   return user;
@@ -1128,7 +1128,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     // If user has no image
     if ([string isEqualToString: @"default_user_image.png"]) {
       string = [string stringByAppendingString: @"/"];
-      _image = [UIImage imageNamed: @"user_icon_default.png"];
+      _image = [UIImage imageNamed: @"profile_default_pic.png"];
     }
     string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
   }

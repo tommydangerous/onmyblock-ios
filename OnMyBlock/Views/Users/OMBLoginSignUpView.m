@@ -385,10 +385,12 @@
     [UIView animateWithDuration: OMBStandardDuration animations: ^{
       _firstNameTextField.alpha = 0.0f;
       _lastNameTextField.alpha  = 0.0f;
+      userSwitchButton.hidden = YES;
       // Email
       CGRect rect1 = [[textFieldFrameArray objectAtIndex: 
         OMBLoginSignUpViewTextFieldFirstName] CGRectValue];
       _emailTextField.frame = rect1;
+      _emailTextField.placeholder = @"Email";
       // Password
       CGRect rect2 = [[textFieldFrameArray objectAtIndex:
         OMBLoginSignUpViewTextFieldLastName] CGRectValue];
@@ -422,11 +424,15 @@
     // Action switch button
     [actionSwitchButton setTitle: @"Sign Up" 
       forState: UIControlStateNormal];
+    // Change the header label text
+    NSString *actionButtonString = isLogin ? @"Login" : @"Sign Up";
+    headerLabel.text = actionButtonString;
   }
   // Sign up
   else {
     _firstNameTextField.hidden = NO;
     _lastNameTextField.hidden  = NO;
+    userSwitchButton.hidden = NO;
     [UIView animateWithDuration: OMBStandardDuration animations: ^{
       _firstNameTextField.alpha = 1.0f;
       _lastNameTextField.alpha  = 1.0f;
@@ -434,6 +440,8 @@
       CGRect rect1 = [[textFieldFrameArray objectAtIndex: 
         OMBLoginSignUpViewTextFieldEmail] CGRectValue];
       _emailTextField.frame = rect1;
+      _emailTextField.placeholder = [NSString stringWithFormat: @"%@ email",
+        isLandlord ? @"Landlord" : @"School"];
       // Password
       CGRect rect2 = [[textFieldFrameArray objectAtIndex:
         OMBLoginSignUpViewTextFieldPassword] CGRectValue];
@@ -462,11 +470,12 @@
     // Action switch button
     [actionSwitchButton setTitle: @"Login" 
       forState: UIControlStateNormal];
+    
+    NSString *actionButtonString = isLogin ? @"Login" : @"Sign Up";
+    headerLabel.text = [NSString stringWithFormat: @"%@ %@",
+      isLandlord ? @"Landlords" : @"Students", actionButtonString];
   }
-  // Change the header label text
-  NSString *actionButtonString = isLogin ? @"Login" : @"Sign Up";
-  headerLabel.text = [NSString stringWithFormat: @"%@ %@",
-    isLandlord ? @"Landlords" : @"Students", actionButtonString];
+  
   [self refreshContentSize];
 }
 

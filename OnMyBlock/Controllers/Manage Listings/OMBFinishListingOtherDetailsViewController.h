@@ -13,9 +13,18 @@
 <UIActionSheetDelegate, UIPickerViewDataSource, 
 UIPickerViewDelegate, UITextFieldDelegate>
 {
+  int auxRow;
   UIActionSheet *deleteActionSheet;
+	UITextField *editingTextField;
+  UIView *fadedBackground;
+  BOOL isShowPicker;
+  UIView *pickerViewContainer;
+	UILabel *pickerViewHeaderLabel;
   NSArray *propertyTypeOptions;
+  UIPickerView *propertyTypePicker;
+	NSString *savedTextFieldString;
   NSIndexPath *selectedIndexPath;
+	UIToolbar *textFieldToolbar;
 }
 
 @end

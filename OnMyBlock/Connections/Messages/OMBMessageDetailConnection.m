@@ -9,6 +9,7 @@
 #import "OMBMessageDetailConnection.h"
 
 #import "OMBMessageDetailViewController.h"
+#import "OMBMessageNewViewController.h"
 
 @implementation OMBMessageDetailConnection
 
@@ -43,12 +44,20 @@
 
   NSLog(@"OMBMessageDetailConnection\n%@", json);
 
-  if (self.delegate && 
-    [self.delegate isKindOfClass: [OMBMessageDetailViewController class]]) {
-
-    OMBMessageDetailViewController *vc = 
-      (OMBMessageDetailViewController *) self.delegate;
-    vc.maxPages = [[json objectForKey: @"pages"] intValue];
+  if (self.delegate)
+  {
+    if([self.delegate isKindOfClass:
+      [OMBMessageDetailViewController class]]) {
+      OMBMessageDetailViewController *vc =
+        (OMBMessageDetailViewController *) self.delegate;
+      vc.maxPages = [[json objectForKey: @"pages"] intValue];
+    }else
+      if([self.delegate isKindOfClass:
+        [OMBMessageNewViewController class]]){
+        OMBMessageNewViewController *vc =
+        (OMBMessageNewViewController *) self.delegate;
+        vc.maxPages = [[json objectForKey: @"pages"] intValue];
+      }
   }
 
   [[OMBUser currentUser] readFromMessagesDictionary: json];

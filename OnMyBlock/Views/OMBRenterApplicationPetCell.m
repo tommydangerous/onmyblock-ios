@@ -77,7 +77,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 {
   _checkmarkBox.backgroundColor   = [UIColor blue];
   _checkmarkBox.layer.borderColor = [UIColor blue].CGColor;
-  _checkmarkImageView.image = [UIImage imageNamed: @"checkmark_icon.png"];
+  _checkmarkImageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
   _isSelected = YES;
 }
 

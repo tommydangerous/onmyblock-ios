@@ -53,7 +53,6 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRentalInfoRow) {
   CGFloat backViewOriginY;
   UILabel *fullNameLabel;
   OMBGradientView *gradient;
-  BOOL isEditing;
   LIALinkedInHttpClient *linkedInClient;
   UIView *nameView;
   CGFloat nameViewOriginY;
@@ -61,6 +60,9 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRentalInfoRow) {
   UIView *scaleBackView;
   NSIndexPath *selectedIndexPath;
   UIToolbar *textFieldToolbar;
+	NSString *savedTextString;
+	UITextView *editingTextView;
+	UITextField *editingTextField;
   UIActionSheet *uploadActionSheet;
   OMBUser *user;
   OMBCenteredImageView *userIconView;

@@ -383,7 +383,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
       }
     ];
     userImageView.imageView.image = 
-      [[UIImage imageNamed: @"user_icon_default.png"] negativeImage];
+      [UIImage imageNamed: @"profile_default_pic.png"];
   }
   // Name for the image
   userImageView.nameLabel.text =
@@ -667,7 +667,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [cell1 setMiddleLabelText: @"You will be able to confirm"];
         [cell1 setBottomLabelText: @"or reject them."];
         [cell1 setObjectImageViewImage: [UIImage imageNamed: 
-          @"money_icon.png"]];
+          @"moneybag_icon.png"]];
         return cell1;
       }
       else {
@@ -717,7 +717,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [cell1 setMiddleLabelText: @"appear here after you have"];
         [cell1 setBottomLabelText: @"paid and signed the lease."];
         [cell1 setObjectImageViewImage: [UIImage imageNamed: 
-          @"group_icon.png"]];
+          @"confirm_place_icon.png"]];
         return cell1;
 
         // cell.separatorInset = UIEdgeInsetsMake(0.0f, 

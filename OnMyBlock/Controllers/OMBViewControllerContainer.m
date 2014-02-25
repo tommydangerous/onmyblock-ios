@@ -948,6 +948,7 @@ completion: (void (^) (void)) block
 
 - (void) logout
 {
+  [self changeTitleLabelColor:discoverButton];
   // This is received by OMBUser and 
   // then OMBUser posts OMBUserLoggedOutNotification
   // [[NSNotificationCenter defaultCenter] postNotificationName:
@@ -1095,6 +1096,16 @@ completion: (void (^) (void)) block
   }
 }
 
+-(void) setTitleColorWhite
+{
+  _accountView.layer.borderColor = [UIColor whiteColor].CGColor;
+  for (OMBUserMenu *m in userMenuArray) {
+    for (UIButton *button in m.currentButtons) {
+      [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+    }
+  }
+}
+
 - (void) setupAttributesForButtons: (NSArray *) array
 {
   CGFloat imageSize = 22.0f;
@@ -1193,16 +1204,20 @@ completion: (void (^) (void)) block
 
 - (void) showAccount
 {
-  [self changeTitleLabelColor:nil];
+  [self setTitleColorWhite];
+  _accountView.layer.borderColor = [UIColor blue].CGColor;
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: self.accountNavigationController];
 }
 
 - (void) showCreateListing
 {
-  [self changeTitleLabelColor: nil];
   if ([[OMBUser currentUser] loggedIn]) {
-    [self presentViewController: 
+    [self hideMenuWithFactor: 1.0f];
+    [self presentDetailViewController:
+      [[OMBNavigationController alloc] initWithRootViewController:
+        [[OMBCreateListingViewController alloc] init]]];
+    /*[self presentViewController:
       [[OMBNavigationController alloc] initWithRootViewController:
         [[OMBCreateListingViewController alloc] init]] animated: YES 
           completion: ^{
@@ -1212,7 +1227,7 @@ completion: (void (^) (void)) block
               [self presentDetailViewController: 
                 self.manageListingsNavigationController];
           }
-        ];
+        ];*/
   }
   else {
     [self showSignUp];
@@ -1221,7 +1236,7 @@ completion: (void (^) (void)) block
 
 - (void) showDiscover
 {
-  [self changeTitleLabelColor:discoverButton];
+  [self changeTitleLabelColor: discoverButton];
   // if (!_mapNavigationController) {
   //   // Search
   //   _mapFilterViewController = [[OMBMapFilterViewController alloc] init];
@@ -1325,7 +1340,6 @@ completion: (void (^) (void)) block
 
 - (void) showLogin
 {
-  [self changeTitleLabelColor: loginButton];
   [self.loginViewController showLogin];
   [self presentLoginViewController];
   // [self hideMenuWithFactor: 1.0f completion: ^{
@@ -1463,7 +1477,7 @@ completion: (void (^) (void)) block
 
 - (void) showSearch
 {
-  [self changeTitleLabelColor:searchButton];
+  [self changeTitleLabelColor:discoverButton];
   [self showSearchAndSwitchToList: YES];
 }
 
@@ -1483,7 +1497,6 @@ completion: (void (^) (void)) block
 
 - (void) showSignUp
 {
-  [self changeTitleLabelColor: signUpButton];
   [self.loginViewController showSignUp];
   [self presentLoginViewController];
   // [self hideMenuWithFactor: 1.0f completion: ^{

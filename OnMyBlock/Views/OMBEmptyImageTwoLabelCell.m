@@ -37,7 +37,6 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // bottomLabel.hidden = YES;
   bottomLabel.font = topLabel.font;
 
-  objectImageView.alpha = 0.3f;
   objectImageView.layer.cornerRadius = 0.0f;
 
   return self;

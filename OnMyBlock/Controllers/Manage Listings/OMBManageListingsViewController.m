@@ -9,6 +9,7 @@
 #import "OMBManageListingsViewController.h"
 
 #import "AMBlurView.h"
+#import "OMBCreateListingViewController.h"
 #import "OMBFinishListingViewController.h"
 #import "OMBManageListingsCell.h"
 #import "OMBManageListingsConnection.h"
@@ -164,7 +165,9 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) createListing
 {
-  [[self appDelegate].container showCreateListing];
+  [self.navigationController pushViewController:
+    [[OMBCreateListingViewController alloc] init] animated: YES];
+  //[[self appDelegate].container showCreateListing];
 }
 
 - (NSArray *) listings

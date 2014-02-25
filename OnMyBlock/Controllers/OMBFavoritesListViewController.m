@@ -58,7 +58,7 @@
 
   [self setMenuBarButtonItem];
 
-  self.table.backgroundColor = [UIColor blackColor];
+  self.table.backgroundColor = [UIColor grayUltraLight];
 
   emptyBackgroundView = 
     [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame: 

@@ -8,6 +8,7 @@
 
 #import "OMBInboxViewController.h"
 
+#import "OMBActivityView.h"
 #import "OMBConversationMessageStore.h"
 #import "OMBEmptyBackgroundWithImageAndLabel.h"
 #import "OMBInboxCell.h"
@@ -53,6 +54,10 @@
   self.table.separatorInset  = UIEdgeInsetsMake(0.0f, 
     10.0f + (screen.size.width * 0.2) + 10.0f, 0.0f, 0.0f);
   self.table.showsVerticalScrollIndicator = YES;
+  
+  // Activity spinner
+  activityView = [[OMBActivityView alloc] init];
+  [self.view addSubview: activityView];
 
   refreshControl = [UIRefreshControl new];
   [refreshControl addTarget:self action:@selector(refresh) forControlEvents:
@@ -62,7 +67,7 @@
   
   noMessagesView = [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame:
     screen];
-  noMessagesView.alpha = 1.0f;
+  noMessagesView.alpha = 0.0f;
   noMessagesView.imageView.image = [UIImage imageNamed: 
     @"speech_bubble_icon.png"];
   NSString *text = @"Your messages with other users appear here. "
@@ -83,6 +88,7 @@
     [self setMenuBarButtonItem];
   }
 
+  [activityView startSpinning];
   [self.table reloadData];
   [self reloadTable];
 
@@ -222,6 +228,7 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 
     [[OMBConversationMessageStore sharedStore] fetchMessagesAtPage: i 
       completion: ^(NSError *error) {
+        [activityView stopSpinning];
         [self.table reloadData];
         [self updateNoMessagesView];
         // NSInteger newCount = 
@@ -245,7 +252,6 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
       }
     ];
   }
-  [self updateNoMessagesView];
 }
 
 - (void) updateNoMessagesView

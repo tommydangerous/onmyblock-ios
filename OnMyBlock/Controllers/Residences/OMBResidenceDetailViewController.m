@@ -73,11 +73,41 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   self.screenName = [NSString stringWithFormat:
     @"Residence Detail View Controller - Residence ID: %i", residence.uid];
-
-  if ([residence.title length])
+  
+  if ([residence.address length]){
+    UIView *labelView = [UIView new];
+    labelView.frame = CGRectMake( -OMBPadding, 0,
+      [[UIScreen mainScreen] bounds].size.width - (4 * OMBPadding), 36.f);
+    
+    UILabel *label =
+      [[UILabel alloc] initWithFrame: CGRectMake( 0, 0,
+        labelView.frame.size.width, 18.f)];
+    label.backgroundColor = [UIColor clearColor];
+    label.font = [UIFont fontWithName: @"HelveticaNeue"
+      size: 14];
+    label.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+    label.shadowOffset    = CGSizeMake(0, 0);
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor textColor];
+    label.text = residence.address;
+    [labelView addSubview:label];
+    
+    UILabel *label2 =
+      [[UILabel alloc] initWithFrame:CGRectMake( 0, label.frame.size.height,
+        label.frame.size.width, 18.f)];
+    label2.backgroundColor = label.backgroundColor;
+    label2.font = [UIFont fontWithName: @"HelveticaNeue-Light"
+      size: 13];
+    label2.shadowColor = label.shadowColor;
+    label2.shadowOffset    = label.shadowOffset;
+    label2.textAlignment = label.textAlignment;
+    label2.textColor = [UIColor grayMedium];
+    label2.text = [NSString stringWithFormat:@"%@, %@",residence.city,residence.state];
+    [labelView addSubview:label2];
+    self.navigationItem.titleView = labelView;
+  }else{
     self.title = residence.title;
-  else
-    self.title = [residence.address capitalizedString];
+  }
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(currentUserLogout) name: OMBUserLoggedOutNotification 
@@ -650,7 +680,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBResidenceDetailAddressCell alloc] initWithStyle: 
           UITableViewCellStyleDefault reuseIdentifier: AddressCellIdentifier];
       }
-        
+      // Main Label
+      if([[residence.title stripWhiteSpace] length])
+        cell.mainLabel.text = residence.title;
+      else{
+        [cell.mainLabel removeFromSuperview];
+        [cell resize];
+      }
       // Address
       if ([residence.address length])
         cell.addressLabel.text = [residence.address capitalizedString];
@@ -886,7 +922,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   if (indexPath.section == 0) {
     // Address
     if (indexPath.row == 0) {
-      return [OMBResidenceDetailAddressCell heightForCell];
+      if([[residence.title stripWhiteSpace] length])
+        return [OMBResidenceDetailAddressCell heightForCell];
+      else
+        return [OMBResidenceDetailAddressCell heightForCell] - 23.0f;
     }
   }
 
@@ -1023,6 +1062,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) closeImageSlides
 {
+  [[UIApplication sharedApplication] setStatusBarHidden:NO];
   [UIView animateWithDuration: 0.25f animations: ^{
     blurView.alpha = 0.0f;
     imageScrollView.alpha = 0.0f;
@@ -1056,10 +1096,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // if (!user || [user.firstName length] == 0)
     //   user = [OMBUser landlordUser];
     if (residence.user) {
-      [[self appDelegate].container presentViewController: 
+      /*[[self appDelegate].container presentViewController:
         [[OMBNavigationController alloc] initWithRootViewController: 
           [[OMBMessageNewViewController alloc] initWithUser: residence.user 
-            residence: residence]] animated: YES completion: nil];
+            residence: residence]] animated: YES completion: nil];*/
+      
+      [self.navigationController pushViewController:
+        [[OMBMessageNewViewController alloc] initWithUser: residence.user
+          residence: residence] animated: YES];
     }
   }
   else {
@@ -1178,7 +1222,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) showImageSlides
 {
   CGRect rect = imageScrollView.frame;
-
   NSArray *array = [residence imagesArray];
   for (OMBResidenceImage *residenceImage in array) {
     OMBImageScrollView *scroll = [[OMBImageScrollView alloc] init];
@@ -1249,6 +1292,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     blurView.alpha = 1.0f;
     imageScrollView.alpha = 1.0f;
     imageScrollView.transform = CGAffineTransformIdentity;
+  } completion: ^(BOOL finished) {
+    if (finished) {
+      [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    }
   }];
 }
 

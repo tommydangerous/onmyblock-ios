@@ -167,10 +167,11 @@
   cityTextField.frame = CGRectMake(padding, 0.0f, 
     screenWidth - (padding * 2), 44.0f);
   cityTextField.layer.cornerRadius = 2.0f;
-  cityTextField.paddingX = padding * 0.5f;
+  cityTextField.leftPaddingX = padding * 0.75f;
   cityTextField.placeholderColor = [UIColor grayMedium];
   cityTextField.placeholder = @"City";
   cityTextField.returnKeyType = UIReturnKeyDone;
+  cityTextField.rightPaddingX = padding * 1.5f;
   cityTextField.rightViewMode = UITextFieldViewModeAlways;
   cityTextField.textColor = [UIColor textColor];
   [cityTextField addTarget: self action: @selector(textFieldDidChange:)
@@ -179,7 +180,7 @@
   // Current location button
   currentLocationButton = [UIButton new];
   currentLocationButton.frame = CGRectMake(0.0f, 0.0f,
-    cityTextField.frame.size.height, cityTextField.frame.size.height);
+    padding * 1.5f, cityTextField.frame.size.height);
   UIImage *currentLocationButtonImage = [UIImage image: [UIImage imageNamed: 
     @"gps_cursor_blue.png"] size: CGSizeMake(padding, padding)];
   [currentLocationButton addTarget: self action: @selector(useCurrentLocation)
@@ -328,13 +329,15 @@
   // City table view footer
   cityTableView.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectMake(0.0f, 0.0f, screenWidth, nextView.frame.size.height)];
+  
+  stepNumber = 0;
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
   
-  stepNumber = 0;
+  [self verifyMenu];
 }
 
 #pragma mark - Protocol
@@ -658,6 +661,7 @@ replacementString: (NSString *) string
     if (stepNumber == 0) {
       [self.navigationItem setLeftBarButtonItem: cancelBarButtonItem
         animated: YES];
+      [self verifyMenu];
       // [self.navigationItem setRightBarButtonItem: nil animated: YES];
       [self showNextButton: NO];
     }
@@ -720,8 +724,9 @@ replacementString: (NSString *) string
 
 - (void) cancel
 {
-  [self.navigationController dismissViewControllerAnimated: YES
-    completion: nil];
+  /*[self.navigationController dismissViewControllerAnimated: YES
+    completion: nil];*/
+  [self.navigationController popViewControllerAnimated: YES];
 }
 
 
@@ -939,6 +944,8 @@ replacementString: (NSString *) string
   // [[self appDelegate].container startSpinning];
   [activityView startSpinning];
 
+  nextButton.enabled = NO;
+  
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGRect progressBarRect = progressBar.frame;
   progressBarRect.size.width = screen.size.width * (stepNumber / 3.0f);
@@ -971,19 +978,24 @@ replacementString: (NSString *) string
         } completion: ^(NSError *error) {
           
         }];
-        [[self appDelegate].container showManageListings];
-        [[self appDelegate].container.manageListingsNavigationController 
+        if ([self.navigationController.viewControllers count] == 1)
+          [[self appDelegate].container showManageListings];
+        else
+          [self.navigationController popViewControllerAnimated: NO];
+        
+        [[self appDelegate].container setTitleColorWhite];
+        [[self appDelegate].container.manageListingsNavigationController
           pushViewController:
-            [[OMBFinishListingViewController alloc] initWithResidence: 
-              _temporaryResidence] animated: NO];
-        [self cancel];
+            [[OMBFinishListingViewController alloc] initWithResidence:
+              _temporaryResidence] animated: YES];
       }
       else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
           @"Save failed" message: @"Please try again" 
             delegate: nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
         [alertView show];
-
+        
+        nextButton.enabled = YES;
         stepNumber -= 1;
         CGRect newRect = progressBar.frame;
         newRect.size.width = screen.size.width * (stepNumber / 3.0f);
@@ -1089,6 +1101,12 @@ withMiles: (int) miles animated: (BOOL) animated
 - (void) useCurrentLocation
 {
   [locationManager startUpdatingLocation];
+}
+
+- (void) verifyMenu
+{
+  if ([self.navigationController.viewControllers count] == 1)
+    [self setMenuBarButtonItem];
 }
 
 @end

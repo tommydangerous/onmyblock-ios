@@ -23,6 +23,9 @@
   UISegmentedControl *segmentedControl;
   NSIndexPath *selectedIndexPath;
   BOOL showMore;
+	UIToolbar *textFieldToolbar;
+	UITextField *editingTextField;
+	NSString *savedTextFieldString;
 }
 
 @end

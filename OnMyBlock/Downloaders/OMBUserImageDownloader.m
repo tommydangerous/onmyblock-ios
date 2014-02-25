@@ -37,7 +37,7 @@
     _user.image = image;
   }
   else {
-    _user.image = [UIImage imageNamed: @"user_icon_default.png"];
+    _user.image = [UIImage imageNamed: @"profile_default_pic.png"];
   }
 
   // NSLog(@"OMBUserImageDownloader\n%@", self.imageURL);
