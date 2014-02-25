@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import "UIImageView+WebCache.h"
+
+@class OMBCenteredImageView;
 @class OMBOffer;
 @class OMBOpenHouse;
 @class OMBResidenceCoverPhotoURLConnection;
@@ -80,6 +83,7 @@ extern NSString *const OMBResidencePropertyTypeSublet;
 + (NSArray *) defaultListOfAmenities;
 + (OMBResidence *) fakeResidence;
 + (NSInteger) numberOfSteps;
++ (UIImage *) placeholderImage;
 
 #pragma mark Instance Methods
 
@@ -118,10 +122,13 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 - (void) readFromResidenceDictionary: (NSDictionary *) dictionary;
 - (void) removeResidenceImage: (OMBResidenceImage *) residenceImage;
 - (NSString *) rentToCurrencyString;
+- (void) setImageForCenteredImageView: (OMBCenteredImageView *) imageView
+withURL: (NSURL *) url completion: (void (^)(void)) block;
 - (NSString *) shareString;
 - (NSArray *) sortedOffers;
 - (NSArray *) sortedOpenHouseDates;
 - (NSString *) statusString;
+- (void) updateCoverPhotoURL;
 - (void) updateResidenceWithResidence: (OMBResidence *) residence;
 - (BOOL) validTitle;
 

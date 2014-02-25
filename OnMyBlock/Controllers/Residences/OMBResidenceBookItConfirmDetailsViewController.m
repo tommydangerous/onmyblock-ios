@@ -385,14 +385,18 @@
   bedBathLabel.text = [NSString stringWithFormat: @"%.0f bd  /  %.0f ba",
     residence.bedrooms, residence.bathrooms];
   // Image
-    __weak typeof (residenceImageView) weakImageView = residenceImageView;
-  [residenceImageView.imageView setImageWithURL:residence.coverPhotoURL
-                               placeholderImage:nil
-                                      completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                                          if (!error) {
-                                              weakImageView.image = image;
-                                          }
-                                      }];
+  __weak typeof (residenceImageView) weakImageView = residenceImageView;
+  [residenceImageView.imageView setImageWithURL: residence.coverPhotoURL
+    placeholderImage: nil completed:
+      ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (error || !image) {
+          weakImageView.image = [OMBResidence placeholderImage];
+        }
+        if (!error) {
+          weakImageView.image = image;
+        }
+      }
+    ];
   // Move In & Out preferences
   NSDictionary *dates = [OMBUser currentUser].movedInOut;
   if([dates objectForKey:@1]){

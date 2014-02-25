@@ -153,11 +153,12 @@
   _inboxButton = [UIButton new];
   [_inboxButton addTarget: self action: @selector(showInbox)
     forControlEvents: UIControlEventTouchUpInside];
-  [_inboxButton setTitle: @"Inbox" forState: UIControlStateNormal];
+  [_inboxButton setTitle: @"Messages" forState: UIControlStateNormal];
   UIImageView *inboxImageView = [UIImageView new];
   inboxImageView.frame = discoverImageView.frame;
-  inboxImageView.image = [UIImage image: [UIImage imageNamed: @"message_icon.png"]
-    size: inboxImageView.frame.size];
+  inboxImageView.image = [UIImage image: 
+    [UIImage imageNamed: @"messages_icon_white.png"]
+      size: inboxImageView.frame.size];
   [_inboxButton addSubview: inboxImageView];
   [_renterButtons addObject: _inboxButton];
   // Notification badge

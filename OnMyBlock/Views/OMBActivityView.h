@@ -24,6 +24,7 @@
 #pragma mark - Initializer
 
 - (id) initWithAppleSpinner;
+- (id) initWithColor: (UIColor *) color;
 
 #pragma mark - Methods
 

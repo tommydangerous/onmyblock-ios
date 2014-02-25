@@ -356,6 +356,7 @@
     CGSizeMake(_offerTableView.frame.size.width - (OMBPadding * 2), 9999)
       font: [UIFont smallTextFont]].size;
   
+  BOOL performEffect = YES;
   // Student
   if ([self offerBelongsToCurrentUser]) {
     switch ([offer statusForStudent]) {
@@ -377,6 +378,7 @@
         // [respondButton setTitle: @"Waiting for landlord response" forState:
         //   UIControlStateNormal];
         effectLabel.text = @"Waiting for landlord response";
+        performEffect = NO;
         respondView.backgroundColor = [UIColor blueLight];
         respondButton.userInteractionEnabled = NO;
         break;
@@ -399,6 +401,7 @@
           // [respondButton setTitle: @"Waiting for student response" forState:
           //   UIControlStateNormal];
           effectLabel.text = @"Waiting for student response";
+          performEffect = NO;
           respondView.backgroundColor = [UIColor blueLightAlpha: 0.95f];
           respondButton.userInteractionEnabled = NO;
         }
@@ -418,7 +421,8 @@
       }
     }
   }
-  [effectLabel performEffectAnimation];
+  if (performEffect)
+    [effectLabel performEffectAnimation];
   
   // User image view
   if (offer.user.image) {

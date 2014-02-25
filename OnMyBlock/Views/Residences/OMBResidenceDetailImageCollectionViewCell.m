@@ -9,6 +9,7 @@
 #import "OMBResidenceDetailImageCollectionViewCell.h"
 
 #import "OMBCenteredImageView.h"
+#import "OMBResidence.h"
 #import "OMBResidenceImage.h"
 #import "UIImageView+WebCache.h"
 
@@ -41,16 +42,19 @@
 {
   __weak typeof (self.centeredImageView) weakImageView = self.centeredImageView;
   [self.centeredImageView.imageView setImageWithURL: residenceImage.imageURL
-    placeholderImage: nil options: SDWebImageRetryFailed
-      completed: ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+    placeholderImage: nil options: SDWebImageRetryFailed completed: 
+      ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (error || !image) {
+          weakImageView.image = [OMBResidence placeholderImage];
+        }
         if (error) {
           NSLog(@"Error: %@, For: %@", error, residenceImage.imageURL);
         }
         else {
           weakImageView.image = image;
         }
-    }
-  ];
+      }
+    ];
 }
 
 @end

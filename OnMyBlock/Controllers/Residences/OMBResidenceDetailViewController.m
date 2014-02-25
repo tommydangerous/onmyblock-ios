@@ -789,7 +789,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell = [[OMBResidenceDetailSellerCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier: SellerCellIdentifier];
         }
-        [cell loadUserData: residence.user];
+        [cell loadResidenceData: residence];
         return cell;
       }
     }
@@ -1239,10 +1239,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
     __weak typeof(scroll) weakScroll = scroll;
     [scroll.imageView setImageWithURL: residenceImage.imageURL
-      placeholderImage: nil options: SDWebImageRetryFailed
+      placeholderImage: nil options: SDWebImageRetryFailed 
         completed: 
           ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             if (error) {
+              weakScroll.imageView.image = [OMBResidence placeholderImage];
               NSLog(@"Error: %@, For: %@", error, residenceImage.imageURL);
             }
             else {

@@ -10,6 +10,7 @@
 
 #import "NSString+Extensions.h"
 #import "OMBAllResidenceStore.h"
+#import "OMBCenteredImageView.h"
 #import "OMBConnection.h"
 #import "OMBOffer.h"
 #import "OMBOpenHouse.h"
@@ -117,6 +118,11 @@ NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
 + (NSInteger) numberOfSteps
 {
   return 7;
+}
+
++ (UIImage *) placeholderImage
+{
+  return [UIImage imageNamed: @"residence_placeholder_image.png"];
 }
 
 #pragma mark Instance Methods
@@ -236,7 +242,6 @@ toImageSizeDictionaryWithSize: (CGSize) size
   }
   return nil;
 }
-
 
 - (UIImage *) coverPhotoForSize: (CGSize) size
 {
@@ -868,6 +873,29 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   return [NSString numberToCurrencyString: (int) _minRent];
 }
 
+- (void) setImageForCenteredImageView: (OMBCenteredImageView *) imageView
+withURL: (NSURL *) url completion: (void (^)(void)) block
+{
+  __weak typeof(imageView) weakImageView = imageView;
+  [self downloadCoverPhotoWithCompletion: ^(NSError *error) {
+    if (!url) {
+      imageView.image = [self coverPhoto];
+      if (block)
+        block();
+      return;
+    }
+    [weakImageView.imageView setImageWithURL: url placeholderImage: nil
+      options: SDWebImageRetryFailed completed:
+        ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+          if (image)
+            weakImageView.image = image;
+          if (block)
+            block();
+        }
+      ];
+  }];
+}
+
 - (NSString *) shareString
 {
   NSArray *array = [OnMyBlockAPIURL componentsSeparatedByString: OnMyBlockAPI];
@@ -911,6 +939,14 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
       stepsRemaining, stepsString];
   }
   return @"Ready to Publish";
+}
+
+- (void) updateCoverPhotoURL
+{
+  if ([_images count] > 0) {
+    OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex: 0];
+    self.coverPhotoURL = residenceImage.imageURL;
+  }
 }
 
 - (void) updateResidenceWithResidence: (OMBResidence *) residence

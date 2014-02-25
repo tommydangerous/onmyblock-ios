@@ -522,6 +522,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.row == 4) {
       //[self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
       [self showPickerView: propertyTypePicker];
+      [self.view endEditing: YES];
     }
   }
   // Delete Listing

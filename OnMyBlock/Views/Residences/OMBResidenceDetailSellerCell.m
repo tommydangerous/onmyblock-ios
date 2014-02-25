@@ -9,6 +9,7 @@
 #import "OMBResidenceDetailSellerCell.h"
 
 #import "OMBCenteredImageView.h"
+#import "OMBResidence.h"
 #import "OMBUser.h"
 
 @implementation OMBResidenceDetailSellerCell
@@ -68,28 +69,27 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 #pragma mark - Instance Methods
 
-- (void) loadUserData: (OMBUser *) user
+- (void) loadResidenceData: (OMBResidence *) residence
 {
   // Name
-  self.titleLabel.text = [user fullName];
+  self.titleLabel.text = [residence.user fullName];
 
   // Image
-  if (user.image) {
-    _sellerImageView.image = user.image;
+  if (residence.user.image) {
+    [self setImageFromUserOrResidence: residence];
   }
   else {
-    [user downloadImageFromImageURLWithCompletion: 
+    [residence.user downloadImageFromImageURLWithCompletion: 
       ^(NSError *error) {
-        _sellerImageView.image = user.image;
+        [self setImageFromUserOrResidence: residence];
       }
     ];
   }
 
   // About
-  NSString *string = user.about;
+  NSString *string = residence.user.about;
   if (![string length]) {
-    string = @"Please contact me for more details or any questions, "
-      @"thank you.";
+    string = @"Contact me for more details on this place! Thank you.";
   }
   _aboutLabel.attributedText = [string attributedStringWithFont:
     _aboutLabel.font lineHeight: 23.0f];
@@ -99,6 +99,17 @@ reuseIdentifier: (NSString *)reuseIdentifier
   _aboutLabel.frame = CGRectMake(_aboutLabel.frame.origin.x,
     _aboutLabel.frame.origin.y, _aboutLabel.frame.size.width,
       rect.size.height);
+}
+
+- (void) setImageFromUserOrResidence: (OMBResidence *) residence
+{
+  if (residence.user.hasDefaultImage) {
+    [residence setImageForCenteredImageView: _sellerImageView
+      withURL: residence.coverPhotoURL completion: nil];
+  }
+  else {
+    _sellerImageView.image = residence.user.image;
+  }
 }
 
 @end

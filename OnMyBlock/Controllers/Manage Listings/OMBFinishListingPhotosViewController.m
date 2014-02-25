@@ -9,6 +9,7 @@
 #import "OMBFinishListingPhotosViewController.h"
 
 #import "AMBlurView.h"
+#import "CustomLoading.h"
 #import "OMBEditablePhotoView.h"
 #import "OMBResidence.h"
 #import "OMBResidenceImage.h"
@@ -19,7 +20,7 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
-#import "CustomLoading.h"
+#import "UIImageView+WebCache.h"
 
 #define DEGREES_TO_RADIANS(x) (M_PI * x / 180.0)
 
@@ -351,7 +352,21 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 {
   for (OMBResidenceImage *residenceImage in [residence imagesArray]) {
     OMBEditablePhotoView *imageView = [[OMBEditablePhotoView alloc] init];
-    imageView.image = residenceImage.image;
+    if (residenceImage.imageURL) {
+      __weak typeof(imageView) weakImageView = imageView;
+      [imageView.imageView setImageWithURL: residenceImage.imageURL 
+        placeholderImage: nil options: SDWebImageRetryFailed completed:
+          ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if (image)
+              weakImageView.image = image;
+            else
+              weakImageView.image = residenceImage.image;
+          }
+        ];
+    }
+    else {
+      imageView.image = residenceImage.image;
+    }
     imageView.residenceImage = residenceImage;
     [imageView.deleteButton addTarget: self action: @selector(deleteImageView:)
       forControlEvents: UIControlEventTouchUpInside];
@@ -444,6 +459,7 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 
   // Clear the residences coverPhotoSizeDictionary
   [residence.coverPhotoSizeDictionary removeAllObjects];
+  [residence updateCoverPhotoURL];
 }
 
 - (void) edit

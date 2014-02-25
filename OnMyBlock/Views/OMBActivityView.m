@@ -17,11 +17,19 @@
 
 - (id) init
 {
+  return [self initWithColor: nil];
+}
+
+- (id) initWithColor: (UIColor *) color
+{
   if (!(self = [super init])) return nil;
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenHeight = screen.size.height; 
   CGFloat screenWidth  = screen.size.width;
+
+  if (!color)
+    color = [UIColor whiteColor];
 
   self.alpha = 0.0f;
   self.backgroundColor = [UIColor clearColor];
@@ -45,12 +53,12 @@
   circle = [UIView new];
   circle.frame = CGRectMake((_spinner.frame.size.width - circleSize) * 0.5f,
     (_spinner.frame.size.height - circleSize) * 0.5f, circleSize, circleSize);
-  circle.layer.borderColor = [UIColor whiteColor].CGColor;
+  circle.layer.borderColor = color.CGColor;
   circle.layer.borderWidth = 1.0f;
   circle.layer.cornerRadius = circle.frame.size.width * 0.5f;
   [_spinner addSubview: circle];
 
-  line = [[OMBCurvedLineView alloc] initWithFrame: _spinner.frame];
+  line = [[OMBCurvedLineView alloc] initWithFrame: _spinner.frame color: color];
   [_spinner addSubview: line];
 
   return self;

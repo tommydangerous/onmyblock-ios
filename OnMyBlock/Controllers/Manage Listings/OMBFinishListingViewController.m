@@ -260,7 +260,8 @@
   conn.completionBlock = ^(NSError *error) {
     // Add the cover photo
     if (!headerImageView.image)
-      headerImageView.image = [residence coverPhoto];
+      [residence setImageForCenteredImageView: headerImageView 
+        withURL: residence.coverPhotoURL completion: nil];
 
     // Update the Photos (X) count
     [self verifyPhotos];
@@ -268,10 +269,12 @@
   [conn start];
 
   // Image
-  if ([residence coverPhoto])
-    headerImageView.image = [residence coverPhoto];
-  else
-    [headerImageView clearImage];
+  // if ([residence coverPhoto])
+  //   headerImageView.image = [residence coverPhoto];
+  // else
+  //   [headerImageView clearImage];
+  [residence setImageForCenteredImageView: headerImageView 
+    withURL: residence.coverPhotoURL completion: nil];
 
   // Reload
   // Photos

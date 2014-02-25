@@ -13,6 +13,7 @@
 #import "OMBResidenceCoverPhotoURLConnection.h"
 #import "OMBTemporaryResidence.h"
 #import "UIImage+Color.h"
+#import "UIImageView+WebCache.h"
 
 @implementation OMBManageListingsCell
 
@@ -88,7 +89,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   residence = object;
 
   // Image
-  if (![residence coverPhoto])
+  if (!residence.coverPhotoURL)
     [self clearImage];
   NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
     centeredImageView.frame.size.width, centeredImageView.frame.size.height];
@@ -97,18 +98,21 @@ reuseIdentifier: (NSString *) reuseIdentifier
     centeredImageView.image = image;
   }
   else {
-    OMBResidenceCoverPhotoURLConnection *conn = 
-      [[OMBResidenceCoverPhotoURLConnection alloc] initWithResidence: 
-        residence];
-    conn.completionBlock = ^(NSError *error) {
-      if ([residence coverPhoto]) {
-        centeredImageView.image = [residence coverPhoto];
-        [residence.coverPhotoSizeDictionary setObject: centeredImageView.image
-          forKey: sizeKey];
-        [self setStatusLabelText];
-      }
-    };
-    [conn start];
+    __weak typeof(centeredImageView) weakCenteredImageView = centeredImageView;
+    [residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
+      [weakCenteredImageView.imageView setImageWithURL: 
+        residence.coverPhotoURL placeholderImage: nil
+          options: SDWebImageRetryFailed completed:
+            ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+              if (img) {
+                weakCenteredImageView.image = img;
+                [residence.coverPhotoSizeDictionary setObject: 
+                  weakCenteredImageView.image forKey: sizeKey];
+              }
+              [self setStatusLabelText];
+            }
+          ];
+    }];
   }
 
   // Address

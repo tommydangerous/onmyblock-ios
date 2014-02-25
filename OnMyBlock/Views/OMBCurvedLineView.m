@@ -10,11 +10,30 @@
 
 #define DEGREES_TO_RADIANS(degrees)  ((M_PI * degrees)/ 180)
 
+@interface OMBCurvedLineView ()
+{
+  UIColor *lineColor;
+}
+
+@end
+
 @implementation OMBCurvedLineView
+
+#pragma mark - Initializer
 
 - (id) initWithFrame: (CGRect) rect
 {
+  return [self initWithFrame: rect color: nil]; 
+}
+
+- (id) initWithFrame: (CGRect) rect color: (UIColor *) color
+{
   if (!(self = [super initWithFrame: rect])) return nil;
+
+  if (color)
+    lineColor = color;
+  else
+    lineColor = [UIColor whiteColor];
 
   self.backgroundColor = [UIColor clearColor];
 
@@ -87,7 +106,7 @@
 
   CGContextAddPath(context, path);
   
-  CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+  CGContextSetFillColorWithColor(context, lineColor.CGColor);
 
   CGContextFillPath(context);
   // CGContextStrokePath(context);

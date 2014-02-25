@@ -9,6 +9,7 @@
 #import "OMBOfferInquiryResidenceCell.h"
 
 #import "OMBResidence.h"
+#import "UIImageView+WebCache.h"
 
 @implementation OMBOfferInquiryResidenceCell
 
@@ -39,13 +40,19 @@ reuseIdentifier: (NSString *) reuseIdentifier
     objectImageView.image = image;
   }
   else {
+    __weak typeof(objectImageView) weakObjectImageView = objectImageView;
     [object downloadCoverPhotoWithCompletion: ^(NSError *error) {
-      if ([object coverPhoto]) {
-        objectImageView.image = [object coverPhoto];
-        [object.coverPhotoSizeDictionary setObject: 
-          objectImageView.image forKey: sizeKey];
-      }
+      [weakObjectImageView.imageView setImageWithURL: 
+        object.coverPhotoURL placeholderImage: nil 
+          options: SDWebImageRetryFailed completed:
+            ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+              weakObjectImageView.image = img;
+              [object.coverPhotoSizeDictionary setObject: 
+                weakObjectImageView.image forKey: sizeKey];
+            }
+          ];
     }];
+    objectImageView.image = [OMBResidence placeholderImage];
   }
   // Title
   if (object.title && [object.title length])

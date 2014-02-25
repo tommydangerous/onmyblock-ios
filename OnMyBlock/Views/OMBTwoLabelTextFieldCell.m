@@ -11,6 +11,13 @@
 #import "NSString+Extensions.h"
 #import "OMBViewController.h"
 
+@interface OMBTwoLabelTextFieldCell ()
+{
+  UIView *middleDivider;
+}
+
+@end
+
 @implementation OMBTwoLabelTextFieldCell
 
 #pragma mark - Initializer
@@ -49,6 +56,10 @@
   _secondTextField.returnKeyType = UIReturnKeyDone;
   _secondTextField.textColor = _firstTextField.textColor;
   [self.contentView addSubview: _secondTextField];
+
+  middleDivider = [UIView new];
+  middleDivider.backgroundColor = [UIColor grayLight];
+  [self.contentView addSubview: middleDivider];
   
   return self;
 }
@@ -89,6 +100,12 @@
   CGFloat originX2 = _firstTextField.frame.origin.x + _firstTextField.frame.size.width + padding;
   _secondTextField.frame = CGRectMake(originX2, 0.0f,
                                      textWidth, height);
+
+  CGFloat middleDividerWidth = 0.5f;
+  middleDivider.frame = CGRectMake(_firstTextField.frame.origin.x + 
+    _firstTextField.frame.size.width - middleDividerWidth,
+      _secondTextField.frame.origin.y, middleDividerWidth, 
+        _secondTextField.frame.size.height);
 }
 
 

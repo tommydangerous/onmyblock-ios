@@ -43,6 +43,8 @@
 
 float const PropertyInfoViewImageHeightPercentage = 0.4;
 
+int kMaxRadiusInMiles = 100;
+
 static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
 @implementation OMBMapViewController
@@ -257,7 +259,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   _listView.separatorStyle               = UITableViewCellSeparatorStyleNone;
   // _listView.showsVerticalScrollIndicator = NO;
   _listView.tableHeaderView = [[UIView alloc] initWithFrame: 
-    CGRectMake(0.0f, 0.0f, _listView.frame.size.width, 44.0f)];
+    CGRectMake(0.0f, 0.0f, _listView.frame.size.width, 
+      sortLabel.frame.size.height)];
   [_listViewContainer insertSubview: _listView atIndex: 0];
 
   // Map view
@@ -349,9 +352,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   emptyBackground = [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame:
     emptyBackgroundRect];
   emptyBackground.alpha = 0.0f;
-  emptyBackground.imageView.alpha = 0.9f;
-  emptyBackground.imageView.image = [UIImage imageNamed: @"search_icon.png"];
-  emptyBackground.label.textColor = [UIColor whiteColor];
+  emptyBackground.imageView.image = [UIImage imageNamed: @"search.png"];
   NSString *text = @"Sorry but we found no results near you. Please choose "
     @"another location or change filters.";
   [emptyBackground setLabelText: text];
@@ -870,7 +871,7 @@ withTitle: (NSString *) title;
   // One degree of latitude is always approximately 111 kilometers (69 miles)
   // One degree of longitude is approximately 111 kilometers (69 miles)
 
-  if (fetching) {
+  if (fetching || _radiusInMiles > kMaxRadiusInMiles) {
     return;
   }
   else {
@@ -918,7 +919,7 @@ withTitle: (NSString *) title;
         [self downloadResidenceImagesForVisibleCells];
 
       // Stop fetching residences after 100 mile radius
-      if (_radiusInMiles < 100) {
+      if (_radiusInMiles < kMaxRadiusInMiles) {
         NSInteger newCount = 
           [[OMBResidenceListStore sharedStore].residences count];
         NSLog(@"NEW COUNT:     %i", newCount);

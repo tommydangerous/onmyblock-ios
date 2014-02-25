@@ -47,7 +47,7 @@
   NSString *originalString = [json objectForKey: @"image"];
   NSString *string         = [json objectForKey: @"image"];
 
-    OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
+  OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
 
   // If the cover photo URL is not empty.png
   if (json && [string rangeOfString: @"empty"].location == NSNotFound) {
@@ -60,43 +60,46 @@
         OnMyBlockAPI] objectAtIndex: 0];
       string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
     }
-//    // Download the residence cover photo from the cover photo url
-//    coverPhotoDownloader = 
-//      [[OMBResidenceCoverPhotoDownloader alloc] initWithResidence:
-//        residence];
-//    coverPhotoDownloader.completionBlock = ^(NSError *error) {
-//      [super connectionDidFinishLoading: connection];
-//    };
-      NSString *postionValue = [json objectForKey: @"position"];
-      int position = (id)postionValue != [NSNull null] ? [postionValue intValue] : 1;
 
-      residenceImage.absoluteString = originalString;
-      residenceImage.imageURL = [NSURL URLWithString:string];
-      residenceImage.position       = position;
-      residenceImage.uid            = [[json objectForKey: @"id"] intValue];
+    // // Download the residence cover photo from the cover photo url
+    // coverPhotoDownloader = 
+    //  [[OMBResidenceCoverPhotoDownloader alloc] initWithResidence:
+    //    residence];
+    // coverPhotoDownloader.completionBlock = ^(NSError *error) {
+    //  [super connectionDidFinishLoading: connection];
+    // };
 
+    NSString *postionValue = [json objectForKey: @"position"];
+    int position = (id)postionValue != [NSNull null] ? [postionValue intValue] : 1;
+
+    residenceImage.absoluteString = originalString;
+    residenceImage.imageURL = [NSURL URLWithString:string];
+    residenceImage.position       = position;
+    residenceImage.uid            = [[json objectForKey: @"id"] intValue];
   }
   // If residence is not a temporary residence
   else if (![residence isKindOfClass: [OMBTemporaryResidence class]]) {
+    residenceImage.imageURL = [residence googleStaticStreetViewImageURL];
+    residenceImage.absoluteString = residenceImage.imageURL.absoluteString;
+    residenceImage.position = 0;
+    residenceImage.uid      = -9999 + arc4random_uniform(1000);
+    [residence addResidenceImage: residenceImage];
       
-      residenceImage.imageURL = [residence googleStaticStreetViewImageURL];
-      residenceImage.absoluteString = residenceImage.imageURL.absoluteString;
-      residenceImage.position = 0;
-      residenceImage.uid      = -9999 + arc4random_uniform(1000);
-      [residence addResidenceImage: residenceImage];
-      
-//    // If the residence has no image, show the Google Static street view
-//     googleStaticImageDownloader =
-//      [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:
-//        residence url: [residence googleStaticStreetViewImageURL]];
-//    googleStaticImageDownloader.completionBlock = ^(NSError *error) {
-//      [super connectionDidFinishLoading: connection];
-//    };
-//    [googleStaticImageDownloader startDownload];
+    // // If the residence has no image, show the Google Static street view
+    // googleStaticImageDownloader =
+    //   [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:
+    //     residence url: [residence googleStaticStreetViewImageURL]];
+    // googleStaticImageDownloader.completionBlock = ^(NSError *error) {
+    //   [super connectionDidFinishLoading: connection];
+    // };
+    // [googleStaticImageDownloader startDownload];
   }
+
+  if (residenceImage.imageURL) {
     residence.coverPhotoURL = residenceImage.imageURL;
-    [residence addResidenceImage:residenceImage];
-    [super connectionDidFinishLoading:connection];
+    [residence addResidenceImage: residenceImage];
+    [super connectionDidFinishLoading: connection];
+  }
 }
 
 #pragma mark - Override

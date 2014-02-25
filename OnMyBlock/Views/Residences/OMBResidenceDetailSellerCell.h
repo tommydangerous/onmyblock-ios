@@ -9,7 +9,7 @@
 #import "OMBResidenceDetailCell.h"
 
 @class OMBCenteredImageView;
-@class OMBUser;
+@class OMBResidence;
 
 @interface OMBResidenceDetailSellerCell : OMBResidenceDetailCell
 
@@ -20,6 +20,6 @@
 
 #pragma mark - Instance Methods
 
-- (void) loadUserData: (OMBUser *) user;
+- (void) loadResidenceData: (OMBResidence *) residence;
 
 @end

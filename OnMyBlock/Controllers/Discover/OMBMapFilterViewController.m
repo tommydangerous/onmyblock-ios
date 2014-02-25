@@ -109,7 +109,7 @@ float kStandardHeight = 44.0f;
 
   // Header for the neighborhood table view
   AMBlurView *headerView = [[AMBlurView alloc] init];
-  headerView.blurTintColor = [UIColor blueLight];
+  headerView.blurTintColor = [UIColor grayLight];
   headerView.frame = CGRectMake(0.0f, 0.0f, 
     neighborhoodTableViewContainer.frame.size.width, kStandardHeight);
   [neighborhoodTableViewContainer addSubview: headerView];
@@ -193,7 +193,7 @@ float kStandardHeight = 44.0f;
 
   // Header for rent picker view with cancel and done button
   AMBlurView *pickerViewHeader = [[AMBlurView alloc] init];
-  pickerViewHeader.blurTintColor = [UIColor blueLight];
+  pickerViewHeader.blurTintColor = [UIColor grayLight];
   pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
     self.view.frame.size.width, kStandardHeight);
 	[pickerViewContainer addSubview:pickerViewHeader];

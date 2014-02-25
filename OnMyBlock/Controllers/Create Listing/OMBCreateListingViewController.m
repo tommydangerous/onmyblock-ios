@@ -180,7 +180,7 @@
   // Current location button
   currentLocationButton = [UIButton new];
   currentLocationButton.frame = CGRectMake(0.0f, 0.0f,
-    padding * 1.5f, cityTextField.frame.size.height);
+    padding * 2, padding);
   UIImage *currentLocationButtonImage = [UIImage image: [UIImage imageNamed: 
     @"gps_cursor_blue.png"] size: CGSizeMake(padding, padding)];
   [currentLocationButton addTarget: self action: @selector(useCurrentLocation)

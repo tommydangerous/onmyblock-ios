@@ -96,7 +96,7 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   // Student
   // NSString *const OMBFakeUserAccessToken = 
   //   @"6591173fc1a1f1ac409c0efb3a0a05b1";
-    int kNotificationTimerInterval = 1;
+    int kNotificationTimerInterval = 1000;
 #elif __ENVIRONMENT__ == 2
   // Staging server
   NSString *const OMBFakeUserAccessToken = @"60721b1691403ed9037b52f8816e351e";
@@ -1129,6 +1129,10 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     if ([string isEqualToString: @"default_user_image.png"]) {
       string = [string stringByAppendingString: @"/"];
       _image = [UIImage imageNamed: @"profile_default_pic.png"];
+      self.hasDefaultImage = YES;
+    }
+    else {
+      self.hasDefaultImage = NO;
     }
     string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
   }

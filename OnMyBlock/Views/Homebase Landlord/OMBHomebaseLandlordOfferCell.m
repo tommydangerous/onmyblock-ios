@@ -15,6 +15,7 @@
 #import "OMBUser.h"
 #import "OMBViewController.h"
 #import "UIFont+OnMyBlock.h"
+#import "UIImageView+WebCache.h"
 
 @implementation OMBHomebaseLandlordOfferCell
 
@@ -25,6 +26,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
 {
   if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
     return nil;
+
+  self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
   CGRect screen       = [[UIScreen mainScreen] bounds];
   CGFloat screenWidth = screen.size.width;
@@ -39,7 +42,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   CGFloat width = screenWidth - (userImageView.frame.origin.x +
     userImageView.frame.size.width + padding + padding);
-  // Time
+  // Time; countdown: 1d 23h 23m 12s
   timeLabel = [UILabel new];
   timeLabel.font = [UIFont smallTextFontBold];
   timeLabel.frame = CGRectMake(userImageView.frame.origin.x + 
@@ -47,7 +50,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   timeLabel.textAlignment = NSTextAlignmentRight;
   [self.contentView addSubview: timeLabel];
   
-  // Name
+  // Name; James J.
   nameLabel = [UILabel new];
   nameLabel.font = [UIFont normalTextFontBold];
   nameLabel.frame = CGRectMake(timeLabel.frame.origin.x, 
@@ -55,12 +58,13 @@ reuseIdentifier: (NSString *) reuseIdentifier
   nameLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: nameLabel];
 
-  // Address
+  // Address; $400 - 8230 Costa Verde Blvd
   addressLabel = [UILabel new];
   addressLabel.font = [UIFont normalTextFont];
+  // Minus another padding to not run into the disclosure indicator
   addressLabel.frame = CGRectMake(nameLabel.frame.origin.x,
     nameLabel.frame.origin.y + nameLabel.frame.size.height,
-      nameLabel.frame.size.width, nameLabel.frame.size.height);
+      nameLabel.frame.size.width - padding, nameLabel.frame.size.height);
   addressLabel.textColor = [UIColor grayMedium];
   [self.contentView addSubview: addressLabel];
 
@@ -73,14 +77,14 @@ reuseIdentifier: (NSString *) reuseIdentifier
   rentLabel.textColor = [UIColor blueDark];
   // [self.contentView addSubview: rentLabel];
 
-  // Type
+  // Type; status: e.g. response required
   typeLabel = [UILabel new];
   typeLabel.font = [UIFont normalTextFont];
   typeLabel.frame = rentLabel.frame;
   typeLabel.textAlignment = NSTextAlignmentLeft;
   [self.contentView addSubview: typeLabel];
 
-  // Notes
+  // Notes; long descriptions
   notesLabel = [UILabel new];
   notesLabel.font = [UIFont smallTextFont];
   notesLabel.hidden = YES;
@@ -144,7 +148,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   // Rent
   CGRect rentLabelRect = [rentLabel.text boundingRectWithSize: 
-    CGSizeMake(screenWidth, typeLabel.frame.size.height) font: rentLabel.font];
+    CGSizeMake(screenWidth, typeLabel.frame.size.height) 
+      font: rentLabel.font];
   rentLabel.frame = CGRectMake(nameLabel.frame.origin.x,
     typeLabel.frame.origin.y + typeLabel.frame.size.height, 
       rentLabelRect.size.width, nameLabel.frame.size.height);
@@ -291,9 +296,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
   _offer = object;
 
   // Image
-  if (![_offer.residence coverPhoto]) {
+  if (!_offer.residence.coverPhotoURL)
     [userImageView clearImage];
-  }
+
   NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
     userImageView.bounds.size.width, userImageView.bounds.size.height];
   UIImage *image = [_offer.residence coverPhotoForSizeKey: sizeKey];
@@ -301,13 +306,24 @@ reuseIdentifier: (NSString *) reuseIdentifier
     userImageView.image = image;
   }
   else {
+    __weak typeof(userImageView) weakUserImageView = userImageView;
     [_offer.residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
-      if ([_offer.residence coverPhoto]) {
-        userImageView.image = [_offer.residence coverPhoto];
-        [_offer.residence.coverPhotoSizeDictionary setObject: 
-          userImageView.image forKey: sizeKey];
-      }
+      [weakUserImageView.imageView setImageWithURL: 
+        _offer.residence.coverPhotoURL placeholderImage: nil 
+          options: SDWebImageRetryFailed completed:
+            ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+              weakUserImageView.image = img;
+              [_offer.residence.coverPhotoSizeDictionary setObject: 
+                weakUserImageView.image forKey: sizeKey];
+            }
+          ];
+      // if ([_offer.residence coverPhoto]) {
+      //   userImageView.image = [_offer.residence coverPhoto];
+      //   [_offer.residence.coverPhotoSizeDictionary setObject: 
+      //     userImageView.image forKey: sizeKey];
+      // }
     }];
+    userImageView.image = [OMBResidence placeholderImage];
   }
 
   nameLabel.text = [_offer.residence.user shortName];

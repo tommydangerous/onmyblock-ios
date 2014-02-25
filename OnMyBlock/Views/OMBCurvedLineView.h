@@ -10,4 +10,8 @@
 
 @interface OMBCurvedLineView : UIView
 
+#pragma mark - Initializer
+
+- (id) initWithFrame: (CGRect) rect color: (UIColor *) color;
+
 @end
