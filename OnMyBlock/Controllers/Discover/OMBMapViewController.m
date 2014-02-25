@@ -33,6 +33,7 @@
 #import "OMBSpringFlowLayout.h"
 #import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
+#import "SVPullToRefresh.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 #import "UIImage+NegativeImage.h"
@@ -383,6 +384,14 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Find user's location
   [locationManager startUpdatingLocation];
+  
+  __weak OMBMapViewController *weakSelf = self;
+  
+  pagination = 0;
+  // setup infinite scrolling
+  [_listView addInfiniteScrollingWithActionHandler:^{
+    [weakSelf reloadWithPagination];
+  }];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -767,7 +776,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  return [currentResidencesForList count];
+  if([currentResidencesForList count] < (pagination + 1) * 10)
+    return [currentResidencesForList count];
+  else
+    return (pagination + 1) * 10;
+  
+  // return [currentResidencesForList count];
   // return [[OMBResidenceListStore sharedStore].residences count];
   // return [[self propertiesSortedBy: @"" ascending: NO] count];
 }
@@ -877,7 +891,7 @@ withTitle: (NSString *) title;
   else {
     fetching = YES;
     if (!activityView.isSpinning) {
-      [activityView startSpinning];
+      //[activityView startSpinning];
     }
   }
 
@@ -1125,6 +1139,25 @@ withTitle: (NSString *) title;
     [_listView reloadData];
 }
 
+
+-(void) reloadWithPagination
+{
+  pagination++;
+  __weak OMBMapViewController *weakSelf = self;
+  if (pagination >=1) {
+    dispatch_queue_t myThread = dispatch_queue_create("mythreadpagination", NULL);
+    dispatch_async(myThread, ^{
+      NSLog(@"reload with pagination");
+      dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"making reload data");
+        [weakSelf.listView reloadData];
+        [weakSelf.listView.infiniteScrollingView stopAnimating];
+      });
+      [weakSelf.listView.infiniteScrollingView stopAnimating];
+    });
+  }
+}
+
 - (void) removeAllAnnotations
 {
   for (id annotation in _mapView.annotations) {
@@ -1169,6 +1202,7 @@ withTitle: (NSString *) title;
 {
   currentResidencesForList = nil;
   [[OMBResidenceListStore sharedStore].residences removeAllObjects];
+  pagination = 0;
   [_listView reloadData];
 
   centerCoordinate = _mapView.centerCoordinate;

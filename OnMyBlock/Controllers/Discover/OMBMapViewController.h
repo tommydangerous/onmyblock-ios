@@ -52,6 +52,7 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
   NSTimeInterval lastOffsetCapture;
   CLLocationManager *locationManager;
   AMBlurView *navigationBarCover;
+  int pagination;
   CGFloat previousOffsetY;
   OMBPropertyInfoView *propertyInfoView;
   UISegmentedControl *segmentedControl;
