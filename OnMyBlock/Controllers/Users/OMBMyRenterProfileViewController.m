@@ -224,6 +224,86 @@
 							 rightPadding];
   textFieldToolbar.tintColor = [UIColor blue];
   aboutTextView.inputAccessoryView = textFieldToolbar;
+  
+  // faded background
+  fadedBackground = [[UIView alloc] init];
+  fadedBackground.alpha = 0.0f;
+  fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
+  fadedBackground.frame = screen;
+  [self.view addSubview: fadedBackground];
+  UITapGestureRecognizer *tapGesture2 =
+  [[UITapGestureRecognizer alloc] initWithTarget: self
+                                          action: @selector(hidePickerView)];
+  [fadedBackground addGestureRecognizer: tapGesture2];
+  
+  // Co-applicants picker view
+  // Picker view container
+  pickerViewContainer = [UIView new];
+  [self.view addSubview: pickerViewContainer];
+  
+  // Header for picker view with cancel and done button
+  UIView *pickerViewHeader = [[UIView alloc] init];
+  pickerViewHeader.backgroundColor = [UIColor grayUltraLight];
+  pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
+                                      screen.size.width, 44.0f);
+  [pickerViewContainer addSubview: pickerViewHeader];
+  
+  pickerViewHeaderLabel = [[UILabel alloc] init];
+  pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  pickerViewHeaderLabel.frame = pickerViewHeader.frame;
+  pickerViewHeaderLabel.text = @"";
+  pickerViewHeaderLabel.textAlignment = NSTextAlignmentCenter;
+  pickerViewHeaderLabel.textColor = [UIColor textColor];
+  [pickerViewHeader addSubview: pickerViewHeaderLabel];
+  
+  // Cancel button
+  UIButton *cancelButton = [UIButton new];
+  cancelButton.titleLabel.font = [UIFont fontWithName:
+    @"HelveticaNeue-Medium" size: 15];
+  CGRect cancelButtonRect = [@"Cancel" boundingRectWithSize:
+     CGSizeMake(pickerViewHeader.frame.size.width, pickerViewHeader.frame.size.height)
+        font: cancelButton.titleLabel.font];
+  cancelButton.frame = CGRectMake(padding, 0.0f,
+    cancelButtonRect.size.width, pickerViewHeader.frame.size.height);
+  [cancelButton addTarget: self
+    action: @selector(cancelPicker)
+      forControlEvents: UIControlEventTouchUpInside];
+  [cancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
+  [cancelButton setTitleColor: [UIColor blueDark]
+    forState: UIControlStateNormal];
+  [pickerViewHeader addSubview: cancelButton];
+  
+  // Done button
+  UIButton *doneButton = [UIButton new];
+  doneButton.titleLabel.font = cancelButton.titleLabel.font;
+  CGRect doneButtonRect = [@"Done" boundingRectWithSize:
+    CGSizeMake(pickerViewHeader.frame.size.width,
+      pickerViewHeader.frame.size.height)
+        font: doneButton.titleLabel.font];
+  doneButton.frame = CGRectMake(pickerViewHeader.frame.size.width -
+    (padding + doneButtonRect.size.width), 0.0f,
+       doneButtonRect.size.width, pickerViewHeader.frame.size.height);
+  [doneButton addTarget: self
+    action: @selector(donePicker)
+      forControlEvents: UIControlEventTouchUpInside];
+  [doneButton setTitle: @"Done" forState: UIControlStateNormal];
+  [doneButton setTitleColor: [UIColor blueDark]
+     forState: UIControlStateNormal];
+  [pickerViewHeader addSubview: doneButton];
+  
+  // co-applicant picker
+  coapplicantPickerView = [[UIPickerView alloc] init];
+  coapplicantPickerView.backgroundColor = [UIColor whiteColor];
+  coapplicantPickerView.dataSource = self;
+  coapplicantPickerView.delegate   = self;
+  coapplicantPickerView.frame = CGRectMake(0.0f,
+    pickerViewHeader.frame.origin.y + pickerViewHeader.frame.size.height,
+      coapplicantPickerView.frame.size.width, coapplicantPickerView.frame.size.height);
+  
+  pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
+    coapplicantPickerView.frame.size.width,
+      pickerViewHeader.frame.size.height +
+        coapplicantPickerView.frame.size.height);
 }
 
 - (void) viewDidDisappear: (BOOL) animated
@@ -357,15 +437,6 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 }
 
 #pragma mark - Protocol UIPickerViewDelegate
-
-- (void) pickerView: (UIPickerView *) pickerView 
-didSelectRow: (NSInteger) row inComponent: (NSInteger) component
-{
-  [valueDictionary setObject: [NSNumber numberWithInt: row + 1]
-    forKey: @"coapplicantCount"];
-  [self updateData];
-  [self updateRenterApplication];
-}
 
 - (CGFloat) pickerView: (UIPickerView *) pickerView
 rowHeightForComponent: (NSInteger) component
@@ -620,15 +691,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (section == OMBMyRenterProfileSectionRentalInfo) {
     // Co-applicants picker view
     if (row == OMBMyRenterProfileSectionRentalInfoRowCoapplicantsPickerView) {
-      static NSString *PickerID = @"PickerID";
-      OMBPickerViewCell *pickerCell =
-      [tableView dequeueReusableCellWithIdentifier: PickerID];
-      if (!pickerCell)
-        pickerCell = [[OMBPickerViewCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier: PickerID];
-      pickerCell.pickerView.dataSource = self;
-      pickerCell.pickerView.delegate   = self;
-      return pickerCell;
+      
     }
 
     static NSString *RentalInfoID = @"RentalInfoID";
@@ -747,7 +810,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   else if (section == OMBMyRenterProfileSectionRentalInfo) {
     // Co-applicants
     if (row == OMBMyRenterProfileSectionRentalInfoRowCoapplicants) {
-      [self reloadPickerViewRowAtIndexPath: indexPath];
+      //[self reloadPickerViewRowAtIndexPath: indexPath];
+      [self showPickerView: coapplicantPickerView];
     }
     // Co-signer
     else if (row == OMBMyRenterProfileSectionRentalInfoRowCosigners) {
@@ -825,14 +889,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // Co-applicants picker view
     else if (row == 
       OMBMyRenterProfileSectionRentalInfoRowCoapplicantsPickerView) {
-      if (section == selectedIndexPath.section && 
-        row == selectedIndexPath.row + 1) {
-
-        return OMBKeyboardHeight;
-      }
-      else {
         return 0.0f;
-      }
     }
     // Co-signers
     else if (row == OMBMyRenterProfileSectionRentalInfoRowCosigners) {
@@ -942,6 +999,12 @@ viewForHeaderInSection: (NSInteger) section
 
 #pragma mark - Instance Methods
 
+- (void) cancelPicker
+{
+  [self updatePicker];
+  [self hidePickerView];
+}
+
 - (void) done
 {
   [self.view endEditing: YES];
@@ -950,6 +1013,25 @@ viewForHeaderInSection: (NSInteger) section
 	savedTextString = nil;
   [self.table beginUpdates];
   [self.table endUpdates];
+}
+
+- (void) donePicker
+{
+  [self hidePickerView];
+  
+  // Co-applicants
+  if ([coapplicantPickerView superview]) {
+    NSInteger selectedRow = [coapplicantPickerView selectedRowInComponent:0] ;
+    [valueDictionary setObject: [NSNumber numberWithInt: selectedRow + 1]
+       forKey: @"coapplicantCount"];
+    OMBRenterProfileUserInfoCell *cell = (OMBRenterProfileUserInfoCell *)
+    [self.table cellForRowAtIndexPath:
+      [NSIndexPath indexPathForItem:OMBMyRenterProfileSectionRentalInfoRowCoapplicants
+        inSection:OMBMyRenterProfileSectionRentalInfo]];
+    cell.label.text = [NSString stringWithFormat:@"%i",selectedRow + 1] ;
+  }
+  
+  [self updatePicker];
 }
 
 - (void) facebookAuthenticationFinished: (NSNotification *) notification
@@ -970,6 +1052,16 @@ viewForHeaderInSection: (NSInteger) section
 {
   [[self appDelegate].container startSpinning];
   [[self appDelegate] openSession];
+}
+
+- (void) hidePickerView
+{
+  CGRect rect = pickerViewContainer.frame;
+  rect.origin.y = self.view.frame.size.height;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 0.0f;
+    pickerViewContainer.frame = rect;
+  }];
 }
 
 - (void) keyboardWillHide: (NSNotification *) notification
@@ -1058,35 +1150,6 @@ viewForHeaderInSection: (NSInteger) section
   }
 }
 
-- (void) reloadPickerViewRowAtIndexPath: (NSIndexPath *) indexPath
-{
-	editingTextField = nil;
-	editingTextView = nil;
-	savedTextString = nil;
-  [self.view endEditing: YES];
-
-  if (selectedIndexPath) {
-    if (selectedIndexPath.section == indexPath.section &&
-      selectedIndexPath.row == indexPath.row) {
-
-      selectedIndexPath = nil;
-    }
-    else {
-      selectedIndexPath = indexPath;
-    }
-  }
-  else {
-    selectedIndexPath = indexPath;
-  }
-  [self.table reloadRowsAtIndexPaths: @[
-    [NSIndexPath indexPathForRow: indexPath.row + 1 
-      inSection: indexPath.section]
-  ] withRowAnimation: UITableViewRowAnimationFade];
-
-  if (selectedIndexPath)
-    [self scrollToRowAtIndexPath: selectedIndexPath];
-}
-
 - (void) save
 {
   [[OMBUser currentUser] updateWithDictionary: valueDictionary
@@ -1105,6 +1168,23 @@ viewForHeaderInSection: (NSInteger) section
     }
   ];
   // [[self appDelegate].container startSpinning];
+}
+
+- (void) showPickerView:(UIPickerView *)pickerView
+{
+  NSString *titlePicker = @"";
+  if (coapplicantPickerView == pickerView) {
+		titlePicker = @"Co-applicants";
+		[pickerViewContainer addSubview:coapplicantPickerView];
+	}
+	pickerViewHeaderLabel.text = titlePicker;
+  CGRect rect = pickerViewContainer.frame;
+  rect.origin.y = self.view.frame.size.height -
+  pickerViewContainer.frame.size.height;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 1.0f;
+    pickerViewContainer.frame = rect;
+  }];
 }
 
 - (void) cancelFromInputAccessoryView
@@ -1174,6 +1254,7 @@ viewForHeaderInSection: (NSInteger) section
   if ([[user shortName] length])
     fullNameLabel.text = [user shortName];
 
+  [self updatePicker];
   [self.table reloadData];
 }
 
@@ -1187,6 +1268,14 @@ viewForHeaderInSection: (NSInteger) section
     }
   ];
   // [[self appDelegate].container startSpinning];
+}
+
+- (void) updatePicker
+{
+  int coapplicant = [[valueDictionary objectForKey: @"coapplicantCount"] intValue] - 1;
+  // Property type picker
+  [coapplicantPickerView selectRow: coapplicant
+    inComponent: 0 animated: NO];
 }
 
 @end

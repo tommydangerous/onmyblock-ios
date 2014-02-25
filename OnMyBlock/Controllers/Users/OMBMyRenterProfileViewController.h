@@ -51,11 +51,15 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRentalInfoRow) {
   OMBCenteredImageView *backImageView;
   UIView *backView;
   CGFloat backViewOriginY;
+	UIPickerView *coapplicantPickerView;
+  UIView *fadedBackground;
   UILabel *fullNameLabel;
   OMBGradientView *gradient;
   LIALinkedInHttpClient *linkedInClient;
   UIView *nameView;
   CGFloat nameViewOriginY;
+  UIView *pickerViewContainer;
+	UILabel *pickerViewHeaderLabel;
   UIBarButtonItem *previewBarButtonItem;
   UIView *scaleBackView;
   NSIndexPath *selectedIndexPath;
