@@ -1028,10 +1028,11 @@ viewForHeaderInSection: (NSInteger) section
     [self.table cellForRowAtIndexPath:
       [NSIndexPath indexPathForItem:OMBMyRenterProfileSectionRentalInfoRowCoapplicants
         inSection:OMBMyRenterProfileSectionRentalInfo]];
-    cell.label.text = [NSString stringWithFormat:@"%i",selectedRow + 1] ;
+    cell.valueLabel.text = [NSString stringWithFormat:@"%i",selectedRow + 1] ;
   }
   
   [self updatePicker];
+  [self updateRenterApplication];
 }
 
 - (void) facebookAuthenticationFinished: (NSNotification *) notification
