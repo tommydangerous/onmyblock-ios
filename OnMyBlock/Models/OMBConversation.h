@@ -11,6 +11,7 @@
 #import "OMBConnectionProtocol.h"
 
 @class OMBMessage;
+@class OMBResidence;
 @class OMBUser;
 
 @interface OMBConversation : NSObject <OMBConnectionProtocol>
@@ -19,7 +20,7 @@
 @property (nonatomic, strong) NSString *mostRecentMessageContent;
 @property (nonatomic) NSTimeInterval mostRecentMessageDate;
 @property (nonatomic, strong) NSString *nameOfConversation;
-@property (nonatomic) NSInteger residenceID;
+@property (nonatomic, strong) OMBResidence *residence;
 @property (nonatomic) NSTimeInterval updatedAt;
 @property (nonatomic, strong) NSString *userIDs;
 @property (nonatomic) NSInteger uid;
@@ -32,6 +33,8 @@
 #pragma mark - Instance Methods
 
 - (void) addMessage: (OMBMessage *) message;
+- (void) fetchConversationWithResidenceUID: (NSUInteger) uid
+completion: (void (^) (NSError *error)) block;
 - (void) fetchConversationWithUserUID: (NSUInteger) uid
 completion: (void (^) (NSError *error)) block;
 - (void) fetchMessagesAtPage: (NSUInteger) page delegate: (id) delegate

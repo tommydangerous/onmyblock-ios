@@ -9,10 +9,13 @@
 #import "OMBConversation.h"
 
 #import "NSDateFormatter+JSON.h"
+#import "OMBAllResidenceStore.h"
 #import "OMBConversationDetailConnection.h"
+#import "OMBConversationWithResidenceConnection.h"
 #import "OMBConversationWithUserConnection.h"
 #import "OMBMessage.h"
 #import "OMBMessagesLastFetchedWithUserConnection.h"
+#import "OMBResidence.h"
 #import "OMBUser.h"
 #import "OMBUserStore.h"
 
@@ -43,7 +46,6 @@
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
   [self readFromDictionary: [dictionary objectForKey: @"object"]];
-  NSLog(@"%@", dictionary);
 }
 
 #pragma mark - Methods
@@ -54,6 +56,16 @@
 {
   [messages setObject: message forKey:
     [NSNumber numberWithInt: message.uid]];
+}
+
+- (void) fetchConversationWithResidenceUID: (NSUInteger) uid
+completion: (void (^) (NSError *error)) block
+{
+  OMBConversationWithResidenceConnection *conn =
+    [[OMBConversationWithResidenceConnection alloc] initWithUID: uid];
+  conn.completionBlock = block;
+  conn.delegate = self;
+  [conn start];
 }
 
 - (void) fetchConversationWithUserUID: (NSUInteger) uid
@@ -123,9 +135,17 @@ delegate: (id) delegate completion: (void (^)(NSError *error)) block
       @"name_of_conversation"];
   }
 
-  // Residence ID
-  if ([dictionary objectForKey: @"residence_id"] != [NSNull null]) {
-    self.residenceID = [[dictionary objectForKey: @"residence_id"] intValue];
+  // Residence
+  if ([dictionary objectForKey: @"residence"] != [NSNull null]) {
+    NSDictionary *resDict = [dictionary objectForKey: @"residence"];
+    NSInteger residenceUID = [[resDict objectForKey: @"id"] intValue];
+    OMBResidence *res = [[OMBAllResidenceStore sharedStore] residenceForUID:
+      residenceUID];
+    if (!res) {
+      res = [[OMBResidence alloc] init];
+    }
+    [res readFromResidenceDictionary: resDict];
+    self.residence = res;
   }
 
   // Updated at

@@ -983,7 +983,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // Seller
   else if (indexPath.section == 4) {
     if (indexPath.row == 0) {
-      return kResidenceDetailCellSpacingHeight;
+      if (residence.user && residence.user.uid) {
+        return kResidenceDetailCellSpacingHeight;
+      }
     }
     else if (indexPath.row == 1) {
       // Only show this if there is a user for that residence
@@ -1112,6 +1114,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
       OMBMessageDetailViewController *vc = 
         [[OMBMessageDetailViewController alloc] initWithUser: residence.user];
+      [vc loadDefaultMessage];
+      [self.navigationController pushViewController: vc animated: YES];
+    }
+    else {
+      OMBMessageDetailViewController *vc = 
+        [[OMBMessageDetailViewController alloc] initWithResidence: residence];
       [vc loadDefaultMessage];
       [self.navigationController pushViewController: vc animated: YES];
     }

@@ -9,9 +9,10 @@
 #import "OMBInboxCell.h"
 
 #import "NSString+Extensions.h"
+#import "OMBCenteredImageView.h"
 #import "OMBConversation.h"
 #import "OMBMessage.h"
-#import "OMBCenteredImageView.h"
+#import "OMBResidence.h"
 #import "OMBUser.h"
 
 @interface OMBInboxCell ()
@@ -88,26 +89,48 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 - (void) loadConversationData: (OMBConversation *) object
 {
-  conversation = object;
-
-  OMBUser *user = conversation.otherUser;
-
   CGRect screen       = [[UIScreen mainScreen] bounds];
   CGFloat screenWidth = screen.size.width;
   CGFloat padding     = 15.0f;
 
-  // User image
+  conversation = object;
+
+  OMBUser *user = conversation.otherUser;
+  OMBResidence *residence = conversation.residence;
   NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
     userImageView.frame.size.width, userImageView.frame.size.height];
-  if (user.image) {
-    userImageView.image = [user imageForSizeKey: sizeKey];
-  }
-  else {
-    [user downloadImageFromImageURLWithCompletion: 
-      ^(NSError *error) {
-        userImageView.image = [user imageForSizeKey: sizeKey];
-      }
-    ];
+  // User image
+  if (user)
+    if (user.image) {
+      userImageView.image = [user imageForSizeKey: sizeKey];
+    }
+    else {
+      [user downloadImageFromImageURLWithCompletion: 
+        ^(NSError *error) {
+          userImageView.image = [user imageForSizeKey: sizeKey];
+        }
+      ];
+    }
+  else if (residence) {
+    UIImage *image = [residence coverPhotoForSizeKey: sizeKey];
+    if (image) {
+      userImageView.image = image;
+    }
+    else {
+      __weak typeof(userImageView) weakUserImageView = userImageView;
+      [residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
+        [weakUserImageView.imageView setImageWithURL: 
+          residence.coverPhotoURL placeholderImage: nil 
+            options: SDWebImageRetryFailed completed:
+              ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+                weakUserImageView.image = img;
+                [residence.coverPhotoSizeDictionary setObject: 
+                  weakUserImageView.image forKey: sizeKey];
+              }
+            ];
+      }];
+      userImageView.image = [OMBResidence placeholderImage];
+    }
   }
 
   // Message content

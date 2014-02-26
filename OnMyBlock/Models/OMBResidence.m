@@ -851,6 +851,9 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
     [user readFromDictionary: userDict];
     _user = user;
   }
+  else {
+    self.user = nil;
+  }
   // Zip
   if ([dictionary objectForKey: @"zip"] != [NSNull null])
     _zip = [dictionary objectForKey: @"zip"];

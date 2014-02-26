@@ -26,6 +26,7 @@
 #pragma mark - Initializer
 
 - (id) initWithConversation: (OMBConversation *) object;
+- (id) initWithResidence: (OMBResidence *) object;
 - (id) initWithUser: (OMBUser *) object;
 
 #pragma mark - Methods

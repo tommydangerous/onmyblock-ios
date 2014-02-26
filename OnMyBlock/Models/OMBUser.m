@@ -96,7 +96,7 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   // Student
   // NSString *const OMBFakeUserAccessToken = 
   //   @"6591173fc1a1f1ac409c0efb3a0a05b1";
-    int kNotificationTimerInterval = 1;
+    int kNotificationTimerInterval = 10000;
 #elif __ENVIRONMENT__ == 2
   // Staging server
   NSString *const OMBFakeUserAccessToken = @"60721b1691403ed9037b52f8816e351e";

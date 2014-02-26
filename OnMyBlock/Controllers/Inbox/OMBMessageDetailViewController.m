@@ -18,6 +18,7 @@
 #import "OMBMessageStore.h"
 #import "OMBOffer.h"
 #import "OMBOtherUserProfileViewController.h"
+#import "OMBResidence.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
@@ -34,6 +35,7 @@
   BOOL isFetching;
   NSTimeInterval lastFetched;
   UIBarButtonItem *phoneBarButtonItem;
+  OMBResidence *residence;
   CGPoint startingPoint;
   NSTimer *timer;
   OMBUser *user;
@@ -60,6 +62,20 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   self.fetching    = NO;
 
   self.title = conversation.nameOfConversation;
+
+  return self;
+}
+
+- (id) initWithResidence: (OMBResidence *) object
+{
+  if (!(self = [super init])) return nil;
+
+  residence = object;
+
+  self.currentPage = self.maxPages = 1;
+  self.fetching    = NO;
+
+  self.title = [residence.address capitalizedString];
 
   return self;
 }
@@ -239,7 +255,16 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     [self reloadTable];
     [self initialLoadOfMessages];
   }
-  else {
+  else if (residence) {
+    conversation = [[OMBConversation alloc] init];
+    [conversation fetchConversationWithResidenceUID: residence.uid completion: 
+      ^(NSError *error) {
+        [self reloadTable];
+        [self initialLoadOfMessages];
+      }
+    ];
+  }
+  else if (user) {
     conversation = [[OMBConversation alloc] init];
     [conversation fetchConversationWithUserUID: user.uid completion: 
       ^(NSError *error) {
