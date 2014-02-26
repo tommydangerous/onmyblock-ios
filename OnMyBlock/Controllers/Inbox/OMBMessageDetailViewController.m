@@ -35,6 +35,7 @@
   BOOL isFetching;
   NSTimeInterval lastFetched;
   UIBarButtonItem *phoneBarButtonItem;
+  UIBarButtonItem *renterApplicationBarButtonItem;
   OMBResidence *residence;
   CGPoint startingPoint;
   NSTimer *timer;
@@ -141,7 +142,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   // iOS 7 toolbar spacing is 16px; 20px on iPad
   leftPadding.width = 4.0f;
   // Renter application
-  UIBarButtonItem *renterApplicationBarButtonItem = 
+  renterApplicationBarButtonItem = 
     [[UIBarButtonItem alloc] initWithTitle: @"Profile"
       style: UIBarButtonItemStylePlain target: self
         action: @selector(showRenterProfile)];
@@ -263,6 +264,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
         [self initialLoadOfMessages];
       }
     ];
+    renterApplicationBarButtonItem.enabled = NO;
   }
   else if (user) {
     conversation = [[OMBConversation alloc] init];
@@ -808,9 +810,16 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showRenterProfile
 {
-  OMBOtherUserProfileViewController *vc =
-    [[OMBOtherUserProfileViewController alloc] initWithUser: user];
-  [self.navigationController pushViewController: vc animated: YES];
+  OMBUser *u;
+  if (conversation)
+    u = conversation.otherUser;
+  else if (user)
+    u = user;
+  if (u) {
+    OMBOtherUserProfileViewController *vc =
+      [[OMBOtherUserProfileViewController alloc] initWithUser: u];
+    [self.navigationController pushViewController: vc animated: YES];
+  }
 }
 
 - (void) timerFireMethod: (NSTimer *) timer

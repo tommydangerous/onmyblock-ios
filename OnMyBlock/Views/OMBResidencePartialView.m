@@ -173,7 +173,6 @@ NSString *const OMBEmptyResidencePartialViewCell =
 - (NSInteger) collectionView: (UICollectionView *) collectionView 
 numberOfItemsInSection: (NSInteger) section
 {
-  NSLog(@"%i", [_residence imagesArray].count);
   if ([_residence imagesArray].count)
     return [_residence imagesArray].count;
   return 1;

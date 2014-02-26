@@ -124,8 +124,9 @@ reuseIdentifier: (NSString *)reuseIdentifier
             options: SDWebImageRetryFailed completed:
               ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
                 weakUserImageView.image = img;
-                [residence.coverPhotoSizeDictionary setObject: 
-                  weakUserImageView.image forKey: sizeKey];
+                if (weakUserImageView.image)
+                  [residence.coverPhotoSizeDictionary setObject: 
+                    weakUserImageView.image forKey: sizeKey];
               }
             ];
       }];
