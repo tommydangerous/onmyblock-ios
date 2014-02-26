@@ -300,6 +300,15 @@
     pickerViewHeader.frame.origin.y + pickerViewHeader.frame.size.height,
       coapplicantPickerView.frame.size.width, coapplicantPickerView.frame.size.height);
   
+  // co-signer picker
+  cosignerPickerView = [[UIPickerView alloc] init];
+  cosignerPickerView.backgroundColor = coapplicantPickerView.backgroundColor;
+  cosignerPickerView.dataSource = self;
+  cosignerPickerView.delegate   = self;
+  cosignerPickerView.frame = CGRectMake(0.0f,
+    pickerViewHeader.frame.origin.y + pickerViewHeader.frame.size.height,
+      cosignerPickerView.frame.size.width, cosignerPickerView.frame.size.height);
+  
   pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
     coapplicantPickerView.frame.size.width,
       pickerViewHeader.frame.size.height +
@@ -433,7 +442,12 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 - (NSInteger) pickerView: (UIPickerView *) pickerView
  numberOfRowsInComponent: (NSInteger) component
 {
-  return 10;
+  if(pickerView == coapplicantPickerView)
+    return 11;
+  else if(pickerView == cosignerPickerView)
+    return 2;
+  
+  return 0;
 }
 
 #pragma mark - Protocol UIPickerViewDelegate
@@ -447,7 +461,18 @@ rowHeightForComponent: (NSInteger) component
 - (NSString *) pickerView: (UIPickerView *) pickerView 
 titleForRow: (NSInteger) row forComponent: (NSInteger) component
 {
-  return [NSString stringWithFormat: @"%i", row + 1];
+  NSString *title =@"";
+  if(pickerView == coapplicantPickerView){
+    if(row == 0)
+      title = @"None";
+    else
+      title = [NSString stringWithFormat: @"%i", row];
+  }
+  
+  else if(pickerView == cosignerPickerView)
+    title = (row == 0 ? @"Yes" : @"No");
+  
+  return title;
 }
 
 #pragma mark - Protocol UIScrollViewDelegate
@@ -710,8 +735,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (row == OMBMyRenterProfileSectionRentalInfoRowCoapplicants) {
       image = [UIImage imageNamed: @"group_icon.png"];
       string = @"Co-applicants";
-      valueString = [NSString stringWithFormat: @"%i",
-        [[valueDictionary objectForKey: @"coapplicantCount"] intValue]];
+      int coapplicants = [[valueDictionary objectForKey: @"coapplicantCount"] intValue];
+      if(coapplicants == 0)
+        valueString = @"None";
+      else
+        valueString = [NSString stringWithFormat: @"%i", coapplicants];
     }
     // Co-signer
     else if (row == OMBMyRenterProfileSectionRentalInfoRowCosigners) {
@@ -815,12 +843,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Co-signer
     else if (row == OMBMyRenterProfileSectionRentalInfoRowCosigners) {
-      BOOL coSigners = [[valueDictionary objectForKey: 
-        @"hasCosigner"] boolValue];
-      [valueDictionary setObject: [NSNumber numberWithBool: !coSigners]
-        forKey: @"hasCosigner"];
-      [self updateData];
-      [self updateRenterApplication];
+      [self showPickerView: cosignerPickerView];
     }
     // Facebook
     else if (row == OMBMyRenterProfileSectionRentalInfoRowFacebook) {
@@ -1022,13 +1045,30 @@ viewForHeaderInSection: (NSInteger) section
   // Co-applicants
   if ([coapplicantPickerView superview]) {
     NSInteger selectedRow = [coapplicantPickerView selectedRowInComponent:0] ;
-    [valueDictionary setObject: [NSNumber numberWithInt: selectedRow + 1]
+    [valueDictionary setObject: [NSNumber numberWithInt: selectedRow]
        forKey: @"coapplicantCount"];
     OMBRenterProfileUserInfoCell *cell = (OMBRenterProfileUserInfoCell *)
     [self.table cellForRowAtIndexPath:
       [NSIndexPath indexPathForItem:OMBMyRenterProfileSectionRentalInfoRowCoapplicants
         inSection:OMBMyRenterProfileSectionRentalInfo]];
-    cell.valueLabel.text = [NSString stringWithFormat:@"%i",selectedRow + 1] ;
+    NSString *text;
+    if(selectedRow == 0)
+      text = @"None";
+    else
+      text = [NSString stringWithFormat:@"%i", selectedRow];
+    cell.valueLabel.text = text ;
+  }
+  // Co-signer
+  else if ([cosignerPickerView superview])
+  {
+    BOOL selectedRow = ([cosignerPickerView selectedRowInComponent:0] == 0)? YES : NO ;
+    [valueDictionary setObject: [NSNumber numberWithBool: selectedRow]
+      forKey: @"hasCosigner"];
+    OMBRenterProfileUserInfoCell *cell = (OMBRenterProfileUserInfoCell *)
+      [self.table cellForRowAtIndexPath:
+        [NSIndexPath indexPathForItem:OMBMyRenterProfileSectionRentalInfoRowCosigners
+          inSection:OMBMyRenterProfileSectionRentalInfo]];
+    cell.valueLabel.text = selectedRow ? @"Yes" : @"No";
   }
   
   [self updatePicker];
@@ -1174,10 +1214,19 @@ viewForHeaderInSection: (NSInteger) section
 - (void) showPickerView:(UIPickerView *)pickerView
 {
   NSString *titlePicker = @"";
+  // Co-applicants picker view
   if (coapplicantPickerView == pickerView) {
 		titlePicker = @"Co-applicants";
-		[pickerViewContainer addSubview:coapplicantPickerView];
+    [cosignerPickerView removeFromSuperview];
+		[pickerViewContainer addSubview: coapplicantPickerView];
 	}
+  // Co-signers picker view
+  else if(cosignerPickerView == pickerView)
+  {
+    titlePicker = @"Co-signers";
+    [coapplicantPickerView removeFromSuperview];
+    [pickerViewContainer addSubview: cosignerPickerView];
+  }
 	pickerViewHeaderLabel.text = titlePicker;
   CGRect rect = pickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height -
@@ -1273,10 +1322,17 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) updatePicker
 {
-  int coapplicant = [[valueDictionary objectForKey: @"coapplicantCount"] intValue] - 1;
-  // Property type picker
+  NSInteger coapplicant = [[valueDictionary objectForKey:
+    @"coapplicantCount"] intValue];
+  NSInteger cosigner = [[valueDictionary objectForKey:
+    @"hasCosigner"] boolValue] ? 0 : 1;
+  
+  // Co-applicant picker
   [coapplicantPickerView selectRow: coapplicant
     inComponent: 0 animated: NO];
+  // Co-signer picker
+  [cosignerPickerView selectRow: cosigner
+    inComponent:0 animated:NO];
 }
 
 @end
