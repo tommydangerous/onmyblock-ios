@@ -422,6 +422,8 @@ CGFloat kBackgroundMaxScale = 5.0f;
   discoverImageView.image = [UIImage image: 
     [UIImage imageNamed: @"discover_icon.png"] 
       size: discoverImageView.frame.size];
+  discoverImageView.image.accessibilityIdentifier = @"discover_icon.png";
+  discoverImageView.tag = 11;
   [discoverButton addSubview: discoverImageView];
 
   // How it Works
@@ -721,7 +723,13 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   for(UIButton *button in currentMenuButtons){
     [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
   }
+  // change text color
   [button setTitleColor: [UIColor blue] forState: UIControlStateNormal];
+  // change icon color
+  UIImageView *iv = (UIImageView *)[button viewWithTag:11];
+  NSString *identifier = iv.image.accessibilityIdentifier;
+  iv.image = [UIImage changeColorForImage: [UIImage imageNamed:identifier] toColor:[UIColor blue]];
+  iv.image.accessibilityIdentifier = identifier;
 }
 
 - (void) drag: (UIPanGestureRecognizer *) gesture
@@ -1102,6 +1110,11 @@ completion: (void (^) (void)) block
   for (OMBUserMenu *m in userMenuArray) {
     for (UIButton *button in m.currentButtons) {
       [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+      UIImageView *iv = (UIImageView *)[button viewWithTag:11];
+      
+      NSString *identifier = iv.image.accessibilityIdentifier;
+      iv.image = [UIImage imageNamed:identifier];
+      iv.image.accessibilityIdentifier = identifier;
     }
   }
 }
