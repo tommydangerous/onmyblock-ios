@@ -12,7 +12,7 @@
 
 #pragma mark - Initializer
 
-- (id) initWithLastFetched: (NSTimeInterval) lastFetched 
-otherUser: (OMBUser *) otherUser;
+- (id) initWithConversationUID: (NSUInteger) uid 
+lastFetched: (NSTimeInterval) lastFetched;
 
 @end

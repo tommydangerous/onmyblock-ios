@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "NSError+OnMyBlock.h"
+#import "OMBConnectionProtocol.h"
 #import "OMBUser.h"
 
 extern NSTimeInterval RequestTimeoutInterval;
@@ -56,6 +57,7 @@ code: (NSInteger) code;
 - (NSString *) errorMessage;
 - (NSString *) errorTitle;
 - (NSDictionary *) json;
+- (NSUInteger) numberOfPages;
 - (NSDictionary *) objectDictionary;
 - (NSDictionary *) objectsDictionary;
 - (NSInteger) objectUID;

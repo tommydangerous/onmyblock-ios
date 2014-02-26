@@ -10,11 +10,18 @@
 
 #import "OMBMessage.h"
 
+@interface OMBMessageCreateConnection ()
+{
+  OMBMessage *message;
+}
+
+@end
+
 @implementation OMBMessageCreateConnection
 
 #pragma mark - Initializer
 
-- (id) initWithMessage: (OMBMessage *) object
+- (id) initWithMessage: (OMBMessage *) object conversationUID: (NSUInteger) uid
 {
   if (!(self = [super init])) return nil;
 
@@ -25,16 +32,41 @@
   NSMutableDictionary *objectParams = 
     [NSMutableDictionary dictionaryWithDictionary: @{
       @"content": message.content,
-      @"recipient_id": [NSNumber numberWithInt: message.recipient.uid]
+      @"conversation_id": [NSNumber numberWithInt: uid]
     }];
-  if (message.residenceUID)
-    [objectParams setObject: [NSNumber numberWithInt: message.residenceUID]
-      forKey: @"residence_id"];
+  // if (message.residenceUID)
+  //   [objectParams setObject: [NSNumber numberWithInt: message.residenceUID]
+  //     forKey: @"residence_id"];
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,
     @"message": objectParams
   };
   [self setRequestWithString: string method: @"POST" parameters: params];
+
+  return self;
+}
+
+- (id) initWithMessage: (OMBMessage *) object
+{
+  if (!(self = [super init])) return nil;
+
+  // message = object;
+
+  // NSString *string = [NSString stringWithFormat: @"%@/messages", 
+  //   OnMyBlockAPIURL];
+  // NSMutableDictionary *objectParams = 
+  //   [NSMutableDictionary dictionaryWithDictionary: @{
+  //     @"content": message.content,
+  //     @"recipient_id": [NSNumber numberWithInt: message.recipient.uid]
+  //   }];
+  // if (message.residenceUID)
+  //   [objectParams setObject: [NSNumber numberWithInt: message.residenceUID]
+  //     forKey: @"residence_id"];
+  // NSDictionary *params = @{
+  //   @"access_token": [OMBUser currentUser].accessToken,
+  //   @"message": objectParams
+  // };
+  // [self setRequestWithString: string method: @"POST" parameters: params];
 
   return self;
 }

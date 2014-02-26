@@ -90,7 +90,7 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 - (void) addCosigner: (OMBCosigner *) cosigner;
 - (void) addEmployment: (OMBEmployment *) employment;
 - (void) addLegalAnswer: (OMBLegalAnswer *) object;
-- (void) addMessage: (OMBMessage *) message;
+// - (void) addMessage: (OMBMessage *) message;
 - (void) addMovedInOutDates: (OMBOffer *) object;
 - (void) addPreviousRental: (OMBPreviousRental *) previousRental;
 - (void) addReceivedOffer: (OMBOffer *) offer;

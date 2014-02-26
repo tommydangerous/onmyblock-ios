@@ -1101,9 +1101,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
           [[OMBMessageNewViewController alloc] initWithUser: residence.user 
             residence: residence]] animated: YES completion: nil];*/
       
-      [self.navigationController pushViewController:
-        [[OMBMessageNewViewController alloc] initWithUser: residence.user
-          residence: residence] animated: YES];
+      // [self.navigationController pushViewController:
+      //   [[OMBMessageNewViewController alloc] initWithUser: residence.user
+      //     residence: residence] animated: YES];
+
+      OMBMessageDetailViewController *vc = 
+        [[OMBMessageDetailViewController alloc] initWithUser: residence.user];
+      [vc loadDefaultMessage];
+      [self.navigationController pushViewController: vc animated: YES];
     }
   }
   else {

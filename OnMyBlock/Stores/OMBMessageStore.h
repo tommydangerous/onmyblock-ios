@@ -11,21 +11,21 @@
 @class OMBMessage;
 
 @interface OMBMessageStore : NSObject
-{
-  NSMutableDictionary *messages;
-}
+// {
+//   NSMutableDictionary *messages;
+// }
 
-#pragma mark - Methods
+// #pragma mark - Methods
 
-#pragma mark - Class Methods
+// #pragma mark - Class Methods
 
-+ (OMBMessageStore *) sharedStore;
+// + (OMBMessageStore *) sharedStore;
 
-#pragma mark - Instance Methods
+// #pragma mark - Instance Methods
 
-- (void) addMessage: (OMBMessage *) message;
-- (void) createFakeMessages;
-- (NSArray *) mostRecentThreadedMessages;
-- (NSArray *) sortedMessagesForUserUID: (int) uid;
+// - (void) addMessage: (OMBMessage *) message;
+// - (void) createFakeMessages;
+// - (NSArray *) mostRecentThreadedMessages;
+// - (NSArray *) sortedMessagesForUserUID: (int) uid;
 
 @end

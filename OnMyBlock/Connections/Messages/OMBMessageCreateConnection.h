@@ -11,12 +11,10 @@
 @class OMBMessage;
 
 @interface OMBMessageCreateConnection : OMBConnection
-{
-  OMBMessage *message;
-}
 
 #pragma mark - Initializer
 
+- (id) initWithMessage: (OMBMessage *) object conversationUID: (NSUInteger) uid;
 - (id) initWithMessage: (OMBMessage *) object;
 
 @end

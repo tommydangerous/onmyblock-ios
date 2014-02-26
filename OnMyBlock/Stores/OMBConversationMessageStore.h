@@ -10,20 +10,20 @@
 
 @interface OMBConversationMessageStore : NSObject
 
-@property (nonatomic) id delegate;
-@property (nonatomic, strong) NSMutableDictionary *messages;
+// @property (nonatomic) id delegate;
+// @property (nonatomic, strong) NSMutableDictionary *messages;
 
-#pragma mark - Methods
+// #pragma mark - Methods
 
-#pragma mark - Class Methods
+// #pragma mark - Class Methods
 
-+ (OMBConversationMessageStore *) sharedStore;
+// + (OMBConversationMessageStore *) sharedStore;
 
-#pragma mark - Instance Methods
+// #pragma mark - Instance Methods
 
-- (void) fetchMessagesAtPage: (NSInteger) page 
-completion: (void (^) (NSError *error)) block;
-- (void) readFromDictionary: (NSDictionary *) dictionary;
-- (NSArray *) sortedMessages;
+// - (void) fetchMessagesAtPage: (NSInteger) page 
+// completion: (void (^) (NSError *error)) block;
+// - (void) readFromDictionary: (NSDictionary *) dictionary;
+// - (NSArray *) sortedMessages;
 
 @end

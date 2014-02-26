@@ -9,21 +9,14 @@
 #import "OMBTableViewCell.h"
 
 @class OMBCenteredImageView;
-@class OMBMessage;
+@class OMBConversation;
 
 @interface OMBInboxCell : OMBTableViewCell
-{
-  UILabel *dateTimeLabel;
-  OMBMessage *message;
-  UILabel *messageContentLabel;
-  OMBCenteredImageView *userImageView;
-  UILabel *userNameLabel;
-}
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
-- (void) loadMessageData: (OMBMessage *) object;
+- (void) loadConversationData: (OMBConversation *) object;
 
 @end
