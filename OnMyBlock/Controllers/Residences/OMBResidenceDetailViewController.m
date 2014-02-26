@@ -585,6 +585,11 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     CGRect currentOfferRect = _currentOfferLabel.frame;
     currentOfferRect.origin.y = currentOfferOriginY - adjustment;
     _currentOfferLabel.frame = currentOfferRect;
+    
+    if(y > backViewOffsetY + imageCollectionView.frame.size.height)
+      _table.backgroundColor = [UIColor grayUltraLight];
+    else
+      _table.backgroundColor = [UIColor clearColor];
   }
   // When changing the image in the image collection view
   else if (scrollView == imageCollectionView) {
