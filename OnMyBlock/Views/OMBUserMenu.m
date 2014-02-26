@@ -14,6 +14,7 @@
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
+#import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 
 @implementation OMBUserMenu
@@ -85,6 +86,7 @@
   searchImageView.image = [UIImage image: 
     [UIImage imageNamed: @"search_icon.png"] 
       size: searchImageView.frame.size];
+  searchImageView.image.accessibilityIdentifier = @"search_icon.png";
   [_searchButton addSubview: searchImageView];
   [_renterButtons addObject: _searchButton];
 
@@ -103,6 +105,8 @@
   discoverImageView.image = [UIImage image: 
     [UIImage imageNamed: @"discover_icon.png"] 
       size: discoverImageView.frame.size];
+  discoverImageView.image.accessibilityIdentifier = @"discover_icon.png";
+  discoverImageView.tag = 11;
   [_discoverButton addSubview: discoverImageView];
   [_renterButtons addObject: _discoverButton];
 
@@ -117,6 +121,7 @@
   UIImage *myRenterAppImage = [UIImage imageNamed: @"user_icon_white.png"];
   myRenterAppImageView.image = [UIImage image: myRenterAppImage
     size: myRenterAppImageView.frame.size];
+  myRenterAppImageView.image.accessibilityIdentifier = @"user_icon_white.png";
   [_myRenterAppButton addSubview: myRenterAppImageView];
   // [_renterButtons addObject: _myRenterAppButton];
 
@@ -130,6 +135,8 @@
   UIImage *homebaseImage = [UIImage imageNamed: @"homebase_icon.png"];
   homebaseImageView.image = [UIImage image: homebaseImage
     size: homebaseImageView.frame.size];
+  homebaseImageView.image.accessibilityIdentifier = @"homebase_icon.png";
+  homebaseImageView.tag = 11;
   [_renterHomebaseButton addSubview: homebaseImageView];
   [_renterButtons addObject: _renterHomebaseButton];
   // Notification badge
@@ -146,6 +153,8 @@
   UIImage *favoritesImage = [UIImage imageNamed: @"favorites_icon.png"];
   favoritesImageView.image = [UIImage image: favoritesImage
     size: favoritesImageView.frame.size];
+  favoritesImageView.image.accessibilityIdentifier = @"favorites_icon.png";
+  favoritesImageView.tag = 11;
   [_favoritesButton addSubview: favoritesImageView];
   [_renterButtons addObject: _favoritesButton];
 
@@ -159,6 +168,8 @@
   inboxImageView.image = [UIImage image: 
     [UIImage imageNamed: @"messages_icon_white.png"]
       size: inboxImageView.frame.size];
+  inboxImageView.image.accessibilityIdentifier = @"messages_icon_white.png";
+  inboxImageView.tag = 11;
   [_inboxButton addSubview: inboxImageView];
   [_renterButtons addObject: _inboxButton];
   // Notification badge
@@ -176,10 +187,12 @@
     forState: UIControlStateNormal];
   UIImageView *createListingImageView = [[UIImageView alloc] init];
   createListingImageView.frame = discoverImageView.frame;
-  UIImage *createListingImage = [UIImage imageNamed: 
+  UIImage *createListingImage = [UIImage imageNamed:
     @"create_listing_icon.png"];
   createListingImageView.image = [UIImage image: createListingImage
     size: createListingImageView.frame.size];
+  createListingImageView.image.accessibilityIdentifier = @"create_listing_icon.png";
+  createListingImageView.tag = 11;
   [_createListingButton addSubview: createListingImageView];
   [_sellerButtons addObject: _createListingButton];
 
@@ -191,10 +204,12 @@
     forState: UIControlStateNormal];
   UIImageView *sellerHomebaseImageView = [[UIImageView alloc] init];
   sellerHomebaseImageView.frame = discoverImageView.frame;
-  UIImage *sellerHomebaseImage = [UIImage imageNamed: 
+  UIImage *sellerHomebaseImage = [UIImage imageNamed:
     @"homebase_icon.png"];
   sellerHomebaseImageView.image = [UIImage image: sellerHomebaseImage
     size: sellerHomebaseImageView.frame.size];
+  sellerHomebaseImageView.image.accessibilityIdentifier = @"homebase_icon.png";
+  sellerHomebaseImageView.tag = 11;
   [_sellerHomebaseButton addSubview: sellerHomebaseImageView];
   [_sellerButtons addObject: _sellerHomebaseButton];
   // Notification badge
@@ -213,6 +228,8 @@
     @"account_icon.png"];
   manageListingImageView.image = [UIImage image: manageListingImage
     size: manageListingImageView.frame.size];
+  manageListingImageView.image.accessibilityIdentifier = @"account_icon.png";
+  manageListingImageView.tag = 11;
   [_manageListingsButton addSubview: manageListingImageView];
   [_sellerButtons addObject: _manageListingsButton];
 
@@ -283,7 +300,13 @@
 {
   // there are six OMBUserMenu in container
   [[self container] setTitleColorWhite];
+  // change text color
   [button setTitleColor: [UIColor blue] forState: UIControlStateNormal];
+  // changd image color
+  UIImageView *iv = (UIImageView *)[button viewWithTag:11];
+  NSString *identifier = iv.image.accessibilityIdentifier;
+  iv.image = [UIImage changeColorForImage: [UIImage imageNamed:identifier]  toColor:[UIColor blue]];
+  iv.image.accessibilityIdentifier = identifier;
 }
 
 - (OMBViewControllerContainer *) container
