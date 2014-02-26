@@ -234,16 +234,16 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     phoneBarButtonItem.enabled = NO;
   }
 
-  [self reloadTable];
-
   // If there is no conversation, fetch one
   if (conversation) {
+    [self reloadTable];
     [self initialLoadOfMessages];
   }
   else {
     conversation = [[OMBConversation alloc] init];
     [conversation fetchConversationWithUserUID: user.uid completion: 
       ^(NSError *error) {
+        [self reloadTable];
         [self initialLoadOfMessages];
       }
     ];
