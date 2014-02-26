@@ -184,7 +184,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
   controller.mailComposeDelegate = self;
   [controller setMessageBody:@"" isHTML:NO];
-  [controller setSubject:@"Lovely for iPhone Feedback"];
+  [controller setSubject:@"OnMyBlock for iPhone Feedback"];
   [controller setToRecipients:@[@"feedback@onmyblock.com"]];
   if(controller)
     [self presentViewController:controller animated:YES completion:nil];
