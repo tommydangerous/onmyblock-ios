@@ -8,18 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
+#import "OMBConnectionProtocol.h"
+
 @class OMBUser;
 
-@interface OMBMessage : NSObject
+@interface OMBMessage : NSObject <OMBConnectionProtocol>
 
 @property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic, strong) NSString *content;
-@property (nonatomic, strong) OMBUser *recipient;
-@property (nonatomic) NSInteger residenceUID;
-@property (nonatomic, strong) OMBUser *sender;
-@property (nonatomic) int uid;
+@property (nonatomic) NSInteger uid;
 @property (nonatomic) NSTimeInterval updatedAt;
-@property (nonatomic) BOOL viewed;
+@property (nonatomic, strong) OMBUser *user;
+@property (nonatomic, strong) NSString *viewedUserIDs;
 
 @property (nonatomic) CGSize sizeForMessageCell;
 
@@ -28,7 +28,9 @@
 #pragma mark - Instance Methods
 
 - (void) calculateSizeForMessageCell;
-- (OMBUser *) otherUser;
+- (void) createMessageConnectionWithConversationUID: (NSUInteger) uid;
+- (BOOL) isFromUser: (OMBUser *) user;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
+- (BOOL) viewedByUser: (OMBUser *) user;
 
 @end

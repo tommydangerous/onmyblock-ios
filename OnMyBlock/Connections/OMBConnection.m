@@ -161,6 +161,11 @@ code: (NSInteger) code
   return jsonDictionary;
 }
 
+- (NSUInteger) numberOfPages
+{
+  return [[[self json] objectForKey: @"pages"] intValue];
+}
+
 - (NSDictionary *) objectDictionary
 {
   return [[self json] objectForKey: @"object"];

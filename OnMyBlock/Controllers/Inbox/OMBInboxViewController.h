@@ -8,11 +8,14 @@
 
 #import "OMBTableViewController.h"
 
+#import "OMBConnectionProtocol.h"
+
 @class OMBActivityView;
 @class OMBEmptyBackgroundWithImageAndLabel;
 @class OMBMessageDetailViewController;
 
-@interface OMBInboxViewController : OMBTableViewController
+@interface OMBInboxViewController : OMBTableViewController 
+<OMBConnectionProtocol>
 {
   OMBActivityView *activityView;
   OMBMessageDetailViewController *messageDetailViewController;

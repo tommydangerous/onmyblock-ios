@@ -14,7 +14,7 @@
 #import "OMBAuthenticationLinkedInConnection.h"
 #import "OMBAuthenticationVenmoConnection.h"
 #import "OMBConfirmedTenantsConnection.h"
-#import "OMBConversationMessageStore.h"
+#import "OMBConversationStore.h"
 #import "OMBCosigner.h"
 #import "OMBOfferCreateConnection.h"
 #import "OMBEmployment.h"
@@ -287,21 +287,21 @@ withCompletion: (void (^) (NSError *error)) block
   [_renterApplication addLegalAnswer: object];
 }
 
-- (void) addMessage: (OMBMessage *) message
-{
-  NSNumber *number = [NSNumber numberWithInt: message.recipient.uid];
-  NSMutableArray *array = [_messages objectForKey: number];
-  if (!array) {
-    array = [NSMutableArray array];
-  }
-  NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
-    @"uid", message.uid];
-  if ([[array filteredArrayUsingPredicate: predicate] count] == 0) {
-    [message calculateSizeForMessageCell];
-    [array addObject: message];
-  }
-  [_messages setObject: array forKey: number];
-}
+// - (void) addMessage: (OMBMessage *) message
+// {
+//   NSNumber *number = [NSNumber numberWithInt: message.recipient.uid];
+//   NSMutableArray *array = [_messages objectForKey: number];
+//   if (!array) {
+//     array = [NSMutableArray array];
+//   }
+//   NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
+//     @"uid", message.uid];
+//   if ([[array filteredArrayUsingPredicate: predicate] count] == 0) {
+//     [message calculateSizeForMessageCell];
+//     [array addObject: message];
+//   }
+//   [_messages setObject: array forKey: number];
+// }
 
 - (void) addMovedIn: (OMBOffer *) object
 {
@@ -784,7 +784,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [OMBUser currentUser].uid = 0;
 
   // Clear conversations
-  [[OMBConversationMessageStore sharedStore].messages removeAllObjects];
+  [[OMBConversationStore sharedStore] removeAllObjects];
 
   // Delete the user defaults for the api key storage
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

@@ -9,9 +9,9 @@
 #import "OMBMessageDetailViewController.h"
 
 #import "NSString+Extensions.h"
+#import "OMBConversation.h"
 #import "OMBMessage.h"
 #import "OMBMessageCollectionViewCell.h"
-#import "OMBMessageCreateConnection.h"
 #import "OMBMessageDetailCollectionViewFlowLayout.h"
 #import "OMBMessageInputToolbar.h"
 #import "OMBMessagesLastFetchedWithUserConnection.h"
@@ -22,6 +22,25 @@
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 
+@interface OMBMessageDetailViewController ()
+<UICollectionViewDataSource, UICollectionViewDelegate, 
+  UICollectionViewDelegateFlowLayout, UIScrollViewDelegate, UITextViewDelegate>
+{
+  OMBMessageInputToolbar *bottomToolbar;
+  UIBarButtonItem *contactBarButtonItem;
+  OMBConversation *conversation;
+  UIToolbar *contactToolbar;
+  BOOL isEditing;
+  BOOL isFetching;
+  NSTimeInterval lastFetched;
+  UIBarButtonItem *phoneBarButtonItem;
+  CGPoint startingPoint;
+  NSTimer *timer;
+  OMBUser *user;
+}
+
+@end
+
 @implementation OMBMessageDetailViewController
 
 static NSString *CellIdentifier   = @"CellIdentifier";
@@ -31,17 +50,30 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 
 #pragma mark - Initializer
 
+- (id) initWithConversation: (OMBConversation *) object
+{
+  if (!(self = [super init])) return nil;
+
+  conversation = object;
+
+  self.currentPage = self.maxPages = 1;
+  self.fetching    = NO;
+
+  self.title = conversation.nameOfConversation;
+
+  return self;
+}
+
 - (id) initWithUser: (OMBUser *) object
 {
   if (!(self = [super init])) return nil;
 
   user = object;
 
-  _currentPage = _maxPages = 1;
-  _fetching    = NO;
+  self.currentPage = self.maxPages = 1;
+  self.fetching    = NO;
 
-  self.screenName  = @"Message Detail";
-  self.title       = [user fullName];
+  self.title = [user fullName];
 
   return self;
 }
@@ -174,8 +206,8 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 
   [timer invalidate];
 
-  // _collection.dataSource = nil;
-  // _collection.delegate = nil;
+  // scrollViewDidScroll will send to this zombie if you don't do this
+  self.collection.delegate = nil;
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -194,10 +226,6 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   // NSRunLoopCommonModes, mode used for tracking events
   [[NSRunLoop currentRunLoop] addTimer: timer forMode: NSRunLoopCommonModes];
 
-  [self assignMessages];
-  [_collection reloadData];
-  [self scrollToBottomAnimatedViewWillAppear: NO];
-
   // If no phone number
   if (user.phone && [[user phoneString] length]) {
     phoneBarButtonItem.enabled = YES;
@@ -207,6 +235,19 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   }
 
   [self reloadTable];
+
+  // If there is no conversation, fetch one
+  if (conversation) {
+    [self initialLoadOfMessages];
+  }
+  else {
+    conversation = [[OMBConversation alloc] init];
+    [conversation fetchConversationWithUserUID: user.uid completion: 
+      ^(NSError *error) {
+        [self initialLoadOfMessages];
+      }
+    ];
+  }
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -219,6 +260,18 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol OMBConnectionProtocol
+
+- (void) JSONDictionary: (NSDictionary *) dictionary
+{
+  [conversation readFromMessagesDictionary: dictionary];
+}
+
+- (void) numberOfPages: (NSUInteger) pages
+{
+  self.maxPages = pages;
+}
 
 #pragma mark - Protocol UICollectionViewDataSource
 
@@ -256,7 +309,6 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
   OMBMessageCollectionViewCell *cell = 
     [collectionView dequeueReusableCellWithReuseIdentifier: CellIdentifier 
       forIndexPath: indexPath];
-  // cell.backgroundColor = [UIColor redColor];
   OMBMessage *message = [self messageAtIndexPath: indexPath];
   [cell loadMessageData: message];
   
@@ -267,7 +319,7 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
       [NSIndexPath indexPathForRow: indexPath.row + 1 
         inSection: indexPath.section]];
     // If the next message is from another user
-    if (message.sender.uid != nextMessage.sender.uid) {
+    if (![message isFromUser: nextMessage.user]) {
       // Add the arrow on the speech bubble
       [cell setupForLastMessageFromSameUser];
     }
@@ -286,7 +338,7 @@ numberOfItemsInSection: (NSInteger) section
   // return 1 + [_messages count];
 
   // Empty cell at the end
-  return [_messages count];
+  return [self.messages count];
 }
 
 - (UICollectionReusableView *) collectionView: 
@@ -417,8 +469,8 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   //   [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] 
   //     lineHeight: 22.0f];
 
-  CGRect screen    = [[UIScreen mainScreen] bounds];
-  CGFloat padding  = [OMBMessageCollectionViewCell paddingForCell];
+  CGRect screen   = [[UIScreen mainScreen] bounds];
+  CGFloat padding = [OMBMessageCollectionViewCell paddingForCell];
   // CGFloat maxWidth = 
   //   [OMBMessageCollectionViewCell maxWidthForMessageContentView];
 
@@ -441,7 +493,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
       [NSIndexPath indexPathForRow: indexPath.row + 1 
         inSection: indexPath.section]];
     // If 2 consecutive messages are from the same person
-    if (message.sender.uid == nextMessage.sender.uid) {
+    if ([message isFromUser: nextMessage.user]) {
       // If 2 consecutive messages are within 60 seconds of each other
       if (nextMessage.createdAt - message.createdAt <= 60) {
         spacing = spacing * 0.5;
@@ -522,13 +574,8 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) assignMessages
 {
-  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: 
-    @"createdAt" ascending: YES];
-  _messages = [[[OMBUser currentUser] messagesWithUser: 
-    user] sortedArrayUsingDescriptors: @[sort]];
-  // OMBMessage *message = [_messages lastObject];
-  // NSLog(@"%@ - %@", message.content, [NSDate dateWithTimeIntervalSince1970:
-  //   message.createdAt]);
+  self.messages = [conversation sortedMessagesWithKey: @"createdAt"
+    ascending: YES];
 }
 
 - (void) done
@@ -542,6 +589,13 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   } completion: ^(BOOL finished) {
     contactToolbar.hidden = YES;
   }];
+}
+
+- (void) initialLoadOfMessages
+{
+  [self assignMessages];
+  [self.collection reloadData];
+  [self scrollToBottomAnimatedViewWillAppear: NO];
 }
 
 - (void) keyboardWillHide: (NSNotification *) notification
@@ -590,6 +644,15 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+- (void) loadDefaultMessage
+{
+  bottomToolbar.messageContentTextView.text = 
+    @"Hi, I’m very interested in your place. "
+    @"When would be a good time for me to visit to check it out? Thank you!";
+  [self textViewDidChange: bottomToolbar.messageContentTextView];
+  [bottomToolbar.messageContentTextView becomeFirstResponder];
+}
+
 - (void) loadEarlierMessages
 {
   // NEED TO FIGURE OUT HOW TO MAKE A HEADER SUPPLEMENTARY VIEW
@@ -604,7 +667,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   // Account for the Load Earlier Messages cell
   // return [_messages objectAtIndex: indexPath.row - 1];
-  return [_messages objectAtIndex: indexPath.row];
+  return [self.messages objectAtIndex: indexPath.row];
 }
 
 - (void) phoneCallUser
@@ -616,15 +679,13 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 - (void) reloadTable
 {
   BOOL firstTime = NO;
-  // if ([_messages count] == 0)
-  //   firstTime = YES;
-  if ([[[OMBUser currentUser] messagesWithUser: user] count] == 0)
+  if ([conversation numberOfMessages] == 0)
     firstTime = YES;
 
-  [[OMBUser currentUser] fetchMessagesAtPage: _currentPage withUser: user
-    delegate: self completion: ^(NSError *error) {
+  [conversation fetchMessagesAtPage: self.currentPage delegate: self
+    completion: ^(NSError *error) {
       [self assignMessages];
-      [_collection reloadData];
+      [self.collection reloadData];
       if (firstTime) {
         lastFetched = [[NSDate date] timeIntervalSince1970];
         [self scrollToBottomAnimated: NO];
@@ -668,19 +729,22 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 - (void) send
 {
   OMBMessage *message = [[OMBMessage alloc] init];
-  message.content   = bottomToolbar.messageContentTextView.text;
-  // Server time is ahead by X + 11 seconds
-  message.createdAt = [[NSDate date] timeIntervalSince1970] +
-    kWebServerTimeOffsetInSeconds + 11;
-  message.recipient = user;
-  message.sender    = [OMBUser currentUser];
+  message.content     = bottomToolbar.messageContentTextView.text;
+  NSInteger offset    = kWebServerTimeOffsetInSeconds;
+  if (offset > 0)
+    offset += 11; // Server time is ahead by X + 11 seconds
+  offset += [[NSDate date] timeIntervalSince1970];
+  message.createdAt = offset;
   message.uid       = -999 + arc4random_uniform(100);
-  message.updatedAt = [[NSDate date] timeIntervalSince1970] +
-    kWebServerTimeOffsetInSeconds + 11;
-  [[OMBUser currentUser] addMessage: message];
+  message.updatedAt = offset;
+  message.user      = [OMBUser currentUser];
+  message.viewedUserIDs = [NSString stringWithFormat: @"%i", message.user.uid];
 
+  [conversation addMessage: message];
   [self assignMessages];
   [_collection reloadData];
+  // Create the message
+  [message createMessageConnectionWithConversationUID: conversation.uid];
 
   // When there is only one message, it doesn't show
   // Only after you come back to this view does it show
@@ -694,8 +758,6 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
   bottomToolbar.messageContentTextView.text = @"";
   [self textViewDidChange: bottomToolbar.messageContentTextView];
-
-  [[[OMBMessageCreateConnection alloc] initWithMessage: message] start];
 
   // NSLog(@"%@ - %@", message.content, [NSDate dateWithTimeIntervalSince1970:
   //   message.createdAt]);
@@ -731,23 +793,17 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   NSInteger currentCount = [_messages count];
   
   if (!isFetching) {
-    OMBMessagesLastFetchedWithUserConnection *conn = 
-      [[OMBMessagesLastFetchedWithUserConnection alloc] initWithLastFetched:
-        lastFetched otherUser: user];
-    conn.completionBlock = ^(NSError *error) {
-      [self assignMessages];
-
-      CGFloat newCount = [_messages count];
-
-      if (currentCount != newCount) {
-        [_collection reloadData];
-        [self scrollToBottomAnimated: YES];
+    [conversation fetchMessagesWithTimeInterval: lastFetched delegate: self
+      completion: ^(NSError *error) {
+        [self assignMessages];
+        if (currentCount != [self.messages count]) {
+          [self.collection reloadData];
+          [self scrollToBottomAnimated: YES];
+        }
+        isFetching  = NO;
+        lastFetched = [[NSDate date] timeIntervalSince1970];
       }
-
-      isFetching = NO;
-      lastFetched = [[NSDate date] timeIntervalSince1970];
-    };
-    [conn start];
+    ];
   }
 }
 

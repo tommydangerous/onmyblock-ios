@@ -15,14 +15,17 @@
 
 #pragma mark - Initializer
 
-- (id) initWithPage: (NSInteger) page
+- (id) initWithPage: (NSUInteger) page
 {
   if (!(self = [super init])) return nil;
 
-  NSString *string = [NSString stringWithFormat:
-    @"%@/messages/?page=%i&access_token=%@",
-      OnMyBlockAPIURL, page, [OMBUser currentUser].accessToken];
-  [self setRequestWithString: string];
+  NSString *string = [NSString stringWithFormat: 
+    @"%@/messages/", OnMyBlockAPIURL];
+  NSDictionary *params = @{
+    @"access_token": [OMBUser currentUser].accessToken,
+    @"page": [NSNumber numberWithInt: page]
+  };
+  [self setRequestWithString: string parameters: params];
 
   return self;
 }
@@ -33,16 +36,12 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
-
-  // NSLog(@"OMBMessagesListConnection\n%@", json);
-
-  OMBInboxViewController *vc = (OMBInboxViewController *) self.delegate;
-  vc.maxPages = [[json objectForKey: @"pages"] intValue];
-
-  [[OMBConversationMessageStore sharedStore] readFromDictionary: json];
-
+  if ([self.delegate respondsToSelector: @selector(numberOfPages:)]) {
+    [self.delegate numberOfPages: [self numberOfPages]];
+  }
+  if ([self.delegate respondsToSelector: @selector(JSONDictionary:)]) {
+    [self.delegate JSONDictionary: [self json]];
+  }
   [super connectionDidFinishLoading: connection];
 }
 

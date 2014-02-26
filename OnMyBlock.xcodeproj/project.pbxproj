@@ -11,6 +11,10 @@
 		67E94814188DB97D007703FC /* OMBFilmstripImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */; };
 		67E9481E188DF726007703FC /* OMBMapFilterDateAvailableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */; };
 		A685EF95188F27E40074E336 /* CustomLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = A685EF94188F27E40074E336 /* CustomLoading.m */; };
+		AB00B9C118BCF9E30050D6F4 /* OMBConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9C018BCF9E30050D6F4 /* OMBConversation.m */; };
+		AB00B9C418BD1C0E0050D6F4 /* OMBConversationStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9C318BD1C0E0050D6F4 /* OMBConversationStore.m */; };
+		AB00B9CC18BD64DE0050D6F4 /* OMBConversationDetailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9CB18BD64DE0050D6F4 /* OMBConversationDetailConnection.m */; };
+		AB00B9CF18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9CE18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m */; };
 		AB01ED341857D67F00333390 /* OMBLegalQuestionListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED331857D67F00333390 /* OMBLegalQuestionListConnection.m */; };
 		AB01ED371857D96800333390 /* OMBLegalQuestionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED361857D96800333390 /* OMBLegalQuestionStore.m */; };
 		AB01ED3A1857DB5300333390 /* OMBLegalQuestion.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED391857DB5300333390 /* OMBLegalQuestion.m */; };
@@ -470,6 +474,15 @@
 		67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterDateAvailableCell.m; sourceTree = "<group>"; };
 		A685EF93188F27E40074E336 /* CustomLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomLoading.h; sourceTree = "<group>"; };
 		A685EF94188F27E40074E336 /* CustomLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomLoading.m; sourceTree = "<group>"; };
+		AB00B9BF18BCF9E30050D6F4 /* OMBConversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBConversation.h; sourceTree = "<group>"; };
+		AB00B9C018BCF9E30050D6F4 /* OMBConversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBConversation.m; sourceTree = "<group>"; };
+		AB00B9C218BD1C0E0050D6F4 /* OMBConversationStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBConversationStore.h; sourceTree = "<group>"; };
+		AB00B9C318BD1C0E0050D6F4 /* OMBConversationStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBConversationStore.m; sourceTree = "<group>"; };
+		AB00B9C818BD483F0050D6F4 /* OMBConnectionProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OMBConnectionProtocol.h; sourceTree = "<group>"; };
+		AB00B9CA18BD64DE0050D6F4 /* OMBConversationDetailConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBConversationDetailConnection.h; sourceTree = "<group>"; };
+		AB00B9CB18BD64DE0050D6F4 /* OMBConversationDetailConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBConversationDetailConnection.m; sourceTree = "<group>"; };
+		AB00B9CD18BDD0D50050D6F4 /* OMBConversationWithUserConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBConversationWithUserConnection.h; sourceTree = "<group>"; };
+		AB00B9CE18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBConversationWithUserConnection.m; sourceTree = "<group>"; };
 		AB01ED321857D67F00333390 /* OMBLegalQuestionListConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLegalQuestionListConnection.h; sourceTree = "<group>"; };
 		AB01ED331857D67F00333390 /* OMBLegalQuestionListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBLegalQuestionListConnection.m; sourceTree = "<group>"; };
 		AB01ED351857D96800333390 /* OMBLegalQuestionStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLegalQuestionStore.h; sourceTree = "<group>"; };
@@ -1376,6 +1389,25 @@
 			name = "Progress Indicator Frames";
 			sourceTree = "<group>";
 		};
+		AB00B9C718BD48340050D6F4 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				AB00B9C818BD483F0050D6F4 /* OMBConnectionProtocol.h */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		AB00B9C918BD64C60050D6F4 /* Conversations */ = {
+			isa = PBXGroup;
+			children = (
+				AB00B9CA18BD64DE0050D6F4 /* OMBConversationDetailConnection.h */,
+				AB00B9CB18BD64DE0050D6F4 /* OMBConversationDetailConnection.m */,
+				AB00B9CD18BDD0D50050D6F4 /* OMBConversationWithUserConnection.h */,
+				AB00B9CE18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m */,
+			);
+			path = Conversations;
+			sourceTree = "<group>";
+		};
 		AB01ED641859653800333390 /* PayPalMobile */ = {
 			isa = PBXGroup;
 			children = (
@@ -1620,6 +1652,7 @@
 		AB802EA318109E5200E04D11 /* OnMyBlock */ = {
 			isa = PBXGroup;
 			children = (
+				AB00B9C718BD48340050D6F4 /* Protocol */,
 				ABB3C56C1811719B00DD91C9 /* AppDelegate */,
 				AB9B263D1811CB1300E6DAC4 /* Categories */,
 				AB9B264A1811CE5E00E6DAC4 /* Connections */,
@@ -1903,6 +1936,8 @@
 				ABE4FBDE18902B140009D643 /* OMBPayoutMethod.m */,
 				ABE679AD1891C30300A494FB /* OMBPayoutTransaction.h */,
 				ABE679AE1891C30300A494FB /* OMBPayoutTransaction.m */,
+				AB00B9BF18BCF9E30050D6F4 /* OMBConversation.h */,
+				AB00B9C018BCF9E30050D6F4 /* OMBConversation.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1932,6 +1967,8 @@
 				AB57EA29186CA065001682DB /* OMBTermsOfServiceStore.m */,
 				ABE2816A186950D400A5D14E /* OMBUserStore.h */,
 				ABE2816B186950D400A5D14E /* OMBUserStore.m */,
+				AB00B9C218BD1C0E0050D6F4 /* OMBConversationStore.h */,
+				AB00B9C318BD1C0E0050D6F4 /* OMBConversationStore.m */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -1989,6 +2026,7 @@
 		AB9B264A1811CE5E00E6DAC4 /* Connections */ = {
 			isa = PBXGroup;
 			children = (
+				AB00B9C918BD64C60050D6F4 /* Conversations */,
 				ABB911C8189998630046611F /* Authentications */,
 				ABB9114F18971C690046611F /* Users */,
 				ABE679B918932E4C00A494FB /* Payout Transactions */,
@@ -3004,6 +3042,7 @@
 				ABB70079187BA9B9005F0730 /* OMBHomebaseRenterPaymentNotificationCell.m in Sources */,
 				ABB9117418982B330046611F /* OMBRenterProfileViewController.m in Sources */,
 				ABBA58CB18761D2F00E9BF4E /* OMBFinishListingOtherDetailsOpenHouseDatesViewController.m in Sources */,
+				AB00B9CC18BD64DE0050D6F4 /* OMBConversationDetailConnection.m in Sources */,
 				ABE4FBF7189045E40009D643 /* OMBPayoutMethodsViewController.m in Sources */,
 				ABB70083187C54C5005F0730 /* OMBRentDepositInfoCell.m in Sources */,
 				ABBA5866186E2A9100E9BF4E /* OMBFinishListingSectionViewController.m in Sources */,
@@ -3057,6 +3096,7 @@
 				ABB911C318998FB30046611F /* AFURLConnectionOperation.m in Sources */,
 				AB131F2E1885C87B0057D769 /* OMBResidenceImageSlideViewController.m in Sources */,
 				ABA5B41C1856B07000F825E1 /* OMBEmploymentAddViewController.m in Sources */,
+				AB00B9C418BD1C0E0050D6F4 /* OMBConversationStore.m in Sources */,
 				AB756AAD185A16D0001AF572 /* OMBIntroStillImagesViewController.m in Sources */,
 				AB6155DC1850DB3600A193C7 /* UIImage+FixOrientation.m in Sources */,
 				ABBA58A6187148CC00E9BF4E /* OMBFinishListingShowMoreCell.m in Sources */,
@@ -3094,6 +3134,7 @@
 				ABABEC351863C239008B6768 /* ILTranslucentView.m in Sources */,
 				ABA080861868E76200C7B851 /* OMBTextViewViewController.m in Sources */,
 				ABE4FBFA189045E40009D643 /* OMBSelectPayoutMethodViewController.m in Sources */,
+				AB00B9C118BCF9E30050D6F4 /* OMBConversation.m in Sources */,
 				AB57EA2A186CA065001682DB /* OMBTermsOfServiceStore.m in Sources */,
 				AB9B26271811AF7B00E6DAC4 /* OMBAnnotationStore.m in Sources */,
 				AB01ED4018580B0700333390 /* OMBLegalAnswer.m in Sources */,
@@ -3175,6 +3216,7 @@
 				ABBA5879186F7D2800E9BF4E /* OMBFinishListingPhotosViewController.m in Sources */,
 				ABB91182189865880046611F /* OMBEditProfileViewController.m in Sources */,
 				ABCB36AF187C8D2F008A0EEF /* OMBOfferAcceptedView.m in Sources */,
+				AB00B9CF18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m in Sources */,
 				AB63D2201821B93A00D63800 /* OMBLoginConnection.m in Sources */,
 				ABB911C418998FB30046611F /* AFURLRequestSerialization.m in Sources */,
 				ABED5FDF1896E8CE00AD630C /* DRNRealTimeBlurView.m in Sources */,

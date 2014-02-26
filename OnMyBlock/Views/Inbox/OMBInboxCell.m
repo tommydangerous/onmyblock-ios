@@ -9,9 +9,21 @@
 #import "OMBInboxCell.h"
 
 #import "NSString+Extensions.h"
+#import "OMBConversation.h"
 #import "OMBMessage.h"
 #import "OMBCenteredImageView.h"
 #import "OMBUser.h"
+
+@interface OMBInboxCell ()
+{
+  UILabel *dateTimeLabel;
+  OMBConversation *conversation;
+  UILabel *messageContentLabel;
+  OMBCenteredImageView *userImageView;
+  UILabel *userNameLabel;
+}
+
+@end
 
 @implementation OMBInboxCell
 
@@ -63,7 +75,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 #pragma mark - Methods
 
-#pragma mark - Instance Methods
+#pragma mark - Class Methods
 
 + (CGFloat) heightForCell
 {
@@ -72,49 +84,62 @@ reuseIdentifier: (NSString *)reuseIdentifier
   return padding + (screen.size.width * 0.2) + padding;
 }
 
-- (void) loadMessageData: (OMBMessage *) object
+#pragma mark - Instance Methods
+
+- (void) loadConversationData: (OMBConversation *) object
 {
-  message = object;
+  conversation = object;
 
-  // See who sent this message
-  OMBUser *otherUser = [message otherUser];
+  OMBUser *user = conversation.otherUser;
 
-  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGRect screen       = [[UIScreen mainScreen] bounds];
   CGFloat screenWidth = screen.size.width;
-  CGFloat padding = 15.0f;
+  CGFloat padding     = 15.0f;
 
   // User image
   NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
     userImageView.frame.size.width, userImageView.frame.size.height];
-  if (otherUser.image) {
-    userImageView.image = [otherUser imageForSizeKey: sizeKey];
+  if (user.image) {
+    userImageView.image = [user imageForSizeKey: sizeKey];
   }
   else {
-    [otherUser downloadImageFromImageURLWithCompletion: 
+    [user downloadImageFromImageURLWithCompletion: 
       ^(NSError *error) {
-        userImageView.image = [otherUser imageForSizeKey: sizeKey];
+        userImageView.image = [user imageForSizeKey: sizeKey];
       }
     ];
   }
 
   // Message content
-  messageContentLabel.text = message.content;
+  messageContentLabel.text = conversation.mostRecentMessageContent;
 
   // Date time
   NSDateFormatter *dateFormatter = [NSDateFormatter new];
   NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
   float secondsInADay = 60 * 60 * 24;
   // Within a day
-  if (message.createdAt > now - (secondsInADay * 1)) {
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  NSInteger components = 
+    (NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit);
+  NSDateComponents *todayComps = [calendar components: components
+    fromDate: [NSDate date]];
+  NSDateComponents *messageComps = [calendar components: components
+    fromDate: [NSDate dateWithTimeIntervalSince1970: 
+      conversation.mostRecentMessageDate]];
+
+  BOOL isToday = [todayComps day] == [messageComps day] && 
+    [todayComps month] == [messageComps month] && 
+      [todayComps year] == [todayComps year];
+  if (isToday) {
     // 4:31 pm
     dateFormatter.dateFormat = @"h:mm a";
   }
   // Within the week
-  else if (message.createdAt > now - (secondsInADay * 7)) {
+  else if (conversation.mostRecentMessageDate > now - (secondsInADay * 7)) {
     // Sun
     dateFormatter.dateFormat = @"EEE";
   }
-  else if (message.createdAt > now - (secondsInADay * 365)) {
+  else if (conversation.mostRecentMessageDate > now - (secondsInADay * 365)) {
     // Jan 4
     dateFormatter.dateFormat = @"MMM d";
   }
@@ -123,8 +148,8 @@ reuseIdentifier: (NSString *)reuseIdentifier
     dateFormatter.dateFormat = @"M/d/yy";
   }
   dateTimeLabel.text = [dateFormatter stringFromDate: 
-    [NSDate dateWithTimeIntervalSince1970: message.createdAt]];
-  if (message.createdAt > now - (secondsInADay * 1))
+    [NSDate dateWithTimeIntervalSince1970: conversation.mostRecentMessageDate]];
+  if (isToday)
     dateTimeLabel.text = [dateTimeLabel.text lowercaseString];
   // CGRect dateTimeRect = [dateTimeLabel.text boundingRectWithSize: 
   //   CGSizeMake(screenWidth, 22.0f) font: dateTimeLabel.font];
@@ -135,18 +160,15 @@ reuseIdentifier: (NSString *)reuseIdentifier
         100.0f, 20.0f);
 
   // User name
-  userNameLabel.text = [otherUser fullName];
+  userNameLabel.text = conversation.nameOfConversation;
   CGRect userNameRect = userNameLabel.frame;
   userNameRect.size.width = screenWidth - 
     (padding + userImageView.frame.size.width + padding + padding +
       dateTimeLabel.frame.size.width + padding);
   userNameLabel.frame = userNameRect;
 
-  if (message.sender.uid == [OMBUser currentUser].uid)
-    message.viewed = YES;
-
   // Viewed; change fonts
-  if (message.viewed) {
+  if ([conversation viewedByUser: [OMBUser currentUser]]) {
     dateTimeLabel.textColor = [UIColor grayMedium];
     messageContentLabel.textColor = [UIColor grayMedium];
     messageContentLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 

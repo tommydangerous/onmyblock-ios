@@ -133,7 +133,7 @@
   
   CGFloat paddingFromSides = padding * 2;
   CGFloat originX = 0.0f;
-  if (message.sender.uid == [OMBUser currentUser].uid) {
+  if ([message isFromUser: [OMBUser currentUser]]) {
     originX = screen.size.width - 
       (padding + rect.size.width + padding + paddingFromSides);
     messageContentLabel.textColor      = [UIColor whiteColor];
@@ -156,7 +156,7 @@
   messageArrowOriginY -= messageArrow.frame.size.height;
   CGFloat messageArrowOriginX = 0.0f;
   // If current user is the sender of the message
-  if (message.sender.uid == [OMBUser currentUser].uid) {
+  if ([message isFromUser: [OMBUser currentUser]]) {
     messageArrowOriginX = messageContentView.frame.origin.x + 
       messageContentView.frame.size.width - 
         (messageArrow.frame.size.width * 0.9);
@@ -175,13 +175,13 @@
     messageContentView.frame.size.height - otherUserImageView.frame.size.height,
       otherUserImageView.frame.size.width, 
         otherUserImageView.frame.size.height);
-  if (message.sender.uid != [OMBUser currentUser].uid)
-    otherUserImageView.image = message.sender.image;
+  if (![message isFromUser: [OMBUser currentUser]])
+    otherUserImageView.image = message.user.image;
 }
 
 - (void) setupForLastMessageFromSameUser
 {
-  if (message.sender.uid == [OMBUser currentUser].uid) {
+  if ([message isFromUser: [OMBUser currentUser]]) {
 
   }
   else {

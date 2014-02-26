@@ -260,7 +260,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
                                [NSIndexPath indexPathForRow: indexPath.row + 1
                                                   inSection: indexPath.section]];
     // If the next message is from another user
-    if (message.sender.uid != nextMessage.sender.uid) {
+    if (![message isFromUser: nextMessage.user]) {
       // Add the arrow on the speech bubble
       [cell setupForLastMessageFromSameUser];
     }
@@ -397,7 +397,7 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
       [NSIndexPath indexPathForRow: indexPath.row + 1
          inSection: indexPath.section]];
     // If 2 consecutive messages are from the same person
-    if (message.sender.uid == nextMessage.sender.uid) {
+    if ([message isFromUser: nextMessage.user]) {
       // If 2 consecutive messages are within 60 seconds of each other
       if (nextMessage.createdAt - message.createdAt <= 60) {
         spacing = spacing * 0.5;
@@ -570,15 +570,16 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
   OMBMessage *message = [[OMBMessage alloc] init];
   message.content   = bottomToolbar.messageContentTextView.text;
   message.createdAt = [[NSDate date] timeIntervalSince1970];
-  message.recipient = user;
-  message.sender    = [OMBUser currentUser];
+  message.user      = [OMBUser currentUser];
   message.uid       = 9999 + arc4random_uniform(100);
   message.updatedAt = [[NSDate date] timeIntervalSince1970];
 
-  if (residence && residence.uid)
-    message.residenceUID = residence.uid;
+  #warning ASSOCIATE THIS MESSAGE'S CONVERSATION WITH A RESIDENCE
+  // if (residence && residence.uid)
+  //   message.residenceUID = residence.uid;
   
-  [[OMBUser currentUser] addMessage: message];
+  #warning ADD THIS MESSAGE TO A CONVERSATION?
+  // [[OMBUser currentUser] addMessage: message];
   
   [self assignMessages];
   [_collection reloadData];
@@ -606,27 +607,27 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
 
 - (void) timerFireMethod: (NSTimer *) timer
 {
-  NSInteger currentCount = [_messages count];
+  // NSInteger currentCount = [_messages count];
   
-  if (!isFetching) {
-    OMBMessagesLastFetchedWithUserConnection *conn =
-    [[OMBMessagesLastFetchedWithUserConnection alloc] initWithLastFetched:
-     lastFetched otherUser: user];
-    conn.completionBlock = ^(NSError *error) {
-      [self assignMessages];
+  // if (!isFetching) {
+  //   OMBMessagesLastFetchedWithUserConnection *conn =
+  //   [[OMBMessagesLastFetchedWithUserConnection alloc] initWithLastFetched:
+  //    lastFetched otherUser: user];
+  //   conn.completionBlock = ^(NSError *error) {
+  //     [self assignMessages];
       
-      CGFloat newCount = [_messages count];
+  //     CGFloat newCount = [_messages count];
       
-      if (currentCount != newCount) {
-        [_collection reloadData];
-        [self scrollToBottomAnimated: YES];
-      }
+  //     if (currentCount != newCount) {
+  //       [_collection reloadData];
+  //       [self scrollToBottomAnimated: YES];
+  //     }
       
-      isFetching = NO;
-      lastFetched = [[NSDate date] timeIntervalSince1970];
-    };
-    [conn start];
-  }
+  //     isFetching = NO;
+  //     lastFetched = [[NSDate date] timeIntervalSince1970];
+  //   };
+  //   [conn start];
+  // }
 }
 
 @end

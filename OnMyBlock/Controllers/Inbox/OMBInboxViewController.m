@@ -9,7 +9,8 @@
 #import "OMBInboxViewController.h"
 
 #import "OMBActivityView.h"
-#import "OMBConversationMessageStore.h"
+#import "OMBConversation.h"
+#import "OMBConversationStore.h"
 #import "OMBEmptyBackgroundWithImageAndLabel.h"
 #import "OMBInboxCell.h"
 #import "OMBMessage.h"
@@ -26,7 +27,7 @@
 {
   if (!(self = [super init])) return nil;
 
-  self.screenName = self.title = @"Inbox";
+  self.title = @"Messages";
 
   return self;
 }
@@ -90,6 +91,7 @@
 
   [activityView startSpinning];
   [self.table reloadData];
+
   [self reloadTable];
 
   // Update the menu badge count for inbox
@@ -115,6 +117,18 @@
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol OMBConnectionProtocol
+
+- (void) JSONDictionary: (NSDictionary *) dictionary
+{
+  [[OMBConversationStore sharedStore] readFromDictionary: dictionary];
+}
+
+- (void) numberOfPages: (NSUInteger) pages
+{
+  self.maxPages = pages;
+}
 
 #pragma mark - Protocol UIScrollViewDelegate
 
@@ -150,27 +164,20 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  return [[[OMBConversationMessageStore sharedStore].messages allKeys] count];
+  return [[OMBConversationStore sharedStore] numberOfConversations];
 }
 
 #pragma mark - Protocol UITableViewDelegate
 
-- (void) tableView: (UITableView *) tableView 
-didEndDisplayingCell: (UITableViewCell *) cell 
-forRowAtIndexPath: (NSIndexPath *) indexPath
-{
-  
-}
-
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  OMBMessage *message = [self messageAtIndexPath: indexPath];
-  message.viewed = YES;
-  messageDetailViewController = 
-    [[OMBMessageDetailViewController alloc] initWithUser: [message otherUser]];
-  [self.navigationController pushViewController: messageDetailViewController 
-    animated: YES];
+  OMBConversation *conversation = [self conversationAtIndexPath: indexPath];
+  // Add the current user's uid to the 
+  // conversation.mostRecentMessage.viewedUserIDs
+  [self.navigationController pushViewController: 
+    [[OMBMessageDetailViewController alloc] initWithConversation: 
+      conversation] animated: YES];
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
@@ -184,24 +191,23 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 willDisplayCell: (UITableViewCell *) cell 
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  OMBMessage *message = [self messageAtIndexPath: indexPath];
-  [(OMBInboxCell *) cell loadMessageData: message];
-  // [[OMBUser currentUser] fetchMessagesAtPage: 1 withUser: message.sender
-  //   delegate: nil completion: nil];
+  OMBConversation *conversation = [self conversationAtIndexPath: indexPath];
+  [(OMBInboxCell *) cell loadConversationData: conversation];
 }
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
-- (OMBMessage *) messageAtIndexPath: (NSIndexPath *) indexPath
+- (OMBConversation *) conversationAtIndexPath: (NSIndexPath *) indexPath
 {
-  return [[self messages] objectAtIndex: indexPath.row];
+  return [[self conversations] objectAtIndex: indexPath.row];
 }
 
-- (NSArray *) messages
+- (NSArray *) conversations
 {
-  return [[OMBConversationMessageStore sharedStore] sortedMessages];
+  return [[OMBConversationStore sharedStore] sortedConversationsWithKey:
+    @"mostRecentMessageDate" ascending: NO];
 }
 
 - (void) newMessage
@@ -221,26 +227,19 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 {
   [super reloadTable];
 
-  [OMBConversationMessageStore sharedStore].delegate = self;
+  // [OMBConversationMessageStore sharedStore].delegate = self;
   for (int i = self.currentPage; i > 0; i--) {
-  // NSInteger currentCount =
-  //   [[[OMBConversationMessageStore sharedStore].messages allKeys] count];
-
-    [[OMBConversationMessageStore sharedStore] fetchMessagesAtPage: i 
-      completion: ^(NSError *error) {
+    // NSInteger currentCount = [[self conversations] count];
+    [[OMBConversationStore sharedStore] fetchConversationsAtPage: i 
+      delegate: self completion: ^(NSError *error) {
         [activityView stopSpinning];
         [self.table reloadData];
         [self updateNoMessagesView];
-        // NSInteger newCount = 
-        //   [[[OMBConversationMessageStore sharedStore].messages 
-        //     allKeys] count];
-        // NSInteger difference = newCount - currentCount;
-        // NSLog(@"CURRENT COUNT: %i", currentCount);
-        // NSLog(@"NEW COUNT: %i", newCount);
+        // NSInteger newCount = [[self conversations] count];
 
-        // if (difference > 0) {
+        // if (newCount - currentCount > 0) {
         //   [self.table beginUpdates];
-        //   for (int i = currentCount; i < newCount; i++) {
+        //   for (NSInteger i = currentCount; i < newCount; i++) {
         //     [self.table insertRowsAtIndexPaths: @[
         //       [NSIndexPath indexPathForRow: i inSection: 0]
         //     ] withRowAnimation: UITableViewRowAnimationFade];
@@ -249,26 +248,19 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
         // }
         self.fetching = NO;
         [refreshControl endRefreshing];
-      }
-    ];
+      }];
   }
 }
 
 - (void) updateNoMessagesView
 {
-  if ([[self messages] count]) {      
+  if ([[self conversations] count]) {      
     if (noMessagesView.alpha) {
-      // [UIView animateWithDuration: OMBStandardDuration animations: ^{
-      //   noMessagesView.alpha = 0.0f;
-      // }];
       noMessagesView.alpha = 0.0f;
     }
   }
   else {
     if (!noMessagesView.alpha) {
-      // [UIView animateWithDuration: OMBStandardDuration animations: ^{
-      //   noMessagesView.alpha = 1.0f;
-      // }];
       noMessagesView.alpha = 1.0f;
     }
   }

@@ -8,24 +8,14 @@
 
 #import "OMBViewController.h"
 
+#import "OMBConnectionProtocol.h"
+
+@class OMBConversation;
 @class OMBMessage;
 @class OMBMessageInputToolbar;
 
 @interface OMBMessageDetailViewController : OMBViewController
-<UICollectionViewDataSource, UICollectionViewDelegate, 
-  UICollectionViewDelegateFlowLayout, UIScrollViewDelegate, UITextViewDelegate>
-{
-  OMBMessageInputToolbar *bottomToolbar;
-  UIBarButtonItem *contactBarButtonItem;
-  UIToolbar *contactToolbar;
-  BOOL isEditing;
-  BOOL isFetching;
-  NSTimeInterval lastFetched;
-  UIBarButtonItem *phoneBarButtonItem;
-  CGPoint startingPoint;
-  NSTimer *timer;
-  OMBUser *user;
-}
+<OMBConnectionProtocol>
 
 @property (nonatomic, strong) UICollectionView *collection;
 @property (nonatomic) NSInteger currentPage;
@@ -35,12 +25,14 @@
 
 #pragma mark - Initializer
 
+- (id) initWithConversation: (OMBConversation *) object;
 - (id) initWithUser: (OMBUser *) object;
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
+- (void) loadDefaultMessage;
 - (void) send;
 
 @end

@@ -1,30 +1,26 @@
 //
-//  OMBMessagesLastFetchedWithUserConnection.m
+//  OMBConversationWithUserConnection.m
 //  OnMyBlock
 //
-//  Created by Tommy DANGerous on 2/13/14.
+//  Created by Tommy DANGerous on 2/25/14.
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import "OMBMessagesLastFetchedWithUserConnection.h"
+#import "OMBConversationWithUserConnection.h"
 
-#import "NSDateFormatter+JSON.h"
-
-@implementation OMBMessagesLastFetchedWithUserConnection
+@implementation OMBConversationWithUserConnection
 
 #pragma mark - Initializer
 
-- (id) initWithConversationUID: (NSUInteger) uid 
-lastFetched: (NSTimeInterval) lastFetched
+- (id) initWithUserUID: (NSUInteger) uid
 {
   if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: 
-    @"%@/conversations/%i/last_fetched", OnMyBlockAPIURL, uid];
+    @"%@/conversations/conversation_with_user", OnMyBlockAPIURL];
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,
-    @"last_fetched": [[NSDateFormatter JSONDateParser] stringFromDate:
-      [NSDate dateWithTimeIntervalSince1970: lastFetched]]
+    @"user_id": [NSNumber numberWithInt: uid]
   };
   [self setRequestWithString: string parameters: params];
 

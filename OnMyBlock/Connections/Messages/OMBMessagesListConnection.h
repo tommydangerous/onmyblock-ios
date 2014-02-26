@@ -12,6 +12,6 @@
 
 #pragma mark - Initializer
 
-- (id) initWithPage: (NSInteger) page;
+- (id) initWithPage: (NSUInteger) page;
 
 @end
