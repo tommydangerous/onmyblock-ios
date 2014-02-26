@@ -451,6 +451,7 @@
 		DE95E8D818A03B5500A2A341 /* MNCalendarViewWeekdayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8CF18A03B5500A2A341 /* MNCalendarViewWeekdayCell.m */; };
 		DE95E8D918A03B5500A2A341 /* MNFastDateEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8D118A03B5500A2A341 /* MNFastDateEnumeration.m */; };
 		DE95E8DA18A03B5500A2A341 /* NSDate+MNAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8D318A03B5500A2A341 /* NSDate+MNAdditions.m */; };
+		DE9927D518BE887F0064A902 /* OMBRateFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9927D418BE887F0064A902 /* OMBRateFeedbackViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1314,6 +1315,8 @@
 		DE95E8D118A03B5500A2A341 /* MNFastDateEnumeration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNFastDateEnumeration.m; sourceTree = "<group>"; };
 		DE95E8D218A03B5500A2A341 /* NSDate+MNAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MNAdditions.h"; sourceTree = "<group>"; };
 		DE95E8D318A03B5500A2A341 /* NSDate+MNAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MNAdditions.m"; sourceTree = "<group>"; };
+		DE9927D318BE887F0064A902 /* OMBRateFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRateFeedbackViewController.h; sourceTree = "<group>"; };
+		DE9927D418BE887F0064A902 /* OMBRateFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRateFeedbackViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1321,6 +1324,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB01ED71185966C800333390 /* MessageUI.framework in Frameworks */,
 				6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */,
 				AB01ED6D185966B500333390 /* AVFoundation.framework in Frameworks */,
 				ABB022D3182490D700F98544 /* CoreData.framework in Frameworks */,
@@ -1332,7 +1336,6 @@
 				AB802E9E18109E5200E04D11 /* Foundation.framework in Frameworks */,
 				ABB022C318248D6E00F98544 /* NewRelicAgent.framework in Frameworks */,
 				ABB3C58718117C1C00DD91C9 /* MapKit.framework in Frameworks */,
-				AB01ED71185966C800333390 /* MessageUI.framework in Frameworks */,
 				ABB022DE182491FD00F98544 /* libGoogleAnalyticsServices.a in Frameworks */,
 				AB01ED691859653800333390 /* libPayPalMobile.a in Frameworks */,
 				AB01ED6B185966AC00333390 /* libxml2.dylib in Frameworks */,
@@ -1488,6 +1491,8 @@
 				AB70CB67186CB9070083DF4C /* OMBTermsPrivacyViewController.m */,
 				AB131F351885E25B0057D769 /* OMBMyRenterApplicationViewController.h */,
 				AB131F361885E25B0057D769 /* OMBMyRenterApplicationViewController.m */,
+				DE9927D318BE887F0064A902 /* OMBRateFeedbackViewController.h */,
+				DE9927D418BE887F0064A902 /* OMBRateFeedbackViewController.m */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -3105,6 +3110,7 @@
 				AB63D2171821ABF500D63800 /* OMBLoginViewController.m in Sources */,
 				ABDF174D18663AE8004E2755 /* OMBResidenceBookItCell.m in Sources */,
 				AB8C8C131815784B00A1B087 /* OMBImageDownloader.m in Sources */,
+				DE9927D518BE887F0064A902 /* OMBRateFeedbackViewController.m in Sources */,
 				ABE679AF1891C30300A494FB /* OMBPayoutTransaction.m in Sources */,
 				AB1C216C1851417800ED7C06 /* OMBRenterApplicationSectionViewController.m in Sources */,
 				AB3396EF18ACA69C00F49064 /* OMBOfferVerifyVenmoConnection.m in Sources */,
