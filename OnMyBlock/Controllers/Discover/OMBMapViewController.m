@@ -127,9 +127,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Sort
   sortView = [[AMBlurView alloc] init];
-  sortView.blurTintColor = [UIColor blue];
+  sortView.blurTintColor = [UIColor grayVeryLight];
   sortView.frame = CGRectMake(0.0f, 44.0f, 
-    _listViewContainer.frame.size.width, 20.0f + 40.0f);
+    _listViewContainer.frame.size.width, 20.0f + 37.0f);
   [_listViewContainer addSubview: sortView];
   UITapGestureRecognizer *sortViewTap = 
     [[UITapGestureRecognizer alloc] initWithTarget: self 
@@ -137,11 +137,11 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [sortView.toolbar addGestureRecognizer: sortViewTap];
   // Sort label
   sortLabel = [[UILabel alloc] init];
-  sortLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 14];
-  sortLabel.frame = CGRectMake(padding, sortView.frame.size.height - 40.0f,
-    0.0f, 40.0f);
+  sortLabel.font = [UIFont fontWithName: @"HelveticaNeue" size: 14];
+  sortLabel.frame = CGRectMake(padding, sortView.frame.size.height - 37.0f,
+    0.0f, 37.0f);
   sortLabel.text = @"Sort by";
-  sortLabel.textColor = [UIColor whiteColor];
+  sortLabel.textColor = [UIColor blue];
   CGRect sortRect = [sortLabel.text boundingRectWithSize: 
     CGSizeMake(screenWidth, sortLabel.frame.size.height) 
       options: NSStringDrawingUsesLineFragmentOrigin
@@ -166,7 +166,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     sortLabel.frame.origin.y + 
     ((sortLabel.frame.size.height - sortArrowSize) * 0.5), 
       sortArrowSize, sortArrowSize);
-  sortArrow.image = [UIImage imageNamed: @"arrow_left_white.png"];
+  sortArrow.image = [UIImage changeColorForImage:
+    [UIImage  imageNamed: @"arrow_left_white.png"] toColor:[UIColor blue]];
   sortArrow.transform = CGAffineTransformMakeRotation(-90 * M_PI / 180.0f);
   [sortView addSubview: sortArrow];
 
@@ -189,7 +190,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     sortButtonLowestPrice
   ]];
   CGFloat sortButtonViewHeight = sortView.frame.size.height + 
-    ((1 + 40) * [sortButtonArray count]);
+    ((1 + 37) * [sortButtonArray count]);
   sortButtonsView = [[UIView alloc] init];
   sortButtonsView.frame = CGRectMake(0.0f, sortView.frame.origin.y, 
     sortView.frame.size.width, sortButtonViewHeight);
@@ -218,7 +219,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   for (UIButton *button in sortButtonArray) {
     button.backgroundColor = [UIColor colorWithWhite: 255/255.0 alpha: 0.95];
     button.frame = CGRectMake(0.0f, 20.0f,
-      sortButtonsView.frame.size.width, 40.0f);
+      sortButtonsView.frame.size.width, 37.0f);
     button.hidden = YES;
     NSString *string = @"";
     if (button == sortButtonPopular) {
@@ -1312,7 +1313,7 @@ withMiles: (int) miles animated: (BOOL) animated
     CGFloat index    = [sortButtonArray indexOfObject: button];
     CGFloat duration = slowestDuration - (0.1 * index);
     CGFloat originY  = sortView.frame.size.height + 1 + 
-      ((1.0f + 40.0f) * index);
+      ((1.0f + 37.0f) * index);
     if (isShowingSortButtons)
       originY = 20.0f;
     [UIView animateWithDuration: duration animations: ^{
@@ -1359,7 +1360,7 @@ withMiles: (int) miles animated: (BOOL) animated
   CGFloat originalY = sortView.frame.origin.y + sortLabel.frame.origin.y + 
     ((sortLabel.frame.size.height - sortArrow.frame.size.height) * 0.5);
   NSInteger index = [sortButtonArray indexOfObject: button];
-  CGFloat originY = originalY + ((1 + 40.0f) * (index + 1));
+  CGFloat originY = originalY + ((1 + 37.0f) * (index + 1));
   sortArrow.frame = CGRectMake(sortArrow.frame.origin.x, originalY,
     sortArrow.frame.size.width, sortArrow.frame.size.height);
   sortArrow.image = [UIImage imageNamed: @"arrow_left.png"];
@@ -1386,7 +1387,7 @@ withMiles: (int) miles animated: (BOOL) animated
       sortArrow.frame = CGRectMake(sortArrow.frame.origin.x,
         originalY - sortView.frame.origin.y, sortArrow.frame.size.width,
           sortArrow.frame.size.height);
-      sortArrow.image = [UIImage imageNamed: @"arrow_left_white.png"];
+      sortArrow.image = [UIImage changeColorForImage: [UIImage imageNamed: @"arrow_left_white.png"] toColor:[UIColor blue]];
       [sortArrow removeFromSuperview];
       [sortView addSubview: sortArrow];
       sortSelectionLabel.text = button.currentTitle;

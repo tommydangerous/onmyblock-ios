@@ -11,6 +11,7 @@
 #import "OMBMyRenterProfileViewController.h"
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBPrivacyPolicyViewController.h"
+#import "OMBRateFeedbackViewController.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBRenterProfileViewController.h"
 #import "OMBTermsOfServiceViewController.h"
@@ -55,7 +56,7 @@
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
   // Profile, renter application, payment info, transactions
-  // How it works, terms of service, privacy statement
+  // How it works, terms of service, privacy statement, rate us
   // Logout
   return 4;
 }
@@ -112,9 +113,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.textLabel.text = @"How it Works";
       }
       else if (indexPath.row == 2) {
-        cell.textLabel.text = @"Terms of Service";
+        cell.textLabel.text = @"Rate Us";
       }
       else if (indexPath.row == 3) {
+        cell.textLabel.text = @"Terms of Service";
+      }
+      else if (indexPath.row == 4) {
         cell.textLabel.text = @"Privacy Policy";
       }
     }
@@ -150,7 +154,7 @@ numberOfRowsInSection: (NSInteger) section
     return 1 + 3;
   }
   else if (section == 1) {
-    return 1 + 3;
+    return 1 + 4;
   }
   else if (section == 2) {
     return 1 + 1;
@@ -192,15 +196,20 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.row == 1) {
       [appDelegate.container showIntroAnimatedVertical: YES];
     }
-    // Terms of Service
+    // Rate us
     else if (indexPath.row == 2) {
+      [self.navigationController pushViewController:
+       [[OMBRateFeedbackViewController alloc] init] animated: YES];
+    }
+    // Terms of Service
+    else if (indexPath.row == 3) {
       [self.navigationController pushViewController: 
         [[OMBTermsOfServiceViewController alloc] init] animated: YES];
     }
     // Privacy Policy
-    else if (indexPath.row == 3) {
+    else if (indexPath.row == 4) {
       [self.navigationController pushViewController:
-        [[OMBPrivacyPolicyViewController alloc] init] animated: YES];
+       [[OMBPrivacyPolicyViewController alloc] init] animated: YES];
     }
   }
   else if (indexPath.section == 2) {
