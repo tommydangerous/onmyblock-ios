@@ -18,6 +18,7 @@
 #import "OMBMessageStore.h"
 #import "OMBOffer.h"
 #import "OMBOtherUserProfileViewController.h"
+#import "OMBResidence.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
@@ -34,6 +35,8 @@
   BOOL isFetching;
   NSTimeInterval lastFetched;
   UIBarButtonItem *phoneBarButtonItem;
+  UIBarButtonItem *renterApplicationBarButtonItem;
+  OMBResidence *residence;
   CGPoint startingPoint;
   NSTimer *timer;
   OMBUser *user;
@@ -60,6 +63,20 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   self.fetching    = NO;
 
   self.title = conversation.nameOfConversation;
+
+  return self;
+}
+
+- (id) initWithResidence: (OMBResidence *) object
+{
+  if (!(self = [super init])) return nil;
+
+  residence = object;
+
+  self.currentPage = self.maxPages = 1;
+  self.fetching    = NO;
+
+  self.title = [residence.address capitalizedString];
 
   return self;
 }
@@ -125,7 +142,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   // iOS 7 toolbar spacing is 16px; 20px on iPad
   leftPadding.width = 4.0f;
   // Renter application
-  UIBarButtonItem *renterApplicationBarButtonItem = 
+  renterApplicationBarButtonItem = 
     [[UIBarButtonItem alloc] initWithTitle: @"Profile"
       style: UIBarButtonItemStylePlain target: self
         action: @selector(showRenterProfile)];
@@ -237,14 +254,24 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   // If there is no conversation, fetch one
   if (conversation) {
     [self reloadTable];
-    [self initialLoadOfMessages];
+    // [self initialLoadOfMessages];
   }
-  else {
+  else if (residence) {
+    conversation = [[OMBConversation alloc] init];
+    [conversation fetchConversationWithResidenceUID: residence.uid completion: 
+      ^(NSError *error) {
+        [self reloadTable];
+        // [self initialLoadOfMessages];
+      }
+    ];
+    renterApplicationBarButtonItem.enabled = NO;
+  }
+  else if (user) {
     conversation = [[OMBConversation alloc] init];
     [conversation fetchConversationWithUserUID: user.uid completion: 
       ^(NSError *error) {
         [self reloadTable];
-        [self initialLoadOfMessages];
+        // [self initialLoadOfMessages];
       }
     ];
   }
@@ -266,6 +293,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
   [conversation readFromMessagesDictionary: dictionary];
+  NSLog(@"VC: %@", dictionary);
 }
 
 - (void) numberOfPages: (NSUInteger) pages
@@ -576,6 +604,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   self.messages = [conversation sortedMessagesWithKey: @"createdAt"
     ascending: YES];
+  NSLog(@"%@", self.messages);
 }
 
 - (void) done
@@ -751,7 +780,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   // Don't know why...
 
   if ([_collection.collectionViewLayout collectionViewContentSize].height >
-    _collection.frame.size.height) {
+    _collection.frame.size.height + bottomToolbar.frame.size.height) {
     
     [self scrollToBottomAnimated: YES];
   }
@@ -783,9 +812,16 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showRenterProfile
 {
-  OMBOtherUserProfileViewController *vc =
-    [[OMBOtherUserProfileViewController alloc] initWithUser: user];
-  [self.navigationController pushViewController: vc animated: YES];
+  OMBUser *u;
+  if (conversation)
+    u = conversation.otherUser;
+  else if (user)
+    u = user;
+  if (u) {
+    OMBOtherUserProfileViewController *vc =
+      [[OMBOtherUserProfileViewController alloc] initWithUser: u];
+    [self.navigationController pushViewController: vc animated: YES];
+  }
 }
 
 - (void) timerFireMethod: (NSTimer *) timer

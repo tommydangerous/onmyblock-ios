@@ -13,6 +13,7 @@
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
 #import "OCMapView.h"
+#import "OMBActivityViewFullScreen.h"
 #import "OMBActivityView.h"
 #import "OMBAnnotation.h"
 #import "OMBAnnotationCity.h"
@@ -48,6 +49,14 @@ int kMaxRadiusInMiles = 100;
 
 static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
+@interface OMBMapViewController ()
+{
+  OMBActivityViewFullScreen *activityViewFullScreen;
+  BOOL firstLoad;
+}
+
+@end
+
 @implementation OMBMapViewController
 
 #pragma mark Initializer
@@ -59,6 +68,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   centerCoordinate = CLLocationCoordinate2DMake(32.78166389765503,
     -117.16957478041991);
   fetching = NO;
+  firstLoad = YES;
   _radiusInMiles = 0;
   
   // Location manager
@@ -346,6 +356,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       activityView.spinnerView.frame.size.height);
   activityView.spinner.frame = spinRect;
 
+  activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
+  [_listViewContainer addSubview: activityViewFullScreen];
+
   // Empty background
   CGFloat emptyBackgroundHeight = screenHeight - sortView.frame.size.height;
   CGRect emptyBackgroundRect = CGRectMake(0.0f, 
@@ -450,6 +463,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Check any filter values and display them
   [self updateFilterLabel];
+
+  if (firstLoad)
+    [activityViewFullScreen startSpinning];
 }
 
 #pragma mark - Protocol
@@ -926,6 +942,11 @@ withTitle: (NSString *) title;
 
   [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters: params 
     completion: ^(NSError *error) {
+      if (firstLoad) {
+        [activityViewFullScreen stopSpinning];
+        firstLoad = NO;
+      }
+
       fetching = NO;
       [self resetCurrentResidencesForList];
       [self reloadTable];

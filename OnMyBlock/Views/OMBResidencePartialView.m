@@ -173,7 +173,6 @@ NSString *const OMBEmptyResidencePartialViewCell =
 - (NSInteger) collectionView: (UICollectionView *) collectionView 
 numberOfItemsInSection: (NSInteger) section
 {
-  NSLog(@"%i", [_residence imagesArray].count);
   if ([_residence imagesArray].count)
     return [_residence imagesArray].count;
   return 1;
@@ -190,16 +189,14 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
     OMBResidenceImage *residenceImage = 
       [[_residence imagesArray] objectAtIndex: indexPath.row];
       
-    __weak typeof(cell) weakCell = cell;
+    cell.imageView.image = [OMBResidence placeholderImage];
+    // __weak typeof(cell) weakCell = cell;
     [cell.imageView setImageWithURL: residenceImage.imageURL
       placeholderImage: nil 
         options: (SDWebImageRetryFailed | 
           SDWebImageDownloaderProgressiveDownload)
         completed:
           ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            if (error || !image) {
-              weakCell.imageView.image = [OMBResidence placeholderImage];
-            }
             if (error) {
               NSLog(@"Error: %@, for: %@", error, residenceImage.imageURL);
             }
@@ -299,6 +296,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) downloadResidenceImages
 {
+  // return;
   if (isDownloadingResidenceImages)
     return;
   NSLog(@"DOWNLOAD RESIDENCE IMAGES");

@@ -66,8 +66,6 @@
   //   updated_at: "2013-10-11 17:34:06 -0700",
   //   zip: "92111"
   // }
-
-  // NSLog(@"OMBResidenceDetailConnection\n%@", json);
   
   [residence readFromResidenceDictionary: [self json]];
   [super connectionDidFinishLoading: connection];

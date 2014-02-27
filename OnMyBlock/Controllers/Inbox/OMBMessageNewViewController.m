@@ -574,11 +574,11 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
   message.uid       = 9999 + arc4random_uniform(100);
   message.updatedAt = [[NSDate date] timeIntervalSince1970];
 
-  #warning ASSOCIATE THIS MESSAGE'S CONVERSATION WITH A RESIDENCE
+  // #warning ASSOCIATE THIS MESSAGE'S CONVERSATION WITH A RESIDENCE
   // if (residence && residence.uid)
   //   message.residenceUID = residence.uid;
   
-  #warning ADD THIS MESSAGE TO A CONVERSATION?
+  // #warning ADD THIS MESSAGE TO A CONVERSATION?
   // [[OMBUser currentUser] addMessage: message];
   
   [self assignMessages];

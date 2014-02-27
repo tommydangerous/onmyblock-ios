@@ -72,7 +72,8 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
   if(buttonIndex == 1){
-    NSLog(@"%i", buttonIndex);
+    [[UIApplication sharedApplication] openURL: [NSURL URLWithString:
+      @"https://itunes.apple.com/us/app/onmyblock/id737199914?mt=8"]];
   }
   else if(buttonIndex == 2){
     [self showEmail];

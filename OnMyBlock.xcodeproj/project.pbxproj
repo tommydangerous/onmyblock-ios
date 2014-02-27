@@ -15,6 +15,7 @@
 		AB00B9C418BD1C0E0050D6F4 /* OMBConversationStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9C318BD1C0E0050D6F4 /* OMBConversationStore.m */; };
 		AB00B9CC18BD64DE0050D6F4 /* OMBConversationDetailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9CB18BD64DE0050D6F4 /* OMBConversationDetailConnection.m */; };
 		AB00B9CF18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9CE18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m */; };
+		AB00B9D218BE95A00050D6F4 /* OMBConversationWithResidenceConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9D118BE95A00050D6F4 /* OMBConversationWithResidenceConnection.m */; };
 		AB01ED341857D67F00333390 /* OMBLegalQuestionListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED331857D67F00333390 /* OMBLegalQuestionListConnection.m */; };
 		AB01ED371857D96800333390 /* OMBLegalQuestionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED361857D96800333390 /* OMBLegalQuestionStore.m */; };
 		AB01ED3A1857DB5300333390 /* OMBLegalQuestion.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED391857DB5300333390 /* OMBLegalQuestion.m */; };
@@ -484,6 +485,8 @@
 		AB00B9CB18BD64DE0050D6F4 /* OMBConversationDetailConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBConversationDetailConnection.m; sourceTree = "<group>"; };
 		AB00B9CD18BDD0D50050D6F4 /* OMBConversationWithUserConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBConversationWithUserConnection.h; sourceTree = "<group>"; };
 		AB00B9CE18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBConversationWithUserConnection.m; sourceTree = "<group>"; };
+		AB00B9D018BE95A00050D6F4 /* OMBConversationWithResidenceConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBConversationWithResidenceConnection.h; sourceTree = "<group>"; };
+		AB00B9D118BE95A00050D6F4 /* OMBConversationWithResidenceConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBConversationWithResidenceConnection.m; sourceTree = "<group>"; };
 		AB01ED321857D67F00333390 /* OMBLegalQuestionListConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLegalQuestionListConnection.h; sourceTree = "<group>"; };
 		AB01ED331857D67F00333390 /* OMBLegalQuestionListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBLegalQuestionListConnection.m; sourceTree = "<group>"; };
 		AB01ED351857D96800333390 /* OMBLegalQuestionStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLegalQuestionStore.h; sourceTree = "<group>"; };
@@ -1407,6 +1410,8 @@
 				AB00B9CB18BD64DE0050D6F4 /* OMBConversationDetailConnection.m */,
 				AB00B9CD18BDD0D50050D6F4 /* OMBConversationWithUserConnection.h */,
 				AB00B9CE18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m */,
+				AB00B9D018BE95A00050D6F4 /* OMBConversationWithResidenceConnection.h */,
+				AB00B9D118BE95A00050D6F4 /* OMBConversationWithResidenceConnection.m */,
 			);
 			path = Conversations;
 			sourceTree = "<group>";
@@ -3192,6 +3197,7 @@
 				AB9D6137188F495A00C9AC64 /* OMBOfferDecisionConnection.m in Sources */,
 				ABCB36BE187CB843008A0EEF /* OMBHomebaseRenterAddRoommatesViewController.m in Sources */,
 				AB8B794B186E17FC005AB552 /* OMBLabelTextFieldCell.m in Sources */,
+				AB00B9D218BE95A00050D6F4 /* OMBConversationWithResidenceConnection.m in Sources */,
 				ABB70068187B58C0005F0730 /* OMBHomebaseLandlordViewController.m in Sources */,
 				AB9D6118188CEFDE00C9AC64 /* UIImage+GIF.m in Sources */,
 				AB3396F518AD4F1700F49064 /* OMBCollectionViewLayout.m in Sources */,
@@ -3519,7 +3525,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "D472D446-0159-4075-8AEB-B911170AC9F6";
+				PROVISIONING_PROFILE = "1D67A8C8-C7C1-4C92-A4E9-21CDCC070DC3";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
