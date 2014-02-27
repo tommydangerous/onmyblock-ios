@@ -185,6 +185,8 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
     OMBFilmstripImageCell *cell = 
       [collectionView dequeueReusableCellWithReuseIdentifier:
         [OMBFilmstripImageCell reuseID] forIndexPath: indexPath];
+    cell.imageView.image = [OMBResidence placeholderImage];
+    
     // Don't resize images or else it hurts performance
     OMBResidenceImage *residenceImage = 
       [[_residence imagesArray] objectAtIndex: indexPath.row];

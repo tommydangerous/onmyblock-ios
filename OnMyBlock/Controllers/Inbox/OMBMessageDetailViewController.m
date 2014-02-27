@@ -293,6 +293,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
   [conversation readFromMessagesDictionary: dictionary];
+  NSLog(@"VC: %@", dictionary);
 }
 
 - (void) numberOfPages: (NSUInteger) pages

@@ -123,10 +123,11 @@ reuseIdentifier: (NSString *)reuseIdentifier
           residence.coverPhotoURL placeholderImage: nil 
             options: SDWebImageRetryFailed completed:
               ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
-                weakUserImageView.image = img;
-                if (weakUserImageView.image)
+                if (img) {
+                  weakUserImageView.image = img;
                   [residence.coverPhotoSizeDictionary setObject: 
                     weakUserImageView.image forKey: sizeKey];
+                }
               }
             ];
       }];
