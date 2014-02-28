@@ -12,6 +12,7 @@
 @class OMBLoginSignUpView;
 
 @interface OMBLoginViewController : OMBViewController
+<UIAlertViewDelegate>
 {
   NSArray *imageNames;
   BOOL animate;

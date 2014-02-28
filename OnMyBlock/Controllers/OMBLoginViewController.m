@@ -101,6 +101,24 @@
 
   [_activityView stopSpinning];
 }
+#pragma mark - Protocol
+
+#pragma mark - Protocol UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+  // login
+  if(alertView.tag == 1){
+    if(buttonIndex == 1)
+       [self showSignUp];
+    else if(buttonIndex == 2)
+        _loginSignUpView.passwordTextField.text = @"";
+  }
+  // sign up
+  else if(alertView.tag == 2){
+    if(buttonIndex == 1)
+      [self showLogin];
+  }
+}
 
 #pragma mark - Methods
 
@@ -147,8 +165,7 @@
       [_loginSignUpView clearTextFields];
     }
     else {
-      _loginSignUpView.passwordTextField.text = @"";
-      [self showAlertViewWithError: error];
+      [self showAlertViewLogin];
     }
     [_activityView stopSpinning];
   };
@@ -163,6 +180,28 @@
     [self login];
   else
     [self signUp];
+}
+
+- (void) showAlertViewLogin
+{
+  NSString *message = @"Incorrect email or password, please try again.";
+  
+  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: nil
+    message: message delegate: self cancelButtonTitle: @"Ok"
+      otherButtonTitles: @"Sign Up", @"Reset Password", nil];
+  alertView.tag = 1;
+  [alertView show];
+}
+
+- (void) showAlertViewSignUp
+{
+  NSString *message = @"Email has already been taken.";
+  
+  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: nil
+    message: message delegate: self cancelButtonTitle: @"Ok"
+      otherButtonTitles: @"Login", nil];
+  alertView.tag = 2;
+  [alertView show];
 }
 
 - (void) showFacebook
@@ -245,7 +284,12 @@
       [_loginSignUpView clearTextFields];
     }
     else {
-      [self showAlertViewWithError: error];
+      NSString *alertMessage = error.localizedFailureReason != (id)[NSNull null] ? error.localizedFailureReason : @"Unsuccessful";
+      
+      if([alertMessage isEqualToString:@"Email has already been taken"])
+        [self showAlertViewSignUp];
+      else
+        [self showAlertViewWithError:error];
     }
     [_activityView stopSpinning];
   };
