@@ -159,13 +159,13 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
           context: nil];
   sortLabel.frame = CGRectMake(sortLabel.frame.origin.x, 
     sortLabel.frame.origin.y, sortRect.size.width, sortLabel.frame.size.height);
-  [sortView addSubview: sortLabel];
+  //[sortView addSubview: sortLabel];
   // Sort selection label
   sortSelectionLabel = [[UILabel alloc] init];
   sortSelectionLabel.font = sortLabel.font;
   sortSelectionLabel.frame = CGRectMake(0.0f, sortLabel.frame.origin.y, 
     screenWidth, sortLabel.frame.size.height);
-  sortSelectionLabel.text = @"Distance";
+  sortSelectionLabel.text = @"Sort your Rental Results";
   sortSelectionLabel.textAlignment = NSTextAlignmentCenter;
   sortSelectionLabel.textColor = sortLabel.textColor;
   [sortView addSubview: sortSelectionLabel];
@@ -452,6 +452,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // If there are filter values, apply and search
   if ([self appDelegate].container.mapFilterViewController.shouldSearch) {
     if ([self isOnList]) {
+      firstLoad = YES;
+      _listView.showsPullToRefresh = NO;
       [self resetListViewResidences];
       [self fetchResidencesForList];
     }
@@ -464,8 +466,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // Check any filter values and display them
   [self updateFilterLabel];
 
-  if (firstLoad)
+  if (firstLoad){
     [activityViewFullScreen startSpinning];
+  }
 }
 
 #pragma mark - Protocol
@@ -908,7 +911,7 @@ withTitle: (NSString *) title;
   else {
     fetching = YES;
     if (!activityView.isSpinning) {
-      //[activityView startSpinning];
+      [activityView startSpinning];
     }
   }
 
@@ -946,7 +949,9 @@ withTitle: (NSString *) title;
         [activityViewFullScreen stopSpinning];
         firstLoad = NO;
       }
-
+      
+      _listView.showsPullToRefresh = YES;
+      
       fetching = NO;
       [self resetCurrentResidencesForList];
       [self reloadTable];
@@ -1166,16 +1171,16 @@ withTitle: (NSString *) title;
 {
   pagination++;
   __weak OMBMapViewController *weakSelf = self;
-  if (pagination >=1) {
+  if (pagination >= 1) {
     dispatch_queue_t myThread = dispatch_queue_create("mythreadpagination", NULL);
     dispatch_async(myThread, ^{
       NSLog(@"reload with pagination");
       dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"making reload data");
-        [weakSelf.listView reloadData];
         [weakSelf.listView.infiniteScrollingView stopAnimating];
+        [weakSelf.listView reloadData];
       });
-      [weakSelf.listView.infiniteScrollingView stopAnimating];
+      //[weakSelf.listView.infiniteScrollingView stopAnimating];
     });
   }
 }
@@ -1411,7 +1416,7 @@ withMiles: (int) miles animated: (BOOL) animated
       sortArrow.image = [UIImage changeColorForImage: [UIImage imageNamed: @"arrow_left_white.png"] toColor:[UIColor blue]];
       [sortArrow removeFromSuperview];
       [sortView addSubview: sortArrow];
-      sortSelectionLabel.text = button.currentTitle;
+      sortSelectionLabel.text = [@"Sorted by " stringByAppendingString:button.currentTitle];
       [UIView animateWithDuration: 0.1 animations: ^{
         sortArrow.transform = CGAffineTransformMakeRotation(
           -90.0f * M_PI / 180.0f);
@@ -1463,7 +1468,7 @@ withMiles: (int) miles animated: (BOOL) animated
     // Show list
     case 1: {
       _listViewContainer.alpha = 1.0;
-      _mapView.alpha           = 0.0;     
+      _mapView.alpha           = 0.0;
       [self fetchResidencesForList];
         [UIView animateWithDuration:0.5f animations:^{
             filterView.transform = CGAffineTransformMakeTranslation(0.0f, self.view.bounds.size.height - 20.0f - 64.0f);

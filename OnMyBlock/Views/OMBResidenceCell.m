@@ -10,6 +10,7 @@
 
 #import "OMBConnection.h"
 #import "OMBResidencePartialView.h"
+#import "UIColor+Extensions.h"
 
 @implementation OMBResidenceCell
 
@@ -29,6 +30,14 @@ reuseIdentifier: (NSString *) reuseIdentifier
   self.selectionStyle = UITableViewCellSelectionStyleNone;
   [self.contentView addSubview: _residencePartialView];
 
+  UIView *borderView = [UIView new];
+  CGRect borderFrame = _residencePartialView.frame;
+  borderFrame.origin.y = borderFrame.size.height - 2.f;
+  borderFrame.size.height = 2.f;
+  borderView.backgroundColor = [UIColor grayDarkAlpha:0.4];
+  borderView.frame = borderFrame;
+  [self.contentView addSubview:borderView];
+  
   return self;
 }
 
