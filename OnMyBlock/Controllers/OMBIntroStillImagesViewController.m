@@ -147,8 +147,8 @@
   slide2.imageView.image = 
     [[UIImage imageNamed: @"map_marker_icon.png"] negativeImage];
   slide2.titleLabel.text = @"Discover";
-  [slide2 setDetailLabelText: @"Find the best college sublets,\n" 
-    @"houses, and apartments."];
+  [slide2 setDetailLabelText: @"Find the best college houses,\n"
+    @"apartments, and sublets."];
   [_scroll addSubview: slide2];
 
   OMBIntroStillImageSlide *slide3 = 
@@ -162,8 +162,8 @@
   slide3.titleLabel.text = @"Book";
   // [slide3 setDetailLabelText: @"Bid on your favorite rentals\n" 
   //   @"through a live auction."];
-  [slide3 setDetailLabelText: @"Make offers on your\n" 
-    @"favorite places."];
+  [slide3 setDetailLabelText: @"Submit offers on your favorite places.\n"
+    @"Once you’re approved..."];
   [_scroll addSubview: slide3];
 
   OMBIntroStillImageSlide *slide4 = 
@@ -172,12 +172,12 @@
     slide4.frame.size.width, slide4.frame.size.height);
   // slide4.imageView.image = [UIImage imageNamed: @"celebrate_icon.png"];
   slide4.imageView.image = 
-    [[UIImage imageNamed: @"champagne_icon.png"] negativeImage];
-  slide4.titleLabel.text = @"Celebrate";
+    [UIImage imageNamed: @"seal_the_deal_icon.png"];
+  slide4.titleLabel.text = @"Seal the Deal";
   // [slide4 setDetailLabelText: @"You are ready to move\n" 
   //   @"into your new college pad."];
-  [slide4 setDetailLabelText: @"Once you are accepted,\n" 
-    @"you'll be ready to move in."];
+  [slide4 setDetailLabelText: @"Sign the lease and pay rent through\n"
+    @"OnMyBlock. It’s that easy!"];
   [_scroll addSubview: slide4];
 
   slides = @[
