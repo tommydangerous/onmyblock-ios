@@ -207,7 +207,7 @@ float kHomebaseLandlordImagePercentage = 0.4f;
   refreshControl = [UIRefreshControl new];
   [refreshControl addTarget:self action:@selector(refresh) forControlEvents:
     UIControlEventValueChanged];
-  refreshControl.tintColor = [UIColor lightTextColor];
+  refreshControl.tintColor = [UIColor grayLight];
   [_activityTableView addSubview:refreshControl];
   
   // Welcome view
@@ -298,54 +298,56 @@ float kHomebaseLandlordImagePercentage = 0.4f;
 
 - (void) scrollViewDidScroll: (UIScrollView *) scrollView
 {
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  CGFloat padding        = 20.0f;
-  CGFloat standardHeight = 44.0f;
+  //CGRect screen = [[UIScreen mainScreen] bounds];
+  //CGFloat padding        = 20.0f;
+  //CGFloat standardHeight = 44.0f;
   CGFloat y = scrollView.contentOffset.y;
 
   if (scrollView == _activityTableView || scrollView == _paymentsTableView) {
-    CGFloat originalButtonsViewOriginY =
-      (screen.size.height * kHomebaseLandlordImagePercentage) + padding;
-    CGFloat minOriginY = padding + standardHeight + padding;
-    CGFloat maxDistanceForBackView = originalButtonsViewOriginY - minOriginY;
+    //CGFloat originalButtonsViewOriginY =
+      //(screen.size.height * kHomebaseLandlordImagePercentage) + padding;
+    //CGFloat minOriginY = padding + standardHeight + padding;
+    //CGFloat maxDistanceForBackView = originalButtonsViewOriginY - minOriginY;
 
-    CGFloat newOriginY = originalButtonsViewOriginY - y;
+    /*CGFloat newOriginY = originalButtonsViewOriginY - y;
     if (newOriginY > originalButtonsViewOriginY)
       newOriginY = originalButtonsViewOriginY;
     else if (newOriginY < minOriginY)
       newOriginY = minOriginY;
     // Move the buttons
     CGRect buttonsViewRect = buttonsView.frame;
-    buttonsViewRect.origin.y = newOriginY;
-    buttonsView.frame = buttonsViewRect;
+    buttonsViewRect.origin.y = newOriginY;*/
+    //buttonsView.frame = buttonsViewRect;
 
     // Move the welcome view
-    CGFloat originalWelcomeViewOriginY = backViewOffsetY;
+    /*CGFloat originalWelcomeViewOriginY = backViewOffsetY;
     CGFloat welcomeViewNewOriginY = backViewOffsetY - y;
     if (welcomeViewNewOriginY > originalWelcomeViewOriginY)
-      welcomeViewNewOriginY = originalWelcomeViewOriginY;
+      welcomeViewNewOriginY = originalWelcomeViewOriginY;*/
     CGRect welcomeViewRect = welcomeView.frame;
-    welcomeViewRect.origin.y = welcomeViewNewOriginY;
+    //welcomeViewRect.origin.y = welcomeViewNewOriginY;
+    welcomeViewRect.origin.y = backViewOffsetY - y;
     welcomeView.frame = welcomeViewRect;
 
     // Move view up
-    CGFloat adjustment = y / 3.0f;
+    // CGFloat adjustment = y / 3.0f;
     // Adjust the header image view
     CGRect backViewRect = backView.frame;
-    CGFloat newOriginY2 = backViewOffsetY - adjustment;
+    /*CGFloat newOriginY2 = backViewOffsetY - adjustment;
     if (newOriginY2 > backViewOffsetY)
       newOriginY2 = backViewOffsetY;
     else if (newOriginY2 < backViewOffsetY - (maxDistanceForBackView / 3.0f))
-      newOriginY2 = backViewOffsetY - (maxDistanceForBackView / 3.0f);
-    backViewRect.origin.y = newOriginY2;
+      newOriginY2 = backViewOffsetY - (maxDistanceForBackView / 3.0f);*/
+    //backViewRect.origin.y = newOriginY2;
+    backViewRect.origin.y = backViewOffsetY - y;
     backView.frame = backViewRect;
 
     // Scale the background image
     CGFloat newScale = 1 + ((y * -3.0f) / backView.imageView.frame.size.height);
     if (newScale < 1)
       newScale = 1;
-    backView.imageView.transform = CGAffineTransformScale(
-      CGAffineTransformIdentity, newScale, newScale);
+    //backView.imageView.transform = CGAffineTransformScale(
+      //CGAffineTransformIdentity, newScale, newScale);
   }
 }
 
