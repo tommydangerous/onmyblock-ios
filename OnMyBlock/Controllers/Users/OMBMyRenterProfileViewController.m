@@ -757,11 +757,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       string = @"Facebook";
       if (user.renterApplication.facebookAuthenticated) {
         cell.iconImageView.alpha = 1.0f;
+        cell.userInteractionEnabled = NO;
         valueString = @"Verified";
         [cell fillCheckmark];
       }
-      else
+      else{
         valueString = @"Unverified";
+        cell.userInteractionEnabled = YES;
+      }
     }
     // LinkedIn
     else if (row == OMBMyRenterProfileSectionRentalInfoRowLinkedIn) {
@@ -770,12 +773,15 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       string = @"LinkedIn";
       if (user.renterApplication.linkedinAuthenticated) {
         cell.iconImageView.alpha = 1.0f;
+        cell.userInteractionEnabled = NO;
         valueString = @"Verified";
         [cell fillCheckmark];
       }
-      else
+      else{
         valueString = @"Unverified";
-      // cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+        cell.userInteractionEnabled = YES;
+      }
+      // cell.separatorInset = UIEdgeInsetsMake(0.0f,
       //   tableView.frame.size.width, 0.0f, 0.0f);
     }
     cell.iconImageView.image = [UIImage image: image size: imageSize];
@@ -959,6 +965,7 @@ viewForHeaderInSection: (NSInteger) section
   [v addSubview: label];
   return v;
 }
+
 
 #pragma mark - Protocol UITextFieldDelegate
 
