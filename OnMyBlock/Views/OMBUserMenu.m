@@ -87,6 +87,7 @@
     [UIImage imageNamed: @"search_icon.png"] 
       size: searchImageView.frame.size];
   searchImageView.image.accessibilityIdentifier = @"search_icon.png";
+  searchImageView.tag = 11;
   [_searchButton addSubview: searchImageView];
   [_renterButtons addObject: _searchButton];
 
@@ -451,7 +452,7 @@
 
 - (void) showSearch
 {
-  [self changeTitleLabelColor:_discoverButton];
+  [self changeTitleLabelColor:_searchButton];
   [[self container] showSearchAndSwitchToList: YES];
 }
 
