@@ -98,6 +98,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
     centeredImageView.image = image;
   }
   else {
+    centeredImageView.image = [UIImage imageNamed:@"residence_placeholder_image.png"];
     __weak typeof(centeredImageView) weakCenteredImageView = centeredImageView;
     [residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
       [weakCenteredImageView.imageView setImageWithURL: 

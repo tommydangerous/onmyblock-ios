@@ -9,6 +9,7 @@
 #import "OMBManageListingsViewController.h"
 
 #import "AMBlurView.h"
+#import "OMBActivityView.h"
 #import "OMBCreateListingViewController.h"
 #import "OMBFinishListingViewController.h"
 #import "OMBManageListingsCell.h"
@@ -59,9 +60,9 @@
     (screen.size.width - createListingViewWidth) * 0.5f, 
       screen.size.height - (createListingViewHeight + padding), 
         createListingViewWidth, createListingViewHeight);
-  createListingView.layer.borderColor = [UIColor blue].CGColor;
-  createListingView.layer.borderWidth = 1.0f;
-  createListingView.layer.cornerRadius = 
+  createListingView.layer.borderColor = [UIColor grayLight].CGColor;
+  createListingView.layer.borderWidth = 1.5f;
+  createListingView.layer.cornerRadius =
     createListingView.frame.size.height * 0.5f;
   [self.view addSubview: createListingView];
 
@@ -74,15 +75,16 @@
   [createListingButton addTarget: self action: @selector(createListing)
     forControlEvents: UIControlEventTouchUpInside];
   [createListingButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor blue]] 
+    [UIImage imageWithColor: [UIColor grayUltraLight]]
       forState: UIControlStateHighlighted];
   [createListingButton setTitle: @"Create Listing" 
     forState: UIControlStateNormal];
-  [createListingButton setTitleColor: [UIColor blue] 
+  [createListingButton setTitleColor: [UIColor blackColor]
     forState: UIControlStateNormal];
-  [createListingButton setTitleColor: [UIColor whiteColor] 
-    forState: UIControlStateHighlighted];
   [createListingView addSubview: createListingButton];
+  
+  activityView = [[OMBActivityView alloc] init];
+  [self.view addSubview: activityView];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -93,7 +95,9 @@
     [[OMBManageListingsConnection alloc] init];
   conn.completionBlock = ^(NSError *error) {
     [self.table reloadData];
+    [activityView stopSpinning];
   };
+  [activityView startSpinning];
   [conn start];
 
   imagesArray = [NSMutableArray array];
