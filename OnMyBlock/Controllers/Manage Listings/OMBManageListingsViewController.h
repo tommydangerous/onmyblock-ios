@@ -8,16 +8,6 @@
 
 #import "OMBTableViewController.h"
 
-@class OMBActivityView;
-
-@class AMBlurView;
-
 @interface OMBManageListingsViewController : OMBTableViewController
-{
-  UIButton *createListingButton;
-  AMBlurView *createListingView;
-  NSMutableArray *imagesArray;
-  OMBActivityView *activityView;
-}
 
 @end

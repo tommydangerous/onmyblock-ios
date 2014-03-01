@@ -9,7 +9,7 @@
 #import "OMBManageListingsViewController.h"
 
 #import "AMBlurView.h"
-#import "OMBActivityView.h"
+#import "OMBActivityViewFullScreen.h"
 #import "OMBCreateListingViewController.h"
 #import "OMBFinishListingViewController.h"
 #import "OMBManageListingsCell.h"
@@ -19,6 +19,16 @@
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
+
+@interface OMBManageListingsViewController ()
+{
+  UIButton *createListingButton;
+  AMBlurView *createListingView;
+  NSMutableArray *imagesArray;
+  OMBActivityViewFullScreen *activityViewFullScreen;
+}
+
+@end
 
 @implementation OMBManageListingsViewController
 
@@ -83,8 +93,8 @@
     forState: UIControlStateNormal];
   [createListingView addSubview: createListingButton];
   
-  activityView = [[OMBActivityView alloc] init];
-  [self.view addSubview: activityView];
+  activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
+  [self.view addSubview: activityViewFullScreen];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -95,9 +105,9 @@
     [[OMBManageListingsConnection alloc] init];
   conn.completionBlock = ^(NSError *error) {
     [self.table reloadData];
-    [activityView stopSpinning];
+    [activityViewFullScreen stopSpinning];
   };
-  [activityView startSpinning];
+  [activityViewFullScreen startSpinning];
   [conn start];
 
   imagesArray = [NSMutableArray array];
