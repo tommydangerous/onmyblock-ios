@@ -52,9 +52,9 @@
   [self addSubview: scroll];
 
   // Close button view
-  CGFloat closeButtonSize = 26.0f;
+  CGFloat closeButtonSize = 30.0f;
   CGRect closeButtonRect = CGRectMake(screenWidth - (closeButtonSize + padding),
-    padding + padding, closeButtonSize, closeButtonSize);
+    padding * 1.5f, closeButtonSize, closeButtonSize);
   _closeButtonView = [[OMBCloseButtonView alloc] initWithFrame: closeButtonRect
     color: [UIColor colorWithWhite: 1.0f alpha: 0.8f]];
   [self addSubview: _closeButtonView];

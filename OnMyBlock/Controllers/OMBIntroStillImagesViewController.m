@@ -305,7 +305,7 @@
   
   // Close button for get started view
   CGFloat closeButtonPadding = padding * 0.5f;
-  CGFloat closeButtonViewHeight = 26.0f;
+  CGFloat closeButtonViewHeight = 30.0f;
   CGFloat closeButtonViewWidth  = closeButtonViewHeight;
   CGRect closeButtonRect = CGRectMake(_getStartedView.frame.size.width - 
     (closeButtonViewWidth + closeButtonPadding), 
