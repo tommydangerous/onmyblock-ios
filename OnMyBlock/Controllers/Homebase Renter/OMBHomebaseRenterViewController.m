@@ -244,7 +244,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
   refreshControl = [UIRefreshControl new];
   [refreshControl addTarget:self action:@selector(refresh) forControlEvents:
     UIControlEventValueChanged];
-  refreshControl.tintColor = [UIColor grayLight];
+  refreshControl.tintColor = [UIColor lightTextColor];
   [_activityTableView addSubview:refreshControl];
   
   alert = [[OMBAlertView alloc] init];
@@ -514,7 +514,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
     CGFloat originalButtonsViewOriginY = padding + standardHeight + 
       (screen.size.height * kHomebaseRenterImagePercentage) + padding;
     CGFloat minOriginY = padding + standardHeight + padding;
-    //CGFloat maxDistanceForBackView = originalButtonsViewOriginY - minOriginY;
+    CGFloat maxDistanceForBackView = originalButtonsViewOriginY - minOriginY;
 
     CGFloat newOriginY = originalButtonsViewOriginY - y;
     if (newOriginY > originalButtonsViewOriginY)
@@ -527,24 +527,23 @@ float kHomebaseRenterImagePercentage = 0.3f;
     buttonsView.frame = buttonsViewRect;
 
     // Move view up
-    // CGFloat adjustment = y / 3.0f;
+    CGFloat adjustment = y / 3.0f;
     // Adjust the header image view
     CGRect backViewRect = backView.frame;
-    /*CGFloat newOriginY2 = backViewOffsetY - adjustment;
+    CGFloat newOriginY2 = backViewOffsetY - adjustment;
     if (newOriginY2 > backViewOffsetY)
       newOriginY2 = backViewOffsetY;
     else if (newOriginY2 < backViewOffsetY - (maxDistanceForBackView / 3.0f))
       newOriginY2 = backViewOffsetY - (maxDistanceForBackView / 3.0f);
-    backViewRect.origin.y = newOriginY2;*/
-    backViewRect.origin.y = backViewOffsetY - y;
+    backViewRect.origin.y = newOriginY2;
     backView.frame = backViewRect;
 
     // Scale the background image
     CGFloat newScale = 1 + ((y * -3.0f) / backView.imageView.frame.size.height);
     if (newScale < 1)
       newScale = 1;
-    //backView.imageView.transform = CGAffineTransformScale(
-      //CGAffineTransformIdentity, newScale, newScale);
+    backView.imageView.transform = CGAffineTransformScale(
+      CGAffineTransformIdentity, newScale, newScale);
 
     // Change the colors of the buttons
     // CGFloat maxDistancePercent = y / maxDistanceForBackView;
