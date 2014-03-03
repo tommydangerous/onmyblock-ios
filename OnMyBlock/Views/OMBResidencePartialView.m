@@ -188,10 +188,14 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
     // Don't resize images or else it hurts performance
     OMBResidenceImage *residenceImage = 
       [[_residence imagesArray] objectAtIndex: indexPath.row];
-      
+    
     cell.imageView.image = [OMBResidence placeholderImage];
-    // __weak typeof(cell) weakCell = cell;
-    [cell.imageView setImageWithURL: residenceImage.imageURL
+    __weak typeof(cell) weakCell = cell;
+    
+    //if(!weakCell.shown || !weakCell.imageView.image)
+      //weakCell.imageView.alpha = 0.0f;
+      
+    [weakCell.imageView setImageWithURL: residenceImage.imageURL
       placeholderImage: nil 
         options: (SDWebImageRetryFailed | 
           SDWebImageDownloaderProgressiveDownload)
@@ -200,6 +204,11 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
             if (error) {
               NSLog(@"Error: %@, for: %@", error, residenceImage.imageURL);
             }
+            
+            cell.alpha = 0.0f;
+            [UIView animateWithDuration:1.0 animations:^{
+              cell.alpha = 1.0f;
+            }];
           }
         ];
     return cell;
