@@ -192,10 +192,7 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
     cell.imageView.image = [OMBResidence placeholderImage];
     __weak typeof(cell) weakCell = cell;
     
-    //if(!weakCell.shown || !weakCell.imageView.image)
-      //weakCell.imageView.alpha = 0.0f;
-      
-    [weakCell.imageView setImageWithURL: residenceImage.imageURL
+    [cell.imageView setImageWithURL: residenceImage.imageURL
       placeholderImage: nil 
         options: (SDWebImageRetryFailed | 
           SDWebImageDownloaderProgressiveDownload)
@@ -205,9 +202,9 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
               NSLog(@"Error: %@, for: %@", error, residenceImage.imageURL);
             }
             
-            cell.alpha = 0.0f;
+            weakCell.alpha = 0.0f;
             [UIView animateWithDuration:1.0 animations:^{
-              cell.alpha = 1.0f;
+              weakCell.alpha = 1.0f;
             }];
           }
         ];
