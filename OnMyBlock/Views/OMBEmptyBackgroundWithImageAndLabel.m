@@ -38,12 +38,46 @@
   _label.textColor = [UIColor grayMedium];
   [self addSubview: _label];
 
+  _startButton = [UIButton new];
+  _startButton.backgroundColor = [UIColor clearColor];
+  _startButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue" size: 16];
+  _startButton.titleLabel.textColor = UIColor.blue;
+  [_startButton setTitleColor:
+   [UIColor colorWithRed:0.2f green:0.7f blue:1.0f alpha:1.0f]
+     forState:UIControlStateNormal];
+  [_startButton setTitleColor:
+    [UIColor colorWithRed:0.1f green:0.4f blue:0.8f alpha:1.0f]
+       forState:UIControlStateHighlighted];
+  
   return self;
 }
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) setButtonText:(NSString *)string
+{
+  [_startButton removeFromSuperview];
+  
+  CGRect startRect = [string boundingRectWithSize:
+    CGSizeMake(self.frame.size.width, 40.0f)
+      options: NSStringDrawingUsesLineFragmentOrigin
+        attributes: @{ NSFontAttributeName:
+          [UIFont fontWithName: @"HelveticaNeue" size: 16] }
+            context: nil];
+  
+  CGFloat startWidth = startRect.size.width + 20;
+  CGFloat startHeight = startRect.size.height + 10;
+  
+  _startButton.frame = CGRectMake((self.frame.size.width - startWidth) * 0.5f,
+    _label.frame.origin.y +
+      _label.frame.size.height + OMBPadding,
+        startWidth, startHeight);
+  [_startButton setTitle:string forState:UIControlStateNormal];
+  
+  [self addSubview: _startButton];
+}
 
 - (void) setLabelText: (NSString *) string
 {

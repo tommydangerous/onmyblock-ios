@@ -17,6 +17,7 @@
 #import "OMBMessageDetailViewController.h"
 #import "OMBMessageNewViewController.h"
 #import "OMBNavigationController.h"
+#import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBInboxViewController
@@ -74,6 +75,12 @@
   NSString *text = @"Your messages with other users appear here. "
     @"You currently have no messages.";
   [noMessagesView setLabelText: text];
+  
+  [noMessagesView setButtonText: @"Start Browsing"];
+  [noMessagesView.startButton addTarget: self
+    action:@selector(discover)
+      forControlEvents:UIControlEventTouchUpInside];
+  
   [self.view addSubview: noMessagesView];
 }
 
@@ -250,6 +257,11 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
         [refreshControl endRefreshing];
       }];
   }
+}
+
+- (void) discover
+{
+  [[self appDelegate].container showDiscover];
 }
 
 - (void) updateNoMessagesView

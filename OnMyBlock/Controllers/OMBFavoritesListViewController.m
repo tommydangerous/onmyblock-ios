@@ -18,6 +18,7 @@
 #import "OMBResidenceDetailViewController.h"
 #import "OMBResidencePartialView.h"
 #import "OMBUser.h"
+#import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+NegativeImage.h"
 
@@ -73,6 +74,12 @@
   // emptyBackgroundView.label.textColor = [UIColor colorWithWhite: 1.0f 
   //   alpha: 0.8f];
   [emptyBackgroundView setLabelText: text];
+  
+  [emptyBackgroundView setButtonText: @"Start Browsing"];
+  [emptyBackgroundView.startButton addTarget: self
+    action:@selector(discover)
+      forControlEvents:UIControlEventTouchUpInside];
+
   [self.view addSubview: emptyBackgroundView];
 }
 
@@ -170,6 +177,11 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
     [self reloadTable];
   }
   [self updateEmptyBackgroundView];
+}
+
+- (void) discover
+{
+  [[self appDelegate].container showDiscover];
 }
 
 - (NSArray *) favorites

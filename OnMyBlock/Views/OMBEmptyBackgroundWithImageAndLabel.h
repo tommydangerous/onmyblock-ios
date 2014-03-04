@@ -10,6 +10,7 @@
 
 @interface OMBEmptyBackgroundWithImageAndLabel : OMBView
 
+@property (nonatomic, strong) UIButton *startButton;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UILabel *label;
 
@@ -18,5 +19,5 @@
 #pragma mark - Instance Methods
 
 - (void) setLabelText: (NSString *) string;
-
+- (void) setButtonText: (NSString *) string;
 @end
