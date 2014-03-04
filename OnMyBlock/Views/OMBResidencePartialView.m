@@ -201,11 +201,12 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
             if (error) {
               NSLog(@"Error: %@, for: %@", error, residenceImage.imageURL);
             }
-            
-            weakCell.alpha = 0.0f;
-            [UIView animateWithDuration:1.0 animations:^{
-              weakCell.alpha = 1.0f;
-            }];
+            if(cacheType == SDImageCacheTypeNone || cacheType == SDImageCacheTypeDisk){
+              weakCell.alpha = 0.0f;
+              [UIView animateWithDuration:1.0 animations:^{
+                weakCell.alpha = 1.0f;
+              }];
+            }
           }
         ];
     return cell;
