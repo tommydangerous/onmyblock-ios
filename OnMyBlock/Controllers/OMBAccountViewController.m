@@ -49,6 +49,11 @@
   self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
 }
 
+- (void) viewWillAppear:(BOOL)animated
+{
+  [self.table reloadData];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol UITableViewDataSource
@@ -89,17 +94,21 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell.textLabel.textColor = [UIColor textColor];
     if (indexPath.section == 0) {
       if (indexPath.row == 1) {
-        cell.detailTextLabel.font = cell.textLabel.font;
-        NSInteger percentage = [[OMBUser currentUser] profilePercentage];
-        cell.detailTextLabel.text = [NSString stringWithFormat:
-                                     @"%i%% complete", percentage];
-        UIColor *color = [UIColor red];
-        if (percentage >= 90)
-          color = [UIColor green];
-        else if (percentage >= 50)
-          color = [UIColor yellow];
-        cell.detailTextLabel.textColor = color;
-        cell.textLabel.text = @"My Profile";
+        if([[OMBUser currentUser] isLandlord])
+          cell.textLabel.text = @"My Profile";
+        else{
+          cell.detailTextLabel.font = cell.textLabel.font;
+          NSInteger percentage = [[OMBUser currentUser] profilePercentage];
+          cell.detailTextLabel.text = [NSString stringWithFormat:
+                                       @"%i%% complete", percentage];
+          UIColor *color = [UIColor red];
+          if (percentage >= 90)
+            color = [UIColor green];
+          else if (percentage >= 50)
+            color = [UIColor yellow];
+          cell.detailTextLabel.textColor = color;
+          cell.textLabel.text = @"My Renter Profile";
+        }
       }
       else if (indexPath.row == 2) {
         cell.textLabel.text = @"My Renter Application";

@@ -345,12 +345,14 @@
 
   // If user is the landlord
   if ([user isLandlord]) {
+    self.title = @"My Profile";
     // Fetch listings
     [user fetchListingsWithCompletion: ^(NSError *error) {
       [self updateData];
     }];
   }
   else {
+    self.title = @"My Renter Profile";
     // Fetch the information about the user, specifically the renter application
     [user fetchUserProfileWithCompletion: ^(NSError *error) {
       [valueDictionary setObject: [NSNumber numberWithInt: 

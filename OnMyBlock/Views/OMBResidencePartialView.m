@@ -203,7 +203,7 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
             }
             if(cacheType == SDImageCacheTypeNone || cacheType == SDImageCacheTypeDisk){
               weakCell.alpha = 0.0f;
-              [UIView animateWithDuration:1.0 animations:^{
+              [UIView animateWithDuration: OMBStandardDuration animations:^{
                 weakCell.alpha = 1.0f;
               }];
             }

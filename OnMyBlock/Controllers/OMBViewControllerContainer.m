@@ -1119,6 +1119,18 @@ completion: (void (^) (void)) block
   }
 }
 
+-(void) highlightDiscover
+{
+  [self setTitleColorWhite];
+  for (OMBUserMenu *m in userMenuArray) {
+    [m.discoverButton setTitleColor: [UIColor blue] forState: UIControlStateNormal];
+    UIImageView *iv = (UIImageView *)[m.discoverButton viewWithTag:11];
+    NSString *identifier = iv.image.accessibilityIdentifier;
+    iv.image = [UIImage changeColorForImage: [UIImage imageNamed:identifier]  toColor:[UIColor blue]];
+    iv.image.accessibilityIdentifier = identifier;
+  }
+}
+
 - (void) setupAttributesForButtons: (NSArray *) array
 {
   CGFloat imageSize = 22.0f;
@@ -1249,6 +1261,7 @@ completion: (void (^) (void)) block
 
 - (void) showDiscover
 {
+  [self highlightDiscover];
   [self changeTitleLabelColor: discoverButton];
   // if (!_mapNavigationController) {
   //   // Search
