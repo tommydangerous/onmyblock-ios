@@ -998,6 +998,11 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         cell.separatorInset = UIEdgeInsetsMake(0.0f,
                                                tableView.frame.size.width, 0.0f, 0.0f);
       }
+      if ([[self payoutMethods] count] == 1 && indexPath.row == 0)
+        cell.userInteractionEnabled = NO;
+      else
+        cell.userInteractionEnabled = YES;
+      
       return cell;
     }
     else {
