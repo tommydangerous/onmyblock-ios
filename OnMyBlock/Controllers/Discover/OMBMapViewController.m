@@ -910,9 +910,9 @@ withTitle: (NSString *) title;
   }
   else {
     fetching = YES;
-    if (!activityView.isSpinning) {
-      [activityView startSpinning];
-    }
+    // if (!activityView.isSpinning) {
+    //   [activityView startSpinning];
+    // }
   }
 
   _radiusInMiles += 4;
@@ -973,16 +973,16 @@ withTitle: (NSString *) title;
         }
         // If new residences were found and added
         else {
-          if (activityView.isSpinning)
-            [activityView stopSpinning];
+          // if (activityView.isSpinning)
+          //   [activityView stopSpinning];
           if ([[self residencesForList] count])
             emptyBackground.alpha = 0.0f;
         }
       }
       // Stop fetching if radius is more than 100 miles
       else {
-        if (activityView.isSpinning)
-          [activityView stopSpinning];
+        // if (activityView.isSpinning)
+        //   [activityView stopSpinning];
         if ([[self residencesForList] count] == 0)
           [UIView animateWithDuration: OMBStandardDuration animations: ^{
             emptyBackground.alpha = 1.0f;
