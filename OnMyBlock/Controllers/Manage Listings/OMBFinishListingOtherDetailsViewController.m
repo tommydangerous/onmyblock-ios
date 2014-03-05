@@ -518,6 +518,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // Listing Details
   if (indexPath.section == 0) {
+    // Bedrooms
+    // Bathrooms
+    if (indexPath.row == 2 || indexPath.row == 3) {
+      [((OMBLabelTextFieldCell *)
+        [self.table cellForRowAtIndexPath:indexPath]).textField becomeFirstResponder];
+    }
     // Property Type
     if (indexPath.row == 4) {
       //[self reloadForDatePickerAndPickerViewRowsAtIndexPath: indexPath];
