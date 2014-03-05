@@ -691,6 +691,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Protocol UITextFieldDelegate
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+  
+  if([[textField.text stringByReplacingCharactersInRange: range
+       withString:string] floatValue] > 15000.00) {
+    return NO;
+  };
+  
+  return YES;
+}
+
 - (void) textFieldDidBeginEditing: (UITextField *) textField
 {
 	editingTextField = textField;
@@ -737,11 +747,31 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [auctionTableView scrollToRowAtIndexPath: tf.indexPath
       atScrollPosition: UITableViewScrollPositionTop animated: YES];
   }
+  
+  [self animateTextField: textField up: YES];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+  [self animateTextField: textField up: NO];
 }
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) animateTextField: (UITextField*) textField up: (BOOL) up
+{
+  const int movementDistance = 25;
+  
+  int movement = (up ? -movementDistance : movementDistance);
+  
+  [UIView beginAnimations: @"anim" context: nil];
+  [UIView setAnimationBeginsFromCurrentState: YES];
+  [UIView setAnimationDuration: 0.3f];
+  self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+  [UIView commitAnimations];
+}
 
 - (void) datePickerChanged: (UIDatePicker *) datePicker
 {
