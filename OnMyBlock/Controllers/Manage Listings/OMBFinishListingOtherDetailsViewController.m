@@ -261,6 +261,13 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   }
 }
 
+#pragma mark - Protocol UIAlertViewDelegate
+
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+  [self.navigationController popToRootViewControllerAnimated: YES];
+}
+
 #pragma mark - Protocol UIPickerViewDataSource
 
 - (NSInteger) numberOfComponentsInPickerView: (UIPickerView *) pickerView
@@ -657,7 +664,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     else {
       residence = nil;
-      [self.navigationController popToRootViewControllerAnimated: NO];
+      NSString *message = @"Listing Deleted";
+      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: nil
+        message: message delegate: self cancelButtonTitle: @"Okay"
+          otherButtonTitles: nil];
+      [alertView show];
     }
     [[self appDelegate].container stopSpinning];
     // [activityView stopSpinning];

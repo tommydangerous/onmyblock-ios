@@ -10,7 +10,7 @@
 
 @interface OMBFinishListingOtherDetailsViewController : 
   OMBFinishListingSectionViewController
-<UIActionSheetDelegate, UIPickerViewDataSource, 
+<UIActionSheetDelegate, UIAlertViewDelegate, UIPickerViewDataSource, 
 UIPickerViewDelegate, UITextFieldDelegate>
 {
   int auxRow;
