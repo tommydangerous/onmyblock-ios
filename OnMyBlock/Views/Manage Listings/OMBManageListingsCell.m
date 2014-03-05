@@ -26,7 +26,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
     return nil;
 
   self.selectedBackgroundView = [[UIImageView alloc] initWithImage:
-    [UIImage imageWithColor: [UIColor blue]]];
+    [UIImage imageWithColor: [UIColor grayVeryLight]]];
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenWidth = screen.size.width;
