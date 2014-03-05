@@ -1222,6 +1222,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   UIActivityViewController *activityViewController = 
     [[UIActivityViewController alloc] initWithActivityItems: dataToShare
       applicationActivities: nil];
+  [activityViewController setValue: @"Check out this listing on OnMyBlock!"
+     forKey: @"subject"];
   [[self appDelegate].container.currentDetailViewController 
     presentViewController: activityViewController 
       animated: YES completion: nil];

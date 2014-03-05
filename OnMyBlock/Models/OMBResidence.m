@@ -905,16 +905,20 @@ withURL: (NSURL *) url completion: (void (^)(void)) block
   NSString *string = [NSString stringWithFormat: @"%@/places/%i",
     [array firstObject], self.uid];
 
-  NSString *bedsString = @"beds";
+  /*NSString *bedsString = @"beds";
   if (_bedrooms == 1)
     bedsString = @"bed";
   NSString *bathsString = @"baths";
   if (_bathrooms == 1)
-    bathsString = @"bath";
+    bathsString = @"bath";*/
 
-  return [NSString stringWithFormat: @"%.0f %@, %.0f %@ for only %@\n%@",
+  return [NSString stringWithFormat:
+            @"Check out this listing I found using OnMyBlock!  %@",
+              string];
+  
+  /*return [NSString stringWithFormat: @"%.0f %@, %.0f %@ for only %@\n%@",
     _bedrooms, bedsString, _bathrooms, bathsString, 
-      [self rentToCurrencyString], string];
+      [self rentToCurrencyString], string];*/
 }
 
 - (NSArray *) sortedOffers
