@@ -26,7 +26,9 @@ UIPickerViewDelegate>
 	UIDatePicker *moveInPicker;
 	UIDatePicker *moveOutPicker;
 	UIPickerView *monthLeasePicker;
+  NSString *leaseTypeDescription;
 	UIPickerView *leaseTypePicker;
+  CGSize leaseTypeDescriptionSize;
 }
 
 @end

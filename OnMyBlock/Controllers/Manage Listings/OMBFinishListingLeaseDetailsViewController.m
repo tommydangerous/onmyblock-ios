@@ -247,7 +247,7 @@ float k2KeyboardHeight = 216.0;
   }
   [leaseTypePicker selectRow: selectedLeaseRow inComponent: 0
     animated: NO];
-  
+  [self updateLeaseTypeDescription: selectedLeaseRow];
   [self.table reloadData];
 }
 
@@ -374,6 +374,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 - (UITableViewCell *) tableView: (UITableView *) tableView
           cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  CGFloat padding = 20.0f;
   // Normal cell
   static NSString *CellIdentifier = @"CellIdentifier";
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
@@ -519,8 +520,37 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       else if (indexPath.row == 10) {
         
       }
-      // View OMB Standard Lease
+      // Lease Type Description
       else if (indexPath.row == 11) {
+        static NSString *CellIdentifier = @"LeaseTypeDescription";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+                                 CellIdentifier];
+        if (!cell) {
+          cell = [[UITableViewCell alloc] initWithStyle:
+                  UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier];
+        }
+        for (UIView *subview in [cell.contentView subviews])
+            [subview removeFromSuperview];
+        
+        UILabel *label = [UILabel new];
+        label.font = [UIFont smallTextFont];
+        label.frame = CGRectMake(padding, padding,
+                                 tableView.frame.size.width - (padding * 2),
+                                 leaseTypeDescriptionSize.height);
+        label.numberOfLines = 0;
+        label.text = leaseTypeDescription;
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor grayMedium];
+        [cell.contentView addSubview: label];
+        
+        cell.backgroundColor = [UIColor grayUltraLight];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+                                               0.0f, 0.0f);
+        return cell;
+      }
+      // View OMB Standard Lease
+      else if (indexPath.row == 12) {
         static NSString *LinkCellIdentifier = @"LinkCellIdentifier";
         UITableViewCell *linkCell =
         [tableView dequeueReusableCellWithIdentifier: LinkCellIdentifier];
@@ -631,8 +661,9 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     // Open House Dates
     // Lease Type
     // - Picker view
+    // Lease Type Description
     // View OMB Standard Lease
-    return 12;
+    return 13;
   }
   // Delete Listing
   else if (section == 2) {
@@ -691,7 +722,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         initWithResidence: residence] animated: YES];
     }
     // OMB Standard Lease
-    else if (indexPath.row == 11) {
+    else if (indexPath.row == 12) {
       [self.navigationController pushViewController:
        [[OMBStandardLeaseViewController alloc] init] animated: YES];
     }
@@ -736,6 +767,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       // Open House Dates
       else if (indexPath.row == 8) {
         return 0.0f;
+      }
+      // Lease Type Description
+      else if (indexPath.row == 11) {
+        return 20.f + leaseTypeDescriptionSize.height + 20.f;
       }
     }
     return 44.0f;
@@ -988,6 +1023,33 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+
+- (void) updateLeaseTypeDescription:(NSInteger)selection
+{
+  if(selection == 0){
+    leaseTypeDescription = @"The OnmyBlock Standard Lease is a California\n"
+                          @"realtor approved lease containing all the\n"
+                          @"necessary clauses and memos of\n"
+                          @"disclosure for optimal\n"
+    @"professional use.";
+  }
+  else if(selection == 1){
+    leaseTypeDescription = @"You may create your listing now, but you will\n"
+                          @"need to upload your own lease\n"
+    @"using desktop OnMyBlock.";
+  }
+  else if(selection == 2){
+    leaseTypeDescription = @"If you are subletting your place, please ensure\n"
+                          @"that you have carefully read the subletting\n"
+                          @"clause of your current lease or have\n"
+    @"consulted with your landlord.";
+  }
+  CGRect rect = [leaseTypeDescription boundingRectWithSize:
+    CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999)
+      font: [UIFont smallTextFont]];
+  leaseTypeDescriptionSize = rect.size;
+}
+
 - (void) updatePicker
 {
   // Move-in date picker
@@ -1021,6 +1083,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if (selectedLeaseRow == NSNotFound)
       selectedLeaseRow = 0;
   }
+  [self updateLeaseTypeDescription: selectedLeaseRow];
+  [self.table reloadRowsAtIndexPaths:
+   @[[NSIndexPath indexPathForRow: 11 inSection: 0]]
+                    withRowAnimation: UITableViewRowAnimationNone];
   [leaseTypePicker selectRow: selectedLeaseRow inComponent: 0
                     animated: NO];
 }
