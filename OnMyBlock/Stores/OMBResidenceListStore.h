@@ -25,8 +25,8 @@
 #pragma mark - Instance Methods
 
 - (void) addResidence: (OMBResidence *) residence;
-- (void) fetchResidencesWithParameters: (NSDictionary *) dictionary
-completion: (void (^) (NSError *error)) block;
+- (void) fetchResidencesWithParameters: (NSDictionary *) parameters
+delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (NSArray *) sortedResidencesByDistanceFromCoordinate: 
   (CLLocationCoordinate2D) coordinate;

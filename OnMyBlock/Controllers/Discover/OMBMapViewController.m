@@ -60,6 +60,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   BOOL firstLoad;
   BOOL isFetchingResidencesForMap;
   NSMutableArray *neighborhoodAnnotationArray;
+  NSDictionary *previousMapFilterParameters;
   OMBAnnotationCity *sanDiegoAnnotationCity;
 }
 
@@ -314,7 +315,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   _mapView.delegate = self;
   _mapView.frame    = screen;
   _mapView.mapType  = MKMapTypeStandard;
-  _mapView.minimumAnnotationCountPerCluster = 5;
+  // _mapView.minimumAnnotationCountPerCluster = 5;
   // mapView.rotateEnabled = NO;
   _mapView.showsPointsOfInterest = NO;
   UITapGestureRecognizer *mapViewTap = 
@@ -479,6 +480,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   NSDictionary *dictionary = (NSDictionary *)
     [self appDelegate].container.mapFilterViewController.valuesDictionary;
+
   // Filter
   // Neighborhood
   if ([dictionary objectForKey: @"neighborhood"] != [NSNull null]) {
@@ -487,7 +489,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     
     if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate)) {
       centerCoordinate = neighborhood.coordinate;
-      [self setMapViewRegion: centerCoordinate withMiles: 4 animated: NO];
+      [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
+        animated: NO];
       if ([self isOnList]) {
         [self resetListViewResidences];
         [self fetchResidencesForList];
@@ -507,7 +510,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       [self fetchResidencesForList];
     }
     else {
-      [self setMapViewRegion: centerCoordinate withMiles: 4 animated: NO];
+      [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
+        animated: NO];
     }
     [self appDelegate].container.mapFilterViewController.shouldSearch = NO;
   }
@@ -583,7 +587,6 @@ didUpdateLocations: (NSArray *) locations
       // [self.mapView addAnnotation: annotationCity];
       [self.mapView.annotationsToIgnore addObject: annotationCity];
       [self.mapView addAnnotation: annotationCity];
-      NSLog(@"%@", annotationCity.cityName);
     }
     // [[self.mapView viewForAnnotation: sanDiegoAnnotationCity] setHidden: NO];
   }
@@ -603,8 +606,17 @@ didUpdateLocations: (NSArray *) locations
       @"bounds": bounds
     }
   ];
-  if ([self mapFilterParameters] != nil)
+  if ([self mapFilterParameters] != nil) {
+    if ([previousMapFilterParameters isEqual: [self mapFilterParameters]]) {
+
+    }
+    else {
+      [self.mapView removeAnnotations: self.mapView.annotations];
+      previousMapFilterParameters = [NSDictionary dictionaryWithDictionary:
+        [self mapFilterParameters]];
+    }
     [params addEntriesFromDictionary: [self mapFilterParameters]];
+  }
 
   if (!isFetchingResidencesForMap) {
     isFetchingResidencesForMap = YES;
@@ -734,39 +746,38 @@ viewForAnnotation: (id <MKAnnotation>) annotation
       [self.mapView addAnnotations: 
         [[OMBResidenceMapStore sharedStore] annotations]];
 
-      return;
-
-      NSMutableArray *arrayOfDictonaries = [NSMutableArray array];
-      NSArray *array = [dictionary objectForKey: @"objects"];
-      NSUInteger arrayCount = [array count];
-      int size = 500;
-      for (int i = 0; i < (arrayCount / size) + 1; i++) {
-        NSUInteger location = i * size;
-        NSUInteger length   = arrayCount - location;
-        if (length > size)
-          length = size;
-        NSArray *subarray = [array subarrayWithRange: 
-          NSMakeRange(location, length)];
-        [arrayOfDictonaries addObject: @{
-          @"objects": subarray
-        }];
-      }
-      for (NSDictionary *dict in arrayOfDictonaries) {
-        // Read from dictionary
-        dispatch_async(dispatch_get_main_queue(), ^{
-          [[OMBResidenceMapStore sharedStore] readFromDictionary: dict];
-          // Add annotations that don't exist
-          NSMutableSet *masterSet = [NSMutableSet setWithSet:
-            [[OMBResidenceMapStore sharedStore] annotations]];
-          [masterSet minusSet: [NSSet setWithArray: self.mapView.annotations]];
+      // NSMutableArray *arrayOfDictonaries = [NSMutableArray array];
+      // NSArray *array = [dictionary objectForKey: @"objects"];
+      // NSUInteger arrayCount = [array count];
+      // int size = 500;
+      // for (int i = 0; i < (arrayCount / size) + 1; i++) {
+      //   NSUInteger location = i * size;
+      //   NSUInteger length   = arrayCount - location;
+      //   if (length > size)
+      //     length = size;
+      //   NSArray *subarray = [array subarrayWithRange: 
+      //     NSMakeRange(location, length)];
+      //   [arrayOfDictonaries addObject: @{
+      //     @"objects": subarray
+      //   }];
+      // }
+      // for (NSDictionary *dict in arrayOfDictonaries) {
+      //   // Read from dictionary
+      //   dispatch_async(dispatch_get_main_queue(), ^{
+      //     [[OMBResidenceMapStore sharedStore] readFromDictionary: dict];
+      //     // Add annotations that don't exist
+      //     NSMutableSet *masterSet = [NSMutableSet setWithSet:
+      //       [[OMBResidenceMapStore sharedStore] annotations]];
+      //     [masterSet minusSet: 
+      //       [NSSet setWithArray: self.mapView.annotations]];
           
-          NSLog(@"ADDING: %i", [[masterSet allObjects] count]);
-          [self.mapView addAnnotations: [masterSet allObjects]];
-          // [self addAnnotations: [masterSet allObjects]];      
-          // [self addAnnotations: 
-          //   [[[OMBResidenceMapStore sharedStore] annotations] allObjects]];
-        });
-      }
+      //     NSLog(@"ADDING: %i", [[masterSet allObjects] count]);
+      //     [self.mapView addAnnotations: [masterSet allObjects]];
+      //     [self addAnnotations: [masterSet allObjects]];      
+      //     [self addAnnotations: 
+      //       [[[OMBResidenceMapStore sharedStore] annotations] allObjects]];
+      //   });
+      // }
     }
   }
 }
@@ -899,7 +910,8 @@ targetContentOffset: (inout CGPoint *) targetContentOffset
     CGFloat totalContentOffset = contentHeight - scrollViewHeight;
     CGFloat limit = totalContentOffset - (scrollViewHeight / 1.0f);
     if (y > limit) {
-      [self fetchResidencesForList];
+      if ([self isOnList])
+        [self fetchResidencesForList];
     }
 
     // Check the speed of scrolling,  if it is slow, download
@@ -1114,7 +1126,7 @@ withTitle: (NSString *) title;
   NSLog(@"CURRENT COUNT: %i", currentCount);
 
   [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters: params 
-    completion: ^(NSError *error) {
+    delegate: self completion: ^(NSError *error) {
       if (firstLoad) {
         [activityViewFullScreen stopSpinning];
         firstLoad = NO;

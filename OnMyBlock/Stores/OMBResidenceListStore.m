@@ -49,12 +49,13 @@
   //   [_residences addObject: residence];
 }
 
-- (void) fetchResidencesWithParameters: (NSDictionary *) dictionary
-completion: (void (^) (NSError *error)) block
+- (void) fetchResidencesWithParameters: (NSDictionary *) parameters
+delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
   OMBResidenceListConnection *conn = 
-    [[OMBResidenceListConnection alloc] initWithParameters: dictionary];
+    [[OMBResidenceListConnection alloc] initWithParameters: parameters];
   conn.completionBlock = block;
+  conn.delegate        = delegate;
   [conn start];
 }
 

@@ -108,10 +108,21 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
   // login
   if(alertView.tag == 1){
+    // Sign up
     if(buttonIndex == 1)
        [self showSignUp];
-    else if(buttonIndex == 2)
-        _loginSignUpView.passwordTextField.text = @"";
+    // Reset password
+    else if(buttonIndex == 2) {
+      _loginSignUpView.passwordTextField.text = @"";
+      #warning SEND AN EMAIL TO RESET PASSWORD
+      NSString *message = [NSString stringWithFormat: 
+        @"An email with password reset instructions has "
+        @"been sent to \"%@\"", _loginSignUpView.emailTextField.text];
+      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: nil
+        message: message delegate: nil cancelButtonTitle: @"Okay"
+          otherButtonTitles: nil];
+      [alertView show];
+    }
   }
   // sign up
   else if(alertView.tag == 2){

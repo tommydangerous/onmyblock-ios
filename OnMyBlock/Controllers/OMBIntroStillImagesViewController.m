@@ -365,11 +365,13 @@
   [[UIApplication sharedApplication] setStatusBarStyle:
     UIStatusBarStyleDefault];
 
-  // If user first comes to the app and is shown the intro,
-  // we have this so that the map doesn't ask them for current location.
-  // Only after they dismiss the intro does it load the map/discover
-  if (![self appDelegate].container.currentDetailViewController)
-    [[self appDelegate].container showDiscover];
+  if (!self.presentedViewController) {
+    // If user first comes to the app and is shown the intro,
+    // we have this so that the map doesn't ask them for current location.
+    // Only after they dismiss the intro does it load the map/discover
+    if (![self appDelegate].container.currentDetailViewController)
+      [[self appDelegate].container showDiscover];
+  }
   
   animate = NO;
 }

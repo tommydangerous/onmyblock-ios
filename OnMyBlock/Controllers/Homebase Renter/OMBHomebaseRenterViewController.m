@@ -70,6 +70,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
   [editBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: boldFont
   } forState: UIControlStateNormal];
+  self.navigationItem.rightBarButtonItem = editBarButtonItem;
 
   selectedSegmentIndex = 0;
 
@@ -1005,7 +1006,7 @@ viewForHeaderInSection: (NSInteger) section
       _activityTableView.contentOffset = CGPointMake(
         _activityTableView.contentOffset.x, threshold);
     }
-    [self.navigationItem setRightBarButtonItem: nil animated: YES];
+    // [self.navigationItem setRightBarButtonItem: nil animated: YES];
   }
   else if (selectedSegmentIndex == 1) {
     activityButton.backgroundColor = [UIColor clearColor];

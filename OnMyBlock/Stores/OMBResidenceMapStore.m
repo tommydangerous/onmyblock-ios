@@ -87,6 +87,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     // Add to annotations set
     [annotations addObject: annotation];
   }
+  NSLog(@"ANNOTATIONS: %i", [annotations count]);
 }
 
 @end

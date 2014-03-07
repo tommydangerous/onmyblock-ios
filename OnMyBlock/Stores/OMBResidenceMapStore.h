@@ -18,7 +18,7 @@
 
 #pragma mark - Instance Methods
 
-- (NSSet *) annotations;
+- (NSArray *) annotations;
 - (void) fetchResidencesWithParameters: (NSDictionary *) parameters
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
