@@ -1256,6 +1256,17 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
 #pragma mark - Protocol UITableViewDelegate
 
+- (BOOL) tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  if (indexPath.section ==
+      OMBResidenceBookItConfirmDetailsSectionPayoutMethods)
+    if(((OMBPayoutMethod *)[[self payoutMethods]
+           objectAtIndex: indexPath.row]).primary)
+      return NO;
+  
+  return YES;
+}
+
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
