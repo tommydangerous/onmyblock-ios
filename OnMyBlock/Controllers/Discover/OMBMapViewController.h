@@ -54,6 +54,7 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
   AMBlurView *navigationBarCover;
   int pagination;
   CGFloat previousOffsetY;
+  NSUInteger previousZoomLevel;
   OMBPropertyInfoView *propertyInfoView;
   UISegmentedControl *segmentedControl;
   UIImageView *sortArrow;

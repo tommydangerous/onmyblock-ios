@@ -39,8 +39,12 @@
 
 - (void) addResidence: (OMBResidence *) residence
 {
-  [_residences setObject: residence forKey: 
-    [NSNumber numberWithInt: residence.uid]];
+  NSNumber *number = [NSNumber numberWithInt: residence.uid];
+  OMBResidence *res = [self.residences objectForKey: number];
+  if (res)
+    [res updateResidenceWithResidence: residence];
+  else
+    [self.residences setObject: residence forKey: number];
 }
 
 - (OMBResidence *) residenceForUID: (NSInteger) uid

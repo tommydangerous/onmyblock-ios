@@ -40,8 +40,10 @@
 {
     _allAnnotations = [[NSMutableSet alloc] init];
     _annotationsToIgnore = [[NSMutableSet alloc] init];
-    _clusteringMethod = OCClusteringMethodBubble;
-    _clusterSize = 0.2;
+    // _clusteringMethod = OCClusteringMethodBubble;
+    _clusteringMethod = OCClusteringMethodGrid;
+    // _clusterSize = 0.2;
+    _clusterSize = 0.3;
     _minLongitudeDeltaToCluster = 0.0;
     _minimumAnnotationCountPerCluster = 0;
     _clusteringEnabled = YES;

@@ -10,6 +10,4 @@
 
 @implementation OMBAnnotationCity
 
-@synthesize cityName;
-
 @end

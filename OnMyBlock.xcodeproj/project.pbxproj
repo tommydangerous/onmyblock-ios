@@ -16,6 +16,7 @@
 		AB00B9CC18BD64DE0050D6F4 /* OMBConversationDetailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9CB18BD64DE0050D6F4 /* OMBConversationDetailConnection.m */; };
 		AB00B9CF18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9CE18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m */; };
 		AB00B9D218BE95A00050D6F4 /* OMBConversationWithResidenceConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9D118BE95A00050D6F4 /* OMBConversationWithResidenceConnection.m */; };
+		AB00EAD318C9075D004FD6F8 /* OMBResidenceMapStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00EAD218C9075D004FD6F8 /* OMBResidenceMapStore.m */; };
 		AB01ED341857D67F00333390 /* OMBLegalQuestionListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED331857D67F00333390 /* OMBLegalQuestionListConnection.m */; };
 		AB01ED371857D96800333390 /* OMBLegalQuestionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED361857D96800333390 /* OMBLegalQuestionStore.m */; };
 		AB01ED3A1857DB5300333390 /* OMBLegalQuestion.m in Sources */ = {isa = PBXBuildFile; fileRef = AB01ED391857DB5300333390 /* OMBLegalQuestion.m */; };
@@ -487,6 +488,8 @@
 		AB00B9CE18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBConversationWithUserConnection.m; sourceTree = "<group>"; };
 		AB00B9D018BE95A00050D6F4 /* OMBConversationWithResidenceConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBConversationWithResidenceConnection.h; sourceTree = "<group>"; };
 		AB00B9D118BE95A00050D6F4 /* OMBConversationWithResidenceConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBConversationWithResidenceConnection.m; sourceTree = "<group>"; };
+		AB00EAD118C9075D004FD6F8 /* OMBResidenceMapStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceMapStore.h; sourceTree = "<group>"; };
+		AB00EAD218C9075D004FD6F8 /* OMBResidenceMapStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceMapStore.m; sourceTree = "<group>"; };
 		AB01ED321857D67F00333390 /* OMBLegalQuestionListConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLegalQuestionListConnection.h; sourceTree = "<group>"; };
 		AB01ED331857D67F00333390 /* OMBLegalQuestionListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBLegalQuestionListConnection.m; sourceTree = "<group>"; };
 		AB01ED351857D96800333390 /* OMBLegalQuestionStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLegalQuestionStore.h; sourceTree = "<group>"; };
@@ -1979,6 +1982,8 @@
 				ABE2816B186950D400A5D14E /* OMBUserStore.m */,
 				AB00B9C218BD1C0E0050D6F4 /* OMBConversationStore.h */,
 				AB00B9C318BD1C0E0050D6F4 /* OMBConversationStore.m */,
+				AB00EAD118C9075D004FD6F8 /* OMBResidenceMapStore.h */,
+				AB00EAD218C9075D004FD6F8 /* OMBResidenceMapStore.m */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -2873,7 +2878,7 @@
 				ORGANIZATIONNAME = OnMyBlock;
 				TargetAttributes = {
 					AB802E9918109E5200E04D11 = {
-						DevelopmentTeam = L6WEK9SB93;
+						DevelopmentTeam = 4PZFNY43X2;
 					};
 					AB802EB418109E5200E04D11 = {
 						TestTargetID = AB802E9918109E5200E04D11;
@@ -3031,6 +3036,7 @@
 				AB90129D18527824003153A2 /* OMBRenterApplicationAddModelViewController.m in Sources */,
 				AB19A0891860FF7300F84DE9 /* OMBLabel.m in Sources */,
 				AB9D6115188CEFDE00C9AC64 /* SDWebImageManager.m in Sources */,
+				AB00EAD318C9075D004FD6F8 /* OMBResidenceMapStore.m in Sources */,
 				ABF18BB41816CCDA002DD723 /* OMBNeighborhoodStore.m in Sources */,
 				ABE4FBDF18902B140009D643 /* OMBPayoutMethod.m in Sources */,
 				AB6155CB184F86F600A193C7 /* OMBUserMenu.m in Sources */,
@@ -3470,7 +3476,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3492,7 +3498,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
+				PROVISIONING_PROFILE = "06651389-7892-433C-9EDE-4980F52DBEA4";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3504,7 +3510,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3525,7 +3531,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
+				PROVISIONING_PROFILE = "06651389-7892-433C-9EDE-4980F52DBEA4";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

@@ -41,7 +41,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   switch (__ENVIRONMENT__) {
     // Production
     case 3: {
-      [self setupTracking];
+      // [self setupTracking];
       // Remove this when submitting to the App Store
       // [self testFlightTakeOff];
       break;

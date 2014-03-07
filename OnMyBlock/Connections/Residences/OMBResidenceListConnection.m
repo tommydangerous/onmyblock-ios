@@ -39,12 +39,12 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
+  // Add the residences to the list store for the map's list view
+  // [[OMBResidenceListStore sharedStore] readFromDictionary: [self json]];
 
-  // NSLog(@"OMBResidenceListConnection\n%@", json);
-
-  [[OMBResidenceListStore sharedStore] readFromDictionary: json];
+  if ([self.delegate respondsToSelector: @selector(JSONDictionary:)]) {
+    [self.delegate JSONDictionary: [self json]];
+  }
 
   [super connectionDidFinishLoading: connection];
 }

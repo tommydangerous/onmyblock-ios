@@ -15,6 +15,7 @@
 #import "OCMapView.h"
 #import "OMBActivityViewFullScreen.h"
 #import "OMBActivityView.h"
+#import "OMBAllResidenceStore.h"
 #import "OMBAnnotation.h"
 #import "OMBAnnotationCity.h"
 #import "OMBAnnotationView.h"
@@ -22,15 +23,16 @@
 #import "OMBMapFilterViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBNeighborhood.h"
+#import "OMBNeighborhoodStore.h"
 #import "OMBPropertyInfoView.h"
 #import "OMBResidenceBookItConfirmDetailsViewController.h"
+#import "OMBResidence.h"
 #import "OMBResidenceCell.h"
 #import "OMBResidenceCollectionViewCell.h"
-#import "OMBResidenceListStore.h"
-#import "OMBResidencePartialView.h"
-#import "OMBResidenceStore.h"
-#import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
+#import "OMBResidenceListStore.h"
+#import "OMBResidenceMapStore.h"
+#import "OMBResidencePartialView.h"
 #import "OMBSpringFlowLayout.h"
 #import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
@@ -47,12 +49,18 @@ float const PropertyInfoViewImageHeightPercentage = 0.4;
 
 int kMaxRadiusInMiles = 100;
 
+const CGFloat DEFAULT_MILE_RADIUS = 4.0f;
+const NSUInteger MINIMUM_ZOOM_LEVEL = 12;
+
 static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
 @interface OMBMapViewController ()
 {
   OMBActivityViewFullScreen *activityViewFullScreen;
   BOOL firstLoad;
+  BOOL isFetchingResidencesForMap;
+  NSMutableArray *neighborhoodAnnotationArray;
+  OMBAnnotationCity *sanDiegoAnnotationCity;
 }
 
 @end
@@ -76,7 +84,31 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   locationManager.delegate        = self;
   locationManager.desiredAccuracy = kCLLocationAccuracyBest;
   locationManager.distanceFilter  = 50;
-  [OMBResidenceStore sharedStore].mapViewController = self;
+  // [OMBResidenceStore sharedStore].mapViewController = self;
+
+  neighborhoodAnnotationArray = [NSMutableArray array];
+  // Create neighborhood annotations
+  if ([neighborhoodAnnotationArray count] == 0) {
+  
+  }
+  for (NSString *cityName in [[OMBNeighborhoodStore sharedStore] cities]) {
+    for (OMBNeighborhood *neighborhood in 
+      [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity: 
+        cityName]) {
+
+      OMBAnnotationCity *annotationCity = [[OMBAnnotationCity alloc] init];
+      annotationCity.cityName   = [neighborhood.name capitalizedString];
+      annotationCity.coordinate = neighborhood.coordinate;
+      
+      [neighborhoodAnnotationArray addObject: annotationCity];
+      // [self.mapView.annotationsToIgnore addObject: annotationCity];
+      // [self.mapView removeAnnotation: annotationCity];
+      // [self.mapView addAnnotation: annotationCity];
+    }
+  }
+  NSLog(@"%@", neighborhoodAnnotationArray);
+
+  previousZoomLevel = 0;
 
   self.screenName = @"Map View Controller";
 
@@ -278,9 +310,11 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // Map view
   _mapView          = [[OCMapView alloc] init];
   _mapView.alpha    = 0.0f;
+  // _mapView.clusteringEnabled = NO;
   _mapView.delegate = self;
   _mapView.frame    = screen;
   _mapView.mapType  = MKMapTypeStandard;
+  _mapView.minimumAnnotationCountPerCluster = 5;
   // mapView.rotateEnabled = NO;
   _mapView.showsPointsOfInterest = NO;
   UITapGestureRecognizer *mapViewTap = 
@@ -394,7 +428,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   coordinate.latitude  = 32.78166389765503;
   coordinate.longitude = -117.16957478041991;
 
-  [self setMapViewRegion: coordinate withMiles: 4 animated: YES];
+  [self setMapViewRegion: coordinate withMiles: DEFAULT_MILE_RADIUS 
+    animated: YES];
 
   // Find user's location
   [locationManager startUpdatingLocation];
@@ -406,6 +441,20 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [_listView addInfiniteScrollingWithActionHandler:^{
     [weakSelf reloadWithPagination];
   }];
+
+  
+
+  // // Create annotation
+  // if (!sanDiegoAnnotationCity) {
+  //   sanDiegoAnnotationCity = [[OMBAnnotationCity alloc] init];
+  //   sanDiegoAnnotationCity.cityName   = @"San Diego";
+  //   sanDiegoAnnotationCity.coordinate = CLLocationCoordinate2DMake(
+  //     32.7150, -117.1625);
+  //   sanDiegoAnnotationCity.title      = @"1000";
+  // }
+  // [self.mapView.annotationsToIgnore addObject: sanDiegoAnnotationCity];
+  // [self.mapView removeAnnotation: sanDiegoAnnotationCity];
+  // [self.mapView addAnnotation: sanDiegoAnnotationCity];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -494,11 +543,50 @@ didUpdateLocations: (NSArray *) locations
 {
   // Tells the delegate that the region displayed by the map view just changed
   // Need to do this to uncluster when zooming in
-  CLLocationCoordinate2D coordinate = map.centerCoordinate;
-  OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
-  annotation.coordinate = coordinate;
-  [_mapView addAnnotation: annotation];
-  [_mapView removeAnnotation: annotation];
+  // CLLocationCoordinate2D coordinate = map.centerCoordinate;
+  // OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
+  // annotation.coordinate = coordinate;
+  // [_mapView addAnnotation: annotation];
+  // [_mapView removeAnnotation: annotation];
+
+  NSUInteger currentZoomLevel = 
+    [self zoomLevelForMapRect: self.mapView.visibleMapRect
+      withMapViewSizeInPixels: self.mapView.bounds.size];
+  if (previousZoomLevel == currentZoomLevel) {
+    // self.mapView.clusteringEnabled = NO;
+    NSLog(@"CENTER CHANGED");
+  }
+  else {
+    // [self.mapView removeAnnotations: self.mapView.annotations];
+    // self.mapView.clusteringEnabled = YES;
+    NSLog(@"ZOOM CHANGED");
+  }
+  NSLog(@"ZOOM LEVEL: %i", currentZoomLevel);
+
+  if (currentZoomLevel >= MINIMUM_ZOOM_LEVEL) {
+    // if ([self.mapView viewForAnnotation: sanDiegoAnnotationCity])
+      // [self.mapView removeAnnotation: sanDiegoAnnotationCity];
+
+    [self.mapView.annotationsToIgnore removeAllObjects];
+    for (OMBAnnotationCity *annotationCity in neighborhoodAnnotationArray) {
+      // [[self.mapView viewForAnnotation: annotationCity] setHidden: YES];
+      [self.mapView removeAnnotation: annotationCity];
+    }
+    // [[self.mapView viewForAnnotation: 
+    //   sanDiegoAnnotationCity] setHidden: YES];
+  }
+  else {
+    [self.mapView removeAnnotations: self.mapView.annotations];
+    // [self.mapView addAnnotation: sanDiegoAnnotationCity];
+    for (OMBAnnotationCity *annotationCity in neighborhoodAnnotationArray) {
+      // [[self.mapView viewForAnnotation: annotationCity] setHidden: NO];
+      // [self.mapView addAnnotation: annotationCity];
+      [self.mapView.annotationsToIgnore addObject: annotationCity];
+      [self.mapView addAnnotation: annotationCity];
+      NSLog(@"%@", annotationCity.cityName);
+    }
+    // [[self.mapView viewForAnnotation: sanDiegoAnnotationCity] setHidden: NO];
+  }
 
   MKCoordinateRegion region = map.region;
   float maxLatitude, maxLongitude, minLatitude, minLongitude;
@@ -518,8 +606,13 @@ didUpdateLocations: (NSArray *) locations
   if ([self mapFilterParameters] != nil)
     [params addEntriesFromDictionary: [self mapFilterParameters]];
 
-  [[OMBResidenceStore sharedStore] fetchPropertiesWithParameters: params
-    completion: nil];
+  if (!isFetchingResidencesForMap) {
+    isFetchingResidencesForMap = YES;
+    [[OMBResidenceMapStore sharedStore] fetchResidencesWithParameters: params
+      delegate: self completion: ^(NSError *error) {
+        isFetchingResidencesForMap = NO;
+      }];
+  }
 
   [self deselectAnnotations];
   [self hidePropertyInfoView];
@@ -530,6 +623,8 @@ didUpdateLocations: (NSArray *) locations
       [self resetListViewResidences];
     }
   }
+
+  previousZoomLevel = currentZoomLevel;
 }
 
 - (void) DONOTHINGmapView: (MKMapView *) map 
@@ -566,23 +661,34 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
   if ([annotationView.annotation isKindOfClass: [OCAnnotation class]]) {
     [self zoomClusterAtAnnotation: (OCAnnotation *) annotationView.annotation];
   }
+  // City
   else if ([annotationView.annotation isKindOfClass: [OMBAnnotationCity class]])
     [self setMapViewRegion: annotationView.annotation.coordinate
-      withMiles: 20 animated: YES];
+      withMiles: DEFAULT_MILE_RADIUS * 0.8f animated: YES];
   // If user clicked on a single residence
   else if ([[NSString stringWithFormat: @"%@",
     [annotationView class]] isEqualToString: @"MKModernUserLocationView"]) {
     [self hidePropertyInfoView];
   }
   else {
-    [(OMBAnnotationView *) annotationView select];
-    CLLocationCoordinate2D coordinate = annotationView.annotation.coordinate;
-    NSString *key = [NSString stringWithFormat: @"%f,%f-%@",
-      coordinate.latitude, coordinate.longitude, 
-        annotationView.annotation.title];
-    OMBResidence *residence = 
-      [[OMBResidenceStore sharedStore].residences objectForKey: key];
-    [self showPropertyInfoViewWithResidence: residence];
+    id annotation = annotationView.annotation;
+    if ([annotation isKindOfClass: [OMBAnnotation class]]) {
+      OMBAnnotationView *annView = (OMBAnnotationView *) annotationView;
+      [annView select];
+      OMBAnnotation *ann = (OMBAnnotation *) annView.annotation;
+      OMBResidence *residence = 
+        [[OMBAllResidenceStore sharedStore] residenceForUID: ann.residenceUID];
+      [self showPropertyInfoViewWithResidence: residence];
+    }
+
+
+    // CLLocationCoordinate2D coordinate = annotationView.annotation.coordinate;
+    // NSString *key = [NSString stringWithFormat: @"%f,%f-%@",
+    //   coordinate.latitude, coordinate.longitude, 
+    //     annotationView.annotation.title];
+    // OMBResidence *residence = 
+    //   [[OMBResidenceStore sharedStore].residences objectForKey: key];
+    // [self showPropertyInfoViewWithResidence: residence];
   }
 }
 
@@ -594,11 +700,6 @@ viewForAnnotation: (id <MKAnnotation>) annotation
     return nil;
 
   static NSString *ReuseIdentifier = @"AnnotationViewIdentifier";
-  // MKAnnotationView *av = [map dequeueReusableAnnotationViewWithIdentifier:
-  //   ReuseIdentifier];
-  // if (!av)
-  //   av = [[MKAnnotationView alloc] init];
-  // return av;
   OMBAnnotationView *annotationView = (OMBAnnotationView *)
     [map dequeueReusableAnnotationViewWithIdentifier: ReuseIdentifier];
   if (!annotationView) {
@@ -606,8 +707,68 @@ viewForAnnotation: (id <MKAnnotation>) annotation
       [[OMBAnnotationView alloc] initWithAnnotation: annotation 
         reuseIdentifier: ReuseIdentifier];
   }
-  [annotationView loadAnnotation: annotation];
+  else
+    [annotationView loadAnnotation: annotation];
   return annotationView;
+}
+
+#pragma mark - Protocol OMBConnection
+
+- (void) JSONDictionary: (NSDictionary *) dictionary
+{
+  // List view
+  if ([self isOnList]) {
+    [[OMBResidenceListStore sharedStore] readFromDictionary: dictionary];
+  }
+  // Map
+  else {
+    if (previousZoomLevel >= MINIMUM_ZOOM_LEVEL) {
+      [[OMBResidenceMapStore sharedStore] readFromDictionary: dictionary];
+      // Add annotations that don't exist
+      // NSMutableSet *masterSet = [NSMutableSet setWithSet:
+      //   [[OMBResidenceMapStore sharedStore] annotations]];
+      // [masterSet minusSet: [NSSet setWithArray: self.mapView.annotations]];
+      
+      // NSLog(@"ADDING: %i", [[masterSet allObjects] count]);
+      // [self.mapView addAnnotations: [masterSet allObjects]];
+      [self.mapView addAnnotations: 
+        [[OMBResidenceMapStore sharedStore] annotations]];
+
+      return;
+
+      NSMutableArray *arrayOfDictonaries = [NSMutableArray array];
+      NSArray *array = [dictionary objectForKey: @"objects"];
+      NSUInteger arrayCount = [array count];
+      int size = 500;
+      for (int i = 0; i < (arrayCount / size) + 1; i++) {
+        NSUInteger location = i * size;
+        NSUInteger length   = arrayCount - location;
+        if (length > size)
+          length = size;
+        NSArray *subarray = [array subarrayWithRange: 
+          NSMakeRange(location, length)];
+        [arrayOfDictonaries addObject: @{
+          @"objects": subarray
+        }];
+      }
+      for (NSDictionary *dict in arrayOfDictonaries) {
+        // Read from dictionary
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [[OMBResidenceMapStore sharedStore] readFromDictionary: dict];
+          // Add annotations that don't exist
+          NSMutableSet *masterSet = [NSMutableSet setWithSet:
+            [[OMBResidenceMapStore sharedStore] annotations]];
+          [masterSet minusSet: [NSSet setWithArray: self.mapView.annotations]];
+          
+          NSLog(@"ADDING: %i", [[masterSet allObjects] count]);
+          [self.mapView addAnnotations: [masterSet allObjects]];
+          // [self addAnnotations: [masterSet allObjects]];      
+          // [self addAnnotations: 
+          //   [[[OMBResidenceMapStore sharedStore] annotations] allObjects]];
+        });
+      }
+    }
+  }
 }
 
 #pragma mark - Protocol UIScrollViewDelegate
@@ -861,20 +1022,29 @@ withTitle: (NSString *) title;
 
 - (void) addAnnotations: (NSArray *) annotations
 {
-  int count = (int) [annotations count];
-  [_mapView removeAnnotations: _mapView.annotations];
-  if (count < 700)
-    [_mapView addAnnotations: annotations];
-  else {
-    // Create annotation
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
-      32.7150, -117.1625);
-    OMBAnnotationCity *annotation = [[OMBAnnotationCity alloc] init];
-    annotation.cityName   = @"San Diego";
-    annotation.coordinate = coordinate;
-    annotation.title      = [NSString stringWithFormat: @"%i", count];
-    [_mapView addAnnotation: annotation];
+  if (previousZoomLevel >= 10) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      NSLog(@"ADDING: %i", [annotations count]);
+      [self.mapView addAnnotations: annotations];
+    });
   }
+  else {
+    
+  }
+  // int count = (int) [annotations count];
+  // [_mapView removeAnnotations: _mapView.annotations];
+  // if (count < 700)
+  //   [_mapView addAnnotations: annotations];
+  // else {
+  //   // Create annotation
+  //   CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+  //     32.7150, -117.1625);
+  //   OMBAnnotationCity *annotation = [[OMBAnnotationCity alloc] init];
+  //   annotation.cityName   = @"San Diego";
+  //   annotation.coordinate = coordinate;
+  //   annotation.title      = [NSString stringWithFormat: @"%i", count];
+  //   [_mapView addAnnotation: annotation];
+  // }
 }
 
 - (void) deselectAnnotations
@@ -1145,13 +1315,13 @@ withTitle: (NSString *) title;
   [self hidePropertyInfoView];
 }
 
-- (NSArray *) propertiesSortedBy: (NSString *) key ascending: (BOOL) ascending
-{
-  NSSet *visibleAnnotations = [_mapView annotationsInMapRect: 
-    _mapView.visibleMapRect];
-  return [[OMBResidenceStore sharedStore] propertiesFromAnnotations: 
-      visibleAnnotations sortedBy: key ascending: ascending];
-}
+// - (NSArray *) propertiesSortedBy: (NSString *) key ascending: (BOOL) ascending
+// {
+//   NSSet *visibleAnnotations = [_mapView annotationsInMapRect: 
+//     _mapView.visibleMapRect];
+//   return [[OMBResidenceStore sharedStore] propertiesFromAnnotations: 
+//       visibleAnnotations sortedBy: key ascending: ascending];
+// }
 
 - (void) refreshProperties
 {
@@ -1582,6 +1752,18 @@ withMiles: (int) miles animated: (BOOL) animated
       zoomRect = MKMapRectUnion(zoomRect, pointRect);
   }
   [_mapView setVisibleMapRect: zoomRect animated: YES];
+}
+
+- (NSUInteger) zoomLevelForMapRect: (MKMapRect) mRect 
+withMapViewSizeInPixels: (CGSize) viewSizeInPixels
+{
+  NSUInteger MAXIMUM_ZOOM = 20;
+  NSUInteger zoomLevel = MAXIMUM_ZOOM;
+  // MKZoomScale is just a CGFloat typedef
+  MKZoomScale zoomScale = mRect.size.width / viewSizeInPixels.width; 
+  double zoomExponent = log2(zoomScale);
+  zoomLevel = (NSUInteger)(MAXIMUM_ZOOM - ceil(zoomExponent));
+  return zoomLevel;
 }
 
 @end
