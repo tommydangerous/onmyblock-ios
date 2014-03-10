@@ -834,7 +834,8 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
         [self assignMessages];
         if (currentCount != [self.messages count]) {
           [self.collection reloadData];
-          [self scrollToBottomAnimated: YES];
+          if([self.messages count] != 1)
+            [self scrollToBottomAnimated: YES];
         }
         isFetching  = NO;
         lastFetched = [[NSDate date] timeIntervalSince1970];
