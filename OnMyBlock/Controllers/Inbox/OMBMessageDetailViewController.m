@@ -33,6 +33,7 @@
   UIToolbar *contactToolbar;
   BOOL isEditing;
   BOOL isFetching;
+  BOOL isFirstTime;
   NSTimeInterval lastFetched;
   UIBarButtonItem *phoneBarButtonItem;
   UIBarButtonItem *renterApplicationBarButtonItem;
@@ -58,6 +59,8 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   if (!(self = [super init])) return nil;
 
   conversation = object;
+  isFirstTime  = YES;
+  lastFetched  = [[NSDate date] timeIntervalSince1970];
 
   self.currentPage = self.maxPages = 1;
   self.fetching    = NO;
@@ -231,17 +234,15 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 {
   [super viewWillAppear: animated];
 
+  if (!self.collection.delegate)
+    self.collection.delegate = self;
+
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(keyboardWillShow:)
       name: UIKeyboardWillShowNotification object: nil];
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(keyboardWillHide:)
       name: UIKeyboardWillHideNotification object: nil];
-
-  timer = [NSTimer timerWithTimeInterval: 1 target: self
-    selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
-  // NSRunLoopCommonModes, mode used for tracking events
-  [[NSRunLoop currentRunLoop] addTimer: timer forMode: NSRunLoopCommonModes];
 
   // If no phone number
   if (user.phone && [[user phoneString] length]) {
@@ -251,17 +252,20 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     phoneBarButtonItem.enabled = NO;
   }
 
-  // If there is no conversation, fetch one
   if (conversation) {
-    [self reloadTable];
-    // [self initialLoadOfMessages];
+    [self assignMessages];
+    if (isFirstTime && [self.messages count]) {
+      [self scrollToBottomAnimated: NO 
+        additionalOffsetY: OMBPadding + OMBStandardHeight];
+    }
+    [self fetchMessages];
   }
+  // If there is no conversation, fetch one
   else if (residence) {
     conversation = [[OMBConversation alloc] init];
     [conversation fetchConversationWithResidenceUID: residence.uid completion: 
       ^(NSError *error) {
-        [self reloadTable];
-        // [self initialLoadOfMessages];
+        [self fetchMessages];
       }
     ];
     renterApplicationBarButtonItem.enabled = NO;
@@ -270,8 +274,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     conversation = [[OMBConversation alloc] init];
     [conversation fetchConversationWithUserUID: user.uid completion: 
       ^(NSError *error) {
-        [self reloadTable];
-        // [self initialLoadOfMessages];
+        [self fetchMessages];
       }
     ];
   }
@@ -293,7 +296,6 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
   [conversation readFromMessagesDictionary: dictionary];
-  NSLog(@"VC: %@", dictionary);
 }
 
 - (void) numberOfPages: (NSUInteger) pages
@@ -537,15 +539,16 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) scrollViewDidScroll: (UIScrollView *) scrollView
 {
-  if (scrollView.contentOffset.y + 216.0f < startingPoint.y) {
-    [self.view endEditing: YES];
-    startingPoint = scrollView.contentOffset;
-  }
+  // if (scrollView.contentOffset.y + 216.0f < startingPoint.y) {
+  //   [self.view endEditing: YES];
+  //   startingPoint = scrollView.contentOffset;
+  // }
+  NSLog(@"CONTENT OFFSET Y: %f", scrollView.contentOffset.y);
 }
 
 - (void) scrollViewWillBeginDragging: (UIScrollView *) scrollView
 {
-  startingPoint = scrollView.contentOffset;
+  // startingPoint = scrollView.contentOffset;
 }
 
 #pragma mark - Protocol UITextViewDelegate
@@ -604,7 +607,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   self.messages = [conversation sortedMessagesWithKey: @"createdAt"
     ascending: YES];
-  NSLog(@"%@", self.messages);
+  [self.collection reloadData];
 }
 
 - (void) done
@@ -620,11 +623,18 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   }];
 }
 
-- (void) initialLoadOfMessages
+- (void) fetchMessages
 {
-  [self assignMessages];
-  [self.collection reloadData];
-  [self scrollToBottomAnimatedViewWillAppear: NO];
+  [conversation fetchMessagesAtPage: self.currentPage delegate: self
+    completion: ^(NSError *error) {
+      [self assignMessages];
+      if (isFirstTime) {
+        isFirstTime = NO;
+        [self scrollToBottomAnimated: NO];
+        [self startTimer];
+      }
+    }
+  ];
 }
 
 - (void) keyboardWillHide: (NSNotification *) notification
@@ -688,7 +698,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   // THAT DOESN'T DISAPPEAR, SO WE CAN LOAD EARLIER MESSAGES
   if (_currentPage < _maxPages) {
     _currentPage += 1;
-    [self reloadTable];
+    [self fetchMessages];
   }
 }
 
@@ -705,54 +715,27 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   [[UIApplication sharedApplication] openURL: [NSURL URLWithString: string]];
 }
 
-- (void) reloadTable
+- (void) scrollToBottomAnimated: (BOOL) animated
 {
-  BOOL firstTime = NO;
-  if ([conversation numberOfMessages] == 0)
-    firstTime = YES;
-
-  [conversation fetchMessagesAtPage: self.currentPage delegate: self
-    completion: ^(NSError *error) {
-      [self assignMessages];
-      [self.collection reloadData];
-      if (firstTime) {
-        lastFetched = [[NSDate date] timeIntervalSince1970];
-        [self scrollToBottomAnimated: NO];
-      }
-    }
-  ];
+  [self scrollToBottomAnimated: animated additionalOffsetY: 0.0f];
 }
 
 - (void) scrollToBottomAnimated: (BOOL) animated
+additionalOffsetY: (CGFloat) offsetY
 {
-  // CGFloat bottom = 
-  //   [_collection.collectionViewLayout collectionViewContentSize].height
-  //     - (_collection.frame.size.height - 
-  //       (bottomToolbar.frame.size.height + 20.0f));
-  // if (isEditing)
-  //   bottom -= bottomToolbar.frame.size.height + 20.0f;
-  // else
-  //   bottom -= bottomToolbar.frame.size.height;
-  // if (bottom < 0)
-  //   bottom = 0;
-  CGFloat bottom = 
-    [_collection.collectionViewLayout collectionViewContentSize].height -
-      _collection.frame.size.height;
-  if (bottom < 0)
-    bottom = 0;
-  [_collection setContentOffset: CGPointMake(0.0f, bottom) animated: animated];
-}
+  CGFloat contentSizeHeight = 
+    [self.collection.collectionViewLayout collectionViewContentSize].height;
+  CGFloat frameSizeHeight = self.collection.frame.size.height;
+  frameSizeHeight -= offsetY;
+  CGFloat bottom = contentSizeHeight - frameSizeHeight;
 
-- (void) scrollToBottomAnimatedViewWillAppear: (BOOL) animated
-{
-  // Use this scroll method only when the view will appear
-  CGFloat bottom = 
-    [_collection.collectionViewLayout collectionViewContentSize].height -
-      _collection.frame.size.height;
-  bottom += OMBPadding + bottomToolbar.frame.size.height;
-  if (bottom < 0)
-    bottom = 0;
-  [_collection setContentOffset: CGPointMake(0.0f, bottom) animated: animated];
+  // NSLog(@"Content Size Height: %f", contentSizeHeight);
+  // NSLog(@"Frame Size Height: %f", frameSizeHeight);
+  // NSLog(@"Bottom: %f", bottom);
+
+  if (bottom > 0)
+    [self.collection setContentOffset: CGPointMake(0.0f, bottom) 
+      animated: animated];
 }
 
 - (void) send
@@ -771,7 +754,6 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
   [conversation addMessage: message];
   [self assignMessages];
-  [_collection reloadData];
   // Create the message
   [message createMessageConnectionWithConversationUID: conversation.uid];
 
@@ -779,19 +761,14 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   // Only after you come back to this view does it show
   // Don't know why...
 
-  if ([_collection.collectionViewLayout collectionViewContentSize].height >
-    _collection.frame.size.height + bottomToolbar.frame.size.height) {
+  if ([self.collection.collectionViewLayout collectionViewContentSize].height >
+    self.collection.frame.size.height + bottomToolbar.frame.size.height) {
     
     [self scrollToBottomAnimated: YES];
   }
 
   bottomToolbar.messageContentTextView.text = @"";
   [self textViewDidChange: bottomToolbar.messageContentTextView];
-
-  // NSLog(@"%@ - %@", message.content, [NSDate dateWithTimeIntervalSince1970:
-  //   message.createdAt]);
-
-  // NSLog(@"%@", _messages);
 }
 
 - (void) showContactMore
@@ -824,6 +801,14 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+- (void) startTimer
+{
+  timer = [NSTimer timerWithTimeInterval: 1 target: self
+    selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
+  // NSRunLoopCommonModes, mode used for tracking events
+  [[NSRunLoop currentRunLoop] addTimer: timer forMode: NSRunLoopCommonModes];
+}
+
 - (void) timerFireMethod: (NSTimer *) timer
 {
   NSInteger currentCount = [_messages count];
@@ -832,11 +817,8 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
     [conversation fetchMessagesWithTimeInterval: lastFetched delegate: self
       completion: ^(NSError *error) {
         [self assignMessages];
-        if (currentCount != [self.messages count]) {
-          [self.collection reloadData];
-          if([self.messages count] != 1)
-            [self scrollToBottomAnimated: YES];
-        }
+        if (currentCount != [self.messages count])
+          [self scrollToBottomAnimated: YES];
         isFetching  = NO;
         lastFetched = [[NSDate date] timeIntervalSince1970];
       }

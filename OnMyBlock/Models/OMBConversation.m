@@ -196,7 +196,6 @@ delegate: (id) delegate completion: (void (^)(NSError *error)) block
     [message readFromDictionary: dict];
     [self addMessage: message];
   }
-  NSLog(@"%@", messages);
 }
 
 - (NSArray *) sortedMessagesWithKey: (NSString *) key 
