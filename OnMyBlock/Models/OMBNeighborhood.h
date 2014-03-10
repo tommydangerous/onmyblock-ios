@@ -18,6 +18,6 @@
 
 #pragma mark - Instance Methods
 
-- (NSString *) nameTitle;
+- (NSString *) nameKey;
 
 @end

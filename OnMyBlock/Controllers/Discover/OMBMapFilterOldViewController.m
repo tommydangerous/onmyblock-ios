@@ -601,7 +601,7 @@ const int kPadding = 20;
 {
   _neighborhood = button.neighborhood;
   neighborhoodTextField.clearButtonMode = UITextFieldViewModeAlways;
-  neighborhoodTextField.text = [_neighborhood nameTitle];
+  neighborhoodTextField.text = _neighborhood.name;
   [self hideDropdownLists];
 }
 

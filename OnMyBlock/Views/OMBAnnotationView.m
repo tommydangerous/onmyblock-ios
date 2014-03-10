@@ -173,7 +173,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat padding = OMBPadding;
 
   // Label
-  label.text = [annotationCity.cityName capitalizedString];
+  label.text = annotationCity.cityName;
   CGRect rect = [label.text boundingRectWithSize: CGSizeMake(999, 21)
     font: label.font];
 
