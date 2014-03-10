@@ -70,7 +70,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
   [editBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: boldFont
   } forState: UIControlStateNormal];
-  self.navigationItem.rightBarButtonItem = editBarButtonItem;
+  // self.navigationItem.rightBarButtonItem = editBarButtonItem;
 
   selectedSegmentIndex = 0;
 

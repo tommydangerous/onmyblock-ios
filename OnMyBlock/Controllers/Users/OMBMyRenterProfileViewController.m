@@ -11,6 +11,7 @@
 #import "CustomLoading.h"
 #import "LIALinkedInApplication.h"
 #import "LIALinkedInHttpClient.h"
+#import "OMBBecomeVerifiedViewController.h"
 #import "OMBCenteredImageView.h"
 #import "OMBEmploymentCell.h"
 #import "OMBGradientView.h"
@@ -313,6 +314,15 @@
     coapplicantPickerView.frame.size.width,
       pickerViewHeader.frame.size.height +
         coapplicantPickerView.frame.size.height);
+}
+
+- (void) viewDidAppear: (BOOL) animated
+{
+  [super viewDidAppear: animated];
+  // #warning REMOVE THIS
+  // [self.navigationController pushViewController:
+  //   [[OMBBecomeVerifiedViewController alloc] initWithUser: user]
+  //     animated: YES];
 }
 
 - (void) viewDidDisappear: (BOOL) animated
