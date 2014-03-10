@@ -41,8 +41,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   switch (__ENVIRONMENT__) {
     // Production
     case 3: {
-      // [self setupTracking];
-      // Remove this when submitting to the App Store
+      [self setupTracking];
+      // #warning Remove this when submitting to the App Store
       // [self testFlightTakeOff];
       break;
     }
@@ -104,6 +104,9 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [_container showIntroAnimatedDissolve: NO];
   else
     [_container showDiscover];
+
+  // #warning Remove container showing controller
+  // [self.container showMyRenterProfile];
 
   // Use this to show whatever view controller you are working on
   // [_container showMyRenterProfile];
