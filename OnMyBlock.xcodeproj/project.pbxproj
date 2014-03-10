@@ -84,14 +84,6 @@
 		AB3396FB18AD52FC00F49064 /* OMBInformationHowItWorksCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3396FA18AD52FC00F49064 /* OMBInformationHowItWorksCell.m */; };
 		AB33970A18AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB33970918AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m */; };
 		AB33970D18AE91D000F49064 /* OMBMyRenterProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB33970C18AE91D000F49064 /* OMBMyRenterProfileViewController.m */; };
-		AB3DA21D18AFFF1900B0EE1D /* neighborhood_downtown.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB3DA21518AFFF1900B0EE1D /* neighborhood_downtown.jpg */; };
-		AB3DA21E18AFFF1900B0EE1D /* neighborhood_hillcrest.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB3DA21618AFFF1900B0EE1D /* neighborhood_hillcrest.jpg */; };
-		AB3DA21F18AFFF1900B0EE1D /* neighborhood_la_jolla.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB3DA21718AFFF1900B0EE1D /* neighborhood_la_jolla.jpg */; };
-		AB3DA22018AFFF1900B0EE1D /* neighborhood_mission_beach.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB3DA21818AFFF1900B0EE1D /* neighborhood_mission_beach.jpg */; };
-		AB3DA22118AFFF1900B0EE1D /* neighborhood_mission_valley.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB3DA21918AFFF1900B0EE1D /* neighborhood_mission_valley.jpg */; };
-		AB3DA22218AFFF1900B0EE1D /* neighborhood_ocean_beach.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB3DA21A18AFFF1900B0EE1D /* neighborhood_ocean_beach.jpg */; };
-		AB3DA22318AFFF1900B0EE1D /* neighborhood_pacific_beach.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB3DA21B18AFFF1900B0EE1D /* neighborhood_pacific_beach.jpg */; };
-		AB3DA22418AFFF1900B0EE1D /* neighborhood_university_towne_center.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB3DA21C18AFFF1900B0EE1D /* neighborhood_university_towne_center.jpg */; };
 		AB3DA22718B0605900B0EE1D /* OMBActivityViewFullScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3DA22618B0605900B0EE1D /* OMBActivityViewFullScreen.m */; };
 		AB449872189AEFFF00979B3B /* OMBLoginSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */; };
 		AB44FBC118358DA400F07747 /* OMBResidencePartialView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB44FBC018358DA400F07747 /* OMBResidencePartialView.m */; };
@@ -118,6 +110,15 @@
 		AB57EA2A186CA065001682DB /* OMBTermsOfServiceStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB57EA29186CA065001682DB /* OMBTermsOfServiceStore.m */; };
 		AB5B49CE1832D64000ED96DC /* OMBIntroductionView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB5B49CD1832D64000ED96DC /* OMBIntroductionView.m */; };
 		AB5B49D51833C9A400ED96DC /* OMBResidenceGoogleStaticImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AB5B49D41833C9A400ED96DC /* OMBResidenceGoogleStaticImageDownloader.m */; };
+		AB5DD32C18CE011500237AFC /* OMBAmenityStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB5DD32B18CE011500237AFC /* OMBAmenityStore.m */; };
+		AB5DD33518CE019700237AFC /* neighborhood_downtown.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB5DD32D18CE019700237AFC /* neighborhood_downtown.jpg */; };
+		AB5DD33618CE019700237AFC /* neighborhood_hillcrest.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB5DD32E18CE019700237AFC /* neighborhood_hillcrest.jpg */; };
+		AB5DD33718CE019700237AFC /* neighborhood_la_jolla.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB5DD32F18CE019700237AFC /* neighborhood_la_jolla.jpg */; };
+		AB5DD33818CE019700237AFC /* neighborhood_mission_beach.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB5DD33018CE019700237AFC /* neighborhood_mission_beach.jpg */; };
+		AB5DD33918CE019700237AFC /* neighborhood_mission_valley.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB5DD33118CE019700237AFC /* neighborhood_mission_valley.jpg */; };
+		AB5DD33A18CE019700237AFC /* neighborhood_ocean_beach.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB5DD33218CE019700237AFC /* neighborhood_ocean_beach.jpg */; };
+		AB5DD33B18CE019700237AFC /* neighborhood_pacific_beach.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB5DD33318CE019700237AFC /* neighborhood_pacific_beach.jpg */; };
+		AB5DD33C18CE019700237AFC /* neighborhood_university_towne_center.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB5DD33418CE019700237AFC /* neighborhood_university_towne_center.jpg */; };
 		AB6155A6184D99DF00A193C7 /* OMBCoApplicantsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6155A5184D99DF00A193C7 /* OMBCoApplicantsViewController.m */; };
 		AB6155A9184D99F100A193C7 /* OMBCosignersListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6155A8184D99F100A193C7 /* OMBCosignersListViewController.m */; };
 		AB6155AC184D99FE00A193C7 /* OMBEmploymentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6155AB184D99FE00A193C7 /* OMBEmploymentListViewController.m */; };
@@ -621,14 +622,6 @@
 		AB33970918AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMessagesLastFetchedWithUserConnection.m; sourceTree = "<group>"; };
 		AB33970B18AE91D000F49064 /* OMBMyRenterProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMyRenterProfileViewController.h; sourceTree = "<group>"; };
 		AB33970C18AE91D000F49064 /* OMBMyRenterProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMyRenterProfileViewController.m; sourceTree = "<group>"; };
-		AB3DA21518AFFF1900B0EE1D /* neighborhood_downtown.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_downtown.jpg; sourceTree = "<group>"; };
-		AB3DA21618AFFF1900B0EE1D /* neighborhood_hillcrest.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_hillcrest.jpg; sourceTree = "<group>"; };
-		AB3DA21718AFFF1900B0EE1D /* neighborhood_la_jolla.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_la_jolla.jpg; sourceTree = "<group>"; };
-		AB3DA21818AFFF1900B0EE1D /* neighborhood_mission_beach.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_mission_beach.jpg; sourceTree = "<group>"; };
-		AB3DA21918AFFF1900B0EE1D /* neighborhood_mission_valley.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_mission_valley.jpg; sourceTree = "<group>"; };
-		AB3DA21A18AFFF1900B0EE1D /* neighborhood_ocean_beach.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_ocean_beach.jpg; sourceTree = "<group>"; };
-		AB3DA21B18AFFF1900B0EE1D /* neighborhood_pacific_beach.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_pacific_beach.jpg; sourceTree = "<group>"; };
-		AB3DA21C18AFFF1900B0EE1D /* neighborhood_university_towne_center.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_university_towne_center.jpg; sourceTree = "<group>"; };
 		AB3DA22518B0605900B0EE1D /* OMBActivityViewFullScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBActivityViewFullScreen.h; sourceTree = "<group>"; };
 		AB3DA22618B0605900B0EE1D /* OMBActivityViewFullScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBActivityViewFullScreen.m; sourceTree = "<group>"; };
 		AB449870189AEFFF00979B3B /* OMBLoginSignUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLoginSignUpView.h; sourceTree = "<group>"; };
@@ -681,6 +674,16 @@
 		AB5B49CD1832D64000ED96DC /* OMBIntroductionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBIntroductionView.m; sourceTree = "<group>"; };
 		AB5B49D31833C9A400ED96DC /* OMBResidenceGoogleStaticImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OMBResidenceGoogleStaticImageDownloader.h; path = OnMyBlock/Downloaders/OMBResidenceGoogleStaticImageDownloader.h; sourceTree = SOURCE_ROOT; };
 		AB5B49D41833C9A400ED96DC /* OMBResidenceGoogleStaticImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OMBResidenceGoogleStaticImageDownloader.m; path = OnMyBlock/Downloaders/OMBResidenceGoogleStaticImageDownloader.m; sourceTree = SOURCE_ROOT; };
+		AB5DD32A18CE011500237AFC /* OMBAmenityStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAmenityStore.h; sourceTree = "<group>"; };
+		AB5DD32B18CE011500237AFC /* OMBAmenityStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAmenityStore.m; sourceTree = "<group>"; };
+		AB5DD32D18CE019700237AFC /* neighborhood_downtown.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_downtown.jpg; sourceTree = "<group>"; };
+		AB5DD32E18CE019700237AFC /* neighborhood_hillcrest.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_hillcrest.jpg; sourceTree = "<group>"; };
+		AB5DD32F18CE019700237AFC /* neighborhood_la_jolla.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_la_jolla.jpg; sourceTree = "<group>"; };
+		AB5DD33018CE019700237AFC /* neighborhood_mission_beach.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_mission_beach.jpg; sourceTree = "<group>"; };
+		AB5DD33118CE019700237AFC /* neighborhood_mission_valley.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_mission_valley.jpg; sourceTree = "<group>"; };
+		AB5DD33218CE019700237AFC /* neighborhood_ocean_beach.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_ocean_beach.jpg; sourceTree = "<group>"; };
+		AB5DD33318CE019700237AFC /* neighborhood_pacific_beach.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_pacific_beach.jpg; sourceTree = "<group>"; };
+		AB5DD33418CE019700237AFC /* neighborhood_university_towne_center.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neighborhood_university_towne_center.jpg; sourceTree = "<group>"; };
 		AB6155A4184D99DF00A193C7 /* OMBCoApplicantsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCoApplicantsViewController.h; sourceTree = "<group>"; };
 		AB6155A5184D99DF00A193C7 /* OMBCoApplicantsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCoApplicantsViewController.m; sourceTree = "<group>"; };
 		AB6155A7184D99F100A193C7 /* OMBCosignersListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCosignersListViewController.h; sourceTree = "<group>"; };
@@ -1984,6 +1987,8 @@
 				AB00B9C318BD1C0E0050D6F4 /* OMBConversationStore.m */,
 				AB00EAD118C9075D004FD6F8 /* OMBResidenceMapStore.h */,
 				AB00EAD218C9075D004FD6F8 /* OMBResidenceMapStore.m */,
+				AB5DD32A18CE011500237AFC /* OMBAmenityStore.h */,
+				AB5DD32B18CE011500237AFC /* OMBAmenityStore.m */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -2278,16 +2283,14 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				B484A9BD18B55A2F005DEBBE /* menuBackground.jpg */,
-				B484A9BE18B55A2F005DEBBE /* menuBackground@2x.jpg */,
-				AB3DA21518AFFF1900B0EE1D /* neighborhood_downtown.jpg */,
-				AB3DA21618AFFF1900B0EE1D /* neighborhood_hillcrest.jpg */,
-				AB3DA21718AFFF1900B0EE1D /* neighborhood_la_jolla.jpg */,
-				AB3DA21818AFFF1900B0EE1D /* neighborhood_mission_beach.jpg */,
-				AB3DA21918AFFF1900B0EE1D /* neighborhood_mission_valley.jpg */,
-				AB3DA21A18AFFF1900B0EE1D /* neighborhood_ocean_beach.jpg */,
-				AB3DA21B18AFFF1900B0EE1D /* neighborhood_pacific_beach.jpg */,
-				AB3DA21C18AFFF1900B0EE1D /* neighborhood_university_towne_center.jpg */,
+				AB5DD32D18CE019700237AFC /* neighborhood_downtown.jpg */,
+				AB5DD32E18CE019700237AFC /* neighborhood_hillcrest.jpg */,
+				AB5DD32F18CE019700237AFC /* neighborhood_la_jolla.jpg */,
+				AB5DD33018CE019700237AFC /* neighborhood_mission_beach.jpg */,
+				AB5DD33118CE019700237AFC /* neighborhood_mission_valley.jpg */,
+				AB5DD33218CE019700237AFC /* neighborhood_ocean_beach.jpg */,
+				AB5DD33318CE019700237AFC /* neighborhood_pacific_beach.jpg */,
+				AB5DD33418CE019700237AFC /* neighborhood_university_towne_center.jpg */,
 				ABE28188186A486E00A5D14E /* edward_d@2x.jpg */,
 				DE96E4A01890169E0081D69F /* GetStarted */,
 				ABF8ECA8182D6C6B0080B1E2 /* intro_contact_view_background.jpg */,
@@ -2301,6 +2304,8 @@
 				ABB911571897F7DE0046611F /* intro_still_image_slide_7_background@2x.jpg */,
 				ABB911581897F7DE0046611F /* intro_still_image_slide_8_background@2x.jpg */,
 				ABB9116F1898215B0046611F /* intro_still_image_slide_9_background@2x.jpg */,
+				B484A9BD18B55A2F005DEBBE /* menuBackground.jpg */,
+				B484A9BE18B55A2F005DEBBE /* menuBackground@2x.jpg */,
 				A685EF96188F2A9E0074E336 /* Progress Indicator Frames */,
 				ABB700111879FDFC005F0730 /* residence_fake@2x.jpg */,
 			);
@@ -2911,33 +2916,33 @@
 			files = (
 				AB756AB2185A1C8A001AF572 /* intro_still_image_slide_1_background@2x.jpg in Resources */,
 				ABE2817E186A187E00A5D14E /* release_notes.md in Resources */,
+				AB5DD33C18CE019700237AFC /* neighborhood_university_towne_center.jpg in Resources */,
 				AB756ABA185A2483001AF572 /* intro_still_image_slide_2_background@2x.jpg in Resources */,
-				AB3DA22118AFFF1900B0EE1D /* neighborhood_mission_valley.jpg in Resources */,
+				AB5DD33918CE019700237AFC /* neighborhood_mission_valley.jpg in Resources */,
 				B484A9BF18B55A2F005DEBBE /* menuBackground.jpg in Resources */,
-				AB3DA22218AFFF1900B0EE1D /* neighborhood_ocean_beach.jpg in Resources */,
 				ABE28189186A486E00A5D14E /* edward_d@2x.jpg in Resources */,
 				ABB911701898215B0046611F /* intro_still_image_slide_9_background@2x.jpg in Resources */,
-				AB3DA22418AFFF1900B0EE1D /* neighborhood_university_towne_center.jpg in Resources */,
+				AB5DD33B18CE019700237AFC /* neighborhood_pacific_beach.jpg in Resources */,
+				AB5DD33618CE019700237AFC /* neighborhood_hillcrest.jpg in Resources */,
 				ABF8ECA9182D6C6B0080B1E2 /* intro_contact_view_background.jpg in Resources */,
-				AB3DA22018AFFF1900B0EE1D /* neighborhood_mission_beach.jpg in Resources */,
 				ABBA589B1870C59700E9BF4E /* ELCAssetTablePicker.xib in Resources */,
 				ABE2817D186A187E00A5D14E /* README.md in Resources */,
 				AB802EA818109E5200E04D11 /* InfoPlist.strings in Resources */,
 				ABB911591897F7DE0046611F /* intro_still_image_slide_5_background@2x.jpg in Resources */,
-				AB3DA22318AFFF1900B0EE1D /* neighborhood_pacific_beach.jpg in Resources */,
-				AB3DA21E18AFFF1900B0EE1D /* neighborhood_hillcrest.jpg in Resources */,
 				ABB9115C1897F7DE0046611F /* intro_still_image_slide_8_background@2x.jpg in Resources */,
 				ABB700121879FDFC005F0730 /* residence_fake@2x.jpg in Resources */,
 				AB756AC2185A25E3001AF572 /* intro_still_image_slide_4_background@2x.jpg in Resources */,
-				AB3DA21D18AFFF1900B0EE1D /* neighborhood_downtown.jpg in Resources */,
 				ABF8ECAE182D7A370080B1E2 /* intro_favorites_view_background.jpg in Resources */,
+				AB5DD33518CE019700237AFC /* neighborhood_downtown.jpg in Resources */,
+				AB5DD33A18CE019700237AFC /* neighborhood_ocean_beach.jpg in Resources */,
 				AB9B2602181196F400E6DAC4 /* location.gpx in Resources */,
 				B484A9C018B55A2F005DEBBE /* menuBackground@2x.jpg in Resources */,
+				AB5DD33718CE019700237AFC /* neighborhood_la_jolla.jpg in Resources */,
 				ABBA589A1870C59700E9BF4E /* ELCAssetPicker.xib in Resources */,
 				ABBA58991870C59700E9BF4E /* ELCAlbumPickerController.xib in Resources */,
 				AB802EB018109E5200E04D11 /* Images.xcassets in Resources */,
+				AB5DD33818CE019700237AFC /* neighborhood_mission_beach.jpg in Resources */,
 				ABB9115A1897F7DE0046611F /* intro_still_image_slide_6_background@2x.jpg in Resources */,
-				AB3DA21F18AFFF1900B0EE1D /* neighborhood_la_jolla.jpg in Resources */,
 				ABB9115B1897F7DE0046611F /* intro_still_image_slide_7_background@2x.jpg in Resources */,
 				AB756ABC185A24F5001AF572 /* intro_still_image_slide_3_background@2x.jpg in Resources */,
 			);
@@ -3052,6 +3057,7 @@
 				ABCB36C1187CC229008A0EEF /* OMBHomebaseRenterAddRoommateFromEmailViewController.m in Sources */,
 				AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */,
 				AB9D611B188CEFDE00C9AC64 /* UIImageView+WebCache.m in Sources */,
+				AB5DD32C18CE011500237AFC /* OMBAmenityStore.m in Sources */,
 				AB1C217E18518C8000ED7C06 /* OMBCosignerCreateConnection.m in Sources */,
 				AB9D611A188CEFDE00C9AC64 /* UIImage+WebP.m in Sources */,
 				ABBA58981870C59700E9BF4E /* ELCImagePickerController.m in Sources */,

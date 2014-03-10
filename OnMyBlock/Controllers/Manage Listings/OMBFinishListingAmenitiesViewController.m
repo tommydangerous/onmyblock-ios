@@ -8,6 +8,8 @@
 
 #import "OMBFinishListingAmenitiesViewController.h"
 
+#import "OMBAmenityStore.h"
+#import "OMBFinishListingAmenityCell.h"
 #import "OMBResidence.h"
 #import "OMBResidenceUpdateConnection.h"
 #import "OMBHeaderTitleCell.h"
@@ -21,7 +23,7 @@
 {
   if (!(self = [super initWithResidence: object])) return nil;
 
-  self.screenName = self.title = @"Pets & Amenities";
+  self.title = @"Amenities";
 
   return self;
 }
@@ -56,127 +58,47 @@
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
-  return 2;
+  return [[[OMBAmenityStore sharedStore] categories] count];
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  static NSString *CellIdentifier = @"CellIdentifier";
-  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
-    CellIdentifier];
+  // Header
+  if (indexPath.row == 0) {
+    static NSString *HeaderID = @"HeaderID";  
+    UITableViewCell *headerCell = 
+      [tableView dequeueReusableCellWithIdentifier: HeaderID];
+    if (!headerCell) {
+      headerCell = [[UITableViewCell alloc] initWithStyle: 
+        UITableViewCellStyleDefault reuseIdentifier: HeaderID];
+      headerCell.backgroundColor = tableView.backgroundColor;
+      headerCell.selectionStyle  = UITableViewCellSelectionStyleNone;
+      headerCell.textLabel.font  = [UIFont mediumTextFontBold];
+      headerCell.textLabel.textAlignment = NSTextAlignmentCenter;
+      headerCell.textLabel.textColor     = [UIColor grayMedium];
+    }
+    headerCell.textLabel.text = 
+      [[self categoryForSection: indexPath.section] capitalizedString];
+    return headerCell;
+  }
+  static NSString *AmenityCellID = @"AmenityCellID";
+  OMBFinishListingAmenityCell *cell = 
+    [tableView dequeueReusableCellWithIdentifier: AmenityCellID];
   if (!cell)
-    cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
-      reuseIdentifier: CellIdentifier];
-  cell.contentView.backgroundColor = [UIColor whiteColor];
-  // Checkmark outline
-  CGFloat padding   = 20.0f;
-  CGFloat imageSize = 20.0f;
-  UIImageView *imageView = (UIImageView *) [cell.contentView viewWithTag: 
-    8888];
-  if (!imageView) {
-    imageView = [UIImageView new];
-    // Need 0.75 instead of 0.5 to push it down further midway
-    imageView.frame = CGRectMake(
-      tableView.frame.size.width - (imageSize + padding), 
-        (58.0f - imageSize) * 0.5f, imageSize, imageSize);
-    imageView.tag   = 8888;
-    [cell.contentView addSubview: imageView];
-  }
-  static NSString *HeaderTitleCellIdentifier = @"HeaderTitleCellIdentifier";
-  OMBHeaderTitleCell *headerTitleCell =
-  [tableView dequeueReusableCellWithIdentifier: HeaderTitleCellIdentifier];
-  if (!headerTitleCell)
-    headerTitleCell = [[OMBHeaderTitleCell alloc] initWithStyle:
-                       UITableViewCellStyleDefault reuseIdentifier: HeaderTitleCellIdentifier];
-  
-  // Pets
-  if (indexPath.section == 0) {
-    if (indexPath.row == 0) {
-      [imageView removeFromSuperview];
-      headerTitleCell.titleLabel.text = @"Pets Allowed";
-      return headerTitleCell;
-      
-    } else {
-      
-      BOOL value = NO;
-      if (indexPath.row == 1) {
-        cell.textLabel.text = @"Dogs";
-        if (residence.dogs)
-          value = YES;
-      }
-      else if (indexPath.row == 2) {
-        cell.textLabel.text = @"Cats";
-        if (residence.cats)
-          value = YES;
-      }
-      else if (indexPath.row == 3){
-        [imageView removeFromSuperview];
-        cell.textLabel.text = @"None";
-        if(!residence.dogs && !residence.cats)
-          value = YES;
-      }
-      if (value) {
-        cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
-                                              size: 15];
-        cell.textLabel.textColor = [UIColor textColor];
-        imageView.alpha = 1.0f;
-        imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
-      }
-      else {
-        cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-                                              size: 15];
-        cell.textLabel.textColor = [UIColor grayMedium];
-        imageView.alpha = 0.2f;
-        imageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
-      }
-    }
-  }
-  // Amenities
-  else if (indexPath.section == 1) {
-    
-    if (indexPath.row == 0) {
-      [imageView removeFromSuperview];
-      headerTitleCell.titleLabel.text = @"Amenities";
-      return headerTitleCell;
-    }
-    
-    NSString *string = [[OMBResidence defaultListOfAmenities] objectAtIndex:
-                        indexPath.row - 1];
-    cell.textLabel.text = [string capitalizedString];
-    int value = [[residence.amenities objectForKey: string] intValue];
-    if (value) {
-      cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
-                                            size: 15];
-      cell.textLabel.textColor = [UIColor textColor];
-      imageView.alpha = 1.0f;
-      imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
-    }
-    else {
-      cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-                                            size: 15];
-      cell.textLabel.textColor = [UIColor grayMedium];
-      imageView.alpha = 0.2f;
-      imageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
-    }
-  }
+    cell = [[OMBFinishListingAmenityCell alloc] initWithStyle: 
+      UITableViewCellStyleDefault reuseIdentifier: AmenityCellID];
+  NSString *amenity = [self amenityAtIndexPath: indexPath];
+  [cell setAmenityName: amenity checked: [residence hasAmenity: amenity]];
   return cell;
 }
 
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  // Pets
-  if (section == 0){
-    // +2 for header and none option
-    return 1 + 2 + 1;
-  }
-  // Amenities
-  else if (section == 1) {
-    // +1 for header
-    return 1 + [[OMBResidence defaultListOfAmenities] count];
-  }
-  return 0;
+  // Header (we don't use viewForHeaderInSection because we don't want
+  // the header to float, we want it to scroll)
+  return 1 + [[self amenitiesForCategoryInSection: section] count];
 }
 
 #pragma mark - Protocol UITableViewDelegate
@@ -184,58 +106,89 @@ numberOfRowsInSection: (NSInteger) section
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  BOOL reload = NO;
-  // Pets
-  if (indexPath.section == 0) {
-    // Dogs
-    if (indexPath.row == 1) {
-      reload = YES;
-      residence.dogs = !residence.dogs;
+  // Must account for the header row
+  if (indexPath.row > 0) {
+    NSString *amenity = [self amenityAtIndexPath: indexPath];
+    // Remove the amenity
+    if ([residence hasAmenity: amenity]) {
+      [residence removeAmenity: amenity];
     }
-    // Cats
-    else if (indexPath.row == 2) {
-      reload = YES;
-      residence.cats = !residence.cats;
+    // Add the amenity
+    else {
+      [residence addAmenity: amenity];
     }
-    // None
-    else if (indexPath.row == 3) {
-      reload = YES;
-      residence.cats = residence.dogs = NO;
-    }
+    [tableView reloadData];
   }
-  // Amenities
-  else if (indexPath.section == 1) {
-    if(indexPath.row){
-      reload = YES;
-      NSString *string = [[OMBResidence defaultListOfAmenities] objectAtIndex:
-                        (indexPath.row - 1)];
-      int value = [[residence.amenities objectForKey: string] intValue];
-      int newValue = 0;
-      if (value) {
-        newValue = 0;
-      }
-      else {
-        newValue = 1;
-      }
-      [residence.amenities setObject: [NSNumber numberWithInt: newValue]
-                            forKey: string];
-    }
-  }
+  [tableView deselectRowAtIndexPath: indexPath animated: YES];
+
+  // BOOL reload = NO;
+  // // Pets
+  // if (indexPath.section == 0) {
+  //   // Dogs
+  //   if (indexPath.row == 1) {
+  //     reload = YES;
+  //     residence.dogs = !residence.dogs;
+  //   }
+  //   // Cats
+  //   else if (indexPath.row == 2) {
+  //     reload = YES;
+  //     residence.cats = !residence.cats;
+  //   }
+  //   // None
+  //   else if (indexPath.row == 3) {
+  //     reload = YES;
+  //     residence.cats = residence.dogs = NO;
+  //   }
+  // }
+  // // Amenities
+  // else if (indexPath.section == 1) {
+  //   if(indexPath.row){
+  //     reload = YES;
+  //     // NSString *string = [[OMBResidence defaultListOfAmenities] objectAtIndex:
+  //     //                   (indexPath.row - 1)];
+  //     // int value = [[residence.amenities objectForKey: string] intValue];
+  //     // int newValue = 0;
+  //     // if (value) {
+  //     //   newValue = 0;
+  //     // }
+  //     // else {
+  //     //   newValue = 1;
+  //     // }
+  //     // [residence.amenities setObject: [NSNumber numberWithInt: newValue]
+  //     //                       forKey: string];
+  //   }
+  // }
 //  if(reload)
 //    [tableView reloadRowsAtIndexPaths: @[indexPath] withRowAnimation:
 //     UITableViewRowAnimationNone];
-  [tableView reloadData];
-  [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  if((indexPath.section == 0 || indexPath.section == 1)
-     && indexPath.row == 0)
-    return 44.0f;
-  
-  return 58.0f;
+  return [OMBFinishListingAmenityCell heightForCell];
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (NSArray *) amenitiesForCategoryInSection: (NSInteger) section
+{
+  return [[OMBAmenityStore sharedStore] amenitiesForCategory:
+    [self categoryForSection: section]];
+}
+
+- (NSString *) amenityAtIndexPath: (NSIndexPath *) indexPath
+{
+  // Need to minus 1 to account for the header of each section
+  return [[self amenitiesForCategoryInSection: 
+    indexPath.section] objectAtIndex: indexPath.row - 1];
+}
+
+- (NSString *) categoryForSection: (NSInteger) section
+{
+  return [[[OMBAmenityStore sharedStore] categories] objectAtIndex: section];
 }
 
 @end

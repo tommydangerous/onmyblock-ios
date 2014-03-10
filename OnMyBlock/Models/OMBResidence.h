@@ -80,13 +80,13 @@ extern NSString *const OMBResidencePropertyTypeSublet;
 
 #pragma mark - Class Methods
 
-+ (NSArray *) defaultListOfAmenities;
 + (OMBResidence *) fakeResidence;
 + (NSInteger) numberOfSteps;
 + (UIImage *) placeholderImage;
 
 #pragma mark Instance Methods
 
+- (void) addAmenity: (NSString *) amenity;
 - (void) addImageWithResidenceImage: (OMBResidenceImage *) residenceImage
 toImageSizeDictionaryWithSize: (CGSize) size;
 - (void) addOffer: (OMBOffer *) offer;
@@ -105,6 +105,7 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 - (void) fetchOffersWithCompletion: (void (^) (NSError *error)) block;
 - (NSURL *) googleStaticMapImageURL;
 - (NSURL *) googleStaticStreetViewImageURL;
+- (BOOL) hasAmenity: (NSString *) amenity;
 - (NSArray *) imagesArray;
 - (UIImage *) imageAtPosition: (int) position;
 - (UIImage *) imageForSize: (CGSize) size 
@@ -121,6 +122,7 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidenceDictionary: (NSDictionary *) dictionary;
 - (void) removeResidenceImage: (OMBResidenceImage *) residenceImage;
+- (void) removeAmenity: (NSString *) amenity;
 - (NSString *) rentToCurrencyString;
 - (void) setImageForCenteredImageView: (OMBCenteredImageView *) imageView
 withURL: (NSURL *) url completion: (void (^)(void)) block;

@@ -10,6 +10,7 @@
 
 #import "NSString+Extensions.h"
 #import "OMBAllResidenceStore.h"
+#import "OMBAmenityStore.h"
 #import "OMBCenteredImageView.h"
 #import "OMBConnection.h"
 #import "OMBOffer.h"
@@ -35,9 +36,10 @@ NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
 {
   if (!(self = [super init])) return nil;
 
-  _amenities = [NSMutableDictionary dictionary];
-  for (NSString *string in [OMBResidence defaultListOfAmenities]) {
-    [_amenities setObject: [NSNumber numberWithInt: 0] forKey: string];
+  self.amenities = [NSMutableDictionary dictionary];
+  for (NSString *amenity in [[OMBAmenityStore sharedStore] allAmenities]) {
+    [self.amenities setObject: [NSNumber numberWithInt: 0] 
+      forKey: [amenity lowercaseString]];
   }
   
   _coverPhotoSizeDictionary = [NSMutableDictionary dictionary];
@@ -53,26 +55,6 @@ NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
 #pragma mark - Methods
 
 #pragma mark - Class Methods
-
-+ (NSArray *) defaultListOfAmenities
-{
-  return @[
-    @"air conditioning",
-    @"backyard",
-    @"central heating",
-    @"dishwasher",
-    @"fence",
-    @"front yard",
-    @"garbage disposal",
-    @"gym",
-    @"hard floors",
-    @"newly remodeled",
-    @"patio/balcony",
-    @"pool",
-    @"storage",
-    @"washer/dryer" 
-  ];
-}
 
 + (OMBResidence *) fakeResidence
 {
@@ -126,6 +108,11 @@ NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
 }
 
 #pragma mark Instance Methods
+
+- (void) addAmenity: (NSString *) amenity
+{
+  [self.amenities setObject: @1 forKey: amenity];
+}
 
 - (void) addImage: (UIImage *) image atPosition: (int) position 
 withString: (NSString *) string
@@ -185,8 +172,8 @@ toImageSizeDictionaryWithSize: (CGSize) size
 - (NSArray *) availableAmenities
 {
   NSMutableArray *array = [NSMutableArray array];
-  for (NSString *string in [_amenities allKeys]) {
-    NSNumber *number = [_amenities objectForKey: string];
+  for (NSString *string in [self.amenities allKeys]) {
+    NSNumber *number = [self.amenities objectForKey: string];
     if ([number intValue])
       [array addObject: string];
   }
@@ -383,6 +370,15 @@ toImageSizeDictionaryWithSize: (CGSize) size
   }
   return [NSURL URLWithString: 
     [NSString stringWithFormat: @"%@%@", base, paramsString]];
+}
+
+- (BOOL) hasAmenity: (NSString *) amenity
+{
+  NSNumber *number = [self.amenities objectForKey: [amenity lowercaseString]];
+  if (number && [number intValue]) {
+    return YES;
+  }
+  return NO;
 }
 
 - (NSArray *) imagesArray
@@ -859,6 +855,11 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
     _zip = [dictionary objectForKey: @"zip"];
 
   [[OMBAllResidenceStore sharedStore] addResidence: self];
+}
+
+- (void) removeAmenity: (NSString *) amenity
+{
+  [self.amenities setObject: @0 forKey: amenity];
 }
 
 - (void) removeResidenceImage: (OMBResidenceImage *) residenceImage

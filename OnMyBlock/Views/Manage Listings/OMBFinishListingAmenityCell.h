@@ -10,4 +10,10 @@
 
 @interface OMBFinishListingAmenityCell : OMBTableViewCell
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) setAmenityName: (NSString *) amenity checked: (BOOL) checked;
+
 @end
