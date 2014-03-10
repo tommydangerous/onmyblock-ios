@@ -21,7 +21,6 @@
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 
-float kStandardHeight = 44.0f;
 @interface OMBMapFilterViewController ()
 {
 	NSString *minRentString;
@@ -48,7 +47,7 @@ float kStandardHeight = 44.0f;
 
   [self resetValuesDictionary];
 
-  self.screenName = self.title = @"Filter";
+  self.title = @"Filter";
   
   return self;
 }
@@ -111,13 +110,13 @@ float kStandardHeight = 44.0f;
   AMBlurView *headerView = [[AMBlurView alloc] init];
   headerView.blurTintColor = [UIColor grayLight];
   headerView.frame = CGRectMake(0.0f, 0.0f, 
-    neighborhoodTableViewContainer.frame.size.width, kStandardHeight);
+    neighborhoodTableViewContainer.frame.size.width, OMBStandardHeight);
   [neighborhoodTableViewContainer addSubview: headerView];
   UILabel *headerLabel = [[UILabel alloc] init];
   headerLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   headerLabel.frame = CGRectMake(0.0f, 0.0f, 
     headerView.frame.size.width, headerView.frame.size.height);
-  headerLabel.text = @"Select neighborhood";
+  headerLabel.text = @"School or Neighborhood";
   headerLabel.textAlignment = NSTextAlignmentCenter;
   headerLabel.textColor = [UIColor textColor];
   [headerView addSubview: headerLabel];
@@ -154,7 +153,7 @@ float kStandardHeight = 44.0f;
   // Header view
   UIView *neighborhoodTableHeaderView = [UIView new];
   neighborhoodTableHeaderView.frame = CGRectMake(0.0f, 0.0f, 
-    neighborhoodTableView.frame.size.width, kStandardHeight);
+    neighborhoodTableView.frame.size.width, OMBStandardHeight);
   neighborhoodTableView.tableHeaderView = neighborhoodTableHeaderView;
   // Label
   UILabel *currentLocationLabel = [UILabel new];
@@ -195,7 +194,7 @@ float kStandardHeight = 44.0f;
   AMBlurView *pickerViewHeader = [[AMBlurView alloc] init];
   pickerViewHeader.blurTintColor = [UIColor grayLight];
   pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
-    self.view.frame.size.width, kStandardHeight);
+    self.view.frame.size.width, OMBStandardHeight);
 	[pickerViewContainer addSubview:pickerViewHeader];
 	
   // Header label
@@ -517,7 +516,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.section == 0) {
       // Header
       if (indexPath.row == 0) {
-        headerCell.textLabel.text = @"Neighborhood";
+        headerCell.textLabel.text = @"Choose Location";
       }
       else if (indexPath.row == 1) {
         static NSString *NeighborhoodCellIdentifier = 
@@ -648,7 +647,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
       size: 15];
-    cell.textLabel.text= [neighborhood nameTitle];
+    cell.textLabel.text = neighborhood.name;
     cell.textLabel.textColor = [UIColor textColor];
     return cell;
   }
@@ -725,7 +724,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         [NSIndexPath indexPathForRow: 1 inSection: 0]];
     NSString *string = @"";
     if (selectedNeighborhood) {
-      string = [selectedNeighborhood nameTitle];
+      string = selectedNeighborhood.name;
     }    
     cell.neighborhoodTextField.text = string;
     [tableView deselectRowAtIndexPath: indexPath animated: YES];

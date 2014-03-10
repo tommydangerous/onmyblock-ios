@@ -10,16 +10,13 @@
 
 @implementation OMBNeighborhood
 
-@synthesize coordinate = _coordinate;
-@synthesize name       = _name;
-
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
-- (NSString *) nameTitle
+- (NSString *) nameKey
 {
-  return [_name capitalizedString];
+  return [self.name lowercaseString];
 }
 
 @end

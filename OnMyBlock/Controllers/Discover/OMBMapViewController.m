@@ -98,7 +98,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
         cityName]) {
 
       OMBAnnotationCity *annotationCity = [[OMBAnnotationCity alloc] init];
-      annotationCity.cityName   = [neighborhood.name capitalizedString];
+      annotationCity.cityName   = neighborhood.name;
       annotationCity.coordinate = neighborhood.coordinate;
       
       [neighborhoodAnnotationArray addObject: annotationCity];
