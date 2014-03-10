@@ -10,6 +10,7 @@
 
 #import "OMBConnectionProtocol.h"
 
+@class OMBConversation;
 @class OMBUser;
 
 @interface OMBMessage : NSObject <OMBConnectionProtocol>
@@ -28,7 +29,8 @@
 #pragma mark - Instance Methods
 
 - (void) calculateSizeForMessageCell;
-- (void) createMessageConnectionWithConversationUID: (NSUInteger) uid;
+- (void) createMessageConnectionWithConversation: 
+(OMBConversation *) conversation;
 - (BOOL) isFromUser: (OMBUser *) user;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (BOOL) viewedByUser: (OMBUser *) user;

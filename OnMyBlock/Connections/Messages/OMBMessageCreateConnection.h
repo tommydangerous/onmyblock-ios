@@ -8,13 +8,15 @@
 
 #import "OMBConnection.h"
 
+@class OMBConversation;
 @class OMBMessage;
 
 @interface OMBMessageCreateConnection : OMBConnection
 
 #pragma mark - Initializer
 
-- (id) initWithMessage: (OMBMessage *) object conversationUID: (NSUInteger) uid;
+- (id) initWithMessage: (OMBMessage *) object 
+conversation: (OMBConversation *) conversationObject;
 - (id) initWithMessage: (OMBMessage *) object;
 
 @end

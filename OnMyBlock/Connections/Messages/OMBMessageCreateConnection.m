@@ -8,10 +8,12 @@
 
 #import "OMBMessageCreateConnection.h"
 
+#import "OMBConversation.h"
 #import "OMBMessage.h"
 
 @interface OMBMessageCreateConnection ()
 {
+  OMBConversation *conversation;
   OMBMessage *message;
 }
 
@@ -21,18 +23,20 @@
 
 #pragma mark - Initializer
 
-- (id) initWithMessage: (OMBMessage *) object conversationUID: (NSUInteger) uid
+- (id) initWithMessage: (OMBMessage *) object 
+conversation: (OMBConversation *) conversationObject
 {
   if (!(self = [super init])) return nil;
 
-  message = object;
+  conversation = conversationObject;
+  message      = object;
 
   NSString *string = [NSString stringWithFormat: @"%@/messages", 
     OnMyBlockAPIURL];
   NSMutableDictionary *objectParams = 
     [NSMutableDictionary dictionaryWithDictionary: @{
       @"content": message.content,
-      @"conversation_id": [NSNumber numberWithInt: uid]
+      @"conversation_id": [NSNumber numberWithInt: conversation.uid]
     }];
   // if (message.residenceUID)
   //   [objectParams setObject: [NSNumber numberWithInt: message.residenceUID]
@@ -84,7 +88,9 @@
     // the server's time is different than user's time by about 1 minute
     // 40 seconds
     NSInteger uid = [[[self objectDictionary] objectForKey: @"id"] intValue];
-    message.uid = uid;
+    // message.uid = uid;
+    [conversation updateMessageUID: message withUID: uid];
+
     // [message readFromDictionary: [self objectDictionary]];
   }
   else {

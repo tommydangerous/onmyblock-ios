@@ -543,7 +543,6 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   //   [self.view endEditing: YES];
   //   startingPoint = scrollView.contentOffset;
   // }
-  NSLog(@"CONTENT OFFSET Y: %f", scrollView.contentOffset.y);
 }
 
 - (void) scrollViewWillBeginDragging: (UIScrollView *) scrollView
@@ -755,7 +754,7 @@ additionalOffsetY: (CGFloat) offsetY
   [conversation addMessage: message];
   [self assignMessages];
   // Create the message
-  [message createMessageConnectionWithConversationUID: conversation.uid];
+  [message createMessageConnectionWithConversation: conversation];
 
   // When there is only one message, it doesn't show
   // Only after you come back to this view does it show

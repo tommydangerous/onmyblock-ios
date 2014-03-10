@@ -198,12 +198,32 @@ delegate: (id) delegate completion: (void (^)(NSError *error)) block
   }
 }
 
+- (void) removeMessage: (OMBMessage *) message
+{
+  [messages removeObjectForKey: [NSNumber numberWithInt: message.uid]];
+}
+
 - (NSArray *) sortedMessagesWithKey: (NSString *) key 
 ascending: (BOOL) ascending
 {
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
     ascending: ascending];
   return [[messages allValues] sortedArrayUsingDescriptors: @[sort]];
+}
+
+- (void) updateMessageUID: (OMBMessage *) message 
+withUID: (NSUInteger) messageUID
+{
+  // Find the existing message
+  OMBMessage *existingMessage = [messages objectForKey: 
+    [NSNumber numberWithInt: message.uid]];
+  // Remove the existing message's key
+  [self removeMessage: existingMessage];
+  
+  // Update the existing message's UID
+  existingMessage.uid = messageUID;
+  // Add the existing message with the updated UID
+  [self addMessage: existingMessage];
 }
 
 - (BOOL) viewedByUser: (OMBUser *) user

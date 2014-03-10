@@ -46,6 +46,8 @@ delegate: (id) delegate completion: (void (^)(NSError *error)) block;
 - (void) readFromMessagesDictionary: (NSDictionary *) dictionary;
 - (NSArray *) sortedMessagesWithKey: (NSString *) key 
 ascending: (BOOL) ascending;
+- (void) updateMessageUID: (OMBMessage *) message 
+withUID: (NSUInteger) messageUID;
 - (BOOL) viewedByUser: (OMBUser *) user;
 
 @end

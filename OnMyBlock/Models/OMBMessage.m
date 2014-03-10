@@ -10,6 +10,7 @@
 
 #import "NSDateFormatter+JSON.h"
 #import "NSString+Extensions.h"
+#import "OMBConversation.h"
 #import "OMBMessageCollectionViewCell.h"
 #import "OMBMessageCreateConnection.h"
 #import "OMBUser.h"
@@ -32,11 +33,12 @@
   self.sizeForMessageCell = rect.size;
 }
 
-- (void) createMessageConnectionWithConversationUID: (NSUInteger) uid
+- (void) createMessageConnectionWithConversation: 
+(OMBConversation *) conversation
 {
-  OMBMessageCreateConnection *conn = 
+  OMBMessageCreateConnection *conn =
     [[OMBMessageCreateConnection alloc] initWithMessage: self
-      conversationUID: uid];
+      conversation: conversation];
   [conn start];
 }
 
