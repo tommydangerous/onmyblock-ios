@@ -175,8 +175,12 @@
     messageContentView.frame.size.height - otherUserImageView.frame.size.height,
       otherUserImageView.frame.size.width, 
         otherUserImageView.frame.size.height);
-  if (![message isFromUser: [OMBUser currentUser]])
-    otherUserImageView.image = message.user.image;
+  if (![message isFromUser: [OMBUser currentUser]]) {
+    if (message.user.image)
+      otherUserImageView.image = message.user.image;
+    else
+      otherUserImageView.image = [OMBUser defaultUserImage];
+  }
 }
 
 - (void) setupForLastMessageFromSameUser

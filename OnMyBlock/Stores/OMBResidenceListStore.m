@@ -11,6 +11,13 @@
 #import "OMBResidence.h"
 #import "OMBResidenceListConnection.h"
 
+@interface OMBResidenceListStore ()
+{
+  OMBResidenceListConnection *listConnection;
+}
+
+@end
+
 @implementation OMBResidenceListStore
 
 #pragma mark - Initializer
@@ -49,14 +56,22 @@
   //   [_residences addObject: residence];
 }
 
+- (void) cancelConnection
+{
+  if (listConnection) {
+    [listConnection cancelConnection];
+    listConnection = nil;
+  }
+}
+
 - (void) fetchResidencesWithParameters: (NSDictionary *) parameters
 delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
-  OMBResidenceListConnection *conn = 
-    [[OMBResidenceListConnection alloc] initWithParameters: parameters];
-  conn.completionBlock = block;
-  conn.delegate        = delegate;
-  [conn start];
+  listConnection = [[OMBResidenceListConnection alloc] initWithParameters: 
+    parameters];
+  listConnection.completionBlock = block;
+  listConnection.delegate        = delegate;
+  [listConnection start];
 }
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
