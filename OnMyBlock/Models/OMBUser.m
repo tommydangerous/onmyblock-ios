@@ -168,6 +168,11 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   return user;
 }
 
++ (UIImage *) defaultUserImage
+{
+  return [UIImage imageNamed: @"profile_default_pic.png"];
+}
+
 + (void) fakeLogin
 {
   [OMBUser currentUser].about = @"About me? Well I like to do cool stuff. "
