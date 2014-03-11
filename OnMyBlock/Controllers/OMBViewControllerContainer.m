@@ -370,7 +370,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   _infiniteScroll.delegate = self;
   // 100 is the renter menu header label size
   _infiniteScroll.frame = CGRectMake(0, 0, _menuScroll.frame.size.width,
-    _menuScroll.frame.size.height - 100);
+    _menuScroll.frame.size.height - 140);
   _infiniteScroll.pagingEnabled = YES;
   _infiniteScroll.panGestureRecognizer.maximumNumberOfTouches = 1;
   _infiniteScroll.showsVerticalScrollIndicator = NO;
@@ -586,9 +586,10 @@ CGFloat kBackgroundMaxScale = 5.0f;
   [_accountView addSubview: accountButton];*/
   _accountView.transform = CGAffineTransformMakeScale(0, 0);
 
+  
   // Top detail view
   CGRect topDetailViewRect = CGRectMake(0.0f, 0.0f,
-    screenWidth, accountImageSize);
+    screenWidth, 64.f);
   _topDetailView = [[OMBTopDetailView alloc]
     initWithFrame: topDetailViewRect];
   [self.view addSubview: _topDetailView];

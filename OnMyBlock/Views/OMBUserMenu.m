@@ -59,7 +59,7 @@
   _headerButton.contentEdgeInsets = UIEdgeInsetsMake(0, leftPad, 0, 0);
   _headerButton.contentHorizontalAlignment =
     UIControlContentHorizontalAlignmentLeft;
-  _headerButton.frame = CGRectMake(0, 0, rect.size.width, 100);
+  _headerButton.frame = CGRectMake(0, 40, rect.size.width, 100);
   // _headerButton.titleLabel.font = [UIFont fontWithName: 
   //   @"HelveticaNeue-Light" size: 27];
   _headerButton.titleLabel.font = [UIFont mediumLargeTextFont];

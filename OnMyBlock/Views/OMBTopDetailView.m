@@ -25,17 +25,22 @@
 {
   if (!(self = [super initWithFrame: rect])) return nil;
   
-  self.backgroundColor = [UIColor clearColor];
-  
   CGFloat padding = 15.f;
-  CGFloat sizeImage = self.frame.size.height * 0.5;
+  CGFloat sizeImage = self.frame.size.height * 0.4;
+  
+  // Background view
+  UIView *backView = [UIView new];
+  backView.alpha = 0.3;
+  backView.backgroundColor = UIColor.blackColor;
+  backView.frame = self.frame;
+  [self addSubview: backView];
   
   // Sign up label
   signup = [UILabel new];
-  CGFloat sizeLabel = (sizeImage + padding);
+  CGFloat heightLabel = (sizeImage + padding);
   signup.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
   signup.frame = CGRectMake(padding,
-    self.frame.size.height - sizeLabel, self.frame.size.width * 0.5, sizeLabel);
+    self.frame.size.height - heightLabel * 0.9f, self.frame.size.width * 0.5, heightLabel);
   signup.hidden = YES;
   signup.text = @"Sign up or Sign in";
   signup.textAlignment = NSTextAlignmentLeft;
@@ -45,7 +50,7 @@
   // Image
   imageView = [[OMBCenteredImageView alloc]
     initWithFrame: CGRectMake(padding,
-      self.frame.size.height - sizeImage - 2.f, sizeImage, sizeImage)];
+      self.frame.size.height - sizeImage - padding * 0.5f, sizeImage, sizeImage)];
   imageView.hidden = YES;
   imageView.layer.borderColor = [UIColor whiteColor].CGColor;
   imageView.layer.borderWidth = 1.0;
@@ -54,19 +59,18 @@
   
   // Name
   nameLabel = [UILabel new];
-  nameLabel.font = [UIFont fontWithName: @"HelveticaNeue" size: 15];
+  nameLabel.font = [UIFont fontWithName: @"HelveticaNeue" size: 17];
   nameLabel.frame = CGRectMake(imageView.frame.origin.x + imageView.frame.size.width + padding * 0.5f,
-    imageView.frame.origin.y + sizeImage * 0.25f, self.frame.size.width * 0.5 , sizeImage * 0.5f);
+    imageView.frame.origin.y, self.frame.size.width * 0.5 , sizeImage);
   nameLabel.hidden = YES;
   nameLabel.textAlignment = NSTextAlignmentLeft;
   nameLabel.textColor = UIColor.whiteColor;
   [self addSubview: nameLabel];
   
   // Setting Button
-  CGFloat sizeButton = 25.0;
   settingsButton = [[UIButton alloc] init];
-  settingsButton.frame = CGRectMake(self.frame.size.width - sizeButton - padding,
-    self.frame.size.height - sizeButton - padding * 0.75f, sizeButton, sizeButton);
+  settingsButton.frame = CGRectMake(self.frame.size.width - sizeImage - padding,
+    self.frame.size.height - sizeImage - padding * 0.5f, sizeImage, sizeImage);
   settingsButton.hidden = YES;
   [settingsButton setImage:[UIImage imageNamed:
     @"account_icon.png"] forState:UIControlStateNormal];
