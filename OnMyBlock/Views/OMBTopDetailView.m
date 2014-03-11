@@ -9,6 +9,7 @@
 #import "OMBTopDetailView.h"
 
 #import "OMBCenteredImageView.h"
+#import "UIFont+OnMyBlock.h"
 
 @implementation OMBTopDetailView
 
@@ -26,7 +27,7 @@
   if (!(self = [super initWithFrame: rect])) return nil;
   
   CGFloat padding = 15.f;
-  CGFloat sizeImage = self.frame.size.height * 0.4;
+  CGFloat sizeImage = self.frame.size.height * 0.5;
   
   // Background view
   UIView *backView = [UIView new];
@@ -34,24 +35,11 @@
   backView.backgroundColor = UIColor.blackColor;
   backView.frame = self.frame;
   [self addSubview: backView];
-  
-  // Sign up label
-  signup = [UILabel new];
-  CGFloat heightLabel = (sizeImage + padding);
-  signup.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
-  signup.frame = CGRectMake(padding,
-    self.frame.size.height - heightLabel * 0.9f, self.frame.size.width * 0.5, heightLabel);
-  signup.hidden = YES;
-  signup.text = @"Sign up or Sign in";
-  signup.textAlignment = NSTextAlignmentLeft;
-  signup.textColor = UIColor.whiteColor;
-  [self addSubview: signup];
 
   // Image
   imageView = [[OMBCenteredImageView alloc]
-    initWithFrame: CGRectMake(padding,
+    initWithFrame: CGRectMake(padding * 1.5f,
       self.frame.size.height - sizeImage - padding * 0.5f, sizeImage, sizeImage)];
-  imageView.hidden = YES;
   imageView.layer.borderColor = [UIColor whiteColor].CGColor;
   imageView.layer.borderWidth = 1.0;
   imageView.layer.cornerRadius = sizeImage * 0.5f;
@@ -59,19 +47,18 @@
   
   // Name
   nameLabel = [UILabel new];
-  nameLabel.font = [UIFont fontWithName: @"HelveticaNeue" size: 17];
-  nameLabel.frame = CGRectMake(imageView.frame.origin.x + imageView.frame.size.width + padding * 0.5f,
+  nameLabel.font = [UIFont normalTextFont];
+  nameLabel.frame = CGRectMake(imageView.frame.origin.x + imageView.frame.size.width + padding,
     imageView.frame.origin.y, self.frame.size.width * 0.5 , sizeImage);
-  nameLabel.hidden = YES;
   nameLabel.textAlignment = NSTextAlignmentLeft;
   nameLabel.textColor = UIColor.whiteColor;
   [self addSubview: nameLabel];
   
   // Setting Button
+  CGFloat sizeIcon = sizeImage * 0.7;
   settingsButton = [[UIButton alloc] init];
-  settingsButton.frame = CGRectMake(self.frame.size.width - sizeImage - padding,
-    self.frame.size.height - sizeImage - padding * 0.5f, sizeImage, sizeImage);
-  settingsButton.hidden = YES;
+  settingsButton.frame = CGRectMake(self.frame.size.width - sizeIcon - padding,
+    self.frame.size.height - sizeIcon - padding * 0.75f, sizeIcon, sizeIcon);
   [settingsButton setImage:[UIImage imageNamed:
     @"account_icon.png"] forState:UIControlStateNormal];
   [self addSubview: settingsButton];
@@ -103,23 +90,4 @@
   nameLabel.text = name;
 }
 
-- (void) setupForLoggedInUser
-{
-  [self removeTargets];
-  [self setViewOn: YES];
-}
-
-- (void) setupForLoggedOutUser
-{
-  [self removeTargets];
-  [self setViewOn: NO];
-}
-
-- (void) setViewOn:(BOOL) hide
-{
-  imageView.hidden = !hide;
-  nameLabel.hidden = !hide;
-  settingsButton.hidden = !hide;
-  signup.hidden = hide;
-}
 @end

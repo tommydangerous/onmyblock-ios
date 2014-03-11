@@ -370,7 +370,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   _infiniteScroll.delegate = self;
   // 100 is the renter menu header label size
   _infiniteScroll.frame = CGRectMake(0, 0, _menuScroll.frame.size.width,
-    _menuScroll.frame.size.height - 140);
+    _menuScroll.frame.size.height - 135);
   _infiniteScroll.pagingEnabled = YES;
   _infiniteScroll.panGestureRecognizer.maximumNumberOfTouches = 1;
   _infiniteScroll.showsVerticalScrollIndicator = NO;
@@ -592,10 +592,10 @@ CGFloat kBackgroundMaxScale = 5.0f;
     screenWidth, 64.f);
   _topDetailView = [[OMBTopDetailView alloc]
     initWithFrame: topDetailViewRect];
+  _topDetailView.hidden = YES;
+  [_topDetailView.account addTarget: self action: @selector(showAccount)
+    forControlEvents: UIControlEventTouchUpInside];
   [self.view addSubview: _topDetailView];
-  [_topDetailView setupForLoggedOutUser];
-  [_topDetailView.account addTarget: self action: @selector(showLogin)
-                   forControlEvents: UIControlEventTouchUpInside];
   // Activity view
   activityView = [[OMBActivityView alloc] init];
   // [_detailView addSubview: activityView];
@@ -987,9 +987,7 @@ completion: (void (^) (void)) block
   // Remove the account view
   [_accountView removeFromSuperview];
   // Update Top detail view
-  [_topDetailView setupForLoggedOutUser];
-  [_topDetailView.account addTarget: self action: @selector(showLogin)
-    forControlEvents: UIControlEventTouchUpInside];
+  _topDetailView.hidden = YES;
   // Adjust the intro view
   [self.introViewController setupForLoggedOutUser];
   // [self showIntroAnimatedDissolve: YES];
@@ -1180,10 +1178,9 @@ completion: (void (^) (void)) block
   // Add the account view
   //[self.view addSubview: _accountView];
   
-  // Top detail view
-  [_topDetailView setupForLoggedInUser];
-  [_topDetailView.account addTarget: self action: @selector(showAccount)
-     forControlEvents: UIControlEventTouchUpInside];
+  // Show top detail view
+  _topDetailView.hidden = NO;
+  
   // Show the buttons for users who are logged in
   // [self showLoggedInButtons];
   // Adjust the menu scroll content inset and content size

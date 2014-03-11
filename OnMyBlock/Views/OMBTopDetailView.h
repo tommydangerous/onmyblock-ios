@@ -13,7 +13,6 @@
 @interface OMBTopDetailView : UIView
 {
   UIButton *settingsButton;
-  UILabel *signup;
   UILabel *nameLabel;
   OMBCenteredImageView *imageView;
 }
@@ -22,7 +21,5 @@
 
 - (void) setName:(NSString *)name;
 - (void) setImage: (UIImage *) object;
-- (void) setupForLoggedInUser;
-- (void) setupForLoggedOutUser;
 
 @end
