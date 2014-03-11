@@ -58,8 +58,7 @@
     ],
     @"pets": @[
       @"cats allowed",
-      @"dogs allowed",
-      @"no pets allowed"
+      @"dogs allowed"
     ],
     @"accessibility": @[
       @"handicap friendly",

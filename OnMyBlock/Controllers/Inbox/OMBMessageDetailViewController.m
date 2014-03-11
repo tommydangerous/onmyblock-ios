@@ -252,6 +252,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     phoneBarButtonItem.enabled = NO;
   }
 
+  
   if (conversation) {
     [self assignMessages];
     if (isFirstTime && [self.messages count]) {

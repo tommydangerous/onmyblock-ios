@@ -79,6 +79,7 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 #pragma mark - Class Methods
 
 + (OMBUser *) currentUser;
++ (UIImage *) defaultUserImage;
 + (void) fakeLogin;
 + (OMBUser *) fakeUser;
 + (OMBUser *) landlordUser;

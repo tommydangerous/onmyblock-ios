@@ -25,6 +25,7 @@
 #pragma mark - Instance Methods
 
 - (void) addResidence: (OMBResidence *) residence;
+- (void) cancelConnection;
 - (void) fetchResidencesWithParameters: (NSDictionary *) parameters
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
