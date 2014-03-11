@@ -231,6 +231,7 @@
 		AB9FEEEF18CE726900E25FE2 /* OMBRenterInfoSectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEEE18CE726900E25FE2 /* OMBRenterInfoSectionViewController.m */; };
 		AB9FEEF218CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEF118CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.m */; };
 		AB9FEEF518CFA17400E25FE2 /* OMBRenterInfoAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEF418CFA17400E25FE2 /* OMBRenterInfoAddViewController.m */; };
+		AB9FEEF818CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEF718CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m */; };
 		ABA080831868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */; };
 		ABA080861868E76200C7B851 /* OMBTextViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080851868E76200C7B851 /* OMBTextViewViewController.m */; };
 		ABA0808C1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA0808B1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m */; };
@@ -899,6 +900,8 @@
 		AB9FEEF118CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionCosignersViewController.m; sourceTree = "<group>"; };
 		AB9FEEF318CFA17400E25FE2 /* OMBRenterInfoAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddViewController.h; sourceTree = "<group>"; };
 		AB9FEEF418CFA17400E25FE2 /* OMBRenterInfoAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoAddViewController.m; sourceTree = "<group>"; };
+		AB9FEEF618CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddCosignerViewController.h; sourceTree = "<group>"; };
+		AB9FEEF718CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoAddCosignerViewController.m; sourceTree = "<group>"; };
 		ABA080811868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceConfirmDetailsBuyerCell.h; sourceTree = "<group>"; };
 		ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceConfirmDetailsBuyerCell.m; sourceTree = "<group>"; };
 		ABA080841868E76200C7B851 /* OMBTextViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTextViewViewController.h; sourceTree = "<group>"; };
@@ -2529,6 +2532,8 @@
 				AB9FEEF118CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.m */,
 				AB9FEEF318CFA17400E25FE2 /* OMBRenterInfoAddViewController.h */,
 				AB9FEEF418CFA17400E25FE2 /* OMBRenterInfoAddViewController.m */,
+				AB9FEEF618CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.h */,
+				AB9FEEF718CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m */,
 			);
 			path = Users;
 			sourceTree = "<group>";
@@ -3141,6 +3146,7 @@
 				ABBA58A6187148CC00E9BF4E /* OMBFinishListingShowMoreCell.m in Sources */,
 				AB8B793E186DEF13005AB552 /* OMBCreateListingDetailCell.m in Sources */,
 				AB8C8C22181597F900A1B087 /* OMBResidence.m in Sources */,
+				AB9FEEF818CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m in Sources */,
 				ABA5B4291857B20900F825E1 /* OMBEmploymentCreateConnection.m in Sources */,
 				ABB70070187B76EB005F0730 /* OMBImageTwoLabelCell.m in Sources */,
 				ABB9118B18994F980046611F /* OMBBecomeVerifiedViewController.m in Sources */,

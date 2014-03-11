@@ -8,7 +8,7 @@
 
 #import "OMBRenterInfoSectionCosignersViewController.h"
 
-#import "OMBRenterInfoAddViewController.h"
+#import "OMBRenterInfoAddCosignerViewController.h"
 
 @interface OMBRenterInfoSectionCosignersViewController ()
 
@@ -22,7 +22,7 @@
 {
   if (!(self = [super initWithUser: object])) return nil;
 
-  addViewController = [[OMBRenterInfoAddViewController alloc] init];
+  addViewController = [[OMBRenterInfoAddCosignerViewController alloc] init];
   self.title = @"Co-signers";
 
   return self;

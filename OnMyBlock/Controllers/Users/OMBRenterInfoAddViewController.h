@@ -9,5 +9,10 @@
 #import "OMBTableViewController.h"
 
 @interface OMBRenterInfoAddViewController : OMBTableViewController
+<UITextFieldDelegate>
+{
+  BOOL isEditing;
+  UIToolbar *textFieldToolbar;
+}
 
 @end
