@@ -74,11 +74,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 {
   if (!(self = [super init])) return nil;
 
-  centerCoordinate = CLLocationCoordinate2DMake(32.78166389765503,
-    -117.16957478041991);
-  fetching = NO;
-  firstLoad = YES;
-  _radiusInMiles = 0;
+  fetching           = NO;
+  firstLoad          = YES;
+  self.radiusInMiles = 0;
   
   // Location manager
   locationManager                 = [[CLLocationManager alloc] init];
@@ -107,7 +105,6 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       // [self.mapView addAnnotation: annotationCity];
     }
   }
-  NSLog(@"%@", neighborhoodAnnotationArray);
 
   previousZoomLevel = 0;
 
@@ -423,17 +420,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 - (void) viewDidLoad
 {
   [super viewDidLoad];
-  _mapView.showsUserLocation = YES;
-  // Load default latitude and longitude
-  CLLocationCoordinate2D coordinate;
-  coordinate.latitude  = 32.78166389765503;
-  coordinate.longitude = -117.16957478041991;
 
-  [self setMapViewRegion: coordinate withMiles: DEFAULT_MILE_RADIUS 
-    animated: YES];
-
-  // Find user's location
-  [locationManager startUpdatingLocation];
+  self.mapView.showsUserLocation = YES;
   
   __weak OMBMapViewController *weakSelf = self;
   
@@ -442,20 +430,6 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [_listView addInfiniteScrollingWithActionHandler:^{
     [weakSelf reloadWithPagination];
   }];
-
-  
-
-  // // Create annotation
-  // if (!sanDiegoAnnotationCity) {
-  //   sanDiegoAnnotationCity = [[OMBAnnotationCity alloc] init];
-  //   sanDiegoAnnotationCity.cityName   = @"San Diego";
-  //   sanDiegoAnnotationCity.coordinate = CLLocationCoordinate2DMake(
-  //     32.7150, -117.1625);
-  //   sanDiegoAnnotationCity.title      = @"1000";
-  // }
-  // [self.mapView.annotationsToIgnore addObject: sanDiegoAnnotationCity];
-  // [self.mapView removeAnnotation: sanDiegoAnnotationCity];
-  // [self.mapView addAnnotation: sanDiegoAnnotationCity];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -467,6 +441,15 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
+
+  if (centerCoordinate.latitude == 0.0f && centerCoordinate.longitude == 0.0f) {
+    centerCoordinate = CLLocationCoordinate2DMake(32.78166389765503,
+      -117.16957478041991);
+    [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS 
+      animated: YES];
+    // Find user's location
+    [locationManager startUpdatingLocation];
+  }
 
   // This is so that the spinner doesn't freeze and just stay there
   if (fetching)
@@ -1178,12 +1161,16 @@ withTitle: (NSString *) title;
 
 - (void) foundLocations: (NSArray *) locations
 {
-  CLLocationCoordinate2D coordinate;
   if ([locations count]) {
     for (CLLocation *location in locations) {
-      coordinate = location.coordinate;
+      centerCoordinate = location.coordinate;
     }
-    [self setMapViewRegion: coordinate withMiles: 2 animated: YES];
+    if (fetching) {
+      fetching = NO;
+      [[OMBResidenceListStore sharedStore] cancelConnection];  
+    }
+    [self fetchResidencesForList];
+    [self setMapViewRegion: centerCoordinate withMiles: 2 animated: YES];
   }
   [locationManager stopUpdatingLocation];
 }
@@ -1354,11 +1341,10 @@ withTitle: (NSString *) title;
   pagination++;
   __weak OMBMapViewController *weakSelf = self;
   if (pagination >= 1) {
-    dispatch_queue_t myThread = dispatch_queue_create("mythreadpagination", NULL);
+    dispatch_queue_t myThread = dispatch_queue_create(
+      "mythreadpagination", NULL);
     dispatch_async(myThread, ^{
-      NSLog(@"reload with pagination");
       dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"making reload data");
         [weakSelf.listView.infiniteScrollingView stopAnimating];
         [weakSelf.listView reloadData];
       });
@@ -1639,22 +1625,25 @@ withMiles: (int) miles animated: (BOOL) animated
   switch (control.selectedSegmentIndex) {
     // Show map
     case 0: {
-      _listViewContainer.alpha = 0.0;
-      _mapView.alpha           = 1.0;
-      [self mapView: _mapView regionDidChangeAnimated: NO];
-        [UIView animateWithDuration:0.5f animations:^{
-            filterView.transform = CGAffineTransformIdentity;
+      self.listViewContainer.alpha = 0.0f;
+      self.mapView.alpha           = 1.0f;
+      if ([self.mapView.annotations count] == 0) {
+        [self mapView: _mapView regionDidChangeAnimated: NO];
+        [UIView animateWithDuration: 0.5f animations: ^{
+          filterView.transform = CGAffineTransformIdentity;
         }];
+      }
       break;
     }
     // Show list
     case 1: {
-      _listViewContainer.alpha = 1.0;
-      _mapView.alpha           = 0.0;
+      self.listViewContainer.alpha = 1.0f;
+      self.mapView.alpha           = 0.0f;
       [self fetchResidencesForList];
-        [UIView animateWithDuration:0.5f animations:^{
-            filterView.transform = CGAffineTransformMakeTranslation(0.0f, self.view.bounds.size.height - 20.0f - 64.0f);
-        }];
+      [UIView animateWithDuration: 0.5f animations: ^{
+        filterView.transform = CGAffineTransformMakeTranslation(
+          0.0f, self.view.bounds.size.height - 20.0f - 64.0f);
+      }];
       break;
     }
     default:
