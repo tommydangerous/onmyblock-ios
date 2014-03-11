@@ -75,8 +75,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // If current session has a valid Facebook token
     [self openSession];
 
-  // #warning Remove fake login
-  // [OMBUser fakeLogin]; // Fake login
+  #warning Remove fake login
+  [OMBUser fakeLogin]; // Fake login
 
   // Check to see if the user has a saved api key in the user defaults
   [[OMBUser currentUser] checkForUserDefaultsAPIKey];
@@ -105,8 +105,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   else
     [_container showDiscover];
 
-  // #warning Remove container showing controller
-  // [self.container showMyRenterProfile];
+  #warning Remove container showing controller
+  [self.container showMyRenterProfile];
 
   // Use this to show whatever view controller you are working on
   // [_container showMyRenterProfile];

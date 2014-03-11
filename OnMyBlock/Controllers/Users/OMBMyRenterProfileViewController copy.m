@@ -26,34 +26,6 @@
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 
-@interface OMBMyRenterProfileViewController ()
-<UIActionSheetDelegate, UIImagePickerControllerDelegate, 
-  UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
-{
-  UILabel *aboutTextViewPlaceholder;
-  UITextView *aboutTextView;
-  OMBCenteredImageView *backImageView;
-  UIView *backView;
-  CGFloat backViewOriginY;
-  UIView *fadedBackground;
-  UILabel *fullNameLabel;
-  OMBGradientView *gradient;
-  UIView *nameView;
-  CGFloat nameViewOriginY;
-  UIBarButtonItem *previewBarButtonItem;
-  UIView *scaleBackView;
-  UIToolbar *textFieldToolbar;
-  NSString *savedTextString;
-  UITextView *editingTextView;
-  UITextField *editingTextField;
-  UIActionSheet *uploadActionSheet;
-  OMBUser *user;
-  OMBCenteredImageView *userIconView;
-  NSMutableDictionary *valueDictionary;
-}
-
-@end
-
 @implementation OMBMyRenterProfileViewController
 
 #pragma mark - Initializer
@@ -68,9 +40,20 @@
     CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFontBold]];
   sizeForLabelTextFieldCell = rect.size;
 
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(keyboardWillShow:)
+      name: UIKeyboardWillShowNotification object: nil];
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(keyboardWillHide:)
+      name: UIKeyboardWillHideNotification object: nil];
   [[NSNotificationCenter defaultCenter] addObserver:self
     selector: @selector(progressConnection:)
       name: @"progressConnection" object:nil];
+
+  // After coming back from Facebook upon verifying
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(facebookAuthenticationFinished:)
+      name: OMBUserCreateAuthenticationForFacebookNotification object: nil];
 
   return self;
 }
@@ -235,15 +218,116 @@
   textFieldToolbar.clipsToBounds = YES;
   textFieldToolbar.frame = CGRectMake(0.0f, 0.0f, 
     screenWidth, OMBStandardHeight);
-  textFieldToolbar.items = @[
-    leftPadding,
-    cancelBarButtonItemForTextFieldToolbar,
-    flexibleSpace,
-    doneBarButtonItemForTextFieldToolbar,
-    rightPadding
-  ];
+  textFieldToolbar.items = @[leftPadding,
+							 cancelBarButtonItemForTextFieldToolbar,
+							 flexibleSpace,
+							 doneBarButtonItemForTextFieldToolbar,
+							 rightPadding];
   textFieldToolbar.tintColor = [UIColor blue];
   aboutTextView.inputAccessoryView = textFieldToolbar;
+  
+  // faded background
+  fadedBackground = [[UIView alloc] init];
+  fadedBackground.alpha = 0.0f;
+  fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
+  fadedBackground.frame = screen;
+  [self.view addSubview: fadedBackground];
+  UITapGestureRecognizer *tapGesture2 =
+  [[UITapGestureRecognizer alloc] initWithTarget: self
+                                          action: @selector(hidePickerView)];
+  [fadedBackground addGestureRecognizer: tapGesture2];
+  
+  // Co-applicants picker view
+  // Picker view container
+  pickerViewContainer = [UIView new];
+  [self.view addSubview: pickerViewContainer];
+  
+  // Header for picker view with cancel and done button
+  UIView *pickerViewHeader = [[UIView alloc] init];
+  pickerViewHeader.backgroundColor = [UIColor grayUltraLight];
+  pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
+                                      screen.size.width, 44.0f);
+  [pickerViewContainer addSubview: pickerViewHeader];
+  
+  pickerViewHeaderLabel = [[UILabel alloc] init];
+  pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  pickerViewHeaderLabel.frame = pickerViewHeader.frame;
+  pickerViewHeaderLabel.text = @"";
+  pickerViewHeaderLabel.textAlignment = NSTextAlignmentCenter;
+  pickerViewHeaderLabel.textColor = [UIColor textColor];
+  [pickerViewHeader addSubview: pickerViewHeaderLabel];
+  
+  // Cancel button
+  UIButton *cancelButton = [UIButton new];
+  cancelButton.titleLabel.font = [UIFont fontWithName:
+    @"HelveticaNeue-Medium" size: 15];
+  CGRect cancelButtonRect = [@"Cancel" boundingRectWithSize:
+     CGSizeMake(pickerViewHeader.frame.size.width, pickerViewHeader.frame.size.height)
+        font: cancelButton.titleLabel.font];
+  cancelButton.frame = CGRectMake(padding, 0.0f,
+    cancelButtonRect.size.width, pickerViewHeader.frame.size.height);
+  [cancelButton addTarget: self
+    action: @selector(cancelPicker)
+      forControlEvents: UIControlEventTouchUpInside];
+  [cancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
+  [cancelButton setTitleColor: [UIColor blueDark]
+    forState: UIControlStateNormal];
+  [pickerViewHeader addSubview: cancelButton];
+  
+  // Done button
+  UIButton *doneButton = [UIButton new];
+  doneButton.titleLabel.font = cancelButton.titleLabel.font;
+  CGRect doneButtonRect = [@"Done" boundingRectWithSize:
+    CGSizeMake(pickerViewHeader.frame.size.width,
+      pickerViewHeader.frame.size.height)
+        font: doneButton.titleLabel.font];
+  doneButton.frame = CGRectMake(pickerViewHeader.frame.size.width -
+    (padding + doneButtonRect.size.width), 0.0f,
+       doneButtonRect.size.width, pickerViewHeader.frame.size.height);
+  [doneButton addTarget: self
+    action: @selector(donePicker)
+      forControlEvents: UIControlEventTouchUpInside];
+  [doneButton setTitle: @"Done" forState: UIControlStateNormal];
+  [doneButton setTitleColor: [UIColor blueDark]
+     forState: UIControlStateNormal];
+  [pickerViewHeader addSubview: doneButton];
+  
+  // co-applicant picker
+  coapplicantPickerView = [[UIPickerView alloc] init];
+  coapplicantPickerView.backgroundColor = [UIColor whiteColor];
+  coapplicantPickerView.dataSource = self;
+  coapplicantPickerView.delegate   = self;
+  coapplicantPickerView.frame = CGRectMake(0.0f,
+    pickerViewHeader.frame.origin.y + pickerViewHeader.frame.size.height,
+      coapplicantPickerView.frame.size.width, coapplicantPickerView.frame.size.height);
+  
+  // co-signer picker
+  cosignerPickerView = [[UIPickerView alloc] init];
+  cosignerPickerView.backgroundColor = coapplicantPickerView.backgroundColor;
+  cosignerPickerView.dataSource = self;
+  cosignerPickerView.delegate   = self;
+  cosignerPickerView.frame = CGRectMake(0.0f,
+    pickerViewHeader.frame.origin.y + pickerViewHeader.frame.size.height,
+      cosignerPickerView.frame.size.width, cosignerPickerView.frame.size.height);
+  
+  pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
+    coapplicantPickerView.frame.size.width,
+      pickerViewHeader.frame.size.height +
+        coapplicantPickerView.frame.size.height);
+}
+
+- (void) viewDidAppear: (BOOL) animated
+{
+  [super viewDidAppear: animated];
+  // #warning REMOVE THIS
+  // [self.navigationController pushViewController:
+  //   [[OMBBecomeVerifiedViewController alloc] initWithUser: user]
+  //     animated: YES];
+}
+
+- (void) viewDidDisappear: (BOOL) animated
+{
+  [super viewDidDisappear: animated];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -259,7 +343,12 @@
     @"firstName": user.firstName ? user.firstName: @"",
     @"lastName":  user.lastName ? user.lastName : @"",
     @"phone":     user.phone ? user.phone : @"",
-    @"school":    user.school ? user.school : @""
+    @"school":    user.school ? user.school : @"",
+
+    @"coapplicantCount": [NSNumber numberWithInt: 
+      user.renterApplication.coapplicantCount],
+    @"hasCosigner": [NSNumber numberWithBool: 
+      user.renterApplication.hasCosigner]
   }];
 
   [self updateData];
@@ -267,9 +356,25 @@
   // If user is the landlord
   if ([user isLandlord]) {
     self.title = @"My Profile";
+    // Fetch listings
+    [user fetchListingsWithCompletion: ^(NSError *error) {
+      [self updateData];
+    }];
   }
   else {
     self.title = @"My Renter Profile";
+    // Fetch the information about the user, specifically the renter application
+    [user fetchUserProfileWithCompletion: ^(NSError *error) {
+      [valueDictionary setObject: [NSNumber numberWithInt: 
+        user.renterApplication.coapplicantCount] forKey: @"coapplicantCount"];
+      [valueDictionary setObject: [NSNumber numberWithBool: 
+        user.renterApplication.hasCosigner] forKey: @"hasCosigner"];
+      [self updateData];
+    }];
+    // Fetch the employments
+    [user fetchEmploymentsWithCompletion: ^(NSError *error) {
+      [self updateData];
+    }];
   }
 }
 
@@ -339,6 +444,49 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
   [picker dismissViewControllerAnimated: YES completion: nil];
 }
 
+#pragma mark - Protocol UIPickerViewDataSource
+
+- (NSInteger) numberOfComponentsInPickerView: (UIPickerView *) pickerView
+{
+  return 1;
+}
+
+- (NSInteger) pickerView: (UIPickerView *) pickerView
+ numberOfRowsInComponent: (NSInteger) component
+{
+  if(pickerView == coapplicantPickerView)
+    return 11;
+  else if(pickerView == cosignerPickerView)
+    return 2;
+  
+  return 0;
+}
+
+#pragma mark - Protocol UIPickerViewDelegate
+
+- (CGFloat) pickerView: (UIPickerView *) pickerView
+rowHeightForComponent: (NSInteger) component
+{
+  return OMBStandardHeight;
+}
+
+- (NSString *) pickerView: (UIPickerView *) pickerView 
+titleForRow: (NSInteger) row forComponent: (NSInteger) component
+{
+  NSString *title =@"";
+  if(pickerView == coapplicantPickerView){
+    if(row == 0)
+      title = @"None";
+    else
+      title = [NSString stringWithFormat: @"%i", row];
+  }
+  
+  else if(pickerView == cosignerPickerView)
+    title = (row == 0 ? @"Yes" : @"No");
+  
+  return title;
+}
+
 #pragma mark - Protocol UIScrollViewDelegate
 
 - (void) scrollViewDidScroll: (UIScrollView *) scrollView
@@ -383,9 +531,10 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
   // User info
-  // Renter info
+  // Rental info
+  // Employments
   // Spacing
-  return 3;
+  return 4;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -394,9 +543,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
 
-  CGFloat padding  = OMBPadding;
+  CGFloat padding = OMBPadding;
   CGRect tableRect = tableView.frame;
 
+  // Subclasses implement this
   static NSString *EmptyCellID = @"EmptyCellID";
   UITableViewCell *emptyCell = [tableView dequeueReusableCellWithIdentifier:
     EmptyCellID];
@@ -404,7 +554,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     emptyCell = [[UITableViewCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: EmptyCellID];
 
-  // User info
   if (section == OMBMyRenterProfileSectionUserInfo) {
     // Image (NOT BEING USED)!!!
     if (row == OMBMyRenterProfileSectionUserInfoRowImage + 99) {
@@ -576,45 +725,94 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       return cell;
     }
   }
-  // Renter info
-  else if (section == OMBMyRenterProfileSectionRenterInfo) {
-    if (row == OMBMyRenterProfileSectionRenterInfoTopSpacing) {
-      emptyCell.backgroundColor = [UIColor backgroundColor];
+  else if (section == OMBMyRenterProfileSectionRentalInfo) {
+    // Co-applicants picker view
+    if (row == OMBMyRenterProfileSectionRentalInfoRowCoapplicantsPickerView) {
+      
     }
-    else {
-      static NSString *RenterID = @"RenterID";
-      OMBRenterProfileUserInfoCell *cell = 
-        [tableView dequeueReusableCellWithIdentifier: RenterID];
-      if (!cell)
-        cell = [[OMBRenterProfileUserInfoCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier: RenterID];
-      cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+
+    static NSString *RentalInfoID = @"RentalInfoID";
+    OMBRenterProfileUserInfoCell *cell = 
+      [tableView dequeueReusableCellWithIdentifier: RentalInfoID];
+    if (!cell)
+      cell = [[OMBRenterProfileUserInfoCell alloc] initWithStyle: 
+        UITableViewCellStyleDefault reuseIdentifier: RentalInfoID];
+    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    [cell reset];
+    CGSize imageSize = cell.iconImageView.bounds.size;
+    UIImage *image;
+    NSString *string;
+    NSString *valueString;
+    // Co-applicants
+    if (row == OMBMyRenterProfileSectionRentalInfoRowCoapplicants) {
+      image = [UIImage imageNamed: @"group_icon.png"];
+      string = @"Co-applicants";
+      int coapplicants = [[valueDictionary objectForKey: @"coapplicantCount"] intValue];
+      if(coapplicants == 0)
+        valueString = @"None";
+      else
+        valueString = [NSString stringWithFormat: @"%i", coapplicants];
+    }
+    // Co-signer
+    else if (row == OMBMyRenterProfileSectionRentalInfoRowCosigners) {
+      image = [UIImage imageNamed: @"landlord_icon.png"];
+      string = @"Co-signer";
+      if ([[valueDictionary objectForKey: @"hasCosigner"] intValue])
+        valueString = @"Yes";
+      else
+        valueString = @"No";
+    }
+    // Facebook
+    else if (row == OMBMyRenterProfileSectionRentalInfoRowFacebook) {
       [cell resetWithCheckmark];
-      NSString *iconImageName;
-      NSString *string;
-      // Co-applicants
-      if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
-        iconImageName = @"group_icon.png";
-        string = @"Co-applicants";
+      image  = [UIImage imageNamed: @"facebook_icon_blue.png"];
+      string = @"Facebook";
+      if (user.renterApplication.facebookAuthenticated) {
+        cell.iconImageView.alpha = 1.0f;
+        cell.userInteractionEnabled = NO;
+        valueString = @"Verified";
+        [cell fillCheckmark];
       }
-      else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
-        iconImageName = @"landlord_icon.png";
-        string = @"Co-signer";
+      else{
+        valueString = @"Unverified";
+        cell.userInteractionEnabled = YES;
       }
-      else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
-        iconImageName = @"house_icon.png";
-        string = @"Rental History";
-      }
-      else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
-        iconImageName = @"papers_icon_black.png";
-        string = @"Work History";
-      }
-      cell.iconImageView.image = [UIImage image: 
-        [UIImage imageNamed: iconImageName] 
-          size: cell.iconImageView.bounds.size];
-      cell.label.text = string;
-      return cell;
     }
+    // LinkedIn
+    else if (row == OMBMyRenterProfileSectionRentalInfoRowLinkedIn) {
+      [cell resetWithCheckmark];
+      image  = [UIImage imageNamed: @"linkedin_icon.png"];
+      string = @"LinkedIn";
+      if (user.renterApplication.linkedinAuthenticated) {
+        cell.iconImageView.alpha = 1.0f;
+        cell.userInteractionEnabled = NO;
+        valueString = @"Verified";
+        [cell fillCheckmark];
+      }
+      else{
+        valueString = @"Unverified";
+        cell.userInteractionEnabled = YES;
+      }
+      // cell.separatorInset = UIEdgeInsetsMake(0.0f,
+      //   tableView.frame.size.width, 0.0f, 0.0f);
+    }
+    cell.iconImageView.image = [UIImage image: image size: imageSize];
+    cell.label.text = string;
+    cell.valueLabel.text = valueString;
+    return cell;
+  }
+  else if (section == OMBMyRenterProfileSectionEmployments) {
+    static NSString *EmploymentCellID = @"EmploymentCellID";
+    OMBEmploymentCell *cell = [tableView dequeueReusableCellWithIdentifier:
+      EmploymentCellID];
+    if (!cell)
+      cell = [[OMBEmploymentCell alloc] initWithStyle: 
+        UITableViewCellStyleDefault reuseIdentifier: EmploymentCellID];
+    [cell loadData: 
+      [[user.renterApplication employmentsSortedByStartDate] 
+        objectAtIndex: indexPath.row]];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    return cell;
   }
 
   return emptyCell;
@@ -623,20 +821,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  // User info
   if (section == OMBMyRenterProfileSectionUserInfo) {
     return 7;
   }
-  // Renter info
-  else if (section == OMBMyRenterProfileSectionRenterInfo) {
-    // Top spacing
-    // Co-applicants
-    // Co-signers
-    // Rental history
-    // Work history
+  else if (section == OMBMyRenterProfileSectionRentalInfo) {
     return 5;
   }
-  // Spacing
+  // Employments
+  else if (section == OMBMyRenterProfileSectionEmployments) {
+    return [[user.renterApplication employmentsSortedByStartDate] count];
+  }
   else if (section == OMBMyRenterProfileSectionSpacing) {
     return 1;
   }
@@ -658,27 +852,42 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       [self showUploadActionSheet];
     }
   }
-  // Renter info
-  else if (section == OMBMyRenterProfileSectionRenterInfo) {
+  // Rental info
+  else if (section == OMBMyRenterProfileSectionRentalInfo) {
     // Co-applicants
-    if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
-
+    if (row == OMBMyRenterProfileSectionRentalInfoRowCoapplicants) {
+      //[self reloadPickerViewRowAtIndexPath: indexPath];
+      [self showPickerView: coapplicantPickerView];
     }
-    // Co-signers
-    else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
-      
+    // Co-signer
+    else if (row == OMBMyRenterProfileSectionRentalInfoRowCosigners) {
+      [self showPickerView: cosignerPickerView];
     }
-    // Rental History
-    else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
-      
+    // Facebook
+    else if (row == OMBMyRenterProfileSectionRentalInfoRowFacebook) {
+      [self facebookButtonSelected];
     }
-    // Work History
-    else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
-      
+    // LinkedIn
+    else if (row == OMBMyRenterProfileSectionRentalInfoRowLinkedIn) {
+      [self linkedInButtonSelected];
     }
   }
 
-  [tableView deselectRowAtIndexPath: indexPath animated: YES];
+  [self.table deselectRowAtIndexPath: indexPath animated: YES];
+}
+
+- (CGFloat) tableView: (UITableView *) tableView 
+heightForHeaderInSection: (NSInteger) section
+{
+  if (section == OMBMyRenterProfileSectionRentalInfo)
+    return OMBStandardHeight;
+  if (section == OMBMyRenterProfileSectionEmployments) {
+    if (![user isLandlord]) {
+      if ([[user.renterApplication employmentsSortedByStartDate] count])
+        return OMBStandardHeight;
+    }
+  }
+  return 0.0f;
 }
 
 - (CGFloat) tableView: (UITableView *) tableView
@@ -692,7 +901,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // Image (NOT BEING USED)!!!
     if (row == OMBMyRenterProfileSectionUserInfoRowImage) {
       return 0.0f;
-      // return OMBPadding + OMBStandardButtonHeight + OMBPadding;
+      return OMBPadding + OMBStandardButtonHeight + OMBPadding;
     }
     // Last Name
     else if (row == OMBMyRenterProfileSectionUserInfoRowLastName)
@@ -710,22 +919,65 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     return [OMBLabelTextFieldCell heightForCellWithIconImageView];
     // return [OMBLabelTextFieldCell heightForCell];
   }
-  // Renter info
-  else if (section == OMBMyRenterProfileSectionRenterInfo) {
-    // Top spacing
-    if (row == OMBMyRenterProfileSectionRenterInfoTopSpacing) {
-      return OMBStandardHeight;
+  // Rental info
+  else if (section == OMBMyRenterProfileSectionRentalInfo) {
+    // Co-applicants
+    if (row == OMBMyRenterProfileSectionRentalInfoRowCoapplicants) {
+      if ([user isLandlord]) {
+        return 0.0f;
+      }
     }
-    return OMBStandardButtonHeight;
+    // Co-applicants picker view
+    else if (row == 
+      OMBMyRenterProfileSectionRentalInfoRowCoapplicantsPickerView) {
+        return 0.0f;
+    }
+    // Co-signers
+    else if (row == OMBMyRenterProfileSectionRentalInfoRowCosigners) {
+      if ([user isLandlord]) {
+        return 0.0f;
+      }
+    }
+    return [OMBRenterProfileUserInfoCell heightForCell];
+  }
+  // Employments
+  else if (section == OMBMyRenterProfileSectionEmployments) {
+    if (![user isLandlord]) {
+      return [OMBEmploymentCell heightForCell];
+    }
   }
   // Spacing
   else if (section == OMBMyRenterProfileSectionSpacing) {
     if (editingTextView || editingTextField) {
-      return textFieldToolbar.frame.size.height + OMBKeyboardHeight;
+      return 216.0f;
     }
   }
   return 0.0f;
 }
+
+- (UIView *) tableView: (UITableView *) tableView 
+viewForHeaderInSection: (NSInteger) section
+{
+  NSString *string;
+  if (section == OMBMyRenterProfileSectionRentalInfo)
+    string = @"Verifications";
+  if (section == OMBMyRenterProfileSectionEmployments)
+    string = @"Work History";
+  UIView *v = [UIView new];
+  v.backgroundColor = [UIColor grayUltraLight];
+  v.frame = CGRectMake(0.0f, 0.0f, 
+    tableView.frame.size.width, OMBStandardHeight);
+  UILabel *label = [UILabel new];
+  label.font = [UIFont normalTextFont];
+  label.frame = CGRectMake(OMBPadding, 0.0f, 
+    v.frame.size.width - (OMBPadding * 2), v.frame.size.height);
+  label.text = string;
+  label.textColor = [UIColor grayMedium];
+  label.textAlignment = NSTextAlignmentCenter;
+  [v addSubview: label];
+  return v;
+}
+
 
 #pragma mark - Protocol UITextFieldDelegate
 
@@ -734,17 +986,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   textField.inputAccessoryView = textFieldToolbar;
 
 	editingTextField = textField;
-	savedTextString  = textField.text;
+	savedTextString = textField.text;
   [self.table beginUpdates];
   [self.table endUpdates];
 
-  if (textField.indexPath.row == OMBMyRenterProfileSectionUserInfoRowLastName)
-    [self scrollToRectAtIndexPath:
-      [NSIndexPath indexPathForRow:
-        OMBMyRenterProfileSectionUserInfoRowFirstName
-          inSection:textField.indexPath.section]];
+  if(textField.indexPath.row == OMBMyRenterProfileSectionUserInfoRowLastName)
+    [self scrollToRectAtIndexPath:[NSIndexPath indexPathForRow:OMBMyRenterProfileSectionUserInfoRowFirstName
+       inSection:textField.indexPath.section]];
   else
     [self scrollToRectAtIndexPath: textField.indexPath];
+  // [self.table scrollToRowAtIndexPath: textField.indexPath
+  //   atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
 - (BOOL) textFieldShouldReturn: (UITextField *) textField
@@ -768,6 +1020,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     OMBMyRenterProfileSectionUserInfoRowAbout
       inSection: OMBMyRenterProfileSectionUserInfo];
   [self scrollToRectAtIndexPath: indexPath];
+  // [self.table scrollToRowAtIndexPath: 
+  //   [NSIndexPath indexPathForRow: OMBMyRenterProfileSectionUserInfoRowAbout
+  //     inSection: OMBMyRenterProfileSectionUserInfo]
+  //       atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
 - (void) textViewDidChange: (UITextView *) textView
@@ -785,15 +1041,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
-- (void) cancelFromInputAccessoryView
+- (void) cancelPicker
 {
-  if (editingTextField)
-    editingTextField.text = savedTextString;
-  
-  if (editingTextView)
-    editingTextView.text = savedTextString;
-  
-  [self done];
+  [self updatePicker];
+  [self hidePickerView];
 }
 
 - (void) done
@@ -806,12 +1057,131 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table endUpdates];
 }
 
+- (void) donePicker
+{
+  [self hidePickerView];
+  
+  // Co-applicants
+  if ([coapplicantPickerView superview]) {
+    NSInteger selectedRow = [coapplicantPickerView selectedRowInComponent:0] ;
+    [valueDictionary setObject: [NSNumber numberWithInt: selectedRow]
+       forKey: @"coapplicantCount"];
+    OMBRenterProfileUserInfoCell *cell = (OMBRenterProfileUserInfoCell *)
+    [self.table cellForRowAtIndexPath:
+      [NSIndexPath indexPathForItem:OMBMyRenterProfileSectionRentalInfoRowCoapplicants
+        inSection:OMBMyRenterProfileSectionRentalInfo]];
+    NSString *text;
+    if(selectedRow == 0)
+      text = @"None";
+    else
+      text = [NSString stringWithFormat:@"%i", selectedRow];
+    cell.valueLabel.text = text ;
+  }
+  // Co-signer
+  else if ([cosignerPickerView superview])
+  {
+    BOOL selectedRow = ([cosignerPickerView selectedRowInComponent:0] == 0)? YES : NO ;
+    [valueDictionary setObject: [NSNumber numberWithBool: selectedRow]
+      forKey: @"hasCosigner"];
+    OMBRenterProfileUserInfoCell *cell = (OMBRenterProfileUserInfoCell *)
+      [self.table cellForRowAtIndexPath:
+        [NSIndexPath indexPathForItem:OMBMyRenterProfileSectionRentalInfoRowCosigners
+          inSection:OMBMyRenterProfileSectionRentalInfo]];
+    cell.valueLabel.text = selectedRow ? @"Yes" : @"No";
+  }
+  
+  [self updatePicker];
+  [self updateRenterApplication];
+}
+
+- (void) facebookAuthenticationFinished: (NSNotification *) notification
+{
+  NSError *error = [notification.userInfo objectForKey: @"error"];
+  if (!error) {
+    user.renterApplication.facebookAuthenticated = YES;
+    [user downloadImageFromImageURLWithCompletion: nil];
+    [self updateData];
+  }
+  else {
+    [self showAlertViewWithError: error];
+  }
+  [[self appDelegate].container stopSpinning];
+}
+
+- (void) facebookButtonSelected
+{
+  [[self appDelegate].container startSpinning];
+  [[self appDelegate] openSession];
+}
+
+- (void) hidePickerView
+{
+  CGRect rect = pickerViewContainer.frame;
+  rect.origin.y = self.view.frame.size.height;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 0.0f;
+    pickerViewContainer.frame = rect;
+  }];
+}
+
+- (void) keyboardWillHide: (NSNotification *) notification
+{
+  // [self.navigationItem setRightBarButtonItem: saveBarButtonItem 
+  //   animated: YES];
+}
+
+- (void) keyboardWillShow: (NSNotification *) notification
+{
+  // [self.navigationItem setRightBarButtonItem: doneBarButtonItem 
+  //   animated: YES];
+}
+
+- (void) linkedInButtonSelected
+{
+  LIALinkedInApplication *app = 
+    [LIALinkedInApplication applicationWithRedirectURL: @"https://onmyblock.com"
+      clientId: @"75zr1yumwx0wld" clientSecret: @"XNY3VsMzvdhyR1ej"
+        state: @"DCEEFWF45453sdffef424" grantedAccess: @[@"r_fullprofile"]];
+  linkedInClient = [LIALinkedInHttpClient clientForApplication: app 
+    presentingViewController: self];
+  [linkedInClient getAuthorizationCode: ^(NSString *code) {
+    [linkedInClient getAccessToken: code success: 
+      ^(NSDictionary *accessTokenData) {
+        NSString *accessToken = [accessTokenData objectForKey: @"access_token"];
+        [user createAuthenticationForLinkedInWithAccessToken:
+          accessToken completion: ^(NSError *error) {
+            if (!error) {
+              user.renterApplication.linkedinAuthenticated = YES;
+              [self updateData];
+              // Fetch the employments
+              [user fetchEmploymentsWithCompletion: ^(NSError *error) {
+                [self updateData];
+              }];
+            }
+            else {
+              [self showAlertViewWithError: error];
+            }
+            [[self appDelegate].container stopSpinning];
+          }
+        ];
+        [[self appDelegate].container startSpinning];
+      }
+    failure: ^(NSError *error) {
+      [self showAlertViewWithError: error];
+    }];
+  } cancel: ^{
+    NSLog(@"LINKEDIN CANCELED");
+  } failure: ^(NSError *error) {
+    [self showAlertViewWithError: error];
+  }];
+}
+
 - (void) loadUser: (OMBUser *) object
 {
   user = object;
 
   if ([user isLandlord])
-    self.title = @"My Profile";
+    self.title = @"My Landlord Profile";
   else
     self.title = @"My Renter Profile";
 }
@@ -828,10 +1198,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   float value = ([[notification object] floatValue]);
   
   CustomLoading *custom = [CustomLoading getInstance];
+  //editBarButtonItem.enabled = NO;
 
   if (value == 1.0) {
     custom.numImages--;
     [custom stopAnimatingWithView: self.view];
+      //editBarButtonItem.enabled = YES;
   }
   else {
     [custom startAnimatingWithProgress: (int)(value * 25) withView: self.view];
@@ -847,12 +1219,52 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         // so the sizes need to change
         [[OMBUser currentUser].heightForAboutTextDictionary removeAllObjects];
         [self updateData];
+        // [self.navigationController popViewControllerAnimated: YES];
       }
       else {
         [self showAlertViewWithError: error];
       }
+      // [[self appDelegate].container stopSpinning];
     }
   ];
+  // [[self appDelegate].container startSpinning];
+}
+
+- (void) showPickerView:(UIPickerView *)pickerView
+{
+  NSString *titlePicker = @"";
+  // Co-applicants picker view
+  if (coapplicantPickerView == pickerView) {
+		titlePicker = @"Co-applicants";
+    [cosignerPickerView removeFromSuperview];
+		[pickerViewContainer addSubview: coapplicantPickerView];
+	}
+  // Co-signers picker view
+  else if(cosignerPickerView == pickerView)
+  {
+    titlePicker = @"Co-signers";
+    [coapplicantPickerView removeFromSuperview];
+    [pickerViewContainer addSubview: cosignerPickerView];
+  }
+	pickerViewHeaderLabel.text = titlePicker;
+  CGRect rect = pickerViewContainer.frame;
+  rect.origin.y = self.view.frame.size.height -
+  pickerViewContainer.frame.size.height;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 1.0f;
+    pickerViewContainer.frame = rect;
+  }];
+}
+
+- (void) cancelFromInputAccessoryView
+{
+	if (editingTextField)
+		editingTextField.text = savedTextString;
+	
+	if (editingTextView)
+		editingTextView.text = savedTextString;
+	
+	[self done];
 }
 
 - (void) saveFromInputAccessoryView
@@ -911,7 +1323,35 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   if ([[user shortName] length])
     fullNameLabel.text = [user shortName];
 
+  [self updatePicker];
   [self.table reloadData];
+}
+
+- (void) updateRenterApplication
+{
+  [user.renterApplication updateWithDictionary: valueDictionary
+    completion: ^(NSError *error) {
+      if (error)
+        [self showAlertViewWithError: error];
+      // [[self appDelegate].container stopSpinning];
+    }
+  ];
+  // [[self appDelegate].container startSpinning];
+}
+
+- (void) updatePicker
+{
+  NSInteger coapplicant = [[valueDictionary objectForKey:
+    @"coapplicantCount"] intValue];
+  NSInteger cosigner = [[valueDictionary objectForKey:
+    @"hasCosigner"] boolValue] ? 0 : 1;
+  
+  // Co-applicant picker
+  [coapplicantPickerView selectRow: coapplicant
+    inComponent: 0 animated: NO];
+  // Co-signer picker
+  [cosignerPickerView selectRow: cosigner
+    inComponent:0 animated:NO];
 }
 
 @end
