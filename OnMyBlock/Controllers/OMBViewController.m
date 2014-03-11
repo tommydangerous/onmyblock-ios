@@ -28,7 +28,6 @@ CGFloat const OMBStandardHeight       = 44.0f;
   if (!(self = [super init])) return nil;
 
   self.screenName = NSStringFromClass([self class]);
-
   self.view.backgroundColor = [UIColor backgroundColor];
 
   return self;
@@ -74,7 +73,7 @@ CGFloat const OMBStandardHeight       = 44.0f;
   menuBarButtonItem =
     [[UIBarButtonItem alloc] initWithImage: 
       [UIImage image:  [UIImage imageNamed: @"menu_icon_staggered.png"] 
-        size: CGSizeMake(26, 26)] style: UIBarButtonItemStylePlain 
+        size: CGSizeMake(26.0f, 26.0f)] style: UIBarButtonItemStylePlain 
           target: self action: @selector(showContainer)];
 
   self.navigationItem.backBarButtonItem = 
@@ -133,6 +132,11 @@ CGFloat const OMBStandardHeight       = 44.0f;
 - (void) save
 {
   // Subclasses implement this
+}
+
+- (CGRect) screen
+{
+  return [[UIScreen mainScreen] bounds];
 }
 
 - (void) setMenuBarButtonItem

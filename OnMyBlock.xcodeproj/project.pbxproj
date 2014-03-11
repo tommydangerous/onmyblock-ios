@@ -229,6 +229,8 @@
 		AB9D612E188F0B1300C9AC64 /* OMBOffersAcceptedConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9D612D188F0B1300C9AC64 /* OMBOffersAcceptedConnection.m */; };
 		AB9D6137188F495A00C9AC64 /* OMBOfferDecisionConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9D6136188F495A00C9AC64 /* OMBOfferDecisionConnection.m */; };
 		AB9FEEEF18CE726900E25FE2 /* OMBRenterInfoSectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEEE18CE726900E25FE2 /* OMBRenterInfoSectionViewController.m */; };
+		AB9FEEF218CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEF118CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.m */; };
+		AB9FEEF518CFA17400E25FE2 /* OMBRenterInfoAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEF418CFA17400E25FE2 /* OMBRenterInfoAddViewController.m */; };
 		ABA080831868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */; };
 		ABA080861868E76200C7B851 /* OMBTextViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080851868E76200C7B851 /* OMBTextViewViewController.m */; };
 		ABA0808C1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA0808B1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m */; };
@@ -893,6 +895,10 @@
 		AB9D6136188F495A00C9AC64 /* OMBOfferDecisionConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBOfferDecisionConnection.m; sourceTree = "<group>"; };
 		AB9FEEED18CE726900E25FE2 /* OMBRenterInfoSectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoSectionViewController.h; sourceTree = "<group>"; };
 		AB9FEEEE18CE726900E25FE2 /* OMBRenterInfoSectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionViewController.m; sourceTree = "<group>"; };
+		AB9FEEF018CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoSectionCosignersViewController.h; sourceTree = "<group>"; };
+		AB9FEEF118CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionCosignersViewController.m; sourceTree = "<group>"; };
+		AB9FEEF318CFA17400E25FE2 /* OMBRenterInfoAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddViewController.h; sourceTree = "<group>"; };
+		AB9FEEF418CFA17400E25FE2 /* OMBRenterInfoAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoAddViewController.m; sourceTree = "<group>"; };
 		ABA080811868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceConfirmDetailsBuyerCell.h; sourceTree = "<group>"; };
 		ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceConfirmDetailsBuyerCell.m; sourceTree = "<group>"; };
 		ABA080841868E76200C7B851 /* OMBTextViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTextViewViewController.h; sourceTree = "<group>"; };
@@ -2318,16 +2324,13 @@
 		ABB3C5711811775300DD91C9 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				ABB9117118982ACF0046611F /* Users */,
-				ABE4FBEB189045E40009D643 /* Payout Methods */,
+				AB70CB65186CB8C90083DF4C /* Account */,
+				AB70CB72186CD1630083DF4C /* Create Listing */,
+				ABABEC461864D547008B6768 /* Discover */,
 				ABB7005D187B58C0005F0730 /* Homebase Landlord */,
 				ABB70064187B58C0005F0730 /* Homebase Renter */,
-				AB70CB77186CD1E00083DF4C /* Manage Listings */,
-				AB70CB72186CD1630083DF4C /* Create Listing */,
-				AB70CB65186CB8C90083DF4C /* Account */,
 				ABE2816D186A063A00A5D14E /* Inbox */,
-				ABDF17471866392E004E2755 /* Residences */,
-				ABABEC461864D547008B6768 /* Discover */,
+				AB70CB77186CD1E00083DF4C /* Manage Listings */,
 				AB9545741848FB58000513BE /* OMBAccountProfileViewController.h */,
 				AB9545751848FB58000513BE /* OMBAccountProfileViewController.m */,
 				AB95456E1848E5EB000513BE /* OMBAccountViewController.h */,
@@ -2348,12 +2351,20 @@
 				AB026BD21822EFBC00E72F53 /* OMBFavoritesListViewController.m */,
 				AB6155AD184D9A0A00A193C7 /* OMBGeneralInformationViewController.h */,
 				AB6155AE184D9A0A00A193C7 /* OMBGeneralInformationViewController.m */,
+				AB3396F018AD4D6B00F49064 /* OMBInformationHowItWorksViewController.h */,
+				AB3396F118AD4D6B00F49064 /* OMBInformationHowItWorksViewController.m */,
+				AB8642B718AB43B500995571 /* OMBInformationStepsViewController.h */,
+				AB8642B818AB43B500995571 /* OMBInformationStepsViewController.m */,
+				AB756AAB185A16D0001AF572 /* OMBIntroStillImagesViewController.h */,
+				AB756AAC185A16D0001AF572 /* OMBIntroStillImagesViewController.m */,
 				AB1D4A7E182C35B800FF4F23 /* OMBIntroViewController.h */,
 				AB1D4A7F182C35B800FF4F23 /* OMBIntroViewController.m */,
 				AB6155B0184D9A2100A193C7 /* OMBLegalViewController.h */,
 				AB6155B1184D9A2100A193C7 /* OMBLegalViewController.m */,
 				AB63D2151821ABF500D63800 /* OMBLoginViewController.h */,
 				AB63D2161821ABF500D63800 /* OMBLoginViewController.m */,
+				ABED5FED189705EC00AD630C /* OMBMapViewViewController.h */,
+				ABED5FEE189705ED00AD630C /* OMBMapViewViewController.m */,
 				AB4F9D1C181AAAED0086D618 /* OMBMenuViewController.h */,
 				AB4F9D1D181AAAED0086D618 /* OMBMenuViewController.m */,
 				ABB3C583181178AE00DD91C9 /* OMBNavigationController.h */,
@@ -2374,22 +2385,17 @@
 				ABB3C5811811789100DD91C9 /* OMBTabBarController.m */,
 				AB9545711848E6C1000513BE /* OMBTableViewController.h */,
 				AB9545721848E6C1000513BE /* OMBTableViewController.m */,
+				ABA080841868E76200C7B851 /* OMBTextViewViewController.h */,
+				ABA080851868E76200C7B851 /* OMBTextViewViewController.m */,
 				ABB3C5721811776700DD91C9 /* OMBViewController.h */,
 				ABB3C5731811776700DD91C9 /* OMBViewController.m */,
 				ABB06AE218453640009CBBEA /* OMBViewControllerContainer.h */,
 				ABB06AE318453640009CBBEA /* OMBViewControllerContainer.m */,
 				ABA5B4201857900F00F825E1 /* OMBWebViewController.h */,
 				ABA5B4211857900F00F825E1 /* OMBWebViewController.m */,
-				AB756AAB185A16D0001AF572 /* OMBIntroStillImagesViewController.h */,
-				AB756AAC185A16D0001AF572 /* OMBIntroStillImagesViewController.m */,
-				ABA080841868E76200C7B851 /* OMBTextViewViewController.h */,
-				ABA080851868E76200C7B851 /* OMBTextViewViewController.m */,
-				ABED5FED189705EC00AD630C /* OMBMapViewViewController.h */,
-				ABED5FEE189705ED00AD630C /* OMBMapViewViewController.m */,
-				AB8642B718AB43B500995571 /* OMBInformationStepsViewController.h */,
-				AB8642B818AB43B500995571 /* OMBInformationStepsViewController.m */,
-				AB3396F018AD4D6B00F49064 /* OMBInformationHowItWorksViewController.h */,
-				AB3396F118AD4D6B00F49064 /* OMBInformationHowItWorksViewController.m */,
+				ABE4FBEB189045E40009D643 /* Payout Methods */,
+				ABDF17471866392E004E2755 /* Residences */,
+				ABB9117118982ACF0046611F /* Users */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2507,18 +2513,22 @@
 		ABB9117118982ACF0046611F /* Users */ = {
 			isa = PBXGroup;
 			children = (
-				ABB9117218982B330046611F /* OMBRenterProfileViewController.h */,
-				ABB9117318982B330046611F /* OMBRenterProfileViewController.m */,
-				ABB91180189865880046611F /* OMBEditProfileViewController.h */,
-				ABB91181189865880046611F /* OMBEditProfileViewController.m */,
 				ABB9118918994F980046611F /* OMBBecomeVerifiedViewController.h */,
 				ABB9118A18994F980046611F /* OMBBecomeVerifiedViewController.m */,
-				ABA3D69618A92EF1006CE8C1 /* OMBOtherUserProfileViewController.h */,
-				ABA3D69718A92EF1006CE8C1 /* OMBOtherUserProfileViewController.m */,
+				ABB91180189865880046611F /* OMBEditProfileViewController.h */,
+				ABB91181189865880046611F /* OMBEditProfileViewController.m */,
 				AB33970B18AE91D000F49064 /* OMBMyRenterProfileViewController.h */,
 				AB33970C18AE91D000F49064 /* OMBMyRenterProfileViewController.m */,
+				ABA3D69618A92EF1006CE8C1 /* OMBOtherUserProfileViewController.h */,
+				ABA3D69718A92EF1006CE8C1 /* OMBOtherUserProfileViewController.m */,
 				AB9FEEED18CE726900E25FE2 /* OMBRenterInfoSectionViewController.h */,
 				AB9FEEEE18CE726900E25FE2 /* OMBRenterInfoSectionViewController.m */,
+				ABB9117218982B330046611F /* OMBRenterProfileViewController.h */,
+				ABB9117318982B330046611F /* OMBRenterProfileViewController.m */,
+				AB9FEEF018CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.h */,
+				AB9FEEF118CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.m */,
+				AB9FEEF318CFA17400E25FE2 /* OMBRenterInfoAddViewController.h */,
+				AB9FEEF418CFA17400E25FE2 /* OMBRenterInfoAddViewController.m */,
 			);
 			path = Users;
 			sourceTree = "<group>";
@@ -3089,6 +3099,7 @@
 				AB01ED371857D96800333390 /* OMBLegalQuestionStore.m in Sources */,
 				DE95E8D618A03B5500A2A341 /* MNCalendarViewDayCell.m in Sources */,
 				AB9FEEEF18CE726900E25FE2 /* OMBRenterInfoSectionViewController.m in Sources */,
+				AB9FEEF218CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.m in Sources */,
 				AB3396F818AD4F3100F49064 /* OMBCollectionViewFlowLayout.m in Sources */,
 				DE93BE2B18B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.m in Sources */,
 				ABA4F207187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m in Sources */,
@@ -3290,6 +3301,7 @@
 				ABBA58961870C59700E9BF4E /* ELCAssetCell.m in Sources */,
 				AB9D6114188CEFDE00C9AC64 /* SDWebImageDownloaderOperation.m in Sources */,
 				ABB06ADE18446773009CBBEA /* OMBGetStartedView.m in Sources */,
+				AB9FEEF518CFA17400E25FE2 /* OMBRenterInfoAddViewController.m in Sources */,
 				ABED5FE21896E8CE00AD630C /* UIImage+BoxBlur.m in Sources */,
 				ABBA58BE1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m in Sources */,
 				ABB9119418996E2E0046611F /* OMBButtonWithImage.m in Sources */,

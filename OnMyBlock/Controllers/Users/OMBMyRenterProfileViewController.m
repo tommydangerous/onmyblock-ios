@@ -19,6 +19,8 @@
 #import "OMBOtherUserProfileViewController.h"
 #import "OMBPickerViewCell.h"
 #import "OMBRenterApplication.h"
+#import "OMBRenterInfoSectionCosignersViewController.h"
+#import "OMBRenterInfoSectionViewController.h"
 #import "OMBRenterProfileUserInfoCell.h"
 #import "OMBTwoLabelTextFieldCell.h"
 #import "OMBViewControllerContainer.h"
@@ -263,14 +265,6 @@
   }];
 
   [self updateData];
-
-  // If user is the landlord
-  if ([user isLandlord]) {
-    self.title = @"My Profile";
-  }
-  else {
-    self.title = @"My Renter Profile";
-  }
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -660,22 +654,26 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Renter info
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
+    OMBRenterInfoSectionViewController *vc;
     // Co-applicants
     if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
-
+      vc = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
     }
     // Co-signers
     else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
-      
+      vc = [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser: 
+        user];
     }
     // Rental History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
-      
+      vc = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
     }
     // Work History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
-      
+      vc = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
     }
+    if (vc)
+      [self.navigationController pushViewController: vc animated: YES];
   }
 
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
