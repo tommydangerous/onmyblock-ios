@@ -22,6 +22,7 @@
 @class OMBPayoutMethodsViewController;
 @class OMBRenterApplicationViewController;
 @class OMBRenterProfileViewController;
+@class OMBTopDetailView;
 @class OMBUserMenu;
 
 @interface OMBViewControllerContainer : OMBViewController
@@ -50,7 +51,8 @@
   UIButton *signUpButton;
   // Bottom right button
   // Logged in
-  UIButton *accountButton;
+  //UIButton *accountButton;
+  UIButton *topDetailButton;
 
   // Values used when hiding and showing the menu
   float buttonSpeedFactor;
@@ -80,6 +82,7 @@
 }
 
 @property (nonatomic, strong) OMBCenteredImageView *accountView;
+@property (nonatomic, strong) OMBTopDetailView *topDetailView;
 //@property (nonatomic, strong) OMBBlurView *backgroundBlurView;
 @property (nonatomic, strong) UIViewController *currentDetailViewController;
 @property (nonatomic, strong) UIView *detailView;
