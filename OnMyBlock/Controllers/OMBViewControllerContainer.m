@@ -35,6 +35,7 @@
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBRenterProfileViewController.h"
+#import "OMBTopDetailView.h"
 #import "OMBUserMenu.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
@@ -369,7 +370,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   _infiniteScroll.delegate = self;
   // 100 is the renter menu header label size
   _infiniteScroll.frame = CGRectMake(0, 0, _menuScroll.frame.size.width,
-    _menuScroll.frame.size.height - 100);
+    _menuScroll.frame.size.height - 135);
   _infiniteScroll.pagingEnabled = YES;
   _infiniteScroll.panGestureRecognizer.maximumNumberOfTouches = 1;
   _infiniteScroll.showsVerticalScrollIndicator = NO;
@@ -577,14 +578,24 @@ CGFloat kBackgroundMaxScale = 5.0f;
   _accountView.layer.borderWidth = 1.0;  
   _accountView.layer.cornerRadius = accountImageSize * 0.5f;
   // Button
-  accountButton = [[UIButton alloc] init];
+  /*accountButton = [[UIButton alloc] init];
   accountButton.frame = CGRectMake(0, 0, _accountView.frame.size.width,
     _accountView.frame.size.height);
   [accountButton addTarget: self action: @selector(showAccount)
     forControlEvents: UIControlEventTouchUpInside];
-  [_accountView addSubview: accountButton];
+  [_accountView addSubview: accountButton];*/
   _accountView.transform = CGAffineTransformMakeScale(0, 0);
 
+  
+  // Top detail view
+  CGRect topDetailViewRect = CGRectMake(0.0f, 0.0f,
+    screenWidth, 64.f);
+  _topDetailView = [[OMBTopDetailView alloc]
+    initWithFrame: topDetailViewRect];
+  _topDetailView.hidden = YES;
+  [_topDetailView.account addTarget: self action: @selector(showAccount)
+    forControlEvents: UIControlEventTouchUpInside];
+  [self.view addSubview: _topDetailView];
   // Activity view
   activityView = [[OMBActivityView alloc] init];
   // [_detailView addSubview: activityView];
@@ -838,6 +849,11 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
       _accountView.alpha     = percentComplete;
       _accountView.transform = CGAffineTransformMakeScale(percentComplete,
         percentComplete);
+      
+      // Animate the top detail view
+      CGRect topDetailFrame = _topDetailView.frame;
+      topDetailFrame.origin.y =  topDetailFrame.size.height * (percentComplete - 1.f);
+      _topDetailView.frame = topDetailFrame;
     }
 
     lastPointX = currentPointX;
@@ -888,10 +904,16 @@ completion: (void (^) (void)) block
     backgroundView.transform = CGAffineTransformScale(
       CGAffineTransformIdentity, kBackgroundMaxScale, kBackgroundMaxScale);
     // blurView.transform = CGAffineTransformMakeScale(2, 2);
-
+    
     // Hide the account image view
     _accountView.alpha     = 0.0;
     _accountView.transform = CGAffineTransformMakeScale(0, 0);
+    
+    // Hide the top detail view
+    CGRect topDetailFrame = _topDetailView.frame;
+    topDetailFrame.origin.y = -topDetailFrame.size.height;
+    _topDetailView.frame = topDetailFrame;
+    
   } completion: ^(BOOL finished) {
     if (block)
       block();
@@ -964,6 +986,8 @@ completion: (void (^) (void)) block
   [[OMBUser currentUser] logout];
   // Remove the account view
   [_accountView removeFromSuperview];
+  // Update Top detail view
+  _topDetailView.hidden = YES;
   // Adjust the intro view
   [self.introViewController setupForLoggedOutUser];
   // [self showIntroAnimatedDissolve: YES];
@@ -1106,7 +1130,7 @@ completion: (void (^) (void)) block
 
 -(void) setTitleColorWhite
 {
-  _accountView.layer.borderColor = [UIColor whiteColor].CGColor;
+  //_accountView.layer.borderColor = [UIColor whiteColor].CGColor;
   for (OMBUserMenu *m in userMenuArray) {
     for (UIButton *button in m.currentButtons) {
       [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
@@ -1152,8 +1176,11 @@ completion: (void (^) (void)) block
 - (void) setupForLoggedInUser
 {
   // Add the account view
-  [self.view addSubview: _accountView];
-
+  //[self.view addSubview: _accountView];
+  
+  // Show top detail view
+  _topDetailView.hidden = NO;
+  
   // Show the buttons for users who are logged in
   // [self showLoggedInButtons];
   // Adjust the menu scroll content inset and content size
@@ -1211,7 +1238,9 @@ completion: (void (^) (void)) block
         image = [UIImage imageNamed: 
           @"default_user_image.png"];
       }
-      [_accountView setImage: image]; 
+      //[_accountView setImage: image];
+      [_topDetailView setImage: image];
+      [_topDetailView setName:[OMBUser currentUser].fullName];
     }
   ];
 
@@ -1230,7 +1259,7 @@ completion: (void (^) (void)) block
 - (void) showAccount
 {
   [self setTitleColorWhite];
-  _accountView.layer.borderColor = [UIColor blue].CGColor;
+  //_accountView.layer.borderColor = [UIColor blue].CGColor;
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: self.accountNavigationController];
 }
@@ -1411,10 +1440,14 @@ completion: (void (^) (void)) block
     // Zoom into the background image view
     backgroundView.transform = CGAffineTransformIdentity;
     // blurView.transform = CGAffineTransformMakeScale(1, 1);
-
-    // Hide the account image view
+    
+    // Show the account image view
     _accountView.alpha     = 1.0;
     _accountView.transform = CGAffineTransformMakeScale(1, 1);
+    // Show the top detail view
+    CGRect topDetailFrame = _topDetailView.frame;
+    topDetailFrame.origin.y =  0.0f;
+    _topDetailView.frame = topDetailFrame;
   } completion: ^(BOOL finished) {
     // Add detail view overlay to the detail view
     [_detailView addSubview: _detailViewOverlay];
@@ -1584,7 +1617,9 @@ completion: (void (^) (void)) block
 
 - (void) updateAccountView
 {
-  [_accountView setImage: [OMBUser currentUser].image];
+  //[_accountView setImage: [OMBUser currentUser].image];
+  [_topDetailView setImage: [OMBUser currentUser].image];
+  [_topDetailView setName: [OMBUser currentUser].fullName];
 }
 
 - (void) updateLandlordType: (NSNotification *) notification

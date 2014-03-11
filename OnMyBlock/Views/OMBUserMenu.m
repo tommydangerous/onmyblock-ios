@@ -51,7 +51,12 @@
   float imageSize = 22;
   float leftPad   = 25;
   // CGFloat buttonHeight = 10.0f + 40.0f + 10.0f;
-  CGFloat buttonHeight = OMBStandardButtonHeight;
+  CGFloat buttonHeight;
+  if([[UIScreen mainScreen] bounds].size.height >= 568)
+    buttonHeight = OMBStandardButtonHeight;
+  else
+    buttonHeight = 47.f;
+  
   CGFloat padding = OMBPadding;
 
   // Button
@@ -59,7 +64,7 @@
   _headerButton.contentEdgeInsets = UIEdgeInsetsMake(0, leftPad, 0, 0);
   _headerButton.contentHorizontalAlignment =
     UIControlContentHorizontalAlignmentLeft;
-  _headerButton.frame = CGRectMake(0, 0, rect.size.width, 100);
+  _headerButton.frame = CGRectMake(0, 35, rect.size.width, 100);
   // _headerButton.titleLabel.font = [UIFont fontWithName: 
   //   @"HelveticaNeue-Light" size: 27];
   _headerButton.titleLabel.font = [UIFont mediumLargeTextFont];
@@ -270,7 +275,7 @@
     label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
     label.frame = CGRectMake(
       discoverImageView.frame.origin.x - (padding * 0.5f), 
-        discoverImageView.frame.origin.y - (padding * 0.5f), 
+        discoverImageView.frame.origin.y - (padding * 0.5f),
           padding, padding);
     label.hidden = YES;
     label.layer.cornerRadius = label.frame.size.height * 0.5f;
