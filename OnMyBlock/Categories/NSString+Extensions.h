@@ -23,7 +23,7 @@
 + (NSString *) timeRemainingShortFormatWithInterval: (NSTimeInterval) interval;
 
 #pragma mark - Instance Methods
-
+- (BOOL) containsString:(NSString *)string options:(NSStringCompareOptions)options;
 - (NSAttributedString *) attributedStringWithFont: (UIFont *) font
 lineHeight: (CGFloat) lineHeight;
 - (NSAttributedString *) attributedStringWithString: (NSString *) string 

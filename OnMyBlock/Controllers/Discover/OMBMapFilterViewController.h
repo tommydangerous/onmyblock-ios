@@ -10,14 +10,18 @@
 
 @class OMBNeighborhood;
 @class AMBlurView;
+@class TextFieldPadding;
+
 @interface OMBMapFilterViewController : OMBTableViewController
 <CLLocationManagerDelegate, UIPickerViewDataSource, UIPickerViewDelegate,
-  UIScrollViewDelegate>
+  UIScrollViewDelegate, UITextFieldDelegate>
 {
   UIPickerView *availabilityPickerView;
   NSCalendar *calendar;
   UIButton *currentLocationButton;
   UIView *fadedBackground;
+  TextFieldPadding *filterTextField;
+  UIImageView *filterImageView;
   BOOL isEditing;
   CLLocationManager *locationManager;
   NSMutableDictionary *moveInDates;
@@ -29,6 +33,7 @@
   UIView *pickerViewContainer;
   UIBarButtonItem *searchBarButtonItem;
   OMBNeighborhood *selectedNeighborhood;
+  NSDictionary *temporaryNeighborhoods;
 }
 
 @property (nonatomic) BOOL shouldSearch;
