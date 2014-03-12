@@ -50,7 +50,9 @@
   [super viewWillAppear: animated];
 
   [[self renterApplication] fetchCosignersForUserUID: [OMBUser currentUser].uid 
-    delegate: self completion: nil];
+    delegate: self completion: ^(NSError *error) {
+      [self hideEmptyLabel: [[self cosigners] count]];
+    }];
 
   [self reloadTable];
 }
@@ -84,6 +86,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (row == [self tableView: tableView numberOfRowsInSection: section] - 1) {
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
       0.0f, 0.0f);
+  }
+  else {
+    cell.separatorInset = tableView.separatorInset;
   }
   return cell;
 }
@@ -124,18 +129,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   OMBCosigner *cosigner = [[self cosigners] objectAtIndex: indexPath.row];
   [[self renterApplication] deleteCosignerConnection: cosigner delegate: nil
     completion: nil];
-  
+
   [self.table beginUpdates];
   [[self renterApplication] removeCosigner: cosigner];
   [self.table deleteRowsAtIndexPaths: @[indexPath]
     withRowAnimation: UITableViewRowAnimationFade];
   [self.table endUpdates];
+  
   [self hideEmptyLabel: [[self cosigners] count]];
 }
 
 - (void) reloadTable
 {
-  [self hideEmptyLabel: [[self cosigners] count]];
   [self.table reloadData];
 }
 

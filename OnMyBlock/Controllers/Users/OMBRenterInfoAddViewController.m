@@ -155,6 +155,7 @@
       [modelObject setValue: [valueDictionary objectForKey: key] forKey: key];
     }
   }
+  [self.view endEditing: YES];
 }
   
 @end
