@@ -9,11 +9,21 @@
 #import "OMBRenterApplication.h"
 
 #import "OMBCosigner.h"
+#import "OMBCosignerCreateConnection.h"
+#import "OMBCosignerListConnection.h"
+#import "OMBDeleteConnection.h"
 #import "OMBEmployment.h"
 #import "OMBLegalAnswer.h"
 #import "OMBLegalQuestion.h"
 #import "OMBPreviousRental.h"
 #import "OMBRenterApplicationUpdateConnection.h"
+
+@interface OMBRenterApplication ()
+{
+  NSMutableDictionary *cosigners;
+}
+
+@end
 
 @implementation OMBRenterApplication
 
@@ -25,12 +35,13 @@
 
   _cats      = NO;
   _coapplicantCount = 0;
-  _cosigners = [NSMutableArray array];
   _dogs      = NO;
   _employments     = [NSMutableArray array];
   _hasCosigner = NO;
   _legalAnswers    = [NSMutableDictionary dictionary];
   _previousRentals = [NSMutableArray array];
+
+  cosigners = [NSMutableDictionary dictionary];
 
   return self;
 }
@@ -41,12 +52,8 @@
 
 - (void) addCosigner: (OMBCosigner *) cosigner
 {
-  NSPredicate *predicate = [NSPredicate predicateWithFormat:
-    @"(%K == %@) AND (%K == %@)", 
-      @"firstName", cosigner.firstName, @"lastName", cosigner.lastName];
-  NSArray *array = [_cosigners filteredArrayUsingPredicate: predicate];
-  if ([array count] == 0)
-    [_cosigners addObject: cosigner];
+  [cosigners setObject: cosigner forKey: 
+    [NSNumber numberWithInt: cosigner.uid]];
 }
 
 - (void) addEmployment: (OMBEmployment *) employment
@@ -87,7 +94,27 @@
 {
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"firstName"
     ascending: YES];
-  return [_cosigners sortedArrayUsingDescriptors: @[sort]];
+  return [[cosigners allValues] sortedArrayUsingDescriptors: @[sort]];
+}
+
+- (void) createCosignerConnection: (OMBCosigner *) cosigner
+delegate: (id) delegate completion: (void (^) (NSError *error)) block
+{
+  OMBCosignerCreateConnection *conn =
+    [[OMBCosignerCreateConnection alloc] initWithCosigner: cosigner];
+  conn.completionBlock = block;
+  conn.delegate        = delegate;
+  [conn start]; 
+}
+
+- (void) deleteCosignerConnection: (OMBCosigner *) cosigner
+delegate: (id) delegate completion: (void (^) (NSError *error)) block
+{
+  OMBDeleteConnection *conn = [[OMBDeleteConnection alloc] initWithModelString:
+    @"cosigners" UID: cosigner.uid];
+  conn.completionBlock = block;
+  conn.delegate = delegate;
+  [conn start];
 }
 
 - (NSArray *) employmentsSortedByStartDate
@@ -97,11 +124,40 @@
   return [_employments sortedArrayUsingDescriptors: @[sort]];
 }
 
+- (void) fetchCosignersForUserUID: (NSUInteger) userUID delegate: (id) delegate
+completion: (void (^) (NSError *error)) block
+{
+  OMBCosignerListConnection *conn = 
+    [[OMBCosignerListConnection alloc] initWithUserUID: userUID];
+  conn.completionBlock = block;
+  conn.delegate        = delegate;
+  [conn start];
+}
+
 - (OMBLegalAnswer *) legalAnswerForLegalQuestion: 
 (OMBLegalQuestion *) legalQuestion
 {
   return [_legalAnswers objectForKey: 
     [NSNumber numberWithInt: legalQuestion.uid]];
+}
+
+- (void) readFromCosignerDictionary: (NSDictionary *) dictionary
+{
+  NSMutableSet *newSet = [NSMutableSet set];
+  for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
+    OMBCosigner *cosigner = [[OMBCosigner alloc] init];
+    [cosigner readFromDictionary: dict];
+    [self addCosigner: cosigner];
+
+    [newSet addObject: [NSNumber numberWithInt: cosigner.uid]];
+  }
+  // Remove objects no longer suppose to be there
+  NSMutableSet *oldSet = [NSMutableSet setWithArray: 
+    [[cosigners allValues] valueForKey: @"uid"]];
+  [oldSet minusSet: newSet];
+  for (NSNumber *number in [oldSet allObjects]) {
+    [cosigners removeObjectForKey: number];
+  }
 }
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
@@ -137,10 +193,16 @@
 {
   _cats = NO;
   _dogs = NO;
-  [_cosigners removeAllObjects];
   [_employments removeAllObjects];
   [_legalAnswers removeAllObjects];
   [_previousRentals removeAllObjects];
+
+  [cosigners removeAllObjects];
+}
+
+- (void) removeCosigner: (OMBCosigner *) cosigner
+{
+  [cosigners removeObjectForKey: [NSNumber numberWithInt: cosigner.uid]];
 }
 
 - (void) updateWithDictionary: (NSDictionary *) dictionary

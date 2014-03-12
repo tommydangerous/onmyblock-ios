@@ -69,8 +69,6 @@
 		AB1C2175185145A800ED7C06 /* OMBCosignerAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1C2174185145A800ED7C06 /* OMBCosignerAddViewController.m */; };
 		AB1C2178185168A300ED7C06 /* OMBCosignerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1C2177185168A300ED7C06 /* OMBCosignerCell.m */; };
 		AB1C217B18516D7F00ED7C06 /* NSString+PhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1C217A18516D7F00ED7C06 /* NSString+PhoneNumber.m */; };
-		AB1C217E18518C8000ED7C06 /* OMBCosignerCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1C217D18518C8000ED7C06 /* OMBCosignerCreateConnection.m */; };
-		AB1C218118518FD600ED7C06 /* OMBCosignerListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1C218018518FD600ED7C06 /* OMBCosignerListConnection.m */; };
 		AB1D4A80182C35B800FF4F23 /* OMBIntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1D4A7F182C35B800FF4F23 /* OMBIntroViewController.m */; };
 		AB1D4A89182C486500FF4F23 /* OMBWelcomeView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1D4A88182C486500FF4F23 /* OMBWelcomeView.m */; };
 		AB2613111818EC800053A8AA /* OMBResidenceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2613101818EC800053A8AA /* OMBResidenceCell.m */; };
@@ -232,6 +230,10 @@
 		AB9FEEF218CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEF118CF9F4400E25FE2 /* OMBRenterInfoSectionCosignersViewController.m */; };
 		AB9FEEF518CFA17400E25FE2 /* OMBRenterInfoAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEF418CFA17400E25FE2 /* OMBRenterInfoAddViewController.m */; };
 		AB9FEEF818CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEF718CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m */; };
+		AB9FEEFB18D0171400E25FE2 /* OMBLabelSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEFA18D0171400E25FE2 /* OMBLabelSwitchCell.m */; };
+		AB9FEF0118D02D3800E25FE2 /* OMBCosignerCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEEFE18D02D3800E25FE2 /* OMBCosignerCreateConnection.m */; };
+		AB9FEF0218D02D3800E25FE2 /* OMBCosignerListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEF0018D02D3800E25FE2 /* OMBCosignerListConnection.m */; };
+		AB9FEF0818D0B3E800E25FE2 /* OMBDeleteConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9FEF0718D0B3E800E25FE2 /* OMBDeleteConnection.m */; };
 		ABA080831868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */; };
 		ABA080861868E76200C7B851 /* OMBTextViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA080851868E76200C7B851 /* OMBTextViewViewController.m */; };
 		ABA0808C1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA0808B1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m */; };
@@ -597,10 +599,6 @@
 		AB1C2177185168A300ED7C06 /* OMBCosignerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCosignerCell.m; sourceTree = "<group>"; };
 		AB1C217918516D7F00ED7C06 /* NSString+PhoneNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PhoneNumber.h"; sourceTree = "<group>"; };
 		AB1C217A18516D7F00ED7C06 /* NSString+PhoneNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PhoneNumber.m"; sourceTree = "<group>"; };
-		AB1C217C18518C8000ED7C06 /* OMBCosignerCreateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCosignerCreateConnection.h; sourceTree = "<group>"; };
-		AB1C217D18518C8000ED7C06 /* OMBCosignerCreateConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCosignerCreateConnection.m; sourceTree = "<group>"; };
-		AB1C217F18518FD600ED7C06 /* OMBCosignerListConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCosignerListConnection.h; sourceTree = "<group>"; };
-		AB1C218018518FD600ED7C06 /* OMBCosignerListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCosignerListConnection.m; sourceTree = "<group>"; };
 		AB1D4A7E182C35B800FF4F23 /* OMBIntroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBIntroViewController.h; sourceTree = "<group>"; };
 		AB1D4A7F182C35B800FF4F23 /* OMBIntroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBIntroViewController.m; sourceTree = "<group>"; };
 		AB1D4A87182C486500FF4F23 /* OMBWelcomeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBWelcomeView.h; sourceTree = "<group>"; };
@@ -903,6 +901,14 @@
 		AB9FEEF418CFA17400E25FE2 /* OMBRenterInfoAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoAddViewController.m; sourceTree = "<group>"; };
 		AB9FEEF618CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddCosignerViewController.h; sourceTree = "<group>"; };
 		AB9FEEF718CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoAddCosignerViewController.m; sourceTree = "<group>"; };
+		AB9FEEF918D0171400E25FE2 /* OMBLabelSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLabelSwitchCell.h; sourceTree = "<group>"; };
+		AB9FEEFA18D0171400E25FE2 /* OMBLabelSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBLabelSwitchCell.m; sourceTree = "<group>"; };
+		AB9FEEFD18D02D3800E25FE2 /* OMBCosignerCreateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCosignerCreateConnection.h; sourceTree = "<group>"; };
+		AB9FEEFE18D02D3800E25FE2 /* OMBCosignerCreateConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCosignerCreateConnection.m; sourceTree = "<group>"; };
+		AB9FEEFF18D02D3800E25FE2 /* OMBCosignerListConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCosignerListConnection.h; sourceTree = "<group>"; };
+		AB9FEF0018D02D3800E25FE2 /* OMBCosignerListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCosignerListConnection.m; sourceTree = "<group>"; };
+		AB9FEF0618D0B3E800E25FE2 /* OMBDeleteConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBDeleteConnection.h; sourceTree = "<group>"; };
+		AB9FEF0718D0B3E800E25FE2 /* OMBDeleteConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBDeleteConnection.m; sourceTree = "<group>"; };
 		ABA080811868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceConfirmDetailsBuyerCell.h; sourceTree = "<group>"; };
 		ABA080821868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceConfirmDetailsBuyerCell.m; sourceTree = "<group>"; };
 		ABA080841868E76200C7B851 /* OMBTextViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTextViewViewController.h; sourceTree = "<group>"; };
@@ -1924,6 +1930,8 @@
 				DE93BE2A18B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.m */,
 				DE9FF67218CF6A500017AA15 /* OMBTopDetailView.h */,
 				DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */,
+				AB9FEEF918D0171400E25FE2 /* OMBLabelSwitchCell.h */,
+				AB9FEEFA18D0171400E25FE2 /* OMBLabelSwitchCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2063,6 +2071,7 @@
 		AB9B264A1811CE5E00E6DAC4 /* Connections */ = {
 			isa = PBXGroup;
 			children = (
+				AB9FEEFC18D02D3800E25FE2 /* Cosigners */,
 				AB00B9C918BD64C60050D6F4 /* Conversations */,
 				ABB911C8189998630046611F /* Authentications */,
 				ABB9114F18971C690046611F /* Users */,
@@ -2078,10 +2087,6 @@
 				AB9B264C1811CE6D00E6DAC4 /* OMBConnection.m */,
 				AB63D20F1821774000D63800 /* OMBContactResidenceLandlordConnection.h */,
 				AB63D2101821774000D63800 /* OMBContactResidenceLandlordConnection.m */,
-				AB1C217C18518C8000ED7C06 /* OMBCosignerCreateConnection.h */,
-				AB1C217D18518C8000ED7C06 /* OMBCosignerCreateConnection.m */,
-				AB1C217F18518FD600ED7C06 /* OMBCosignerListConnection.h */,
-				AB1C218018518FD600ED7C06 /* OMBCosignerListConnection.m */,
 				ABA5B4141856922600F825E1 /* OMBDeleteRenterApplicationSectionModelConnection.h */,
 				ABA5B4151856922600F825E1 /* OMBDeleteRenterApplicationSectionModelConnection.m */,
 				ABBB18C9182408DB00211499 /* OMBFavoriteResidenceConnection.h */,
@@ -2122,6 +2127,8 @@
 				AB756AC8185A3ADE001AF572 /* OMBPayPalVerifyMobilePaymentConnection.m */,
 				ABABEBF318625DFA008B6768 /* OMBAuthenticationVenmoConnection.h */,
 				ABABEBF418625DFA008B6768 /* OMBAuthenticationVenmoConnection.m */,
+				AB9FEF0618D0B3E800E25FE2 /* OMBDeleteConnection.h */,
+				AB9FEF0718D0B3E800E25FE2 /* OMBDeleteConnection.m */,
 			);
 			path = Connections;
 			sourceTree = "<group>";
@@ -2181,6 +2188,17 @@
 				AB3396EE18ACA69C00F49064 /* OMBOfferVerifyVenmoConnection.m */,
 			);
 			path = Offers;
+			sourceTree = "<group>";
+		};
+		AB9FEEFC18D02D3800E25FE2 /* Cosigners */ = {
+			isa = PBXGroup;
+			children = (
+				AB9FEEFD18D02D3800E25FE2 /* OMBCosignerCreateConnection.h */,
+				AB9FEEFE18D02D3800E25FE2 /* OMBCosignerCreateConnection.m */,
+				AB9FEEFF18D02D3800E25FE2 /* OMBCosignerListConnection.h */,
+				AB9FEF0018D02D3800E25FE2 /* OMBCosignerListConnection.m */,
+			);
+			path = Cosigners;
 			sourceTree = "<group>";
 		};
 		ABA4F204187CF01600D725D4 /* Google */ = {
@@ -3039,8 +3057,8 @@
 				ABED5FE01896E8CE00AD630C /* UIImage+BoxBlur.m in Sources */,
 				AB6CCE4618933BF6000ED5CE /* OMBConfirmedTenantsConnection.m in Sources */,
 				ABA4F217187DDF8D00D725D4 /* OMBResidenceUploadImageConnection.m in Sources */,
-				AB1C218118518FD600ED7C06 /* OMBCosignerListConnection.m in Sources */,
 				AB9B264D1811CE6D00E6DAC4 /* OMBConnection.m in Sources */,
+				AB9FEEFB18D0171400E25FE2 /* OMBLabelSwitchCell.m in Sources */,
 				ABBA58BB1875A49200E9BF4E /* OMBStandardLeaseViewController.m in Sources */,
 				ABB911C218998FB30046611F /* AFSecurityPolicy.m in Sources */,
 				ABE679B818932A3100A494FB /* NSString+UAObfuscatedString.m in Sources */,
@@ -3083,7 +3101,6 @@
 				AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */,
 				AB9D611B188CEFDE00C9AC64 /* UIImageView+WebCache.m in Sources */,
 				AB5DD32C18CE011500237AFC /* OMBAmenityStore.m in Sources */,
-				AB1C217E18518C8000ED7C06 /* OMBCosignerCreateConnection.m in Sources */,
 				AB9D611A188CEFDE00C9AC64 /* UIImage+WebP.m in Sources */,
 				ABBA58981870C59700E9BF4E /* ELCImagePickerController.m in Sources */,
 				ABB70079187BA9B9005F0730 /* OMBHomebaseRenterPaymentNotificationCell.m in Sources */,
@@ -3101,6 +3118,7 @@
 				AB4ED2D4188222C8009AFB01 /* OMBResidenceImageUpdateConnection.m in Sources */,
 				AB9545731848E6C1000513BE /* OMBTableViewController.m in Sources */,
 				ABB70080187BD5C4005F0730 /* OMBHomebaseRenterRentDepositInfoViewController.m in Sources */,
+				AB9FEF0818D0B3E800E25FE2 /* OMBDeleteConnection.m in Sources */,
 				ABB9115218971CB00046611F /* OMBUserCurrentUserInfoConnection.m in Sources */,
 				AB9B26391811B7ED00E6DAC4 /* OCAlgorithms.m in Sources */,
 				AB01ED3A1857DB5300333390 /* OMBLegalQuestion.m in Sources */,
@@ -3115,6 +3133,7 @@
 				ABA4F207187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m in Sources */,
 				ABA3D69818A92EF1006CE8C1 /* OMBOtherUserProfileViewController.m in Sources */,
 				AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */,
+				AB9FEF0218D02D3800E25FE2 /* OMBCosignerListConnection.m in Sources */,
 				ABBA58971870C59700E9BF4E /* ELCAssetTablePicker.m in Sources */,
 				ABBB18DD182453BF00211499 /* OMBAnnotationCity.m in Sources */,
 				ABABEC4C1864D56A008B6768 /* OMBMapViewController.m in Sources */,
@@ -3382,6 +3401,7 @@
 				ABDF17561868AABB004E2755 /* OMBResidenceConfirmDetailsDatesCell.m in Sources */,
 				AB70CB7A186CD1E00083DF4C /* OMBManageListingsViewController.m in Sources */,
 				ABF18BBA1816D3F0002DD723 /* TextFieldPadding.m in Sources */,
+				AB9FEF0118D02D3800E25FE2 /* OMBCosignerCreateConnection.m in Sources */,
 				ABED5FCE1895977200AD630C /* OMBResidenceDetailImageCollectionViewCell.m in Sources */,
 				ABE4FC031890A3180009D643 /* OMBPayoutMethodUpdateConnection.m in Sources */,
 				AB026BD31822EFBC00E72F53 /* OMBFavoritesListViewController.m in Sources */,

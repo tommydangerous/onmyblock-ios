@@ -8,7 +8,32 @@
 
 #import "OMBCosigner.h"
 
+#import "OMBConnectionProtocol.h"
+
 @implementation OMBCosigner
+
+#pragma mark - Override
+
+#pragma mark - Override NSObject
+
+- (NSUInteger) hash
+{
+  return self.uid;
+}
+
+- (BOOL) isEqual: (id) anObject
+{
+  return self.uid == [(OMBCosigner *) anObject uid];
+}
+
+#pragma mark - Protocol
+
+#pragma mark - Protocol OMBConnectionProtocol
+
+- (void) JSONDictionary: (NSDictionary *) dictionary
+{
+  [self readFromDictionary: dictionary];
+}
 
 #pragma mark - Methods
 
@@ -16,11 +41,36 @@
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
-  _email     = [dictionary objectForKey: @"email"];
-  _firstName = [dictionary objectForKey: @"first_name"];
-  _lastName  = [dictionary objectForKey: @"last_name"];
-  _phone     = [dictionary objectForKey: @"phone"];
-  _uid       = [[dictionary objectForKey: @"id"] intValue];
+  // Email
+  id email = [dictionary objectForKey: @"email"];
+  if (email != [NSNull null]) {
+    self.email = email;
+  }
+
+  // First name
+  id firstName = [dictionary objectForKey: @"first_name"];
+  if (firstName != [NSNull null])
+    self.firstName = firstName;
+
+  // Last name
+  id lastName = [dictionary objectForKey: @"last_name"];
+  if (lastName != [NSNull null])
+    self.lastName = lastName;
+
+  // Phone
+  id phone = [dictionary objectForKey: @"phone"];
+  if (phone != [NSNull null])
+    self.phone = phone;
+
+  // Relationship type
+  id relationshipType = [dictionary objectForKey: @"relationship_type"];
+  if (relationshipType != [NSNull null])
+    self.relationshipType = relationshipType;
+
+  // UID
+  id uid = [dictionary objectForKey: @"id"];
+  if (uid != [NSNull null])
+    self.uid = [uid intValue];
 }
 
 @end

@@ -14,6 +14,8 @@
 
 #pragma mark - Class Methods
 
++ (NSAttributedString *) attributedStringWithStrings: (NSArray *) strings
+fonts: (NSArray *) fonts colors: (NSArray *) colors;
 + (NSString *) numberToCurrencyString: (int) number;
 + (NSString *) stringFromDateForJSON: (NSDate *) date;
 + (NSString *) stripLower: (NSString *) string;

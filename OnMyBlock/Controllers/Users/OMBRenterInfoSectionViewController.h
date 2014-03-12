@@ -13,9 +13,10 @@
 @class OMBUser;
 
 @interface OMBRenterInfoSectionViewController : OMBTableViewController
+<UIActionSheetDelegate>
 {
   UIButton *addButton;
-  OMBRenterInfoAddViewController *addViewController;
+  UIButton *addButtonMiddle;
   AMBlurView *bottomBlurView;
   UILabel *emptyLabel;
 }
@@ -28,6 +29,9 @@
 
 #pragma mark - Instance Methods
 
+- (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath;
+- (void) hideEmptyLabel: (BOOL) hide;
+- (OMBRenterApplication *) renterApplication;
 - (void) setEmptyLabelText: (NSString *) string;
 
 @end

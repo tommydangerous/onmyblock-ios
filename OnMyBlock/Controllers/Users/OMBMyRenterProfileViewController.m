@@ -72,7 +72,7 @@
 
   [[NSNotificationCenter defaultCenter] addObserver:self
     selector: @selector(progressConnection:)
-      name: @"progressConnection" object:nil];
+      name: @"progressConnection" object: nil];
 
   return self;
 }
@@ -391,6 +391,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   CGFloat padding  = OMBPadding;
   CGRect tableRect = tableView.frame;
 
+  UIEdgeInsets maxInsets = UIEdgeInsetsMake(0.0f, tableRect.size.width,
+    0.0f, 0.0f);
+
   static NSString *EmptyCellID = @"EmptyCellID";
   UITableViewCell *emptyCell = [tableView dequeueReusableCellWithIdentifier:
     EmptyCellID];
@@ -461,8 +464,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         aboutTextViewPlaceholder.hidden = NO;
       }
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      // cell.separatorInset = UIEdgeInsetsMake(0.0f,
-      //   tableView.frame.size.width, 0.0f, 0.0f);
+      cell.separatorInset = maxInsets;
       return cell;
     }
     // Everything else
@@ -574,6 +576,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
     if (row == OMBMyRenterProfileSectionRenterInfoTopSpacing) {
       emptyCell.backgroundColor = [UIColor backgroundColor];
+      emptyCell.separatorInset = maxInsets;
     }
     else {
       static NSString *RenterID = @"RenterID";
@@ -585,28 +588,35 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.selectionStyle = UITableViewCellSelectionStyleDefault;
       [cell resetWithCheckmark];
       NSString *iconImageName;
+      NSString *key = @"";
       NSString *string;
       // Co-applicants
       if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
         iconImageName = @"group_icon.png";
+        key = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
         string = @"Co-applicants";
       }
       else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
         iconImageName = @"landlord_icon.png";
+        key = OMBUserDefaultsRenterApplicationCheckedCosigners;
         string = @"Co-signer";
       }
       else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
         iconImageName = @"house_icon.png";
+        key = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
         string = @"Rental History";
       }
       else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
         iconImageName = @"papers_icon_black.png";
+        key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
         string = @"Work History";
       }
       cell.iconImageView.image = [UIImage image: 
         [UIImage imageNamed: iconImageName] 
           size: cell.iconImageView.bounds.size];
       cell.label.text = string;
+      if ([[self renterapplicationUserDefaults] objectForKey: key])
+        [cell fillCheckmark];
       return cell;
     }
   }
@@ -655,25 +665,38 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   // Renter info
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
     OMBRenterInfoSectionViewController *vc;
+    NSString *key = @"";
     // Co-applicants
     if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
-      vc = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
+      key = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
+      vc  = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
     }
     // Co-signers
     else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
-      vc = [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser: 
+      key = OMBUserDefaultsRenterApplicationCheckedCosigners;
+      vc  = [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser: 
         user];
     }
     // Rental History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
-      vc = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
+      key = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
+      vc  = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
     }
     // Work History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
-      vc = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
+      key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
+      vc  = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
     }
-    if (vc)
+    if (vc) {
+      NSMutableDictionary *dictionary = 
+        [NSMutableDictionary dictionaryWithDictionary: 
+          [self renterapplicationUserDefaults]];
+      [dictionary setObject: [NSNumber numberWithBool: YES] forKey: key];
+      [[NSUserDefaults standardUserDefaults] setObject: dictionary 
+        forKey: OMBUserDefaultsRenterApplication];
+      [[NSUserDefaults standardUserDefaults] synchronize];
       [self.navigationController pushViewController: vc animated: YES];
+    }
   }
 
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
@@ -792,6 +815,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     editingTextView.text = savedTextString;
   
   [self done];
+}
+
+- (NSMutableDictionary *) renterapplicationUserDefaults
+{
+  NSMutableDictionary *dictionary = 
+    [[NSUserDefaults standardUserDefaults] objectForKey: 
+      OMBUserDefaultsRenterApplication];
+  if (!dictionary)
+    dictionary = [NSMutableDictionary dictionary];
+  return dictionary;
 }
 
 - (void) done

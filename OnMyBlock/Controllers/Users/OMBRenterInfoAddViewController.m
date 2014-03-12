@@ -11,10 +11,6 @@
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 
-@interface OMBRenterInfoAddViewController ()
-
-@end
-
 @implementation OMBRenterInfoAddViewController
 
 #pragma mark - Initializer
@@ -22,6 +18,8 @@
 - (id) init
 {
   if (!(self = [super init])) return nil;
+
+  valueDictionary = [NSMutableDictionary dictionary];
 
   return self;
 }
@@ -69,7 +67,7 @@
   rightPadding.width = 4.0f;
 
   textFieldToolbar = [UIToolbar new];
-  textFieldToolbar.barTintColor = [UIColor grayVeryLight];
+  textFieldToolbar.barTintColor = [UIColor whiteColor];
   textFieldToolbar.clipsToBounds = YES;
   textFieldToolbar.frame = CGRectMake(0.0f, 0.0f, 
     [self screen].size.width, OMBStandardHeight);
@@ -90,11 +88,10 @@
 - (void) textFieldDidBeginEditing: (TextFieldPadding *) textField
 {
   isEditing = YES;
-
-  textField.inputAccessoryView = textFieldToolbar;
-
   [self.table beginUpdates];
   [self.table endUpdates];
+
+  textField.inputAccessoryView = textFieldToolbar;
 
   // [self scrollToRectAtIndexPath: textField.indexPath];
   [self scrollToRowAtIndexPath: textField.indexPath];
@@ -102,7 +99,7 @@
 
 - (BOOL) textFieldShouldReturn: (UITextField *) textField
 {
-  [self done];
+  [self doneFromInputAccessoryView];
   return YES;
 }
 
@@ -114,6 +111,24 @@
 {
   [self.navigationController dismissViewControllerAnimated: YES
     completion: nil];
+}
+
+- (void) cancelFromInputAccessoryView
+{
+  [self.view endEditing: YES];
+  isEditing = NO;
+  [self.table beginUpdates];
+  [self.table endUpdates];
+}
+
+- (void) doneFromInputAccessoryView
+{
+  [self cancelFromInputAccessoryView];
+}
+
+- (OMBRenterApplication *) renterApplication
+{
+  return [OMBUser currentUser].renterApplication;
 }
 
 - (void) scrollToRectAtIndexPath: (NSIndexPath *) indexPath
@@ -131,7 +146,15 @@
 
 - (void) save
 {
-  [self cancel];
+  if (isSaving)
+    return;
+  else
+    isSaving = YES;
+  if (modelObject) {
+    for (NSString *key in [valueDictionary allKeys]) {
+      [modelObject setValue: [valueDictionary objectForKey: key] forKey: key];
+    }
+  }
 }
   
 @end

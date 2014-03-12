@@ -18,7 +18,6 @@
 
 @property (nonatomic) BOOL cats;
 @property (nonatomic) NSInteger coapplicantCount;
-@property (nonatomic, strong) NSMutableArray *cosigners;
 @property (nonatomic) BOOL dogs;
 @property (nonatomic, strong) NSMutableArray *employments;
 @property (nonatomic) BOOL facebookAuthenticated;
@@ -36,11 +35,19 @@
 - (void) addLegalAnswer: (OMBLegalAnswer *) legalAnswer;
 - (void) addPreviousRental: (OMBPreviousRental *) previousRental;
 - (NSArray *) cosignersSortedByFirstName;
+- (void) createCosignerConnection: (OMBCosigner *) cosigner
+delegate: (id) delegate completion: (void (^) (NSError *error)) block;
+- (void) deleteCosignerConnection: (OMBCosigner *) cosigner
+delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (NSArray *) employmentsSortedByStartDate;
+- (void) fetchCosignersForUserUID: (NSUInteger) userUID delegate: (id) delegate
+completion: (void (^) (NSError *error)) block;
 - (OMBLegalAnswer *) legalAnswerForLegalQuestion: 
 (OMBLegalQuestion *) legalQuestion;
+- (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) removeAllObjects;
+- (void) removeCosigner: (OMBCosigner *) cosigner;
 - (void) updateWithDictionary: (NSDictionary *) dictionary
 completion: (void (^) (NSError *error)) block;
 

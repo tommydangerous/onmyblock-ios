@@ -50,19 +50,19 @@
 {
   [super viewWillAppear: animated];
 
-  OMBCosignerListConnection *connection = 
-    [[OMBCosignerListConnection alloc] initWithUser: user];
-  connection.completionBlock = ^(NSError *error) {
-    if ([[user.renterApplication cosignersSortedByFirstName] count] == 0 &&
-      !showedAddModelViewControllerForTheFirstTime) {
+  // OMBCosignerListConnection *connection = 
+  //   [[OMBCosignerListConnection alloc] initWithUser: user];
+  // connection.completionBlock = ^(NSError *error) {
+  //   if ([[user.renterApplication cosignersSortedByFirstName] count] == 0 &&
+  //     !showedAddModelViewControllerForTheFirstTime) {
       
-      showedAddModelViewControllerForTheFirstTime = YES;
-      [self addModel];
-    }
-    else
-      [self.table reloadData];
-  };
-  [connection start];
+  //     showedAddModelViewControllerForTheFirstTime = YES;
+  //     [self addModel];
+  //   }
+  //   else
+  //     [self.table reloadData];
+  // };
+  // [connection start];
   [self.table reloadData];
 }
 
@@ -76,13 +76,13 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   // Remove cosigner
   if (buttonIndex == 0) {
     [self.table beginUpdates];
-    OMBCosigner *object = 
-      [[user.renterApplication cosignersSortedByFirstName]
-        objectAtIndex: selectedIndexPath.row];
-    // Delete connection
-    [[[OMBDeleteRenterApplicationSectionModelConnection alloc] 
-      initWithObject: object] start];
-    [user.renterApplication.cosigners removeObject: object];
+    // OMBCosigner *object = 
+    //   [[user.renterApplication cosignersSortedByFirstName]
+    //     objectAtIndex: selectedIndexPath.row];
+    // // Delete connection
+    // [[[OMBDeleteRenterApplicationSectionModelConnection alloc] 
+    //   initWithObject: object] start];
+    // [user.renterApplication.cosigners removeObject: object];
     [self.table deleteRowsAtIndexPaths: @[selectedIndexPath]
       withRowAnimation: UITableViewRowAnimationFade];
     [self.table endUpdates];
@@ -110,7 +110,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  return [user.renterApplication.cosigners count];
+  // return [user.renterApplication.cosigners count];
+  return 0;
 }
 
 #pragma mark - Protocol UITableViewDelegate

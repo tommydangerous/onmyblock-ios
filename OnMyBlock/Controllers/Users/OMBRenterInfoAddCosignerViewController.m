@@ -8,8 +8,12 @@
 
 #import "OMBRenterInfoAddCosignerViewController.h"
 
+#import "OMBCosigner.h"
+#import "OMBLabelSwitchCell.h"
 #import "OMBLabelTextFieldCell.h"
+#import "OMBRenterApplication.h"
 #import "OMBTwoLabelTextFieldCell.h"
+#import "OMBViewControllerContainer.h"
 #import "UIImage+Resize.h"
 
 @interface OMBRenterInfoAddCosignerViewController ()
@@ -39,6 +43,13 @@
   [self setupForTable];
 }
 
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  modelObject = [[OMBCosigner alloc] init];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol UITableViewDataSource
@@ -59,9 +70,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   static NSString *EmptyID = @"EmptyID";
   UITableViewCell *empty = [tableView dequeueReusableCellWithIdentifier:
     EmptyID];
-  if (!empty)
+  if (!empty) {
     empty = [[UITableViewCell alloc] initWithStyle: 
       UITableViewCellStyleDefault reuseIdentifier: EmptyID];
+  }
   // Fields
   if (section == OMBRenterInfoAddCosignerSectionFields) {
     // First name, last name
@@ -84,7 +96,15 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.secondTextField.delegate  = self;
       cell.secondTextField.indexPath = indexPath;
       cell.secondTextField.placeholder = @"Last name";
+      cell.secondTextField.tag = 
+        OMBRenterInfoAddCosignerSectionFieldsRowLastName;
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      [cell.firstTextField addTarget: self 
+        action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
+      [cell.secondTextField addTarget: self 
+        action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
       return cell;
     }
     else {
@@ -114,6 +134,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         OMBRenterInfoAddCosignerSectionFieldsRowRelationshipType) {
         imageName         = @"group_icon.png";
         placeholderString = @"Relationship type";
+        // Last row, hide the separator
+        cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+          tableView.frame.size.width, 0.0f, 0.0f);
       }
       cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
         size: cell.iconImageView.bounds.size];
@@ -121,10 +144,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.textField.delegate  = self;
       cell.textField.indexPath = indexPath;
       cell.textField.placeholder = placeholderString;
-      [cell.textField addTarget: self action: @selector(textFieldDidChange:)
-        forControlEvents: UIControlEventEditingChanged];
+      [cell.textField addTarget: self 
+        action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
       return cell;
     }
+  }
+  // Spacing
+  else if (section == OMBRenterInfoAddCosignerSectionSpacing) {
+    empty.backgroundColor = [UIColor clearColor];
+    empty.separatorInset = UIEdgeInsetsMake(0.0f, 
+      tableView.frame.size.width, 0.0f, 0.0f);
   }
   return empty;
 }
@@ -144,11 +174,10 @@ numberOfRowsInSection: (NSInteger) section
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
 
   if (section == OMBRenterInfoAddCosignerSectionFields) {
-    return OMBStandardButtonHeight;
+    return [OMBLabelTextFieldCell heightForCellWithIconImageView];
   }
   else if (section == OMBRenterInfoAddCosignerSectionSpacing) {
     if (isEditing) {
@@ -162,9 +191,48 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
+- (void) save
+{
+  [super save];
+  [[self renterApplication] createCosignerConnection: modelObject
+    delegate: modelObject completion: ^(NSError *error) {
+      if (error) {
+        [self showAlertViewWithError: error];
+      }
+      else {
+        [[self renterApplication] addCosigner: modelObject];
+        [self cancel];
+      }
+      isSaving = NO;
+      [[self appDelegate].container stopSpinning];
+    }];
+  [[self appDelegate].container startSpinning];
+}
+
 - (void) textFieldDidChange: (TextFieldPadding *) textField
 {
   NSInteger row = textField.indexPath.row;
+  NSString *string = textField.text;
+
+  if ([string length]) {
+    if (row == OMBRenterInfoAddCosignerSectionFieldsRowFirstNameLastName) {
+      if (textField.tag == OMBRenterInfoAddCosignerSectionFieldsRowLastName) {
+        [valueDictionary setObject: string forKey: @"lastName"];
+      }
+      else {
+        [valueDictionary setObject: string forKey: @"firstName"];
+      }
+    }
+    else if (row == OMBRenterInfoAddCosignerSectionFieldsRowEmail) {
+      [valueDictionary setObject: string forKey: @"email"];
+    }
+    else if (row == OMBRenterInfoAddCosignerSectionFieldsRowPhone) {
+      [valueDictionary setObject: string forKey: @"phone"];
+    }
+    else if (row == OMBRenterInfoAddCosignerSectionFieldsRowRelationshipType) {
+      [valueDictionary setObject: string forKey: @"relationshipType"];
+    }
+  }
 }
 
 @end

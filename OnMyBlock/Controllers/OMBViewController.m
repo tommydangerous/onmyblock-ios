@@ -146,8 +146,10 @@ CGFloat const OMBStandardHeight       = 44.0f;
 
 - (void) showAlertViewWithError:(NSError *) error
 {
-    NSString *message = error.localizedFailureReason != (id)[NSNull null] ? error.localizedFailureReason : @"Please try again.";
-  NSString *title   =  error.localizedDescription != (id)[NSNull null] ? error.localizedDescription : @"Unsuccessful";
+  NSString *message = error.localizedFailureReason != (id) [NSNull null] ? 
+    error.localizedFailureReason : @"Please try again.";
+  NSString *title =  error.localizedDescription != (id) [NSNull null] ? 
+    error.localizedDescription : @"Unsuccessful";
 
   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title
     message: message delegate: nil cancelButtonTitle: @"Okay" 

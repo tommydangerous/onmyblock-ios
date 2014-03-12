@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSString *phone;
+@property (nonatomic, strong) NSString *relationshipType;
 
 @property (nonatomic) int uid;
 

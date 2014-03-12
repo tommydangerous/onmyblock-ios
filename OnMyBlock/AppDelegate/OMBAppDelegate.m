@@ -31,6 +31,16 @@ NSString *const OMBUserDefaultsAPIKeyAccessToken =
   @"OMBUserDefaultsAPIKeyAccessToken";
 NSString *const OMBUserDefaultsAPIKeyExpiresAt = 
   @"OMBUserDefaultsAPIKeyExpiresAt";
+NSString *const OMBUserDefaultsRenterApplication = 
+  @"OMBUserDefaultsRenterApplication";
+NSString *const OMBUserDefaultsRenterApplicationCheckedCoapplicants = 
+  @"OMBUserDefaultsRenterApplicationCheckedCoapplicants";
+NSString *const OMBUserDefaultsRenterApplicationCheckedCosigners = 
+  @"OMBUserDefaultsRenterApplicationCheckedCosigners";
+NSString *const OMBUserDefaultsRenterApplicationCheckedRentalHistory = 
+  @"OMBUserDefaultsRenterApplicationCheckedRentalHistory";
+NSString *const OMBUserDefaultsRenterApplicationCheckedWorkHistory = 
+  @"OMBUserDefaultsRenterApplicationCheckedWorkHistory";
 NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
 
 @implementation OMBAppDelegate
@@ -63,7 +73,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
 
-  _container = [[OMBViewControllerContainer alloc] init];
+  self.container = [[OMBViewControllerContainer alloc] init];
 
   // Set root view controller for app
   self.window.backgroundColor    = [UIColor backgroundColor];
@@ -75,8 +85,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // If current session has a valid Facebook token
     [self openSession];
 
-  #warning Remove fake login
-  [OMBUser fakeLogin]; // Fake login
+  // #warning Remove fake login
+  // [OMBUser fakeLogin]; // Fake login
 
   // Check to see if the user has a saved api key in the user defaults
   [[OMBUser currentUser] checkForUserDefaultsAPIKey];
@@ -105,8 +115,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   else
     [_container showDiscover];
 
-  #warning Remove container showing controller
-  [self.container showMyRenterProfile];
+  // #warning Remove container showing controller
+  // [self.container showMyRenterProfile];
 
   // Use this to show whatever view controller you are working on
   // [_container showMyRenterProfile];

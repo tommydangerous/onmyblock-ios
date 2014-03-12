@@ -260,11 +260,6 @@ withCompletion: (void (^) (NSError *error)) block
     [_confirmedTenants setObject: object forKey: key];
 }
 
-- (void) addCosigner: (OMBCosigner *) cosigner
-{
-  [_renterApplication addCosigner: cosigner];
-}
-
 - (void) addDepositPayoutTransaction: (OMBPayoutTransaction *) object
 {
   NSNumber *key = [NSNumber numberWithInt: object.uid];
@@ -797,6 +792,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   // Set the dictionary in the defaults
   [[NSUserDefaults standardUserDefaults] setObject: apiKeyDict 
     forKey: OMBUserDefaultsAPIKey];
+  [[NSUserDefaults standardUserDefaults] setObject: 
+    [NSMutableDictionary dictionary] forKey: OMBUserDefaultsRenterApplication];
   [defaults synchronize];
 
   [[NSNotificationCenter defaultCenter] postNotificationName: 
@@ -1040,16 +1037,6 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [oldSet minusSet: newSet];
   for (NSNumber *number in [oldSet allObjects]) {
     [_confirmedTenants removeObjectForKey: number];
-  }
-}
-
-- (void) readFromCosignerDictionary: (NSDictionary *) dictionary
-{
-  NSArray *array = [dictionary objectForKey: @"objects"];
-  for (NSDictionary *dict in array) {
-    OMBCosigner *cosigner = [[OMBCosigner alloc] init];
-    [cosigner readFromDictionary: dict];
-    [self addCosigner: cosigner];
   }
 }
 

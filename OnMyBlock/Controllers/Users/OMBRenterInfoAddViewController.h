@@ -12,7 +12,16 @@
 <UITextFieldDelegate>
 {
   BOOL isEditing;
+  BOOL isSaving;
+  id modelObject;
   UIToolbar *textFieldToolbar;
+  NSMutableDictionary *valueDictionary;
 }
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (OMBRenterApplication *) renterApplication;
 
 @end

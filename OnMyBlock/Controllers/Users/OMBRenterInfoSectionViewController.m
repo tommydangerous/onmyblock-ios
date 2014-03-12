@@ -10,7 +10,6 @@
 
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
-#import "OMBNavigationController.h"
 #import "OMBRenterInfoAddViewController.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
@@ -18,6 +17,8 @@
 
 @interface OMBRenterInfoSectionViewController ()
 {
+  UIActionSheet *deleteActionSheet;
+  NSIndexPath *selectedIndexPath;
   OMBUser *user;
 }
 
@@ -50,9 +51,31 @@
   CGFloat screenHeight = screen.size.height;
   CGFloat screenWidth  = screen.size.width;
 
+  [self setupForTable];
+  self.table.tableFooterView = [[UIView alloc] initWithFrame:
+    CGRectMake(0.0f, 0.0f, screenWidth, OMBStandardButtonHeight)];
+
+  addButtonMiddle = [UIButton new];
+  addButtonMiddle.backgroundColor = [UIColor blue];
+  addButtonMiddle.frame = CGRectMake(OMBPadding, 0.0f, 
+    screenWidth - (OMBPadding * 2), OMBStandardButtonHeight);
+  addButtonMiddle.hidden = YES;
+  addButtonMiddle.layer.cornerRadius = OMBCornerRadius;
+  addButtonMiddle.titleLabel.font = [UIFont mediumTextFontBold];
+  [addButtonMiddle addTarget: self action: @selector(addButtonSelected)
+    forControlEvents: UIControlEventTouchUpInside];
+  [addButtonMiddle setBackgroundImage: 
+    [UIImage imageWithColor: [UIColor blueHighlighted]] 
+      forState: UIControlStateHighlighted];
+  [addButtonMiddle setTitle: @"Add" forState: UIControlStateNormal];
+  [addButtonMiddle setTitleColor: [UIColor whiteColor]
+    forState: UIControlStateNormal];
+  [self.view addSubview: addButtonMiddle];
+
   // Bottom blur view
   bottomBlurView = [[AMBlurView alloc] init];
   bottomBlurView.blurTintColor = [UIColor blue];
+  bottomBlurView.hidden = YES;
   bottomBlurView.frame = CGRectMake(0.0f, 
     screenHeight - OMBStandardButtonHeight, 
       screenWidth, OMBStandardButtonHeight);
@@ -74,9 +97,38 @@
   // Empty label
   emptyLabel = [UILabel new];
   emptyLabel.font = [UIFont mediumTextFont];
+  emptyLabel.hidden = YES;
   emptyLabel.numberOfLines = 0;
   emptyLabel.textColor = [UIColor grayMedium];
   [self.view addSubview: emptyLabel];
+
+  deleteActionSheet = [[UIActionSheet alloc] initWithTitle: nil delegate: self
+    cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"Delete"
+      otherButtonTitles: nil];
+  [self.view addSubview: deleteActionSheet];
+}
+
+#pragma mark - Protocol
+
+#pragma mark - Protocol UIActionSheetDelegate
+
+- (void) actionSheet: (UIActionSheet *) actionSheet 
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  if (buttonIndex == 0) {
+    [self deleteModelObjectAtIndexPath: selectedIndexPath];
+    selectedIndexPath = nil;
+  }
+}
+
+#pragma mark - Protocol UITableViewDelegate
+
+- (void) tableView: (UITableView *) tableView
+didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  selectedIndexPath = indexPath;
+  [deleteActionSheet showInView: self.view];
+  [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
 #pragma mark - Methods
@@ -85,15 +137,36 @@
 
 - (void) addButtonSelected
 {
-  if (addViewController)
-    [self presentViewController: 
-      [[OMBNavigationController alloc] initWithRootViewController: 
-        addViewController] animated: YES completion: nil];
+  // Subclassess implement this
+}
+
+- (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath
+{
+  // Subclasses implement this
 }
 
 - (void) done
 {
   [self.navigationController popViewControllerAnimated: YES];
+}
+
+- (void) hideEmptyLabel: (BOOL) hide
+{
+  if (hide) {
+    addButtonMiddle.hidden = YES;
+    emptyLabel.hidden      = YES;
+    bottomBlurView.hidden  = NO;
+  }
+  else {
+    addButtonMiddle.hidden = NO;
+    emptyLabel.hidden      = NO;
+    bottomBlurView.hidden  = YES;
+  }
+}
+
+- (OMBRenterApplication *) renterApplication
+{
+  return [OMBUser currentUser].renterApplication;
 }
 
 - (void) setEmptyLabelText: (NSString *) string
@@ -107,10 +180,15 @@
   CGRect rect = [emptyLabel.attributedText boundingRectWithSize: 
     CGSizeMake(screenWidth - (OMBPadding * 2), 9999.0f)
       options: NSStringDrawingUsesLineFragmentOrigin context: nil];
-  emptyLabel.frame = CGRectMake(OMBPadding, 
-    (screenHeight - rect.size.height) * 0.5f, 
+  emptyLabel.frame = CGRectMake(OMBPadding, (screenHeight - 
+    (rect.size.height + addButtonMiddle.frame.size.height)) * 0.5f, 
       screenWidth - (OMBPadding * 2), rect.size.height);
   emptyLabel.textAlignment = NSTextAlignmentCenter;
+
+  CGRect buttonRect = addButtonMiddle.frame;
+  buttonRect.origin.y = emptyLabel.frame.origin.y + 
+    emptyLabel.frame.size.height + (OMBPadding * 2);
+  addButtonMiddle.frame = buttonRect;
 }
 
 @end

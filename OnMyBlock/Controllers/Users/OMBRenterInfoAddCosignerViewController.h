@@ -20,7 +20,8 @@ typedef NS_ENUM(NSInteger, OMBRenterInfoAddCosignerSectionFieldsRow) {
   OMBRenterInfoAddCosignerSectionFieldsRowFirstNameLastName,
   OMBRenterInfoAddCosignerSectionFieldsRowEmail,
   OMBRenterInfoAddCosignerSectionFieldsRowPhone,
-  OMBRenterInfoAddCosignerSectionFieldsRowRelationshipType
+  OMBRenterInfoAddCosignerSectionFieldsRowRelationshipType,
+  OMBRenterInfoAddCosignerSectionFieldsRowLastName
 };
 
 @interface OMBRenterInfoAddCosignerViewController : 
