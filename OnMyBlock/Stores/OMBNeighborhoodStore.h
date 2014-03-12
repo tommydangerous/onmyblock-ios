@@ -22,5 +22,5 @@
 
 - (NSArray *) cities;
 - (NSArray *) sortedNeighborhoodsForCity: (NSString *) string;
-
+- (NSDictionary *) sortedNeighborhoodsForName: (NSString *) string;
 @end

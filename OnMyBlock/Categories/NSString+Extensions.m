@@ -207,6 +207,12 @@ fonts: (NSArray *) fonts colors: (NSArray *) colors
 
 #pragma mark - Instance Methods
 
+- (BOOL) containsString:(NSString *)string options:(NSStringCompareOptions)options
+{
+  NSRange rng = [self rangeOfString:string options:options];
+  return rng.location != NSNotFound;
+}
+
 - (NSAttributedString *) attributedStringWithFont: (UIFont *) font
 lineHeight: (CGFloat) lineHeight
 {

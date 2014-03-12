@@ -9,6 +9,7 @@
 #import "OMBNeighborhoodStore.h"
 
 #import "OMBNeighborhood.h"
+#import "NSString+Extensions.h"
 
 @implementation OMBNeighborhoodStore
 
@@ -156,6 +157,42 @@
     [array addObject: [neighborhoods objectForKey: key]];
   }
   return array;
+}
+
+- (NSDictionary *) sortedNeighborhoodsForName: (NSString *) string
+{
+  NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+  
+  for(NSString *keyCity in [self cities]){
+    BOOL found = NO;
+    NSDictionary *city          = [self.neighborhoods objectForKey: keyCity];
+    NSDictionary *schools       = [city objectForKey: @"schools"];
+    NSDictionary *neighborhoods = [city objectForKey: @"neighborhoods"];
+    NSMutableArray *array       = [NSMutableArray array];
+    
+    // Schools
+    NSArray *schoolKeys = [[schools allKeys] sortedArrayUsingSelector:
+                           @selector(localizedCaseInsensitiveCompare:)];
+    for (NSString *key in schoolKeys) {
+      if([key containsString:string options:0] || [string isEqualToString:@""]){
+        found = YES;
+        [array addObject: [schools objectForKey: key]];
+      }
+    }
+    // Neighborhoods
+    NSArray *neighborhoodKeys = [[neighborhoods allKeys] sortedArrayUsingSelector:
+                                 @selector(localizedCaseInsensitiveCompare:)];
+    for (NSString *key in neighborhoodKeys) {
+      if([key containsString:string options:0] || [string isEqualToString:@""]){
+        found = YES;
+        [array addObject: [neighborhoods objectForKey: key]];
+      }
+    }
+    if(found){
+      [dictionary setObject: array forKey:keyCity];
+    }
+  }
+  return dictionary;
 }
 
 @end
