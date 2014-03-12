@@ -32,7 +32,7 @@
 
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
-  [self readFromDictionary: dictionary];
+  [self readFromDictionary: [dictionary objectForKey: @"object"]];
 }
 
 #pragma mark - Methods

@@ -79,7 +79,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!cell)
     cell = [[OMBCosignerCell alloc] initWithStyle: UITableViewCellStyleDefault
       reuseIdentifier: CosignerID];
-  [cell loadData: [[self cosigners] objectAtIndex: indexPath.row]];
+  [cell loadData: [[self cosigners] objectAtIndex: row]];
   // Last row
   if (row == [self tableView: tableView numberOfRowsInSection: section] - 1) {
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
@@ -123,15 +123,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   OMBCosigner *cosigner = [[self cosigners] objectAtIndex: indexPath.row];
   [[self renterApplication] deleteCosignerConnection: cosigner delegate: nil
-    completion: ^(NSError *error) {
-      [self.table beginUpdates];
-      [[self renterApplication] removeCosigner: cosigner];
-      [self.table deleteRowsAtIndexPaths: @[indexPath]
-        withRowAnimation: UITableViewRowAnimationFade];
-      [self.table endUpdates];
-      [self hideEmptyLabel: [[self cosigners] count]];
-    }
-  ];
+    completion: nil];
+  
+  [self.table beginUpdates];
+  [[self renterApplication] removeCosigner: cosigner];
+  [self.table deleteRowsAtIndexPaths: @[indexPath]
+    withRowAnimation: UITableViewRowAnimationFade];
+  [self.table endUpdates];
+  [self hideEmptyLabel: [[self cosigners] count]];
 }
 
 - (void) reloadTable

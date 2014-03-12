@@ -123,6 +123,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (row == OMBRenterInfoAddCosignerSectionFieldsRowEmail) {
         imageName         = @"messages_icon_dark.png";
         placeholderString = @"Email";
+        cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
       }
       // Phone
       else if (row == OMBRenterInfoAddCosignerSectionFieldsRowPhone) {
