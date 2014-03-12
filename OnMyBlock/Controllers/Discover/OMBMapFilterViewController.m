@@ -16,9 +16,11 @@
 #import "OMBMapFilterPropertyTypeCell.h"
 #import "OMBMapFilterRentCell.h"
 #import "OMBMapFilterDateAvailableCell.h"
+#import "OMBMapFilterLocationViewController.h"
+#import "OMBNavigationController.h"
 #import "OMBNeighborhood.h"
 #import "OMBNeighborhoodStore.h"
-#import "TextFieldPadding.h"
+#import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
@@ -139,7 +141,7 @@
   [headerView addSubview: neighborhoodCancelButton];
 
   // Neighborhood selection
-  neighborhoodTableView = [[UITableView alloc] initWithFrame: 
+  /*neighborhoodTableView = [[UITableView alloc] initWithFrame:
     CGRectMake(0.0f, headerView.frame.size.height, 
       neighborhoodTableViewContainer.frame.size.width,
       neighborhoodTableViewContainer.frame.size.height - 
@@ -212,7 +214,7 @@
   currentLocationButton.frame = buttonFrame;
   [currentLocationButton addTarget: self action: @selector(userCurrentLocation)
     forControlEvents: UIControlEventTouchUpInside];
-  //[neighborhoodTableHeaderView addSubview: currentLocationButton];
+  //[neighborhoodTableHeaderView addSubview: currentLocationButton];*/
 
   // Footer view
   neighborhoodTableView.tableFooterView = [[UIView alloc] initWithFrame:
@@ -232,7 +234,7 @@
 	
   // Header label
   pickerViewHeaderLabel = [UILabel new];
-  pickerViewHeaderLabel.font = headerLabel.font;
+  pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   pickerViewHeaderLabel.frame = pickerViewHeader.frame;
   pickerViewHeaderLabel.text = @"";
   pickerViewHeaderLabel.textAlignment = headerLabel.textAlignment;
@@ -301,10 +303,29 @@
     rentPickerView.frame.size.width, 
       pickerViewHeader.frame.size.height +
       rentPickerView.frame.size.height);
+  filterViewController = [[OMBMapFilterLocationViewController alloc]
+   initWithSelectedNeighborhood: selectedNeighborhood];
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
+  OMBMapFilterNeighborhoodCell *cell = (OMBMapFilterNeighborhoodCell *)
+  [self.table cellForRowAtIndexPath:
+   [NSIndexPath indexPathForRow: 1 inSection: 0]];
+  NSString *string = @"";
+  selectedNeighborhood = filterViewController.selectedNeighborhood;
+  if (selectedNeighborhood) {
+    string = selectedNeighborhood.name;
+  }
+  cell.neighborhoodTextField.text = string;
+  if (selectedNeighborhood) {
+    [_valuesDictionary setObject: selectedNeighborhood
+      forKey: @"neighborhood"];
+  }
+  else
+    [_valuesDictionary setObject: @"" forKey: @"neighborhood"];
+  
+  
   moveInDates = [NSMutableDictionary dictionary];
 
   NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit | 
@@ -507,12 +528,6 @@ widthForComponent: (NSInteger) component
 {
   if (scrollView == self.table) {
     [self done];
-  }
-  else if(scrollView == neighborhoodTableView)
-  {
-    if(isEditing){
-      [self hideTextField];
-    }
   }
 }
 
@@ -889,35 +904,6 @@ viewForHeaderInSection: (NSInteger) section
   return [[UIView alloc] initWithFrame: CGRectZero];
 }
 
-#pragma mark - Protocol UITextFieldDelegate
-
-- (void) textFieldDidBeginEditing:(UITextField *)textField
-{
-  isEditing = YES;
-  [UIView animateWithDuration: OMBStandardDuration animations:^{
-    CGRect frame = filterImageView.frame;
-    frame.origin.x = OMBPadding * 0.75f;
-    filterImageView.frame = frame;
-  }];
-}
-
-- (void) textFieldDidEndEditing:(UITextField *)textField
-{
-  isEditing = NO;
-  if(![[textField.text stripWhiteSpace] length])
-    [UIView animateWithDuration: OMBStandardDuration animations:^{
-      CGRect frame = filterImageView.frame;
-      frame.origin.x = (neighborhoodTableViewContainer.frame.size.width - frame.size.width )* 0.5f;
-      filterImageView.frame = frame;
-    }];
-}
-
-- (BOOL) textFieldShouldReturn: (UITextField *) textField
-{
-  [self hideTextField];
-  return YES;
-}
-
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
@@ -1072,14 +1058,14 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) hideNeighborhoodTableViewContainer
 {
-  [self hideTextField];
+  /*[self hideTextField];
   CGRect rect = neighborhoodTableViewContainer.frame;
   rect.origin.y = self.view.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 0.0f;
     neighborhoodTableViewContainer.frame = rect;
   }];
-  [self showSearchBarButtonItem];
+  [self showSearchBarButtonItem];*/
 }
 
 - (void) hidePickerView
@@ -1092,12 +1078,6 @@ viewForHeaderInSection: (NSInteger) section
     pickerViewContainer.frame = rect;
   }];
   [self showSearchBarButtonItem];
-}
-
-- (void) hideTextField
-{
-  [filterTextField resignFirstResponder];
-  isEditing = NO;
 }
 
 - (NSArray *) moveInDatesSortedArray
@@ -1189,13 +1169,18 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) showNeighborhoodTableViewContainer
 {
-  CGRect rect = neighborhoodTableViewContainer.frame;
+  filterViewController.selectedNeighborhood = selectedNeighborhood;
+  [self presentViewController:
+   [[OMBNavigationController alloc] initWithRootViewController:
+    filterViewController] animated: YES completion: nil];
+  
+  /*CGRect rect = neighborhoodTableViewContainer.frame;
   rect.origin.y = self.view.frame.size.height -
     neighborhoodTableViewContainer.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 1.0f;
     neighborhoodTableViewContainer.frame = rect;
-  }];
+  }];*/
   // [self showDoneBarButtonItem];
 }
 
@@ -1227,24 +1212,6 @@ viewForHeaderInSection: (NSInteger) section
 {
   [self.navigationItem setRightBarButtonItem: searchBarButtonItem
     animated: YES];
-}
-
-- (void) textFieldDidChange: (UITextField *) textField
-{
-  // Filter
-  if (textField == filterTextField) {
-    if ([[textField.text stripWhiteSpace] length]) {
-      filterTextField.clearButtonMode = UITextFieldViewModeAlways;
-      filterTextField.enablesReturnKeyAutomatically = YES;
-    }
-    else {
-      filterTextField.clearButtonMode = UITextFieldViewModeNever;  
-      filterTextField.enablesReturnKeyAutomatically = NO;
-    }
-    temporaryNeighborhoods = [[OMBNeighborhoodStore sharedStore]
-      sortedNeighborhoodsForName: [textField.text lowercaseString]];
-    [neighborhoodTableView reloadData];
-  }
 }
 
 - (void) userCurrentLocation
