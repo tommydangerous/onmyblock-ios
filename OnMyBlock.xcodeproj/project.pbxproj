@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		58BA0F2318D356560099A7B6 /* OMBResidenceLegalDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BA0F2218D356560099A7B6 /* OMBResidenceLegalDetailsViewController.m */; };
 		6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */; };
 		67E94814188DB97D007703FC /* OMBFilmstripImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */; };
 		67E9481E188DF726007703FC /* OMBMapFilterDateAvailableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */; };
@@ -480,6 +481,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		58BA0F2118D356560099A7B6 /* OMBResidenceLegalDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceLegalDetailsViewController.h; sourceTree = "<group>"; };
+		58BA0F2218D356560099A7B6 /* OMBResidenceLegalDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceLegalDetailsViewController.m; sourceTree = "<group>"; };
 		67E94812188DB97D007703FC /* OMBFilmstripImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFilmstripImageCell.h; sourceTree = "<group>"; };
 		67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFilmstripImageCell.m; sourceTree = "<group>"; };
 		67E9481C188DF726007703FC /* OMBMapFilterDateAvailableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterDateAvailableCell.h; sourceTree = "<group>"; };
@@ -2691,6 +2694,8 @@
 				ABA0808B1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m */,
 				AB8642BD18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.h */,
 				AB8642BE18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m */,
+				58BA0F2118D356560099A7B6 /* OMBResidenceLegalDetailsViewController.h */,
+				58BA0F2218D356560099A7B6 /* OMBResidenceLegalDetailsViewController.m */,
 			);
 			path = Residences;
 			sourceTree = "<group>";
@@ -3307,6 +3312,7 @@
 				ABE7069D188863B3007A4E29 /* OMBMessageCreateConnection.m in Sources */,
 				ABBA58A31870DC7300E9BF4E /* OMBFinishListingAuctionStartPriceCell.m in Sources */,
 				AB19A09218616C5100F84DE9 /* OMBResidenceDetailDescriptionCell.m in Sources */,
+				58BA0F2318D356560099A7B6 /* OMBResidenceLegalDetailsViewController.m in Sources */,
 				ABB70067187B58C0005F0730 /* OMBHomebaseLandlordConfirmedTenantsViewController.m in Sources */,
 				AB57EA27186C788B001682DB /* OMBMessageInputToolbar.m in Sources */,
 				AB9D6121188D73F000C9AC64 /* OMBCurvedLineView.m in Sources */,

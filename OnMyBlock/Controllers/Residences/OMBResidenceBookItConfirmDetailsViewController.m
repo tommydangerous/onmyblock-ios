@@ -35,11 +35,13 @@
 #import "OMBResidenceLeaseAgreementViewController.h"
 #import "OMBResidenceMonthlyPaymentScheduleViewController.h"
 #import "OMBViewControllerContainer.h"
+#import "OMBResidenceLegalDetailsViewController.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 #import "UIImageView+WebCache.h"
+
 
 @implementation OMBResidenceBookItConfirmDetailsViewController
 
@@ -824,7 +826,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
         label.frame = CGRectMake(20.0f, 0.0f,
                                  tableView.frame.size.width - (20 * 2), 24.f);
-        label.text = @"View Lease Details";
+        label.text = @"View Legal Details";
         label.textAlignment = NSTextAlignmentRight;
         label.textColor = [UIColor blue];
         [cell.contentView addSubview: label];
@@ -1276,7 +1278,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // View lease details
     if (indexPath.row == 3) {
       [self.navigationController pushViewController:
-       [[OMBResidenceLeaseAgreementViewController alloc] init] animated: YES];
+       [[OMBResidenceLegalDetailsViewController alloc] init] animated: YES];
     }
   }
   // Price breakdown (NOT BEING USED) !!!
