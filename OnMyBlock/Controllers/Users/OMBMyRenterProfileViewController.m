@@ -21,6 +21,7 @@
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoSectionCosignersViewController.h"
 #import "OMBRenterInfoSectionEmploymentViewController.h"
+#import "OMBRenterInfoSectionPreviousRentalViewController.h"
 #import "OMBRenterInfoSectionViewController.h"
 #import "OMBRenterProfileUserInfoCell.h"
 #import "OMBTwoLabelTextFieldCell.h"
@@ -681,7 +682,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Rental History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
       key = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
-      vc  = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
+      vc  = [[OMBRenterInfoSectionPreviousRentalViewController alloc] initWithUser: user];
     }
     // Work History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {

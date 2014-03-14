@@ -24,6 +24,7 @@
   _leaseMonths   = [[dictionary objectForKey: @"lease_months"] intValue];
   if ([dictionary objectForKey: @"rent"])
     _rent = [[dictionary objectForKey: @"rent"] floatValue];
+  _school  = [dictionary objectForKey: @"school"];
   _state  = [dictionary objectForKey: @"state"];
   _zip    = [dictionary objectForKey: @"zip"];
 

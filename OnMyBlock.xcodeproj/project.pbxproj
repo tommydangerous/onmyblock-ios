@@ -469,6 +469,8 @@
 		DE9FF67418CF6A500017AA15 /* OMBTopDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */; };
 		DEA2793218D357E300C4107F /* OMBRenterInfoSectionEmploymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DEA2793118D357E300C4107F /* OMBRenterInfoSectionEmploymentViewController.m */; };
 		DEA2793518D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DEA2793418D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.m */; };
+		DED92DBD18D39CA4003BF830 /* OMBRenterInfoSectionPreviousRentalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DED92DBC18D39CA4003BF830 /* OMBRenterInfoSectionPreviousRentalViewController.m */; };
+		DED92DC018D39DFF003BF830 /* OMBRenterInfoAddPreviousRentalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DED92DBF18D39DFF003BF830 /* OMBRenterInfoAddPreviousRentalViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1369,6 +1371,10 @@
 		DEA2793118D357E300C4107F /* OMBRenterInfoSectionEmploymentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionEmploymentViewController.m; sourceTree = "<group>"; };
 		DEA2793318D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddEmploymentViewController.h; sourceTree = "<group>"; };
 		DEA2793418D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoAddEmploymentViewController.m; sourceTree = "<group>"; };
+		DED92DBB18D39CA4003BF830 /* OMBRenterInfoSectionPreviousRentalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoSectionPreviousRentalViewController.h; sourceTree = "<group>"; };
+		DED92DBC18D39CA4003BF830 /* OMBRenterInfoSectionPreviousRentalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionPreviousRentalViewController.m; sourceTree = "<group>"; };
+		DED92DBE18D39DFF003BF830 /* OMBRenterInfoAddPreviousRentalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddPreviousRentalViewController.h; sourceTree = "<group>"; };
+		DED92DBF18D39DFF003BF830 /* OMBRenterInfoAddPreviousRentalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoAddPreviousRentalViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2572,6 +2578,10 @@
 				DEA2793118D357E300C4107F /* OMBRenterInfoSectionEmploymentViewController.m */,
 				DEA2793318D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.h */,
 				DEA2793418D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.m */,
+				DED92DBB18D39CA4003BF830 /* OMBRenterInfoSectionPreviousRentalViewController.h */,
+				DED92DBC18D39CA4003BF830 /* OMBRenterInfoSectionPreviousRentalViewController.m */,
+				DED92DBE18D39DFF003BF830 /* OMBRenterInfoAddPreviousRentalViewController.h */,
+				DED92DBF18D39DFF003BF830 /* OMBRenterInfoAddPreviousRentalViewController.m */,
 			);
 			path = Users;
 			sourceTree = "<group>";
@@ -3087,6 +3097,7 @@
 				AB0269D61822A12600E72F53 /* AMBlurView.m in Sources */,
 				AB9012A018528A55003153A2 /* OMBPreviousRentalCell.m in Sources */,
 				AB9D611E188CF12F00C9AC64 /* NSData+ImageContentType.m in Sources */,
+				DED92DC018D39DFF003BF830 /* OMBRenterInfoAddPreviousRentalViewController.m in Sources */,
 				AB0C36B818407590006DC3AD /* OMBTriangleView.m in Sources */,
 				ABE4FBF6189045E40009D643 /* OMBPayoutMethodPayPalViewController.m in Sources */,
 				AB9D6112188CEFDE00C9AC64 /* SDWebImageDecoder.m in Sources */,
@@ -3112,6 +3123,7 @@
 				ABB91160189808020046611F /* OMBView.m in Sources */,
 				AB9D6119188CEFDE00C9AC64 /* UIImage+MultiFormat.m in Sources */,
 				67E9481E188DF726007703FC /* OMBMapFilterDateAvailableCell.m in Sources */,
+				DED92DBD18D39CA4003BF830 /* OMBRenterInfoSectionPreviousRentalViewController.m in Sources */,
 				ABED5FEF189705ED00AD630C /* OMBMapViewViewController.m in Sources */,
 				ABCB36C1187CC229008A0EEF /* OMBHomebaseRenterAddRoommateFromEmailViewController.m in Sources */,
 				AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */,
