@@ -40,6 +40,7 @@
   UIView *fadedBackground;
   UILabel *fullNameLabel;
   OMBGradientView *gradient;
+  LIALinkedInHttpClient *linkedInClient;
   UIView *nameView;
   CGFloat nameViewOriginY;
   UIBarButtonItem *previewBarButtonItem;
@@ -686,6 +687,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
       key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
       vc  = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
+      [self linkedInButtonSelected];
+      return;
     }
     if (vc) {
       NSMutableDictionary *dictionary = 
@@ -835,6 +838,46 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 	savedTextString = nil;
   [self.table beginUpdates];
   [self.table endUpdates];
+}
+
+- (void) linkedInButtonSelected
+{
+  LIALinkedInApplication *app = 
+    [LIALinkedInApplication applicationWithRedirectURL: @"https://onmyblock.com"
+      clientId: @"75zr1yumwx0wld" clientSecret: @"XNY3VsMzvdhyR1ej"
+        state: @"DCEEFWF45453sdffef424" grantedAccess: @[@"r_fullprofile"]];
+  linkedInClient = [LIALinkedInHttpClient clientForApplication: app 
+    presentingViewController: self];
+  [linkedInClient getAuthorizationCode: ^(NSString *code) {
+    [linkedInClient getAccessToken: code success: 
+      ^(NSDictionary *accessTokenData) {
+        NSString *accessToken = [accessTokenData objectForKey: @"access_token"];
+        [user createAuthenticationForLinkedInWithAccessToken:
+          accessToken completion: ^(NSError *error) {
+            if (!error) {
+              user.renterApplication.linkedinAuthenticated = YES;
+              [self updateData];
+              // Fetch the employments
+              [user fetchEmploymentsWithCompletion: ^(NSError *error) {
+                [self updateData];
+              }];
+            }
+            else {
+              [self showAlertViewWithError: error];
+            }
+            [[self appDelegate].container stopSpinning];
+          }
+        ];
+        [[self appDelegate].container startSpinning];
+      }
+    failure: ^(NSError *error) {
+      [self showAlertViewWithError: error];
+    }];
+  } cancel: ^{
+    NSLog(@"LINKEDIN CANCELED");
+  } failure: ^(NSError *error) {
+    [self showAlertViewWithError: error];
+  }];
 }
 
 - (void) loadUser: (OMBUser *) object
