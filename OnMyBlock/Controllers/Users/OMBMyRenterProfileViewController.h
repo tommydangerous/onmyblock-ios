@@ -16,8 +16,7 @@
 // Sections
 typedef NS_ENUM(NSInteger, OMBMyRenterProfileSection) {
   OMBMyRenterProfileSectionUserInfo,
-  OMBMyRenterProfileSectionRentalInfo,
-  OMBMyRenterProfileSectionEmployments,
+  OMBMyRenterProfileSectionRenterInfo,
   OMBMyRenterProfileSectionSpacing
 };
 
@@ -32,47 +31,16 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionUserInfoRow) {
   OMBMyRenterProfileSectionUserInfoRowPhone,
   OMBMyRenterProfileSectionUserInfoRowAbout
 };
-// Rental Info
-typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRentalInfoRow) {
-  OMBMyRenterProfileSectionRentalInfoRowCoapplicants,
-  OMBMyRenterProfileSectionRentalInfoRowCoapplicantsPickerView,
-  OMBMyRenterProfileSectionRentalInfoRowCosigners,
-  OMBMyRenterProfileSectionRentalInfoRowFacebook,
-  OMBMyRenterProfileSectionRentalInfoRowLinkedIn
+// Renter Info
+typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRenterInfoRow) {
+  OMBMyRenterProfileSectionRenterInfoTopSpacing,
+  OMBMyRenterProfileSectionRenterInfoRowCoapplicants,
+  OMBMyRenterProfileSectionRenterInfoRowCosigners,
+  OMBMyRenterProfileSectionRenterInfoRowRentalHistory,
+  OMBMyRenterProfileSectionRenterInfoRowWorkHistory
 };
 
 @interface OMBMyRenterProfileViewController : OMBTableViewController
-<UIActionSheetDelegate, UIImagePickerControllerDelegate, 
-  UINavigationControllerDelegate, UIPickerViewDataSource,
-  UIPickerViewDelegate, UITextFieldDelegate, UITextViewDelegate>
-{
-  UILabel *aboutTextViewPlaceholder;
-  UITextView *aboutTextView;
-  OMBCenteredImageView *backImageView;
-  UIView *backView;
-  CGFloat backViewOriginY;
-	UIPickerView *coapplicantPickerView;
-	UIPickerView *cosignerPickerView;
-  UIView *fadedBackground;
-  UILabel *fullNameLabel;
-  OMBGradientView *gradient;
-  LIALinkedInHttpClient *linkedInClient;
-  UIView *nameView;
-  CGFloat nameViewOriginY;
-  UIView *pickerViewContainer;
-	UILabel *pickerViewHeaderLabel;
-  UIBarButtonItem *previewBarButtonItem;
-  UIView *scaleBackView;
-  NSIndexPath *selectedIndexPath;
-  UIToolbar *textFieldToolbar;
-	NSString *savedTextString;
-	UITextView *editingTextView;
-	UITextField *editingTextField;
-  UIActionSheet *uploadActionSheet;
-  OMBUser *user;
-  OMBCenteredImageView *userIconView;
-  NSMutableDictionary *valueDictionary;
-}
 
 #pragma mark - Methods
 

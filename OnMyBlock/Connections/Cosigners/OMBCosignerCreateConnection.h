@@ -11,9 +11,6 @@
 @class OMBCosigner;
 
 @interface OMBCosignerCreateConnection : OMBConnection
-{
-  OMBCosigner *cosigner;
-}
 
 #pragma mark - Initializer
 

@@ -35,17 +35,17 @@
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view     = [[UIView alloc] initWithFrame: screen];
 
-  _table = [[UITableView alloc] initWithFrame: screen
+  self.table = [[UITableView alloc] initWithFrame: screen
     style: UITableViewStylePlain];
-  _table.alwaysBounceVertical         = YES;
-  _table.canCancelContentTouches      = YES;
-  // _table.contentInset                 = UIEdgeInsetsMake(0, 0, -49, 0);
-  _table.dataSource                   = self;
-  _table.delegate                     = self;
-  _table.separatorColor               = [UIColor clearColor];
-  _table.separatorStyle               = UITableViewCellSeparatorStyleNone;
-  _table.showsVerticalScrollIndicator = NO;
-  [self.view addSubview: _table];
+  self.table.alwaysBounceVertical         = YES;
+  self.table.canCancelContentTouches      = YES;
+  // self.table.contentInset                 = UIEdgeInsetsMake(0, 0, -49, 0);
+  self.table.dataSource                   = self;
+  self.table.delegate                     = self;
+  self.table.separatorColor               = [UIColor clearColor];
+  self.table.separatorStyle               = UITableViewCellSeparatorStyleNone;
+  self.table.showsVerticalScrollIndicator = NO;
+  [self.view addSubview: self.table];
 }
 
 #pragma mark - Protocol

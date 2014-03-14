@@ -14,6 +14,28 @@
 
 #pragma mark - Class Methods
 
++ (NSAttributedString *) attributedStringWithStrings: (NSArray *) strings
+fonts: (NSArray *) fonts colors: (NSArray *) colors
+{
+  NSMutableAttributedString *attributedString = 
+    [[NSMutableAttributedString alloc] initWithString: @"" attributes: nil];
+  for (NSString *string in strings) {
+    NSUInteger index = [strings indexOfObject: string];
+    NSMutableAttributedString *aString = 
+      [[NSMutableAttributedString alloc] initWithString: string attributes: @{
+        NSFontAttributeName: [fonts objectAtIndex: index],
+        NSForegroundColorAttributeName: [colors objectAtIndex: index]
+      }];
+    if (index > 0) {
+      [attributedString appendAttributedString: 
+        [[NSMutableAttributedString alloc] initWithString: @" " 
+          attributes: nil]];
+    }
+    [attributedString appendAttributedString: aString];
+  }
+  return attributedString;
+}
+
 + (NSString *) numberToCurrencyString: (int) number
 {
   NSNumberFormatter *formatter = [NSNumberFormatter new];
@@ -184,6 +206,12 @@
 }
 
 #pragma mark - Instance Methods
+
+- (BOOL) containsString:(NSString *)string options:(NSStringCompareOptions)options
+{
+  NSRange rng = [self rangeOfString:string options:options];
+  return rng.location != NSNotFound;
+}
 
 - (NSAttributedString *) attributedStringWithFont: (UIFont *) font
 lineHeight: (CGFloat) lineHeight

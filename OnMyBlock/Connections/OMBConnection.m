@@ -34,11 +34,6 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
 
 @implementation OMBConnection
 
-@synthesize completionBlock = _completionBlock;
-@synthesize createdAt       = _createdAt;
-@synthesize delegate        = _delegate;
-@synthesize request         = _request;
-
 #pragma mark - Initializer
 
 - (id) init
@@ -134,8 +129,8 @@ didFailWithError: (NSError *) error
 code: (NSInteger) code
 {
   internalError = [NSError errorWithDomain: domain code: code userInfo: @{
-    NSLocalizedDescriptionKey:        [self errorTitle],
-    NSLocalizedFailureReasonErrorKey: [self errorMessage]
+    NSLocalizedDescriptionKey:        [[self errorTitle] capitalizedString],
+    NSLocalizedFailureReasonErrorKey: [[self errorMessage] capitalizedString]
   }];
 }
 

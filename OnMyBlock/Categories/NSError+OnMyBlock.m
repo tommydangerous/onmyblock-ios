@@ -11,6 +11,9 @@
 // Authentication w/ 3rd parties
 NSString *const OMBConnectionErrorDomainAuthentication =
   @"OMBConnectionErrorDomainAuthentication";
+// Cosigner
+NSString *const OMBConnectionErrorDomainCosigner =
+  @"OMBConnectionErrorDomainCosigner";
 // Messages
 NSString *const OMBConnectionErrorDomainMessage =
   @"OMBConnectionErrorDomainMessage";

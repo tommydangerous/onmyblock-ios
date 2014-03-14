@@ -9,12 +9,9 @@
 #import "OMBConnection.h"
 
 @interface OMBCosignerListConnection : OMBConnection
-{
-  OMBUser *user;
-}
 
 #pragma mark - Initializer
 
-- (id) initWithUser: (OMBUser *) object;
+- (id) initWithUserUID: (NSUInteger) userUID;
 
 @end

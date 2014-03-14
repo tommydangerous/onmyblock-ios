@@ -8,8 +8,10 @@
 
 #import "OMBTableViewController.h"
 
+@class OMBMapFilterLocationViewController;
 @class OMBNeighborhood;
 @class AMBlurView;
+
 @interface OMBMapFilterViewController : OMBTableViewController
 <CLLocationManagerDelegate, UIPickerViewDataSource, UIPickerViewDelegate,
   UIScrollViewDelegate>
@@ -18,7 +20,7 @@
   NSCalendar *calendar;
   UIButton *currentLocationButton;
   UIView *fadedBackground;
-  BOOL isEditing;
+  OMBMapFilterLocationViewController *filterViewController;
   CLLocationManager *locationManager;
   NSMutableDictionary *moveInDates;
   UITableView *neighborhoodTableView;
@@ -29,6 +31,7 @@
   UIView *pickerViewContainer;
   UIBarButtonItem *searchBarButtonItem;
   OMBNeighborhood *selectedNeighborhood;
+  NSDictionary *temporaryNeighborhoods;
 }
 
 @property (nonatomic) BOOL shouldSearch;

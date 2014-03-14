@@ -31,6 +31,16 @@ NSString *const OMBUserDefaultsAPIKeyAccessToken =
   @"OMBUserDefaultsAPIKeyAccessToken";
 NSString *const OMBUserDefaultsAPIKeyExpiresAt = 
   @"OMBUserDefaultsAPIKeyExpiresAt";
+NSString *const OMBUserDefaultsRenterApplication = 
+  @"OMBUserDefaultsRenterApplication";
+NSString *const OMBUserDefaultsRenterApplicationCheckedCoapplicants = 
+  @"OMBUserDefaultsRenterApplicationCheckedCoapplicants";
+NSString *const OMBUserDefaultsRenterApplicationCheckedCosigners = 
+  @"OMBUserDefaultsRenterApplicationCheckedCosigners";
+NSString *const OMBUserDefaultsRenterApplicationCheckedRentalHistory = 
+  @"OMBUserDefaultsRenterApplicationCheckedRentalHistory";
+NSString *const OMBUserDefaultsRenterApplicationCheckedWorkHistory = 
+  @"OMBUserDefaultsRenterApplicationCheckedWorkHistory";
 NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
 
 @implementation OMBAppDelegate
@@ -63,7 +73,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
 
-  _container = [[OMBViewControllerContainer alloc] init];
+  self.container = [[OMBViewControllerContainer alloc] init];
 
   // Set root view controller for app
   self.window.backgroundColor    = [UIColor backgroundColor];

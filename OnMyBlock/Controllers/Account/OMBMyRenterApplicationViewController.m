@@ -105,14 +105,14 @@
   }
 
   // Download cosigners
-  OMBCosignerListConnection *cosignerConn = 
-    [[OMBCosignerListConnection alloc] initWithUser: user];
-  cosignerConn.completionBlock = ^(NSError *error) {
-    // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 2]
-    //   withRowAnimation: UITableViewRowAnimationNone];
-    [self.table reloadData];
-  };
-  [cosignerConn start];
+  // OMBCosignerListConnection *cosignerConn = 
+  //   [[OMBCosignerListConnection alloc] initWithUser: user];
+  // cosignerConn.completionBlock = ^(NSError *error) {
+  //   // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 2]
+  //   //   withRowAnimation: UITableViewRowAnimationNone];
+  //   [self.table reloadData];
+  // };
+  // [cosignerConn start];
 
   // Rental History
   OMBPreviousRentalListConnection *rentalListConn = 
@@ -387,7 +387,7 @@ numberOfRowsInSection: (NSInteger) section
   }
   // Co-signers
   else if (section == 2) {
-    return [user.renterApplication.cosigners count];
+    // return [user.renterApplication.cosigners count];
   }
   // Pets
   else if (section == 3) {

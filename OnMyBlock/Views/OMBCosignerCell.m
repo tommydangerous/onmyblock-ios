@@ -9,8 +9,10 @@
 #import "OMBCosignerCell.h"
 
 #import "OMBCosigner.h"
+#import "NSString+Extensions.h"
 #import "NSString+PhoneNumber.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 
 @implementation OMBCosignerCell
 
@@ -77,14 +79,25 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 - (void) loadData: (OMBCosigner *) object
 {
-  _cosigner = object;
-  nameLabel.text = [NSString stringWithFormat: @"%@ %@",
-    [_cosigner.firstName capitalizedString], 
-      [_cosigner.lastName capitalizedString]];
-  emailLabel.text = [_cosigner.email lowercaseString];
-  if ([[_cosigner.phone phoneNumberString] length] > 0) {
-    phoneLabel.text = [_cosigner.phone phoneNumberString];
-    phoneLabel.textColor = [UIColor blue];
+  self.cosigner = object;
+  NSString *fullName = [NSString stringWithFormat: @"%@ %@",
+    [self.cosigner.firstName capitalizedString], 
+      [self.cosigner.lastName capitalizedString]];
+  
+  NSString *relationshipType = @"";
+  if (self.cosigner.relationshipType)
+    relationshipType = [NSString stringWithFormat: @"(%@)",
+      self.cosigner.relationshipType];
+  nameLabel.attributedText = [NSString attributedStringWithStrings: 
+    @[fullName, relationshipType] 
+      fonts: @[[UIFont normalTextFontBold], [UIFont smallTextFont]] 
+        colors: @[[UIColor textColor], [UIColor grayMedium]]];
+  emailLabel.text = [self.cosigner.email lowercaseString];
+  if (self.cosigner.phone) {
+    if ([[self.cosigner.phone phoneNumberString] length] > 0) {
+      phoneLabel.text = [self.cosigner.phone phoneNumberString];
+      phoneLabel.textColor = [UIColor blue];
+    }
   }
   else {
     phoneLabel.text      = @"no phone number";

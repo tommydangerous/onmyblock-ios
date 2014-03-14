@@ -16,10 +16,13 @@
 #import "OMBMapFilterPropertyTypeCell.h"
 #import "OMBMapFilterRentCell.h"
 #import "OMBMapFilterDateAvailableCell.h"
+#import "OMBMapFilterLocationViewController.h"
+#import "OMBNavigationController.h"
 #import "OMBNeighborhood.h"
 #import "OMBNeighborhoodStore.h"
-#import "TextFieldPadding.h"
+#import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIImage+Color.h"
 
 @interface OMBMapFilterViewController ()
 {
@@ -103,12 +106,12 @@
 
   neighborhoodTableViewContainer = [[UIView alloc] init];
   neighborhoodTableViewContainer.frame = CGRectMake(0.0f, 
-    screenHeight, screenWidth, screenHeight * 0.6);
+    screenHeight, screenWidth, screenHeight * 0.8);
   [self.view addSubview: neighborhoodTableViewContainer];
 
   // Header for the neighborhood table view
   AMBlurView *headerView = [[AMBlurView alloc] init];
-  headerView.blurTintColor = [UIColor grayLight];
+  headerView.blurTintColor = [UIColor grayVeryLight];
   headerView.frame = CGRectMake(0.0f, 0.0f, 
     neighborhoodTableViewContainer.frame.size.width, OMBStandardHeight);
   [neighborhoodTableViewContainer addSubview: headerView];
@@ -138,48 +141,80 @@
   [headerView addSubview: neighborhoodCancelButton];
 
   // Neighborhood selection
-  neighborhoodTableView = [[UITableView alloc] initWithFrame: 
+  /*neighborhoodTableView = [[UITableView alloc] initWithFrame:
     CGRectMake(0.0f, headerView.frame.size.height, 
       neighborhoodTableViewContainer.frame.size.width,
       neighborhoodTableViewContainer.frame.size.height - 
       headerView.frame.size.height)
         style: UITableViewStylePlain];
   neighborhoodTableView.alwaysBounceVertical = YES;
+  neighborhoodTableView.backgroundColor = [UIColor grayUltraLight];
   neighborhoodTableView.dataSource = self;
   neighborhoodTableView.delegate = self;
   neighborhoodTableView.separatorColor = [UIColor grayLight];
   neighborhoodTableView.separatorInset = UIEdgeInsetsMake(0.0f, padding, 
     0.0f, 0.0f);
+  temporaryNeighborhoods = [[OMBNeighborhoodStore sharedStore]
+    sortedNeighborhoodsForName:@""];
   // Header view
   UIView *neighborhoodTableHeaderView = [UIView new];
-  neighborhoodTableHeaderView.frame = CGRectMake(0.0f, 0.0f, 
+  neighborhoodTableHeaderView.backgroundColor = [UIColor grayLight];
+  neighborhoodTableHeaderView.frame = CGRectMake(0.0f, 0.0f,
     neighborhoodTableView.frame.size.width, OMBStandardHeight);
   neighborhoodTableView.tableHeaderView = neighborhoodTableHeaderView;
+  // Filter
+  filterTextField = [[TextFieldPadding alloc] init];
+  filterTextField.backgroundColor = [UIColor whiteColor];
+  filterTextField.delegate = self;
+  filterTextField.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  filterTextField.frame = CGRectMake(padding * 0.5, OMBStandardHeight * 0.1f,
+    neighborhoodTableHeaderView.frame.size.width - (padding), OMBStandardHeight * 0.8f);
+  filterTextField.layer.cornerRadius = 6.0f;
+  filterTextField.leftPaddingX = padding * 1.5f;
+  filterTextField.returnKeyType = UIReturnKeySearch;
+  filterTextField.rightPaddingX = padding * 1.5f;
+  filterTextField.textColor = [UIColor textColor];
+  [filterTextField addTarget: self action: @selector(textFieldDidChange:)
+    forControlEvents: UIControlEventEditingChanged];
+  [neighborhoodTableHeaderView addSubview: filterTextField];
+  // Filter image view
+  CGFloat sizeImage = 17;
+  filterImageView = [[UIImageView alloc] initWithImage:
+    [UIImage changeColorForImage:[UIImage imageNamed:@"search"]
+      toColor:[UIColor grayMedium]]];
+  filterImageView.frame = CGRectMake((neighborhoodTableHeaderView.frame.size.width - sizeImage) * 0.5f,
+    (neighborhoodTableHeaderView.frame.size.height - sizeImage) * 0.5f,
+      sizeImage , sizeImage);
+  [neighborhoodTableHeaderView addSubview: filterImageView];
+  
   // Label
   UILabel *currentLocationLabel = [UILabel new];
   currentLocationLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
     size: 15];
-  currentLocationLabel.frame = CGRectMake(padding, 0.0f,
+  currentLocationLabel.frame = CGRectMake(padding, OMBStandardHeight,
     neighborhoodTableHeaderView.frame.size.width,
-      neighborhoodTableHeaderView.frame.size.height);
+      OMBStandardHeight);
   currentLocationLabel.text = @"User Current Location";
   currentLocationLabel.textColor = [UIColor blue];
-  [neighborhoodTableHeaderView addSubview: currentLocationLabel];
+  //[neighborhoodTableHeaderView addSubview: currentLocationLabel];
   // Image view
   CGFloat imageSize = padding;
   UIImageView *headerImageView = [UIImageView new];
   headerImageView.frame = CGRectMake(
     neighborhoodTableHeaderView.frame.size.width - (imageSize + padding), 
-      (neighborhoodTableHeaderView.frame.size.height - imageSize) * 0.5, 
+      OMBStandardHeight + (OMBStandardHeight - imageSize) * 0.5,
         imageSize, imageSize);
   headerImageView.image = [UIImage imageNamed: @"gps_cursor_blue.png"];
-  [neighborhoodTableHeaderView addSubview: headerImageView];
+  //[neighborhoodTableHeaderView addSubview: headerImageView];
   // Current location button
+  CGRect buttonFrame = neighborhoodTableHeaderView.frame;
+  buttonFrame.origin.y = OMBStandardHeight;
+  buttonFrame.size.height = OMBStandardHeight;
   currentLocationButton = [UIButton new];
-  currentLocationButton.frame = neighborhoodTableHeaderView.frame;
+  currentLocationButton.frame = buttonFrame;
   [currentLocationButton addTarget: self action: @selector(userCurrentLocation)
     forControlEvents: UIControlEventTouchUpInside];
-  [neighborhoodTableHeaderView addSubview: currentLocationButton];
+  //[neighborhoodTableHeaderView addSubview: currentLocationButton];*/
 
   // Footer view
   neighborhoodTableView.tableFooterView = [[UIView alloc] initWithFrame:
@@ -199,7 +234,7 @@
 	
   // Header label
   pickerViewHeaderLabel = [UILabel new];
-  pickerViewHeaderLabel.font = headerLabel.font;
+  pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   pickerViewHeaderLabel.frame = pickerViewHeader.frame;
   pickerViewHeaderLabel.text = @"";
   pickerViewHeaderLabel.textAlignment = headerLabel.textAlignment;
@@ -268,10 +303,29 @@
     rentPickerView.frame.size.width, 
       pickerViewHeader.frame.size.height +
       rentPickerView.frame.size.height);
+  filterViewController = [[OMBMapFilterLocationViewController alloc]
+   initWithSelectedNeighborhood: selectedNeighborhood];
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
+  OMBMapFilterNeighborhoodCell *cell = (OMBMapFilterNeighborhoodCell *)
+  [self.table cellForRowAtIndexPath:
+   [NSIndexPath indexPathForRow: 1 inSection: 0]];
+  NSString *string = @"";
+  selectedNeighborhood = filterViewController.selectedNeighborhood;
+  if (selectedNeighborhood) {
+    string = selectedNeighborhood.name;
+  }
+  cell.neighborhoodTextField.text = string;
+  if (selectedNeighborhood) {
+    [_valuesDictionary setObject: selectedNeighborhood
+      forKey: @"neighborhood"];
+  }
+  else
+    [_valuesDictionary setObject: @"" forKey: @"neighborhood"];
+  
+  
   moveInDates = [NSMutableDictionary dictionary];
 
   NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit | 
@@ -491,7 +545,8 @@ widthForComponent: (NSInteger) component
     return 6;
   }
   else if (tableView == neighborhoodTableView) {
-    return [[[OMBNeighborhoodStore sharedStore] cities] count];
+    return [[temporaryNeighborhoods allKeys] count];
+    //return [[[OMBNeighborhoodStore sharedStore] cities] count];
   }
   return 0;
 }
@@ -632,10 +687,28 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (!cell)
       cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
         reuseIdentifier: NeighborhoodNameCellIdentifier];
-    NSString *city = 
-      [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: 
-        indexPath.section];
-    NSArray *neighborhoods = 
+  
+    NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
+                           @selector(localizedCaseInsensitiveCompare:)];
+    OMBNeighborhood *neighborhoodCity = [[temporaryNeighborhoods objectForKey:keys[indexPath.section]] objectAtIndex:
+                       indexPath.row];
+    if (selectedNeighborhood == neighborhoodCity) {
+      cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    }
+    else {
+      cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+    cell.backgroundColor = [UIColor grayUltraLight];
+    cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
+                                          size: 15];
+    cell.textLabel.text = neighborhoodCity.name;
+    cell.textLabel.textColor = [UIColor textColor];
+    return cell;
+    
+    /*NSString *city =
+     [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex:
+     indexPath.section];
+    NSArray *neighborhoods =
       [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity: city];
     OMBNeighborhood *neighborhood = [neighborhoods objectAtIndex: 
       indexPath.row];
@@ -645,13 +718,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     else {
       cell.accessoryType = UITableViewCellAccessoryNone;
     }
+    cell.backgroundColor = [UIColor grayUltraLight];
     cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
       size: 15];
     cell.textLabel.text = neighborhood.name;
     cell.textLabel.textColor = [UIColor textColor];
-    return cell;
+    return cell;*/
   }
-  return [[UITableViewCell alloc] init];
+  return [[UITableViewCell alloc] init]; 
 }
 
 - (NSInteger) tableView: (UITableView *) tableView
@@ -663,11 +737,15 @@ numberOfRowsInSection: (NSInteger) section
   }
   // Neighborhood
   else if (tableView == neighborhoodTableView) {
-    NSString *city = 
+    NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
+                     @selector(localizedCaseInsensitiveCompare:)];
+    return [[temporaryNeighborhoods objectForKey:keys[section]] count];
+    
+    /*NSString *city =
       [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: section];
     NSArray *neighborhoods = 
       [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity: city];
-    return [neighborhoods count];
+    return [neighborhoods count];*/
   }
   return 0;
 }
@@ -706,18 +784,25 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Neighborhood table view
   else if (tableView == neighborhoodTableView) {
-    NSString *city = 
+    NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
+                     @selector(localizedCaseInsensitiveCompare:)];
+    OMBNeighborhood *neighborhood = [[temporaryNeighborhoods
+      objectForKey:keys[indexPath.section]]
+        objectAtIndex: indexPath.row];
+    
+    /*NSString *city =
       [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: 
         indexPath.section];
     NSArray *neighborhoods = 
       [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity: city];
     OMBNeighborhood *neighborhood = 
-      [neighborhoods objectAtIndex: indexPath.row];
+      [neighborhoods objectAtIndex: indexPath.row];*/
     if (selectedNeighborhood == neighborhood) {
       selectedNeighborhood = nil;
     }
     else {
-      selectedNeighborhood = [neighborhoods objectAtIndex: indexPath.row];
+      selectedNeighborhood = neighborhood;
+      //selectedNeighborhood = [neighborhoods objectAtIndex: indexPath.row];
     }
     OMBMapFilterNeighborhoodCell *cell = (OMBMapFilterNeighborhoodCell *)
       [self.table cellForRowAtIndexPath: 
@@ -787,8 +872,23 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 viewForHeaderInSection: (NSInteger) section
 {
   if (tableView == neighborhoodTableView) {
+    NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
+      @selector(localizedCaseInsensitiveCompare:)];
     AMBlurView *blur = [[AMBlurView alloc] init];
-    blur.blurTintColor = [UIColor grayLight];
+    blur.blurTintColor = [UIColor grayVeryLight];
+    blur.frame = CGRectMake(0.0f, 0.0f,
+                            tableView.frame.size.width, 13.0f * 2);
+    UILabel *label = [UILabel new];
+    label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 13];
+    label.frame = blur.frame;
+    label.text = [keys[section] capitalizedString];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor blue];
+    [blur addSubview: label];
+    return blur;
+    
+    /*AMBlurView *blur = [[AMBlurView alloc] init];
+    blur.blurTintColor = [UIColor grayVeryLight];
     blur.frame = CGRectMake(0.0f, 0.0f, 
       tableView.frame.size.width, 13.0f * 2);
     UILabel *label = [UILabel new];
@@ -797,9 +897,9 @@ viewForHeaderInSection: (NSInteger) section
     label.text = [[[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: 
       section] capitalizedString];
     label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [UIColor grayMedium];
+    label.textColor = [UIColor blue];
     [blur addSubview: label];
-    return blur;
+    return blur;*/
   }
   return [[UIView alloc] initWithFrame: CGRectZero];
 }
@@ -958,13 +1058,14 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) hideNeighborhoodTableViewContainer
 {
+  /*[self hideTextField];
   CGRect rect = neighborhoodTableViewContainer.frame;
   rect.origin.y = self.view.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 0.0f;
     neighborhoodTableViewContainer.frame = rect;
   }];
-  [self showSearchBarButtonItem];
+  [self showSearchBarButtonItem];*/
 }
 
 - (void) hidePickerView
@@ -1068,13 +1169,18 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) showNeighborhoodTableViewContainer
 {
-  CGRect rect = neighborhoodTableViewContainer.frame;
+  filterViewController.selectedNeighborhood = selectedNeighborhood;
+  [self presentViewController:
+   [[OMBNavigationController alloc] initWithRootViewController:
+    filterViewController] animated: YES completion: nil];
+  
+  /*CGRect rect = neighborhoodTableViewContainer.frame;
   rect.origin.y = self.view.frame.size.height -
     neighborhoodTableViewContainer.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 1.0f;
     neighborhoodTableViewContainer.frame = rect;
-  }];
+  }];*/
   // [self showDoneBarButtonItem];
 }
 

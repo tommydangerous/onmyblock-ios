@@ -13,6 +13,12 @@ typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainAuthenticationCode) {
   OMBConnectionErrorDomainAuthenticationCodeLinkedInFailed
 };
 
+// Cosigner
+extern NSString *const OMBConnectionErrorDomainCosigner;
+typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainCosignerCode) {
+  OMBConnectionErrorDomainCosignerCodeCreateFailed
+};
+
 // Message
 extern NSString *const OMBConnectionErrorDomainMessage;
 typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainMessageCode) {

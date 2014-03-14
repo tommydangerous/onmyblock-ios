@@ -88,7 +88,6 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 
 - (void) acceptOffer: (OMBOffer *) offer 
   withCompletion: (void (^) (NSError *error)) block;
-- (void) addCosigner: (OMBCosigner *) cosigner;
 - (void) addEmployment: (OMBEmployment *) employment;
 - (void) addLegalAnswer: (OMBLegalAnswer *) object;
 // - (void) addMessage: (OMBMessage *) message;
@@ -152,7 +151,6 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (NSInteger) profilePercentage;
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromConfirmedTenantsDictionary: (NSDictionary *) dictionary;
-- (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDepositPayoutTransactionDictionary: 
 (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;

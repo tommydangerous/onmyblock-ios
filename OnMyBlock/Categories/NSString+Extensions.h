@@ -14,6 +14,8 @@
 
 #pragma mark - Class Methods
 
++ (NSAttributedString *) attributedStringWithStrings: (NSArray *) strings
+fonts: (NSArray *) fonts colors: (NSArray *) colors;
 + (NSString *) numberToCurrencyString: (int) number;
 + (NSString *) stringFromDateForJSON: (NSDate *) date;
 + (NSString *) stripLower: (NSString *) string;
@@ -23,7 +25,7 @@
 + (NSString *) timeRemainingShortFormatWithInterval: (NSTimeInterval) interval;
 
 #pragma mark - Instance Methods
-
+- (BOOL) containsString:(NSString *)string options:(NSStringCompareOptions)options;
 - (NSAttributedString *) attributedStringWithFont: (UIFont *) font
 lineHeight: (CGFloat) lineHeight;
 - (NSAttributedString *) attributedStringWithString: (NSString *) string 

@@ -127,10 +127,12 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat padding = OMBPadding;
   CGFloat height = [OMBRenterProfileUserInfoCell heightForCell];
 
+  CGFloat originX = screen.size.width - (checkmarkSize + padding);
+  if (self.accessoryType != UITableViewCellAccessoryNone)
+    originX -= padding;
   _checkmarkImageView.alpha = 0.2f;
-  _checkmarkImageView.frame = CGRectMake(
-    screen.size.width - (checkmarkSize + padding), 
-      (height - checkmarkSize) * 0.5f, checkmarkSize, checkmarkSize);
+  _checkmarkImageView.frame = CGRectMake(originX, 
+    (height - checkmarkSize) * 0.5f, checkmarkSize, checkmarkSize);
   _checkmarkImageView.hidden = NO;
   _checkmarkImageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
 

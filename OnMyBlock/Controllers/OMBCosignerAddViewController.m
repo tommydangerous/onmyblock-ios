@@ -70,7 +70,7 @@
   cosigner.firstName = [_firstNameTextField.text lowercaseString];
   cosigner.lastName  = [_lastNameTextField.text lowercaseString];
   cosigner.phone     = _phoneTextField.text;
-  [[OMBUser currentUser] addCosigner: cosigner];
+  // [[OMBUser currentUser] addCosigner: cosigner];
   [[[OMBCosignerCreateConnection alloc] initWithCosigner: cosigner] start];
   [self cancel];
 }

@@ -40,6 +40,7 @@ extern CGFloat const OMBStandardHeight;
 - (void) cancel;
 - (void) done;
 - (void) save;
+- (CGRect) screen;
 - (void) setMenuBarButtonItem;
 - (void) showAlertViewWithError: (NSError *) error;
 
