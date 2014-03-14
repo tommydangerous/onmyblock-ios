@@ -205,6 +205,15 @@ completion: (void (^) (NSError *error)) block
   [cosigners removeObjectForKey: [NSNumber numberWithInt: cosigner.uid]];
 }
 
+- (void) removeEmployment: (OMBEmployment *) employment
+{
+  for(int i=0; i< _employments.count; i++){
+    if(((OMBEmployment *)_employments[i]).uid == employment.uid){
+      [_employments removeObjectAtIndex: i];
+    }
+  }
+}
+
 - (void) updateWithDictionary: (NSDictionary *) dictionary
 completion: (void (^) (NSError *error)) block
 {

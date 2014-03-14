@@ -48,6 +48,7 @@ completion: (void (^) (NSError *error)) block;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) removeAllObjects;
 - (void) removeCosigner: (OMBCosigner *) cosigner;
+- (void) removeEmployment: (OMBEmployment *) employment;
 - (void) updateWithDictionary: (NSDictionary *) dictionary
 completion: (void (^) (NSError *error)) block;
 

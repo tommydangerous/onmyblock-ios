@@ -467,6 +467,8 @@
 		DE9927D518BE887F0064A902 /* OMBRateFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9927D418BE887F0064A902 /* OMBRateFeedbackViewController.m */; };
 		DE9E7A9718D104AE00617563 /* OMBMapFilterLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9E7A9618D104AE00617563 /* OMBMapFilterLocationViewController.m */; };
 		DE9FF67418CF6A500017AA15 /* OMBTopDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */; };
+		DEA2793218D357E300C4107F /* OMBRenterInfoSectionEmploymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DEA2793118D357E300C4107F /* OMBRenterInfoSectionEmploymentViewController.m */; };
+		DEA2793518D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DEA2793418D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1363,6 +1365,10 @@
 		DE9E7A9618D104AE00617563 /* OMBMapFilterLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterLocationViewController.m; sourceTree = "<group>"; };
 		DE9FF67218CF6A500017AA15 /* OMBTopDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTopDetailView.h; sourceTree = "<group>"; };
 		DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTopDetailView.m; sourceTree = "<group>"; };
+		DEA2793018D357E300C4107F /* OMBRenterInfoSectionEmploymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoSectionEmploymentViewController.h; sourceTree = "<group>"; };
+		DEA2793118D357E300C4107F /* OMBRenterInfoSectionEmploymentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionEmploymentViewController.m; sourceTree = "<group>"; };
+		DEA2793318D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddEmploymentViewController.h; sourceTree = "<group>"; };
+		DEA2793418D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoAddEmploymentViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2562,6 +2568,10 @@
 				AB9FEEF418CFA17400E25FE2 /* OMBRenterInfoAddViewController.m */,
 				AB9FEEF618CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.h */,
 				AB9FEEF718CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m */,
+				DEA2793018D357E300C4107F /* OMBRenterInfoSectionEmploymentViewController.h */,
+				DEA2793118D357E300C4107F /* OMBRenterInfoSectionEmploymentViewController.m */,
+				DEA2793318D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.h */,
+				DEA2793418D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.m */,
 			);
 			path = Users;
 			sourceTree = "<group>";
@@ -3167,6 +3177,7 @@
 				ABBA58AF1871C2F500E9BF4E /* OMBPickerViewCell.m in Sources */,
 				ABBA58AC1871623100E9BF4E /* OMBDatePickerCell.m in Sources */,
 				ABBB18CB182408DB00211499 /* OMBFavoriteResidenceConnection.m in Sources */,
+				DEA2793218D357E300C4107F /* OMBRenterInfoSectionEmploymentViewController.m in Sources */,
 				ABB70069187B58C0005F0730 /* OMBOfferInquiryViewController.m in Sources */,
 				ABB911C318998FB30046611F /* AFURLConnectionOperation.m in Sources */,
 				AB131F2E1885C87B0057D769 /* OMBResidenceImageSlideViewController.m in Sources */,
@@ -3327,6 +3338,7 @@
 				ABCB36AC187C7524008A0EEF /* OMBAlertView.m in Sources */,
 				ABF18BB11816CC65002DD723 /* OMBNeighborhood.m in Sources */,
 				AB95456D1848DAC0000513BE /* DDPageControl.m in Sources */,
+				DEA2793518D35B6C00C4107F /* OMBRenterInfoAddEmploymentViewController.m in Sources */,
 				ABE679B51893268800A494FB /* OMBAllResidenceStore.m in Sources */,
 				ABE4FC0018909C6E0009D643 /* OMBPayoutMethodEditViewController.m in Sources */,
 				ABA5B4101856873500F825E1 /* OMBPreviousRentalListConnection.m in Sources */,
@@ -3538,7 +3550,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3560,7 +3572,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "06651389-7892-433C-9EDE-4980F52DBEA4";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3572,7 +3584,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3593,7 +3605,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1D67A8C8-C7C1-4C92-A4E9-21CDCC070DC3";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
