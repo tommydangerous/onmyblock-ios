@@ -19,9 +19,9 @@ typedef NS_ENUM(NSInteger, OMBRenterInfoAddEmploymentSection) {
 typedef NS_ENUM(NSInteger, OMBRenterInfoAddEmploymentSectionFieldsRow) {
   OMBRenterInfoAddEmploymentSectionFieldsRowCompanyName,
   OMBRenterInfoAddEmploymentSectionFieldsRowCompanyWebsite,
-  OMBRenterInfoAddEmploymentSectionFieldsRowEndDate,
   OMBRenterInfoAddEmploymentSectionFieldsRowIncome,
   OMBRenterInfoAddEmploymentSectionFieldsRowStartDate,
+  OMBRenterInfoAddEmploymentSectionFieldsRowEndDate,
   OMBRenterInfoAddEmploymentSectionFieldsRowTitle
 };
 

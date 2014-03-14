@@ -98,6 +98,12 @@
       imageName         = @"phone_icon.png";
       placeholderString = @"company website";
     }
+    // Income
+    else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowIncome) {
+      imageName         = @"phone_icon.png";
+      placeholderString = @"income";
+      cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
+    }
     // Start date
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowStartDate) {
       imageName         = @"phone_icon.png";
@@ -107,12 +113,6 @@
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowEndDate) {
       imageName         = @"phone_icon.png";
       placeholderString = @"end date";
-    }
-    // Income
-    else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowIncome) {
-      imageName         = @"phone_icon.png";
-      placeholderString = @"income";
-      cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
     }
     // Title
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowTitle) {

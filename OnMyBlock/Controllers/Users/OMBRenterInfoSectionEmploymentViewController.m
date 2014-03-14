@@ -21,7 +21,7 @@
 {
   if (!(self = [super initWithUser: object])) return nil;
   
-  self.title = @"Employment";
+  self.title = @"Work History";
   
   return self;
 }
