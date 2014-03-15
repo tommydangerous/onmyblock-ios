@@ -8,9 +8,15 @@
 
 #import "OMBResidenceLegalDetailsViewController.h"
 #import "NSString+Extensions.h"
+#import "OMBViewControllerContainer.h"
+#import <QuartzCore/QuartzCore.h>
 
 
 @implementation OMBResidenceLegalDetailsViewController
+@synthesize originalFrame;
+@synthesize screenWidth;
+@synthesize screenHeight;
+@synthesize deltaY;
 
 #pragma mark - Initializer
 
@@ -21,7 +27,7 @@
     //self.screenName = self.title = @"Lease Agreement";
     
     UIFont *font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-    CGFloat lineHeight = 22.0f;
+    CGFloat lineHeight = 20.0f;
     
     NSString *string1 =
     @"As detailed in the lease, the landlord is required to disclose to tenants any pertinent information about "
@@ -72,11 +78,24 @@
 
 - (void) loadView
 {
+    [self appDelegate].container.slideEnabled=NO;
+    
     [super loadView];
     
+    self.view.clipsToBounds = YES;
+    
+    //Add pinchToZoom
+    UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scalePiece:)];
+    [pinchGesture setDelegate:self];
+    [self.table addGestureRecognizer:pinchGesture];
+    CGRect wh =  [[UIScreen mainScreen]bounds];
+	screenWidth = wh.size.width;
+	screenHeight = wh.size.height;
+	
+    deltaY = 5;
+
     self.table.backgroundColor = [UIColor whiteColor];
-    
-    
+
     // Title view
     CGRect screen      = [[UIScreen mainScreen] bounds];
     segmentedControl = [[UISegmentedControl alloc] initWithItems:
@@ -100,19 +119,40 @@
     //       action: @selector(shareButtonSelected)];
     self.navigationItem.rightBarButtonItem = shareBarButtonItem;
 
-      
-    
+
+}
+- (void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self appDelegate].container.slideEnabled=NO;
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self appDelegate].container.slideEnabled=YES;
 }
 
 #pragma mark - Selectors
 
 - (void) switchViews: (UISegmentedControl *) control
 {
+   // [self resetTable];
+    self.view.clipsToBounds = YES;
+    CGRect wh =  [[UIScreen mainScreen]bounds];
+	screenWidth = wh.size.width;
+	screenHeight = wh.size.height;
+    deltaY = 5;
+    
+    
+
     UIFont *font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-    CGFloat lineHeight = 22.0f;
+    CGFloat lineHeight = 20.0f;
     switch (control.selectedSegmentIndex) {
             
         case 0: {
+            
+           
             NSString *string1 =
             @"If your offer is accepted, we will email to you (and your roommates if applicable) the lease to"
             @"electronically sign, and you will have 1 week to secure the place by signing the lease and paying the"
@@ -137,6 +177,7 @@
             break;
                 }
         case 1: {
+          
             NSString *string1 =
             @"As detailed in the lease, the landlord is required to disclose to tenants any pertinent information about "
             @"the property through a Memo of Disclosure.";
@@ -180,6 +221,7 @@
             break;
         }
         case 2: {
+           
             NSString *string1 =
             @"BRUNO For a full refund, cancellation must be made five full days prior to "
             @"listing's local check in time (or 3:00 PM if not specified) on the day "
@@ -208,6 +250,7 @@
     }
     
     [self.table reloadData];
+  
 }
 
 - (void) shareButtonSelected
@@ -309,6 +352,125 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
                       CGSizeMake(maxWidth, 9999) options: NSStringDrawingUsesLineFragmentOrigin 
                                         context: nil].size.height + padding;
 }
+
+#pragma mark - UIGestureRecognizer Delegates And Methods
+
+- (void)adjustAnchorPointForGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer {
+    
+ 
+	if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        
+		UIView *piece = gestureRecognizer.view;
+		originalFrame.size.height = self.view.frame.size.height;
+		self.originalFrame = self.view.frame;
+        
+        CGPoint locationInView = [gestureRecognizer locationInView:nil];
+        CGPoint locationInSuperview = [gestureRecognizer locationInView:piece.superview];
+		
+		UIInterfaceOrientation orientaion = [[UIDevice currentDevice]orientation];
+        
+		/*some times Device gives unknown orientaion
+         If Device orientaion is unkown check orientaion of status bar
+         */
+		if( orientaion != UIInterfaceOrientationPortrait  && orientaion != UIInterfaceOrientationPortraitUpsideDown &&orientaion != UIInterfaceOrientationLandscapeLeft && orientaion != UIInterfaceOrientationLandscapeRight) {
+			
+			orientaion = [[UIApplication sharedApplication] statusBarOrientation];
+		}
+		
+		if( orientaion == UIInterfaceOrientationPortrait ) {
+			
+		}
+		
+		else if ( orientaion == UIInterfaceOrientationPortraitUpsideDown ) {
+			
+			locationInView.x = screenWidth - locationInView.x;
+			locationInView.y = (screenHeight -20) - locationInView.y;
+		}
+		
+		else if ( orientaion == UIInterfaceOrientationLandscapeLeft ) {
+			
+			float x =  screenHeight - locationInView.y;
+			float y = locationInView.x;
+			
+			locationInView.x = x;
+			locationInView.y = y;
+			
+		}
+		else if ( orientaion == UIInterfaceOrientationLandscapeRight ) {
+			
+			float y =  locationInView.y;
+			float x = screenWidth - locationInView.x;
+			
+			locationInView.x = y;
+			locationInView.y = x;
+		}
+        
+		piece.layer.anchorPoint = CGPointMake(locationInView.x / piece.bounds.size.width, (locationInView.y -deltaY) / piece.bounds.size.height);
+        
+        piece.center = locationInSuperview;
+		
+        if (locationInView.x <screenWidth)
+            [self resetTable];
+    }
+	
+	else if(gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        self.originalFrame = self.view.frame;
+        if ( self.table.frame.origin.x > self.originalFrame.origin.x)
+		   [self resetTable];
+
+        UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panPiece:)];
+        [panGesture setDelegate:self];
+        [self.table addGestureRecognizer:panGesture];
+
+	}
+	
+}
+
+- (void)resetTable {
+	
+	[UIView beginAnimations:nil context:nil];
+	[self.table setTransform:CGAffineTransformIdentity];
+	self.table.frame = originalFrame;
+	[UIView commitAnimations];
+}
+
+- (void)scalePiece:(UIPinchGestureRecognizer *)gestureRecognizer {
+    
+	
+	[self adjustAnchorPointForGestureRecognizer:gestureRecognizer];
+    
+    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
+        [gestureRecognizer view].transform = CGAffineTransformScale([[gestureRecognizer view] transform], [gestureRecognizer scale], [gestureRecognizer scale]);
+		[gestureRecognizer setScale:1];
+    }
+}
+
+
+
+- (void)panPiece:(UIPanGestureRecognizer *)recognizer {
+	
+  //[self.navigationController.view.superview.superview.superview setFrame:CGRectMake(0,0,1150,1800)];
+
+    CGPoint translation = [recognizer translationInView:self.view];
+    recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
+                                         recognizer.view.center.y + translation.y);
+    [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
+    
+
+    
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    for (UIGestureRecognizer *recognizer in self.view.gestureRecognizers) {
+        [self.table removeGestureRecognizer:recognizer];
+    }
+}
+
 
 @end
 

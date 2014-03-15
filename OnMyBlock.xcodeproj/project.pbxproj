@@ -2936,7 +2936,7 @@
 				ORGANIZATIONNAME = OnMyBlock;
 				TargetAttributes = {
 					AB802E9918109E5200E04D11 = {
-						DevelopmentTeam = 4PZFNY43X2;
+						DevelopmentTeam = L6WEK9SB93;
 					};
 					AB802EB418109E5200E04D11 = {
 						TestTargetID = AB802E9918109E5200E04D11;
@@ -3544,8 +3544,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: bruno cardenas torres (7UTDGZ8DN5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: bruno cardenas torres (7UTDGZ8DN5)";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3566,7 +3566,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "06651389-7892-433C-9EDE-4980F52DBEA4";
+				PROVISIONING_PROFILE = "E31DC563-B6B5-47DE-AADF-5787F1F15BE6";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3578,8 +3578,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: bruno cardenas torres (7UTDGZ8DN5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: bruno cardenas torres (7UTDGZ8DN5)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
@@ -3599,7 +3599,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1D67A8C8-C7C1-4C92-A4E9-21CDCC070DC3";
+				PROVISIONING_PROFILE = "E31DC563-B6B5-47DE-AADF-5787F1F15BE6";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
