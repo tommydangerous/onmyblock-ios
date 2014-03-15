@@ -14,9 +14,13 @@
 @property (nonatomic, strong) NSString *city;
 @property (nonatomic, strong) NSString *landlordEmail;
 @property (nonatomic, strong) NSString *landlordName;
+@property (nonatomic, strong) NSString *landlordLastName;
 @property (nonatomic, strong) NSString *landlordPhone;
 @property (nonatomic) int leaseMonths;
+@property (nonatomic) NSTimeInterval moveInDate;
+@property (nonatomic) NSTimeInterval moveOutDate;
 @property (nonatomic) float rent;
+@property (nonatomic, strong) NSString *school;
 @property (nonatomic, strong) NSString *state;
 @property (nonatomic, strong) NSString *zip;
 

@@ -87,7 +87,7 @@
         @"state", previousRental.state];
   NSArray *array = [_previousRentals filteredArrayUsingPredicate: predicate];
   if ([array count] == 0)
-    [_previousRentals insertObject: previousRental atIndex: 0];
+    [_previousRentals addObject: previousRental];
 }
 
 - (NSArray *) cosignersSortedByFirstName
@@ -160,6 +160,11 @@ completion: (void (^) (NSError *error)) block
   }
 }
 
+- (NSArray *) previousRentalsSort
+{
+  return _previousRentals;
+}
+
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
   // Cats
@@ -203,6 +208,26 @@ completion: (void (^) (NSError *error)) block
 - (void) removeCosigner: (OMBCosigner *) cosigner
 {
   [cosigners removeObjectForKey: [NSNumber numberWithInt: cosigner.uid]];
+}
+
+- (void) removeEmployment: (OMBEmployment *) employment
+{
+  for(int i=0; i < _employments.count; i++){
+    if(((OMBEmployment *)_employments[i]).uid == employment.uid){
+      [_employments removeObjectAtIndex: i];
+      break;
+    }
+  }
+}
+
+- (void) removePreviousRental:(OMBPreviousRental *) previousRental
+{
+  for(int i=0; i< _previousRentals.count; i++){
+    if(((OMBPreviousRental *)_previousRentals[i]).uid == previousRental.uid){
+      [_previousRentals removeObjectAtIndex: i];
+      break;
+    }
+  }
 }
 
 - (void) updateWithDictionary: (NSDictionary *) dictionary

@@ -15,5 +15,5 @@
 #pragma mark - Instance Methods
 
 - (void) addTarget: (id) target action: (SEL) selector;
-
+- (void) setFrameUsingSize: (CGSize) size;
 @end

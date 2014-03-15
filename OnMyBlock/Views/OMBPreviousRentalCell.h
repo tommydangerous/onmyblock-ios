@@ -26,9 +26,14 @@
 
 #pragma mark - Methods
 
+#pragma mark - Class methods
+
++ (CGFloat) heightForCell2;
+
 #pragma mark - Instance Methods
 
 - (void) loadData: (OMBPreviousRental *) object;
+- (void) loadData2: (OMBPreviousRental *) object;
 - (void) loadFakeData1;
 - (void) loadFakeData2;
 
