@@ -160,11 +160,9 @@ completion: (void (^) (NSError *error)) block
   }
 }
 
-- (NSArray *) previousRentalSortedByStartDate
+- (NSArray *) previousRentalsSort
 {
-  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"startDate"
-    ascending: NO];
-  return [_previousRentals sortedArrayUsingDescriptors: @[sort]];
+  return _previousRentals;
 }
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
@@ -214,9 +212,10 @@ completion: (void (^) (NSError *error)) block
 
 - (void) removeEmployment: (OMBEmployment *) employment
 {
-  for(int i=0; i< _employments.count; i++){
+  for(int i=0; i < _employments.count; i++){
     if(((OMBEmployment *)_employments[i]).uid == employment.uid){
       [_employments removeObjectAtIndex: i];
+      break;
     }
   }
 }
@@ -226,6 +225,7 @@ completion: (void (^) (NSError *error)) block
   for(int i=0; i< _previousRentals.count; i++){
     if(((OMBPreviousRental *)_previousRentals[i]).uid == previousRental.uid){
       [_previousRentals removeObjectAtIndex: i];
+      break;
     }
   }
 }

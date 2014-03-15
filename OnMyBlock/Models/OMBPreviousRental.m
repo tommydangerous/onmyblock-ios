@@ -26,11 +26,13 @@
   
   NSDateFormatter *dateFormatter = [NSDateFormatter new];
   dateFormatter.dateFormat = @"yyyy-MM-d HH:mm:ss ZZZ";
-  if ([dictionary objectForKey: @"start_date"] != [NSNull null]) {
-    _moveInDate = [[dictionary objectForKey: @"start_date"] timeIntervalSince1970];
-  }
   if ([dictionary objectForKey: @"end_date"] != [NSNull null]) {
-    _moveOutDate = [[dictionary objectForKey: @"end_date"] timeIntervalSince1970];
+    _moveOutDate = [[dateFormatter dateFromString:
+      [dictionary objectForKey: @"end_date"]] timeIntervalSince1970];
+  }
+  if ([dictionary objectForKey: @"start_date"] != [NSNull null]) {
+    _moveInDate = [[dateFormatter dateFromString:
+      [dictionary objectForKey: @"start_date"]] timeIntervalSince1970];
   }
   
   if ([dictionary objectForKey: @"rent"])

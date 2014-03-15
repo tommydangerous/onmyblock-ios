@@ -169,6 +169,7 @@
 - (UITableViewCell *) tableView: (UITableView *) tableView
           cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
   
@@ -334,14 +335,12 @@
         key               = @"landlord_phone";
         placeholderString = [landlord stringByAppendingString: @"phone"];
         cell.textField.keyboardType = UIKeyboardTypePhonePad;
-        // Last row, hide the separator
-        cell.separatorInset = UIEdgeInsetsMake(0.0f,
-          tableView.frame.size.width, 0.0f, 0.0f);
       }
       
       cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
         size: cell.iconImageView.bounds.size];
-      cell.textField.text =[valueDictionary objectForKey: key];
+      if(key.length)
+        cell.textField.text =[valueDictionary objectForKey: key];
       cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
       cell.textField.delegate  = self;
       cell.textField.indexPath = indexPath;
@@ -354,7 +353,7 @@
   }
   // Spacing
   else if (section == OMBRenterInfoAddPreviousRentalSectionSpacing) {
-    empty.backgroundColor = [UIColor clearColor];
+    empty.backgroundColor = [UIColor grayUltraLight];
     empty.separatorInset = UIEdgeInsetsMake(0.0f,
       tableView.frame.size.width, 0.0f, 0.0f);
   }
@@ -405,7 +404,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         case OMBRenterInfoAddPreviousRentalSectionFieldsRowAddress:
         case OMBRenterInfoAddPreviousRentalSectionFieldsRowCity:
         case OMBRenterInfoAddPreviousRentalSectionFieldsRowState:
-        case OMBRenterInfoAddPreviousRentalSectionFieldsRowZip:
         case OMBRenterInfoAddPreviousRentalSectionFieldsRowMonthRent:
           return 0.0f;
       }
@@ -435,7 +433,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) textFieldDidBeginEditing:(TextFieldPadding *)textField
 {
-  
   isEditing = YES;
   [self.table beginUpdates];
   [self.table endUpdates];
@@ -464,52 +461,29 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self hidePickerView];
 }
 
-
 - (void) donePicker
 {
   [self hidePickerView];
   
   // Move-in Date
   if ([moveInPicker superview]) {
-    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-    [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:
-      OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate
-        inSection: OMBRenterInfoAddPreviousRentalSectionFields]];
     moveInDate = [moveInPicker.date timeIntervalSince1970];
-    cell.textField.text = [dateFormatter stringFromDate: moveInPicker.date];
     // compare if move out is earlier than move in
     if([[NSDate dateWithTimeIntervalSince1970: moveOutDate]
         compare:moveInPicker.date] == NSOrderedAscending){
       //change move out
       moveOutDate = [moveInPicker.date timeIntervalSince1970];
-      
-      OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-      [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:
-        OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveOutDate
-          inSection:OMBRenterInfoAddPreviousRentalSectionFields]];
-      cell.textField.text = [dateFormatter stringFromDate: moveInPicker.date];
     }
     //leaseMonths = [self numberOfMonthsBetweenMovingDates];
   }
   // Move-out Date
   else if ([moveOutPicker superview]) {
-    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-    [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:
-      OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveOutDate
-        inSection: OMBRenterInfoAddPreviousRentalSectionFields]];
-    cell.textField.text = [dateFormatter stringFromDate: moveOutPicker.date];
     moveOutDate = [moveOutPicker.date timeIntervalSince1970];
     // compare if move in is later than move out
     if([[NSDate dateWithTimeIntervalSince1970: moveInDate]
         compare:moveOutPicker.date] == NSOrderedDescending){
       //change move in
       moveInDate = [moveOutPicker.date timeIntervalSince1970];
-      
-      OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-      [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:
-        OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate
-          inSection:OMBRenterInfoAddPreviousRentalSectionFields]];
-      cell.textField.text = [dateFormatter stringFromDate: moveOutPicker.date];
     }
     //leaseMonths = [self numberOfMonthsBetweenMovingDates];
   }
@@ -558,7 +532,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [[self appDelegate].container startSpinning];
   
 #warning DELETE THESE 5 LINES AND UPDATE THE CODE ABOVE
-  NSLog(@"%@",[valueDictionary description]);
   [modelObject readFromDictionary: valueDictionary];
   [[self renterApplication] addPreviousRental: modelObject];
   [self cancel];
@@ -571,7 +544,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table scrollToRowAtIndexPath: indexPath
     atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
-
 
 - (void) showPickerView:(UIPickerView *)pickerView
 {
@@ -640,10 +612,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowZip) {
       [valueDictionary setObject: string forKey: @"zip"];
     }
-    // Fields
     else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMonthRent) {
       [valueDictionary setObject: string forKey: @"rent"];
     }
+    // Fields
     else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowFirstName) {
       [valueDictionary setObject: string forKey: @"landlord_name"];
     }
@@ -677,14 +649,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [valueDictionary setObject: [dateFormatter stringFromDate:
     [NSDate dateWithTimeIntervalSince1970: moveOutDate]] forKey: @"end_date"];
   
-  [self.table reloadRowsAtIndexPaths:
+  /*[self.table reloadRowsAtIndexPaths:
     @[[NSIndexPath indexPathForRow: OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate
         inSection: OMBRenterInfoAddPreviousRentalSectionFields],
       [NSIndexPath indexPathForRow: OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveOutDate
         inSection: OMBRenterInfoAddPreviousRentalSectionFields]]
     withRowAnimation: UITableViewRowAnimationNone];
+  */
+  
+  [self.table reloadData];
 }
-
-
 
 @end

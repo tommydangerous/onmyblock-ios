@@ -49,7 +49,7 @@
      delegate: self completion: ^(NSError *error) {
        [self hideEmptyLabel: [[self employments] count]];
     }];*/
-#warning DELETE THIS LINE AND CREATE METHOD ABOVE
+  #warning DELETE THIS LINE AND CREATE METHOD ABOVE
   [self hideEmptyLabel: [[self employments] count]];
   
   [self reloadTable];
@@ -61,7 +61,7 @@
 
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
-#warning CREATE METHOD
+  #warning CREATE METHOD
   //[[self renterApplication] readFromEmploymentDictionary: dictionary];
   [self reloadTable];
 }

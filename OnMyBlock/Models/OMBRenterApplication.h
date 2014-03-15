@@ -44,7 +44,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 completion: (void (^) (NSError *error)) block;
 - (OMBLegalAnswer *) legalAnswerForLegalQuestion: 
 (OMBLegalQuestion *) legalQuestion;
-- (NSArray *) previousRentalSortedByStartDate;
+- (NSArray *) previousRentalsSort;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) removeAllObjects;

@@ -105,7 +105,7 @@
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  return [OMBPreviousRentalCell heightForCell];
+  return [OMBPreviousRentalCell heightForCell2];
 }
 
 #pragma mark - Methods
@@ -123,7 +123,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSArray *) previousRentals
 {
   // Change method in renter info
-  return [[self renterApplication] previousRentalSortedByStartDate];
+  return [[self renterApplication] previousRentalsSort];
 }
 
 - (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath
@@ -134,12 +134,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     completion: nil];*/
   
   [self.table beginUpdates];
-  [[self renterApplication] removePreviousRental:(OMBPreviousRental *) previousRental];
+  [[self renterApplication] removePreviousRental: previousRental];
   [self.table deleteRowsAtIndexPaths: @[indexPath]
     withRowAnimation: UITableViewRowAnimationFade];
   [self.table endUpdates];
   
   [self hideEmptyLabel: [[self previousRentals] count]];
+  
 }
 
 - (void) reloadTable

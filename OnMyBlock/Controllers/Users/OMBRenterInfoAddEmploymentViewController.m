@@ -399,45 +399,23 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   
   // Move-in Date
   if ([moveInPicker superview]) {
-    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-      [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:
-        OMBRenterInfoAddEmploymentSectionFieldsRowStartDate
-          inSection: OMBRenterInfoAddEmploymentSectionFields]];
     moveInDate = [moveInPicker.date timeIntervalSince1970];
-    cell.textField.text = [dateFormatter stringFromDate: moveInPicker.date];
     // compare if move out is earlier than move in
     if([[NSDate dateWithTimeIntervalSince1970: moveOutDate]
         compare:moveInPicker.date] == NSOrderedAscending){
       //change move out
       moveOutDate = [moveInPicker.date timeIntervalSince1970];
-      
-      OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-        [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:
-          OMBRenterInfoAddEmploymentSectionFieldsRowEndDate
-            inSection:OMBRenterInfoAddEmploymentSectionFields]];
-      cell.textField.text = [dateFormatter stringFromDate: moveInPicker.date];
     }
     //leaseMonths = [self numberOfMonthsBetweenMovingDates];
   }
   // Move-out Date
   else if ([moveOutPicker superview]) {
-    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-      [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:
-         OMBRenterInfoAddEmploymentSectionFieldsRowEndDate
-           inSection: OMBRenterInfoAddEmploymentSectionFields]];
-    cell.textField.text = [dateFormatter stringFromDate: moveOutPicker.date];
     moveOutDate = [moveOutPicker.date timeIntervalSince1970];
     // compare if move in is later than move out
     if([[NSDate dateWithTimeIntervalSince1970: moveInDate]
         compare:moveOutPicker.date] == NSOrderedDescending){
       //change move in
       moveInDate = [moveOutPicker.date timeIntervalSince1970];
-      
-      OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-      [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:
-         OMBRenterInfoAddEmploymentSectionFieldsRowStartDate
-           inSection:OMBRenterInfoAddEmploymentSectionFields]];
-      cell.textField.text = [dateFormatter stringFromDate: moveOutPicker.date];
     }
     //leaseMonths = [self numberOfMonthsBetweenMovingDates];
   }
@@ -480,9 +458,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   
   [[self appDelegate].container startSpinning];
   
-#warning DELETE THESE 5 LINES AND UPDATE THE CODE ABOVE
+  #warning DELETE THESE 5 LINES AND UPDATE THE CODE ABOVE
   [modelObject readFromDictionary: valueDictionary];
-  NSLog(@"valueDictionary: %@", [valueDictionary description]);
   [[self renterApplication] addEmployment: modelObject];
   [self cancel];
   isSaving = NO;
