@@ -26,8 +26,8 @@ typedef NS_ENUM(NSInteger, OMBRenterInfoAddPreviousRentalSectionFieldsRow) {
   OMBRenterInfoAddPreviousRentalSectionFieldsRowCity,
   OMBRenterInfoAddPreviousRentalSectionFieldsRowState,
   OMBRenterInfoAddPreviousRentalSectionFieldsRowZip,
-  // Fields
   OMBRenterInfoAddPreviousRentalSectionFieldsRowMonthRent,
+  // Fields
   OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate,
   OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveOutDate,
   OMBRenterInfoAddPreviousRentalSectionFieldsRowFirstName,
@@ -37,8 +37,17 @@ typedef NS_ENUM(NSInteger, OMBRenterInfoAddPreviousRentalSectionFieldsRow) {
 };
 
 @interface OMBRenterInfoAddPreviousRentalViewController :
-  OMBRenterInfoAddViewController
+  OMBRenterInfoAddViewController <UITextFieldDelegate>
 {
+  NSDateFormatter *dateFormatter;
+  UIView *fadedBackground;
+  BOOL isShowPicker;
+  NSTimeInterval moveInDate;
+  UIDatePicker *moveInPicker;
+  NSTimeInterval moveOutDate;
+  UIDatePicker *moveOutPicker;
+  UIView *pickerViewContainer;
+	UILabel *pickerViewHeaderLabel;
   BOOL onCampus;
 }
 

@@ -125,9 +125,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath
 {
-
   OMBEmployment *employment = [[self employments] objectAtIndex: indexPath.row];
-#warning CREATE METHOD
+  #warning CREATE METHOD
   /*[[self renterApplication] deleteCosignerConnection: employment delegate: nil
     completion: nil];*/
   

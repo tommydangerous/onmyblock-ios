@@ -44,11 +44,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 completion: (void (^) (NSError *error)) block;
 - (OMBLegalAnswer *) legalAnswerForLegalQuestion: 
 (OMBLegalQuestion *) legalQuestion;
+- (NSArray *) previousRentalSortedByStartDate;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) removeAllObjects;
 - (void) removeCosigner: (OMBCosigner *) cosigner;
 - (void) removeEmployment: (OMBEmployment *) employment;
+- (void) removePreviousRental:(OMBPreviousRental *)object;
 - (void) updateWithDictionary: (NSDictionary *) dictionary
 completion: (void (^) (NSError *error)) block;
 

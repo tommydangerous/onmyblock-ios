@@ -81,7 +81,8 @@
   if (!cell)
     cell = [[OMBPreviousRentalCell alloc] initWithStyle: UITableViewCellStyleDefault
       reuseIdentifier: PreviousRentalID];
-  [cell loadData: [[self previousRentals] objectAtIndex: row]];
+  [cell loadData2: [[self previousRentals] objectAtIndex: row]];
+  
   // Last row
   if (row == [self tableView: tableView numberOfRowsInSection: section] - 1) {
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
@@ -121,8 +122,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (NSArray *) previousRentals
 {
-  #warning CHANGE
-  return [[self renterApplication] employmentsSortedByStartDate];
+  // Change method in renter info
+  return [[self renterApplication] previousRentalSortedByStartDate];
 }
 
 - (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath
@@ -133,7 +134,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     completion: nil];*/
   
   [self.table beginUpdates];
-  //[[self renterApplication] removePreviousRental:(OMBPreviousRental *): previousRental];
+  [[self renterApplication] removePreviousRental:(OMBPreviousRental *) previousRental];
   [self.table deleteRowsAtIndexPaths: @[indexPath]
     withRowAnimation: UITableViewRowAnimationFade];
   [self.table endUpdates];
