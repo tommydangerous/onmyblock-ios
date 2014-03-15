@@ -12,6 +12,7 @@
 
 @implementation OMBTableViewController
 
+
 #pragma mark - Initializer
 
 - (id) init
@@ -99,5 +100,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   self.table.separatorStyle  = UITableViewCellSeparatorStyleSingleLine;
   self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
 }
+
+
 
 @end
