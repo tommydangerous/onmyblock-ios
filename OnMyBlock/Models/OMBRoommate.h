@@ -21,4 +21,10 @@
 @property (nonatomic) NSTimeInterval updatedAt;
 @property (nonatomic, strong) OMBUser *user;
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) readFromDictionary: (NSDictionary *) dictionary;
+
 @end

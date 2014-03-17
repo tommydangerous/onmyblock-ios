@@ -22,6 +22,7 @@
 #import "OMBRenterInfoSectionCosignersViewController.h"
 #import "OMBRenterInfoSectionEmploymentViewController.h"
 #import "OMBRenterInfoSectionPreviousRentalViewController.h"
+#import "OMBRenterInfoSectionRoommateViewController.h"
 #import "OMBRenterInfoSectionViewController.h"
 #import "OMBRenterProfileUserInfoCell.h"
 #import "OMBTwoLabelTextFieldCell.h"
@@ -671,7 +672,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Co-applicants
     if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
       key = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
-      vc  = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
+      vc  = [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser: user];
     }
     // Co-signers
     else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {

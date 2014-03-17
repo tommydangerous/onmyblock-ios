@@ -244,6 +244,11 @@ completion: (void (^) (NSError *error)) block
   [roommates removeObjectForKey: [NSNumber numberWithInt: roommate.uid]];
 }
 
+- (NSArray *) roommatesSort
+{
+  return [roommates allValues];
+}
+
 - (void) updateWithDictionary: (NSDictionary *) dictionary
 completion: (void (^) (NSError *error)) block
 {

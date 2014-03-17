@@ -451,12 +451,15 @@
 		B484A9BF18B55A2F005DEBBE /* menuBackground.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B484A9BD18B55A2F005DEBBE /* menuBackground.jpg */; };
 		B484A9C018B55A2F005DEBBE /* menuBackground@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B484A9BE18B55A2F005DEBBE /* menuBackground@2x.jpg */; };
 		B484A9C218B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = B484A9C118B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		DE16026C18D7A13000D67614 /* OMBRoommateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE16026B18D7A13000D67614 /* OMBRoommateCell.m */; };
 		DE5089A418D517BF00C998BF /* OMBRenterInfoAddEmploymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE50899C18D517BF00C998BF /* OMBRenterInfoAddEmploymentViewController.m */; };
 		DE5089A618D517BF00C998BF /* OMBRenterInfoAddPreviousRentalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE50899E18D517BF00C998BF /* OMBRenterInfoAddPreviousRentalViewController.m */; };
 		DE5089A818D517BF00C998BF /* OMBRenterInfoSectionEmploymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5089A018D517BF00C998BF /* OMBRenterInfoSectionEmploymentViewController.m */; };
 		DE5089AA18D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5089A218D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m */; };
 		DE8D2D5518BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8D2D5218BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m */; };
 		DE8D2D5618BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8D2D5418BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m */; };
+		DE92170918D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170818D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m */; };
+		DE92170C18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170B18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m */; };
 		DE93158718916D1800111CF6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE93158618916D1800111CF6 /* FacebookSDK.framework */; };
 		DE93158D18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */; };
 		DE93158F1891E05800111CF6 /* OMBCreateListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */; };
@@ -1337,6 +1340,8 @@
 		B484A9BD18B55A2F005DEBBE /* menuBackground.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = menuBackground.jpg; sourceTree = "<group>"; };
 		B484A9BE18B55A2F005DEBBE /* menuBackground@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "menuBackground@2x.jpg"; sourceTree = "<group>"; };
 		B484A9C118B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSPDFUIKitMainThreadGuard.m; sourceTree = "<group>"; };
+		DE16026A18D7A13000D67614 /* OMBRoommateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRoommateCell.h; sourceTree = "<group>"; };
+		DE16026B18D7A13000D67614 /* OMBRoommateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRoommateCell.m; sourceTree = "<group>"; };
 		DE50899B18D517BF00C998BF /* OMBRenterInfoAddEmploymentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddEmploymentViewController.h; sourceTree = "<group>"; };
 		DE50899C18D517BF00C998BF /* OMBRenterInfoAddEmploymentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoAddEmploymentViewController.m; sourceTree = "<group>"; };
 		DE50899D18D517BF00C998BF /* OMBRenterInfoAddPreviousRentalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddPreviousRentalViewController.h; sourceTree = "<group>"; };
@@ -1350,6 +1355,10 @@
 		DE8D2D5218BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVInfiniteScrolling.m"; sourceTree = "<group>"; };
 		DE8D2D5318BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+SVPullToRefresh.h"; sourceTree = "<group>"; };
 		DE8D2D5418BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVPullToRefresh.m"; sourceTree = "<group>"; };
+		DE92170718D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoSectionRoommateViewController.h; sourceTree = "<group>"; };
+		DE92170818D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionRoommateViewController.m; sourceTree = "<group>"; };
+		DE92170A18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddRoommateViewController.h; sourceTree = "<group>"; };
+		DE92170B18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoAddRoommateViewController.m; sourceTree = "<group>"; };
 		DE93158618916D1800111CF6 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		DE93158B18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailLeaseCell.h; sourceTree = "<group>"; };
 		DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailLeaseCell.m; sourceTree = "<group>"; };
@@ -1953,6 +1962,8 @@
 				DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */,
 				AB9FEEF918D0171400E25FE2 /* OMBLabelSwitchCell.h */,
 				AB9FEEFA18D0171400E25FE2 /* OMBLabelSwitchCell.m */,
+				DE16026A18D7A13000D67614 /* OMBRoommateCell.h */,
+				DE16026B18D7A13000D67614 /* OMBRoommateCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2590,6 +2601,10 @@
 				AB9FEEF418CFA17400E25FE2 /* OMBRenterInfoAddViewController.m */,
 				AB9FEEF618CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.h */,
 				AB9FEEF718CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m */,
+				DE92170718D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.h */,
+				DE92170818D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m */,
+				DE92170A18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.h */,
+				DE92170B18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m */,
 			);
 			path = Users;
 			sourceTree = "<group>";
@@ -3042,6 +3057,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE5089A418D517BF00C998BF /* OMBRenterInfoAddEmploymentViewController.m in Sources */,
+				DE92170C18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m in Sources */,
 				DE5089A618D517BF00C998BF /* OMBRenterInfoAddPreviousRentalViewController.m in Sources */,
 				DE5089A818D517BF00C998BF /* OMBRenterInfoSectionEmploymentViewController.m in Sources */,
 				DE5089AA18D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m in Sources */,
@@ -3213,6 +3229,7 @@
 				AB8B793E186DEF13005AB552 /* OMBCreateListingDetailCell.m in Sources */,
 				AB8C8C22181597F900A1B087 /* OMBResidence.m in Sources */,
 				AB9FEEF818CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m in Sources */,
+				DE92170918D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m in Sources */,
 				ABA5B4291857B20900F825E1 /* OMBEmploymentCreateConnection.m in Sources */,
 				ABB70070187B76EB005F0730 /* OMBImageTwoLabelCell.m in Sources */,
 				ABB9118B18994F980046611F /* OMBBecomeVerifiedViewController.m in Sources */,
@@ -3254,6 +3271,7 @@
 				ABE4FBEA189034C40009D643 /* OMBPayoutMethodListCell.m in Sources */,
 				AB4ED2FD1884AD9F009AFB01 /* OMBResidenceDetailConnection.m in Sources */,
 				DE93158F1891E05800111CF6 /* OMBCreateListingViewController.m in Sources */,
+				DE16026C18D7A13000D67614 /* OMBRoommateCell.m in Sources */,
 				AB63D2171821ABF500D63800 /* OMBLoginViewController.m in Sources */,
 				ABDF174D18663AE8004E2755 /* OMBResidenceBookItCell.m in Sources */,
 				AB8C8C131815784B00A1B087 /* OMBImageDownloader.m in Sources */,
