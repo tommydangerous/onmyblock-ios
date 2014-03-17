@@ -310,17 +310,44 @@
             [NSDate dateWithTimeIntervalSince1970: moveOutDate]];
         }
       }
-      // First name
-      else if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowFirstName) {
-        imageName         = @"user_icon.png";
-        key               = @"landlord_name";
-        placeholderString = [landlord stringByAppendingString: @"first name"];
-      }
-      // Last name
-      else if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowLastName) {
-        imageName         = @"user_icon.png";
-        key               = @"landlord_lastname";
-        placeholderString = [landlord stringByAppendingString: @"last name"];
+      // First name and Last name
+      else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowFirstName) {
+        imageName = @"user_icon.png";
+        static NSString *LabelTextCellID = @"TwoLabelTextCellID";
+        OMBTwoLabelTextFieldCell *cell =
+        [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
+        if (!cell) {
+          cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
+                  UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
+          [cell setFrameUsingIconImageView];
+        }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        placeholderString = [[landlord stringByAppendingString: @"first name"] capitalizedString];
+        // First name
+        cell.firstIconImageView.image =
+          [UIImage image: [UIImage imageNamed: imageName]
+            size: cell.firstIconImageView.frame.size];
+        cell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        cell.firstTextField.delegate  = self;
+        cell.firstTextField.font = [UIFont normalTextFont];
+        cell.firstTextField.indexPath = indexPath;
+        cell.firstTextField.placeholder = placeholderString;
+        cell.firstTextField.text = [valueDictionary objectForKey:@"landlord_name"];
+        [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
+        
+        // Last name
+        cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        cell.secondTextField.delegate  = self;
+        cell.secondTextField.font = cell.firstTextField.font;
+        cell.secondTextField.indexPath =
+          [NSIndexPath indexPathForRow: OMBRenterInfoAddPreviousRentalSectionFieldsRowLastName
+            inSection: indexPath.section] ;
+        cell.secondTextField.placeholder = @"Last Name";
+        cell.secondTextField.text = [valueDictionary objectForKey:@"landlord_lastname"];
+        [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
+        return cell;
       }
       // Email
       else if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowEmail) {
@@ -415,8 +442,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
           return 0.0f;
       }
     }
-    // On campus
-    if(indexPath.row == OMBRenterInfoAddPreviousRentalSectionFieldsRowZip)
+    // Two Fields in one row
+    if(indexPath.row == OMBRenterInfoAddPreviousRentalSectionFieldsRowZip ||
+       indexPath.row == OMBRenterInfoAddPreviousRentalSectionFieldsRowLastName)
       return 0.0f;
     
     return [OMBLabelTextFieldCell heightForCellWithIconImageView];
@@ -446,6 +474,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [NSIndexPath indexPathForRow:
         OMBRenterInfoAddPreviousRentalSectionFieldsRowState
           inSection:textField.indexPath.section]];
+  else if(textField.indexPath.row == OMBRenterInfoAddPreviousRentalSectionFieldsRowLastName)
+    [self scrollToRowAtIndexPath:
+     [NSIndexPath indexPathForRow:
+      OMBRenterInfoAddPreviousRentalSectionFieldsRowFirstName
+        inSection:textField.indexPath.section]];
   else
     [self scrollToRowAtIndexPath: textField.indexPath];
 

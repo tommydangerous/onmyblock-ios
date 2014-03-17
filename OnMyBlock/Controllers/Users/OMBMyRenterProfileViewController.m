@@ -604,7 +604,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         string = @"Co-signer";
       }
       else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
-        iconImageName = @"house_icon.png";
+        //iconImageName = @"house_icon.png";
+        iconImageName = nil;
         key = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
         string = @"Rental History";
       }
