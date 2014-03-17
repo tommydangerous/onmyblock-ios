@@ -699,11 +699,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) startGooglePlacesConnection
 {
+  
+  NSString *state = [valueDictionary objectForKey: @"state"];
+  if(![state length])
+    state = @"US";
+  
   // Search for places via Google
   OMBGoogleMapsReverseGeocodingConnection *conn =
   [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithAddress:
     [valueDictionary objectForKey:@"address"] city: [valueDictionary objectForKey:@"city"]
-      state: [valueDictionary objectForKey: @"state"]];
+      state: state];
   conn.completionBlock = ^(NSError *error) {
     [addressTableView reloadData];
   };
