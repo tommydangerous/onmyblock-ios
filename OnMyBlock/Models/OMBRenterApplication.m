@@ -16,11 +16,13 @@
 #import "OMBLegalAnswer.h"
 #import "OMBLegalQuestion.h"
 #import "OMBPreviousRental.h"
+#import "OMBRoommate.h"
 #import "OMBRenterApplicationUpdateConnection.h"
 
 @interface OMBRenterApplication ()
 {
   NSMutableDictionary *cosigners;
+  NSMutableDictionary *roommates;
 }
 
 @end
@@ -42,6 +44,7 @@
   _previousRentals = [NSMutableArray array];
 
   cosigners = [NSMutableDictionary dictionary];
+  roommates = [NSMutableDictionary dictionary];
 
   return self;
 }
@@ -88,6 +91,11 @@
   NSArray *array = [_previousRentals filteredArrayUsingPredicate: predicate];
   if ([array count] == 0)
     [_previousRentals addObject: previousRental];
+}
+
+- (void) addRoommate: (OMBRoommate *) object
+{
+  [roommates setObject: object forKey: [NSNumber numberWithInt: object.uid]];
 }
 
 - (NSArray *) cosignersSortedByFirstName
@@ -203,6 +211,7 @@ completion: (void (^) (NSError *error)) block
   [_previousRentals removeAllObjects];
 
   [cosigners removeAllObjects];
+  [roommates removeAllObjects];
 }
 
 - (void) removeCosigner: (OMBCosigner *) cosigner
@@ -228,6 +237,11 @@ completion: (void (^) (NSError *error)) block
       break;
     }
   }
+}
+
+- (void) removeRoommate: (OMBRoommate *) roommate
+{
+  [roommates removeObjectForKey: [NSNumber numberWithInt: roommate.uid]];
 }
 
 - (void) updateWithDictionary: (NSDictionary *) dictionary
