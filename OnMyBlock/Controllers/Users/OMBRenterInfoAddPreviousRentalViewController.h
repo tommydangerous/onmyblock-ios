@@ -49,6 +49,12 @@ typedef NS_ENUM(NSInteger, OMBRenterInfoAddPreviousRentalSectionFieldsRow) {
   UIView *pickerViewContainer;
 	UILabel *pickerViewHeaderLabel;
   BOOL onCampus;
+  //Address
+  NSString *address;
+  UITableView *addressTableView;
+  NSTimer *typingTimer;
 }
+
+@property (nonatomic, strong) NSArray *addressArray;
 
 @end

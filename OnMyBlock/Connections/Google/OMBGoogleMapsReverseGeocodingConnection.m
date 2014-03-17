@@ -10,6 +10,7 @@
 
 #import "OMBCreateListingViewController.h"
 #import "OMBFinishListingAddressViewController.h"
+#import "OMBRenterInfoAddPreviousRentalViewController.h"
 
 @implementation OMBGoogleMapsReverseGeocodingConnection
 
@@ -149,6 +150,20 @@ state: (NSString *) state
     }
     OMBFinishListingAddressViewController *vc =
       (OMBFinishListingAddressViewController *) self.delegate;
+    vc.addressArray = (NSArray *) addressArray;
+  }
+  // OMBRenterInfoAddPreviousRentalViewController
+  else if ([self.delegate isKindOfClass:
+       [OMBRenterInfoAddPreviousRentalViewController class]]) {
+    NSMutableArray *addressArray = [NSMutableArray array];
+    for (NSDictionary *dict in array) {
+      NSDictionary *addressDict = @{
+        @"formatted_address": [dict objectForKey: @"formatted_address"],
+      };
+      [addressArray addObject: addressDict];
+    }
+    OMBRenterInfoAddPreviousRentalViewController *vc =
+    (OMBRenterInfoAddPreviousRentalViewController *) self.delegate;
     vc.addressArray = (NSArray *) addressArray;
   }
   [super connectionDidFinishLoading: connection];
