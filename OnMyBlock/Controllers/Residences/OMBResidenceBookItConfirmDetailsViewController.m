@@ -434,10 +434,11 @@
   
   // Total price notes
   totalPriceNotes = [NSString stringWithFormat:
-   @"Your total of %@ will not be charged upfront.\n"
-   @"It will only be charged when the landlord\n"
-   @"accepts your offer and the\n"
-   @"lease has been signed.",
+   @"Your total of %@ will NOT be charged\n"
+   @"upfront. It will only be charged if you decide to\n"
+   @"secure the place by signing the lease and paying\n"
+   @"the 1st months rent and deposit\n"
+   @"through OnMyBlock",
     [NSString numberToCurrencyString: deposit + residence.minRent]];
   CGRect rect = [totalPriceNotes boundingRectWithSize:
                  CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999)
@@ -454,7 +455,7 @@
                  }
    ];
   NSMutableAttributedString *string2 =
-  [[NSMutableAttributedString alloc] initWithString: @"lease agreement"
+  [[NSMutableAttributedString alloc] initWithString: @"legal details"
                                          attributes: @{
                                                        NSFontAttributeName: [UIFont smallTextFont],
                                                        NSForegroundColorAttributeName: [UIColor blue]
@@ -462,7 +463,7 @@
    ];
   NSMutableAttributedString *string3 =
   [[NSMutableAttributedString alloc] initWithString:
-   @" and would be willing to sign at a later date."
+   @" of this property and understand that you will be required to sign a lease to secure this rental."
                                          attributes: @{
                                                        NSFontAttributeName: [UIFont smallTextFont],
                                                        NSForegroundColorAttributeName: [UIColor grayMedium]
@@ -1365,7 +1366,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
            OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes) {
     if (indexPath.row == 0) {
       [self.navigationController pushViewController:
-       [[OMBResidenceLeaseAgreementViewController alloc] init] animated: YES];
+       [[OMBResidenceLegalDetailsViewController alloc] init] animated: YES];
     }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
