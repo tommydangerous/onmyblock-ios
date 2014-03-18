@@ -25,7 +25,7 @@
 {
   if (!(self = [super initWithUser: object])) return nil;
   
-  self.title = @"Co-applicant(s)";
+  self.title = @"Co-applicants";
   
   return self;
 }

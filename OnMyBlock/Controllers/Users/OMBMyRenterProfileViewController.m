@@ -736,6 +736,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Renter info
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
+    if([user isLandlord])
+      return 0.0;
+    
     // Top spacing
     if (row == OMBMyRenterProfileSectionRenterInfoTopSpacing) {
       return OMBStandardHeight;

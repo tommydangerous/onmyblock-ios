@@ -90,7 +90,7 @@
     NSString *placeholderString;
     
     // First name, last name
-    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstNameLastName) {
+    /*if (row == OMBRenterInfoAddRoommateSectionFieldsRowasdasd) {
       static NSString *NameID = @"NameID";
       OMBTwoLabelTextFieldCell *cell =
       [tableView dequeueReusableCellWithIdentifier: NameID];
@@ -118,6 +118,13 @@
         action: @selector(textFieldDidChange:)
           forControlEvents: UIControlEventEditingChanged];
       return cell;
+    }*/
+    
+    // Full Name
+    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFullName) {
+      imageName         = @"user_icon.png";
+      placeholderString = @"Full Name";
+      cell.textField.keyboardType = UIKeyboardTypeDefault;
     }
     // Email
     if (row == OMBRenterInfoAddRoommateSectionFieldsRowEmail) {
@@ -215,14 +222,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   NSString *string = textField.text;
   
   if ([string length]) {
-    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstNameLastName) {
-      if(textField.tag == OMBRenterInfoAddCosignerSectionFieldsRowLastName)
+    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFullName) {
+      /*if(textField.tag == OMBRenterInfoAddCosignerSectionFieldsRowLastName)
         [valueDictionary setObject: string forKey: @"last_name"];
       else
-        [valueDictionary setObject: string forKey: @"first_name"];
-    }
-    else if (row == OMBRenterInfoAddCosignerSectionFieldsRowLastName) {
-      [valueDictionary setObject: string forKey: @"last_name"];
+        [valueDictionary setObject: string forKey: @"first_name"];*/
+      [valueDictionary setObject: string forKey: @"first_name"];
     }
     else if (row == OMBRenterInfoAddRoommateSectionFieldsRowEmail) {
       [valueDictionary setObject: string forKey: @"email"];

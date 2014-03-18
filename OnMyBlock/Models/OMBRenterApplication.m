@@ -95,6 +95,8 @@
 
 - (void) addRoommate: (OMBRoommate *) object
 {
+  // don't have uid,
+  object.uid = [self lastIndexFromRoomates];
   [roommates setObject: object forKey: [NSNumber numberWithInt: object.uid]];
 }
 
@@ -140,6 +142,17 @@ completion: (void (^) (NSError *error)) block
   conn.completionBlock = block;
   conn.delegate        = delegate;
   [conn start];
+}
+
+- (NSInteger) lastIndexFromRoomates
+{
+  NSInteger index = 0;
+  for(OMBRoommate *roommate in [roommates allValues]){
+    if(index <= roommate.uid)
+      index = roommate.uid + 1;
+  }
+  
+  return index;
 }
 
 - (OMBLegalAnswer *) legalAnswerForLegalQuestion: 
