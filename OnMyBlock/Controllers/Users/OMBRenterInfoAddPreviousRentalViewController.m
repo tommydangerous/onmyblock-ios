@@ -702,7 +702,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   
   NSString *state = [valueDictionary objectForKey: @"state"];
   if(![state length])
-    state = @"US";
+    state = @"CA";
   
   // Search for places via Google
   OMBGoogleMapsReverseGeocodingConnection *conn =

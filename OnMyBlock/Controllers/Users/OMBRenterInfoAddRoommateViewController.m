@@ -88,17 +88,36 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     NSString *imageName;
     NSString *placeholderString;
-    // First Name
-    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstName) {
-      imageName         = @"user_icon.png";
-      placeholderString = @"First name";
-      cell.textField.keyboardType = UIKeyboardTypeDefault;
-    }
-    // Last Name
-    if (row == OMBRenterInfoAddRoommateSectionFieldsRowLastName) {
-      imageName         = @"user_icon.png";
-      placeholderString = @"Last name";
-      cell.textField.keyboardType = UIKeyboardTypeDefault;
+    
+    // First name, last name
+    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstNameLastName) {
+      static NSString *NameID = @"NameID";
+      OMBTwoLabelTextFieldCell *cell =
+      [tableView dequeueReusableCellWithIdentifier: NameID];
+      if (!cell) {
+        cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
+                UITableViewCellStyleDefault reuseIdentifier: NameID];
+        [cell setFrameUsingIconImageView];
+      }
+      cell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+      cell.firstTextField.delegate  = self;
+      cell.firstTextField.indexPath = indexPath;
+      cell.firstTextField.placeholder  = @"First name";
+      cell.firstIconImageView.image = [UIImage image: [UIImage imageNamed:
+        @"user_icon.png"] size: cell.firstIconImageView.bounds.size];
+      cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+      cell.secondTextField.delegate  = self;
+      cell.secondTextField.indexPath = indexPath;
+      cell.secondTextField.placeholder = @"Last name";
+      cell.secondTextField.tag = OMBRenterInfoAddCosignerSectionFieldsRowLastName;
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      [cell.firstTextField addTarget: self
+        action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
+      [cell.secondTextField addTarget: self
+        action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
+      return cell;
     }
     // Email
     if (row == OMBRenterInfoAddRoommateSectionFieldsRowEmail) {
@@ -134,7 +153,7 @@
   numberOfRowsInSection: (NSInteger) section
 {
   if (section == OMBRenterInfoAddRoommateSectionFields)
-    return 3;
+    return 2;
   else if (section == OMBRenterInfoAddRoommateSectionSpacing)
     return 1;
   return 0;
@@ -150,11 +169,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   if (section == OMBRenterInfoAddRoommateSectionFields) {
     return [OMBLabelTextFieldCell heightForCellWithIconImageView];
   }
-  else if (section == OMBRenterInfoAddRoommateSectionSpacing) {
-    if (isEditing) {
-      return OMBKeyboardHeight + textFieldToolbar.frame.size.height;
-    }
-  }
+  
   return 0.0f;
 }
 
@@ -200,10 +215,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   NSString *string = textField.text;
   
   if ([string length]) {
-    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstName) {
-      [valueDictionary setObject: string forKey: @"first_name"];
+    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstNameLastName) {
+      if(textField.tag == OMBRenterInfoAddCosignerSectionFieldsRowLastName)
+        [valueDictionary setObject: string forKey: @"last_name"];
+      else
+        [valueDictionary setObject: string forKey: @"first_name"];
     }
-    else if (row == OMBRenterInfoAddRoommateSectionFieldsRowLastName) {
+    else if (row == OMBRenterInfoAddCosignerSectionFieldsRowLastName) {
       [valueDictionary setObject: string forKey: @"last_name"];
     }
     else if (row == OMBRenterInfoAddRoommateSectionFieldsRowEmail) {

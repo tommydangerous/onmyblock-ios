@@ -23,9 +23,20 @@
                    [dictionary objectForKey: @"createdAt"]] timeIntervalSince1970];
   }
   
-  _email = [dictionary objectForKey: @"email"];
-  _firstName = [dictionary objectForKey: @"first_name"];
-  _lastName = [dictionary objectForKey: @"last_name"];
+  if([[dictionary objectForKey: @"email"]  length])
+    _email = [dictionary objectForKey: @"email"];
+  else
+    _email = @"";
+  
+  if([[dictionary objectForKey: @"first_name"] length])
+    _firstName = [dictionary objectForKey: @"first_name"];
+  else
+    _firstName = @"";
+  
+  if([[dictionary objectForKey: @"last_name"] length])
+    _lastName = [dictionary objectForKey: @"last_name"];
+  else
+    _lastName = @"";
   
   _uid   = [[dictionary objectForKey: @"id"] intValue];
 }

@@ -8,12 +8,14 @@
 
 #import "OMBTableViewCell.h"
 
+@class OMBCenteredImageView;
 @class OMBRoommate;
 
 @interface OMBRoommateCell : OMBTableViewCell
 {
   UILabel *emailLabel;
   UILabel *nameLabel;
+  OMBCenteredImageView *userImageView;
 }
 
 @property (nonatomic, strong) OMBRoommate *roommate;

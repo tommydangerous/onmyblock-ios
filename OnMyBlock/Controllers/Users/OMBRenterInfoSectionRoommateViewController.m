@@ -25,7 +25,7 @@
 {
   if (!(self = [super initWithUser: object])) return nil;
   
-  self.title = @"Co-applicants";
+  self.title = @"Co-applicant(s)";
   
   return self;
 }
@@ -41,8 +41,8 @@
   [self setEmptyLabelText: @"You have no co-applicants.\nAdding a co-applicant "
    @"will greatly increase your acceptance rate."];
   
-  [addButton setTitle: @"Add Roommate" forState: UIControlStateNormal];
-  [addButtonMiddle setTitle: @"Add Roommate" forState: UIControlStateNormal];
+  [addButton setTitle: @"Add Co-applicant" forState: UIControlStateNormal];
+  [addButtonMiddle setTitle: @"Add Co-applicant" forState: UIControlStateNormal];
 }
 
 - (void) viewWillAppear: (BOOL) animated
