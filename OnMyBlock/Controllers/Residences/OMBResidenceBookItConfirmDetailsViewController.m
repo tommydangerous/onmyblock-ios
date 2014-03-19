@@ -1767,7 +1767,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSArray *array = @[
     @{
-      @"title": @"Complete your Renter Profile",
+      @"title": @"Renter Profile",
       @"information": @"The more information you complete, the more likely "
         @"landlords or subletters are to accept your booking request. "
         @"If you have roommates, make sure they complete their profiles too!"

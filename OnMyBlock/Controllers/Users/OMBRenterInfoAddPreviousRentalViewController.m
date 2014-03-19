@@ -308,7 +308,7 @@
           }
         }
         
-        NSString *landlord = onCampus? @"" : @"Landlord ";
+        NSString *landlord = onCampus? @"Reference's " : @"Landlord's ";
         // Fields
         // Move-in Date
         if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate) {
@@ -320,7 +320,7 @@
             NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
             dateFormat.dateFormat = @"MMM yyyy";
             cell.textField.text = [dateFormat stringFromDate:
-                                   [NSDate dateWithTimeIntervalSince1970: moveInDate]];
+              [NSDate dateWithTimeIntervalSince1970: moveInDate]];
           }
         }
         // Move-out Date
@@ -333,7 +333,7 @@
             NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
             dateFormat.dateFormat = @"MMM yyyy";
             cell.textField.text = [dateFormat stringFromDate:
-                                   [NSDate dateWithTimeIntervalSince1970: moveOutDate]];
+              [NSDate dateWithTimeIntervalSince1970: moveOutDate]];
           }
         }
         // First name
@@ -362,18 +362,18 @@
           placeholderString = [landlord stringByAppendingString: @"phone"];
           cell.textField.keyboardType = UIKeyboardTypePhonePad;
         }
-        
         cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
-                                             size: cell.iconImageView.bounds.size];
+          size: cell.iconImageView.bounds.size];
+        
         if(key.length)
           cell.textField.text =[valueDictionary objectForKey: key];
         cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         cell.textField.delegate  = self;
         cell.textField.indexPath = indexPath;
-        cell.textField.placeholder = [placeholderString capitalizedString];
+        cell.textField.placeholder = placeholderString;
         [cell.textField addTarget: self
-                           action: @selector(textFieldDidChange:)
-                 forControlEvents: UIControlEventEditingChanged];
+          action: @selector(textFieldDidChange:)
+            forControlEvents: UIControlEventEditingChanged];
         return cell;
       }
     }
@@ -381,7 +381,7 @@
     else if (section == OMBRenterInfoAddPreviousRentalSectionSpacing) {
       empty.backgroundColor = [UIColor grayUltraLight];
       empty.separatorInset = UIEdgeInsetsMake(0.0f,
-                                              tableView.frame.size.width, 0.0f, 0.0f);
+        tableView.frame.size.width, 0.0f, 0.0f);
     }
   }
   // Address table view
@@ -391,7 +391,7 @@
                              CellIdentifier];
     if (!cell)
       cell = [[UITableViewCell alloc] initWithStyle:
-              UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+        UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
     
     // If this is not the last row ("Address Form")
     if (indexPath.row <
@@ -438,13 +438,13 @@
     // Move-in date
     if(indexPath.row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate){
       [self.table scrollToRowAtIndexPath: indexPath
-                        atScrollPosition: UITableViewScrollPositionTop animated: YES];
+        atScrollPosition: UITableViewScrollPositionTop animated: YES];
       [self showPickerView: (UIPickerView *)moveInPicker];
     }
     // Move-out date
     else if (indexPath.row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveOutDate){
       [self.table scrollToRowAtIndexPath: indexPath
-                        atScrollPosition: UITableViewScrollPositionTop animated: YES];
+         atScrollPosition: UITableViewScrollPositionTop animated: YES];
       [self showPickerView: (UIPickerView *)moveOutPicker];
     }
   }

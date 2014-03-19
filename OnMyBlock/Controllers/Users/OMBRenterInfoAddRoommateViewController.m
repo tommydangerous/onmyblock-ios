@@ -123,7 +123,7 @@
     // Full Name
     if (row == OMBRenterInfoAddRoommateSectionFieldsRowFullName) {
       imageName         = @"user_icon.png";
-      placeholderString = @"Full Name";
+      placeholderString = @"Full name";
       cell.textField.keyboardType = UIKeyboardTypeDefault;
     }
     // Email
