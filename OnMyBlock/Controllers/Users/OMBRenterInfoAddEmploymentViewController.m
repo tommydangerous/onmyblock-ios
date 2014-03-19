@@ -252,7 +252,7 @@
       cell.textField.userInteractionEnabled = NO;
       if (moveInDate) {
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-        dateFormat.dateFormat = @"MMM yyyy";
+        dateFormat.dateFormat = @"MMMM yyyy";
         cell.textField.text = [dateFormat stringFromDate:
            [NSDate dateWithTimeIntervalSince1970: moveInDate]];
       }
@@ -265,7 +265,7 @@
       cell.textField.userInteractionEnabled = NO;
       if (moveOutDate) {
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-        dateFormat.dateFormat = @"MMM yyyy";
+        dateFormat.dateFormat = @"MMMM yyyy";
         cell.textField.text = [dateFormat stringFromDate:
           [NSDate dateWithTimeIntervalSince1970: moveOutDate]];
       }

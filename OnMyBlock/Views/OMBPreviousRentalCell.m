@@ -181,20 +181,27 @@ reuseIdentifier: (NSString *)reuseIdentifier
 - (void) loadData2: (OMBPreviousRental *) object
 {
   _previousRental = object;
-  CGFloat originx = 20.0f;
-  
+  CGFloat padding = 20.0f;
+  CGFloat width = self.frame.size.width - 2 * 20;
   [residenceImageView removeFromSuperview];
+  
   CGRect previousFrame = addressLabel.frame;
-  previousFrame.origin.x = originx;
+  previousFrame.origin.x = padding;
+  previousFrame.size.width = width;
   addressLabel.font = [UIFont mediumTextFontBold];
   addressLabel.frame = previousFrame;
+  addressLabel.textAlignment = NSTextAlignmentLeft;
   addressLabel.textColor = [UIColor textColor];
-  previousFrame = addressLabel2.frame;
-  previousFrame.origin.x = originx;
+  
+  previousFrame.origin.y = addressLabel.frame.origin.y +
+    addressLabel.frame.size.height;
   addressLabel2.frame = previousFrame;
-  previousFrame = rentLeaseMonthsLabel.frame;
-  previousFrame.origin.x = originx;
+  addressLabel2.textAlignment = addressLabel.textAlignment;
+  
+  previousFrame.origin.y = addressLabel2.frame.origin.y +
+    addressLabel2.frame.size.height;
   rentLeaseMonthsLabel.frame = previousFrame;
+  rentLeaseMonthsLabel.textAlignment = addressLabel.textAlignment;
   
   if([_previousRental.school length]){
     addressLabel.text = _previousRental.school;
