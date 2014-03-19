@@ -1767,22 +1767,26 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSArray *array = @[
     @{
-      @"title": @"Authorize",
-      @"information": @"Review your offer and add "
-        @"a payment method. You will NOT be charged until the landlord "
-        @"accepts your offer. Only then can you confirm and pay for the place."
+      @"title": @"Complete your Renter Profile",
+      @"information": @"The more information you complete, the more likely "
+        @"landlords or subletters are to accept your booking request. "
+        @"If you have roommates, make sure they complete their profiles too!"
     },
     @{
-      @"title": @"Review",
-      @"information": @"The landlord or subletter will review your offer and "
-        @"renter profile. They will have 24 hours to confirm your offer at "
-        @"which point you will be notified."
+      @"title": @"Authorize Payment",
+      @"information": @"Review your offer and add a payment method.  You will NOT be charged "
+        @"upfront.  You will only be charged if you decide to secure the place by "
+        @"signing the lease and paying the 1st months rent and deposit through OnMyBlock."
     },
     @{
-      @"title": @"Sign & Pay",
-      @"information": @"Once accepted, you will receive a lease to e-sign via "
-        @"email. You will have 48 hours to confirm, sign the lease, and pay "
-        @"the 1st month’s rent and deposit using your selected payment method."
+      @"title": @"Wait For Response",
+      @"information": @"Once you submit your offer, the landlord or subletter will "
+        @"have 96 hours to review your offer, your renter profile, and your "
+        @"roommates renter profiles if applicable.\n\n"
+        @"If your offer is accepted, you will have 1 week to secure the place by "
+        @"signing the lease and paying the 1st months rent and deposit through "
+        @"OnMyBlock.  Some places may also require a signed co-signer agreement. "
+        @"If your offer is retracted, declined, or expires, any payment authorization is voided."
     }
   ];
 
