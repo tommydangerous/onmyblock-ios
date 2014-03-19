@@ -15,6 +15,7 @@
 #import "OMBRenterApplication.h"
 #import "OMBTwoLabelTextFieldCell.h"
 #import "OMBViewControllerContainer.h"
+#import "NSString+Extensions.h"
 #import "UIImage+Resize.h"
 
 @interface OMBRenterInfoAddPreviousRentalViewController ()
@@ -633,10 +634,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // Address
   NSArray *words = [string componentsSeparatedByString: @","];
   if ([words count] >= 1) {
-    [valueDictionary setObject:[words objectAtIndex: 0] forKey:@"address"];
+    [valueDictionary setObject:[[words objectAtIndex: 0] stripWhiteSpace] forKey:@"address"];
   }
   if ([words count] >= 2) {
-    [valueDictionary setObject:[words objectAtIndex: 1] forKey:@"city"];
+    [valueDictionary setObject:[[words objectAtIndex: 1] stripWhiteSpace] forKey:@"city"];
   }
   if ([words count] >= 3) {
     NSString *stateZip = [words objectAtIndex: 2];
@@ -718,16 +719,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) switchFields
 {
   onCampus = !onCampus;
-  //[self.table reloadData];
+  [self.table reloadData];
 
-  [self.table reloadRowsAtIndexPaths:
+  /*[self.table reloadRowsAtIndexPaths:
     @[[NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowSchool inSection:OMBRenterInfoAddPreviousRentalSectionFields],
       [NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowAddress inSection:OMBRenterInfoAddPreviousRentalSectionFields],
       [NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowCity inSection:OMBRenterInfoAddPreviousRentalSectionFields],
       [NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowState inSection:OMBRenterInfoAddPreviousRentalSectionFields],
       [NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowZip inSection:OMBRenterInfoAddPreviousRentalSectionFields],
       [NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowMonthRent inSection:OMBRenterInfoAddPreviousRentalSectionFields]]
-      withRowAnimation:UITableViewRowAnimationFade];
+      withRowAnimation:UITableViewRowAnimationFade];*/
   
   //[self.table reloadSections:[NSIndexSet indexSetWithIndex:OMBRenterInfoAddPreviousRentalSectionFields]
     // withRowAnimation:UITableViewRowAnimationFade ];
