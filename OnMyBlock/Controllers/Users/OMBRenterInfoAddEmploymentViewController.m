@@ -214,7 +214,7 @@
       cell.firstTextField.delegate  = self;
       cell.firstTextField.font = [UIFont normalTextFont];
       cell.firstTextField.indexPath = indexPath;
-      cell.firstTextField.placeholder = @"company";
+      cell.firstTextField.placeholder = @"Company";
       cell.firstTextField.textColor = [UIColor blueDark];
       [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
          forControlEvents: UIControlEventEditingChanged];
@@ -226,7 +226,7 @@
       cell.secondTextField.indexPath =
         [NSIndexPath indexPathForRow: OMBRenterInfoAddEmploymentSectionFieldsRowTitle
           inSection: indexPath.section] ;
-      cell.secondTextField.placeholder = @"title";
+      cell.secondTextField.placeholder = @"Title";
       cell.secondTextField.textColor = cell.firstTextField.textColor;
       [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
          forControlEvents: UIControlEventEditingChanged];
@@ -236,23 +236,23 @@
     // Company website
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowCompanyWebsite) {
       imageName         = @"phone_icon.png";
-      placeholderString = @"company website";
+      placeholderString = @"Company website";
     }
     // Income
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowIncome) {
       imageName         = @"phone_icon.png";
-      placeholderString = @"monthly income";
+      placeholderString = @"Monthly income";
       cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
     }
     // Start date
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowStartDate) {
       imageName         = @"phone_icon.png";
-      placeholderString = @"start date";
+      placeholderString = @"Start date";
       cell.selectionStyle = UITableViewCellSelectionStyleDefault;
       cell.textField.userInteractionEnabled = NO;
       if (moveInDate) {
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-        dateFormat.dateFormat = @"MMM yyyy";
+        dateFormat.dateFormat = @"MMMM yyyy";
         cell.textField.text = [dateFormat stringFromDate:
            [NSDate dateWithTimeIntervalSince1970: moveInDate]];
       }
@@ -260,12 +260,12 @@
     // End date
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowEndDate) {
       imageName         = @"phone_icon.png";
-      placeholderString = @"end date";
+      placeholderString = @"End date";
       cell.selectionStyle = UITableViewCellSelectionStyleDefault;
       cell.textField.userInteractionEnabled = NO;
       if (moveOutDate) {
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-        dateFormat.dateFormat = @"MMM yyyy";
+        dateFormat.dateFormat = @"MMMM yyyy";
         cell.textField.text = [dateFormat stringFromDate:
           [NSDate dateWithTimeIntervalSince1970: moveOutDate]];
       }

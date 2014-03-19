@@ -234,81 +234,79 @@
           [cell setFrameUsingIconImageView];
         }
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.textField.keyboardType = UIKeyboardTypeDefault;
+        cell.textField.userInteractionEnabled = YES;
         NSString *imageName;
         NSString *placeholderString;
         NSString *key;
         // Switch On
-        if(onCampus){
-          if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowSchool) {
-            imageName         = @"school_icon.png";
-            placeholderString = @"School";
-            key = @"school";
-          }
+        if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowSchool) {
+          imageName         = @"school_icon.png";
+          placeholderString = @"School";
+          key = @"school";
         }
         // Switch Off
-        else{
-          // Address
-          if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowAddress) {
-            imageName         = @"messages_icon_dark.png";
-            placeholderString = @"Address";
-            key = @"address";
+        // Address
+        if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowAddress) {
+          imageName         = @"messages_icon_dark.png";
+          placeholderString = @"Address";
+          key = @"address";
+        }
+        // City
+        else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowCity) {
+          imageName         = @"phone_icon.png";
+          placeholderString = @"City";
+          key = @"city";
+        }
+        // State and Zip
+        else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowState) {
+          imageName = @"user_icon.png";
+          static NSString *LabelTextCellID = @"TwoLabelTextCellID";
+          OMBTwoLabelTextFieldCell *cell =
+          [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
+          if (!cell) {
+            cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
+                    UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
+            [cell setFrameUsingIconImageView];
           }
-          // City
-          else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowCity) {
-            imageName         = @"phone_icon.png";
-            placeholderString = @"City";
-            key = @"city";
-          }
-          // State and Zip
-          else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowState) {
-            imageName = @"user_icon.png";
-            static NSString *LabelTextCellID = @"TwoLabelTextCellID";
-            OMBTwoLabelTextFieldCell *cell =
-            [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
-            if (!cell) {
-              cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
-                      UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
-              [cell setFrameUsingIconImageView];
-            }
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            
-            // State
-            cell.firstIconImageView.image =
+          cell.selectionStyle = UITableViewCellSelectionStyleNone;
+          
+          // State
+          cell.firstIconImageView.image =
             [UIImage image: [UIImage imageNamed: imageName]
-                      size: cell.firstIconImageView.frame.size];
-            cell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-            cell.firstTextField.delegate  = self;
-            cell.firstTextField.font = [UIFont normalTextFont];
-            cell.firstTextField.indexPath = indexPath;
-            cell.firstTextField.placeholder = @"State";
-            cell.firstTextField.text = [valueDictionary objectForKey:@"state"];
-            [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
-                          forControlEvents: UIControlEventEditingChanged];
-            
-            // Zip
-            cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-            cell.secondTextField.delegate  = self;
-            cell.secondTextField.font = cell.firstTextField.font;
-            cell.secondTextField.indexPath =
-            [NSIndexPath indexPathForRow: OMBRenterInfoAddPreviousRentalSectionFieldsRowZip
-                               inSection: indexPath.section] ;
-            cell.secondTextField.placeholder = @"Zip";
-            cell.secondTextField.text = [valueDictionary objectForKey:@"zip"];
-            [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
-                           forControlEvents: UIControlEventEditingChanged];
-            return cell;
-            
-          }
-          // Month rent
-          else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMonthRent) {
-            imageName         = @"phone_icon.png";
-            placeholderString = @"Rent";
-            key = @"rent";
-            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
-          }
+              size: cell.firstIconImageView.frame.size];
+          cell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+          cell.firstTextField.delegate  = self;
+          cell.firstTextField.font = [UIFont normalTextFont];
+          cell.firstTextField.indexPath = indexPath;
+          cell.firstTextField.placeholder = @"State";
+          cell.firstTextField.text = [valueDictionary objectForKey:@"state"];
+          [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
+            forControlEvents: UIControlEventEditingChanged];
+          
+          // Zip
+          cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+          cell.secondTextField.delegate  = self;
+          cell.secondTextField.font = cell.firstTextField.font;
+          cell.secondTextField.indexPath =
+          [NSIndexPath indexPathForRow: OMBRenterInfoAddPreviousRentalSectionFieldsRowZip
+            inSection: indexPath.section] ;
+          cell.secondTextField.placeholder = @"Zip";
+          cell.secondTextField.text = [valueDictionary objectForKey:@"zip"];
+          [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
+            forControlEvents: UIControlEventEditingChanged];
+          return cell;
+          
+        }
+        // Month rent
+        else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMonthRent) {
+          imageName         = @"phone_icon.png";
+          placeholderString = @"Rent";
+          key = @"rent";
+          cell.textField.keyboardType = UIKeyboardTypeNumberPad;
         }
         
-        NSString *landlord = onCampus? @"" : @"Landlord ";
+        NSString *landlord = onCampus? @"Reference's " : @"Landlord's ";
         // Fields
         // Move-in Date
         if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate) {
@@ -318,9 +316,9 @@
           cell.textField.userInteractionEnabled = NO;
           if (moveInDate) {
             NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-            dateFormat.dateFormat = @"MMM yyyy";
+            dateFormat.dateFormat = @"MMMM yyyy";
             cell.textField.text = [dateFormat stringFromDate:
-                                   [NSDate dateWithTimeIntervalSince1970: moveInDate]];
+              [NSDate dateWithTimeIntervalSince1970: moveInDate]];
           }
         }
         // Move-out Date
@@ -331,9 +329,9 @@
           cell.textField.userInteractionEnabled = NO;
           if (moveOutDate) {
             NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-            dateFormat.dateFormat = @"MMM yyyy";
+            dateFormat.dateFormat = @"MMMM yyyy";
             cell.textField.text = [dateFormat stringFromDate:
-                                   [NSDate dateWithTimeIntervalSince1970: moveOutDate]];
+              [NSDate dateWithTimeIntervalSince1970: moveOutDate]];
           }
         }
         // First name
@@ -362,18 +360,18 @@
           placeholderString = [landlord stringByAppendingString: @"phone"];
           cell.textField.keyboardType = UIKeyboardTypePhonePad;
         }
-        
         cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
-                                             size: cell.iconImageView.bounds.size];
+          size: cell.iconImageView.bounds.size];
+        
         if(key.length)
           cell.textField.text =[valueDictionary objectForKey: key];
         cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         cell.textField.delegate  = self;
         cell.textField.indexPath = indexPath;
-        cell.textField.placeholder = [placeholderString capitalizedString];
+        cell.textField.placeholder = placeholderString;
         [cell.textField addTarget: self
-                           action: @selector(textFieldDidChange:)
-                 forControlEvents: UIControlEventEditingChanged];
+          action: @selector(textFieldDidChange:)
+            forControlEvents: UIControlEventEditingChanged];
         return cell;
       }
     }
@@ -381,7 +379,7 @@
     else if (section == OMBRenterInfoAddPreviousRentalSectionSpacing) {
       empty.backgroundColor = [UIColor grayUltraLight];
       empty.separatorInset = UIEdgeInsetsMake(0.0f,
-                                              tableView.frame.size.width, 0.0f, 0.0f);
+        tableView.frame.size.width, 0.0f, 0.0f);
     }
   }
   // Address table view
@@ -391,7 +389,7 @@
                              CellIdentifier];
     if (!cell)
       cell = [[UITableViewCell alloc] initWithStyle:
-              UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+        UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
     
     // If this is not the last row ("Address Form")
     if (indexPath.row <
@@ -434,17 +432,18 @@
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+  NSLog(@"%i",indexPath.row);
   if(tableView == self.table){
     // Move-in date
     if(indexPath.row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate){
       [self.table scrollToRowAtIndexPath: indexPath
-                        atScrollPosition: UITableViewScrollPositionTop animated: YES];
+        atScrollPosition: UITableViewScrollPositionTop animated: YES];
       [self showPickerView: (UIPickerView *)moveInPicker];
     }
     // Move-out date
     else if (indexPath.row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveOutDate){
       [self.table scrollToRowAtIndexPath: indexPath
-                        atScrollPosition: UITableViewScrollPositionTop animated: YES];
+         atScrollPosition: UITableViewScrollPositionTop animated: YES];
       [self showPickerView: (UIPickerView *)moveOutPicker];
     }
   }
@@ -719,16 +718,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) switchFields
 {
   onCampus = !onCampus;
-  [self.table reloadData];
+  //[self.table reloadData];
 
-  /*[self.table reloadRowsAtIndexPaths:
+  [self.table reloadRowsAtIndexPaths:
     @[[NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowSchool inSection:OMBRenterInfoAddPreviousRentalSectionFields],
       [NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowAddress inSection:OMBRenterInfoAddPreviousRentalSectionFields],
       [NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowCity inSection:OMBRenterInfoAddPreviousRentalSectionFields],
       [NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowState inSection:OMBRenterInfoAddPreviousRentalSectionFields],
       [NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowZip inSection:OMBRenterInfoAddPreviousRentalSectionFields],
       [NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowMonthRent inSection:OMBRenterInfoAddPreviousRentalSectionFields]]
-      withRowAnimation:UITableViewRowAnimationFade];*/
+      withRowAnimation:UITableViewRowAnimationFade];
   
   //[self.table reloadSections:[NSIndexSet indexSetWithIndex:OMBRenterInfoAddPreviousRentalSectionFields]
     // withRowAnimation:UITableViewRowAnimationFade ];
@@ -820,7 +819,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [valueDictionary setObject: [dateFormatter stringFromDate:
     [NSDate dateWithTimeIntervalSince1970: moveOutDate]] forKey: @"end_date"];
 
-  [self.table reloadData];
+  //[self.table reloadData];
+  [self.table reloadRowsAtIndexPaths:
+    @[[NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate
+          inSection:OMBRenterInfoAddPreviousRentalSectionFields],
+        [NSIndexPath indexPathForRow:OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveOutDate
+           inSection:OMBRenterInfoAddPreviousRentalSectionFields]]
+       withRowAnimation:UITableViewRowAnimationFade];
+  
 }
 
 @end
+
