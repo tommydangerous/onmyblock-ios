@@ -179,6 +179,14 @@ float kResidenceDetailImagePercentage   = 0.5f;
   imageCollectionView.pagingEnabled = YES;
   imageCollectionView.showsHorizontalScrollIndicator = NO;
   [self.view addSubview: imageCollectionView];
+  
+  // Show when there aren't images
+  placeholderImageView = [[UIImageView alloc] initWithFrame:
+    imageCollectionView.frame];
+  placeholderImageView.hidden = NO;
+  placeholderImageView.image = [OMBResidence placeholderImage];
+  [self.view addSubview: placeholderImageView];
+  
   // Tap gesture when user clicks the images
   UITapGestureRecognizer *tapGesture =
     [[UITapGestureRecognizer alloc] initWithTarget: self 
@@ -576,7 +584,8 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 
     // Adjust the gradient
     gradientView.frame = backRect;
-
+    placeholderImageView.frame = backRect;
+    
     // Header view
     backRect.size.height = imageCollectionView.frame.size.height - y + adjustment;
     headerView.frame = backRect;
@@ -1187,7 +1196,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // Set the pages text 1/2
   _pageOfImagesLabel.text = [NSString stringWithFormat: @"%i/%i",
     [self currentPageOfImages], (int) [[residence imagesArray] count]];
-
+  if([residence imagesArray].count)
+    placeholderImageView.hidden = YES;
+  
   [self adjustPageOfImagesLabelFrame];
 }
 

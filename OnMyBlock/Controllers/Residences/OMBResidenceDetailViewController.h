@@ -38,6 +38,7 @@
   MKMapView *map;
   OMBMessageDetailViewController *messageDetailViewController;
   UIImage *notFavoritedImage;
+  UIImageView *placeholderImageView;
   OMBResidence *residence;
 }
 
