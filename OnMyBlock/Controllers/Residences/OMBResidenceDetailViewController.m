@@ -360,7 +360,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   // Close button for image scroll view
   CGFloat closeButtonPadding = padding * 0.5f;
-  CGFloat closeButtonViewHeight = 26.0f;
+  CGFloat closeButtonViewHeight = 30.0f;
   CGFloat closeButtonViewWidth  = closeButtonViewHeight;
   CGRect closeButtonRect = CGRectMake(imageScrollView.frame.size.width - 
     (closeButtonViewWidth + closeButtonPadding), 
