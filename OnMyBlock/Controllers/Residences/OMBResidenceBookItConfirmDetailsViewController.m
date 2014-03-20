@@ -35,11 +35,13 @@
 #import "OMBResidenceLeaseAgreementViewController.h"
 #import "OMBResidenceMonthlyPaymentScheduleViewController.h"
 #import "OMBViewControllerContainer.h"
+#import "OMBResidenceLegalDetailsViewController.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 #import "UIImageView+WebCache.h"
+
 
 @implementation OMBResidenceBookItConfirmDetailsViewController
 
@@ -432,10 +434,11 @@
   
   // Total price notes
   totalPriceNotes = [NSString stringWithFormat:
-   @"Your total of %@ will not be charged upfront.\n"
-   @"It will only be charged when the landlord\n"
-   @"accepts your offer and the\n"
-   @"lease has been signed.",
+   @"Your total of %@ will NOT be charged\n"
+   @"upfront. It will only be charged if you decide to\n"
+   @"secure the place by signing the lease and paying\n"
+   @"the 1st months rent and deposit\n"
+   @"through OnMyBlock",
     [NSString numberToCurrencyString: deposit + residence.minRent]];
   CGRect rect = [totalPriceNotes boundingRectWithSize:
                  CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999)
@@ -452,7 +455,7 @@
                  }
    ];
   NSMutableAttributedString *string2 =
-  [[NSMutableAttributedString alloc] initWithString: @"lease agreement"
+  [[NSMutableAttributedString alloc] initWithString: @"legal details"
                                          attributes: @{
                                                        NSFontAttributeName: [UIFont smallTextFont],
                                                        NSForegroundColorAttributeName: [UIColor blue]
@@ -460,7 +463,7 @@
    ];
   NSMutableAttributedString *string3 =
   [[NSMutableAttributedString alloc] initWithString:
-   @" and would be willing to sign at a later date."
+   @" of this property and understand that you will be required to sign a lease to secure this rental."
                                          attributes: @{
                                                        NSFontAttributeName: [UIFont smallTextFont],
                                                        NSForegroundColorAttributeName: [UIColor grayMedium]
@@ -824,7 +827,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
         label.frame = CGRectMake(20.0f, 0.0f,
                                  tableView.frame.size.width - (20 * 2), 24.f);
-        label.text = @"View Lease Details";
+        label.text = @"View Legal Details";
         label.textAlignment = NSTextAlignmentRight;
         label.textColor = [UIColor blue];
         [cell.contentView addSubview: label];
@@ -1276,7 +1279,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // View lease details
     if (indexPath.row == 3) {
       [self.navigationController pushViewController:
-       [[OMBResidenceLeaseAgreementViewController alloc] init] animated: YES];
+       [[OMBResidenceLegalDetailsViewController alloc] init] animated: YES];
     }
   }
   // Price breakdown (NOT BEING USED) !!!
@@ -1363,7 +1366,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
            OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes) {
     if (indexPath.row == 0) {
       [self.navigationController pushViewController:
-       [[OMBResidenceLeaseAgreementViewController alloc] init] animated: YES];
+       [[OMBResidenceLegalDetailsViewController alloc] init] animated: YES];
     }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
@@ -1764,22 +1767,26 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSArray *array = @[
     @{
-      @"title": @"Authorize",
-      @"information": @"Review your offer and add "
-        @"a payment method. You will NOT be charged until the landlord "
-        @"accepts your offer. Only then can you confirm and pay for the place."
+      @"title": @"Renter Profile",
+      @"information": @"The more information you complete, the more likely "
+        @"landlords or subletters are to accept your booking request. "
+        @"If you have roommates, make sure they complete their profiles too!"
     },
     @{
-      @"title": @"Review",
-      @"information": @"The landlord or subletter will review your offer and "
-        @"renter profile. They will have 24 hours to confirm your offer at "
-        @"which point you will be notified."
+      @"title": @"Authorize Payment",
+      @"information": @"Review your offer and add a payment method.  You will NOT be charged "
+        @"upfront.  You will only be charged if you decide to secure the place by "
+        @"signing the lease and paying the 1st months rent and deposit through OnMyBlock."
     },
     @{
-      @"title": @"Sign & Pay",
-      @"information": @"Once accepted, you will receive a lease to e-sign via "
-        @"email. You will have 48 hours to confirm, sign the lease, and pay "
-        @"the 1st month’s rent and deposit using your selected payment method."
+      @"title": @"Wait For Response",
+      @"information": @"Once you submit your offer, the landlord or subletter will "
+        @"have 96 hours to review your offer, your renter profile, and your "
+        @"roommates renter profiles if applicable.\n\n"
+        @"If your offer is accepted, you will have 1 week to secure the place by "
+        @"signing the lease and paying the 1st months rent and deposit through "
+        @"OnMyBlock.  Some places may also require a signed co-signer agreement. "
+        @"If your offer is retracted, declined, or expires, any payment authorization is voided."
     }
   ];
 

@@ -263,6 +263,8 @@ CGFloat kBackgroundMaxScale = 5.0f;
     selector: @selector(updateAccountView)
       name: OMBCurrentUserUploadedImage object: nil];
 
+  _slideEnabled=YES;
+
   return self;
 }
 
@@ -1645,6 +1647,12 @@ completion: (void (^) (void)) block
 {
   if ([self respondsToSelector: @selector(setNeedsStatusBarAppearanceUpdate)])
     [self setNeedsStatusBarAppearanceUpdate];
+}
+
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    return _slideEnabled;
 }
 
 @end

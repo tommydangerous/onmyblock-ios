@@ -16,11 +16,13 @@
 #import "OMBLegalAnswer.h"
 #import "OMBLegalQuestion.h"
 #import "OMBPreviousRental.h"
+#import "OMBRoommate.h"
 #import "OMBRenterApplicationUpdateConnection.h"
 
 @interface OMBRenterApplication ()
 {
   NSMutableDictionary *cosigners;
+  NSMutableDictionary *roommates;
 }
 
 @end
@@ -42,6 +44,7 @@
   _previousRentals = [NSMutableArray array];
 
   cosigners = [NSMutableDictionary dictionary];
+  roommates = [NSMutableDictionary dictionary];
 
   return self;
 }
@@ -87,7 +90,14 @@
         @"state", previousRental.state];
   NSArray *array = [_previousRentals filteredArrayUsingPredicate: predicate];
   if ([array count] == 0)
-    [_previousRentals insertObject: previousRental atIndex: 0];
+    [_previousRentals addObject: previousRental];
+}
+
+- (void) addRoommate: (OMBRoommate *) object
+{
+  // don't have uid,
+  object.uid = [self lastIndexFromRoomates];
+  [roommates setObject: object forKey: [NSNumber numberWithInt: object.uid]];
 }
 
 - (NSArray *) cosignersSortedByFirstName
@@ -134,6 +144,17 @@ completion: (void (^) (NSError *error)) block
   [conn start];
 }
 
+- (NSInteger) lastIndexFromRoomates
+{
+  NSInteger index = 0;
+  for(OMBRoommate *roommate in [roommates allValues]){
+    if(index <= roommate.uid)
+      index = roommate.uid + 1;
+  }
+  
+  return index;
+}
+
 - (OMBLegalAnswer *) legalAnswerForLegalQuestion: 
 (OMBLegalQuestion *) legalQuestion
 {
@@ -158,6 +179,11 @@ completion: (void (^) (NSError *error)) block
   for (NSNumber *number in [oldSet allObjects]) {
     [cosigners removeObjectForKey: number];
   }
+}
+
+- (NSArray *) previousRentalsSort
+{
+  return _previousRentals;
 }
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
@@ -198,11 +224,42 @@ completion: (void (^) (NSError *error)) block
   [_previousRentals removeAllObjects];
 
   [cosigners removeAllObjects];
+  [roommates removeAllObjects];
 }
 
 - (void) removeCosigner: (OMBCosigner *) cosigner
 {
   [cosigners removeObjectForKey: [NSNumber numberWithInt: cosigner.uid]];
+}
+
+- (void) removeEmployment: (OMBEmployment *) employment
+{
+  for(int i=0; i < _employments.count; i++){
+    if(((OMBEmployment *)_employments[i]).uid == employment.uid){
+      [_employments removeObjectAtIndex: i];
+      break;
+    }
+  }
+}
+
+- (void) removePreviousRental:(OMBPreviousRental *) previousRental
+{
+  for(int i=0; i< _previousRentals.count; i++){
+    if(((OMBPreviousRental *)_previousRentals[i]).uid == previousRental.uid){
+      [_previousRentals removeObjectAtIndex: i];
+      break;
+    }
+  }
+}
+
+- (void) removeRoommate: (OMBRoommate *) roommate
+{
+  [roommates removeObjectForKey: [NSNumber numberWithInt: roommate.uid]];
+}
+
+- (NSArray *) roommatesSort
+{
+  return [roommates allValues];
 }
 
 - (void) updateWithDictionary: (NSDictionary *) dictionary

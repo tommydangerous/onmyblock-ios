@@ -129,6 +129,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       else if (row == OMBRenterInfoAddCosignerSectionFieldsRowPhone) {
         imageName         = @"phone_icon.png";
         placeholderString = @"Phone";
+        cell.textField.keyboardType = UIKeyboardTypePhonePad;
       }
       // Relationship type
       else if (row == 

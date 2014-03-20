@@ -11,6 +11,7 @@
 #import "NSString+PhoneNumber.h"
 #import "OMBPreviousRental.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 
 @implementation OMBPreviousRentalCell
 
@@ -109,6 +110,12 @@ reuseIdentifier: (NSString *)reuseIdentifier
   return padding + (22.0f * 3) + padding + (22.0f * 3) + padding;
 }
 
++ (CGFloat) heightForCell2
+{
+  CGFloat padding = 20.0f;
+  return padding + (22.0f * 3) + padding;
+}
+
 #pragma mark - Instance Methods
 
 - (void) loadData: (OMBPreviousRental *) object
@@ -168,6 +175,64 @@ reuseIdentifier: (NSString *)reuseIdentifier
   landlordPhoneLabel.frame = CGRectMake(landlordPhoneLabel.frame.origin.x,
     originX + spacing, landlordPhoneLabel.frame.size.width,
       landlordPhoneLabel.frame.size.height);
+}
+
+
+- (void) loadData2: (OMBPreviousRental *) object
+{
+  _previousRental = object;
+  CGFloat padding = 20.0f;
+  CGFloat width = self.frame.size.width - 2 * 20;
+  [residenceImageView removeFromSuperview];
+  
+  CGRect previousFrame = addressLabel.frame;
+  previousFrame.origin.x = padding;
+  previousFrame.size.width = width;
+  addressLabel.font = [UIFont mediumTextFontBold];
+  addressLabel.frame = previousFrame;
+  addressLabel.textAlignment = NSTextAlignmentLeft;
+  addressLabel.textColor = [UIColor textColor];
+  
+  previousFrame.origin.y = addressLabel.frame.origin.y +
+    addressLabel.frame.size.height;
+  addressLabel2.frame = previousFrame;
+  addressLabel2.textAlignment = addressLabel.textAlignment;
+  
+  previousFrame.origin.y = addressLabel2.frame.origin.y +
+    addressLabel2.frame.size.height;
+  rentLeaseMonthsLabel.frame = previousFrame;
+  rentLeaseMonthsLabel.textAlignment = addressLabel.textAlignment;
+  
+  if([_previousRental.school length]){
+    addressLabel.text = _previousRental.school;
+    addressLabel2.text = @"on-campus residence";
+  }else{
+    addressLabel.text = [_previousRental.address capitalizedString];
+    addressLabel2.text = [NSString stringWithFormat: @"%@, %@ %@",
+      _previousRental.city.length ? [_previousRental.city capitalizedString] : @"",
+        ([_previousRental.state length] == 2 ? [_previousRental.state uppercaseString]:
+         (_previousRental.state.length ? _previousRental.state : @"")),
+            _previousRental.zip.length ? _previousRental.zip : @""];
+  }
+  
+  // Start date
+  if (_previousRental.moveInDate) {
+    NSString *startDate = @"";
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"MMM yyyy";
+    startDate = [dateFormatter stringFromDate:
+      [NSDate dateWithTimeIntervalSince1970: _previousRental.moveInDate]];
+    NSString *endDateString = @"Present";
+    if (_previousRental.moveOutDate) {
+      endDateString = [dateFormatter stringFromDate:
+        [NSDate dateWithTimeIntervalSince1970: _previousRental.moveOutDate]];
+    }
+    rentLeaseMonthsLabel.text = [NSString stringWithFormat: @"%@ - %@",
+      startDate, endDateString];
+  }
+  else {
+    rentLeaseMonthsLabel.text = @"";
+  }
 }
 
 - (void) loadFakeData1

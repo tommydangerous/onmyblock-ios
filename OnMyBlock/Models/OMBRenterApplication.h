@@ -13,6 +13,7 @@
 @class OMBLegalAnswer;
 @class OMBLegalQuestion;
 @class OMBPreviousRental;
+@class OMBRoommate;
 
 @interface OMBRenterApplication : NSObject
 
@@ -34,6 +35,7 @@
 - (void) addEmployment: (OMBEmployment *) employment;
 - (void) addLegalAnswer: (OMBLegalAnswer *) legalAnswer;
 - (void) addPreviousRental: (OMBPreviousRental *) previousRental;
+- (void) addRoommate: (OMBRoommate *) object;
 - (NSArray *) cosignersSortedByFirstName;
 - (void) createCosignerConnection: (OMBCosigner *) cosigner
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
@@ -44,10 +46,15 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 completion: (void (^) (NSError *error)) block;
 - (OMBLegalAnswer *) legalAnswerForLegalQuestion: 
 (OMBLegalQuestion *) legalQuestion;
+- (NSArray *) previousRentalsSort;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) removeAllObjects;
 - (void) removeCosigner: (OMBCosigner *) cosigner;
+- (void) removeEmployment: (OMBEmployment *) employment;
+- (void) removePreviousRental:(OMBPreviousRental *)object;
+- (void) removeRoommate: (OMBRoommate *) roommate;
+- (NSArray *) roommatesSort;
 - (void) updateWithDictionary: (NSDictionary *) dictionary
 completion: (void (^) (NSError *error)) block;
 

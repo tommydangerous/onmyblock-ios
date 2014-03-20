@@ -51,7 +51,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
       (size.height - switchButton.frame.size.height) * 0.5f,
         switchButton.frame.size.width, switchButton.frame.size.height);
 
-  self.textFieldLabel.frame = CGRectMake(padding, 0.0f, 
+  self.textFieldLabel.frame = CGRectMake(padding, (OMBStandardButtonHeight - OMBStandardHeight) * 0.5f,
     size.width, OMBStandardHeight);
 }
 

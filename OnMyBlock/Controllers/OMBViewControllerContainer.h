@@ -79,6 +79,8 @@
   OMBOfferAcceptedView *offerAcceptedView;
   UIButton *signUpButtonBottom;
   UIView *viewForScrollingInfiniteScroll;
+  
+    BOOL slideEnabled;
 }
 
 @property (nonatomic, strong) OMBCenteredImageView *accountView;
@@ -89,6 +91,8 @@
 @property (nonatomic, strong) UIView *detailViewOverlay;
 @property (nonatomic, strong) UIScrollView *infiniteScroll;
 @property (nonatomic, strong) UIScrollView *menuScroll;
+
+@property  BOOL slideEnabled;
 
 // View controllers
 

@@ -8,21 +8,19 @@
 
 #import "OMBTableViewController.h"
 
+@class OMBMapFilterLocationViewController;
 @class OMBNeighborhood;
 @class AMBlurView;
-@class TextFieldPadding;
 
 @interface OMBMapFilterViewController : OMBTableViewController
 <CLLocationManagerDelegate, UIPickerViewDataSource, UIPickerViewDelegate,
-  UIScrollViewDelegate, UITextFieldDelegate>
+  UIScrollViewDelegate>
 {
   UIPickerView *availabilityPickerView;
   NSCalendar *calendar;
   UIButton *currentLocationButton;
   UIView *fadedBackground;
-  TextFieldPadding *filterTextField;
-  UIImageView *filterImageView;
-  BOOL isEditing;
+  OMBMapFilterLocationViewController *filterViewController;
   CLLocationManager *locationManager;
   NSMutableDictionary *moveInDates;
   UITableView *neighborhoodTableView;

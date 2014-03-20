@@ -20,6 +20,9 @@
 #import "OMBPickerViewCell.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoSectionCosignersViewController.h"
+#import "OMBRenterInfoSectionEmploymentViewController.h"
+#import "OMBRenterInfoSectionPreviousRentalViewController.h"
+#import "OMBRenterInfoSectionRoommateViewController.h"
 #import "OMBRenterInfoSectionViewController.h"
 #import "OMBRenterProfileUserInfoCell.h"
 #import "OMBTwoLabelTextFieldCell.h"
@@ -670,7 +673,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Co-applicants
     if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
       key = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
-      vc  = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
+      vc  = [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser: user];
     }
     // Co-signers
     else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
@@ -681,14 +684,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Rental History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
       key = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
-      vc  = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
+      vc  = [[OMBRenterInfoSectionPreviousRentalViewController alloc] initWithUser: user];
     }
     // Work History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
       key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
-      vc  = [[OMBRenterInfoSectionViewController alloc] initWithUser: user];
-      [self linkedInButtonSelected];
-      return;
+      vc  = [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser: 
+        user];
     }
     if (vc) {
       NSMutableDictionary *dictionary = 
@@ -736,6 +738,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Renter info
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
+    if([user isLandlord])
+      return 0.0;
+    
     // Top spacing
     if (row == OMBMyRenterProfileSectionRenterInfoTopSpacing) {
       return OMBStandardHeight;
