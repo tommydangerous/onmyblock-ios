@@ -217,7 +217,7 @@
   sellerHomebaseImageView.image.accessibilityIdentifier = @"homebase_icon.png";
   sellerHomebaseImageView.tag = 11;
   [_sellerHomebaseButton addSubview: sellerHomebaseImageView];
-  [_sellerButtons addObject: _sellerHomebaseButton];
+  //[_sellerButtons addObject: _sellerHomebaseButton];
   // Notification badge
   _sellerHomebaseNotificationBadge = [UILabel new];
   [_sellerHomebaseButton addSubview: _sellerHomebaseNotificationBadge];
@@ -239,6 +239,24 @@
   [_manageListingsButton addSubview: manageListingImageView];
   [_sellerButtons addObject: _manageListingsButton];
 
+  // Inbox
+  _sellerInboxButton = [UIButton new];
+  [_sellerInboxButton addTarget: self action: @selector(showInboxSeller)
+    forControlEvents: UIControlEventTouchUpInside];
+  [_sellerInboxButton setTitle: @"Messages" forState: UIControlStateNormal];
+  UIImageView *sellerInboxImageView = [UIImageView new];
+  sellerInboxImageView.frame = discoverImageView.frame;
+  sellerInboxImageView.image = [UIImage image:
+    [UIImage imageNamed: @"messages_icon_white.png"]
+      size: sellerInboxImageView.frame.size];
+  sellerInboxImageView.image.accessibilityIdentifier = @"messages_icon_white.png";
+  sellerInboxImageView.tag = 11;
+  [_sellerInboxButton addSubview: sellerInboxImageView];
+  [_sellerButtons addObject: _sellerInboxButton];
+  // Notification badge
+  _inboxNotificationBadge = [UILabel new];
+  [_sellerInboxButton addSubview: _inboxNotificationBadge];
+  
   // Set attributes for buttons
   NSArray *buttonsArray = @[
     // Renter
@@ -250,8 +268,9 @@
     _inboxButton,
     // Seller
     _createListingButton,
-    _sellerHomebaseButton,
-    _manageListingsButton
+    //_sellerHomebaseButton,
+    _manageListingsButton,
+    _sellerInboxButton
   ];
   for (UIButton *button in buttonsArray) {
     button.contentEdgeInsets = UIEdgeInsetsMake(0.0f, 
@@ -441,6 +460,12 @@
 - (void) showInbox
 {
   [self changeTitleLabelColor:_inboxButton];
+  [[self container] showInbox];
+}
+
+- (void) showInboxSeller
+{
+  [self changeTitleLabelColor:_sellerInboxButton];
   [[self container] showInbox];
 }
 

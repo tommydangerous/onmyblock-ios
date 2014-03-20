@@ -60,7 +60,26 @@ residenceImage: (OMBResidenceImage *) image;
 
   residenceImage.absoluteString = 
     [[json objectForKey: @"object"] objectForKey: @"image"];
-  residenceImage.uid = 
+  residenceImage.imageURL =
+    [[json objectForKey: @"object"] objectForKey: @"image"];
+  
+  NSString *originalString = [[json objectForKey: @"object"] objectForKey: @"image"];
+  NSString *string         = [[json objectForKey: @"object"] objectForKey: @"image"];
+  
+  // If URL is something like this //ombrb-prod.s3.amazonaws.com
+  if ([string hasPrefix: @"//"]) {
+    string = [@"http:" stringByAppendingString: string];
+  }
+  else if (![string hasPrefix: @"http"]) {
+    NSString *baseURLString =
+    [[OnMyBlockAPIURL componentsSeparatedByString:
+      OnMyBlockAPI] objectAtIndex: 0];
+    string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
+  }
+  residenceImage.absoluteString = originalString;
+  residenceImage.imageURL = [NSURL URLWithString:string];
+  
+  residenceImage.uid =
     [[[json objectForKey: @"object"] objectForKey: @"id"] intValue];
 
   NSLog(@"OMBResidenceUploadImageConnection");
