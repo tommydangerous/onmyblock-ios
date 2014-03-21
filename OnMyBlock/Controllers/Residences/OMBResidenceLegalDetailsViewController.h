@@ -12,18 +12,24 @@
 
 @interface OMBResidenceLegalDetailsViewController : OMBTableViewController<UIGestureRecognizerDelegate>
 {
-    NSAttributedString *text1;
-    NSAttributedString *text2;
-    NSAttributedString *text3;
-    NSAttributedString *text4;
-    NSAttributedString *text5;
-    NSAttributedString *text6;
-    NSAttributedString *text7;
-    NSAttributedString *text8;
-    NSAttributedString *text9;
-
-    
-    UISegmentedControl *segmentedControl;
+  NSAttributedString *text1;
+  NSAttributedString *text2;
+  NSAttributedString *text3;
+  NSAttributedString *text4;
+  NSAttributedString *text5;
+  NSAttributedString *text6;
+  NSAttributedString *text7;
+  NSAttributedString *text8;
+  NSAttributedString *text9;
+  NSAttributedString *text10;
+  NSAttributedString *text11;
+  NSAttributedString *text12;
+  NSAttributedString *text13;
+  NSAttributedString *text14;
+  NSAttributedString *text15;
+  UIScrollView *scrollView;
+  UISegmentedControl *segmentedControl;
+  CGFloat lastScale;
 }
 
 @property (nonatomic, readwrite) CGRect originalFrame;
@@ -31,6 +37,6 @@
 @property (nonatomic, readwrite) CGFloat screenHeight;
 @property (nonatomic, readwrite) CGFloat deltaY;
 - (void) resetTable;
-- (void) addGesture;
+
 
 @end
