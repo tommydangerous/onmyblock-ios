@@ -11,6 +11,7 @@
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
 #import "OMBMapFilterBathroomsCell.h"
+#import "OMBMapFilterViewController.h"
 #import "OMBMapFilterBedroomsCell.h"
 #import "OMBMapFilterNeighborhoodCell.h"
 #import "OMBMapFilterPropertyTypeCell.h"
@@ -47,8 +48,8 @@
   
   self.navigationItem.leftBarButtonItem =
   [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
-    style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
-
+                                   style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
+  
   CGFloat padding = 20.0f;
   
   // Neighborhood table
@@ -58,14 +59,14 @@
   self.table.delegate = self;
   self.table.separatorColor = [UIColor grayLight];
   self.table.separatorInset = UIEdgeInsetsMake(0.0f, padding,
-                                                          0.0f, 0.0f);
+                                               0.0f, 0.0f);
   temporaryNeighborhoods = [[OMBNeighborhoodStore sharedStore]
                             sortedNeighborhoodsForName:@""];
   // Header view
   UIView *neighborhoodTableHeaderView = [UIView new];
   neighborhoodTableHeaderView.backgroundColor = [UIColor grayLight];
   neighborhoodTableHeaderView.frame = CGRectMake(0.0f, 0.0f,
-    self.table.frame.size.width, OMBStandardHeight);
+                                                 self.table.frame.size.width, OMBStandardHeight * 2);
   self.table.tableHeaderView = neighborhoodTableHeaderView;
   // Filter
   filterTextField = [[TextFieldPadding alloc] init];
@@ -87,30 +88,36 @@
   filterImageView = [[UIImageView alloc] initWithImage:
                      [UIImage changeColorForImage:[UIImage imageNamed:@"search"]
                                           toColor:[UIColor grayMedium]]];
-  filterImageView.frame = CGRectMake((neighborhoodTableHeaderView.frame.size.width - sizeImage) * 0.5f,
-                                     (neighborhoodTableHeaderView.frame.size.height - sizeImage) * 0.5f,
+  filterImageView.frame = CGRectMake((neighborhoodTableHeaderView.frame.size.width - sizeImage) * 0.95f,
+                                     (neighborhoodTableHeaderView.frame.size.height - sizeImage) * 0.2f,
                                      sizeImage , sizeImage);
   [neighborhoodTableHeaderView addSubview: filterImageView];
+  [neighborhoodTableHeaderView setBackgroundColor:[UIColor grayUltraLight]];
   
   // Label
-  UILabel *currentLocationLabel = [UILabel new];
-  currentLocationLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
-                                              size: 15];
-  currentLocationLabel.frame = CGRectMake(padding, OMBStandardHeight,
-                                          neighborhoodTableHeaderView.frame.size.width,
-                                          OMBStandardHeight);
-  currentLocationLabel.text = @"User Current Location";
-  currentLocationLabel.textColor = [UIColor blue];
-  //[neighborhoodTableHeaderView addSubview: currentLocationLabel];
+  UIButton *currentLocationButton = [UIButton new];
+  currentLocationButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
+                                                          size: 15];
+  currentLocationButton.frame = CGRectMake(padding-40.0, OMBStandardHeight,
+                                           neighborhoodTableHeaderView.frame.size.width,
+                                           OMBStandardHeight);
+  
+  [currentLocationButton setTitle:@"User Current Location" forState:UIControlStateNormal];
+  [currentLocationButton setTitleColor:[UIColor blue] forState:0];
+  
+  
+  [currentLocationButton addTarget:self action:@selector(setCurrentLocation) forControlEvents:UIControlEventTouchUpInside];
+  //currentLocationButton.titleLabel.textColor = [UIColor blue];
+  [neighborhoodTableHeaderView addSubview: currentLocationButton];
   // Image view
   CGFloat imageSize = padding;
   UIImageView *headerImageView = [UIImageView new];
   headerImageView.frame = CGRectMake(
-                                     neighborhoodTableHeaderView.frame.size.width - (imageSize + padding),
+                                     neighborhoodTableHeaderView.frame.size.width - (imageSize + padding +35.0),
                                      OMBStandardHeight + (OMBStandardHeight - imageSize) * 0.5,
                                      imageSize, imageSize);
   headerImageView.image = [UIImage imageNamed: @"gps_cursor_blue.png"];
-  //[neighborhoodTableHeaderView addSubview: headerImageView];
+  [neighborhoodTableHeaderView addSubview: headerImageView];
   // Current location button
   CGRect buttonFrame = neighborhoodTableHeaderView.frame;
   buttonFrame.origin.y = OMBStandardHeight;
@@ -118,7 +125,9 @@
   
   // Footer view
   self.table.tableFooterView = [[UIView alloc] initWithFrame:
-    CGRectZero];
+                                CGRectZero];
+  
+  
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -246,12 +255,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     [tableView reloadData];
     [self done];
     /*if (_selectedNeighborhood) {
-      [_valuesDictionary setObject: selectedNeighborhood
-                            forKey: @"neighborhood"];
-    }
-    else
-      [_valuesDictionary setObject: @"" forKey: @"neighborhood"];*/
-
+     [_valuesDictionary setObject: selectedNeighborhood
+     forKey: @"neighborhood"];
+     }
+     else
+     [_valuesDictionary setObject: @"" forKey: @"neighborhood"];*/
+    
   }
 }
 
@@ -341,6 +350,18 @@ viewForHeaderInSection: (NSInteger) section
 
 #pragma mark - Methods
 
+#pragma mark - Selector Methods
+-(void) setCurrentLocation{
+  
+  OMBNeighborhood *neighborhood =[[OMBNeighborhood alloc] init];
+  neighborhood.name=@"User Current Location";
+  CLLocation *location1 = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
+  neighborhood.coordinate =location1.coordinate;
+  
+  _selectedNeighborhood=neighborhood;
+  [self done];
+  
+}
 #pragma mark - Instance Methods
 
 - (void) cancel
@@ -372,7 +393,7 @@ viewForHeaderInSection: (NSInteger) section
     filterTextField.enablesReturnKeyAutomatically = NO;
   }
   temporaryNeighborhoods = [[OMBNeighborhoodStore sharedStore]
-    sortedNeighborhoodsForName: [textField.text lowercaseString]];
+                            sortedNeighborhoodsForName: [textField.text lowercaseString]];
   [self.table reloadData];
   
 }

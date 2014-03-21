@@ -314,6 +314,7 @@
    [NSIndexPath indexPathForRow: 1 inSection: 0]];
   NSString *string = @"";
   selectedNeighborhood = filterViewController.selectedNeighborhood;
+  NSLog(@"%@", selectedNeighborhood);
   if (selectedNeighborhood) {
     string = selectedNeighborhood.name;
   }

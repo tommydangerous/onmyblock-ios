@@ -1029,7 +1029,7 @@ completion: (void (^) (void)) block
   }
 
   [self presentDetailViewController: self.mapNavigationController];
-
+  //[self showMenuWithFactor: 1.0];
   // Hide the title for the create listing button
   createListingButton.hidden = NO;
   [createListingButton setTitle: @"Create Listing" 
@@ -1195,7 +1195,7 @@ completion: (void (^) (void)) block
   [self.introViewController hideStudentLandlordView];
 
   // Hide the menu
-  [self hideMenuWithFactor: 1.0f];
+  //[self hideMenuWithFactor: 1.0f];
   // Hide the intro view controller -> login view controller
   void (^completion)(void) = ^(void) {
     [self.introViewController setupForLoggedInUser];

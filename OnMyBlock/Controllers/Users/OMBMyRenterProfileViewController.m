@@ -926,6 +926,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         // so the sizes need to change
         [[OMBUser currentUser].heightForAboutTextDictionary removeAllObjects];
         [self updateData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:
+         OMBCurrentUserUploadedImage object: nil];
       }
       else {
         [self showAlertViewWithError: error];

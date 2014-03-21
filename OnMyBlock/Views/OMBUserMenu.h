@@ -28,6 +28,7 @@
 @property (nonatomic, strong) UIButton *createListingButton;
 @property (nonatomic, strong) UIButton *manageListingsButton;
 @property (nonatomic, strong) UIButton *sellerHomebaseButton;
+@property (nonatomic, strong) UIButton *sellerInboxButton;
 
 // Notification badges
 @property (nonatomic, strong) UILabel *inboxNotificationBadge;
