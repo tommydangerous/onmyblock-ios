@@ -466,7 +466,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Filter
   // Neighborhood
-  if ([dictionary objectForKey: @"neighborhood"] != [NSNull null]) {
+  if ([dictionary objectForKey: @"neighborhood"] != [NSNull null] &&
+    [[dictionary objectForKey: @"neighborhood"] isKindOfClass: 
+      [OMBNeighborhood class]]) {
     OMBNeighborhood *neighborhood = [dictionary objectForKey: 
       @"neighborhood"];
     
