@@ -1853,11 +1853,23 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         userTypeString = @"subletter";
       
       [alertBlur setTitle: @"Offer Placed!"];
+      // [alertBlur setMessage: [NSString stringWithFormat:
+      //   @"If the %@ accepts your offer, you will receive a lease "
+      //   @"via email to e-sign. You will have 48 hours to confirm, "
+      //   @"sign the lease, and pay the 1st month's rent "
+      //   @"and deposit using your selected payment method.", userTypeString]];
+      NSUInteger weeks = kMaxHoursForStudentToConfirm / 7;
       [alertBlur setMessage: [NSString stringWithFormat:
-        @"If the %@ accepts your offer, you will receive a lease "
-        @"via email to e-sign. You will have 48 hours to confirm, "
-        @"sign the lease, and pay the 1st month's rent "
-        @"and deposit using your selected payment method.", userTypeString]];
+        @"If the landlord accepts your offer, we will immediately email you "
+        @"the lease, and you (and your roommates if applicable) will have %@ "
+        @"to secure the place by electronically signing the lease and paying "
+        @"the 1st month's rent and deposit through OnMyBlock. Some places may "
+        @"also require a signed co-signer agreement. If your offer is "
+        @"retracted, declined, or expires, "
+        @"any payment authorization is voided.",
+        [NSString stringWithFormat: @"%i %@", weeks,
+          weeks == 1 ? @"week" : @"weeks"]
+      ]];
       [alertBlur resetQuestionDetails];
       [alertBlur hideQuestionButton];
       // Buttons

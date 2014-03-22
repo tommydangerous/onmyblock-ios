@@ -326,7 +326,19 @@ reuseIdentifier: (NSString *) reuseIdentifier
     userImageView.image = [OMBResidence placeholderImage];
   }
 
-  nameLabel.text = [_offer.residence.user shortName];
+  // nameLabel.text = [_offer.residence.user shortName];
+  // NSMutableAttributedString *aString1 = (NSMutableAttributedString *) 
+  //   [[NSString numberToCurrencyString: 
+  //     self.offer.amount] attributedStringWithFont: 
+  //       [UIFont normalTextFontBold]];
+  // NSMutableAttributedString *aString2 = (NSMutableAttributedString *) 
+  //   [[NSString stringWithFormat: @" %i bd / %i ba", 
+  //     (NSUInteger) self.offer.residence.bedrooms, 
+  //       (NSUInteger) self.offer.residence.bathrooms] 
+  //         attributedStringWithFont: [UIFont normalTextFont]];
+  // [aString1 appendAttributedString: aString2];
+  // nameLabel.attributedText = aString1;
+  nameLabel.text = [NSString numberToCurrencyString: self.offer.amount];
 
   // Time
   timeLabel.hidden = YES;
@@ -352,9 +364,12 @@ reuseIdentifier: (NSString *) reuseIdentifier
     case OMBOfferStatusForStudentAccepted: {
       color = [UIColor pink];
       notesLabel.hidden = NO;
-      notesLabel.text = @"You have 48 hours to confirm or reject. You may "
-        @"confirm the place by signing the lease and paying the 1st month's "
-        @"rent and deposit.";
+      notesLabel.text = [NSString stringWithFormat:
+        @"You have %@ to confirm or reject. "
+        @"You may secure the place by signing the lease and "
+        @"paying the 1st month's rent and deposit.",
+        [self.offer timelineStringForStudent]
+      ];
       timeLabel.hidden = NO;
       break;
     }
@@ -373,7 +388,13 @@ reuseIdentifier: (NSString *) reuseIdentifier
     case OMBOfferStatusForStudentWaitingForLandlordResponse: {
       color = [UIColor orange];
       notesLabel.hidden = NO;
-      notesLabel.text = @"The landlord will have 24 hours to either accept or "
+      notesLabel.text = [NSString stringWithFormat:
+        @"Once you submit your offer, the landlord will have %@ "
+        @"to review your offer, your renter profile, and your roommates' "
+        @"renter profiles if applicable.", 
+        [self.offer timelineStringForLandlord]
+      ];
+      @"The landlord will have 24 hours to either accept or "
         @"decline your offer after reviewing your renter profile and offer.";
       timeLabel.hidden = NO;
       break;
@@ -385,14 +406,15 @@ reuseIdentifier: (NSString *) reuseIdentifier
     default:
       break;
   }
-  typeLabel.text = [_offer statusStringForStudent];
+  typeLabel.text = [[self.offer statusStringForStudent] capitalizedString];
   typeLabel.textColor = color;
 
   // Address
   // addressLabel.text = [_offer.residence.address capitalizedString];
-  addressLabel.text = [NSString stringWithFormat: @"%@ - %@",
-    [NSString numberToCurrencyString: _offer.amount],
-      [_offer.residence.address capitalizedString]];
+  // addressLabel.text = [NSString stringWithFormat: @"%@ - %@",
+  //   [NSString numberToCurrencyString: _offer.amount],
+  //     [_offer.residence.address capitalizedString]];
+  addressLabel.text = [self.offer.residence.address capitalizedString];
 }
 
 - (void) timerFireMethod: (NSTimer *) timer

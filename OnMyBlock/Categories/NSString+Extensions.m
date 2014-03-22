@@ -214,6 +214,14 @@ fonts: (NSArray *) fonts colors: (NSArray *) colors
 }
 
 - (NSAttributedString *) attributedStringWithFont: (UIFont *) font
+{
+  return [[NSMutableAttributedString alloc] initWithString: self attributes:
+    @{
+      NSFontAttributeName: font
+    }];
+}
+
+- (NSAttributedString *) attributedStringWithFont: (UIFont *) font
 lineHeight: (CGFloat) lineHeight
 {
   NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];

@@ -1871,8 +1871,13 @@ viewForHeaderInSection: (NSInteger) section
   [alertBlur stopSpinning];
 
   if (offer.payoutTransaction.verified) {
-    [alertBlur setTitle: @"Payment Successful!"];
-    [alertBlur setMessage: @"Your payment using Venmo is complete."];
+    [alertBlur setTitle: @"Payment Successful"];
+    // [alertBlur setMessage: @"Your payment using Venmo is complete."];
+    [alertBlur setMessage:
+      @"You're ready to move in! "
+      @"We have transferred the 1st month's rent and deposit to your "
+      @"landlord and have emailed the executed lease to both parties."
+    ];
     [alertBlur resetQuestionDetails];
     [alertBlur hideQuestionButton];
     // Buttons
@@ -1989,12 +1994,15 @@ viewForHeaderInSection: (NSInteger) section
 {
   // Student
   if ([self offerBelongsToCurrentUser]) {
-    NSString *paymentMethodName =
-      [[[OMBUser currentUser] primaryPaymentPayoutMethod].payoutType capitalizedString];
+    NSString *paymentMethodName = [[[OMBUser currentUser] 
+      primaryPaymentPayoutMethod].payoutType capitalizedString];
     [alertBlur setTitle: @"Confirm and Pay"];
-    [alertBlur setMessage: @"The landlord has accepted your offer! "
-     @"To confirm this place, you must sign the lease we email you and "
-     @"pay the 1st month's rent and deposit by tapping Confirm below."];
+    [alertBlur setMessage: 
+      @"The landlord has accepted your offer! "
+      @"To confirm this place you must sign the lease that we have emailed "
+      @"to you and pay the 1st month's rent and deposit by "
+      @"tapping Confirm below."
+    ];
     [alertBlur setQuestionDetails: [NSString stringWithFormat:
       @"Confirm: Charges %@ (for the 1st month's rent and deposit) from "
       @"your %@ account.\n\n"

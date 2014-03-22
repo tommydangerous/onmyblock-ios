@@ -26,6 +26,7 @@ fonts: (NSArray *) fonts colors: (NSArray *) colors;
 
 #pragma mark - Instance Methods
 - (BOOL) containsString:(NSString *)string options:(NSStringCompareOptions)options;
+- (NSAttributedString *) attributedStringWithFont: (UIFont *) font;
 - (NSAttributedString *) attributedStringWithFont: (UIFont *) font
 lineHeight: (CGFloat) lineHeight;
 - (NSAttributedString *) attributedStringWithString: (NSString *) string 

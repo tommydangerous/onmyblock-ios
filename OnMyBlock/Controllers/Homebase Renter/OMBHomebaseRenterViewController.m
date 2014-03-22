@@ -938,7 +938,8 @@ viewForHeaderInSection: (NSInteger) section
       titleString = @"Top Priority";
     }
     else if (section == 1) {
-      titleString = @"Confirmed Places";
+      // titleString = @"Confirmed Places";
+      titleString = @"Ready to Move In";
     }
   }
   // Payments

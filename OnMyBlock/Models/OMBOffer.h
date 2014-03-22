@@ -83,6 +83,8 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 - (CGFloat) timeLeftPercentageForStudent;
 - (NSString *) timeLeftStringForLandlord;
 - (NSString *) timeLeftStringForStudent;
+- (NSString *) timelineStringForLandlord;
+- (NSString *) timelineStringForStudent;
 - (CGFloat) totalAmount;
 
 @end

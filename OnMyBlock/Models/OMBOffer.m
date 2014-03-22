@@ -15,8 +15,8 @@
 #import "OMBUser.h"
 #import "OMBUserStore.h"
 
-NSInteger kMaxHoursForLandlordToAccept = 24;
-NSInteger kMaxHoursForStudentToConfirm = 48;
+NSInteger kMaxHoursForLandlordToAccept = 24 * 4;
+NSInteger kMaxHoursForStudentToConfirm = 24 * 7;
 
 #if __ENVIRONMENT__ == 1
   NSInteger kWebServerTimeOffsetInSeconds = 0;
@@ -350,7 +350,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
       break;
     }
     case OMBOfferStatusForLandlordOfferPaid: {
-      return @"student confirmed - paid";
+      return @"student confirmed & paid";
       break;
     }
     case OMBOfferStatusForLandlordOfferPaidExpired: {
@@ -387,7 +387,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
       break;
     }
     case OMBOfferStatusForStudentWaitingForLandlordResponse: {
-      return @"waiting for landlord response";
+      return @"waiting for response";
       break;
     }
     case OMBOfferStatusForStudentExpired: {
@@ -395,7 +395,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
       break;
     }
     case OMBOfferStatusForStudentOfferPaid: {
-      return @"confirmed - paid";
+      return @"confirmed & paid";
       break;
     }
     case OMBOfferStatusForStudentOfferPaidExpired: {
@@ -454,6 +454,31 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   // Account for the server being ahead 1 minute and 20 seconds
   deadline -= kWebServerTimeOffsetInSeconds;
   return [NSString timeRemainingShortFormatWithAllUnitsInterval: deadline];
+}
+
+- (NSString *) timelineStringForLandlord
+{
+  return [NSString stringWithFormat: @"%i hours", kMaxHoursForLandlordToAccept];
+}
+
+- (NSString *) timelineStringForStudent
+{
+  NSString *unit = @"hour";
+  NSUInteger i = kMaxHoursForStudentToConfirm;
+  NSUInteger week = 1 * 24 * 7;
+  NSUInteger day  = 1 * 24;
+  NSUInteger hour = 1;
+  if (kMaxHoursForStudentToConfirm >= week) {
+    unit = @"week";
+    i = kMaxHoursForStudentToConfirm / week;
+  }
+  else if (kMaxHoursForStudentToConfirm >= day) {
+    unit = @"day";
+    i = kMaxHoursForStudentToConfirm / day;
+  }
+  if (i != 1)
+    unit = [unit stringByAppendingString: @"s"];
+  return [NSString stringWithFormat: @"%i %@", i, unit];
 }
 
 - (CGFloat) totalAmount
