@@ -36,6 +36,8 @@ extern CGFloat const OMBStandardHeight;
 #pragma mark - Instance Methods
 
 - (OMBAppDelegate *) appDelegate;
+- (void) containerStartSpinning;
+- (void) containerStopSpinning;
 - (void) back;
 - (void) cancel;
 - (void) done;

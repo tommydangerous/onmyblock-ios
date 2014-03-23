@@ -11,6 +11,9 @@
 #import "OMBCosigner.h"
 #import "OMBCosignerCreateConnection.h"
 #import "OMBCosignerListConnection.h"
+#import "OMBModelCreateConnection.h"
+#import "OMBModelDeleteConnection.h"
+#import "OMBModelListConnection.h"
 #import "OMBDeleteConnection.h"
 #import "OMBEmployment.h"
 #import "OMBLegalAnswer.h"
@@ -22,6 +25,7 @@
 @interface OMBRenterApplication ()
 {
   NSMutableDictionary *cosigners;
+  NSMutableDictionary *employments;
   NSMutableDictionary *roommates;
 }
 
@@ -38,13 +42,13 @@
   _cats      = NO;
   _coapplicantCount = 0;
   _dogs      = NO;
-  _employments     = [NSMutableArray array];
   _hasCosigner = NO;
   _legalAnswers    = [NSMutableDictionary dictionary];
   _previousRentals = [NSMutableArray array];
 
-  cosigners = [NSMutableDictionary dictionary];
-  roommates = [NSMutableDictionary dictionary];
+  cosigners   = [NSMutableDictionary dictionary];
+  employments = [NSMutableDictionary dictionary];
+  roommates   = [NSMutableDictionary dictionary];
 
   return self;
 }
@@ -53,21 +57,23 @@
 
 #pragma mark - Instance Methods
 
-- (void) addCosigner: (OMBCosigner *) cosigner
+- (void) addCosigner: (OMBCosigner *) object
 {
-  [cosigners setObject: cosigner forKey: 
-    [NSNumber numberWithInt: cosigner.uid]];
+  [cosigners setObject: object forKey: 
+    [NSNumber numberWithInt: object.uid]];
 }
 
-- (void) addEmployment: (OMBEmployment *) employment
+- (void) addEmployment: (OMBEmployment *) object
 {
-  NSPredicate *predicate = [NSPredicate predicateWithFormat:
-    @"(%K == %@) AND (%K == %f)",
-      @"companyName", employment.companyName, 
-        @"startDate", employment.startDate];
-  NSArray *array = [_employments filteredArrayUsingPredicate: predicate];
-  if ([array count] == 0)
-    [_employments addObject: employment];
+  [employments setObject: object forKey: 
+    [NSNumber numberWithInt: object.uid]];
+}
+
+- (void) addModel: (OMBObject *) object
+{
+  NSNumber *key = [NSNumber numberWithInt: [object uid]];
+  if ([[object modelName] isEqualToString: [OMBEmployment modelName]])
+    [employments setObject: object forKey: key];
 }
 
 - (void) addLegalAnswer: (OMBLegalAnswer *) legalAnswer
@@ -117,6 +123,16 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [conn start]; 
 }
 
+- (void) createModelConnection: (OMBObject *) object
+delegate: (id) delegate completion: (void (^) (NSError *error)) block
+{
+  OMBModelCreateConnection *conn = 
+    [[OMBModelCreateConnection alloc] initWithModel: object];
+  conn.completionBlock = block;
+  conn.delegate = delegate;
+  [conn start];
+}
+
 - (void) deleteCosignerConnection: (OMBCosigner *) cosigner
 delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
@@ -127,11 +143,21 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [conn start];
 }
 
+- (void) deleteModelConnection: (OMBObject *) object
+delegate: (id) delegate completion: (void (^) (NSError *error)) block
+{
+  OMBModelDeleteConnection *conn = [[OMBModelDeleteConnection alloc] 
+    initWithModel: object];
+  conn.completionBlock = block;
+  conn.delegate        = delegate;
+  [conn start];
+}
+
 - (NSArray *) employmentsSortedByStartDate
 {
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"startDate"
     ascending: NO];
-  return [_employments sortedArrayUsingDescriptors: @[sort]];
+  return [[employments allValues] sortedArrayUsingDescriptors: @[sort]];
 }
 
 - (void) fetchCosignersForUserUID: (NSUInteger) userUID delegate: (id) delegate
@@ -141,6 +167,16 @@ completion: (void (^) (NSError *error)) block
     [[OMBCosignerListConnection alloc] initWithUserUID: userUID];
   conn.completionBlock = block;
   conn.delegate        = delegate;
+  [conn start];
+}
+
+- (void) fetchListForModel: (id) object userUID: (NSUInteger) userUID 
+delegate: (id) delegate completion: (void (^) (NSError *error)) block
+{
+  OMBModelListConnection *conn =
+    [[OMBModelListConnection alloc] initWithModel: object userUID: userUID];
+  conn.completionBlock = block;
+  conn.delegate = delegate;
   [conn start];
 }
 
@@ -162,6 +198,11 @@ completion: (void (^) (NSError *error)) block
     [NSNumber numberWithInt: legalQuestion.uid]];
 }
 
+- (NSArray *) previousRentalsSort
+{
+  return _previousRentals;
+}
+
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary
 {
   NSMutableSet *newSet = [NSMutableSet set];
@@ -179,11 +220,6 @@ completion: (void (^) (NSError *error)) block
   for (NSNumber *number in [oldSet allObjects]) {
     [cosigners removeObjectForKey: number];
   }
-}
-
-- (NSArray *) previousRentalsSort
-{
-  return _previousRentals;
 }
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
@@ -215,31 +251,65 @@ completion: (void (^) (NSError *error)) block
     _linkedinAuthenticated = NO;
 }
 
+- (void) readFromDictionary: (NSDictionary *) dictionary
+forModelName: (NSString *) modelName
+{
+  if ([dictionary objectForKey: @"objects"] == [NSNull null])
+    return;
+
+  NSMutableSet *newSet = [NSMutableSet set];
+  for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
+    id model;
+    if ([modelName isEqualToString: [OMBEmployment modelName]]) {
+      model = [[OMBEmployment alloc] init];
+      [model readFromDictionary: dict];
+    }
+    [self addModel: model];
+    [newSet addObject: [NSNumber numberWithInt: [model uid]]];
+  }
+  // Remove objects no longer suppose to be there
+  NSArray *values;
+  if ([modelName isEqualToString: [OMBEmployment modelName]]) {
+    values = [employments allValues];
+  }
+  NSMutableSet *oldSet = [NSMutableSet setWithArray: 
+    [values valueForKey: @"uid"]];
+  [oldSet minusSet: newSet];
+  for (NSNumber *number in [oldSet allObjects]) {
+    if ([modelName isEqualToString: [OMBEmployment modelName]]) {
+      [employments removeObjectForKey: number];
+    }
+  }
+}
+
 - (void) removeAllObjects
 {
   _cats = NO;
   _dogs = NO;
-  [_employments removeAllObjects];
   [_legalAnswers removeAllObjects];
   [_previousRentals removeAllObjects];
 
   [cosigners removeAllObjects];
+  [employments removeAllObjects];
   [roommates removeAllObjects];
 }
 
-- (void) removeCosigner: (OMBCosigner *) cosigner
+- (void) removeCosigner: (OMBCosigner *) object
 {
-  [cosigners removeObjectForKey: [NSNumber numberWithInt: cosigner.uid]];
+  [cosigners removeObjectForKey: [NSNumber numberWithInt: object.uid]];
 }
 
-- (void) removeEmployment: (OMBEmployment *) employment
+- (void) removeEmployment: (OMBEmployment *) object
 {
-  for(int i=0; i < _employments.count; i++){
-    if(((OMBEmployment *)_employments[i]).uid == employment.uid){
-      [_employments removeObjectAtIndex: i];
-      break;
-    }
-  }
+  [employments removeObjectForKey: [NSNumber numberWithInt: object.uid]];
+}
+
+- (void) removeModel: (OMBObject *) object
+{
+  NSNumber *number = [NSNumber numberWithInt: [object uid]];
+  // Employments
+  if ([[object modelName] isEqualToString: [OMBEmployment modelName]])
+    [employments removeObjectForKey: number];
 }
 
 - (void) removePreviousRental:(OMBPreviousRental *) previousRental

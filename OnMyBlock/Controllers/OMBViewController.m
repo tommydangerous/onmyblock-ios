@@ -124,6 +124,16 @@ CGFloat const OMBStandardHeight       = 44.0f;
   // Subclasses implement this
 }
 
+- (void) containerStartSpinning
+{
+  [[self appDelegate].container startSpinning];
+}
+
+- (void) containerStopSpinning
+{
+  [[self appDelegate].container stopSpinning];
+}
+
 - (void) done
 {
   // Subclasses implement this

@@ -401,7 +401,7 @@ numberOfRowsInSection: (NSInteger) section
   }
   // Work History
   else if (section == 5) {
-    return [user.renterApplication.employments count];
+//    return [user.renterApplication.employments count];
   }
   // Legal Stuff
   else if (section == 6) {

@@ -25,6 +25,12 @@ typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainMessageCode) {
   OMBConnectionErrorDomainMessageCodeCreateFailed
 };
 
+// Model
+extern NSString *const OMBConnectionErrorDomainModel;
+typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainModelCode) {
+  OMBConnectionErrorDomainModelCodeCreateFailed
+};
+
 // Offer
 extern NSString *const OMBConnectionErrorDomainOffer;
 typedef NS_ENUM(NSInteger, OMBConnectionErrorDomainOfferCode) {

@@ -592,9 +592,9 @@ numberOfRowsInSection: (NSInteger) section
   }
   // Employment
   else if (section == OMBOtherUserProfileSectionEmployment) {
-    if ([user.renterApplication.employments count]) {
-      return 1 + [[user.renterApplication employmentsSortedByStartDate] count];
-    }
+//    if ([user.renterApplication.employments count]) {
+//      return 1 + [[user.renterApplication employmentsSortedByStartDate] count];
+//    }
   }
   // Listings
   else if (section == OMBOtherUserProfileSectionListings) {

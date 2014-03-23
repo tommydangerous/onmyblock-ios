@@ -19,6 +19,7 @@
   UIButton *addButtonMiddle;
   AMBlurView *bottomBlurView;
   UILabel *emptyLabel;
+  OMBUser *user;
 }
 
 #pragma mark - Initializer
@@ -31,6 +32,7 @@
 
 - (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath;
 - (void) hideEmptyLabel: (BOOL) hide;
+- (NSArray *) objects;
 - (OMBRenterApplication *) renterApplication;
 - (void) setEmptyLabelText: (NSString *) string;
 

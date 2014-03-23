@@ -17,6 +17,9 @@ NSString *const OMBConnectionErrorDomainCosigner =
 // Messages
 NSString *const OMBConnectionErrorDomainMessage =
   @"OMBConnectionErrorDomainMessage";
+// Model
+NSString *const OMBConnectionErrorDomainModel =
+  @"OMBConnectionErrorDomainModel";
 // Offers
 NSString *const OMBConnectionErrorDomainOffer = 
   @"OMBConnectionErrorDomainOffer";

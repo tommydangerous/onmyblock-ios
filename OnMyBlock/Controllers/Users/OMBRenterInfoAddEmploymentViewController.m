@@ -118,24 +118,26 @@
     pickerViewHeader.frame.origin.y +
       pickerViewHeader.frame.size.height,
         moveInPicker.frame.size.width, moveInPicker.frame.size.height);
-  moveInPicker.minimumDate    = [NSDate date];
+  // moveInPicker.minimumDate    = [NSDate date];
   // specify max date
   NSDateFormatter *df = [[NSDateFormatter alloc] init];
   [df setDateFormat:@"dd-MM-yyyy"];
   NSDate *dateFromString1 = [[NSDate alloc] init];
   dateFromString1 = [df dateFromString:@"31-12-2015"];
-  moveInPicker.maximumDate = dateFromString1;
+  // moveInPicker.maximumDate = dateFromString1;
+  moveInPicker.date = moveInPicker.maximumDate = [NSDate date];
   
   // Move-out picker
   moveOutPicker = [UIDatePicker new];
 	moveOutPicker.backgroundColor = [UIColor whiteColor];
   moveOutPicker.datePickerMode = UIDatePickerModeDate;
   moveOutPicker.frame = moveInPicker.frame;
-  moveOutPicker.minimumDate = [NSDate date];
+  // moveOutPicker.minimumDate = [NSDate date];
   // specify max date
   NSDate *dateFromString2 = [[NSDate alloc] init];
   dateFromString2 = [df dateFromString:@"31-12-2015"];
-  moveOutPicker.maximumDate = dateFromString2;
+  // moveOutPicker.maximumDate = dateFromString2;
+  moveOutPicker.date = moveOutPicker.maximumDate = moveInPicker.maximumDate;
   
   // Picker View Container
   pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
@@ -195,7 +197,7 @@
     NSString *placeholderString;
     // Company name and Title
     if (row == OMBRenterInfoAddEmploymentSectionFieldsRowCompanyName) {
-      imageName = @"user_icon.png";
+      imageName = @"business_icon_black.png";
       static NSString *LabelTextCellID = @"TwoLabelTextCellID";
       OMBTwoLabelTextFieldCell *cell =
         [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
@@ -215,7 +217,6 @@
       cell.firstTextField.font = [UIFont normalTextFont];
       cell.firstTextField.indexPath = indexPath;
       cell.firstTextField.placeholder = @"Company";
-      cell.firstTextField.textColor = [UIColor blueDark];
       [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
          forControlEvents: UIControlEventEditingChanged];
       
@@ -227,26 +228,20 @@
         [NSIndexPath indexPathForRow: OMBRenterInfoAddEmploymentSectionFieldsRowTitle
           inSection: indexPath.section] ;
       cell.secondTextField.placeholder = @"Title";
-      cell.secondTextField.textColor = cell.firstTextField.textColor;
       [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
          forControlEvents: UIControlEventEditingChanged];
       return cell;
       
     }
-    // Company website
-    else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowCompanyWebsite) {
-      imageName         = @"phone_icon.png";
-      placeholderString = @"Company website";
-    }
     // Income
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowIncome) {
-      imageName         = @"phone_icon.png";
+      imageName         = @"money_icon_black.png";
       placeholderString = @"Monthly income";
       cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
     }
     // Start date
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowStartDate) {
-      imageName         = @"phone_icon.png";
+      imageName         = @"calendar_icon_black.png";
       placeholderString = @"Start date";
       cell.selectionStyle = UITableViewCellSelectionStyleDefault;
       cell.textField.userInteractionEnabled = NO;
@@ -259,7 +254,7 @@
     }
     // End date
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowEndDate) {
-      imageName         = @"phone_icon.png";
+      imageName         = @"calendar_icon_black.png";
       placeholderString = @"End date";
       cell.selectionStyle = UITableViewCellSelectionStyleDefault;
       cell.textField.userInteractionEnabled = NO;
@@ -312,7 +307,7 @@
   numberOfRowsInSection: (NSInteger) section
 {
   if (section == OMBRenterInfoAddEmploymentSectionFields)
-    return 7;
+    return 6;
   else if (section == OMBRenterInfoAddEmploymentSectionSpacing)
     return 1;
   return 0;
@@ -442,8 +437,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) save
 {
-  //[super save];
-  /*[[self renterApplication] createCosignerConnection: modelObject
+  [super save];
+  [[self renterApplication] createModelConnection: modelObject
     delegate: modelObject completion: ^(NSError *error) {
       if (error) {
         [self showAlertViewWithError: error];
@@ -454,16 +449,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       isSaving = NO;
       [[self appDelegate].container stopSpinning];
-    }];*/
-  
+    }];
   [[self appDelegate].container startSpinning];
-  
-  #warning DELETE THESE 5 LINES AND UPDATE THE CODE ABOVE
-  [modelObject readFromDictionary: valueDictionary];
-  [[self renterApplication] addEmployment: modelObject];
-  [self cancel];
-  isSaving = NO;
-  [[self appDelegate].container stopSpinning];
+
 }
 
 - (void) scrollToRowAtIndexPath: (NSIndexPath *) indexPath
@@ -500,7 +488,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) switchFields
 {
   isCurrentEmployer = !isCurrentEmployer;
-  
+  if (isCurrentEmployer)
+    [valueDictionary setObject: [NSNull null] forKey: @"endDate"];
   [self.table reloadRowsAtIndexPaths:
     @[[NSIndexPath indexPathForRow:OMBRenterInfoAddEmploymentSectionFieldsRowEndDate
       inSection:OMBRenterInfoAddEmploymentSectionFields]]
@@ -514,13 +503,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   
   if ([string length]) {
     if (row == OMBRenterInfoAddEmploymentSectionFieldsRowCompanyName) {
-      [valueDictionary setObject: string forKey: @"company_name"];
+      [valueDictionary setObject: string forKey: @"companyName"];
     }
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowTitle) {
       [valueDictionary setObject: string forKey: @"title"];
-    }
-    else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowCompanyWebsite) {
-      [valueDictionary setObject: string forKey: @"company_website"];
     }
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowIncome) {
       [valueDictionary setObject: string forKey: @"income"];
@@ -540,10 +526,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [NSDate dateWithTimeIntervalSince1970: moveOutDate]
       animated: NO];
   
-  [valueDictionary setObject: [dateFormatter stringFromDate:
-    [NSDate dateWithTimeIntervalSince1970: moveInDate]] forKey: @"start_date"];
-  [valueDictionary setObject: [dateFormatter stringFromDate:
-    [NSDate dateWithTimeIntervalSince1970: moveOutDate]] forKey: @"end_date"];
+  [valueDictionary setObject: [NSNumber numberWithDouble: moveInDate] 
+    forKey: @"startDate"];
+  if (isCurrentEmployer)
+    [valueDictionary setObject: [NSNull null] forKey: @"endDate"];
+  else
+    [valueDictionary setObject: [NSNumber numberWithDouble: moveOutDate] 
+      forKey: @"endDate"];
   
   [self.table reloadRowsAtIndexPaths:
    @[[NSIndexPath indexPathForRow: OMBRenterInfoAddEmploymentSectionFieldsRowStartDate inSection: OMBRenterInfoAddEmploymentSectionFields],

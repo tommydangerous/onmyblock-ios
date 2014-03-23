@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "OMBObject.h"
 
-@interface OMBEmployment : NSObject
+@interface OMBEmployment : OMBObject
 
 @property (nonatomic, strong) NSString *companyName;
 @property (nonatomic, strong) NSString *companyWebsite;
@@ -16,8 +16,6 @@
 @property (nonatomic) float income;
 @property (nonatomic) NSTimeInterval startDate;
 @property (nonatomic, strong) NSString *title;
-
-@property (nonatomic) int uid;
 
 #pragma mark - Methods
 

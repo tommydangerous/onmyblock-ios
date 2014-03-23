@@ -85,7 +85,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     [[[OMBDeleteRenterApplicationSectionModelConnection alloc]
       initWithObject: object] start];
     // Remove employment from user's employments
-    [user.renterApplication.employments removeObject: object];
+//    [user.renterApplication.employments removeObject: object];
     // Delete the row
     [self.table deleteRowsAtIndexPaths: @[selectedIndexPath]
       withRowAnimation: UITableViewRowAnimationFade];

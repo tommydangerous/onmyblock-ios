@@ -10,7 +10,9 @@
 
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
+#import "OMBRenterApplication.h"
 #import "OMBRenterInfoAddViewController.h"
+#import "OMBObject.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -19,7 +21,6 @@
 {
   UIActionSheet *deleteActionSheet;
   NSIndexPath *selectedIndexPath;
-  OMBUser *user;
 }
 
 @end
@@ -57,6 +58,7 @@
 
   addButtonMiddle = [UIButton new];
   addButtonMiddle.backgroundColor = [UIColor blue];
+  addButtonMiddle.clipsToBounds = YES;
   addButtonMiddle.frame = CGRectMake(OMBPadding, 0.0f, 
     screenWidth - (OMBPadding * 2), OMBStandardButtonHeight);
   addButtonMiddle.hidden = YES;
@@ -142,7 +144,17 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath
 {
-  // Subclasses implement this
+  OMBObject *object = [[self objects] objectAtIndex: indexPath.row];
+  [[self renterApplication] deleteModelConnection: object delegate: nil
+    completion: nil];
+
+  [self.table beginUpdates];
+  [[self renterApplication] removeModel: object];
+  [self.table deleteRowsAtIndexPaths: @[indexPath]
+    withRowAnimation: UITableViewRowAnimationFade];
+  [self.table endUpdates];
+
+  [self hideEmptyLabel: [[self objects] count]];
 }
 
 - (void) done
@@ -162,6 +174,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     emptyLabel.hidden      = NO;
     bottomBlurView.hidden  = YES;
   }
+}
+
+- (NSArray *) objects
+{
+  // Subclasses implement this
+  return [NSArray array];
 }
 
 - (OMBRenterApplication *) renterApplication

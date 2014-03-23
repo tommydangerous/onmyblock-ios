@@ -32,7 +32,10 @@
 
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
-  [self readFromDictionary: [dictionary objectForKey: @"object"]];
+  if ([dictionary objectForKey: @"object"] == [NSNull null])
+    [self readFromDictionary: dictionary];
+  else
+    [self readFromDictionary: [dictionary objectForKey: @"object"]];
 }
 
 #pragma mark - Methods

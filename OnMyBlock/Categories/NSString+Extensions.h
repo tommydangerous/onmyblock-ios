@@ -36,6 +36,7 @@ secondaryColor: (UIColor *) secondayColor;
 - (CGRect) boundingRectWithSize: (CGSize) size font: (UIFont *) font;
 - (NSDictionary *) dictionaryFromString;
 - (NSArray *) matchingResultsWithRegularExpression: (NSString *) string;
+- (NSArray *) stringSeparatedByUppercaseStrings;
 - (NSString *) stripWhiteSpace;
 
 @end

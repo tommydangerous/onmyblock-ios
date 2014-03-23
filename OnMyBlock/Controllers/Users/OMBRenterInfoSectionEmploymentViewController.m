@@ -8,10 +8,22 @@
 
 #import "OMBRenterInfoSectionEmploymentViewController.h"
 
+#import "LIALinkedInApplication.h"
+#import "LIALinkedInHttpClient.h"
+#import "OMBEmployment.h"
 #import "OMBEmploymentCell.h"
 #import "OMBNavigationController.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoAddEmploymentViewController.h"
+#import "UIFont+OnMyBlock.h"
+
+@interface OMBRenterInfoSectionEmploymentViewController ()
+{
+  UIButton *linkedInButton;
+  LIALinkedInHttpClient *linkedInClient;
+}
+
+@end
 
 @implementation OMBRenterInfoSectionEmploymentViewController
 
@@ -33,6 +45,21 @@
 - (void) loadView
 {
   [super loadView];
+
+  CGRect screen = [self screen];
+
+  linkedInButton = [UIButton new];
+  linkedInButton.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
+  linkedInButton.frame = CGRectMake(0.0f, 0.0f, 
+    screen.size.width, OMBStandardButtonHeight);
+  linkedInButton.titleLabel.font = [UIFont normalTextFontBold];
+  [linkedInButton addTarget: self action: @selector(linkedInButtonSelected)
+    forControlEvents: UIControlEventTouchUpInside];
+  [linkedInButton setTitle: @"Connect my LinkedIn" 
+    forState: UIControlStateNormal];
+  [linkedInButton setTitleColor: [UIColor whiteColor]
+    forState: UIControlStateNormal];
+  self.table.tableHeaderView = linkedInButton;
   
   [self setEmptyLabelText: @"You have no work history.\nAdding a employment "
    @"will greatly increase your acceptance rate."];
@@ -44,13 +71,8 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-  
-  /*[[self renterApplication] fetchEmploymentsForUserUID: [OMBUser currentUser].uid
-     delegate: self completion: ^(NSError *error) {
-       [self hideEmptyLabel: [[self employments] count]];
-    }];*/
-  #warning DELETE THIS LINE AND CREATE METHOD ABOVE
-  [self hideEmptyLabel: [[self employments] count]];
+
+  [self fetchObjects];
   
   [self reloadTable];
 }
@@ -61,8 +83,8 @@
 
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
-  #warning CREATE METHOD
-  //[[self renterApplication] readFromEmploymentDictionary: dictionary];
+  [[self renterApplication] readFromDictionary: dictionary 
+    forModelName: [OMBEmployment modelName]];
   [self reloadTable];
 }
 
@@ -80,7 +102,7 @@
   if (!cell)
     cell = [[OMBEmploymentCell alloc] initWithStyle: UITableViewCellStyleDefault
                                   reuseIdentifier: EmploymentID];
-  [cell loadData: [[self employments] objectAtIndex: row]];
+  [cell loadData: [[self objects] objectAtIndex: row]];
   // Last row
   if (row == [self tableView: tableView numberOfRowsInSection: section] - 1) {
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
@@ -95,7 +117,7 @@
 - (NSInteger) tableView: (UITableView *) tableView
   numberOfRowsInSection: (NSInteger) section
 {
-  return [[self employments] count];
+  return [[self objects] count];
 }
 
 #pragma mark - Protocol UITableViewDelegate
@@ -118,29 +140,62 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       completion: nil];
 }
 
-- (NSArray *) employments
+- (void) fetchObjects
+{
+  [[self renterApplication] fetchListForModel: [OMBEmployment new]
+    userUID: user.uid delegate: self completion: ^(NSError *error) {
+      [self hideEmptyLabel: [[self objects] count]];
+    }];
+}
+
+- (void) linkedInButtonSelected
+{
+  LIALinkedInApplication *app = 
+    [LIALinkedInApplication applicationWithRedirectURL: @"https://onmyblock.com"
+      clientId: @"75zr1yumwx0wld" clientSecret: @"XNY3VsMzvdhyR1ej"
+        state: @"DCEEFWF45453sdffef424" grantedAccess: @[@"r_fullprofile"]];
+  linkedInClient = [LIALinkedInHttpClient clientForApplication: app 
+    presentingViewController: self];
+  [linkedInClient getAuthorizationCode: ^(NSString *code) {
+    [linkedInClient getAccessToken: code success: 
+      ^(NSDictionary *accessTokenData) {
+        NSString *accessToken = [accessTokenData objectForKey: @"access_token"];
+        [user createAuthenticationForLinkedInWithAccessToken:
+          accessToken completion: ^(NSError *error) {
+            if (!error) {
+              user.renterApplication.linkedinAuthenticated = YES;
+              [self reloadTable];
+              [self fetchObjects];
+            }
+            else {
+              [self showAlertViewWithError: error];
+            }
+            [self containerStopSpinning];
+          }
+        ];
+        [self containerStartSpinning];
+      }
+    failure: ^(NSError *error) {
+      [self showAlertViewWithError: error];
+    }];
+  } cancel: ^{
+    NSLog(@"LINKEDIN CANCELED");
+  } failure: ^(NSError *error) {
+    [self showAlertViewWithError: error];
+  }];
+}
+
+- (NSArray *) objects
 {
   return [[self renterApplication] employmentsSortedByStartDate];
 }
 
-- (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath
-{
-  OMBEmployment *employment = [[self employments] objectAtIndex: indexPath.row];
-  #warning CREATE METHOD
-  /*[[self renterApplication] deleteCosignerConnection: employment delegate: nil
-    completion: nil];*/
-  
-  [self.table beginUpdates];
-  [[self renterApplication] removeEmployment: employment];
-  [self.table deleteRowsAtIndexPaths: @[indexPath]
-    withRowAnimation: UITableViewRowAnimationFade];
-  [self.table endUpdates];
-  
-  [self hideEmptyLabel: [[self employments] count]];
-}
-
 - (void) reloadTable
 {
+  if (user.renterApplication.linkedinAuthenticated)
+    self.table.tableHeaderView = [[UIView alloc] initWithFrame: CGRectZero];
+  else
+    self.table.tableHeaderView = linkedInButton;
   [self.table reloadData];
 }
 

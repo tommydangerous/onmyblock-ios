@@ -487,7 +487,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.textField.font = [UIFont normalTextFont];
       cell.textField.textColor = [UIColor blueDark];
       cell.textFieldLabel.font = [UIFont normalTextFont];
-      NSString *imageName;
+      NSString *imageName = @"user_icon.png";
       NSString *key;
       NSString *labelString;
       // First name

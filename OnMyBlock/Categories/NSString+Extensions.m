@@ -297,6 +297,20 @@ secondaryColor: (UIColor *) secondayColor
     range: NSMakeRange(0, [self length])];
 }
 
+- (NSArray *) stringSeparatedByUppercaseStrings
+{
+  NSRegularExpression *regexp = [NSRegularExpression 
+    regularExpressionWithPattern:@"([a-z])([A-Z])" 
+    options:0 
+    error:NULL];
+  NSString *newString = [regexp 
+    stringByReplacingMatchesInString: self
+    options:0 
+    range:NSMakeRange(0, [self length]) 
+    withTemplate:@"$1 $2"];
+  return [newString componentsSeparatedByString: @" "];
+}
+
 - (NSString *) stripWhiteSpace
 {
   return [self stringByTrimmingCharactersInSet: 

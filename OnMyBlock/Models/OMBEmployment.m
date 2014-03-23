@@ -10,7 +10,26 @@
 
 @implementation OMBEmployment
 
+#pragma mark - Protocol
+
+#pragma mark - Protocol OMBConnectionProtocol
+
+- (void) JSONDictionary: (NSDictionary *) dictionary
+{
+  if ([dictionary objectForKey: @"object"] == [NSNull null])
+    [self readFromDictionary: dictionary];
+  else
+    [self readFromDictionary: [dictionary objectForKey: @"object"]];
+}
+
 #pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (NSString *) modelName
+{
+  return @"employment";
+}
 
 #pragma mark - Instance Methods
 
@@ -88,7 +107,8 @@
     _title = @"";
   else
     _title = [dictionary objectForKey: @"title"];
-  _uid   = [[dictionary objectForKey: @"id"] intValue];
+  
+  self.uid = [[dictionary objectForKey: @"id"] intValue];
 }
 
 - (NSString *) shortCompanyWebsiteString

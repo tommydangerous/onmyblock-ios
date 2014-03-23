@@ -152,7 +152,8 @@
     isSaving = YES;
   if (modelObject) {
     for (NSString *key in [valueDictionary allKeys]) {
-      [modelObject setValue: [valueDictionary objectForKey: key] forKey: key];
+      if ([valueDictionary objectForKey: key] != [NSNull null])
+        [modelObject setValue: [valueDictionary objectForKey: key] forKey: key];
     }
   }
   [self.view endEditing: YES];
