@@ -26,6 +26,7 @@
 {
   NSMutableDictionary *cosigners;
   NSMutableDictionary *employments;
+  NSMutableDictionary *previousRentals;
   NSMutableDictionary *roommates;
 }
 
@@ -44,11 +45,11 @@
   _dogs      = NO;
   _hasCosigner = NO;
   _legalAnswers    = [NSMutableDictionary dictionary];
-  _previousRentals = [NSMutableArray array];
 
-  cosigners   = [NSMutableDictionary dictionary];
-  employments = [NSMutableDictionary dictionary];
-  roommates   = [NSMutableDictionary dictionary];
+  cosigners       = [NSMutableDictionary dictionary];
+  employments     = [NSMutableDictionary dictionary];
+  previousRentals = [NSMutableDictionary dictionary];
+  roommates       = [NSMutableDictionary dictionary];
 
   return self;
 }
@@ -72,8 +73,12 @@
 - (void) addModel: (OMBObject *) object
 {
   NSNumber *key = [NSNumber numberWithInt: [object uid]];
+  // Employments
   if ([[object modelName] isEqualToString: [OMBEmployment modelName]])
     [employments setObject: object forKey: key];
+  // Previous rentals
+  else if ([[object modelName] isEqualToString: [OMBPreviousRental modelName]])
+    [previousRentals setObject: object forKey: key];
 }
 
 - (void) addLegalAnswer: (OMBLegalAnswer *) legalAnswer
@@ -86,17 +91,6 @@
   }
   else
     [_legalAnswers setObject: legalAnswer forKey: key];
-}
-
-- (void) addPreviousRental: (OMBPreviousRental *) previousRental
-{
-  NSPredicate *predicate = [NSPredicate predicateWithFormat:
-    @"(%K == %@) AND (%K == %@) AND (%K == %@)", 
-      @"address", previousRental.address, @"city", previousRental.city,
-        @"state", previousRental.state];
-  NSArray *array = [_previousRentals filteredArrayUsingPredicate: predicate];
-  if ([array count] == 0)
-    [_previousRentals addObject: previousRental];
 }
 
 - (void) addRoommate: (OMBRoommate *) object
@@ -170,11 +164,13 @@ completion: (void (^) (NSError *error)) block
   [conn start];
 }
 
-- (void) fetchListForModel: (id) object userUID: (NSUInteger) userUID 
-delegate: (id) delegate completion: (void (^) (NSError *error)) block
+- (void) fetchListForResourceName: (NSString *) resourceName 
+userUID: (NSUInteger) userUID delegate: (id) delegate 
+completion: (void (^) (NSError *error)) block
 {
   OMBModelListConnection *conn =
-    [[OMBModelListConnection alloc] initWithModel: object userUID: userUID];
+    [[OMBModelListConnection alloc] initWithResourceName: resourceName 
+      userUID: userUID];
   conn.completionBlock = block;
   conn.delegate = delegate;
   [conn start];
@@ -198,9 +194,24 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     [NSNumber numberWithInt: legalQuestion.uid]];
 }
 
+- (NSArray *) objectsWithModelName: (NSString *) modelName 
+sortedWithKey: (NSString *) key ascending: (BOOL)  ascending
+{
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
+    ascending: ascending];
+  NSArray *array = [NSArray array];
+  // Employments
+  if ([modelName isEqualToString: [OMBEmployment modelName]])
+    array = [employments allValues];
+  // Previous rentals
+  else if ([modelName isEqualToString: [OMBPreviousRental modelName]])
+    array = [previousRentals allValues];
+  return [array sortedArrayUsingDescriptors: @[sort]];
+}
+
 - (NSArray *) previousRentalsSort
 {
-  return _previousRentals;
+  return previousRentals;
 }
 
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary
@@ -260,8 +271,14 @@ forModelName: (NSString *) modelName
   NSMutableSet *newSet = [NSMutableSet set];
   for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
     id model;
+    // Employments
     if ([modelName isEqualToString: [OMBEmployment modelName]]) {
       model = [[OMBEmployment alloc] init];
+      [model readFromDictionary: dict];
+    }
+    // Previous rentals
+    else if ([modelName isEqualToString: [OMBPreviousRental modelName]]) {
+      model = [[OMBPreviousRental alloc] init];
       [model readFromDictionary: dict];
     }
     [self addModel: model];
@@ -269,15 +286,25 @@ forModelName: (NSString *) modelName
   }
   // Remove objects no longer suppose to be there
   NSArray *values;
+  // Employments
   if ([modelName isEqualToString: [OMBEmployment modelName]]) {
     values = [employments allValues];
+  }
+  // Previous rentals
+  else if ([modelName isEqualToString: [OMBPreviousRental modelName]]) {
+    values = [previousRentals allValues];
   }
   NSMutableSet *oldSet = [NSMutableSet setWithArray: 
     [values valueForKey: @"uid"]];
   [oldSet minusSet: newSet];
   for (NSNumber *number in [oldSet allObjects]) {
+    // Employments
     if ([modelName isEqualToString: [OMBEmployment modelName]]) {
       [employments removeObjectForKey: number];
+    }
+    // Previous rentals
+    else if ([modelName isEqualToString: [OMBPreviousRental modelName]]) {
+      [previousRentals removeObjectForKey: number];
     }
   }
 }
@@ -287,10 +314,10 @@ forModelName: (NSString *) modelName
   _cats = NO;
   _dogs = NO;
   [_legalAnswers removeAllObjects];
-  [_previousRentals removeAllObjects];
 
   [cosigners removeAllObjects];
   [employments removeAllObjects];
+  [previousRentals removeAllObjects];
   [roommates removeAllObjects];
 }
 
@@ -310,16 +337,9 @@ forModelName: (NSString *) modelName
   // Employments
   if ([[object modelName] isEqualToString: [OMBEmployment modelName]])
     [employments removeObjectForKey: number];
-}
-
-- (void) removePreviousRental:(OMBPreviousRental *) previousRental
-{
-  for(int i=0; i< _previousRentals.count; i++){
-    if(((OMBPreviousRental *)_previousRentals[i]).uid == previousRental.uid){
-      [_previousRentals removeObjectAtIndex: i];
-      break;
-    }
-  }
+  // Previous rentals
+  else if ([[object modelName] isEqualToString: [OMBPreviousRental modelName]])
+    [previousRentals removeObjectForKey: number];
 }
 
 - (void) removeRoommate: (OMBRoommate *) roommate

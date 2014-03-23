@@ -56,14 +56,14 @@
   OMBPreviousRentalListConnection *connection = 
     [[OMBPreviousRentalListConnection alloc] initWithUser: user];
   connection.completionBlock = ^(NSError *error) {
-    if ([user.renterApplication.previousRentals count] == 0 &&
-      !showedAddModelViewControllerForTheFirstTime) {
-
-      showedAddModelViewControllerForTheFirstTime = YES;
-      [self addModel];
-    } 
-    else
-      [self.table reloadData];
+//    if ([user.renterApplication.previousRentals count] == 0 &&
+//      !showedAddModelViewControllerForTheFirstTime) {
+//
+//      showedAddModelViewControllerForTheFirstTime = YES;
+//      [self addModel];
+//    } 
+//    else
+//      [self.table reloadData];
   };
   [connection start];
   
@@ -79,20 +79,20 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   // Remove cosigner
   if (buttonIndex == 0) {
-    [self.table beginUpdates];
-    OMBPreviousRental *object = 
-      [user.renterApplication.previousRentals objectAtIndex: 
-        selectedIndexPath.row];
-    // Delete connection
-    [[[OMBDeleteRenterApplicationSectionModelConnection alloc] 
-      initWithObject: object] start];
-    // Remove previous rental from user's previous rental
-    [user.renterApplication.previousRentals removeObject: object];
-    // Reload the row
-    [self.table deleteRowsAtIndexPaths: @[selectedIndexPath]
-      withRowAnimation: UITableViewRowAnimationFade];
-    [self.table endUpdates];
-    selectedIndexPath = nil;
+//    [self.table beginUpdates];
+//    OMBPreviousRental *object = 
+//      [user.renterApplication.previousRentals objectAtIndex: 
+//        selectedIndexPath.row];
+//    // Delete connection
+//    [[[OMBDeleteRenterApplicationSectionModelConnection alloc] 
+//      initWithObject: object] start];
+//    // Remove previous rental from user's previous rental
+//    [user.renterApplication.previousRentals removeObject: object];
+//    // Reload the row
+//    [self.table deleteRowsAtIndexPaths: @[selectedIndexPath]
+//      withRowAnimation: UITableViewRowAnimationFade];
+//    [self.table endUpdates];
+//    selectedIndexPath = nil;
   }
 }
 
@@ -108,15 +108,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell = 
       [[OMBPreviousRentalCell alloc] initWithStyle: UITableViewCellStyleDefault
         reuseIdentifier: CellIdentifier];
-  [cell loadData: 
-    [user.renterApplication.previousRentals objectAtIndex: indexPath.row]];
+//  [cell loadData: 
+//    [user.renterApplication.previousRentals objectAtIndex: indexPath.row]];
   return cell;
 }
 
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  return [user.renterApplication.previousRentals count];
+//  return [user.renterApplication.previousRentals count];
+    return 0;
 }
 
 #pragma mark - Protocol UITableViewDelegate
@@ -126,16 +127,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   return [OMBPreviousRentalCell heightForCell];
   float height = 20.0f + (22.0f * 3) + 20.0f;
-  OMBPreviousRental *previousRental = 
-    [user.renterApplication.previousRentals objectAtIndex: indexPath.row];
-  if ([previousRental.landlordEmail length] > 0)
-    height += 22;
-  if ([previousRental.landlordName length] > 0)
-    height += 22;
-  if ([[previousRental.landlordPhone phoneNumberString] length] > 0)
-    height += 22;
-  if (height > 20 + (22 * 3) + 20)
-    height += 20;
+//  OMBPreviousRental *previousRental = 
+//    [user.renterApplication.previousRentals objectAtIndex: indexPath.row];
+//  if ([previousRental.landlordEmail length] > 0)
+//    height += 22;
+//  if ([previousRental.landlordName length] > 0)
+//    height += 22;
+//  if ([[previousRental.landlordPhone phoneNumberString] length] > 0)
+//    height += 22;
+//  if (height > 20 + (22 * 3) + 20)
+//    height += 20;
   return height;
 }
 

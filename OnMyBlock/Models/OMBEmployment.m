@@ -31,6 +31,11 @@
   return @"employment";
 }
 
++ (NSString *) resourceName
+{
+  return [NSString stringWithFormat: @"%@s", [OMBEmployment modelName]];
+}
+
 #pragma mark - Instance Methods
 
 - (NSString *) companyWebsiteString

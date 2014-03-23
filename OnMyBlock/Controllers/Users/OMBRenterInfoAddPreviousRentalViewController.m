@@ -18,10 +18,6 @@
 #import "NSString+Extensions.h"
 #import "UIImage+Resize.h"
 
-@interface OMBRenterInfoAddPreviousRentalViewController ()
-
-@end
-
 @implementation OMBRenterInfoAddPreviousRentalViewController
 
 #pragma mark - Initializer
@@ -30,7 +26,7 @@
 {
   if (!(self = [super init])) return nil;
   
-  self.title = @"Add Rental History";
+  self.title = @"Add Previous Rental";
   
   return self;
 }
@@ -114,30 +110,32 @@
   
   // Move-in picker
   moveInPicker = [UIDatePicker new];
-	moveInPicker.backgroundColor = [UIColor whiteColor];
+  moveInPicker.backgroundColor = [UIColor whiteColor];
   moveInPicker.datePickerMode = UIDatePickerModeDate;
   moveInPicker.frame = CGRectMake(0.0f,
     pickerViewHeader.frame.origin.y +
       pickerViewHeader.frame.size.height,
         moveInPicker.frame.size.width, moveInPicker.frame.size.height);
-  moveInPicker.minimumDate    = [NSDate date];
+  // moveInPicker.minimumDate    = [NSDate date];
   // specify max date
   NSDateFormatter *df = [[NSDateFormatter alloc] init];
   [df setDateFormat:@"dd-MM-yyyy"];
   NSDate *dateFromString1 = [[NSDate alloc] init];
   dateFromString1 = [df dateFromString:@"31-12-2015"];
-  moveInPicker.maximumDate = dateFromString1;
+  // moveInPicker.maximumDate = dateFromString1;
+  moveInPicker.date = moveInPicker.maximumDate = [NSDate date];
   
   // Move-out picker
   moveOutPicker = [UIDatePicker new];
-	moveOutPicker.backgroundColor = [UIColor whiteColor];
+  moveOutPicker.backgroundColor = [UIColor whiteColor];
   moveOutPicker.datePickerMode = UIDatePickerModeDate;
   moveOutPicker.frame = moveInPicker.frame;
-  moveOutPicker.minimumDate = [NSDate date];
+  // moveOutPicker.minimumDate = [NSDate date];
   // specify max date
   NSDate *dateFromString2 = [[NSDate alloc] init];
   dateFromString2 = [df dateFromString:@"31-12-2015"];
-  moveOutPicker.maximumDate = dateFromString2;
+  // moveOutPicker.maximumDate = dateFromString2;
+  moveOutPicker.date = moveOutPicker.maximumDate = moveInPicker.maximumDate;
   
   // Picker View Container
   pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
@@ -249,19 +247,19 @@
         // Switch Off
         // Address
         if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowAddress) {
-          imageName         = @"messages_icon_dark.png";
+          imageName         = @"location_icon_black.png";
           placeholderString = @"Address";
           key = @"address";
         }
         // City
         else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowCity) {
-          imageName         = @"phone_icon.png";
+          imageName         = @"map_marker_icon.png";
           placeholderString = @"City";
           key = @"city";
         }
         // State and Zip
         else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowState) {
-          imageName = @"user_icon.png";
+          imageName = @"globe_icon_black.png";
           static NSString *LabelTextCellID = @"TwoLabelTextCellID";
           OMBTwoLabelTextFieldCell *cell =
           [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
@@ -301,7 +299,7 @@
         }
         // Month rent
         else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMonthRent) {
-          imageName         = @"phone_icon.png";
+          imageName         = @"rent_icon_black.png";
           placeholderString = @"Rent";
           key = @"rent";
           cell.textField.keyboardType = UIKeyboardTypeNumberPad;
@@ -311,7 +309,7 @@
         // Fields
         // Move-in Date
         if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate) {
-          imageName         = @"phone_icon.png";
+          imageName         = @"calendar_icon_black.png";
           placeholderString = @"Move in";
           cell.selectionStyle = UITableViewCellSelectionStyleDefault;
           cell.textField.userInteractionEnabled = NO;
@@ -324,7 +322,7 @@
         }
         // Move-out Date
         else if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveOutDate) {
-          imageName         = @"phone_icon.png";
+          imageName         = @"calendar_icon_black.png";
           placeholderString = @"Move out";
           cell.selectionStyle = UITableViewCellSelectionStyleDefault;
           cell.textField.userInteractionEnabled = NO;
@@ -594,33 +592,22 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) save
 {
-  if(!onCampus){
-    // Set school to nothing
-    [valueDictionary setObject: @"" forKey: @"school"];
-  }
-
-  //[super save];
-  /*[[self renterApplication] createPreviousRentalConnection: modelObject
+  if (!onCampus)
+    [valueDictionary removeObjectForKey: @"school"];
+  [super save];
+  [[self renterApplication] createModelConnection: modelObject
     delegate: modelObject completion: ^(NSError *error) {
       if (error) {
         [self showAlertViewWithError: error];
       }
       else {
-        [[self renterApplication] addPreviousRental: modelObject];
+        [[self renterApplication] addModel: modelObject];
         [self cancel];
       }
       isSaving = NO;
-      [[self appDelegate].container stopSpinning];
-    }];*/
-  
-  [[self appDelegate].container startSpinning];
-  
-#warning DELETE THESE 5 LINES AND UPDATE THE CODE ABOVE
-  [modelObject readFromDictionary: valueDictionary];
-  [[self renterApplication] addPreviousRental: modelObject];
-  [self cancel];
-  isSaving = NO;
-  [[self appDelegate].container stopSpinning];
+      [self containerStopSpinning];
+    }];
+  [self containerStartSpinning];
 }
 
 - (void) scrollToRowAtIndexPath: (NSIndexPath *) indexPath
@@ -760,17 +747,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Fields
     else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowFirstName) {
-      [valueDictionary setObject: string forKey: @"landlord_name"];
+      [valueDictionary setObject: string forKey: @"landlordName"];
     }
     else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowLastName) {
       // New atrribute
-      [valueDictionary setObject: string forKey: @"landlord_lastname"];
+      [valueDictionary setObject: string forKey: @"landlordLastName"];
     }
     else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowEmail) {
-      [valueDictionary setObject: string forKey: @"landlord_email"];
+      [valueDictionary setObject: string forKey: @"landlordEmail"];
     }
     else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowPhone) {
-      [valueDictionary setObject: string forKey: @"landlord_phone"];
+      [valueDictionary setObject: string forKey: @"landlordPhone"];
     }
   }
   
@@ -815,10 +802,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [NSDate dateWithTimeIntervalSince1970: moveOutDate]
       animated: NO];
   
-  [valueDictionary setObject: [dateFormatter stringFromDate:
-    [NSDate dateWithTimeIntervalSince1970: moveInDate]] forKey: @"start_date"];
-  [valueDictionary setObject: [dateFormatter stringFromDate:
-    [NSDate dateWithTimeIntervalSince1970: moveOutDate]] forKey: @"end_date"];
+  [valueDictionary setObject: [NSNumber numberWithDouble: moveInDate] 
+    forKey: @"moveInDate"];
+  [valueDictionary setObject: [NSNumber numberWithDouble: moveOutDate] 
+    forKey: @"moveOutDate"];
 
   //[self.table reloadData];
   [self.table reloadRowsAtIndexPaths:

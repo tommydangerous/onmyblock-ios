@@ -31,6 +31,7 @@
 #pragma mark - Instance Methods
 
 - (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath;
+- (void) fetchObjectsForResourceName: (NSString *) resourceName;
 - (void) hideEmptyLabel: (BOOL) hide;
 - (NSArray *) objects;
 - (OMBRenterApplication *) renterApplication;

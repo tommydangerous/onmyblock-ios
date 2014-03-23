@@ -330,8 +330,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell1 = [[OMBPreviousRentalCell alloc] initWithStyle: 
         UITableViewCellStyleDefault
           reuseIdentifier: RentalCellIdentifier];
-    [cell1 loadData: 
-      [user.renterApplication.previousRentals objectAtIndex: indexPath.row]];
+//    [cell1 loadData: 
+//      [user.renterApplication.previousRentals objectAtIndex: indexPath.row]];
     return cell1;
   }
   // Work History
@@ -397,7 +397,7 @@ numberOfRowsInSection: (NSInteger) section
   }
   // Rental History
   else if (section == 4) {
-    return [user.renterApplication.previousRentals count];
+//    return [user.renterApplication.previousRentals count];
   }
   // Work History
   else if (section == 5) {

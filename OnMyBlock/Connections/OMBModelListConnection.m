@@ -12,12 +12,13 @@
 
 #pragma mark - Initializer
 
-- (id) initWithModel: (OMBObject *) object userUID: (NSUInteger) userUID
+- (id) initWithResourceName: (NSString *) resourceName 
+userUID: (NSUInteger) userUID
 {
-  if (!(self = [super initWithModel: object])) return nil;
+  if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: @"%@/%@",
-    OnMyBlockAPIURL, [object resourceName]];
+    OnMyBlockAPIURL, resourceName];
   [self setRequestWithString: string parameters: @{
     @"access_token": [OMBUser currentUser].accessToken,
     @"user_id": [NSNumber numberWithInt: userUID]

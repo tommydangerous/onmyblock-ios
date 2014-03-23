@@ -8,6 +8,8 @@
 
 #import "OMBObject.h"
 
+#import "NSString+Extensions.h"
+
 @implementation OMBObject
 
 #pragma mark - Methods
@@ -19,12 +21,19 @@
   return @"object";
 }
 
++ (NSString *) resourceName
+{
+  return [NSString stringWithFormat: @"%@s", [OMBObject modelName]];
+}
+
 #pragma mark - Instance Methods
 
 - (NSString *) modelName
 {
-  return [[[NSStringFromClass([self class]) componentsSeparatedByString: 
-    @"OMB"] lastObject] lowercaseString];
+  NSString *string = [[NSStringFromClass([self class])
+    componentsSeparatedByString: @"OMB"] lastObject];
+  return [[[string stringSeparatedByUppercaseStrings] componentsJoinedByString: 
+    @"_"] lowercaseString];
 }
 
 - (NSString *) resourceName

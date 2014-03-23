@@ -36,7 +36,7 @@
 {
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
-  [user readFromPreviousRentalDictionary: json];
+  // [user readFromPreviousRentalDictionary: json];
   [super connectionDidFinishLoading: connection];
 }
 

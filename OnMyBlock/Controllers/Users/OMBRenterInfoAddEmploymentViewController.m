@@ -16,10 +16,6 @@
 #import "OMBViewControllerContainer.h"
 #import "UIImage+Resize.h"
 
-@interface OMBRenterInfoAddEmploymentViewController ()
-
-@end
-
 @implementation OMBRenterInfoAddEmploymentViewController
 
 #pragma mark - Initializer
@@ -451,7 +447,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [[self appDelegate].container stopSpinning];
     }];
   [[self appDelegate].container startSpinning];
-
 }
 
 - (void) scrollToRowAtIndexPath: (NSIndexPath *) indexPath

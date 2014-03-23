@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "OMBObject.h"
 
-@interface OMBPreviousRental : NSObject
+@interface OMBPreviousRental : OMBObject
 
 @property (nonatomic, strong) NSString *address;
 @property (nonatomic, strong) NSString *city;
@@ -23,8 +23,6 @@
 @property (nonatomic, strong) NSString *school;
 @property (nonatomic, strong) NSString *state;
 @property (nonatomic, strong) NSString *zip;
-
-@property (nonatomic) int uid;
 
 #pragma mark - Methods
 

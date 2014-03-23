@@ -123,6 +123,14 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   }
 }
 
+#pragma mark - Protocol UITableViewDataSource
+
+- (NSInteger) tableView: (UITableView *) tableView
+  numberOfRowsInSection: (NSInteger) section
+{
+  return [[self objects] count];
+}
+
 #pragma mark - Protocol UITableViewDelegate
 
 - (void) tableView: (UITableView *) tableView
@@ -174,6 +182,14 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     emptyLabel.hidden      = NO;
     bottomBlurView.hidden  = YES;
   }
+}
+
+- (void) fetchObjectsForResourceName: (NSString *) resourceName
+{
+  [[self renterApplication] fetchListForResourceName: resourceName
+    userUID: user.uid delegate: self completion: ^(NSError *error) {
+      [self hideEmptyLabel: [[self objects] count]];
+    }];
 }
 
 - (NSArray *) objects

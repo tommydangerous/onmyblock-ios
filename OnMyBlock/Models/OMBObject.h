@@ -17,6 +17,7 @@
 #pragma mark - Class Methods
 
 + (NSString *) modelName;
++ (NSString *) resourceName;
 
 #pragma mark - Instance Methods
 

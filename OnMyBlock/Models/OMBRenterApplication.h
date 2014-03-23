@@ -13,7 +13,6 @@
 @class OMBLegalAnswer;
 @class OMBLegalQuestion;
 @class OMBObject;
-@class OMBPreviousRental;
 @class OMBRoommate;
 
 @interface OMBRenterApplication : NSObject
@@ -25,7 +24,6 @@
 @property (nonatomic) BOOL hasCosigner;
 @property (nonatomic, strong) NSMutableDictionary *legalAnswers;
 @property (nonatomic) BOOL linkedinAuthenticated;
-@property (nonatomic, strong) NSMutableArray *previousRentals;
 
 #pragma mark - Methods
 
@@ -34,7 +32,7 @@
 - (void) addCosigner: (OMBCosigner *) object;
 - (void) addEmployment: (OMBEmployment *) object;
 - (void) addLegalAnswer: (OMBLegalAnswer *) legalAnswer;
-- (void) addPreviousRental: (OMBPreviousRental *) previousRental;
+- (void) addModel: (OMBObject *) object;
 - (void) addRoommate: (OMBRoommate *) object;
 - (NSArray *) cosignersSortedByFirstName;
 - (void) createCosignerConnection: (OMBCosigner *) cosigner
@@ -48,10 +46,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (NSArray *) employmentsSortedByStartDate;
 - (void) fetchCosignersForUserUID: (NSUInteger) userUID delegate: (id) delegate
 completion: (void (^) (NSError *error)) block;
-- (void) fetchListForModel: (id) object userUID: (NSUInteger) userUID 
-delegate: (id) delegate completion: (void (^) (NSError *error)) block;
+- (void) fetchListForResourceName: (NSString *) resourceName 
+userUID: (NSUInteger) userUID delegate: (id) delegate 
+completion: (void (^) (NSError *error)) block;
 - (OMBLegalAnswer *) legalAnswerForLegalQuestion: 
 (OMBLegalQuestion *) legalQuestion;
+- (NSArray *) objectsWithModelName: (NSString *) modelName 
+sortedWithKey: (NSString *) key ascending: (BOOL)  ascending;
 - (NSArray *) previousRentalsSort;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
@@ -61,7 +62,6 @@ forModelName: (NSString *) modelName;
 - (void) removeCosigner: (OMBCosigner *) object;
 - (void) removeEmployment: (OMBEmployment *) object;
 - (void) removeModel: (OMBObject *) object;
-- (void) removePreviousRental:(OMBPreviousRental *)object;
 - (void) removeRoommate: (OMBRoommate *) roommate;
 - (NSArray *) roommatesSort;
 - (void) updateWithDictionary: (NSDictionary *) dictionary

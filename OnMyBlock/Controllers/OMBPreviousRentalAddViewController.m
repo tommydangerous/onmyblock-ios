@@ -100,7 +100,7 @@
   previousRental.rent          = [_rentTextField.text floatValue];
   previousRental.state         = [_stateTextField.text lowercaseString];
   previousRental.zip           = _zipTextField.text;
-  [[OMBUser currentUser] addPreviousRental: previousRental];
+  // [[OMBUser currentUser] addPreviousRental: previousRental];
   // Connection
   [[[OMBPreviousRentalCreateConnection alloc] initWithPreviousRental: 
     previousRental] start];

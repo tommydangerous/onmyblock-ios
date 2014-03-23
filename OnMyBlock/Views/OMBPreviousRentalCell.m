@@ -120,18 +120,18 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 - (void) loadData: (OMBPreviousRental *) object
 {
-  _previousRental = object;
-  addressLabel.text = [_previousRental.address capitalizedString];
+  self.previousRental = object;
+  addressLabel.text = [self.previousRental.address capitalizedString];
   addressLabel2.text = [NSString stringWithFormat: @"%@, %@ %@",
-    [_previousRental.city capitalizedString], 
-      [_previousRental.state capitalizedString], _previousRental.zip];
+    [self.previousRental.city capitalizedString], 
+      [self.previousRental.state capitalizedString], self.previousRental.zip];
   rentLeaseMonthsLabel.text = [NSString stringWithFormat: @"%i mo lease",
-    _previousRental.leaseMonths];
-  if (_previousRental.rent) {
+    self.previousRental.leaseMonths];
+  if (self.previousRental.rent) {
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setNumberStyle: NSNumberFormatterCurrencyStyle];
     NSString *string = [numberFormatter stringFromNumber: 
-      [NSNumber numberWithFloat: _previousRental.rent]];
+      [NSNumber numberWithFloat: self.previousRental.rent]];
     string = [[string componentsSeparatedByString: @"."] objectAtIndex: 0];
     rentLeaseMonthsLabel.text = [NSString stringWithFormat: @"%@ / mo - %@",
       string, rentLeaseMonthsLabel.text];
@@ -142,9 +142,9 @@ reuseIdentifier: (NSString *)reuseIdentifier
   // Reset it so when it is reused, it doesn't have a text from another cell
   landlordNameLabel.text = @"no landlord name";
   landlordNameLabel.textColor = [UIColor grayMedium];
-  if ([_previousRental.landlordName length] > 0) {
+  if ([self.previousRental.landlordName length] > 0) {
     landlordNameLabel.text = 
-      [_previousRental.landlordName capitalizedString];
+      [self.previousRental.landlordName capitalizedString];
     landlordNameLabel.textColor = [UIColor textColor];
   }
   landlordNameLabel.frame = CGRectMake(landlordNameLabel.frame.origin.x,
@@ -154,9 +154,9 @@ reuseIdentifier: (NSString *)reuseIdentifier
   // Reset it so when it is reused, it doesn't have a text from another cell
   landlordEmailLabel.text = @"no landlord email";
   landlordEmailLabel.textColor = [UIColor grayMedium];
-  if ([_previousRental.landlordEmail length] > 0) {
+  if ([self.previousRental.landlordEmail length] > 0) {
     landlordEmailLabel.text = 
-      [_previousRental.landlordEmail lowercaseString];
+      [self.previousRental.landlordEmail lowercaseString];
     landlordEmailLabel.textColor = [UIColor blue];
   }
   landlordEmailLabel.frame = CGRectMake(landlordEmailLabel.frame.origin.x,
@@ -167,9 +167,9 @@ reuseIdentifier: (NSString *)reuseIdentifier
   // Reset it so when it is reused, it doesn't have a text from another cell
   landlordPhoneLabel.text = @"no landlord phone";
   landlordPhoneLabel.textColor = [UIColor grayMedium];
-  if ([[_previousRental.landlordPhone phoneNumberString] length] > 0) {
+  if ([[self.previousRental.landlordPhone phoneNumberString] length] > 0) {
     landlordPhoneLabel.text = 
-      [_previousRental.landlordPhone phoneNumberString];
+      [self.previousRental.landlordPhone phoneNumberString];
     landlordPhoneLabel.textColor = [UIColor blue];
   }
   landlordPhoneLabel.frame = CGRectMake(landlordPhoneLabel.frame.origin.x,
@@ -180,7 +180,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 - (void) loadData2: (OMBPreviousRental *) object
 {
-  _previousRental = object;
+  self.previousRental = object;
   CGFloat padding = 20.0f;
   CGFloat width = self.frame.size.width - 2 * 20;
   [residenceImageView removeFromSuperview];
@@ -188,44 +188,47 @@ reuseIdentifier: (NSString *)reuseIdentifier
   CGRect previousFrame = addressLabel.frame;
   previousFrame.origin.x = padding;
   previousFrame.size.width = width;
-  addressLabel.font = [UIFont mediumTextFontBold];
+  addressLabel.font = [UIFont normalTextFontBold];
   addressLabel.frame = previousFrame;
   addressLabel.textAlignment = NSTextAlignmentLeft;
   addressLabel.textColor = [UIColor textColor];
   
   previousFrame.origin.y = addressLabel.frame.origin.y +
     addressLabel.frame.size.height;
+  addressLabel2.font = [UIFont normalTextFont];
   addressLabel2.frame = previousFrame;
   addressLabel2.textAlignment = addressLabel.textAlignment;
   
   previousFrame.origin.y = addressLabel2.frame.origin.y +
     addressLabel2.frame.size.height;
+  rentLeaseMonthsLabel.font = [UIFont normalTextFont];
   rentLeaseMonthsLabel.frame = previousFrame;
   rentLeaseMonthsLabel.textAlignment = addressLabel.textAlignment;
+  rentLeaseMonthsLabel.textColor = [UIColor grayMedium];
   
-  if([_previousRental.school length]){
-    addressLabel.text = _previousRental.school;
+  if(self.previousRental.school && [self.previousRental.school length]){
+    addressLabel.text = self.previousRental.school;
     addressLabel2.text = @"on-campus residence";
   }else{
-    addressLabel.text = [_previousRental.address capitalizedString];
+    addressLabel.text = [self.previousRental.address capitalizedString];
     addressLabel2.text = [NSString stringWithFormat: @"%@, %@ %@",
-      _previousRental.city.length ? [_previousRental.city capitalizedString] : @"",
-        ([_previousRental.state length] == 2 ? [_previousRental.state uppercaseString]:
-         (_previousRental.state.length ? _previousRental.state : @"")),
-            _previousRental.zip.length ? _previousRental.zip : @""];
+      self.previousRental.city.length ? [self.previousRental.city capitalizedString] : @"",
+        ([self.previousRental.state length] == 2 ? [self.previousRental.state uppercaseString]:
+         (self.previousRental.state.length ? self.previousRental.state : @"")),
+            self.previousRental.zip.length ? self.previousRental.zip : @""];
   }
   
   // Start date
-  if (_previousRental.moveInDate) {
+  if (self.previousRental.moveInDate) {
     NSString *startDate = @"";
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.dateFormat = @"MMM yyyy";
     startDate = [dateFormatter stringFromDate:
-      [NSDate dateWithTimeIntervalSince1970: _previousRental.moveInDate]];
+      [NSDate dateWithTimeIntervalSince1970: self.previousRental.moveInDate]];
     NSString *endDateString = @"Present";
-    if (_previousRental.moveOutDate) {
+    if (self.previousRental.moveOutDate) {
       endDateString = [dateFormatter stringFromDate:
-        [NSDate dateWithTimeIntervalSince1970: _previousRental.moveOutDate]];
+        [NSDate dateWithTimeIntervalSince1970: self.previousRental.moveOutDate]];
     }
     rentLeaseMonthsLabel.text = [NSString stringWithFormat: @"%@ - %@",
       startDate, endDateString];

@@ -331,11 +331,6 @@ withCompletion: (void (^) (NSError *error)) block
     [_receivedOffers setObject: offer forKey: key];
 }
 
-- (void) addPreviousRental: (OMBPreviousRental *) previousRental
-{
-  [_renterApplication addPreviousRental: previousRental];
-}
-
 - (void) addResidence: (OMBResidence *) residence
 {
   NSString *classString;
@@ -1317,16 +1312,6 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [oldSet minusSet: newSet];
   for (NSNumber *number in [oldSet allObjects]) {
     [_payoutMethods removeObjectForKey: number];
-  }
-}
-
-- (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary
-{
-  NSArray *array = [dictionary objectForKey: @"objects"];
-  for (NSDictionary *dict in array) {
-    OMBPreviousRental *previousRental = [[OMBPreviousRental alloc] init];
-    [previousRental readFromDictionary: dict];
-    [self addPreviousRental: previousRental];
   }
 }
 

@@ -114,12 +114,6 @@
   return cell;
 }
 
-- (NSInteger) tableView: (UITableView *) tableView
-  numberOfRowsInSection: (NSInteger) section
-{
-  return [[self objects] count];
-}
-
 #pragma mark - Protocol UITableViewDelegate
 
 - (CGFloat) tableView: (UITableView *) tableView
@@ -142,10 +136,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) fetchObjects
 {
-  [[self renterApplication] fetchListForModel: [OMBEmployment new]
-    userUID: user.uid delegate: self completion: ^(NSError *error) {
-      [self hideEmptyLabel: [[self objects] count]];
-    }];
+  [self fetchObjectsForResourceName: [OMBEmployment resourceName]];
 }
 
 - (void) linkedInButtonSelected
@@ -187,7 +178,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (NSArray *) objects
 {
-  return [[self renterApplication] employmentsSortedByStartDate];
+  return [[self renterApplication] objectsWithModelName: 
+    [OMBEmployment modelName] sortedWithKey: @"startDate" ascending: NO];
 }
 
 - (void) reloadTable

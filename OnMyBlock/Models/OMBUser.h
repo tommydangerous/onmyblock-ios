@@ -92,7 +92,6 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 - (void) addLegalAnswer: (OMBLegalAnswer *) object;
 // - (void) addMessage: (OMBMessage *) message;
 - (void) addMovedInOutDates: (OMBOffer *) object;
-- (void) addPreviousRental: (OMBPreviousRental *) previousRental;
 - (void) addReceivedOffer: (OMBOffer *) offer;
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
 - (void) addResidence: (OMBResidence *) residence;
@@ -160,7 +159,6 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromMessagesDictionary: (NSDictionary *) dictionary;
 - (void) readFromMovedInDictionary: (NSDictionary *) dictionary;
 - (void) readFromPayoutMethodsDictionary: (NSDictionary *) dictionary;
-- (void) readFromPreviousRentalDictionary: (NSDictionary *) dictionary;
 - (void) readFromReceivedOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
 - (void) rejectOffer: (OMBOffer *) offer 

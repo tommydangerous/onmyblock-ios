@@ -8,6 +8,7 @@
 
 #import "OMBRenterInfoSectionPreviousRentalViewController.h"
 
+#import "OMBPreviousRental.h"
 #import "OMBPreviousRentalCell.h"
 #import "OMBNavigationController.h"
 #import "OMBRenterApplication.h"
@@ -44,14 +45,8 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-  
-  /*[[self renterApplication] fetchPreviousRentalsForUserUID: [OMBUser currentUser].uid
-    delegate: self completion: ^(NSError *error) {
-      [self hideEmptyLabel: [[self cosigners] count]];
-  }];*/
-  
-  // Remove this line
-  [self hideEmptyLabel: [[self previousRentals] count]];
+
+  [self fetchObjects];
   
   [self reloadTable];
 }
@@ -62,9 +57,9 @@
 
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
-  #warning CHANGE
-  /*[[self renterApplication] readFromPreviousRentalDictionary: dictionary];
-  [self reloadTable];*/
+  [[self renterApplication] readFromDictionary: dictionary 
+    forModelName: [OMBPreviousRental modelName]];
+  [self reloadTable];
 }
 
 #pragma mark - Protocol UITableViewDataSource
@@ -81,7 +76,7 @@
   if (!cell)
     cell = [[OMBPreviousRentalCell alloc] initWithStyle: UITableViewCellStyleDefault
       reuseIdentifier: PreviousRentalID];
-  [cell loadData2: [[self previousRentals] objectAtIndex: row]];
+  [cell loadData2: [[self objects] objectAtIndex: row]];
   
   // Last row
   if (row == [self tableView: tableView numberOfRowsInSection: section] - 1) {
@@ -92,12 +87,6 @@
     cell.separatorInset = tableView.separatorInset;
   }
   return cell;
-}
-
-- (NSInteger) tableView: (UITableView *) tableView
-  numberOfRowsInSection: (NSInteger) section
-{
-  return [[self previousRentals] count];
 }
 
 #pragma mark - Protocol UITableViewDelegate
@@ -120,27 +109,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       completion: nil];
 }
 
-- (NSArray *) previousRentals
+- (void) fetchObjects
 {
-  // Change method in renter info
-  return [[self renterApplication] previousRentalsSort];
+  [self fetchObjectsForResourceName: [OMBPreviousRental resourceName]];
 }
 
-- (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath
+- (NSArray *) objects
 {
-  OMBPreviousRental *previousRental = [[self previousRentals] objectAtIndex: indexPath.row];
-  #warning CREATE METHOD
-  /*[[self renterApplication] deletePreviousRentalConnection: cosigner delegate: nil
-    completion: nil];*/
-  
-  [self.table beginUpdates];
-  [[self renterApplication] removePreviousRental: previousRental];
-  [self.table deleteRowsAtIndexPaths: @[indexPath]
-    withRowAnimation: UITableViewRowAnimationFade];
-  [self.table endUpdates];
-  
-  [self hideEmptyLabel: [[self previousRentals] count]];
-  
+  return [[self renterApplication] objectsWithModelName: 
+    [OMBPreviousRental modelName] sortedWithKey: @"moveInDate" ascending: NO];
 }
 
 - (void) reloadTable

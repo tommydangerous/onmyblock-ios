@@ -12,6 +12,7 @@
 
 #pragma mark - Initializer
 
-- (id) initWithModel: (OMBObject *) object userUID: (NSUInteger) userUID;
+- (id) initWithResourceName: (NSString *) resourceName 
+userUID: (NSUInteger) userUID;
 
 @end
