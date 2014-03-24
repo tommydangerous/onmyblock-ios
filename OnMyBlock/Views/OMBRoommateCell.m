@@ -15,6 +15,7 @@
 #import "OMBViewController.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
+#import "UIImageView+WebCache.h"
 
 @implementation OMBRoommateCell
 
@@ -28,8 +29,8 @@
   
   CGRect screen     = [[UIScreen mainScreen] bounds];
   float screenWidth = screen.size.width;
-  float padding = 20.0f;
-  CGFloat imageSize = 44;
+  float padding = OMBPadding;
+  CGFloat imageSize = OMBStandardHeight;
   
   self.contentView.frame = CGRectMake(0, 0,
     screenWidth, padding + (22 * 2) + padding);
@@ -45,7 +46,7 @@
   nameLabel.font = [UIFont normalTextFontBold];
   nameLabel.frame = CGRectMake(userImageView.frame.origin.x +
     userImageView.frame.size.width + padding,
-      padding, screenWidth - (imageSize - 2 * padding), 22);
+      padding, screenWidth - (padding + imageSize + padding + padding), 22);
   nameLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: nameLabel];
   
@@ -75,11 +76,53 @@
 - (void) loadData: (OMBRoommate *) object
 {
   self.roommate = object;
-  [userImageView setImage: [OMBUser placeholderImage]];
-  nameLabel.text = [NSString stringWithFormat: @"%@ %@",
-    [self.roommate.firstName capitalizedString],
-      [self.roommate.lastName capitalizedString]];
-  emailLabel.text = self.roommate.email;
+  OMBUser *user = self.roommate.roommate;
+
+  if (user) {
+    nameLabel.text = [user fullName];
+    emailLabel.text = @"OnMyBlock user";
+    if (user.image) {
+      userImageView.image = [user imageForSize: userImageView.bounds.size];
+    }
+    else {
+      [user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+        userImageView.image = [user imageForSize: userImageView.bounds.size];
+      }];
+      userImageView.image = [OMBUser placeholderImage];
+    }
+  }
+  else {
+    NSString *nameString = @"";
+    if (self.roommate.firstName && [self.roommate.firstName length])
+      nameString = [nameString stringByAppendingString:
+        [self.roommate.firstName capitalizedString]];
+    if ([nameString length])
+      nameString = [nameString stringByAppendingString: @" "];
+    if (self.roommate.lastName && [self.roommate.lastName length])
+      nameString = [nameString stringByAppendingString:
+        [self.roommate.lastName capitalizedString]];
+    nameLabel.text = nameString;
+    if (self.roommate.providerId) {
+      emailLabel.text = @"added from Facebook";
+      NSURL *imageURL = [NSURL URLWithString: [NSString stringWithFormat:
+        @"http://graph.facebook.com/%i/picture?type=large",
+          self.roommate.providerId]];
+      __weak typeof(userImageView) weakImageView = userImageView;
+      [userImageView.imageView setImageWithURL: imageURL
+        placeholderImage: [OMBUser placeholderImage] options: 
+          (SDWebImageRetryFailed | SDWebImageDownloaderProgressiveDownload)
+            completed: 
+              ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                if (image)
+                  weakImageView.image = image;
+                NSLog(@"%@ %@", imageURL, image);
+              }];
+    }
+    else {
+      [userImageView setImage: [OMBUser placeholderImage]];
+      emailLabel.text = self.roommate.email;
+    }
+  }
 }
 
 @end

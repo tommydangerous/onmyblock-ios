@@ -16,6 +16,7 @@
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
+@property (nonatomic) NSUInteger providerId;
 @property (nonatomic, strong) OMBUser *roommate;
 @property (nonatomic) NSTimeInterval updatedAt;
 @property (nonatomic, strong) OMBUser *user;

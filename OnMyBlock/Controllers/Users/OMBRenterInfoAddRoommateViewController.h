@@ -13,6 +13,10 @@ typedef NS_ENUM(NSInteger, OMBRenterInfoAddRoommateSection) {
   OMBRenterInfoAddRoommateSectionFields,
   OMBRenterInfoAddRoommateSectionSpacing
 };
+typedef NS_ENUM(NSInteger, OMBRenterInfoAddRoommateSearchSection) {
+  OMBRenterInfoAddRoommateSearchSectionResults,
+  OMBRenterInfoAddRoommateSearchSectionSpacing
+};
 
 // Rows
 // Fields

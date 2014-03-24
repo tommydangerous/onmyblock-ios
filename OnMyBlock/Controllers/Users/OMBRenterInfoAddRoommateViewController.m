@@ -9,12 +9,24 @@
 #import "OMBRenterInfoAddRoommateViewController.h"
 
 #import "OMBRoommate.h"
+#import "OMBRoommatesSearchFacebookFriendsConnection.h"
 #import "OMBLabelSwitchCell.h"
 #import "OMBLabelTextFieldCell.h"
 #import "OMBRenterApplication.h"
 #import "OMBTwoLabelTextFieldCell.h"
 #import "OMBViewControllerContainer.h"
 #import "UIImage+Resize.h"
+
+@interface OMBRenterInfoAddRoommateViewController ()
+{
+  UIButton *facebookButton;
+  BOOL isSearching;
+  OMBRoommatesSearchFacebookFriendsConnection *searchFacebookFriendsConnection;
+  NSMutableDictionary *searchResultsDictionary;
+  UITableView *searchTableView;
+}
+
+@end
 
 @implementation OMBRenterInfoAddRoommateViewController
 
@@ -24,7 +36,12 @@
 {
   if (!(self = [super init])) return nil;
   
+  searchResultsDictionary = [NSMutableDictionary dictionary];
   self.title = @"Add Co-applicant";
+
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(facebookAuthenticationFinished:)
+      name: OMBUserCreateAuthenticationForFacebookNotification object: nil];
   
   return self;
 }
@@ -37,6 +54,37 @@
 {
   [super loadView];
   [self setupForTable];
+
+  CGRect screen = [self screen];
+
+  facebookButton = [UIButton new];
+  facebookButton.backgroundColor = [UIColor facebookBlue];
+  facebookButton.frame = CGRectMake(0.0f, 0.0f, 
+    screen.size.width, OMBStandardButtonHeight);
+  facebookButton.titleLabel.font = [UIFont normalTextFontBold];
+  [facebookButton addTarget: self action: @selector(facebookButtonSelected)
+    forControlEvents: UIControlEventTouchUpInside];
+  [facebookButton setTitle: @"Connect my Facebook" 
+    forState: UIControlStateNormal];
+  [facebookButton setTitleColor: [UIColor whiteColor]
+    forState: UIControlStateNormal];
+  self.table.tableFooterView = facebookButton;
+
+  CGFloat tableHeight = self.table.frame.size.height - 
+    (OMBPadding + OMBStandardHeight + 
+      [OMBLabelTextFieldCell heightForCellWithIconImageView]);
+  searchTableView = [[UITableView alloc] initWithFrame: CGRectMake(0.0f,
+    self.table.frame.size.height - tableHeight, screen.size.width,
+      tableHeight)];
+  searchTableView.backgroundColor = [UIColor green];
+  searchTableView.dataSource = self;
+  searchTableView.delegate = self;
+  searchTableView.hidden = YES;
+  searchTableView.separatorColor = [UIColor grayLight];
+  searchTableView.separatorInset = UIEdgeInsetsMake(0.0f, OMBPadding, 
+    0.0f, 0.0f);
+  searchTableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
+  [self.view addSubview: searchTableView];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -44,21 +92,43 @@
   [super viewWillAppear: animated];
   
   modelObject = [[OMBRoommate alloc] init];
+
+  [self updateFacebookButton];
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol OMBConnection
+
+- (void) JSONDictionary: (NSDictionary *) dictionary
+{
+  if ([dictionary objectForKey: @"objects"] != [NSNull null] &&
+    [[dictionary objectForKey: @"objects"] count]) {
+    for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
+      [searchResultsDictionary setObject: dict forKey:
+        [NSString stringWithFormat: @"%@ %@", 
+          [dict objectForKey: @"first_name"],
+            [dict objectForKey: @"last_name"]]];
+    }
+    [searchTableView reloadData];
+  }
+}
 
 #pragma mark - Protocol UITableViewDataSource
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
-  // Fields
-  // Spacing
-  return 2;
+  if (tableView == self.table) {
+    return 2;
+  }
+  else if (tableView == searchTableView) {
+    return 2;
+  }
+  return 0;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
- cellForRowAtIndexPath: (NSIndexPath *) indexPath
+cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
@@ -70,88 +140,244 @@
     empty = [[UITableViewCell alloc] initWithStyle:
      UITableViewCellStyleDefault reuseIdentifier: EmptyID];
   }
-  // Fields
-  if (section == OMBRenterInfoAddRoommateSectionFields) {
-    // First name
-    static NSString *LabelTextID = @"LabelTextID";
-    OMBLabelTextFieldCell *cell =
-    [tableView dequeueReusableCellWithIdentifier: LabelTextID];
-    if (!cell) {
-      cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
-        UITableViewCellStyleDefault reuseIdentifier: LabelTextID];
-      [cell setFrameUsingIconImageView];
+
+  if (tableView == self.table) {
+    // Fields
+    if (section == OMBRenterInfoAddRoommateSectionFields) {
+      // First name
+      static NSString *LabelTextID = @"LabelTextID";
+      OMBLabelTextFieldCell *cell =
+      [tableView dequeueReusableCellWithIdentifier: LabelTextID];
+      if (!cell) {
+        cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier: LabelTextID];
+        [cell setFrameUsingIconImageView];
+      }
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      NSString *imageName;
+      NSString *placeholderString;
+      
+      // First name
+      if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstName) {
+        imageName         = @"user_icon.png";
+        placeholderString = @"First name";
+        cell.textField.keyboardType = UIKeyboardTypeDefault;
+      }
+      // Last name
+      else if (row == OMBRenterInfoAddRoommateSectionFieldsRowLastName) {
+        imageName         = @"user_icon.png";
+        placeholderString = @"Last name";
+        cell.textField.keyboardType = UIKeyboardTypeDefault;
+      }
+      // Email
+      if (row == OMBRenterInfoAddRoommateSectionFieldsRowEmail) {
+        imageName         = @"messages_icon_dark.png";
+        placeholderString = @"Email";
+        cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
+        // Last row, hide the separator
+        cell.separatorInset = UIEdgeInsetsMake(0.0f,
+          tableView.frame.size.width, 0.0f, 0.0f);
+      }
+      cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
+        size: cell.iconImageView.bounds.size];
+      cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+      cell.textField.delegate  = self;
+      cell.textField.indexPath = indexPath;
+      cell.textField.placeholder = placeholderString;
+      [cell.textField addTarget: self
+        action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
+      return cell;
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    NSString *imageName;
-    NSString *placeholderString;
-    
-    // First name
-    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstName) {
-      imageName         = @"user_icon.png";
-      placeholderString = @"First name";
-      cell.textField.keyboardType = UIKeyboardTypeDefault;
-    }
-    // Last name
-    else if (row == OMBRenterInfoAddRoommateSectionFieldsRowLastName) {
-      imageName         = @"user_icon.png";
-      placeholderString = @"Last name";
-      cell.textField.keyboardType = UIKeyboardTypeDefault;
-    }
-    // Email
-    if (row == OMBRenterInfoAddRoommateSectionFieldsRowEmail) {
-      imageName         = @"messages_icon_dark.png";
-      placeholderString = @"Email";
-      cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
-      // Last row, hide the separator
-      cell.separatorInset = UIEdgeInsetsMake(0.0f,
+    // Spacing
+    else if (section == OMBRenterInfoAddRoommateSectionSpacing) {
+      empty.backgroundColor = [UIColor clearColor];
+      empty.separatorInset = UIEdgeInsetsMake(0.0f,
         tableView.frame.size.width, 0.0f, 0.0f);
     }
-    cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
-      size: cell.iconImageView.bounds.size];
-    cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    cell.textField.delegate  = self;
-    cell.textField.indexPath = indexPath;
-    cell.textField.placeholder = placeholderString;
-    [cell.textField addTarget: self
-      action: @selector(textFieldDidChange:)
-        forControlEvents: UIControlEventEditingChanged];
-    return cell;
   }
-  
-  // Spacing
-  else if (section == OMBRenterInfoAddRoommateSectionSpacing) {
-    empty.backgroundColor = [UIColor clearColor];
-    empty.separatorInset = UIEdgeInsetsMake(0.0f,
-      tableView.frame.size.width, 0.0f, 0.0f);
+  else if (tableView == searchTableView) {
+    if (section == OMBRenterInfoAddRoommateSearchSectionResults) {
+      static NSString *ResultID = @"ResultID";
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        ResultID];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:
+         UITableViewCellStyleDefault reuseIdentifier: ResultID];
+      }
+      cell.backgroundColor = [UIColor whiteColor];
+      // Add co-applicant manually
+      if (row == [searchResultsDictionary count]) {
+        cell.textLabel.font = [UIFont normalTextFontBold];
+        cell.textLabel.text = @"Add co-applicant manually";
+        cell.textLabel.textColor = [UIColor blue];
+      }
+      else {
+        cell.textLabel.font = [UIFont normalTextFont];
+        cell.textLabel.text = [[self sortedSearchResultsDictionaryKeys] 
+          objectAtIndex: row];
+        cell.textLabel.textColor = [UIColor textColor];
+      }
+      return cell;
+    }
+    // Spacing
+    else if (section == OMBRenterInfoAddRoommateSearchSectionSpacing) {
+      empty.backgroundColor = [UIColor clearColor];
+      empty.separatorInset = UIEdgeInsetsMake(0.0f,
+        tableView.frame.size.width, 0.0f, 0.0f);
+    }
   }
+    
   return empty;
 }
 
 - (NSInteger) tableView: (UITableView *) tableView
-  numberOfRowsInSection: (NSInteger) section
+numberOfRowsInSection: (NSInteger) section
 {
-  if (section == OMBRenterInfoAddRoommateSectionFields)
-    return 3;
-  else if (section == OMBRenterInfoAddRoommateSectionSpacing)
-    return 1;
+  if (tableView == self.table) {
+    if (section == OMBRenterInfoAddRoommateSectionFields)
+      return 3;
+    else if (section == OMBRenterInfoAddRoommateSectionSpacing)
+      return 1;
+  }
+  else if (tableView == searchTableView) {
+    if (section == OMBRenterInfoAddRoommateSearchSectionResults) {
+      // Last row for "Add co-applicant manually"
+      return [searchResultsDictionary count] + 1;
+    }
+    else if (section == OMBRenterInfoAddRoommateSearchSectionSpacing) {
+      return 1;
+    }
+  }
   return 0;
 }
 
 #pragma mark - Protocol UITableViewDelegate
 
+- (void) tableView: (UITableView *) tableView
+didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  NSInteger row     = indexPath.row;
+  NSInteger section = indexPath.section;
+  if (tableView == searchTableView) {
+    if (section == OMBRenterInfoAddRoommateSearchSectionResults) {
+      if (row == [searchResultsDictionary count]) {
+        [self setupForSearching: NO];
+        [self cancelFromInputAccessoryView];
+      }
+      else {
+        NSString *key = [[self sortedSearchResultsDictionaryKeys] objectAtIndex:
+          row];
+        NSDictionary *dict = [searchResultsDictionary objectForKey: key];
+        [valueDictionary setObject: [NSString stringWithFormat: 
+          @"%@@facebook.com", [dict objectForKey: @"username"]]
+            forKey: @"email"];
+        [valueDictionary setObject: [dict objectForKey: @"first_name"]
+          forKey: @"firstName"];
+        [valueDictionary setObject: [dict objectForKey: @"last_name"]
+          forKey: @"lastName"];
+        [valueDictionary setObject: [dict objectForKey: @"id"]
+          forKey: @"providerId"];
+        [self save];
+      }
+    }
+  }
+}
+
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
-  if (section == OMBRenterInfoAddRoommateSectionFields) {
-    return [OMBLabelTextFieldCell heightForCellWithIconImageView];
+  if (tableView == self.table) {
+    if (section == OMBRenterInfoAddRoommateSectionFields) {
+      if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstName) {
+        return [OMBLabelTextFieldCell heightForCellWithIconImageView];
+      }
+      else if (!isSearching) {
+        return [OMBLabelTextFieldCell heightForCellWithIconImageView]; 
+      }
+    }
+    else if (section == OMBRenterInfoAddRoommateSectionSpacing && isEditing) {
+      return OMBKeyboardHeight + textFieldToolbar.frame.size.height;
+    }
+  }
+  else if (tableView == searchTableView) {
+    if (section == OMBRenterInfoAddRoommateSearchSectionResults) {
+      return OMBStandardHeight;
+    }
+    else if (section == OMBRenterInfoAddRoommateSearchSectionSpacing && 
+      isEditing) {
+      return OMBKeyboardHeight + textFieldToolbar.frame.size.height;
+    }
   }
   return 0.0f;
+}
+
+#pragma mark - Protocol UITextFieldDelegate
+
+- (void) textFieldDidBeginEditing: (TextFieldPadding *) textField
+{
+  isEditing = YES;
+  if (textField.indexPath.row == 
+    OMBRenterInfoAddRoommateSectionFieldsRowFirstName) {
+    if ([self user].renterApplication.facebookAuthenticated) {
+      if (searchTableView.hidden)
+        [self setupForSearching: YES];
+      [searchTableView beginUpdates];
+      [searchTableView endUpdates];
+      [searchResultsDictionary removeAllObjects];
+      [searchTableView reloadData];
+      // [searchTableView setContentOffset: CGPointZero animated: NO];
+    }
+  }
+  
+  [self.table beginUpdates];
+  [self.table endUpdates];
+
+  textField.inputAccessoryView = textFieldToolbar;
+
+  [self scrollToRowAtIndexPath: textField.indexPath];
 }
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) cancelFromInputAccessoryView
+{
+  [self.view endEditing: YES];
+  isEditing = NO;
+  if ([self user].renterApplication.facebookAuthenticated &&
+    !searchTableView.hidden) {
+    [searchTableView beginUpdates];
+    [searchTableView endUpdates];
+  }
+  [self.table beginUpdates];
+  [self.table endUpdates];
+}
+
+- (void) facebookAuthenticationFinished: (NSNotification *) notification
+{
+  NSError *error = [notification.userInfo objectForKey: @"error"];
+  if (!error) {
+    [self user].renterApplication.facebookAuthenticated = YES;
+    [[self user] downloadImageFromImageURLWithCompletion: nil];
+    [self updateFacebookButton];
+  }
+  else {
+    [self showAlertViewWithError: error];
+  }
+  [self containerStopSpinning];
+}
+
+- (void) facebookButtonSelected
+{
+  if (![self user].renterApplication.facebookAuthenticated) {
+    [self containerStartSpinning];
+    [[self appDelegate] openSession];
+  }
+}
 
 - (void) save
 {
@@ -177,6 +403,29 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
+- (void) searchFacebookFriendsWithQuery: (NSString *) string
+{
+  if (searchFacebookFriendsConnection)
+    [searchFacebookFriendsConnection cancel];
+  searchFacebookFriendsConnection = 
+    [[OMBRoommatesSearchFacebookFriendsConnection alloc] initWithQuery: string];
+  searchFacebookFriendsConnection.delegate = self;
+  [searchFacebookFriendsConnection start];
+}
+
+- (void) setupForSearching: (BOOL) setup
+{
+  isSearching = setup;
+  self.table.scrollEnabled = !setup;
+  searchTableView.hidden = !setup;
+}
+
+- (NSArray *) sortedSearchResultsDictionaryKeys
+{
+  return [[searchResultsDictionary allKeys] sortedArrayUsingSelector:
+    @selector(localizedCaseInsensitiveCompare:)];
+}
+
 - (void) textFieldDidChange: (TextFieldPadding *) textField
 {
   NSInteger row = textField.indexPath.row;
@@ -185,6 +434,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // First name
     if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstName) {
       [valueDictionary setObject: string forKey: @"firstName"];
+      if ([self user].renterApplication.facebookAuthenticated) {
+        [self searchFacebookFriendsWithQuery: string];
+      }
     }
     // Last name
     else if (row == OMBRenterInfoAddRoommateSectionFieldsRowLastName) {
@@ -196,5 +448,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+- (void) updateFacebookButton
+{
+  facebookButton.hidden = [self user].renterApplication.facebookAuthenticated;
+}
+
+- (OMBUser *) user
+{
+  return [OMBUser currentUser];
+}
 
 @end

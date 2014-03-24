@@ -8,6 +8,8 @@
 
 #import "OMBRoommate.h"
 
+#import "OMBUser.h"
+
 @implementation OMBRoommate
 
 #pragma mark - Methods
@@ -44,7 +46,17 @@
   if (lastName != [NSNull null])
     self.lastName = lastName;
 
+  // Provider ID
+  id providerId = [dictionary objectForKey: @"provider_id"];
+  if (providerId != [NSNull null])
+    self.providerId = [providerId intValue];
+
   // Roommate
+  id roommate = [dictionary objectForKey: @"roommate"];
+  if (roommate != [NSNull null]) {
+    self.roommate = [[OMBUser alloc] init];
+    [self.roommate readFromDictionary: roommate];
+  }
 
   // User
 
