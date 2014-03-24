@@ -33,9 +33,9 @@
 #import "OMBResidenceConfirmDetailsDatesCell.h"
 #import "OMBResidenceConfirmDetailsPlaceOfferCell.h"
 #import "OMBResidenceLeaseAgreementViewController.h"
+#import "OMBResidenceLegalDetailsViewController.h"
 #import "OMBResidenceMonthlyPaymentScheduleViewController.h"
 #import "OMBViewControllerContainer.h"
-#import "OMBResidenceLegalDetailsViewController.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -1279,7 +1279,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // View lease details
     if (indexPath.row == 3) {
       [self.navigationController pushViewController:
-       [[OMBResidenceLegalDetailsViewController alloc] init] animated: YES];
+        [[OMBResidenceLegalDetailsViewController alloc] initWithResidence: 
+          residence] animated: YES];
     }
   }
   // Price breakdown (NOT BEING USED) !!!
@@ -1366,7 +1367,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
            OMBResidenceBookItConfirmDetailsSectionSubmitOfferNotes) {
     if (indexPath.row == 0) {
       [self.navigationController pushViewController:
-       [[OMBResidenceLegalDetailsViewController alloc] init] animated: YES];
+        [[OMBResidenceLegalDetailsViewController alloc] initWithResidence: 
+          residence] animated: YES];
     }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];

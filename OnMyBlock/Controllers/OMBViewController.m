@@ -68,6 +68,10 @@ CGFloat const OMBStandardHeight       = 44.0f;
   [saveBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: boldFont
   } forState: UIControlStateNormal];
+  // Share
+  shareBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
+    UIBarButtonSystemItemAction target: self
+      action: @selector(shareButtonSelected)];
 
   // Menu
   menuBarButtonItem =
@@ -152,6 +156,11 @@ CGFloat const OMBStandardHeight       = 44.0f;
 - (void) setMenuBarButtonItem
 {
   self.navigationItem.leftBarButtonItem = menuBarButtonItem;
+}
+
+- (void) shareButtonSelected
+{
+  // Subclasses implement this
 }
 
 - (void) showAlertViewWithError:(NSError *) error

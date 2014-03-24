@@ -477,6 +477,13 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   return @"month to month";
 }
 
+- (NSString *) legalDetailsShareString
+{
+  NSArray *array = [OnMyBlockAPIURL componentsSeparatedByString: OnMyBlockAPI];
+  return [NSString stringWithFormat: @"%@/places/%i/legal-details",
+    [array firstObject], self.uid];
+}
+
 - (NSDate *) moveOutDateDate
 {
   NSCalendar *calendar = [NSCalendar currentCalendar];

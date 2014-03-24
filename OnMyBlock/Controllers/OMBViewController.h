@@ -29,6 +29,7 @@ extern CGFloat const OMBStandardHeight;
   UIBarButtonItem *doneBarButtonItem;
   UIBarButtonItem *menuBarButtonItem;
   UIBarButtonItem *saveBarButtonItem;
+  UIBarButtonItem *shareBarButtonItem;
 }
 
 #pragma mark - Methods
@@ -44,6 +45,7 @@ extern CGFloat const OMBStandardHeight;
 - (void) save;
 - (CGRect) screen;
 - (void) setMenuBarButtonItem;
+- (void) shareButtonSelected;
 - (void) showAlertViewWithError: (NSError *) error;
 
 @end
