@@ -10,13 +10,22 @@
 
 #import "NSString+Extensions.h"
 #import "OMBCenteredImageView.h"
+#import "OMBCosigner.h"
+#import "OMBCosignerCell.h"
+#import "OMBEmployment.h"
 #import "OMBEmploymentCell.h"
 #import "OMBGradientView.h"
 #import "OMBManageListingsCell.h"
 #import "OMBMessageDetailViewController.h"
+#import "OMBLegalQuestionCell.h"
 #import "OMBOtherUserProfileCell.h"
+#import "OMBOtherUserProfileHeaderCell.h"
+#import "OMBPreviousRental.h"
+#import "OMBPreviousRentalCell.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidenceDetailViewController.h"
+#import "OMBRoommate.h"
+#import "OMBRoommateCell.h"
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
@@ -231,7 +240,7 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-
+  
   if (![user isCurrentUser]) {
     self.navigationItem.rightBarButtonItem = contactBarButtonItem;
   }
@@ -262,10 +271,22 @@
     [user fetchUserProfileWithCompletion: ^(NSError *error) {
       [self updateData];
     }];
-    // Fetch the employments
-    [user fetchEmploymentsWithCompletion: ^(NSError *error) {
-      [self updateData];
+    
+    // Fetch coapplicants
+    [self fetchObjectsForResourceName:[OMBRoommate resourceName]];
+    
+    // Fetch cosigners
+    [[self renterApplication] fetchCosignersForUserUID: user.uid
+      delegate: self completion: ^(NSError *error) {
+        [self updateData];
     }];
+    
+    // Fetch rental history
+    [self fetchObjectsForResourceName:[OMBPreviousRental resourceName]];
+    // Fetch work history
+    [self fetchObjectsForResourceName:[OMBEmployment resourceName]];
+    //OMBOtherUserProfileSectionLegalQuestion
+    
   }
 }
 
@@ -279,6 +300,27 @@ didFinishWithResult: (MFMailComposeResult) result error: (NSError*) error
   [controller dismissViewControllerAnimated: YES completion: nil];
 }
 
+#pragma mark - Protocol OMBConnectionProtocol
+
+- (void) JSONDictionary: (NSDictionary *) dictionary forResourceName:(NSString *)resourceName
+{
+  if([resourceName isEqualToString:[OMBRoommate resourceName]]){
+    [[self renterApplication] readFromDictionary: dictionary
+      forModelName: [OMBRoommate modelName]];
+    [self reloadTable];
+  }
+  if([resourceName isEqualToString:[OMBPreviousRental resourceName]]){
+    [[self renterApplication] readFromDictionary: dictionary
+      forModelName: [OMBPreviousRental modelName]];
+    [self reloadTable];
+  }
+  if([resourceName isEqualToString:[OMBEmployment resourceName]]){
+    [[self renterApplication] readFromDictionary: dictionary
+      forModelName: [OMBEmployment modelName]];
+    [self reloadTable];
+  }
+}
+
 #pragma mark - Protocol UICollectionViewDataSource
 
 - (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView 
@@ -290,11 +332,11 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
 
   NSInteger row = indexPath.row;
 
-  if ([user isLandlord]) {
+  /*if ([user isLandlord]) {
     if (row > 1) {
       row += 2;
     }
-  }
+  }*/
 
   NSDictionary *dictionary = [userAttributes objectAtIndex: row];
   UIImage *image = [UIImage image: [UIImage imageNamed: 
@@ -302,9 +344,9 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
   cell.imageView.image = image;
   cell.label.text = [dictionary objectForKey: @"name"];
   cell.valueLabel.text = [dictionary objectForKey: @"value"];
-  if (row == 4 && user.renterApplication.facebookAuthenticated)
+  if (row == 2 && user.renterApplication.facebookAuthenticated)
     cell.imageView.alpha = 1.0f;
-  else if (row == 5 && user.renterApplication.linkedinAuthenticated)
+  else if (row == 3 && user.renterApplication.linkedinAuthenticated)
     cell.imageView.alpha = 1.0f;
 
   return cell;
@@ -314,8 +356,8 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
 numberOfItemsInSection: (NSInteger) section
 {
   if ([user isLandlord])
-    return 4;
-  return 6;
+    return 2;
+  return 4;
 }
 
 - (NSInteger) numberOfSectionsInCollectionView: 
@@ -394,7 +436,12 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   // Stats
   // Employment
   // Listings
-  return 4;
+  //return 4;
+  if([user isLandlord])
+    return 9;
+  else
+    return 8;
+    
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -465,44 +512,164 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       return cell;
     }
   }
+  // Coapplicants
+  else if (section == OMBOtherUserProfileSectionCoapplicants) {
+    // Header
+    if (row == OMBOtherUserProfileSectionCoapplicantsRowHeader) {
+      static NSString *CoapplicantsHeaderID = @"CoapplicantsHeaderID";
+      OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
+         CoapplicantsHeaderID];
+      
+      if (!cell) {
+        cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier: CoapplicantsHeaderID];
+      }
+      cell.iconView.image = [UIImage image:
+        [UIImage imageNamed: @"group_icon.png"]
+          size: cell.iconView.bounds.size];
+      cell.headLabel.text = @"Co-Applicants";
+
+      return cell;
+    }
+    else{
+      static NSString *RoommateID = @"RoommateID";
+      OMBRoommateCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        RoommateID];
+      if (!cell)
+        cell = [[OMBRoommateCell alloc] initWithStyle: UITableViewCellStyleDefault
+          reuseIdentifier: RoommateID];
+      [cell loadData: [[self objectsFromRoommates] objectAtIndex: row - 1]];
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      return cell;
+    }
+  }
+  // Cosigners
+  else if (section == OMBOtherUserProfileSectionCosigners) {
+    if(row == OMBOtherUserProfileSectionCosignersRowHeader){
+      static NSString *CosignerHeaderID = @"CosignerHeaderID";
+      OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        CosignerHeaderID];
+      
+      if (!cell) {
+        cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier: CosignerHeaderID];
+      }
+      cell.iconView.image = [UIImage image:
+        [UIImage imageNamed: @"landlord_icon.png"]
+          size: cell.iconView.bounds.size];
+      cell.headLabel.text = @"Co-Signer";
+      
+      return cell;
+    }
+    else{
+      static NSString *CosignerID = @"CosignerID";
+      OMBCosignerCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        CosignerID];
+      if (!cell)
+        cell = [[OMBCosignerCell alloc] initWithStyle: UITableViewCellStyleDefault
+          reuseIdentifier: CosignerID];
+      [cell loadData: [[self cosigners] objectAtIndex: row - 1]];
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      return cell;
+    }
+  }
+  // Pets
+  else if (section == OMBOtherUserProfileSectionPets) {
+    // Header
+    if (row == OMBOtherUserProfileSectionPetRowHeader) {
+      static NSString *PetsHeaderID = @"PetsHeaderID";
+      
+      OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        PetsHeaderID];
+      if (!cell) {
+        cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier: PetsHeaderID];
+      }
+      cell.iconView.image = [UIImage image:
+        [UIImage imageNamed: @"dogs_icon.png"]
+          size: cell.iconView.bounds.size];
+      cell.headLabel.text = @"Pets";
+      
+      return cell;
+    }
+    else{
+      static NSString *PetsID = @"PetsID";
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        PetsID];
+      if (!cell)
+        cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleValue1
+          reuseIdentifier: PetsID];
+      cell.accessoryType = UITableViewCellAccessoryNone;
+      cell.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
+        size: 15];
+      cell.detailTextLabel.text = @"";
+      cell.detailTextLabel.textColor = [UIColor grayMedium];
+      cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+      cell.textLabel.textColor = cell.detailTextLabel.textColor;
+      
+      NSString *string = @"";
+      if(row == OMBOtherUserProfileSectionPetRowHeader + 1){
+        if([self renterApplication].dogs)
+          string = @"Dog";
+        else
+          string = @"Cat";
+      }
+      // More than 2
+      else{
+         string = @"Cat";
+      }
+      cell.textLabel.text = [@"I have a " stringByAppendingString: string];
+      return cell;
+    }
+  }
+  // Previous Rental
+  else if (section == OMBOtherUserProfileSectionPreviousRental) {
+    // Header
+    if (row == OMBOtherUserProfileSectionPreviousRentalRowHeader) {
+      static NSString *PreviousRentalHeaderID = @"PreviousRentalHeaderID";
+      OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        PreviousRentalHeaderID];
+      
+      if (!cell) {
+        cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier: PreviousRentalHeaderID];
+      }
+      cell.iconView.image = [UIImage image:
+        [UIImage imageNamed: @"house_icon.png"]
+          size: cell.iconView.bounds.size];
+      cell.headLabel.text = @"Rental History";
+
+      return cell;
+    }
+    else{
+      static NSString *PreviousRentalID = @"PreviousRentalID";
+      OMBPreviousRentalCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        PreviousRentalID];
+      if (!cell)
+        cell = [[OMBPreviousRentalCell alloc] initWithStyle: UITableViewCellStyleDefault
+          reuseIdentifier: PreviousRentalID];
+      [cell loadData2: [[self objectsFromPreviousRental] objectAtIndex: row - 1]];
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      return cell;
+    }
+  }
   // Employment
   else if (section == OMBOtherUserProfileSectionEmployment) {
     // Header
     if (row == OMBOtherUserProfileSectionEmploymentRowHeader) {
       static NSString *EmploymentHeaderID = @"EmploymentHeaderID";
-      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+      OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
         EmploymentHeaderID];
+      
       if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle: 
+        cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: EmploymentHeaderID];
-        
-        CGFloat labelHeight = OMBStandardHeight;
-        // Image
-        CGFloat imageSize = labelHeight * 0.5f;
-        UIImageView *imageView = [UIImageView new];
-        imageView.alpha = 0.3f;
-        imageView.frame = CGRectMake(padding, 
-          padding + ((labelHeight - imageSize) * 0.5f), imageSize, imageSize);
-        imageView.image = [UIImage image: 
-          [UIImage imageNamed: @"document_icon_black.png"] 
-            size: imageView.bounds.size];
-        [cell.contentView addSubview: imageView];
-
-        // Label
-        CGFloat originX = imageView.frame.origin.x + 
-          imageView.frame.size.width + (padding * 0.5f);
-        UILabel *headLabel = [UILabel new];
-        headLabel.font = [UIFont mediumTextFont];
-        headLabel.frame = CGRectMake(originX, padding, 
-          width - (originX + (padding * 0.5f)), labelHeight);
-        headLabel.text = @"Work Experience";
-        headLabel.textColor = [UIColor grayMedium];
-        [cell.contentView addSubview: headLabel];
       }
-      cell.backgroundColor = [UIColor grayUltraLight];
-      cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      cell.separatorInset = UIEdgeInsetsMake(0.0f, 
-        tableView.frame.size.width, 0.0f, 0.0f);
+      cell.iconView.image = [UIImage image:
+        [UIImage imageNamed: @"document_icon_black.png"]
+          size: cell.iconView.bounds.size];
+      cell.headLabel.text = @"Work History";
+      
       return cell;
     }
     else {
@@ -519,44 +686,27 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       return cell;
     }
   }
+  // Legal Questions
+  else if (section == OMBOtherUserProfileSectionLegalQuestion) {
+    
+  }
   // Listings
   else if (section == OMBOtherUserProfileSectionListings) {
     // Listings header
     if (row == OMBOtherUserProfileSectionListingsRowHeader) {
       static NSString *ListingsHeaderID = @"ListingsHeaderID";
-      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+      OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
         ListingsHeaderID];
+      
       if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle: 
+        cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: ListingsHeaderID];
-        
-        CGFloat labelHeight = OMBStandardHeight;
-        // Image
-        CGFloat imageSize = labelHeight * 0.5f;
-        UIImageView *imageView = [UIImageView new];
-        imageView.alpha = 0.3f;
-        imageView.frame = CGRectMake(padding, 
-          padding + ((labelHeight - imageSize) * 0.5f), imageSize, imageSize);
-        imageView.image = [UIImage image: 
-          [UIImage imageNamed: @"house_icon.png"] 
-            size: imageView.bounds.size];
-        [cell.contentView addSubview: imageView];
-
-        // Label
-        CGFloat originX = imageView.frame.origin.x + 
-          imageView.frame.size.width + (padding * 0.5f);
-        UILabel *headLabel = [UILabel new];
-        headLabel.font = [UIFont mediumTextFont];
-        headLabel.frame = CGRectMake(originX, padding, 
-          width - (originX + (padding * 0.5f)), labelHeight);
-        headLabel.text = @"Listings";
-        headLabel.textColor = [UIColor grayMedium];
-        [cell.contentView addSubview: headLabel];
       }
-      cell.backgroundColor = [UIColor grayUltraLight];
-      cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      cell.separatorInset = UIEdgeInsetsMake(0.0f, 
-        tableView.frame.size.width, 0.0f, 0.0f);
+      cell.iconView.image = [UIImage image:
+        [UIImage imageNamed: @"house_icon.png"]
+          size: cell.iconView.bounds.size];
+      cell.headLabel.text = @"Listings";
+      
       return cell;
     }
     // Listings
@@ -590,12 +740,43 @@ numberOfRowsInSection: (NSInteger) section
   else if (section == OMBOtherUserProfileSectionStats) {
     return 1;
   }
+  // Coapplicants
+  else if (section == OMBOtherUserProfileSectionCoapplicants) {
+    if([self objectsFromRoommates].count){
+      return 1 + [self objectsFromRoommates].count;
+    }
+  }
+  // Cosigners
+  else if (section == OMBOtherUserProfileSectionCosigners) {
+    if([[self renterApplication] cosignersSortedByFirstName].count){
+      return 1 + [[[self renterApplication] cosignersSortedByFirstName] count];
+    }
+  }
+  // Pets
+  else if (section == OMBOtherUserProfileSectionPets) {
+    if([self renterApplication].cats || [self renterApplication].dogs){
+      return
+        ([self renterApplication].cats && [self renterApplication].dogs) ? 2 : 1;
+    }
+  }
+  // Previous Rental
+  else if (section == OMBOtherUserProfileSectionPreviousRental) {
+    if([self objectsFromPreviousRental].count){
+      return 1 + [self objectsFromPreviousRental].count;
+    }
+  }
   // Employment
   else if (section == OMBOtherUserProfileSectionEmployment) {
-//    if ([user.renterApplication.employments count]) {
-//      return 1 + [[user.renterApplication employmentsSortedByStartDate] count];
-//    }
+    if([self objectsFromEmployments].count){
+      return 1 + [self objectsFromEmployments].count;
+    }
   }
+  // Legal Question
+  /*else if (section == OMBOtherUserProfileSectionLegalQuestion) {
+    if([[self renterApplication] employmentsSortedByStartDate].count){
+      return 1 + [[[self renterApplication] employmentsSortedByStartDate] count];
+    }
+  }*/
   // Listings
   else if (section == OMBOtherUserProfileSectionListings) {
     // If the user has listings
@@ -634,14 +815,70 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return userCollectionView.frame.size.height;
     }
   }
+  // Coapplicants
+  else if (section == OMBOtherUserProfileSectionCoapplicants) {
+    if (![user isLandlord]) {
+      if (row == OMBOtherUserProfileSectionCoapplicantsRowHeader) {
+        return [OMBOtherUserProfileHeaderCell heightForCell];
+      }
+      else {
+        return [OMBRoommateCell heightForCell];
+      }
+    }
+  }
+  // Cosigners
+  else if (section == OMBOtherUserProfileSectionCosigners) {
+    if (![user isLandlord]) {
+      if (row == OMBOtherUserProfileSectionCosignersRowHeader) {
+        return [OMBOtherUserProfileHeaderCell heightForCell];
+      }
+      else {
+        return [OMBCosignerCell heightForCell];
+      }
+    }
+  }
+  
+  // Pets
+  else if (section == OMBOtherUserProfileSectionPets) {
+    if (![user isLandlord]) {
+      if (row == OMBOtherUserProfileSectionPetRowHeader) {
+        return [OMBOtherUserProfileHeaderCell heightForCell];
+      }
+      else {
+        //return [OMBEmploymentCell heightForCell];
+      }
+    }
+  }
+  // Rental History
+  else if (section == OMBOtherUserProfileSectionPreviousRental) {
+    if (![user isLandlord]) {
+      if (row == OMBOtherUserProfileSectionPreviousRentalRowHeader) {
+        return [OMBOtherUserProfileHeaderCell heightForCell];
+      }
+      else {
+        return [OMBPreviousRentalCell heightForCell];
+      }
+    }
+  }
   // Employment
   else if (section == OMBOtherUserProfileSectionEmployment) {
     if (![user isLandlord]) {
       if (row == OMBOtherUserProfileSectionEmploymentRowHeader) {
-        return padding + OMBStandardHeight + padding;
+        return [OMBOtherUserProfileHeaderCell heightForCell];
       }
       else {
         return [OMBEmploymentCell heightForCell];
+      }
+    }
+  }
+  // Legal Question
+  else if (section == OMBOtherUserProfileSectionLegalQuestion) {
+    if (![user isLandlord]) {
+      if (row == OMBOtherUserProfileSectionLegalQuestionsRowHeader) {
+        return [OMBOtherUserProfileHeaderCell heightForCell];
+      }
+      else {
+        return [OMBLegalQuestionCell textViewHeight];
       }
     }
   }
@@ -650,7 +887,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if ([user isLandlord]) {
       // Header
       if (row == OMBOtherUserProfileSectionListingsRowHeader) {
-        return padding + OMBStandardHeight + padding;
+        return [OMBOtherUserProfileHeaderCell heightForCell];
       }
       // Listings
       else {
@@ -697,6 +934,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }];
 }
 
+- (NSArray *) cosigners
+{
+  return [[self renterApplication] cosignersSortedByFirstName];
+}
+
 - (void) done
 {
   [self.navigationItem setRightBarButtonItem: contactBarButtonItem 
@@ -729,9 +971,44 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+- (void) JSONDictionary: (NSDictionary *) dictionary
+{
+  [[self renterApplication] readFromCosignerDictionary: dictionary];
+  [self reloadTable];
+}
+
+- (void) fetchObjectsForResourceName: (NSString *) resourceName
+{
+  [[self renterApplication] fetchListForResourceName: resourceName
+    userUID: user.uid delegate: self completion: ^(NSError *error) {
+      [self updateData];
+  }];
+}
+
 - (NSArray *) listings
 {
   return [user residencesActive: YES sortedWithKey: @"createdAt" ascending: NO];
+}
+
+// Employments
+- (NSArray *) objectsFromEmployments
+{
+  return [[self renterApplication] objectsWithModelName:
+    [OMBEmployment modelName] sortedWithKey: @"startDate" ascending: NO];
+}
+
+// Previous rentals
+- (NSArray *) objectsFromPreviousRental
+{
+  return [[self renterApplication] objectsWithModelName:
+    [OMBPreviousRental modelName] sortedWithKey: @"moveInDate" ascending: NO];
+}
+
+// Roommates
+- (NSArray *) objectsFromRoommates
+{
+  return [[self renterApplication] objectsWithModelName:
+    [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES];
 }
 
 - (void) phoneCallUser
@@ -740,6 +1017,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     NSString *string = [@"telprompt:" stringByAppendingString: user.phone];
     [[UIApplication sharedApplication] openURL: [NSURL URLWithString: string]];
   }
+}
+
+- (OMBRenterApplication *) renterApplication
+{
+  return user.renterApplication;
 }
 
 - (void) sendMessage
@@ -782,7 +1064,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   userNameLabel.text = [user fullName];
   // User scrool
   if ([user isLandlord]) {
-    userSchoolLabel.text = [user.landlordType capitalizedString];
+    //userSchoolLabel.text = [user.landlordType capitalizedString];
   }
   else {
     if (user.school && [user.school length])
@@ -802,7 +1084,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       @"name":      @"Email",
       @"value": [user.email length] ? @"Verified" : @"Not verified",
     },
-    @{
+    /*@{
       @"imageName": @"group_icon.png",
       @"name":      @"Co-applicants",
       @"value": [NSString stringWithFormat: @"%i",
@@ -812,7 +1094,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       @"imageName": @"landlord_icon.png",
       @"name":      @"Co-signers",
       @"value": user.renterApplication.hasCosigner ? @"Yes" : @"No",
-    },
+    },*/
     @{
       @"imageName": @"facebook_icon_blue.png",
       @"name":      @"Facebook",

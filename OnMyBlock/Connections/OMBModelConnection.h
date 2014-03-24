@@ -10,6 +10,8 @@
 
 @interface OMBModelConnection : OMBConnection
 
+@property NSString *resourceName;
+
 #pragma mark - Initializer
 
 - (id) initWithModel: (OMBObject *) object;
