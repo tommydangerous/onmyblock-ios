@@ -18,6 +18,7 @@ extern NSString *const OMBUserDefaultsAPIKeyExpiresAt;
 extern NSString *const OMBUserDefaultsRenterApplication;
 extern NSString *const OMBUserDefaultsRenterApplicationCheckedCoapplicants;
 extern NSString *const OMBUserDefaultsRenterApplicationCheckedCosigners;
+extern NSString *const OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
 extern NSString *const OMBUserDefaultsRenterApplicationCheckedRentalHistory;
 extern NSString *const OMBUserDefaultsRenterApplicationCheckedWorkHistory;
 extern NSString *const OMBUserDefaultsViewedIntro;

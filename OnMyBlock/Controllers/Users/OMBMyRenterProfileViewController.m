@@ -16,6 +16,7 @@
 #import "OMBEmploymentCell.h"
 #import "OMBGradientView.h"
 #import "OMBLabelTextFieldCell.h"
+#import "OMBLegalViewController.h"
 #import "OMBOtherUserProfileViewController.h"
 #import "OMBPickerViewCell.h"
 #import "OMBRenterApplication.h"
@@ -615,6 +616,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
         string = @"Work History";
       }
+      else if (row == OMBMyRenterProfileSectionRenterInfoRowLegalQuestions) {
+        iconImageName = @"law_icon_black.png";
+        key = OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
+        string = @"Legal Questions";
+      }
       cell.iconImageView.image = [UIImage image: 
         [UIImage imageNamed: iconImageName] 
           size: cell.iconImageView.bounds.size];
@@ -642,7 +648,8 @@ numberOfRowsInSection: (NSInteger) section
     // Co-signers
     // Rental history
     // Work history
-    return 5;
+    // Legal questions
+    return 6;
   }
   // Spacing
   else if (section == OMBMyRenterProfileSectionSpacing) {
@@ -673,7 +680,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Co-applicants
     if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
       key = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
-      vc  = [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser: user];
+      vc  = [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser: 
+        user];
     }
     // Co-signers
     else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
@@ -684,13 +692,19 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Rental History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
       key = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
-      vc  = [[OMBRenterInfoSectionPreviousRentalViewController alloc] initWithUser: user];
+      vc  = [[OMBRenterInfoSectionPreviousRentalViewController alloc] 
+        initWithUser: user];
     }
     // Work History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
       key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
       vc  = [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser: 
         user];
+    }
+    // Legal Questions
+    else if (row == OMBMyRenterProfileSectionRenterInfoRowLegalQuestions) {
+      key = OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
+      vc  = [[OMBLegalViewController alloc] initWithUser: user];
     }
     if (vc) {
       NSMutableDictionary *dictionary = 

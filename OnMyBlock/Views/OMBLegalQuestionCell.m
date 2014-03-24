@@ -41,11 +41,19 @@ reuseIdentifier: (NSString *) reuseIdentifier
   [self.contentView addSubview: questionLabel];
 
   float buttonSize = [OMBLegalQuestionCell buttonSize];
-  // Yes
-  yesButton = [[UIButton alloc] init];
-  yesButton.frame = CGRectMake((screenWidth - (buttonSize * 2)) / 3.0, 
+  // No
+  noButton = [[UIButton alloc] init];
+  noButton.frame = CGRectMake((screenWidth - (buttonSize * 2)) / 3.0, 
     questionLabel.frame.origin.y + questionLabel.frame.size.height,
       buttonSize, buttonSize);
+  // Yes
+  yesButton = [[UIButton alloc] init];
+  yesButton.frame = CGRectMake(noButton.frame.origin.x + 
+    noButton.frame.size.width + noButton.frame.origin.x, 
+      noButton.frame.origin.y, noButton.frame.size.width,
+        noButton.frame.size.height);
+
+  // Yes
   yesButton.layer.borderColor = [UIColor grayMedium].CGColor;
   yesButton.layer.borderWidth = 1.5f;
   yesButton.layer.cornerRadius = yesButton.frame.size.width * 0.5;
@@ -57,12 +65,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
   [yesButton setTitleColor: [UIColor grayMedium] 
     forState: UIControlStateNormal];
   [self.contentView addSubview: yesButton];
+
   // No
-  noButton = [[UIButton alloc] init];
-  noButton.frame = CGRectMake(yesButton.frame.origin.x + 
-    yesButton.frame.size.width + yesButton.frame.origin.x, 
-      yesButton.frame.origin.y, yesButton.frame.size.width,
-        yesButton.frame.size.height);
   noButton.layer.borderColor = [UIColor grayMedium].CGColor;
   noButton.layer.borderWidth = yesButton.layer.borderWidth;
   noButton.layer.cornerRadius = yesButton.layer.cornerRadius;

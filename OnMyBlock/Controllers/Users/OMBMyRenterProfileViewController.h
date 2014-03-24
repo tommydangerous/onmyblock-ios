@@ -37,7 +37,8 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRenterInfoRow) {
   OMBMyRenterProfileSectionRenterInfoRowCoapplicants,
   OMBMyRenterProfileSectionRenterInfoRowCosigners,
   OMBMyRenterProfileSectionRenterInfoRowRentalHistory,
-  OMBMyRenterProfileSectionRenterInfoRowWorkHistory
+  OMBMyRenterProfileSectionRenterInfoRowWorkHistory,
+  OMBMyRenterProfileSectionRenterInfoRowLegalQuestions
 };
 
 @interface OMBMyRenterProfileViewController : OMBTableViewController

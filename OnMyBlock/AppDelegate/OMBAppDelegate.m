@@ -37,6 +37,8 @@ NSString *const OMBUserDefaultsRenterApplicationCheckedCoapplicants =
   @"OMBUserDefaultsRenterApplicationCheckedCoapplicants";
 NSString *const OMBUserDefaultsRenterApplicationCheckedCosigners = 
   @"OMBUserDefaultsRenterApplicationCheckedCosigners";
+NSString *const OMBUserDefaultsRenterApplicationCheckedLegalQuestions =
+  @"OMBUserDefaultsRenterApplicationCheckedLegalQuestions";
 NSString *const OMBUserDefaultsRenterApplicationCheckedRentalHistory = 
   @"OMBUserDefaultsRenterApplicationCheckedRentalHistory";
 NSString *const OMBUserDefaultsRenterApplicationCheckedWorkHistory = 

@@ -41,6 +41,13 @@
 {
   [super loadView];
 
+  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
+  [doneBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+  } forState: UIControlStateNormal];
+  [saveBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+  } forState: UIControlStateNormal];
   self.navigationItem.rightBarButtonItem = saveBarButtonItem;
 
   [self setupForTable];
@@ -162,7 +169,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     animated: YES];
   [self.table scrollToRowAtIndexPath: 
     [NSIndexPath indexPathForRow: textView.tag inSection: 0] 
-      atScrollPosition: UITableViewScrollPositionMiddle animated: YES];
+      atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
 - (void) textViewDidChange: (UITextView *) textView

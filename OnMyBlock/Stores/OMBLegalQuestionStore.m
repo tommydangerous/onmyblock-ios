@@ -56,8 +56,8 @@
 
 - (void) fetchLegalQuestionsWithCompletion: (void (^)(NSError *)) block
 {
-  OMBLegalQuestionListConnection *connection 
-    = [[OMBLegalQuestionListConnection alloc] init];
+  OMBLegalQuestionListConnection *connection = 
+    [[OMBLegalQuestionListConnection alloc] init];
   connection.completionBlock = block;
   [connection start];
 }
