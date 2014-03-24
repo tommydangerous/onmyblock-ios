@@ -78,6 +78,7 @@ typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionListingsRow) {
   UIToolbar *contactToolbar;
   UIBarButtonItem *emailBarButtonItem;
   OMBGradientView *gradient;
+  NSMutableDictionary *legalAnswers;
   UIBarButtonItem *phoneBarButtonItem;
   UIView *scaleBackView;
   OMBUser *user;
@@ -86,6 +87,7 @@ typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionListingsRow) {
   OMBCenteredImageView *userIconImageView;
   UILabel *userNameLabel;
   UILabel *userSchoolLabel;
+  
 }
 
 #pragma mark - Initializer

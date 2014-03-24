@@ -130,6 +130,12 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 #pragma mark - Instance Methods
 
+- (void) enableButton:(BOOL) enabled
+{
+  noButton.userInteractionEnabled = enabled;
+  yesButton.userInteractionEnabled = enabled;
+}
+
 - (void) loadData: (OMBLegalQuestion *) object 
 atIndexPath: (NSIndexPath *) indexPath
 {
@@ -176,7 +182,7 @@ atIndexPath: (NSIndexPath *) indexPath
 }
 
 - (void) loadLegalAnswer: (OMBLegalAnswer *) object
-{  
+{
   if (object) {
     _legalAnswer.answer      = object.answer;
     _legalAnswer.explanation = object.explanation;
@@ -200,6 +206,39 @@ atIndexPath: (NSIndexPath *) indexPath
     [self noButtonNotHighlighted];
     [self yesButtonNotHighlighted];
     [self resetExplanationTextViewText];
+  }
+}
+
+- (void) loadLegalAnswer2: (OMBLegalAnswer *) object
+{
+  lineView.hidden = YES;
+  CGRect frameText = _explanationTextView.frame;
+  frameText.origin.y -= OMBPadding;
+  _explanationTextView.frame = frameText;
+  
+  if (object) {
+    _legalAnswer.answer      = object.answer;
+    _legalAnswer.explanation = object.explanation;
+    _legalAnswer.legalQuestionID = _legalQuestion.uid;
+    if (_legalAnswer.answer)
+      [self yesButtonHighlighted];
+    else
+      [self noButtonHighlighted];
+    if ([[_legalAnswer.explanation stripWhiteSpace] length] > 0) {
+      _explanationTextView.text      = _legalAnswer.explanation;
+      _explanationTextView.textColor = [UIColor textColor];
+    }
+    else {
+      _explanationTextView.text = @"";
+    }
+  }
+  else {
+    _explanationTextView.text    = @"";
+    _legalAnswer                 = [[OMBLegalAnswer alloc] init];
+    _legalAnswer.explanation     = @"";
+    _legalAnswer.legalQuestionID = _legalQuestion.uid;
+    [self noButtonNotHighlighted];
+    [self yesButtonNotHighlighted];
   }
 }
 
