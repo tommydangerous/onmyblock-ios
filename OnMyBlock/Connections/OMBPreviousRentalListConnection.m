@@ -34,8 +34,8 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
+  // NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
+  //   options: 0 error: nil];
   // [user readFromPreviousRentalDictionary: json];
   [super connectionDidFinishLoading: connection];
 }

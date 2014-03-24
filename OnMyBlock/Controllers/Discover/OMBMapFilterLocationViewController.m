@@ -65,8 +65,8 @@
     [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
       style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
   
-  CGRect screen = [self screen];
-  CGFloat screenWidth = screen.size.width;
+  // CGRect screen = [self screen];
+  // CGFloat screenWidth = screen.size.width;
   CGFloat padding = OMBPadding;
   
   // Neighborhood table
@@ -90,6 +90,8 @@
   self.table.tableHeaderView = neighborhoodTableHeaderView;
   // Filter
   filterTextField = [[TextFieldPadding alloc] init];
+  filterTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+  filterTextField.autocorrectionType = UITextAutocorrectionTypeNo;
   filterTextField.backgroundColor = [UIColor whiteColor];
   filterTextField.delegate = self;
   filterTextField.font = [UIFont normalTextFont];

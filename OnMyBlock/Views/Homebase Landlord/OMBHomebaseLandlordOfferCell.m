@@ -394,8 +394,6 @@ reuseIdentifier: (NSString *) reuseIdentifier
         @"renter profiles if applicable.", 
         [self.offer timelineStringForLandlord]
       ];
-      @"The landlord will have 24 hours to either accept or "
-        @"decline your offer after reviewing your renter profile and offer.";
       timeLabel.hidden = NO;
       break;
     }

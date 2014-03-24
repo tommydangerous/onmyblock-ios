@@ -80,7 +80,7 @@
   UIButton *signUpButtonBottom;
   UIView *viewForScrollingInfiniteScroll;
   
-    BOOL slideEnabled;
+  // BOOL slideEnabled;
 }
 
 @property (nonatomic, strong) OMBCenteredImageView *accountView;

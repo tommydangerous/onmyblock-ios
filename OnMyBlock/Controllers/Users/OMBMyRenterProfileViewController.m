@@ -675,7 +675,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Renter info
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
-    OMBRenterInfoSectionViewController *vc;
+    id vc;
     NSString *key = @"";
     // Co-applicants
     if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
