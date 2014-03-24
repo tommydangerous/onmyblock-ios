@@ -17,9 +17,9 @@ typedef NS_ENUM(NSInteger, OMBRenterInfoAddRoommateSection) {
 // Rows
 // Fields
 typedef NS_ENUM(NSInteger, OMBRenterInfoAddRoommateSectionFieldsRow) {
-  OMBRenterInfoAddRoommateSectionFieldsRowFullName,
-  OMBRenterInfoAddRoommateSectionFieldsRowEmail,
-  OMBRenterInfoAddRoommateSectionFieldsRowLastName
+  OMBRenterInfoAddRoommateSectionFieldsRowFirstName,
+  OMBRenterInfoAddRoommateSectionFieldsRowLastName,
+  OMBRenterInfoAddRoommateSectionFieldsRowEmail
 };
 
 @interface OMBRenterInfoAddRoommateViewController :

@@ -234,6 +234,11 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   return user;
 }
 
++ (UIImage *) placeholderImage
+{
+  return [UIImage imageNamed: @"profile_default_pic.png"];
+}
+
 #pragma mark - Instance Methods
 
 - (void) acceptOffer: (OMBOffer *) offer 

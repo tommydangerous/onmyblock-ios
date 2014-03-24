@@ -83,6 +83,7 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 + (void) fakeLogin;
 + (OMBUser *) fakeUser;
 + (OMBUser *) landlordUser;
++ (UIImage *) placeholderImage;
 
 #pragma mark - Instance Methods
 

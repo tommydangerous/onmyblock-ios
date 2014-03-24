@@ -16,10 +16,6 @@
 #import "OMBViewControllerContainer.h"
 #import "UIImage+Resize.h"
 
-@interface OMBRenterInfoAddRoommateViewController ()
-
-@end
-
 @implementation OMBRenterInfoAddRoommateViewController
 
 #pragma mark - Initializer
@@ -28,7 +24,7 @@
 {
   if (!(self = [super init])) return nil;
   
-  self.title = @"Add Roommate";
+  self.title = @"Add Co-applicant";
   
   return self;
 }
@@ -82,48 +78,23 @@
     [tableView dequeueReusableCellWithIdentifier: LabelTextID];
     if (!cell) {
       cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
-              UITableViewCellStyleDefault reuseIdentifier: LabelTextID];
+        UITableViewCellStyleDefault reuseIdentifier: LabelTextID];
       [cell setFrameUsingIconImageView];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     NSString *imageName;
     NSString *placeholderString;
     
-    // First name, last name
-    /*if (row == OMBRenterInfoAddRoommateSectionFieldsRowasdasd) {
-      static NSString *NameID = @"NameID";
-      OMBTwoLabelTextFieldCell *cell =
-      [tableView dequeueReusableCellWithIdentifier: NameID];
-      if (!cell) {
-        cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
-                UITableViewCellStyleDefault reuseIdentifier: NameID];
-        [cell setFrameUsingIconImageView];
-      }
-      cell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-      cell.firstTextField.delegate  = self;
-      cell.firstTextField.indexPath = indexPath;
-      cell.firstTextField.placeholder  = @"First name";
-      cell.firstIconImageView.image = [UIImage image: [UIImage imageNamed:
-        @"user_icon.png"] size: cell.firstIconImageView.bounds.size];
-      cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-      cell.secondTextField.delegate  = self;
-      cell.secondTextField.indexPath = indexPath;
-      cell.secondTextField.placeholder = @"Last name";
-      cell.secondTextField.tag = OMBRenterInfoAddCosignerSectionFieldsRowLastName;
-      cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      [cell.firstTextField addTarget: self
-        action: @selector(textFieldDidChange:)
-          forControlEvents: UIControlEventEditingChanged];
-      [cell.secondTextField addTarget: self
-        action: @selector(textFieldDidChange:)
-          forControlEvents: UIControlEventEditingChanged];
-      return cell;
-    }*/
-    
-    // Full Name
-    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFullName) {
+    // First name
+    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstName) {
       imageName         = @"user_icon.png";
-      placeholderString = @"Full name";
+      placeholderString = @"First name";
+      cell.textField.keyboardType = UIKeyboardTypeDefault;
+    }
+    // Last name
+    else if (row == OMBRenterInfoAddRoommateSectionFieldsRowLastName) {
+      imageName         = @"user_icon.png";
+      placeholderString = @"Last name";
       cell.textField.keyboardType = UIKeyboardTypeDefault;
     }
     // Email
@@ -160,7 +131,7 @@
   numberOfRowsInSection: (NSInteger) section
 {
   if (section == OMBRenterInfoAddRoommateSectionFields)
-    return 2;
+    return 3;
   else if (section == OMBRenterInfoAddRoommateSectionSpacing)
     return 1;
   return 0;
@@ -172,11 +143,9 @@
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger section = indexPath.section;
-  
   if (section == OMBRenterInfoAddRoommateSectionFields) {
     return [OMBLabelTextFieldCell heightForCellWithIconImageView];
   }
-  
   return 0.0f;
 }
 
@@ -186,28 +155,20 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) save
 {
-  //[super save];
-  /*[[self renterApplication] createCosignerConnection: modelObject
-   delegate: modelObject completion: ^(NSError *error) {
-   if (error) {
-   [self showAlertViewWithError: error];
-   }
-   else {
-   [[self renterApplication] addRoommate: modelObject];
-   [self cancel];
-   }
-   isSaving = NO;
-   [[self appDelegate].container stopSpinning];
-   }];*/
-  
-  [[self appDelegate].container startSpinning];
-  
-#warning DELETE THESE 5 LINES AND UPDATE THE CODE ABOVE
-  [modelObject readFromDictionary: valueDictionary];
-  [[self renterApplication] addRoommate: modelObject];
-  [self cancel];
-  isSaving = NO;
-  [[self appDelegate].container stopSpinning];
+  [super save];
+  [[self renterApplication] createModelConnection: modelObject
+    delegate: modelObject completion: ^(NSError *error) {
+      if (error) {
+        [self showAlertViewWithError: error];
+      }
+      else {
+        [[self renterApplication] addModel: modelObject];
+        [self cancel];
+      }
+      isSaving = NO;
+      [self containerStopSpinning];
+    }];
+  [self containerStartSpinning];
 }
 
 - (void) scrollToRowAtIndexPath: (NSIndexPath *) indexPath
@@ -220,14 +181,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger row = textField.indexPath.row;
   NSString *string = textField.text;
-  
   if ([string length]) {
-    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFullName) {
-      /*if(textField.tag == OMBRenterInfoAddCosignerSectionFieldsRowLastName)
-        [valueDictionary setObject: string forKey: @"last_name"];
-      else
-        [valueDictionary setObject: string forKey: @"first_name"];*/
-      [valueDictionary setObject: string forKey: @"first_name"];
+    // First name
+    if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstName) {
+      [valueDictionary setObject: string forKey: @"firstName"];
+    }
+    // Last name
+    else if (row == OMBRenterInfoAddRoommateSectionFieldsRowLastName) {
+      [valueDictionary setObject: string forKey: @"lastName"];
     }
     else if (row == OMBRenterInfoAddRoommateSectionFieldsRowEmail) {
       [valueDictionary setObject: string forKey: @"email"];

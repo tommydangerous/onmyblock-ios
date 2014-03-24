@@ -12,6 +12,18 @@
 
 @implementation OMBObject
 
+#pragma mark - Protocol
+
+#pragma mark - Protocol OMBConnectionProtocol
+
+- (void) JSONDictionary: (NSDictionary *) dictionary
+{
+  if ([dictionary objectForKey: @"object"] == [NSNull null])
+    [self readFromDictionary: dictionary];
+  else
+    [self readFromDictionary: [dictionary objectForKey: @"object"]];
+}
+
 #pragma mark - Methods
 
 #pragma mark - Class Methods
@@ -34,6 +46,11 @@
     componentsSeparatedByString: @"OMB"] lastObject];
   return [[[string stringSeparatedByUppercaseStrings] componentsJoinedByString: 
     @"_"] lowercaseString];
+}
+
+- (void) readFromDictionary: (NSDictionary *) dictionary
+{
+  // Subclasses implement this
 }
 
 - (NSString *) resourceName

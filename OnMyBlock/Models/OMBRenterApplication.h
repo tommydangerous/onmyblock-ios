@@ -53,7 +53,6 @@ completion: (void (^) (NSError *error)) block;
 (OMBLegalQuestion *) legalQuestion;
 - (NSArray *) objectsWithModelName: (NSString *) modelName 
 sortedWithKey: (NSString *) key ascending: (BOOL)  ascending;
-- (NSArray *) previousRentalsSort;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary

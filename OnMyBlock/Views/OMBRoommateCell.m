@@ -11,6 +11,8 @@
 #import "OMBCenteredImageView.h"
 #import "OMBResidence.h"
 #import "OMBRoommate.h"
+#import "OMBUser.h"
+#import "OMBViewController.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 
@@ -22,7 +24,7 @@
      reuseIdentifier: (NSString *) reuseIdentifier
 {
   if (!(self = [super initWithStyle: style
-                    reuseIdentifier: reuseIdentifier])) return nil;
+    reuseIdentifier: reuseIdentifier])) return nil;
   
   CGRect screen     = [[UIScreen mainScreen] bounds];
   float screenWidth = screen.size.width;
@@ -65,7 +67,7 @@
 
 + (CGFloat) heightForCell
 {
-  return 20.0f + (22.0f * 2.0f) + 20.0f;
+  return OMBPadding + (22.0f * 2.0f) + OMBPadding;
 }
 
 #pragma mark - Instance Methods
@@ -73,15 +75,11 @@
 - (void) loadData: (OMBRoommate *) object
 {
   self.roommate = object;
-  NSString *fullName = [NSString stringWithFormat: @"%@ %@",
+  [userImageView setImage: [OMBUser placeholderImage]];
+  nameLabel.text = [NSString stringWithFormat: @"%@ %@",
     [self.roommate.firstName capitalizedString],
       [self.roommate.lastName capitalizedString]];
-  
-  //
-  emailLabel.text = @"Soy tu roommate!";
-  nameLabel.text = fullName;
-  [userImageView setImage:[OMBResidence placeholderImage]];
-  
+  emailLabel.text = self.roommate.email;
 }
 
 @end

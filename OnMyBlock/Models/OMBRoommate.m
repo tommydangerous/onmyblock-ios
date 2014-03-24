@@ -12,33 +12,48 @@
 
 #pragma mark - Methods
 
+#pragma mark - Class Methods
+
++ (NSString *) modelName
+{
+  return @"roommate";
+}
+
++ (NSString *) resourceName
+{
+  return [NSString stringWithFormat: @"%@s", [OMBRoommate modelName]];
+}
+
 #pragma mark - Instance Methods
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
-  NSDateFormatter *dateFormatter = [NSDateFormatter new];
-  dateFormatter.dateFormat = @"yyyy-MM-d HH:mm:ss ZZZ";
-  if ([dictionary objectForKey: @"createdAt"] != [NSNull null]) {
-    _createdAt = [[dateFormatter dateFromString:
-                   [dictionary objectForKey: @"createdAt"]] timeIntervalSince1970];
+  // Email
+  id email = [dictionary objectForKey: @"email"];
+  if (email != [NSNull null]) {
+    self.email = email;
   }
-  
-  if([[dictionary objectForKey: @"email"]  length])
-    _email = [dictionary objectForKey: @"email"];
-  else
-    _email = @"";
-  
-  if([[dictionary objectForKey: @"first_name"] length])
-    _firstName = [dictionary objectForKey: @"first_name"];
-  else
-    _firstName = @"";
-  
-  if([[dictionary objectForKey: @"last_name"] length])
-    _lastName = [dictionary objectForKey: @"last_name"];
-  else
-    _lastName = @"";
-  
-  _uid   = [[dictionary objectForKey: @"id"] intValue];
+
+  // First name
+  id firstName = [dictionary objectForKey: @"first_name"];
+  if (firstName != [NSNull null])
+    self.firstName = firstName;
+
+  // Last name
+  id lastName = [dictionary objectForKey: @"last_name"];
+  if (lastName != [NSNull null])
+    self.lastName = lastName;
+
+  // Roommate
+
+  // User
+
+  // UID
+  id uid = [dictionary objectForKey: @"id"];
+  if (uid != [NSNull null])
+    self.uid = [uid intValue];
+
+  NSLog(@"OMBRoommate:\n%@", dictionary);
 }
 
 @end

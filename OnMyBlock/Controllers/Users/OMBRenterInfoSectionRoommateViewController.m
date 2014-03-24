@@ -11,11 +11,8 @@
 #import "OMBNavigationController.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoAddRoommateViewController.h"
+#import "OMBRoommate.h"
 #import "OMBRoommateCell.h"
-
-@interface OMBRenterInfoSectionRoommateViewController ()
-
-@end
 
 @implementation OMBRenterInfoSectionRoommateViewController
 
@@ -38,23 +35,19 @@
 {
   [super loadView];
   
-  [self setEmptyLabelText: @"You have no co-applicants.\nAdding a co-applicant "
-   @"will greatly increase your acceptance rate."];
+  [self setEmptyLabelText: @"You have no co-applicants.\n"
+    @"Adding a co-applicant will greatly increase your acceptance rate."];
   
   [addButton setTitle: @"Add Co-applicant" forState: UIControlStateNormal];
-  [addButtonMiddle setTitle: @"Add Co-applicant" forState: UIControlStateNormal];
+  [addButtonMiddle setTitle: @"Add Co-applicant" 
+    forState: UIControlStateNormal];
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-  
-  /*[[self renterApplication] fetchEmploymentsForUserUID: [OMBUser currentUser].uid
-   delegate: self completion: ^(NSError *error) {
-   [self hideEmptyLabel: [[self employments] count]];
-   }];*/
-  #warning DELETE THIS LINE AND CREATE METHOD ABOVE
-  [self hideEmptyLabel: [[self roommates] count]];
+
+  [self fetchObjects];
   
   [self reloadTable];
 }
@@ -65,15 +58,15 @@
 
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
-  #warning CREATE METHOD
-  //[[self renterApplication] readFromRoommateDictionary: dictionary];
+  [[self renterApplication] readFromDictionary: dictionary 
+    forModelName: [OMBRoommate modelName]];
   [self reloadTable];
 }
 
 #pragma mark - Protocol UITableViewDataSource
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
-          cellForRowAtIndexPath: (NSIndexPath *) indexPath
+cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSUInteger row     = indexPath.row;
   NSUInteger section = indexPath.section;
@@ -84,7 +77,7 @@
   if (!cell)
     cell = [[OMBRoommateCell alloc] initWithStyle: UITableViewCellStyleDefault
       reuseIdentifier: RoommateID];
-  [cell loadData: [[self roommates] objectAtIndex: row]];
+  [cell loadData: [[self objects] objectAtIndex: row]];
   // Last row
   if (row == [self tableView: tableView numberOfRowsInSection: section] - 1) {
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
@@ -94,12 +87,6 @@
     cell.separatorInset = tableView.separatorInset;
   }
   return cell;
-}
-
-- (NSInteger) tableView: (UITableView *) tableView
-  numberOfRowsInSection: (NSInteger) section
-{
-  return [[self roommates] count];
 }
 
 #pragma mark - Protocol UITableViewDelegate
@@ -122,31 +109,20 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         completion: nil];
 }
 
-- (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath
+- (void) fetchObjects
 {
-  OMBRoommate *roommate = [[self roommates] objectAtIndex: indexPath.row];
-  #warning CREATE METHOD
-  /*[[self renterApplication] deleteRoommateConnection: roommate delegate: nil
-    completion: nil];*/
-  
-  [self.table beginUpdates];
-  [[self renterApplication] removeRoommate: roommate];
-  [self.table deleteRowsAtIndexPaths: @[indexPath]
-    withRowAnimation: UITableViewRowAnimationFade];
-  [self.table endUpdates];
-  
-  [self hideEmptyLabel: [[self roommates] count]];
+  [self fetchObjectsForResourceName: [OMBRoommate resourceName]];
+}
+
+- (NSArray *) objects
+{
+  return [[self renterApplication] objectsWithModelName: 
+    [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES];
 }
 
 - (void) reloadTable
 {
   [self.table reloadData];
-}
-
-- (NSArray *) roommates
-{
-  // Change method in renter info
-  return [[self renterApplication] roommatesSort];
 }
 
 @end

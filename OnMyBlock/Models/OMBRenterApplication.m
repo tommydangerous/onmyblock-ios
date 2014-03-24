@@ -60,14 +60,12 @@
 
 - (void) addCosigner: (OMBCosigner *) object
 {
-  [cosigners setObject: object forKey: 
-    [NSNumber numberWithInt: object.uid]];
+  [cosigners setObject: object forKey: [NSNumber numberWithInt: object.uid]];
 }
 
 - (void) addEmployment: (OMBEmployment *) object
 {
-  [employments setObject: object forKey: 
-    [NSNumber numberWithInt: object.uid]];
+  [employments setObject: object forKey: [NSNumber numberWithInt: object.uid]];
 }
 
 - (void) addModel: (OMBObject *) object
@@ -79,6 +77,9 @@
   // Previous rentals
   else if ([[object modelName] isEqualToString: [OMBPreviousRental modelName]])
     [previousRentals setObject: object forKey: key];
+  // Roommate
+  else if ([[object modelName] isEqualToString: [OMBRoommate modelName]])
+    [roommates setObject: object forKey: key];
 }
 
 - (void) addLegalAnswer: (OMBLegalAnswer *) legalAnswer
@@ -206,12 +207,10 @@ sortedWithKey: (NSString *) key ascending: (BOOL)  ascending
   // Previous rentals
   else if ([modelName isEqualToString: [OMBPreviousRental modelName]])
     array = [previousRentals allValues];
+  // Roommates
+  else if ([modelName isEqualToString: [OMBRoommate modelName]])
+    array = [roommates allValues];
   return [array sortedArrayUsingDescriptors: @[sort]];
-}
-
-- (NSArray *) previousRentalsSort
-{
-  return previousRentals;
 }
 
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary
@@ -281,6 +280,11 @@ forModelName: (NSString *) modelName
       model = [[OMBPreviousRental alloc] init];
       [model readFromDictionary: dict];
     }
+    // Roommates
+    else if ([modelName isEqualToString: [OMBRoommate modelName]]) {
+      model = [[OMBRoommate alloc] init];
+      [model readFromDictionary: dict];
+    }
     [self addModel: model];
     [newSet addObject: [NSNumber numberWithInt: [model uid]]];
   }
@@ -294,6 +298,10 @@ forModelName: (NSString *) modelName
   else if ([modelName isEqualToString: [OMBPreviousRental modelName]]) {
     values = [previousRentals allValues];
   }
+  // Roommates
+  else if ([modelName isEqualToString: [OMBRoommate modelName]]) {
+    values = [roommates allValues];
+  }
   NSMutableSet *oldSet = [NSMutableSet setWithArray: 
     [values valueForKey: @"uid"]];
   [oldSet minusSet: newSet];
@@ -305,6 +313,10 @@ forModelName: (NSString *) modelName
     // Previous rentals
     else if ([modelName isEqualToString: [OMBPreviousRental modelName]]) {
       [previousRentals removeObjectForKey: number];
+    }
+    // Roommates
+    else if ([modelName isEqualToString: [OMBRoommate modelName]]) {
+      [roommates removeObjectForKey: number];
     }
   }
 }
@@ -340,6 +352,9 @@ forModelName: (NSString *) modelName
   // Previous rentals
   else if ([[object modelName] isEqualToString: [OMBPreviousRental modelName]])
     [previousRentals removeObjectForKey: number];
+  // Roommates
+  else if ([[object modelName] isEqualToString: [OMBRoommate modelName]])
+    [roommates removeObjectForKey: number];
 }
 
 - (void) removeRoommate: (OMBRoommate *) roommate
