@@ -23,6 +23,13 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
+@interface OMBMapFilterLocationViewController ()
+{
+  CLLocationManager *locationManager;
+}
+
+@end
+
 @implementation OMBMapFilterLocationViewController
 
 #pragma mark - Initializer
@@ -30,9 +37,17 @@
 - (id) initWithSelectedNeighborhood:(OMBNeighborhood *) selectedNeighborhood
 {
   if (!(self = [super init])) return nil;
+
+  // Location manager
+  locationManager                 = [[CLLocationManager alloc] init];
+  locationManager.delegate        = self;
+  locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+  locationManager.distanceFilter  = 50;
+
+  _selectedNeighborhood = selectedNeighborhood;
   
   self.title = @"Choose Location";
-  _selectedNeighborhood = selectedNeighborhood;
+
   return self;
 }
 
@@ -46,11 +61,13 @@
   
   [self setupForTable];
   
-  self.navigationItem.leftBarButtonItem =
-  [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
-                                   style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
+  self.navigationItem.leftBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
+      style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
   
-  CGFloat padding = 20.0f;
+  CGRect screen = [self screen];
+  CGFloat screenWidth = screen.size.width;
+  CGFloat padding = OMBPadding;
   
   // Neighborhood table
   self.table.alwaysBounceVertical = YES;
@@ -62,70 +79,79 @@
                                                0.0f, 0.0f);
   temporaryNeighborhoods = [[OMBNeighborhoodStore sharedStore]
                             sortedNeighborhoodsForName:@""];
+
   // Header view
-  UIView *neighborhoodTableHeaderView = [UIView new];
-  neighborhoodTableHeaderView.backgroundColor = [UIColor grayLight];
+  AMBlurView *neighborhoodTableHeaderView = [AMBlurView new];
+  // neighborhoodTableHeaderView.backgroundColor = [UIColor blue];
+  neighborhoodTableHeaderView.blurTintColor = [UIColor grayLight];
   neighborhoodTableHeaderView.frame = CGRectMake(0.0f, 0.0f,
-                                                 self.table.frame.size.width, OMBStandardHeight * 2);
+    self.table.frame.size.width, (OMBPadding * 0.5f) + OMBStandardHeight + 
+      (OMBPadding * 0.5f) + OMBStandardHeight);
   self.table.tableHeaderView = neighborhoodTableHeaderView;
   // Filter
   filterTextField = [[TextFieldPadding alloc] init];
   filterTextField.backgroundColor = [UIColor whiteColor];
   filterTextField.delegate = self;
-  filterTextField.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  filterTextField.frame = CGRectMake(padding * 0.5, OMBStandardHeight * 0.1f,
-                                     neighborhoodTableHeaderView.frame.size.width - (padding), OMBStandardHeight * 0.8f);
-  filterTextField.layer.cornerRadius = 6.0f;
-  filterTextField.leftPaddingX = padding * 1.5f;
+  filterTextField.font = [UIFont normalTextFont];
+  filterTextField.frame = CGRectMake(padding * 0.5f, padding * 0.5f,
+    neighborhoodTableHeaderView.frame.size.width - padding, 
+      OMBStandardHeight);
+  filterTextField.layer.cornerRadius = OMBCornerRadius;
+  filterTextField.leftPaddingX = padding * 0.5f;
   filterTextField.returnKeyType = UIReturnKeySearch;
-  filterTextField.rightPaddingX = padding * 1.5f;
+  filterTextField.rightPaddingX = filterTextField.leftPaddingX;
+  filterTextField.placeholderColor = [UIColor grayMedium];
+  filterTextField.placeholder = @"Search city or school";
+  filterTextField.textAlignment = NSTextAlignmentCenter;
   filterTextField.textColor = [UIColor textColor];
   [filterTextField addTarget: self action: @selector(textFieldDidChange:)
-            forControlEvents: UIControlEventEditingChanged];
+    forControlEvents: UIControlEventEditingChanged];
   [neighborhoodTableHeaderView addSubview: filterTextField];
   // Filter image view
-  CGFloat sizeImage = 17;
-  filterImageView = [[UIImageView alloc] initWithImage:
-                     [UIImage changeColorForImage:[UIImage imageNamed:@"search"]
-                                          toColor:[UIColor grayMedium]]];
-  filterImageView.frame = CGRectMake((neighborhoodTableHeaderView.frame.size.width - sizeImage) * 0.95f,
-                                     (neighborhoodTableHeaderView.frame.size.height - sizeImage) * 0.2f,
-                                     sizeImage , sizeImage);
-  [neighborhoodTableHeaderView addSubview: filterImageView];
-  [neighborhoodTableHeaderView setBackgroundColor:[UIColor grayUltraLight]];
+  // CGFloat sizeImage = OMBPadding * 0.8f;
+  // filterImageView = [[UIImageView alloc] initWithImage:
+  //   [UIImage changeColorForImage: [UIImage imageNamed: @"search"]
+  //     toColor: [UIColor blue]]];
+  // filterImageView.frame = CGRectMake(
+  //   neighborhoodTableHeaderView.frame.size.width - sizeImage,
+  //     0.0f, sizeImage, sizeImage);
+  // [neighborhoodTableHeaderView addSubview: filterImageView];
+  // [neighborhoodTableHeaderView setBackgroundColor:[UIColor grayUltraLight]];
   
   // Label
   UIButton *currentLocationButton = [UIButton new];
-  currentLocationButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
-                                                          size: 15];
-  currentLocationButton.frame = CGRectMake(padding-40.0, OMBStandardHeight,
-                                           neighborhoodTableHeaderView.frame.size.width,
-                                           OMBStandardHeight);
-  
-  [currentLocationButton setTitle:@"User Current Location" forState:UIControlStateNormal];
-  [currentLocationButton setTitleColor:[UIColor blue] forState:0];
-  
-  
-  [currentLocationButton addTarget:self action:@selector(setCurrentLocation) forControlEvents:UIControlEventTouchUpInside];
-  //currentLocationButton.titleLabel.textColor = [UIColor blue];
+  // currentLocationButton.contentHorizontalAlignment =
+  //   UIControlContentHorizontalAlignmentLeft;
+  currentLocationButton.backgroundColor = [UIColor whiteColor];
+  currentLocationButton.frame = CGRectMake(0.0f, 
+    filterTextField.frame.origin.y + filterTextField.frame.size.height + 
+      filterTextField.frame.origin.y, 
+        neighborhoodTableHeaderView.frame.size.width, OMBStandardHeight);
+  currentLocationButton.titleLabel.font = [UIFont normalTextFontBold];
+  [currentLocationButton addTarget: self action: @selector(useCurrentLocation) 
+    forControlEvents: UIControlEventTouchUpInside];
+  [currentLocationButton setTitle: @"Use My Current Location" 
+    forState:UIControlStateNormal];
+  [currentLocationButton setTitleColor: [UIColor blue] 
+    forState: UIControlStateNormal];
   [neighborhoodTableHeaderView addSubview: currentLocationButton];
+
   // Image view
-  CGFloat imageSize = padding;
-  UIImageView *headerImageView = [UIImageView new];
-  headerImageView.frame = CGRectMake(
-                                     neighborhoodTableHeaderView.frame.size.width - (imageSize + padding +35.0),
-                                     OMBStandardHeight + (OMBStandardHeight - imageSize) * 0.5,
-                                     imageSize, imageSize);
-  headerImageView.image = [UIImage imageNamed: @"gps_cursor_blue.png"];
-  [neighborhoodTableHeaderView addSubview: headerImageView];
-  // Current location button
-  CGRect buttonFrame = neighborhoodTableHeaderView.frame;
-  buttonFrame.origin.y = OMBStandardHeight;
-  buttonFrame.size.height = OMBStandardHeight;
+  // CGFloat imageSize = padding;
+  // UIImageView *headerImageView = [UIImageView new];
+  // headerImageView.frame = CGRectMake(
+  //                                    neighborhoodTableHeaderView.frame.size.width - (imageSize + padding +35.0),
+  //                                    OMBStandardHeight + (OMBStandardHeight - imageSize) * 0.5,
+  //                                    imageSize, imageSize);
+  // headerImageView.image = [UIImage imageNamed: @"gps_cursor_blue.png"];
+  // [neighborhoodTableHeaderView addSubview: headerImageView];
+  // // Current location button
+  // CGRect buttonFrame = neighborhoodTableHeaderView.frame;
+  // buttonFrame.origin.y = OMBStandardHeight;
+  // buttonFrame.size.height = OMBStandardHeight;
   
   // Footer view
-  self.table.tableFooterView = [[UIView alloc] initWithFrame:
-                                CGRectZero];
+  self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
   
   
 }
@@ -136,6 +162,25 @@
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol CLLocationManagerDelegate
+
+- (void) locationManager: (CLLocationManager *) manager
+didFailWithError: (NSError *) error
+{
+  NSLog(@"Location manager did fail with error: %@", 
+    error.localizedDescription);
+  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+    @"Could not locate" message: error.localizedDescription delegate: nil 
+      cancelButtonTitle: @"OK" otherButtonTitles: nil];
+  [alertView show];
+}
+
+- (void) locationManager: (CLLocationManager *) manager
+didUpdateLocations: (NSArray *) locations
+{
+  [self foundLocations: locations];
+}
 
 #pragma mark - Protocol UIScrollViewDelegate
 
@@ -176,9 +221,8 @@
     else {
       cell.accessoryType = UITableViewCellAccessoryNone;
     }
-    cell.backgroundColor = [UIColor grayUltraLight];
-    cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-                                          size: 15];
+    cell.backgroundColor = [UIColor whiteColor];
+    cell.textLabel.font = [UIFont normalTextFont];
     cell.textLabel.text = neighborhoodCity.name;
     cell.textLabel.textColor = [UIColor textColor];
     return cell;
@@ -288,33 +332,18 @@ viewForHeaderInSection: (NSInteger) section
 {
   if (tableView == self.table) {
     NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
-                     @selector(localizedCaseInsensitiveCompare:)];
+      @selector(localizedCaseInsensitiveCompare:)];
     AMBlurView *blur = [[AMBlurView alloc] init];
-    blur.blurTintColor = [UIColor grayVeryLight];
-    blur.frame = CGRectMake(0.0f, 0.0f,
-                            tableView.frame.size.width, 13.0f * 2);
+    blur.blurTintColor = [UIColor grayLight];
+    blur.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 13.0f * 2);
     UILabel *label = [UILabel new];
-    label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 13];
+    label.font = [UIFont smallTextFontBold];
     label.frame = blur.frame;
     label.text = [keys[section] capitalizedString];
     label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [UIColor blue];
+    label.textColor = [UIColor blueDark];
     [blur addSubview: label];
     return blur;
-    
-    /*AMBlurView *blur = [[AMBlurView alloc] init];
-     blur.blurTintColor = [UIColor grayVeryLight];
-     blur.frame = CGRectMake(0.0f, 0.0f,
-     tableView.frame.size.width, 13.0f * 2);
-     UILabel *label = [UILabel new];
-     label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 13];
-     label.frame = blur.frame;
-     label.text = [[[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex:
-     section] capitalizedString];
-     label.textAlignment = NSTextAlignmentCenter;
-     label.textColor = [UIColor blue];
-     [blur addSubview: label];
-     return blur;*/
   }
   return [[UIView alloc] initWithFrame: CGRectZero];
 }
@@ -350,18 +379,6 @@ viewForHeaderInSection: (NSInteger) section
 
 #pragma mark - Methods
 
-#pragma mark - Selector Methods
--(void) setCurrentLocation{
-  
-  OMBNeighborhood *neighborhood =[[OMBNeighborhood alloc] init];
-  neighborhood.name=@"User Current Location";
-  CLLocation *location1 = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
-  neighborhood.coordinate =location1.coordinate;
-  
-  _selectedNeighborhood=neighborhood;
-  [self done];
-  
-}
 #pragma mark - Instance Methods
 
 - (void) cancel
@@ -373,6 +390,22 @@ viewForHeaderInSection: (NSInteger) section
 - (void) done
 {
   [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void) foundLocations: (NSArray *) locations
+{
+  CLLocationCoordinate2D coordinate;
+  if ([locations count]) {
+    for (CLLocation *location in locations) {
+      coordinate = location.coordinate;
+    }
+    OMBNeighborhood *neighborhood = [[OMBNeighborhood alloc] init];
+    neighborhood.coordinate = coordinate;
+    neighborhood.name = @"My Current Location";
+    self.selectedNeighborhood = neighborhood;
+    [self done];
+  }
+  [locationManager stopUpdatingLocation];
 }
 
 - (void) hideTextField
@@ -396,6 +429,12 @@ viewForHeaderInSection: (NSInteger) section
                             sortedNeighborhoodsForName: [textField.text lowercaseString]];
   [self.table reloadData];
   
+}
+
+- (void) useCurrentLocation
+{
+  self.selectedNeighborhood = nil;
+  [locationManager startUpdatingLocation];
 }
 
 @end

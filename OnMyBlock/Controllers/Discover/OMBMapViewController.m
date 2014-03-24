@@ -472,6 +472,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     OMBNeighborhood *neighborhood = [dictionary objectForKey: 
       @"neighborhood"];
     
+    // If the current center coordinate is not equal to the neighborhood's
     if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate)) {
       centerCoordinate = neighborhood.coordinate;
       [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS

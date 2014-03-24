@@ -6,13 +6,15 @@
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
+#import <MapKit/MapKit.h>
+
 #import "OMBTableViewController.h"
 
 @class OMBNeighborhood;
 @class TextFieldPadding;
 
 @interface OMBMapFilterLocationViewController : OMBTableViewController
-<UIScrollViewDelegate, UITextFieldDelegate>
+<CLLocationManagerDelegate, UIScrollViewDelegate, UITextFieldDelegate>
 {
   TextFieldPadding *filterTextField;
   UIImageView *filterImageView;
