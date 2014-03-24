@@ -68,7 +68,7 @@
     forState: UIControlStateNormal];
   [facebookButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
-  self.table.tableFooterView = facebookButton;
+  self.table.tableHeaderView = facebookButton;
 
   CGFloat tableHeight = self.table.frame.size.height - 
     (OMBPadding + OMBStandardHeight + 
@@ -76,7 +76,7 @@
   searchTableView = [[UITableView alloc] initWithFrame: CGRectMake(0.0f,
     self.table.frame.size.height - tableHeight, screen.size.width,
       tableHeight)];
-  searchTableView.backgroundColor = [UIColor green];
+  searchTableView.backgroundColor = [UIColor whiteColor];
   searchTableView.dataSource = self;
   searchTableView.delegate = self;
   searchTableView.hidden = YES;
@@ -374,6 +374,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) facebookButtonSelected
 {
   if (![self user].renterApplication.facebookAuthenticated) {
+    [self.view endEditing: YES];
     [self containerStartSpinning];
     [[self appDelegate] openSession];
   }
@@ -450,7 +451,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) updateFacebookButton
 {
-  facebookButton.hidden = [self user].renterApplication.facebookAuthenticated;
+  if ([self user].renterApplication.facebookAuthenticated) {
+    self.table.tableHeaderView = [[UIView alloc] initWithFrame: CGRectZero];
+  }
+  else {
+    self.table.tableHeaderView = facebookButton;
+  }
 }
 
 - (OMBUser *) user
