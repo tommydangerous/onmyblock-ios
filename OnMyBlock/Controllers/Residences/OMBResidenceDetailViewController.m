@@ -1189,6 +1189,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [self currentPageOfImages], (int) [[residence imagesArray] count]];
   if([residence imagesArray].count)
     placeholderImageView.hidden = YES;
+  else
+    placeholderImageView.hidden = NO;
   
   [self adjustPageOfImagesLabelFrame];
 }

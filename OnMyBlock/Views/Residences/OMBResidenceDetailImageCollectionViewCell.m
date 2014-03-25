@@ -42,7 +42,7 @@
 {
   __weak typeof (self.centeredImageView) weakImageView = self.centeredImageView;
   [self.centeredImageView.imageView setImageWithURL: residenceImage.imageURL
-    placeholderImage: nil options: SDWebImageRetryFailed completed: 
+    placeholderImage:[OMBResidence placeholderImage] options: SDWebImageRetryFailed completed:
       ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (error || !image) {
           weakImageView.image = [OMBResidence placeholderImage];
