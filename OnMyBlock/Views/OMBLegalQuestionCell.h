@@ -35,6 +35,7 @@ extern NSString *const LegalAnswerTextViewPlaceholder;
 
 + (CGFloat) buttonSize;
 + (UIFont *) fontForQuestionLabel;
++ (UIFont *) fontForQuestionLabelForOtherUser;
 + (CGFloat) textViewHeight;
 + (CGFloat) widthForQuestionLabel;
 
@@ -43,7 +44,10 @@ extern NSString *const LegalAnswerTextViewPlaceholder;
 - (void) enableButton:(BOOL) enabled;
 - (void) loadData: (OMBLegalQuestion *) object 
 atIndexPath: (NSIndexPath *) indexPath;
+- (void) loadData: (OMBLegalQuestion *) object
+atIndexPathForOtherUser: (NSIndexPath *) indexPath;
 - (void) loadLegalAnswer: (OMBLegalAnswer *) object;
+- (void) loadLegalAnswerForOtherUser: (OMBLegalAnswer *) object;
 - (void) loadLegalAnswer2: (OMBLegalAnswer *) object;
 
 @end

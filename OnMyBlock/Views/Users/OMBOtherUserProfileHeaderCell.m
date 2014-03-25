@@ -25,7 +25,7 @@
   CGFloat width   = self.frame.size.width;
   
   // Image
-  CGFloat imageSize = labelHeight * 0.5f;
+  CGFloat imageSize = labelHeight * 0.6f;
   
   _iconView = [UIImageView new];
   _iconView.alpha = 0.3f;
@@ -35,7 +35,7 @@
   
   // Label
   CGFloat originX = _iconView.frame.origin.x +
-  _iconView.frame.size.width + (padding * 0.5f);
+  _iconView.frame.size.width + _iconView.frame.origin.x;
   _headLabel = [UILabel new];
   _headLabel.font = [UIFont mediumTextFont];
   _headLabel.frame = CGRectMake(originX, padding,

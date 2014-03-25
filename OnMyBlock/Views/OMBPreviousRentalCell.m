@@ -30,23 +30,24 @@ reuseIdentifier: (NSString *)reuseIdentifier
   CGFloat height  = 22.0f;
   CGFloat imageSize = height * 3;
   CGFloat width = screenWidth - (padding + imageSize + padding + padding);
-  CGFloat originX = padding + imageSize + padding;
+  // CGFloat originX = padding + imageSize + padding;
+  CGFloat originX = padding;
 
   // Residence icon
-  residenceImageView = [UIImageView new];
-  residenceImageView.frame = CGRectMake(padding, padding, height * 3,
-    height * 3);
-  residenceImageView.image = [UIImage imageNamed: @"house_icon.png"];
-  [self.contentView addSubview: residenceImageView];
+  // residenceImageView = [UIImageView new];
+  // residenceImageView.frame = CGRectMake(padding, padding, height * 3,
+  //   height * 3);
+  // residenceImageView.image = [UIImage imageNamed: @"house_icon.png"];
+  // [self.contentView addSubview: residenceImageView];
   // Landlord icon
-  landlordImageView = [UIImageView new];
-  landlordImageView.frame = CGRectMake(padding, 
-    residenceImageView.frame.origin.y + 
-    residenceImageView.frame.size.height + padding, 
-      residenceImageView.frame.size.width, 
-        residenceImageView.frame.size.height);
-  landlordImageView.image = [UIImage imageNamed: @"landlord_icon.png"];
-  [self.contentView addSubview: landlordImageView];
+  // landlordImageView = [UIImageView new];
+  // landlordImageView.frame = CGRectMake(padding, 
+  //   residenceImageView.frame.origin.y + 
+  //   residenceImageView.frame.size.height + padding, 
+  //     residenceImageView.frame.size.width, 
+  //       residenceImageView.frame.size.height);
+  // landlordImageView.image = [UIImage imageNamed: @"landlord_icon.png"];
+  // [self.contentView addSubview: landlordImageView];
 
   addressLabel = [[UILabel alloc] init];
   addressLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
@@ -140,7 +141,16 @@ reuseIdentifier: (NSString *)reuseIdentifier
     rentLeaseMonthsLabel.frame.size.height + 20;
   float spacing = 0;
   // Reset it so when it is reused, it doesn't have a text from another cell
-  landlordNameLabel.text = @"no landlord name";
+  if (self.previousRental.school && [self.previousRental.school length]) {
+    landlordNameLabel.text = @"no reference name";
+    landlordEmailLabel.text = @"no reference email";
+    landlordPhoneLabel.text = @"no reference phone";
+  }
+  else {
+    landlordNameLabel.text = @"no landlord name";
+    landlordEmailLabel.text = @"no landlord email";
+    landlordPhoneLabel.text = @"no landlord phone";
+  }
   landlordNameLabel.textColor = [UIColor grayMedium];
   if ([self.previousRental.landlordName length] > 0) {
     landlordNameLabel.text = 
@@ -152,7 +162,6 @@ reuseIdentifier: (NSString *)reuseIdentifier
       landlordNameLabel.frame.size.height);
   spacing += landlordNameLabel.frame.size.height;
   // Reset it so when it is reused, it doesn't have a text from another cell
-  landlordEmailLabel.text = @"no landlord email";
   landlordEmailLabel.textColor = [UIColor grayMedium];
   if ([self.previousRental.landlordEmail length] > 0) {
     landlordEmailLabel.text = 
@@ -165,7 +174,6 @@ reuseIdentifier: (NSString *)reuseIdentifier
         landlordEmailLabel.frame.size.height);
   spacing += landlordEmailLabel.frame.size.height;
   // Reset it so when it is reused, it doesn't have a text from another cell
-  landlordPhoneLabel.text = @"no landlord phone";
   landlordPhoneLabel.textColor = [UIColor grayMedium];
   if ([[self.previousRental.landlordPhone phoneNumberString] length] > 0) {
     landlordPhoneLabel.text = 
@@ -236,6 +244,53 @@ reuseIdentifier: (NSString *)reuseIdentifier
   else {
     rentLeaseMonthsLabel.text = @"";
   }
+
+  float originX = rentLeaseMonthsLabel.frame.origin.y +
+    rentLeaseMonthsLabel.frame.size.height + 20;
+  float spacing = 0;
+  // Reset it so when it is reused, it doesn't have a text from another cell
+  if (self.previousRental.school && [self.previousRental.school length]) {
+    landlordNameLabel.text = @"no reference name";
+    landlordEmailLabel.text = @"no reference email";
+    landlordPhoneLabel.text = @"no reference phone";
+  }
+  else {
+    landlordNameLabel.text = @"no landlord name";
+    landlordEmailLabel.text = @"no landlord email";
+    landlordPhoneLabel.text = @"no landlord phone";
+  }
+  landlordNameLabel.textColor = [UIColor grayMedium];
+  if ([self.previousRental.landlordName length] > 0) {
+    landlordNameLabel.text = 
+      [self.previousRental.landlordName capitalizedString];
+    landlordNameLabel.textColor = [UIColor textColor];
+  }
+  landlordNameLabel.frame = CGRectMake(landlordNameLabel.frame.origin.x,
+    originX, landlordNameLabel.frame.size.width, 
+      landlordNameLabel.frame.size.height);
+  spacing += landlordNameLabel.frame.size.height;
+  // Reset it so when it is reused, it doesn't have a text from another cell
+  landlordEmailLabel.textColor = [UIColor grayMedium];
+  if ([self.previousRental.landlordEmail length] > 0) {
+    landlordEmailLabel.text = 
+      [self.previousRental.landlordEmail lowercaseString];
+    landlordEmailLabel.textColor = [UIColor blue];
+  }
+  landlordEmailLabel.frame = CGRectMake(landlordEmailLabel.frame.origin.x,
+    originX + spacing,
+      landlordEmailLabel.frame.size.width, 
+        landlordEmailLabel.frame.size.height);
+  spacing += landlordEmailLabel.frame.size.height;
+  // Reset it so when it is reused, it doesn't have a text from another cell
+  landlordPhoneLabel.textColor = [UIColor grayMedium];
+  if ([[self.previousRental.landlordPhone phoneNumberString] length] > 0) {
+    landlordPhoneLabel.text = 
+      [self.previousRental.landlordPhone phoneNumberString];
+    landlordPhoneLabel.textColor = [UIColor textColor];
+  }
+  landlordPhoneLabel.frame = CGRectMake(landlordPhoneLabel.frame.origin.x,
+    originX + spacing, landlordPhoneLabel.frame.size.width,
+      landlordPhoneLabel.frame.size.height);
 }
 
 - (void) loadFakeData1

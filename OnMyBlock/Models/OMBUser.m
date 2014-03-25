@@ -189,8 +189,8 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   // [OMBUser currentUser].userType  = OMBUserTypeLandlord;
   [OMBUser currentUser].uid       = 61;
 
-  [OMBUser currentUser].renterApplication.cats = YES;
-  [OMBUser currentUser].renterApplication.dogs = YES;
+  // [OMBUser currentUser].renterApplication.cats = YES;
+  // [OMBUser currentUser].renterApplication.dogs = YES;
 
   [[OMBUserStore sharedStore] addUser: [OMBUser currentUser]];
 

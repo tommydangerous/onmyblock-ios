@@ -15,6 +15,13 @@
 
 NSString *const LegalAnswerTextViewPlaceholder = @"Please explain...";
 
+@interface OMBLegalQuestionCell ()
+{
+  UILabel *answerLabel;
+}
+
+@end
+
 @implementation OMBLegalQuestionCell
 
 #pragma mark - Initializer
@@ -98,6 +105,12 @@ reuseIdentifier: (NSString *) reuseIdentifier
   _explanationTextView.textColor = [UIColor grayMedium];
   [self.contentView addSubview: _explanationTextView];
 
+  answerLabel = [UILabel new];
+  answerLabel.hidden = YES;
+  answerLabel.frame = CGRectMake(questionLabel.frame.origin.x, 0.0f,
+    questionLabel.frame.size.width, 22.0f);
+  [self.contentView addSubview: answerLabel];
+
   return self;
 }
 
@@ -113,6 +126,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
 + (UIFont *) fontForQuestionLabel
 {
   return [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
+}
+
++ (UIFont *) fontForQuestionLabelForOtherUser
+{
+  return [UIFont normalTextFont];
 }
 
 + (CGFloat) textViewHeight
@@ -181,6 +199,30 @@ atIndexPath: (NSIndexPath *) indexPath
   _explanationTextView.tag = indexPath.row;
 }
 
+- (void) loadData: (OMBLegalQuestion *) object
+atIndexPathForOtherUser: (NSIndexPath *) indexPath
+{
+  self.legalQuestion = object;
+
+  NSString *text = [NSString stringWithFormat: @"%i. %@",
+    indexPath.row + 1, self.legalQuestion.question];
+  questionLabel.font = [UIFont normalTextFont];
+  questionLabel.text = text;
+  CGRect rect1 = [questionLabel.text boundingRectWithSize:
+    CGSizeMake(questionLabel.frame.size.width, 9999)
+      options: NSStringDrawingUsesLineFragmentOrigin
+        attributes: @{ NSFontAttributeName: questionLabel.font }
+          context: nil];
+  questionLabel.frame = CGRectMake(questionLabel.frame.origin.x,
+    questionLabel.frame.origin.y, questionLabel.frame.size.width,
+      rect1.size.height);
+
+  noButton.hidden  = YES;
+  yesButton.hidden = YES;
+  lineView.hidden  = YES;
+  self.explanationTextView.hidden = YES;
+}
+
 - (void) loadLegalAnswer: (OMBLegalAnswer *) object
 {
   if (object) {
@@ -207,6 +249,30 @@ atIndexPath: (NSIndexPath *) indexPath
     [self yesButtonNotHighlighted];
     [self resetExplanationTextViewText];
   }
+}
+
+- (void) loadLegalAnswerForOtherUser: (OMBLegalAnswer *) object
+{
+  CGFloat padding = OMBPadding;
+
+  answerLabel.hidden = NO;
+  CGRect answerLabelRect = answerLabel.frame;
+  answerLabelRect.origin.y = questionLabel.frame.origin.y + (padding * 0.5) +
+    questionLabel.frame.size.height;
+  answerLabel.frame = answerLabelRect;
+  NSAttributedString *aString;
+  NSArray *strings = @[@"No", @"Yes"];
+  if (object.answer) {
+    aString = [NSString attributedStringWithStrings: strings
+      fonts: @[[UIFont normalTextFont], [UIFont normalTextFontBold]]
+        colors: @[[UIColor grayMedium], [UIColor textColor]]];
+  }
+  else {
+    aString = [NSString attributedStringWithStrings: strings
+      fonts: @[[UIFont normalTextFontBold], [UIFont normalTextFont]]
+        colors: @[[UIColor textColor], [UIColor grayMedium]]];
+  }
+  answerLabel.attributedText = aString;
 }
 
 - (void) loadLegalAnswer2: (OMBLegalAnswer *) object

@@ -168,8 +168,8 @@
     [[UICollectionViewFlowLayout alloc] init];
 
   // Collection view
-  CGFloat userCollectionViewHeight = (padding * 4) + 
-    ([OMBOtherUserProfileCell heightForCell] * 3);
+  CGFloat userCollectionViewHeight = (padding * 3) + 
+    ([OMBOtherUserProfileCell heightForCell] * 2);
   userCollectionView = [[UICollectionView alloc] initWithFrame:
     CGRectMake(0.0f, 0.0f, screenWidth, userCollectionViewHeight) 
       collectionViewLayout: layout];
@@ -255,11 +255,12 @@
 
   // Resize collection view
   CGFloat padding = OMBPadding;
-  CGFloat userCollectionViewHeight = (padding * 4) + 
-    ([OMBOtherUserProfileCell heightForCell] * 3);
+  // Use the padding for inset top, bottom and spacing in between each row
+  CGFloat userCollectionViewHeight = (padding * 3) +
+    [OMBOtherUserProfileCell heightForCell] * 2;
   if ([user isLandlord]) {
-    userCollectionViewHeight = (padding * 3) + 
-      ([OMBOtherUserProfileCell heightForCell] * 2);
+    userCollectionViewHeight = (padding * 2) + 
+      ([OMBOtherUserProfileCell heightForCell] * 1);
   }
   CGRect collectionViewRect = userCollectionView.frame;
   collectionViewRect.size.height = userCollectionViewHeight;
@@ -626,19 +627,20 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.textLabel.font = [UIFont normalTextFont];
       cell.textLabel.textColor = [UIColor textColor];
       
-      NSString *string = @"";
-      if(row == OMBOtherUserProfileSectionPetRowHeader + 1){
-        if([self renterApplication].dogs)
-          string = @"Dog";
+      // NSString *string = @"";
+      if (row == OMBOtherUserProfileSectionPetRowHeader + 1) {
+        if ([self renterApplication].dogs)
+          cell.textLabel.text = @"I do have a dog";
         else
-          string = @"Cat";
+          cell.textLabel.text = @"I do not have a dog";
       }
-      // More than 2
-      else{
-         string = @"Cat";
+      else {
+        if ([self renterApplication].cats)
+          cell.textLabel.text = @"I do have a cat";
+        else
+          cell.textLabel.text = @"I do not have a cat";
       }
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      cell.textLabel.text = [@"I have a " stringByAppendingString: string];
       return cell;
     }
   }
@@ -733,19 +735,19 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBLegalQuestionCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: OMBLegalQuestionID];
       
-      [cell enableButton: NO];
-      cell.explanationTextView.editable = NO;
-      cell.explanationTextView.scrollEnabled = YES;
+      // [cell enableButton: NO];
+      // cell.explanationTextView.editable = NO;
+      // cell.explanationTextView.scrollEnabled = YES;
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       OMBLegalQuestion *legalQuestion = [[[OMBLegalQuestionStore sharedStore]
         questionsSortedByQuestion] objectAtIndex: row - 1];
       // Load the question
-      [cell loadData: legalQuestion atIndexPath:
+      [cell loadData: legalQuestion atIndexPathForOtherUser:
         [NSIndexPath indexPathForRow: row - 1  inSection:section]];
       // Load the answer
       OMBLegalAnswer *legalAnswer = [legalAnswers objectForKey:
         [NSNumber numberWithInt: legalQuestion.uid]];
-      [cell loadLegalAnswer2: legalAnswer];
+      [cell loadLegalAnswerForOtherUser: legalAnswer];
       return cell;
     }
   }
@@ -893,12 +895,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Pets
   else if (section == OMBOtherUserProfileSectionPets) {
-    if (![user isLandlord]) {
-      if (row == OMBOtherUserProfileSectionPetRowHeader)
-        return [OMBOtherUserProfileHeaderCell heightForCell];
-      else
-        return 58.0f;
-    }
+    // if (![user isLandlord]) {
+    //   if (row == OMBOtherUserProfileSectionPetRowHeader)
+    //     return [OMBOtherUserProfileHeaderCell heightForCell];
+    //   else
+    //     return 58.0f;
+    // }
+    return 0.0f;
   }
   // Rental History
   else if (section == OMBOtherUserProfileSectionPreviousRental) {
@@ -932,17 +935,19 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
           CGSizeMake([OMBLegalQuestionCell widthForQuestionLabel], 9999)
             options: NSStringDrawingUsesLineFragmentOrigin
               attributes: @{ NSFontAttributeName:
-                [OMBLegalQuestionCell fontForQuestionLabel] }
+                [OMBLegalQuestionCell fontForQuestionLabelForOtherUser] }
                   context: nil];
-        float padding = 20.0f;
-        float height  = padding + rect.size.height + padding +
-        [OMBLegalQuestionCell buttonSize] + padding;
+        CGFloat padding = OMBPadding;
+        // float height  = padding + rect.size.height + padding +
+        // [OMBLegalQuestionCell buttonSize] + padding;
+        CGFloat height = padding + rect.size.height + 
+          (padding * 0.5) + 22.0f + padding;
         // If the answer is yes, show explain
-        OMBLegalAnswer *legalAnswer = [legalAnswers objectForKey:
-          [NSNumber numberWithInt: legalQuestion.uid]];
-        if (legalAnswer && legalAnswer.answer && [legalAnswer.explanation stripWhiteSpace].length){
-          height += padding + [OMBLegalQuestionCell textViewHeight] + padding;
-        }
+        // OMBLegalAnswer *legalAnswer = [legalAnswers objectForKey:
+        //   [NSNumber numberWithInt: legalQuestion.uid]];
+        // if (legalAnswer && legalAnswer.answer && [legalAnswer.explanation stripWhiteSpace].length){
+        //   height += padding + [OMBLegalQuestionCell textViewHeight] + padding;
+        // }
         return height;
       }
     }
@@ -1126,6 +1131,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   // User scrool
   if ([user isLandlord]) {
     //userSchoolLabel.text = [user.landlordType capitalizedString];
+    userSchoolLabel.text = @"Property Owner";
   }
   else {
     if (user.school && [user.school length])

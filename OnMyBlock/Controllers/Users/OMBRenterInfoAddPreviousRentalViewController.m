@@ -333,17 +333,11 @@
               [NSDate dateWithTimeIntervalSince1970: moveOutDate]];
           }
         }
-        // First name
-        else if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowFirstName) {
+        // Full name
+        else if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowName) {
           imageName         = @"user_icon.png";
           key               = @"landlord_name";
-          placeholderString = [landlord stringByAppendingString: @"first name"];
-        }
-        // Last name
-        else if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowLastName) {
-          imageName         = @"user_icon.png";
-          key               = @"landlord_lastname";
-          placeholderString = [landlord stringByAppendingString: @"last name"];
+          placeholderString = [landlord stringByAppendingString: @"full name"];
         }
         // Email
         else if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowEmail) {
@@ -417,7 +411,7 @@
 {
   if(tableView == self.table){
     if (section == OMBRenterInfoAddPreviousRentalSectionFields)
-      return 13;
+      return 12;
     else if (section == OMBRenterInfoAddPreviousRentalSectionSpacing)
       return 1;
   }
@@ -746,12 +740,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [valueDictionary setObject: string forKey: @"rent"];
     }
     // Fields
-    else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowFirstName) {
+    else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowName) {
       [valueDictionary setObject: string forKey: @"landlordName"];
-    }
-    else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowLastName) {
-      // New atrribute
-      [valueDictionary setObject: string forKey: @"landlordLastName"];
     }
     else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowEmail) {
       [valueDictionary setObject: string forKey: @"landlordEmail"];

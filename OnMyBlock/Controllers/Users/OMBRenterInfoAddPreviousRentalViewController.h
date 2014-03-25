@@ -30,8 +30,7 @@ typedef NS_ENUM(NSInteger, OMBRenterInfoAddPreviousRentalSectionFieldsRow) {
   // Fields
   OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate,
   OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveOutDate,
-  OMBRenterInfoAddPreviousRentalSectionFieldsRowFirstName,
-  OMBRenterInfoAddPreviousRentalSectionFieldsRowLastName,
+  OMBRenterInfoAddPreviousRentalSectionFieldsRowName,
   OMBRenterInfoAddPreviousRentalSectionFieldsRowEmail,
   OMBRenterInfoAddPreviousRentalSectionFieldsRowPhone,
 };
