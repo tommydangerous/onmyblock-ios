@@ -18,7 +18,12 @@
 typedef NS_ENUM(NSInteger, OMBOtherUserProfileSection) {
   OMBOtherUserProfileSectionAbout,
   OMBOtherUserProfileSectionStats,
+  OMBOtherUserProfileSectionCoapplicants,
+  OMBOtherUserProfileSectionCosigners,
+  OMBOtherUserProfileSectionPets,
+  OMBOtherUserProfileSectionPreviousRental,
   OMBOtherUserProfileSectionEmployment,
+  OMBOtherUserProfileSectionLegalQuestion,
   OMBOtherUserProfileSectionListings
 };
 
@@ -31,9 +36,29 @@ typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionAboutRow) {
 typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionStatsRow) {
   OMBOtherUserProfileSectionStatsRowCollectionView
 };
+// Coapplicants
+typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionCoapplicantsRow) {
+  OMBOtherUserProfileSectionCoapplicantsRowHeader
+};
+// Cosigners
+typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionCosignersRow) {
+  OMBOtherUserProfileSectionCosignersRowHeader
+};
+// Pets
+typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionPetsRow) {
+  OMBOtherUserProfileSectionPetRowHeader
+};
+// Rental History
+typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionPreviousRentalRow) {
+  OMBOtherUserProfileSectionPreviousRentalRowHeader
+};
 // Employment
 typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionEmploymentRow) {
   OMBOtherUserProfileSectionEmploymentRowHeader
+};
+// Legal Question
+typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionLegalQuestionsRow) {
+  OMBOtherUserProfileSectionLegalQuestionsRowHeader
 };
 // Listings
 typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionListingsRow) {
@@ -53,6 +78,7 @@ typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionListingsRow) {
   UIToolbar *contactToolbar;
   UIBarButtonItem *emailBarButtonItem;
   OMBGradientView *gradient;
+  NSMutableDictionary *legalAnswers;
   UIBarButtonItem *phoneBarButtonItem;
   UIView *scaleBackView;
   OMBUser *user;
@@ -61,6 +87,7 @@ typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionListingsRow) {
   OMBCenteredImageView *userIconImageView;
   UILabel *userNameLabel;
   UILabel *userSchoolLabel;
+  
 }
 
 #pragma mark - Initializer

@@ -17,6 +17,7 @@ userUID: (NSUInteger) userUID
 {
   if (!(self = [super init])) return nil;
 
+  self.resourceName = resourceName;
   NSString *string = [NSString stringWithFormat: @"%@/%@",
     OnMyBlockAPIURL, resourceName];
   [self setRequestWithString: string parameters: @{

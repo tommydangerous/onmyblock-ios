@@ -28,9 +28,12 @@
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
   if ([self successful]) {
-    if ([self.delegate respondsToSelector: @selector(JSONDictionary:)]) {
+    if([self.delegate respondsToSelector: @selector(JSONDictionary:forResourceName:)]){
+      [self.delegate JSONDictionary:[self json] forResourceName: _resourceName];
+    }
+    else if ([self.delegate respondsToSelector: @selector(JSONDictionary:)]) {
       [self.delegate JSONDictionary: [self json]];
-    }    
+    }
   }
   else {
     [self createInternalErrorWithDomain: OMBConnectionErrorDomainModel

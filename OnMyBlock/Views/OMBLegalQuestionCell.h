@@ -40,8 +40,10 @@ extern NSString *const LegalAnswerTextViewPlaceholder;
 
 #pragma mark - Instance Methods
 
+- (void) enableButton:(BOOL) enabled;
 - (void) loadData: (OMBLegalQuestion *) object 
 atIndexPath: (NSIndexPath *) indexPath;
 - (void) loadLegalAnswer: (OMBLegalAnswer *) object;
+- (void) loadLegalAnswer2: (OMBLegalAnswer *) object;
 
 @end
