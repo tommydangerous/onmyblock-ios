@@ -39,6 +39,9 @@
   else if ([[payoutMethod.payoutType lowercaseString] isEqualToString: 
     @"venmo"])
     string = @"Venmo";
+  else if ([[payoutMethod.payoutType lowercaseString] isEqualToString:
+     @"credit_card"])
+    string = @"Credit Card";
   self.title = [NSString stringWithFormat: @"Edit %@", string];
 
   return self;

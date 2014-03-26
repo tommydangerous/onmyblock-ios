@@ -178,12 +178,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       labelString = @"Zip";
       key = @"zip";
     }
+    
     cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
       size: cell.iconImageView.bounds.size];
     cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     cell.textField.delegate  = self;
     cell.textField.indexPath = indexPath;
-    
+    cell.textField.placeholder = labelString;
     [cell.textField addTarget: self
       action: @selector(textFieldDidChange:)
         forControlEvents: UIControlEventEditingChanged];
@@ -373,7 +374,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     completion: nil];
 }
 
-
 - (void) cancelFromInputAccessoryView
 {
   [self.view endEditing: YES];
@@ -384,7 +384,20 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) done
 {
-  
+  [[OMBUser currentUser] createPayoutMethodWithDictionary:
+   @{
+     @"active":      [NSNumber numberWithBool: YES],
+     @"email":       @"aguilarpgc",
+     @"payoutType":  @"credit_card",
+     @"primary":     [NSNumber numberWithBool: YES]
+     } withCompletion: ^(NSError *error) {
+       if(error)
+         NSLog(@"ERROR: %@",error.description);
+       [[self appDelegate].container stopSpinning];
+       [self cancel];
+  }];
+  [[self appDelegate].container startSpinning];
+
 }
 
 - (void) doneFromInputAccessoryView

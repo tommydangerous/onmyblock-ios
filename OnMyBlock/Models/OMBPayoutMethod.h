@@ -21,7 +21,8 @@ extern NSString *const OMBPayoutMethodNotificationFirst;
 
 typedef enum {
   OMBPayoutMethodPayoutTypePayPal,
-  OMBPayoutMethodPayoutTypeVenmo
+  OMBPayoutMethodPayoutTypeVenmo,
+  OMBPayoutMethodPayoutTypeCreditCard,
 } OMBPayoutMethodPayoutType;
 
 @interface OMBPayoutMethod : NSObject
@@ -48,6 +49,7 @@ typedef enum {
 
 - (BOOL) isPayPal;
 - (BOOL) isVenmo;
+- (BOOL) isCreditCard;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (OMBPayoutMethodPayoutType) type;
 
