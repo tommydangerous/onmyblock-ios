@@ -57,6 +57,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
   else if ([payoutType isEqualToString: @"venmo"]) {
     [self setUpForVenmo: object primary: object.primary];
   }
+  else if ([payoutType isEqualToString: @"credit_card"]) {
+    [self setUpForCreditCard: object primary: object.primary];
+  }
 
   middleLabel.text = [object.email lowercaseString];
 }
@@ -89,6 +92,24 @@ reuseIdentifier: (NSString *) reuseIdentifier
   }
   objectImageView.image = [UIImage imageNamed: @"venmo_icon.png"];
   // [self setUpTypeAndPrimary: object];
+  if (object.primary)
+    self.accessoryType = UITableViewCellAccessoryCheckmark;
+  else
+    self.accessoryType = UITableViewCellAccessoryNone;
+}
+
+
+- (void) setUpForCreditCard: (OMBPayoutMethod *) object primary: (BOOL) primary
+{
+  topLabel.text = @"Credit Card";
+  if (primary) {
+    imageHolder.backgroundColor = [UIColor whiteColor];
+  }
+  else {
+    imageHolder.backgroundColor = [UIColor grayLight];
+  }
+  objectImageView.image = [UIImage imageNamed: @"credit_card_icon.png"];
+  
   if (object.primary)
     self.accessoryType = UITableViewCellAccessoryCheckmark;
   else

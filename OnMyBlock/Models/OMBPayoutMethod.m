@@ -57,6 +57,11 @@ NSString *const OMBPayoutMethodNotificationFirst =
   return [self type] == OMBPayoutMethodPayoutTypeVenmo;
 }
 
+- (BOOL) isCreditCard
+{
+  return [self type] == OMBPayoutMethodPayoutTypeCreditCard;
+}
+
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
   NSDateFormatter *dateFormatter = [NSDateFormatter JSONDateParser];
@@ -129,6 +134,9 @@ NSString *const OMBPayoutMethodNotificationFirst =
   }
   else if ([[_payoutType lowercaseString] isEqualToString: @"venmo"]) {
     return OMBPayoutMethodPayoutTypeVenmo;
+  }
+  else if ([[_payoutType lowercaseString] isEqualToString: @"credit_card"]) {
+    return OMBPayoutMethodPayoutTypeCreditCard;
   }
   return OMBPayoutMethodPayoutTypeVenmo;
 }
