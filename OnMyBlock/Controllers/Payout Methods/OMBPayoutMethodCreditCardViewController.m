@@ -172,11 +172,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       imageName         = @"business_icon_black";
       labelString = @"Billing address";
       key = @"billing_address";
+      cell.textField.keyboardType = UIKeyboardTypeDefault;
     }
     if (row == OMBPayoutMethodCreditCardSectionPersonalRowZip) {
       imageName         = @"location_icon_black.png";
       labelString = @"Zip";
       key = @"zip";
+      cell.textField.keyboardType = UIKeyboardTypeNumberPad;
     }
     
     cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
@@ -224,6 +226,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       border.frame = CGRectMake(20.0f, 0.0f,
         cell.contentView.frame.size.width - 20.0f, borderHeight);
       [cell.layer addSublayer: border];
+      cell.textField.keyboardType = UIKeyboardTypeNumberPad;
     }
     // Expiry CCV
     else if (row == OMBPayoutMethodCreditCardSectionCreditCardRowExpiration) {
@@ -248,6 +251,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.firstTextField.delegate  = self;
       cell.firstTextField.font = [UIFont normalTextFont];
       cell.firstTextField.indexPath = indexPath;
+      cell.firstTextField.keyboardType = UIKeyboardTypeNumberPad;
       cell.firstTextField.placeholder = firstlabelString;
       [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
         forControlEvents: UIControlEventEditingChanged];
@@ -259,6 +263,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.secondTextField.indexPath =
       [NSIndexPath indexPathForRow: OMBPayoutMethodCreditCardSectionCreditCardRowCCV
         inSection: indexPath.section] ;
+      cell.secondTextField.keyboardType = UIKeyboardTypeNumberPad;
       cell.secondTextField.placeholder = secondlabelString;
       [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
         forControlEvents: UIControlEventEditingChanged];
