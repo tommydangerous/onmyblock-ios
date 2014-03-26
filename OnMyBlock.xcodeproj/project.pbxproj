@@ -487,6 +487,7 @@
 		DE9927D518BE887F0064A902 /* OMBRateFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9927D418BE887F0064A902 /* OMBRateFeedbackViewController.m */; };
 		DE9E7A9718D104AE00617563 /* OMBMapFilterLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9E7A9618D104AE00617563 /* OMBMapFilterLocationViewController.m */; };
 		DE9FF67418CF6A500017AA15 /* OMBTopDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */; };
+		DEA0560418E230AD002A962C /* OMBPayoutMethodCreditCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DEA0560318E230AD002A962C /* OMBPayoutMethodCreditCardViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1420,6 +1421,8 @@
 		DE9E7A9618D104AE00617563 /* OMBMapFilterLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterLocationViewController.m; sourceTree = "<group>"; };
 		DE9FF67218CF6A500017AA15 /* OMBTopDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTopDetailView.h; sourceTree = "<group>"; };
 		DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTopDetailView.m; sourceTree = "<group>"; };
+		DEA0560218E230AC002A962C /* OMBPayoutMethodCreditCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodCreditCardViewController.h; sourceTree = "<group>"; };
+		DEA0560318E230AD002A962C /* OMBPayoutMethodCreditCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodCreditCardViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2890,6 +2893,8 @@
 				ABE4FBF5189045E40009D643 /* OMBSelectPayoutMethodViewController.m */,
 				ABE4FBFE18909C6E0009D643 /* OMBPayoutMethodEditViewController.h */,
 				ABE4FBFF18909C6E0009D643 /* OMBPayoutMethodEditViewController.m */,
+				DEA0560218E230AC002A962C /* OMBPayoutMethodCreditCardViewController.h */,
+				DEA0560318E230AD002A962C /* OMBPayoutMethodCreditCardViewController.m */,
 			);
 			path = "Payout Methods";
 			sourceTree = "<group>";
@@ -3371,6 +3376,7 @@
 				ABB911C618998FB30046611F /* AFURLSessionManager.m in Sources */,
 				ABE28170186A068B00A5D14E /* OMBInboxViewController.m in Sources */,
 				AB4ED2E71884807F009AFB01 /* OMBOpenHouseDeleteConnection.m in Sources */,
+				DEA0560418E230AD002A962C /* OMBPayoutMethodCreditCardViewController.m in Sources */,
 				AB9D6111188CEFDE00C9AC64 /* SDWebImageCompat.m in Sources */,
 				ABED5FCB1895975400AD630C /* OMBCollectionViewCell.m in Sources */,
 				AB6155B8184D9A3E00A193C7 /* OMBPreviousRentalsListViewController.m in Sources */,

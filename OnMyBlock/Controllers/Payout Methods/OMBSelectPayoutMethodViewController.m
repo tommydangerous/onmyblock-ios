@@ -8,7 +8,9 @@
 
 #import "OMBSelectPayoutMethodViewController.h"
 
+#import "OMBNavigationController.h"
 #import "OMBPayoutMethodCell.h"
+#import "OMBPayoutMethodCreditCardViewController.h"
 #import "OMBPayoutMethodPayPalViewController.h"
 #import "OMBPayoutMethodVenmoViewController.h"
 #import "UIColor+Extensions.h"
@@ -72,6 +74,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.iconViewBackgroundColor = [UIColor paypalBlue];
       cell.nameLabel.text = @"PayPal";
     }
+    // Credit Card
+    else if (indexPath.row == 2) {
+      cell.detailLabel.text = @"Arrives within 5-7 business\n"
+      @"days except holidays.";
+      cell.iconImageView.image = [UIImage imageNamed: @"credit_card_icon.png"];
+      cell.iconView.backgroundColor = UIColor.whiteColor;
+      cell.nameLabel.text = @"Credit Card";
+    }
     if (indexPath.row == 0) {
       CALayer *topBorder = [CALayer layer];
       topBorder.backgroundColor = tableView.separatorColor.CGColor;
@@ -97,7 +107,8 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Venmo
   // Paypal
-  return 2;
+  // Credit Card
+  return 3;
 }
 
 #pragma mark - Protocol UITableViewDelegate
@@ -114,7 +125,14 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // PayPal
     else if (indexPath.row == 1) {
       [self.navigationController pushViewController:
-        [[OMBPayoutMethodPayPalViewController alloc] init] animated: YES];
+       [[OMBPayoutMethodPayPalViewController alloc] init] animated: YES];
+    }
+    // Credit Card
+    else if (indexPath.row == 2) {
+      [self presentViewController:
+        [[OMBNavigationController alloc] initWithRootViewController:
+          [[OMBPayoutMethodCreditCardViewController alloc] init]] animated: YES
+            completion: nil];
     }
   }
   [self.table deselectRowAtIndexPath: indexPath animated: YES];
