@@ -76,6 +76,7 @@ typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionListingsRow) {
   CGFloat backViewOriginY;
   UIBarButtonItem *contactBarButtonItem;
   UIToolbar *contactToolbar;
+  UIBarButtonItem *editBarButtonItem;
   UIBarButtonItem *emailBarButtonItem;
   OMBGradientView *gradient;
   NSMutableDictionary *legalAnswers;

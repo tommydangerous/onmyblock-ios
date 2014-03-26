@@ -9,6 +9,7 @@
 #import "OMBOtherUserProfileViewController.h"
 
 #import "NSString+Extensions.h"
+#import "NSString+PhoneNumber.h"
 #import "OMBCenteredImageView.h"
 #import "OMBCosigner.h"
 #import "OMBCosignerCell.h"
@@ -17,6 +18,7 @@
 #import "OMBGradientView.h"
 #import "OMBManageListingsCell.h"
 #import "OMBMessageDetailViewController.h"
+#import "OMBMyRenterProfileViewController.h"
 #import "OMBLegalAnswer.h"
 #import "OMBLegalAnswerListConnection.h"
 #import "OMBLegalQuestion.h"
@@ -77,7 +79,13 @@
     style: UIBarButtonItemStylePlain target: self action: @selector(contact)];
   doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
     style: UIBarButtonItemStylePlain target: self action: @selector(done)];
-
+  editBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Edit"
+    style: UIBarButtonItemStylePlain target: self action: @selector(edit)];
+  UIFont *boldFont = [UIFont mediumTextFontBold];
+  [editBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+      } forState: UIControlStateNormal];
+  
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenHeight   = screen.size.height;
   CGFloat screenWidth    = screen.size.width;
@@ -247,6 +255,8 @@
   
   if (![user isCurrentUser]) {
     self.navigationItem.rightBarButtonItem = contactBarButtonItem;
+  }else{
+    self.navigationItem.rightBarButtonItem = editBarButtonItem;
   }
   
   legalAnswers = [NSMutableDictionary dictionary];
@@ -560,7 +570,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBRoommateCell alloc] initWithStyle: UITableViewCellStyleDefault
           reuseIdentifier: RoommateID];
       [cell loadData: [[self objectsFromRoommates] objectAtIndex: row - 1]];
-      cell.selectionStyle = UITableViewCellSelectionStyleNone;
       return cell;
     }
   }
@@ -590,6 +599,15 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBCosignerCell alloc] initWithStyle: UITableViewCellStyleDefault
           reuseIdentifier: CosignerID];
       [cell loadData: [[self cosigners] objectAtIndex: row - 1]];
+      cell.emailButton.tag = row - 1;
+      [cell.emailButton addTarget:self
+        action:@selector(emailCosigner:)
+          forControlEvents:UIControlEventTouchUpInside];
+      
+      cell.phoneButton.tag = row - 1;
+      [cell.phoneButton addTarget:self
+        action:@selector(phoneCallCosigner:)
+          forControlEvents:UIControlEventTouchUpInside];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       return cell;
     }
@@ -735,9 +753,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBLegalQuestionCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: OMBLegalQuestionID];
       
-      // [cell enableButton: NO];
-      // cell.explanationTextView.editable = NO;
-      // cell.explanationTextView.scrollEnabled = YES;
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       OMBLegalQuestion *legalQuestion = [[[OMBLegalQuestionStore sharedStore]
         questionsSortedByQuestion] objectAtIndex: row - 1];
@@ -908,8 +923,21 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if (![user isLandlord]) {
       if (row == OMBOtherUserProfileSectionPreviousRentalRowHeader)
         return [OMBOtherUserProfileHeaderCell heightForCell];
-      else
-        return [OMBPreviousRentalCell heightForCell];
+      else{
+        CGFloat adjusment = 0.0;
+        OMBPreviousRental *previousRental =
+          [[self objectsFromPreviousRental] objectAtIndex: row - 1];
+        if([previousRental.landlordName length] > 0)
+          adjusment += 22.0f;
+        if([previousRental.landlordEmail length] > 0)
+          adjusment += 22.0f;
+        if([[previousRental.landlordPhone phoneNumberString] length] > 0)
+          adjusment += 22.0f;
+        
+        if(adjusment > 0.0)
+          adjusment += padding;
+        return [OMBPreviousRentalCell heightForCell2] + adjusment;
+      }
     }
   }
   // Employment
@@ -943,11 +971,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         CGFloat height = padding + rect.size.height + 
           (padding * 0.5) + 22.0f + padding;
         // If the answer is yes, show explain
-        // OMBLegalAnswer *legalAnswer = [legalAnswers objectForKey:
-        //   [NSNumber numberWithInt: legalQuestion.uid]];
-        // if (legalAnswer && legalAnswer.answer && [legalAnswer.explanation stripWhiteSpace].length){
-        //   height += padding + [OMBLegalQuestionCell textViewHeight] + padding;
-        // }
+        OMBLegalAnswer *legalAnswer = [legalAnswers objectForKey:
+          [NSNumber numberWithInt: legalQuestion.uid]];
+        if (legalAnswer && legalAnswer.answer && [legalAnswer.explanation stripWhiteSpace].length){
+          height += [OMBLegalQuestionCell textViewHeight];
+        }
         return height;
       }
     }
@@ -972,6 +1000,18 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
 
+  // Coapplicants
+  if (section == OMBOtherUserProfileSectionCoapplicants){
+    OMBUser *userRoommate =
+      ((OMBRoommate *)[[self objectsFromRoommates]
+        objectAtIndex: row - 1]).roommate;
+    // If is an OMB user
+    if(userRoommate){
+      [self.navigationController pushViewController:
+       [[OMBOtherUserProfileViewController alloc] initWithUser: userRoommate] animated:YES];
+    }
+  }
+  
   // Listings
   if (section == OMBOtherUserProfileSectionListings) {
     if (row > OMBOtherUserProfileSectionListingsRowHeader) {
@@ -1019,22 +1059,40 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }];
 }
 
-- (void) emailUser
+- (void) edit
+{
+  [self.navigationController pushViewController:
+    [[OMBMyRenterProfileViewController alloc] init] animated:YES];
+}
+
+- (void) email: (NSArray *)toRecipients
 {
   if ([MFMailComposeViewController canSendMail]) {
-    MFMailComposeViewController *mailer = 
-      [[MFMailComposeViewController alloc] init];
+    MFMailComposeViewController *mailer =
+    [[MFMailComposeViewController alloc] init];
     mailer.mailComposeDelegate = self;
     // Subject
     [mailer setSubject: @"Hello"];
     // Recipients
-    NSArray *toRecipients = @[user.email];
     [mailer setToRecipients: toRecipients];
     // Body
     NSString *emailBody = @"";
     [mailer setMessageBody: emailBody isHTML: NO];
-    [self presentViewController: mailer animated: YES completion: nil];
+    if(mailer)
+      [self presentViewController: mailer animated: YES completion: nil];
   }
+}
+
+- (void) emailUser
+{
+  [self email:@[user.email]];
+}
+
+- (void) emailCosigner:(id)sender
+{
+  OMBCosigner *cosigner = [[self cosigners]
+    objectAtIndex:((UIButton *)sender).tag];
+  [self email:@[cosigner.email]];
 }
 
 - (void) fetchObjectsForResourceName: (NSString *) resourceName
@@ -1077,12 +1135,24 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES];
 }
 
-- (void) phoneCallUser
+- (void) phoneCall:(NSString *)phone
 {
-  if ([user.phone length]) {
-    NSString *string = [@"telprompt:" stringByAppendingString: user.phone];
+  if ([phone length]) {
+    NSString *string = [@"telprompt:" stringByAppendingString: phone];
     [[UIApplication sharedApplication] openURL: [NSURL URLWithString: string]];
   }
+}
+
+- (void) phoneCallCosigner:(id)sender
+{
+  OMBCosigner *cosigner =[[self cosigners]
+    objectAtIndex:((UIButton *)sender).tag];
+  [self phoneCall: cosigner.phone];
+}
+
+- (void) phoneCallUser
+{
+  [self phoneCall: user.phone];
 }
 
 - (OMBRenterApplication *) renterApplication
