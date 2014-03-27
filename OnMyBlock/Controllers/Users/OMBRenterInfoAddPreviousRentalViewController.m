@@ -310,8 +310,10 @@
         // Move-in Date
         if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveInDate) {
           imageName         = @"calendar_icon_black.png";
+          key = @"";
           placeholderString = @"Move in";
           cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+          cell.textField.text = @"";
           cell.textField.userInteractionEnabled = NO;
           if (moveInDate) {
             NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
@@ -323,8 +325,10 @@
         // Move-out Date
         else if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowMoveOutDate) {
           imageName         = @"calendar_icon_black.png";
+          key = @"";
           placeholderString = @"Move out";
           cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+          cell.textField.text = @"";
           cell.textField.userInteractionEnabled = NO;
           if (moveOutDate) {
             NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
@@ -336,20 +340,20 @@
         // Full name
         else if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowName) {
           imageName         = @"user_icon.png";
-          key               = @"landlord_name";
+          key               = @"landlordName";
           placeholderString = [landlord stringByAppendingString: @"full name"];
         }
         // Email
         else if(row == OMBRenterInfoAddPreviousRentalSectionFieldsRowEmail) {
           imageName         = @"messages_icon_dark.png";
-          key               = @"landlord_email";
+          key               = @"landlordEmail";
           placeholderString = [landlord stringByAppendingString: @"email"];
           cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
         }
         // Phone
         else if (row == OMBRenterInfoAddPreviousRentalSectionFieldsRowPhone) {
           imageName         = @"phone_icon.png";
-          key               = @"landlord_phone";
+          key               = @"landlordPhone";
           placeholderString = [landlord stringByAppendingString: @"phone"];
           cell.textField.keyboardType = UIKeyboardTypePhonePad;
         }
@@ -358,6 +362,7 @@
         
         if(key.length)
           cell.textField.text =[valueDictionary objectForKey: key];
+          
         cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         cell.textField.delegate  = self;
         cell.textField.indexPath = indexPath;
@@ -365,6 +370,7 @@
         [cell.textField addTarget: self
           action: @selector(textFieldDidChange:)
             forControlEvents: UIControlEventEditingChanged];
+        
         return cell;
       }
     }
@@ -460,23 +466,22 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   
   if(tableView == self.table){
     if (section == OMBRenterInfoAddPreviousRentalSectionFields) {
-      // Switch On
-      if(onCampus){
-        switch (indexPath.row) {
-          case OMBRenterInfoAddPreviousRentalSectionFieldsRowAddress:
-          case OMBRenterInfoAddPreviousRentalSectionFieldsRowCity:
-          case OMBRenterInfoAddPreviousRentalSectionFieldsRowState:
-          case OMBRenterInfoAddPreviousRentalSectionFieldsRowMonthRent:
+      
+      switch (indexPath.row) {
+          // Switch On
+        case OMBRenterInfoAddPreviousRentalSectionFieldsRowAddress:
+        case OMBRenterInfoAddPreviousRentalSectionFieldsRowCity:
+        case OMBRenterInfoAddPreviousRentalSectionFieldsRowState:
+        case OMBRenterInfoAddPreviousRentalSectionFieldsRowMonthRent:
+          if(onCampus)
             return 0.0f;
-        }
-      }
-      // Switch Off
-      else{
-        switch (indexPath.row) {
-          case OMBRenterInfoAddPreviousRentalSectionFieldsRowSchool:
+          break;
+          // Switch Off
+        case OMBRenterInfoAddPreviousRentalSectionFieldsRowSchool:
+          if(!onCampus)
             return 0.0f;
-        }
       }
+      
       // Two Fields in one row
       if(indexPath.row == OMBRenterInfoAddPreviousRentalSectionFieldsRowZip)
         return 0.0f;
@@ -778,6 +783,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       addressTableView.hidden = YES;
     }
   }
+  NSLog(@"DICTIONARY :  %@",[valueDictionary description]);
 }
 
 - (void) updatePicker
