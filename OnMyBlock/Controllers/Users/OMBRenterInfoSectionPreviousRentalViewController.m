@@ -35,8 +35,9 @@
 {
   [super loadView];
   
-  [self setEmptyLabelText: @"You have no rental history.\n"
-    @"Adding a previous rental will greatly increase your acceptance rate."];
+  [self setEmptyLabelText: @"Most landlords prefer to see a \n"
+    @"rental history of at least 3 \n"
+    @"previous places."];
   
   [addButton setTitle: @"Add Previous Rental" forState: UIControlStateNormal];
   [addButtonMiddle setTitle: @"Add Previous Rental" forState: UIControlStateNormal];

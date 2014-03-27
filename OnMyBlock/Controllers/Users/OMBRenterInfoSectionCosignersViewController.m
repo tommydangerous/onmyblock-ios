@@ -38,8 +38,8 @@
 {
   [super loadView];
   
-  [self setEmptyLabelText: @"You have no co-signers.\nAdding a co-signer "
-    @"will greatly increase your acceptance rate."];
+  [self setEmptyLabelText: @"Some landlords require a co-signer \n"
+    @"If you have one, add them here."];
 
   [addButton setTitle: @"Add Co-signer" forState: UIControlStateNormal];
   [addButtonMiddle setTitle: @"Add Co-signer" forState: UIControlStateNormal];

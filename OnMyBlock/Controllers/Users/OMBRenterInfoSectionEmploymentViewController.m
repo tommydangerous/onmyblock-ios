@@ -33,7 +33,7 @@
 {
   if (!(self = [super initWithUser: object])) return nil;
   
-  self.title = @"Work History";
+  self.title = @"Work & School History";
   
   return self;
 }
@@ -61,8 +61,8 @@
     forState: UIControlStateNormal];
   self.table.tableHeaderView = linkedInButton;
   
-  [self setEmptyLabelText: @"You have no work history.\nAdding a employment "
-   @"will greatly increase your acceptance rate."];
+  [self setEmptyLabelText: @"Have jobs or involved on campus? \n"
+   @"Add them there or connect with LinkedIn below."];
   
   [addButton setTitle: @"Add Employment" forState: UIControlStateNormal];
   [addButtonMiddle setTitle: @"Add Employment" forState: UIControlStateNormal];
