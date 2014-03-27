@@ -249,7 +249,7 @@
     doneBarButtonItemForTextFieldToolbar,
     rightPadding
   ];
-  textFieldToolbar.tintColor = [UIColor blue];
+  textFieldToolbar.tintColor = [UIColor blueDark];
   aboutTextView.inputAccessoryView = textFieldToolbar;
 }
 
@@ -491,7 +491,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       NSString *imageName = @"user_icon.png";
       NSString *key;
       NSString *labelString;
-      // First name
+      // First name & Last Name
       if (row == OMBMyRenterProfileSectionUserInfoRowFirstName) {
         imageName = @"user_icon.png";
         NSString *nameLabelString = @"First name";
@@ -514,6 +514,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
         cell.firstTextField.delegate  = self;
         cell.firstTextField.indexPath = indexPath;
+        cell.firstTextField.keyboardType = UIKeyboardTypeDefault;
         cell.firstTextField.placeholder = [nameLabelString capitalizedString];
         cell.firstTextField.text = [valueDictionary objectForKey: @"firstName"];
         cell.firstTextField.text = [cell.firstTextField.text capitalizedString];
@@ -531,6 +532,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.secondTextField.indexPath =
           [NSIndexPath indexPathForRow:OMBMyRenterProfileSectionUserInfoRowLastName
             inSection:indexPath.section] ;
+        cell.secondTextField.keyboardType = UIKeyboardTypeDefault;
         cell.secondTextField.placeholder = [lastNameLabelString capitalizedString];
         cell.secondTextField.text = [valueDictionary objectForKey: @"lastName"];
         cell.secondTextField.text = [cell.secondTextField.text capitalizedString];
@@ -540,29 +542,26 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         return cell;
         
       }
-      // Last name
-      else if (row == OMBMyRenterProfileSectionUserInfoRowLastName) {
-        imageName = @"user_icon.png";
-        key         = @"lastName";
-        labelString = @"Last name";
-      }
       // School
       else if (row == OMBMyRenterProfileSectionUserInfoRowSchool) {
         imageName = @"school_icon.png";
         key         = @"school";
         labelString = @"School";
+        cell.textField.keyboardType = UIKeyboardTypeDefault;
       }
       // Email
       else if (row == OMBMyRenterProfileSectionUserInfoRowEmail) {
         imageName = @"messages_icon_dark.png";
         key         = @"email";
         labelString = @"Email";
+        cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
       }
       // Phone
       else if (row == OMBMyRenterProfileSectionUserInfoRowPhone) {
         imageName = @"phone_icon.png";
         key         = @"phone";
         labelString = @"Phone";
+        cell.textField.keyboardType = UIKeyboardTypeNumberPad;
       }
       cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
         size: cell.iconImageView.frame.size];
@@ -614,7 +613,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
         iconImageName = @"papers_icon_black.png";
         key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
-        string = @"Work History";
+        string = @"Work & School History";
       }
       else if (row == OMBMyRenterProfileSectionRenterInfoRowLegalQuestions) {
         iconImageName = @"law_icon_black.png";

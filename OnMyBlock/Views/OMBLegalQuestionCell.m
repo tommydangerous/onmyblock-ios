@@ -284,6 +284,7 @@ atIndexPathForOtherUser: (NSIndexPath *) indexPath
     _explanationTextView.hidden = NO;
     _explanationTextView.scrollEnabled = YES;
     _explanationTextView.text = object.explanation;
+    _explanationTextView.textColor = [UIColor textColor];
   }
 }
 

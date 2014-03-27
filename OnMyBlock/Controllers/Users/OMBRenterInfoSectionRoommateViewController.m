@@ -35,8 +35,9 @@
 {
   [super loadView];
   
-  [self setEmptyLabelText: @"You have no co-applicants.\n"
-    @"Adding a co-applicant will greatly increase your acceptance rate."];
+  [self setEmptyLabelText: @"When you add a co-applicant, \n"
+    @"we will send them an invitation \n"
+    @"to fill out their renter profiles."];
   
   [addButton setTitle: @"Add Co-applicant" forState: UIControlStateNormal];
   [addButtonMiddle setTitle: @"Add Co-applicant" 

@@ -708,7 +708,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.iconView.image = [UIImage image:
         [UIImage imageNamed: @"document_icon_black.png"]
           size: cell.iconView.bounds.size];
-      cell.headLabel.text = @"Work History";
+      cell.headLabel.text = @"Work & School History";
       
       return cell;
     }
