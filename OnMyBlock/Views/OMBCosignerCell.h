@@ -12,12 +12,12 @@
 
 @interface OMBCosignerCell : OMBTableViewCell
 {
-  UILabel *emailLabel;
   UILabel *nameLabel;
-  UILabel *phoneLabel;
 }
 
 @property (nonatomic, strong) OMBCosigner *cosigner;
+@property UIButton *emailButton;
+@property UIButton *phoneButton;
 
 #pragma mark - Methods
 

@@ -38,21 +38,24 @@ reuseIdentifier: (NSString *) reuseIdentifier
   nameLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: nameLabel];
 
-  emailLabel = [[UILabel alloc] init];
-  emailLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  emailLabel.frame = CGRectMake(nameLabel.frame.origin.x,
+  _emailButton = [[UIButton alloc] init];
+  _emailButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+  _emailButton.frame = CGRectMake(nameLabel.frame.origin.x,
     nameLabel.frame.origin.y + nameLabel.frame.size.height,
       nameLabel.frame.size.width, nameLabel.frame.size.height);
-  emailLabel.textColor = [UIColor blue];
-  [self.contentView addSubview: emailLabel];
+  _emailButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  [_emailButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
+  [self.contentView addSubview: _emailButton];
 
-  phoneLabel = [[UILabel alloc] init];
-  phoneLabel.font = emailLabel.font;
-  phoneLabel.frame = CGRectMake(nameLabel.frame.origin.x,
-    emailLabel.frame.origin.y + emailLabel.frame.size.height,
+  _phoneButton = [[UIButton alloc] init];
+  _phoneButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+  _phoneButton.titleLabel.font = _emailButton.titleLabel.font;
+  _phoneButton.frame = CGRectMake(nameLabel.frame.origin.x,
+    _emailButton.frame.origin.y + _emailButton.frame.size.height,
       nameLabel.frame.size.width, nameLabel.frame.size.height);
-  phoneLabel.textColor = [UIColor blue];
-  [self.contentView addSubview: phoneLabel];
+  [_phoneButton setTitleColor:
+    [UIColor blue] forState:UIControlStateNormal];
+  [self.contentView addSubview: _phoneButton];
 
   return self;
 }
@@ -92,16 +95,21 @@ reuseIdentifier: (NSString *) reuseIdentifier
     @[fullName, relationshipType] 
       fonts: @[[UIFont normalTextFontBold], [UIFont smallTextFont]] 
         colors: @[[UIColor textColor], [UIColor grayMedium]]];
-  emailLabel.text = [self.cosigner.email lowercaseString];
+  [_emailButton setTitle:[self.cosigner.email lowercaseString] forState:UIControlStateNormal];
   if (self.cosigner.phone) {
     if ([[self.cosigner.phone phoneNumberString] length] > 0) {
-      phoneLabel.text = [self.cosigner.phone phoneNumberString];
-      phoneLabel.textColor = [UIColor blue];
+      [_phoneButton setTitle:
+        [self.cosigner.phone phoneNumberString]
+          forState:UIControlStateNormal];
+      [_phoneButton setTitleColor:[UIColor blue]
+        forState:UIControlStateNormal];
     }
   }
   else {
-    phoneLabel.text      = @"no phone number";
-    phoneLabel.textColor = [UIColor grayMedium];
+    [_phoneButton setTitle: @"no phone number"
+      forState:UIControlStateNormal];
+    [_phoneButton setTitleColor:[UIColor grayMedium]
+      forState:UIControlStateNormal];
   }
 }
 

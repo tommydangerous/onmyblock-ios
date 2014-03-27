@@ -259,8 +259,10 @@ atIndexPathForOtherUser: (NSIndexPath *) indexPath
   CGRect answerLabelRect = answerLabel.frame;
   answerLabelRect.origin.y = questionLabel.frame.origin.y + (padding * 0.5) +
     questionLabel.frame.size.height;
+  answerLabel.font = [UIFont normalTextFontBold];
   answerLabel.frame = answerLabelRect;
-  NSAttributedString *aString;
+  answerLabel.textColor = [UIColor textColor];
+  /*NSAttributedString *aString;
   NSArray *strings = @[@"No", @"Yes"];
   if (object.answer) {
     aString = [NSString attributedStringWithStrings: strings
@@ -271,8 +273,18 @@ atIndexPathForOtherUser: (NSIndexPath *) indexPath
     aString = [NSString attributedStringWithStrings: strings
       fonts: @[[UIFont normalTextFontBold], [UIFont normalTextFont]]
         colors: @[[UIColor textColor], [UIColor grayMedium]]];
+  }*/
+  answerLabel.text = object.answer ? @"YES" : @"NO";
+  if ([[object.explanation stripWhiteSpace] length]) {
+    CGRect explanationRect = _explanationTextView.frame;
+    explanationRect.origin.y = answerLabel.frame.origin.y +
+      answerLabel.frame.size.height;
+    _explanationTextView.editable = NO;
+    _explanationTextView.frame = explanationRect;
+    _explanationTextView.hidden = NO;
+    _explanationTextView.scrollEnabled = YES;
+    _explanationTextView.text = object.explanation;
   }
-  answerLabel.attributedText = aString;
 }
 
 - (void) loadLegalAnswer2: (OMBLegalAnswer *) object
