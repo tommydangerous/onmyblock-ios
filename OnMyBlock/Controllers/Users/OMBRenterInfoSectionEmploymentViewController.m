@@ -61,8 +61,8 @@
     forState: UIControlStateNormal];
   self.table.tableHeaderView = linkedInButton;
   
-  [self setEmptyLabelText: @"Have jobs or involved on campus? \n"
-   @"Add them there or connect with LinkedIn below."];
+  [self setEmptyLabelText: @"Have jobs or involved on campus?\n"
+   @"Connect your LinkedIn or add them here."];
   
   [addButton setTitle: @"Add Employment" forState: UIControlStateNormal];
   [addButtonMiddle setTitle: @"Add Employment" forState: UIControlStateNormal];

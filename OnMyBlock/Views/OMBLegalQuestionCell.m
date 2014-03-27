@@ -275,7 +275,7 @@ atIndexPathForOtherUser: (NSIndexPath *) indexPath
         colors: @[[UIColor textColor], [UIColor grayMedium]]];
   }*/
   answerLabel.text = object.answer ? @"YES" : @"NO";
-  if ([[object.explanation stripWhiteSpace] length]) {
+  if (object.answer && [[object.explanation stripWhiteSpace] length]) {
     CGRect explanationRect = _explanationTextView.frame;
     explanationRect.origin.y = answerLabel.frame.origin.y +
       answerLabel.frame.size.height;

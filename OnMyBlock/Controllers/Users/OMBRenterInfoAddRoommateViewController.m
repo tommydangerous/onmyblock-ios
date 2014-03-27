@@ -224,6 +224,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     // Spacing
     else if (section == OMBRenterInfoAddRoommateSearchSectionSpacing) {
       empty.backgroundColor = [UIColor clearColor];
+      empty.selectionStyle = UITableViewCellSelectionStyleNone;
       empty.separatorInset = UIEdgeInsetsMake(0.0f,
         tableView.frame.size.width, 0.0f, 0.0f);
     }
