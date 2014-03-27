@@ -17,6 +17,7 @@ typedef NS_ENUM(NSUInteger, OMBResidenceLegalDetailsDocumentType) {
 };
 
 @interface OMBResidenceLegalDetailsViewController : OMBViewController
+ <UIScrollViewDelegate>
 
 #pragma mark - Initializer
 
