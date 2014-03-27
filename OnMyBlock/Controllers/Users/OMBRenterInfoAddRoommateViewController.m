@@ -102,6 +102,7 @@
 
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
+  [searchResultsDictionary removeAllObjects];
   if ([dictionary objectForKey: @"objects"] != [NSNull null] &&
     [[dictionary objectForKey: @"objects"] count]) {
     for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
@@ -110,8 +111,8 @@
           [dict objectForKey: @"first_name"],
             [dict objectForKey: @"last_name"]]];
     }
-    [searchTableView reloadData];
   }
+  [searchTableView reloadData];
 }
 
 #pragma mark - Protocol UITableViewDataSource
@@ -214,8 +215,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       else {
         cell.textLabel.font = [UIFont normalTextFont];
-        cell.textLabel.text = [[self sortedSearchResultsDictionaryKeys] 
-          objectAtIndex: row];
+        cell.textLabel.text = [[[self sortedSearchResultsDictionaryKeys]
+          objectAtIndex: row] stringByAppendingString:@" (Facebook user)"];
         cell.textLabel.textColor = [UIColor textColor];
       }
       return cell;
