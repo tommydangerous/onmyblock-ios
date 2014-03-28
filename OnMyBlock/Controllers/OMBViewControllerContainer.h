@@ -71,6 +71,7 @@
 
   // Views
   OMBActivityView *activityView;
+  UIView *arrowView;
   UIImageView *backgroundImageView;
   UIView *backgroundView;
   DRNRealTimeBlurView *blurView;

@@ -550,6 +550,36 @@ CGFloat kBackgroundMaxScale = 5.0f;
       forState: UIControlStateNormal];
   [self.view addSubview: signUpButtonBottom];
 
+  // Arrow
+  arrowView = [UIView new];
+  CGFloat arrowHeight = 20.0f;
+  CGFloat originY = createListingButton.frame.origin.y +
+    (createListingButton.frame.size.height -
+      arrowHeight * 0.5f) * 0.5f;
+  arrowView.frame = CGRectMake((screen.size.width - arrowHeight) * 0.5f,
+    originY, arrowHeight, arrowHeight);
+  arrowView.hidden = YES;
+  [self.view addSubview: arrowView];
+  
+  UIView *left = [[UIView alloc] init];
+  left.backgroundColor = UIColor.whiteColor;
+  left.frame = CGRectMake((arrowHeight * 0.25f), 0.0f,
+    2.0f, (arrowView.frame.size.height * 0.5) * sqrt(2.0));
+  left.layer.cornerRadius = 1.0f;
+  [arrowView addSubview: left];
+  
+  UIView *right = [[UIView alloc] init];
+  right.backgroundColor = left.backgroundColor;
+  right.frame = CGRectMake(arrowHeight * 0.75f - 1, 0.0f,
+    2.0f, (arrowView.frame.size.height * 0.5) * sqrt(2.0));
+  right.layer.cornerRadius = left.layer.cornerRadius;
+  [arrowView addSubview: right];
+  
+  left.transform =
+    CGAffineTransformMakeRotation( M_PI * -45 / 180.0);
+  right.transform =
+    CGAffineTransformMakeRotation( M_PI * 45 / 180.0);
+  
   // Detail view
   _detailView = [[UIView alloc] initWithFrame: screen];
   [self.view addSubview: _detailView];
@@ -990,6 +1020,7 @@ completion: (void (^) (void)) block
   [_accountView removeFromSuperview];
   // Update Top detail view
   _topDetailView.hidden = YES;
+  arrowView.hidden = YES;
   // Adjust the intro view
   [self.introViewController setupForLoggedOutUser];
   // [self showIntroAnimatedDissolve: YES];
@@ -1182,7 +1213,7 @@ completion: (void (^) (void)) block
   
   // Show top detail view
   _topDetailView.hidden = NO;
-  
+  arrowView.hidden = NO;
   // Show the buttons for users who are logged in
   // [self showLoggedInButtons];
   // Adjust the menu scroll content inset and content size
@@ -1630,12 +1661,14 @@ completion: (void (^) (void)) block
   // If there is a landlord type of any sort, enable the scroll,
   // and hide the create listing button box
   NSLog(@"%@", landlordType);
+  arrowView.hidden              = YES;
   createListingButton.hidden    = NO;
   hitArea.scrollView            = nil;
   _infiniteScroll.scrollEnabled = NO;
   // if (landlordType != [NSNull null]) {
   if ([[OMBUser currentUser].landlordType length]) {
     if ([(NSString *) landlordType length]) {
+      arrowView.hidden              = NO;
       createListingButton.hidden    = YES;
       hitArea.scrollView            = _infiniteScroll;
       _infiniteScroll.scrollEnabled = YES;
