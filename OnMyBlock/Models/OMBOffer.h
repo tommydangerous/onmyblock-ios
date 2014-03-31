@@ -67,6 +67,10 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 
 #pragma mark - Methods
 
+#pragma mark - Class Methods
+
++ (CGFloat) downPaymentPercentage;
+
 #pragma mark - Instance Methods
 
 - (BOOL) isExpiredForLandlord;

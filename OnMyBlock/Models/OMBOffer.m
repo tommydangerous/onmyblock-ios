@@ -17,6 +17,7 @@
 
 NSInteger kMaxHoursForLandlordToAccept = 24 * 4;
 NSInteger kMaxHoursForStudentToConfirm = 24 * 7;
+CGFloat kOfferDownPaymentPercentage    = 0.1;
 
 #if __ENVIRONMENT__ == 1
   NSInteger kWebServerTimeOffsetInSeconds = 0;
@@ -51,6 +52,13 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 }
 
 #pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (CGFloat) downPaymentPercentage
+{
+  return kOfferDownPaymentPercentage;
+}
 
 #pragma mark - Instance Methods
 
