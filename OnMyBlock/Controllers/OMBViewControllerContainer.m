@@ -559,7 +559,8 @@ CGFloat kBackgroundMaxScale = 5.0f;
   arrowView.frame = CGRectMake((screen.size.width - arrowHeight) * 0.5f,
     originY, arrowHeight, arrowHeight);
   arrowView.hidden = YES;
-  [self.view addSubview: arrowView];
+  // insert below so the user can touch at hitArea
+  [self.view insertSubview: arrowView belowSubview: hitArea];
   
   UIView *left = [[UIView alloc] init];
   left.backgroundColor = UIColor.whiteColor;

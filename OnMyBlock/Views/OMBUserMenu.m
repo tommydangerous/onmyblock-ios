@@ -290,13 +290,14 @@
     _sellerHomebaseNotificationBadge
   ];
   for (UILabel *label in badgeArray) {
-    label.backgroundColor = [UIColor blue];
+    //label.backgroundColor = [UIColor blue];
     label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
     label.frame = CGRectMake(
       discoverImageView.frame.origin.x - (padding * 0.5f), 
         discoverImageView.frame.origin.y - (padding * 0.5f),
           padding, padding);
     label.hidden = YES;
+    label.layer.backgroundColor = [UIColor blue].CGColor;
     label.layer.cornerRadius = label.frame.size.height * 0.5f;
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor whiteColor];
@@ -489,7 +490,6 @@
 - (void) updateNotificationBadgeLabel: (UILabel *) label 
 withNumber: (NSNumber *) number
 {
-  label.layer.cornerRadius = label.frame.size.height * 0.5f;
   int count = [number intValue];
   if (count == 0)
     label.hidden = YES;
@@ -507,6 +507,7 @@ withNumber: (NSNumber *) number
     newRect.size.width = 1.0f + newWidth + 1.0f;
     label.frame = newRect;
   }
+  label.layer.cornerRadius = label.frame.size.height * 0.5f;
 }
 
 - (void) updateLandlordType: (NSNotification *) notification
