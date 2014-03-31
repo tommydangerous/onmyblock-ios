@@ -434,12 +434,17 @@
   
   // Total price notes
   totalPriceNotes = [NSString stringWithFormat:
-   @"Your total of %@ will NOT be charged\n"
-   @"upfront. It will only be charged if you decide to\n"
-   @"secure the place by signing the lease and paying\n"
-   @"the 1st months rent and deposit\n"
-   @"through OnMyBlock",
-    [NSString numberToCurrencyString: deposit + residence.minRent]];
+   @"A down payment of %@ will be charged\n"
+   @"upon offer acceptance to secure the place.\n"
+   @"If your offer is accepted, you will have %@ "
+   @"to sign the lease and pay the remainder total\n"
+   @"of %@ for the 1st months rent and\n"
+   @"deposit through OnMyBlock.\n",
+     [NSString numberToCurrencyString:[offer downPaymentAmount]],
+     [offer timelineStringForStudent],
+     [NSString numberToCurrencyString:[offer remainingBalanceAmount]]];
+  
+  
   CGRect rect = [totalPriceNotes boundingRectWithSize:
                  CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999)
                                                  font: [UIFont smallTextFont]];
@@ -463,7 +468,7 @@
    ];
   NSMutableAttributedString *string3 =
   [[NSMutableAttributedString alloc] initWithString:
-   @" of this property and understand that you will be required to sign a lease to secure this rental."
+   @" of this property and understand that you will be required to sign a lease (and co-signer agreement) to secure this rental."
                                          attributes: @{
                                                        NSFontAttributeName: [UIFont smallTextFont],
                                                        NSForegroundColorAttributeName: [UIColor grayMedium]
@@ -1776,19 +1781,25 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     },
     @{
       @"title": @"Authorize Payment",
-      @"information": @"Review your offer and add a payment method.  You will NOT be charged "
-        @"upfront.  You will only be charged if you decide to secure the place by "
-        @"signing the lease and paying the 1st months rent and deposit through OnMyBlock."
+      @"information": [NSString stringWithFormat: @"Review your offer and add a payment method. You will NOT be charged "
+        @"upfront. A down payment of %@ will be charged upon offer acceptance to secure the place. "
+        @"If your offer is accepted, you will have %@ to sign the lease and pay the remainder "
+        @"of the 1st month’s rent and deposit through OnMyBlock.",
+          [NSString numberToCurrencyString:[offer downPaymentAmount]],
+          [offer timelineStringForStudent]]
     },
     @{
       @"title": @"Wait For Response",
-      @"information": @"Once you submit your offer, the landlord or subletter will "
-        @"have 96 hours to review your offer, your renter profile, and your "
+      @"information": [NSString stringWithFormat: @"Once you submit your offer, the landlord or subletter will "
+        @"have %@ to review your offer, your renter profile, and your "
         @"roommates renter profiles if applicable.\n\n"
-        @"If your offer is accepted, you will have 1 week to secure the place by "
-        @"signing the lease and paying the 1st months rent and deposit through "
-        @"OnMyBlock.  Some places may also require a signed co-signer agreement. "
-        @"If your offer is retracted, declined, or expires, any payment authorization is voided."
+        @"If your offer is accepted, a down payment of %@ will be charged and you "
+        @"will have %@ to sign the lease and pay the remainder of the 1st month’s rent "
+        @"and deposit through OnMyBlock. Some places may also require a signed "
+        @"co-signer agreement. If your offer is retracted, declined, or expired, any payment authorization is voided.",
+          [offer timelineStringForLandlord],
+          [NSString numberToCurrencyString:[offer downPaymentAmount]],
+          [offer timelineStringForStudent]]
     }
   ];
 
