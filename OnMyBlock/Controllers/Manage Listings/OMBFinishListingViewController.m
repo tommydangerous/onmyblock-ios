@@ -741,7 +741,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         [alertBlur setConfirmButtonTitle: @"Okay"];
         [alertBlur addTargetForConfirmButton: self 
           action: @selector(hideAlertBlurAndPopController)];
-        [alertBlur showInView: self.view];
+        [alertBlur showInView: self.view withDetails: NO];
         [alertBlur showOnlyConfirmButton];
         [alertBlur hideQuestionButton];
       }

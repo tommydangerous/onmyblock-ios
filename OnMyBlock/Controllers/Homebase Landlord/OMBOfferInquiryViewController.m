@@ -197,7 +197,7 @@
   profileButton.titleLabel.font = offerButton.titleLabel.font;
   [profileButton addTarget: self action: @selector(segmentButtonSelected:)
           forControlEvents: UIControlEventTouchUpInside];
-  [profileButton setTitle: @"Profile" forState: UIControlStateNormal];
+  [profileButton setTitle: @"Applicants" forState: UIControlStateNormal];
   [profileButton setTitleColor: [UIColor whiteColor]
                       forState: UIControlStateNormal];
   [buttonsView addSubview: profileButton];
@@ -350,6 +350,7 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
+  firstTimeAlert = YES;
   
   // Size for offer note
   sizeForOfferNotes = [offer.note boundingRectWithSize:
@@ -1228,12 +1229,14 @@ viewForHeaderInSection: (NSInteger) section
        if (offer.accepted && !error) {
          [alertBlur setTitle: @"Offer Accepted!"];
          [alertBlur setMessage: [NSString stringWithFormat:
-            @"%@ will have %i hours to confirm, pay, and sign the lease. "
-            @"Once the lease has been signed by the tenants, we will "
-            @"send it to you via email. If you have any questions, contact "
-            @"us at help@onmyblock.com.",
+            @"%@ has been charged a %@ non refundable down payment and will "
+            @"have %@ to sign the lease and pay the remainder of the 1st month’s "
+            @"rent and deposit. Once the lease has been signed, and payment is "
+            @"made in full, we will transfer the 1st month’s rent and deposit to "
+            @"your payout account and email both parties the signed lease.",
               [offer.user.firstName capitalizedString], 
-                kMaxHoursForStudentToConfirm]];
+                [NSString numberToCurrencyString:[offer downPaymentAmount]],
+                  [offer timelineStringForStudent]]];
          [alertBlur resetQuestionDetails];
          [alertBlur hideQuestionButton];
          // Buttons
@@ -1276,12 +1279,13 @@ viewForHeaderInSection: (NSInteger) section
 {
   [alertBlur setTitle: @"Accepting Offer"];
   [alertBlur setMessage: [NSString stringWithFormat:
-    @"Ready to accept %@'s offer? If yes, all other offers will be placed "
-    @"on hold and %@ will have %i hours to confirm, pay the 1st month's "
-    @"rent and deposit, and sign the lease.",
+    @"Ready to accept %@’s offer? %@ will be charged a %@ nonrefundable "
+    @"down payment and will have %@ to sign the lease and pay the "
+    @"remainder of the 1st month’s rent and deposit.",
       [offer.user.firstName capitalizedString],
-        [offer.user.firstName capitalizedString], 
-          kMaxHoursForStudentToConfirm]];
+        [offer.user.firstName capitalizedString],
+          [NSString numberToCurrencyString:[offer downPaymentAmount]],
+            [offer timelineStringForStudent]]];
   [alertBlur resetQuestionDetails];
   [alertBlur hideQuestionButton];
   // Buttons
@@ -2016,7 +2020,7 @@ viewForHeaderInSection: (NSInteger) section
       action: @selector(rejectOfferFinalAnswer)];
     [alertBlur addTargetForConfirmButton: self
       action: @selector(confirmOfferFinalAnswer)];
-    [alertBlur showInView: self.view];
+    [alertBlur showInView: self.view withDetails: NO];
     didCancelVenmoAppFromWebView = NO;
   }
   // Landlord
@@ -2033,10 +2037,13 @@ viewForHeaderInSection: (NSInteger) section
           moveOutDateString, [NSString numberToCurrencyString: offer.amount],
             [NSString numberToCurrencyString: [offer.residence deposit]]]];
     [alertBlur setQuestionDetails: [NSString stringWithFormat:
-      @"Accept: Gives the student %i hours to sign the lease and pay the "
-      @"1st month's rent and deposit.\n\n"
+      @"Accept: Charges a non refundable down payment of %@ to %@ and "
+      @"gives the applicant party %@ to sign the lease and pay the remainder "
+      @"of the 1st month’s rent and deposit.\n"
       @"Decline: Tells the student to look for another place to rent.",
-        kMaxHoursForStudentToConfirm]];
+        [NSString numberToCurrencyString: [offer downPaymentAmount]],
+        [[offer.user firstName] capitalizedString],
+        [offer timelineStringForStudent]]];
     
     // Buttons
     [alertBlur setCancelButtonTitle: @"Decline"];
@@ -2045,7 +2052,8 @@ viewForHeaderInSection: (NSInteger) section
                                  action: @selector(declineOfferFinalAnswer)];
     [alertBlur addTargetForConfirmButton: self
                                   action: @selector(acceptOfferFinalAnswer)];
-    [alertBlur showInView: self.view];
+    [alertBlur showInView: self.view withDetails:firstTimeAlert];
+    firstTimeAlert = NO;
   }
 }
 

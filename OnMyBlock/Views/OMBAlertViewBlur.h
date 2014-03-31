@@ -56,7 +56,7 @@
 - (void) setMessage: (NSString *) string;
 - (void) setTitle: (NSString *) string;
 - (void) showBothButtons;
-- (void) showInView: (UIView *) view;
+- (void) showInView: (UIView *) view withDetails:(BOOL) show;
 - (void) showCloseButton;
 - (void) showOnlyConfirmButton;
 - (void) startSpinning;

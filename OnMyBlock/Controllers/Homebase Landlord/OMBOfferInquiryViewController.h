@@ -55,6 +55,7 @@ typedef NS_ENUM(NSInteger, OMBOfferInquirySectionOfferRow) {
   NSDateFormatter *dateFormatter1;
   BOOL didCancelVenmoAppFromWebView;
   LEffectLabel *effectLabel;
+  BOOL firstTimeAlert;
   OMBGradientView *gradient;
   NSArray *legalQuestions;
   OMBOffer *offer;

@@ -1851,7 +1851,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [alertBlur addTargetForConfirmButton: self
     action: @selector(submitOfferConfirmed)];
   
-  [alertBlur showInView: self.view];
+  [alertBlur showInView: self.view withDetails: NO];
 }
 
 - (void) submitOfferConfirmed
