@@ -77,6 +77,7 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 - (BOOL) isExpiredForStudent;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (NSInteger) numberOfMonthsBetweenMovingDates;
+- (CGFloat) remainingBalanceAmount;
 - (OMBOfferStatusForLandlord) statusForLandlord;
 - (OMBOfferStatusForStudent) statusForStudent;
 - (NSString *) statusStringForLandlord;

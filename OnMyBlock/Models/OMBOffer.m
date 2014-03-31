@@ -62,6 +62,11 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 
 #pragma mark - Instance Methods
 
+- (CGFloat) downPaymentAmount
+{
+  return [self totalAmount] * [OMBOffer downPaymentPercentage];
+}
+
 - (BOOL) isExpiredForLandlord
 {
   if (
@@ -242,6 +247,11 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
     }
     _user = user;
   }
+}
+
+- (CGFloat) remainingBalanceAmount
+{
+  return [self totalAmount] - [self downPaymentAmount];
 }
 
 - (OMBOfferStatusForLandlord) statusForLandlord
