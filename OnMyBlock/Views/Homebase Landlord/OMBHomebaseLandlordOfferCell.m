@@ -64,7 +64,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // Minus another padding to not run into the disclosure indicator
   addressLabel.frame = CGRectMake(nameLabel.frame.origin.x,
     nameLabel.frame.origin.y + nameLabel.frame.size.height,
-      nameLabel.frame.size.width - padding, nameLabel.frame.size.height);
+      nameLabel.frame.size.width, nameLabel.frame.size.height);
   addressLabel.textColor = [UIColor grayMedium];
   [self.contentView addSubview: addressLabel];
 
@@ -226,7 +226,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   // Note
   notesLabel.hidden = YES;
-  notesLabel.text = @"";
+  notesLabel.text = @"Once you have reviewed the applicant party’s "
+    @"offer and renter profile(s), please accept or decline.";
 
   // Name
   nameLabel.text = [_offer.user shortName];

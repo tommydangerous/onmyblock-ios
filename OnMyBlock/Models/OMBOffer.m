@@ -340,11 +340,11 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 {
   switch ([self statusForStudent]) {
     case OMBOfferStatusForLandlordRejected: {
-      return @"student rejected";
+      return @"applicant rejected";
       break;
     }
     case OMBOfferStatusForLandlordConfirmed: {
-      return @"student confirmed - not paid";
+      return @"applicant confirmed - paid";
       break;
     }
     case OMBOfferStatusForLandlordAccepted: {
