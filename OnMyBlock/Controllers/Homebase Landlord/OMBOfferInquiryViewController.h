@@ -29,9 +29,12 @@ typedef NS_ENUM(NSInteger, OMBOfferInquirySectionOfferRow) {
   OMBOfferInquirySectionOfferSpacingBelowDates,
   OMBOfferInquirySectionOfferRowPriceBreakdown,
   OMBOfferInquirySectionOfferRowSecurityDeposit,
+  OMBOfferInquirySectionOfferRowDownPayment,
+  OMBOfferInquirySectionOfferRowRemainingPayment,
   OMBOfferInquirySectionOfferRowOffer,
   OMBOfferInquirySectionOfferRowTotal,
-  OMBOfferInquirySectionOfferSpacingBelowTotal,
+  OMBOfferInquirySectionOfferRowRememberDetail,
+  //OMBOfferInquirySectionOfferSpacingBelowTotal,
   OMBOfferInquirySectionOfferRowNotes
 };
 
@@ -62,10 +65,12 @@ typedef NS_ENUM(NSInteger, OMBOfferInquirySectionOfferRow) {
   UIButton *offerButton;
   int previouslySelectedIndex;
   UIButton *profileButton;
+  NSString *rememberDetails;
   UIButton *respondButton;
   UIView *respondView;
   int selectedSegmentIndex;
   CGSize sizeForOfferNotes;
+  CGSize sizeForRememberDetails;
   OMBCenteredImageView *userImageView;
 }
 

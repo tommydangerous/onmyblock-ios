@@ -357,6 +357,19 @@
     CGSizeMake(_offerTableView.frame.size.width - (OMBPadding * 2), 9999)
       font: [UIFont smallTextFont]].size;
   
+  // Size for offer note
+  rememberDetails = [NSString stringWithFormat:
+    @"A non refundable down payment of %@ will be "
+    @"charged to %@ upon offer acceptance. If the offer is accepted, "
+    @"the applicant party will have  %@ to sign the lease and pay "
+    @"the remainder of the 1st month’s rent and deposit through OnMyBlock.",
+      [NSString numberToCurrencyString:[offer downPaymentAmount]],
+        [[offer.user firstName] capitalizedString],
+          [offer timelineStringForStudent]];
+  sizeForRememberDetails = [rememberDetails boundingRectWithSize:
+    CGSizeMake(_offerTableView.frame.size.width - (OMBPadding * 2), 9999)
+      font: [UIFont smallTextFont]].size;
+  
   BOOL performEffect = YES;
   // Student
   if ([self offerBelongsToCurrentUser]) {
@@ -691,11 +704,13 @@
         cell.separatorInset  = UIEdgeInsetsMake(0.0f,
                                                 tableView.frame.size.width, 0.0f, 0.0f);
       }
-      // Price breakdown, security deposit, offer
+      // Price breakdown, security deposit, down payment, remaining payment, offer
       else if (
                indexPath.row == OMBOfferInquirySectionOfferRowPriceBreakdown ||
                indexPath.row == OMBOfferInquirySectionOfferRowSecurityDeposit ||
-               indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
+               indexPath.row == OMBOfferInquirySectionOfferRowOffer ||
+               indexPath.row == OMBOfferInquirySectionOfferRowDownPayment ||
+               indexPath.row == OMBOfferInquirySectionOfferRowRemainingPayment) {
         
         static NSString *PriceCellIdentifier = @"PriceCellIdentifier";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
@@ -735,6 +750,20 @@
             [offer.residence deposit]];
           cell.textLabel.text = @"Security Deposit";
         }
+        else if (indexPath.row ==
+          OMBOfferInquirySectionOfferRowDownPayment) {
+          
+          cell.detailTextLabel.text = [NSString numberToCurrencyString:
+                                       [offer downPaymentAmount]];
+          cell.textLabel.text = @"Down Payment";
+        }
+        else if (indexPath.row ==
+          OMBOfferInquirySectionOfferRowRemainingPayment) {
+          
+          cell.detailTextLabel.text = [NSString numberToCurrencyString:
+                                       [offer remainingBalanceAmount]];
+          cell.textLabel.text = @"Remaining Payment";
+        }
         else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
           cell.detailTextLabel.text = [NSString numberToCurrencyString:
                                        offer.amount];
@@ -770,12 +799,37 @@
         cell1.textLabel.textColor = [UIColor textColor];
         return cell1;
       }
+      // Remember Detail
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowRememberDetail) {
+        static NSString *RememberDetailIdentifier = @"RememberDetailIdentifier";
+        UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
+                                  RememberDetailIdentifier];
+        if (!cell1) {
+          cell1 = [[UITableViewCell alloc] initWithStyle:
+                   UITableViewCellStyleDefault reuseIdentifier: RememberDetailIdentifier];
+          UILabel *label = [UILabel new];
+          label.font = [UIFont smallTextFont];
+          label.numberOfLines = 0;
+          label.text = rememberDetails;
+          label.textAlignment = NSTextAlignmentCenter;
+          label.textColor = [UIColor grayMedium];
+          label.frame = CGRectMake(padding, padding,
+            tableView.frame.size.width - (padding * 2),
+              sizeForRememberDetails.height);
+          [cell1.contentView addSubview: label];
+        }
+        cell1.backgroundColor = [UIColor grayUltraLight];
+        cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+          0.0f, 0.0f);
+        cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell1;
+      }
       // Spacing below total
-      else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowTotal) {
+      /*else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowTotal) {
         cell.backgroundColor = [UIColor grayUltraLight];
         cell.separatorInset  = UIEdgeInsetsMake(0.0f,
                                                 tableView.frame.size.width, 0.0f, 0.0f);
-      }
+      }*/
       // Notes
       else if (indexPath.row == OMBOfferInquirySectionOfferRowNotes) {
         static NSString *OfferNoteIdentifier = @"OfferNoteIdentifier";
@@ -989,11 +1043,14 @@
     // Spacing below dates
     // Price breakdown
     // Security deposit
+    // Down Payment
+    // Remaining Payment
     // Offer
     // Total
-    // Spacing below total
+    // Remember details
+    // !Spacing below total
     // Notes
-    return 9;
+    return 10;
   }
   // Profile
   else if (tableView == _profileTableView) {
@@ -1090,18 +1147,30 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       else if (indexPath.row == OMBOfferInquirySectionOfferRowSecurityDeposit) {
         return standardHeight;
       }
+      // Down Payment
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowDownPayment) {
+        return standardHeight;
+      }
+      // Remaining Payment
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowRemainingPayment) {
+        return standardHeight;
+      }
       // Offer
       else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
         return standardHeight;
+      }
+      // Remember detail
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowRememberDetail) {
+        return padding + sizeForRememberDetails.height + padding;;
       }
       // Total
       else if (indexPath.row == OMBOfferInquirySectionOfferRowTotal) {
         return padding + 36.0f + padding;
       }
       // Spacing below total
-      else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowTotal) {
+      /*else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowTotal) {
         return standardHeight;
-      }
+      }*/
       // Notes
       else if (indexPath.row == OMBOfferInquirySectionOfferRowNotes) {
         if (offer.note && [offer.note length]) {
