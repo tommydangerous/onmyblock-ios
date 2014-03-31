@@ -206,7 +206,7 @@
   _sellerHomebaseButton = [[UIButton alloc] init];
   [_sellerHomebaseButton addTarget: self action: @selector(showHomebaseLandlord)
     forControlEvents: UIControlEventTouchUpInside];
-  [_sellerHomebaseButton setTitle: @"Homebase" 
+  [_sellerHomebaseButton setTitle: @"Landlord Homebase" 
     forState: UIControlStateNormal];
   UIImageView *sellerHomebaseImageView = [[UIImageView alloc] init];
   sellerHomebaseImageView.frame = discoverImageView.frame;
@@ -217,7 +217,7 @@
   sellerHomebaseImageView.image.accessibilityIdentifier = @"homebase_icon.png";
   sellerHomebaseImageView.tag = 11;
   [_sellerHomebaseButton addSubview: sellerHomebaseImageView];
-  //[_sellerButtons addObject: _sellerHomebaseButton];
+  [_sellerButtons addObject: _sellerHomebaseButton];
   // Notification badge
   _sellerHomebaseNotificationBadge = [UILabel new];
   [_sellerHomebaseButton addSubview: _sellerHomebaseNotificationBadge];
@@ -240,7 +240,7 @@
   [_sellerButtons addObject: _manageListingsButton];
 
   // Inbox
-  _sellerInboxButton = [UIButton new];
+  /*_sellerInboxButton = [UIButton new];
   [_sellerInboxButton addTarget: self action: @selector(showInboxSeller)
     forControlEvents: UIControlEventTouchUpInside];
   [_sellerInboxButton setTitle: @"Messages" forState: UIControlStateNormal];
@@ -255,7 +255,7 @@
   [_sellerButtons addObject: _sellerInboxButton];
   // Notification badge
   _inboxNotificationBadge = [UILabel new];
-  [_sellerInboxButton addSubview: _inboxNotificationBadge];
+  [_sellerInboxButton addSubview: _inboxNotificationBadge];*/
   
   // Set attributes for buttons
   NSArray *buttonsArray = @[
@@ -268,9 +268,9 @@
     _inboxButton,
     // Seller
     _createListingButton,
-    //_sellerHomebaseButton,
-    _manageListingsButton,
-    _sellerInboxButton
+    _sellerHomebaseButton,
+    _manageListingsButton
+    //_sellerInboxButton
   ];
   for (UIButton *button in buttonsArray) {
     button.contentEdgeInsets = UIEdgeInsetsMake(0.0f, 
