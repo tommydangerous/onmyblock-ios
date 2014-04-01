@@ -21,9 +21,11 @@
 #import "OMBMyRenterProfileViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOffer.h"
+#import "OMBOtherUserProfileViewController.h"
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutMethodListCell.h"
 #import "OMBPayoutMethodUpdateConnection.h"
+#import "OMBRenterApplication.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBRenterProfileViewController.h"
 #import "OMBResidence.h"
@@ -35,6 +37,8 @@
 #import "OMBResidenceLeaseAgreementViewController.h"
 #import "OMBResidenceLegalDetailsViewController.h"
 #import "OMBResidenceMonthlyPaymentScheduleViewController.h"
+#import "OMBRoommate.h"
+#import "OMBRoommateCell.h"
 #import "OMBViewControllerContainer.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
@@ -500,7 +504,9 @@
   [[OMBUser currentUser] fetchPayoutMethodsWithCompletion: ^(NSError *error) {
     [self.table reloadData];
   }];
-  
+  // Fecth Coapplicants
+  [self fetchCoapplicants];
+
   [self.table reloadData];
 }
 
@@ -628,6 +634,15 @@
 //   return YES;
 // }
 
+#pragma mark - Protocol OMBConnectionProtocol
+
+- (void) JSONDictionary:(NSDictionary *)json
+{
+  [[self renterApplication] readFromDictionary:json
+    forModelName:[OMBRoommate resourceName]];
+  [self.table reloadData];
+}
+
 #pragma mark - Protocol UIAlertViewDelegate
 
 - (void) alertView: (UIAlertView *) alertView
@@ -663,13 +678,14 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   // Place offer
   // Dates
+  // Co-applicants
   // Price breakdown
   // Payout methods
   // Monthly schedule
   // Renter profile
   // Submit offer notes
   // Spacing
-  return 8;
+  return 9;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -849,12 +865,47 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       return cell;
     }
   }
+  // Coapplicants
+  else if (indexPath.section ==
+           OMBResidenceBookItConfirmDetailsSectionCoapplicants) {
+    // Header
+    if(indexPath.row == 0){
+      static NSString *RoommateHeaderCellID = @"RoommateHeaderCellID";
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        RoommateHeaderCellID];
+      if (!cell)
+        cell = [[UITableViewCell alloc] initWithStyle:
+          UITableViewCellStyleValue1 reuseIdentifier: RoommateHeaderCellID];
+      
+      cell.backgroundColor = [UIColor whiteColor];
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.detailTextLabel.font =
+        [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+      cell.detailTextLabel.text = @"";
+      cell.detailTextLabel.textColor = [UIColor textColor];
+      cell.textLabel.font = [UIFont normalTextFontBold];
+      cell.textLabel.textColor = [UIColor textColor];
+      cell.textLabel.text = @"Co-applicants";
+      
+      return cell;
+    }else{
+      static NSString *RoommateCellID = @"RoommateCellID";
+      OMBRoommateCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        RoommateCellID];
+      if(!cell)
+        cell = [[OMBRoommateCell alloc] initWithStyle:UITableViewCellStyleDefault
+          reuseIdentifier: RoommateCellID];
+      [cell loadData: [[self roommates] objectAtIndex: indexPath.row - 1]];
+      return cell;
+    }
+  }
   // Price breakdown
   else if (indexPath.section ==
            OMBResidenceBookItConfirmDetailsSectionPriceBreakdown) {
     emptyCell.accessoryType = UITableViewCellAccessoryNone;
     // Price Breakdown, Deposit, 1st Month's Rent
-    if (indexPath.row == 0 || indexPath.row == 1 || indexPath.row == 2) {
+    if (indexPath.row == 0 || indexPath.row == 1 || indexPath.row == 2 ||
+        indexPath.row == 3|| indexPath.row == 4) {
       static NSString *PriceCellIdentifier = @"PriceCellIdentifier";
       UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
                                PriceCellIdentifier];
@@ -893,10 +944,18 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         cell.detailTextLabel.text = [residence rentToCurrencyString];
         cell.textLabel.text = @"1st Month's Rent";
       }
+      else if (indexPath.row == 3) {
+        cell.detailTextLabel.text = [NSString numberToCurrencyString:[offer downPaymentAmount]];
+        cell.textLabel.text = @"Down Payment";
+      }
+      else if (indexPath.row == 4) {
+        cell.detailTextLabel.text = [NSString numberToCurrencyString:[offer remainingBalanceAmount]];
+        cell.textLabel.text = @"Remaining Payment";
+      }
       return cell;
     }
     // Total
-    else if (indexPath.row == 3) {
+    else if (indexPath.row == 5) {
       static NSString *TotalCellIdentifier = @"TotalCellIdentifier";
       UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
         TotalCellIdentifier];
@@ -925,7 +984,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       return cell;
     }
     // Extra information, notes, etc.
-    else if (indexPath.row == 4) {
+    else if (indexPath.row == 6) {
       static NSString *CellIdentifier = @"CellIdentifier";
       UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
                                CellIdentifier];
@@ -1222,14 +1281,24 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     // Spacing
     // return 1 + 1;
   }
+  // Coapplicants
+  else if (section == OMBResidenceBookItConfirmDetailsSectionCoapplicants) {
+    if([self roommates].count > 0){
+      // 1 for header
+      return [self roommates].count + 1;
+    }else
+      return 0;
+  }
   // Price Breakdown
   else if (section == OMBResidenceBookItConfirmDetailsSectionPriceBreakdown) {
     // Price Breakdown
     // Security Deposit
     // 1st Month's Rent
+    // Down Payment
+    // Remaining Payment
     // Total
     // Total price notes
-    return 5;
+    return 7;
     // return 1 + 4;
   }
   // Payout methods
@@ -1286,6 +1355,17 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       [self.navigationController pushViewController:
         [[OMBResidenceLegalDetailsViewController alloc] initWithResidence: 
           residence] animated: YES];
+    }
+  }
+  else if(indexPath.section ==
+          OMBResidenceBookItConfirmDetailsSectionCoapplicants){
+    if(indexPath.row != 0){
+      OMBRoommate *aux = [[self roommates] objectAtIndex: indexPath.row - 1];
+      // if is a OMB user
+      if(aux.roommate)
+        [self.navigationController pushViewController:
+          [[OMBOtherUserProfileViewController alloc] initWithUser: aux.roommate]
+            animated: YES];
     }
   }
   // Price breakdown (NOT BEING USED) !!!
@@ -1434,6 +1514,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return 27.f;
     }
   }
+  //
+  else if (indexPath.section == OMBResidenceBookItConfirmDetailsSectionCoapplicants){
+    if(indexPath.row == 0)
+      return spacing;
+    else
+      return [OMBRoommateCell heightForCell];
+  }
   // Price breakdown
   else if (indexPath.section ==
            OMBResidenceBookItConfirmDetailsSectionPriceBreakdown) {
@@ -1442,16 +1529,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return spacing;
     }
     // Deposit, 1st Month's Rent
-    else if (indexPath.row == 1 || indexPath.row == 2) {
+    else if (indexPath.row == 1 || indexPath.row == 2 ||
+             indexPath.row == 3|| indexPath.row == 4) {
       // if (isShowingPriceBreakdown)
       return spacing;
     }
     // Total
-    else if (indexPath.row == 3) {
+    else if (indexPath.row == 5) {
       return padding + 36.0f + padding;
     }
     // Total price notes
-    else if (indexPath.row == 4) {
+    else if (indexPath.row == 6) {
       return padding + totalPriceNotesSize.height + padding;
       // return padding + totalPriceNotesSize.height + padding + padding;
     }
@@ -1592,6 +1680,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.view endEditing: YES];
 }
 
+- (void) fetchCoapplicants
+{
+  [[self renterApplication] fetchListForResourceName: [OMBRoommate resourceName]
+    userUID: offer.user.uid delegate: self completion: ^(NSError *error) {
+      
+  }];
+}
+
 - (void) hideAlert
 {
   [alert hideAlert];
@@ -1634,6 +1730,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
                                                  ascending: NO];
 }
 
+- (OMBRenterApplication *) renterApplication
+{
+  return offer.user.renterApplication;
+}
+
 - (void) review
 {
   if ([[[self yourOfferTextField].text stripWhiteSpace] length]) {
@@ -1652,6 +1753,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   [self.table beginUpdates];
   [self.table endUpdates];
+}
+
+- (NSArray *) roommates
+{
+  return [[self renterApplication] objectsWithModelName:
+    [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES];
 }
 
 - (void) saveDatePreferences

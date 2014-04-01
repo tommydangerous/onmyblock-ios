@@ -22,6 +22,7 @@
 typedef NS_ENUM(NSInteger, OMBResidenceBookItConfirmDetailsSection) {
   OMBResidenceBookItConfirmDetailsSectionPlaceOffer,
   OMBResidenceBookItConfirmDetailsSectionDates,
+  OMBResidenceBookItConfirmDetailsSectionCoapplicants,
   OMBResidenceBookItConfirmDetailsSectionPriceBreakdown,
   OMBResidenceBookItConfirmDetailsSectionPayoutMethods,
   OMBResidenceBookItConfirmDetailsSectionMonthlySchedule,
