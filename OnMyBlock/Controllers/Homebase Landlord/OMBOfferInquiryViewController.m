@@ -21,6 +21,7 @@
 #import "OMBCosignerCell.h"
 #import "OMBEmploymentCell.h"
 #import "OMBGradientView.h"
+#import "OMBHomebaseLandlordConfirmedTenantCell.h"
 #import "OMBLegalQuestion.h"
 #import "OMBLegalQuestionAndAnswerCell.h"
 #import "OMBLegalQuestionStore.h"
@@ -34,8 +35,11 @@
 #import "OMBPayoutTransaction.h"
 #import "OMBPayPalVerifyMobilePaymentConnection.h"
 #import "OMBPreviousRentalCell.h"
+#import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
+#import "OMBRoommate.h"
+#import "OMBRoommateCell.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
@@ -467,6 +471,9 @@
     cameFromSettingUpPayoutMethods = NO;
   }
   
+  // Fetch Applicants
+  [self fetchObjectsForResourceName:[OMBRoommate resourceName]];
+  
   // Fetch questions
   // [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
   //   ^(NSError *error) {
@@ -489,6 +496,15 @@
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol Connection
+
+- (void) JSONDictionary: (NSDictionary *) dictionary
+{
+  [[self renterApplication] readFromDictionary: dictionary
+    forModelName: [OMBRoommate modelName]];
+  [_profileTableView reloadData];
+}
 
 #pragma mark - Protocol PayPalPaymentDelegate
 
@@ -622,6 +638,7 @@
   }
   // Profile
   else if (tableView == _profileTableView) {
+    return 1;
     // Name, school, about
     // Co-signers
     // Co-applicants
@@ -629,7 +646,6 @@
     // Rental history
     // Work history
     // Legal stuff
-    return 1;
     // return 7;
   }
   return 0;
@@ -639,7 +655,8 @@
           cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGFloat padding        = OMBPadding;
-  CGFloat standardHeight = OMBStandardHeight;
+  //CGFloat standardHeight = OMBStandardHeight;
+  NSUInteger row = indexPath.row;
   
   static NSString *CellIdentifier = @"CellIdentifier";
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
@@ -860,8 +877,34 @@
   }
   // Profile
   else if (tableView == _profileTableView) {
+    if(row == 0){
+      static NSString *CellIdentifier = @"CellIdentifier";
+      OMBHomebaseLandlordConfirmedTenantCell *cell =
+      [tableView dequeueReusableCellWithIdentifier: CellIdentifier];
+      if (!cell)
+        cell = [[OMBHomebaseLandlordConfirmedTenantCell alloc] initWithStyle:
+                UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+      // Will eventually need an accessory type
+      cell.accessoryType = UITableViewCellAccessoryNone;
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      [cell loadUser: offer.user];
+      return cell;
+    }
+    else{
+      static NSString *RoommateCellID = @"RoommateCellID";
+      OMBRoommateCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        RoommateCellID];
+      if(!cell){
+        cell = [[OMBRoommateCell alloc] initWithStyle:UITableViewCellStyleDefault
+          reuseIdentifier:RoommateCellID];
+      }
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      [cell loadData: [[self objects] objectAtIndex: row - 1]];
+      return cell;
+    }
+    
     // Name, school, about
-    if (indexPath.section == 0) {
+    /*if (indexPath.section == 0) {
       // Name and school
       if (indexPath.row == 0) {
         static NSString *NameCellIdentifier = @"NameCellIdentifier";
@@ -1028,7 +1071,7 @@
       [cell1 loadData: [legalQuestions objectAtIndex: indexPath.row]
           atIndexPath: indexPath];
       return cell1;
-    }
+    }*/
   }
   return cell;
 }
@@ -1054,8 +1097,11 @@
   }
   // Profile
   else if (tableView == _profileTableView) {
+    // user and their roomates
+    return [[self objects] count] + 1;
+    
     // Name & school, about
-    if (section == 0) {
+    /*if (section == 0) {
       return 2;
     }
     // Co-signers
@@ -1083,7 +1129,7 @@
     // Legal Stuff
     else if (section == 6) {
       return [legalQuestions count];
-    }
+    }*/
   }
   return 0;
 }
@@ -1104,6 +1150,27 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       }
     }
   }
+  // Applicants
+  else if(tableView == _profileTableView)
+  {
+    // user
+    if(indexPath.row == 0){
+      [self.navigationController pushViewController:
+        [[OMBOtherUserProfileViewController alloc] initWithUser: offer.user]
+          animated: YES];
+    }
+    // Applicants
+    else {
+      OMBRoommate *aux = [[self objects] objectAtIndex: indexPath.row - 1];
+      // if is a OMB user
+      if(aux.roommate){
+        [self.navigationController pushViewController:
+          [[OMBOtherUserProfileViewController alloc] initWithUser: aux.roommate]
+            animated: YES];
+      }
+    }
+  }
+  
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
@@ -1181,8 +1248,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Profile
   else if (tableView == _profileTableView) {
+    if(indexPath.row == 0)
+      return [OMBHomebaseLandlordConfirmedTenantCell heightForCell];
+    else
+      return [OMBRoommateCell heightForCell];
+    
     // Name & school, about
-    if (indexPath.section == 0) {
+    /*if (indexPath.section == 0) {
       // Name & school
       if (indexPath.row == 0) {
         return padding + 23.0f + 20.0f + padding;
@@ -1228,7 +1300,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
                      CGSizeMake([OMBLegalQuestionAndAnswerCell widthForQuestionLabel], 9999)
                                                             font: [OMBLegalQuestionAndAnswerCell fontForQuestionLabel]];
       return padding + rect.size.height + (padding * 0.5) + 22.0f + padding;
-    }
+    }*/
   }
   return 0.0f;
 }
@@ -1251,7 +1323,7 @@ viewForHeaderInSection: (NSInteger) section
   // Profile
   if (tableView == _profileTableView) {
     // Co-signers
-    if (section == 1) {
+    /*if (section == 1) {
       titleString = @"Co-signers";
     }
     // Co-applicants
@@ -1273,7 +1345,7 @@ viewForHeaderInSection: (NSInteger) section
     // Legal Stuff
     else if (section == 6) {
       titleString = @"Legal Stuff";
-    }
+    }*/
   }
   label.text = titleString;
   return blurView;
@@ -1528,37 +1600,38 @@ viewForHeaderInSection: (NSInteger) section
     }
   }
   else if (selectedSegmentIndex == 1) {
-    // previouslySelectedIndex = 1;
+    previouslySelectedIndex = 1;
     
-    // offerButton.backgroundColor   = [UIColor clearColor];
-    // profileButton.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.5f];
-    // contactButton.backgroundColor = [UIColor clearColor];
+    offerButton.backgroundColor   = [UIColor clearColor];
+    profileButton.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.5f];
+    contactButton.backgroundColor = [UIColor clearColor];
     
-    // _offerTableView.hidden   = YES;
-    // _profileTableView.hidden = NO;
+    _offerTableView.hidden   = YES;
+    _profileTableView.hidden = NO;
     
-    // // If the profile table view content size height minus the
-    // // respond view's height is less than the profile table's height
-    // if (_profileTableView.contentSize.height - respondView.frame.size.height <=
-    //   _profileTableView.frame.size.height) {
+    // If the profile table view content size height minus the
+    // respond view's height is less than the profile table's height
+    if (_profileTableView.contentSize.height - respondView.frame.size.height <=
+        _profileTableView.frame.size.height) {
+      
+      [_offerTableView setContentOffset: CGPointZero animated: YES];
+    }
+    else if (_offerTableView.contentOffset.y < threshold) {
+      _profileTableView.contentOffset = _offerTableView.contentOffset;
+    }
+    // If payments table view content offset is less than threshold
+    else if (_profileTableView.contentOffset.y < threshold) {
+      _profileTableView.contentOffset = CGPointMake(
+       _profileTableView.contentOffset.x, threshold);
+    }
     
-    //   [_offerTableView setContentOffset: CGPointZero animated: YES];
-    // }
-    // else if (_offerTableView.contentOffset.y < threshold) {
-    //   _profileTableView.contentOffset = _offerTableView.contentOffset;
-    // }
-    // // If payments table view content offset is less than threshold
-    // else if (_profileTableView.contentOffset.y < threshold) {
-    //   _profileTableView.contentOffset = CGPointMake(
-    //     _profileTableView.contentOffset.x, threshold);
-    // }
+    /*OMBRenterProfileViewController *vc =
+     [[OMBRenterProfileViewController alloc] init];
+     [vc loadUser: offer.user];*/
     
-    // OMBRenterProfileViewController *vc =
-    //   [[OMBRenterProfileViewController alloc] init];
-    // [vc loadUser: offer.user];
-    OMBOtherUserProfileViewController *vc =
-      [[OMBOtherUserProfileViewController alloc] initWithUser: offer.user];
-    [self.navigationController pushViewController: vc animated: YES];
+    /*OMBOtherUserProfileViewController *vc =
+     [[OMBOtherUserProfileViewController alloc] initWithUser: offer.user];
+     [self.navigationController pushViewController: vc animated: YES];*/
     
     selectedSegmentIndex = previouslySelectedIndex;
   }
@@ -1850,6 +1923,14 @@ viewForHeaderInSection: (NSInteger) section
   [alertBlur animateChangeOfContent];
 }
 
+- (void) fetchObjectsForResourceName: (NSString *) resourceName
+{
+  [[self renterApplication] fetchListForResourceName: resourceName
+    userUID: offer.user.uid delegate: self completion: ^(NSError *error) {
+      
+  }];
+}
+
 - (void) hideAlert
 {
   [alert hideAlert];
@@ -1918,6 +1999,13 @@ viewForHeaderInSection: (NSInteger) section
       completion: ^{
         
       }];
+}
+
+
+- (NSArray *) objects
+{
+  return [[self renterApplication] objectsWithModelName:
+    [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES];
 }
 
 - (void) offerAcceptedConfirmed
@@ -2061,6 +2149,11 @@ viewForHeaderInSection: (NSInteger) section
   [alertBlur addTargetForConfirmButton: self
                                 action: @selector(rejectOfferConfirmed)];
   [alertBlur animateChangeOfContent];
+}
+
+- (OMBRenterApplication *) renterApplication
+{
+  return offer.user.renterApplication;
 }
 
 - (void) respond
