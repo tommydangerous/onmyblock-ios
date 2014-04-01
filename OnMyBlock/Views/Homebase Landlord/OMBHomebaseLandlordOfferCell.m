@@ -11,7 +11,9 @@
 #import "NSString+Extensions.h"
 #import "OMBCenteredImageView.h"
 #import "OMBOffer.h"
+#import "OMBRenterApplication.h"
 #import "OMBResidence.h"
+#import "OMBRoommate.h"
 #import "OMBUser.h"
 #import "OMBViewController.h"
 #import "UIFont+OnMyBlock.h"
@@ -106,6 +108,23 @@ reuseIdentifier: (NSString *) reuseIdentifier
   return self;
 }
 
+
+#pragma mark - Protocol
+
+#pragma mark - Protocol OMBConnectionProtocol
+
+- (void) JSONDictionary:(NSDictionary *)dictionary
+{
+  [[OMBUser currentUser].renterApplication readFromDictionary:dictionary
+    forModelName:[OMBRoommate modelName]];
+  
+  NSString *coapplicants = @"";
+  if([[self roommates] count] > 0)
+    coapplicants = [NSString stringWithFormat:@"and %i others", [[self roommates] count]];
+  
+  nameLabel.text = [NSString stringWithFormat:@"%@ %@", _offer.user.fullName,coapplicants];
+}
+
 #pragma mark - Methods
 
 #pragma mark - Class Methods
@@ -163,6 +182,30 @@ reuseIdentifier: (NSString *) reuseIdentifier
       rentLabel.frame.origin.y, addressMaxWidth, rentLabel.frame.size.height);
 }
 
+- (void) adjustFramesWithoutImage
+{
+  CGRect screen       = [[UIScreen mainScreen] bounds];
+  CGFloat screenWidth = screen.size.width;
+  CGFloat padding     = 20.0f;
+  
+  // Name
+  CGFloat addressOriginX = padding;
+  addressLabel.frame = CGRectMake(addressOriginX, padding,
+    screenWidth - padding, 22.0f);
+  
+  // Address
+  CGRect nameLabelRect = addressLabel.frame;
+  nameLabel.frame = CGRectMake(nameLabelRect.origin.x,
+    nameLabelRect.origin.y + nameLabelRect.size.height,
+      nameLabelRect.size.width, nameLabelRect.size.height);
+  
+  // Type Label
+  CGRect typeLabelRect = nameLabel.frame;
+  typeLabel.frame = CGRectMake(typeLabelRect.origin.x,
+    typeLabelRect.origin.y + typeLabelRect.size.height,
+      typeLabelRect.size.width, typeLabelRect.size.height);
+}
+
 - (void) loadConfirmedTenant: (OMBOffer *) object
 {
   _offer = object;
@@ -203,6 +246,48 @@ reuseIdentifier: (NSString *) reuseIdentifier
     [dateFormatter stringFromDate: moveInDate],
       [dateFormatter stringFromDate: moveOutDate]];
   typeLabel.textColor = [UIColor textColor];
+}
+
+- (void) loadMoveInConfirmedTenant: (OMBOffer *) object
+{
+  _offer = object;
+  
+  // Image
+  
+  userImageView.image = nil;
+  userImageView.hidden = YES;
+  
+  nameLabel.font = [UIFont normalTextFont];
+  nameLabel.text = _offer.user.fullName;
+  // Name
+  [[OMBUser currentUser].renterApplication fetchListForResourceName: [OMBRoommate resourceName]
+    userUID: [OMBUser currentUser].uid delegate: self completion: ^(NSError *error) {
+      
+  }];
+  
+  // Time
+  timeLabel.hidden = YES;
+  
+  // Address
+  addressLabel.font = [UIFont normalTextFontBold];
+  addressLabel.text = [NSString stringWithFormat:@"%@ - %@",
+    [NSString numberToCurrencyString: _offer.amount],
+      _offer.residence.address];
+  addressLabel.textColor = [UIColor textColor];
+  
+  // Dates
+  NSDateFormatter *dateFormatter = [NSDateFormatter new];
+  dateFormatter.dateFormat = @"M/d/yy";
+  NSDate *moveInDate = [NSDate dateWithTimeIntervalSince1970:
+    _offer.residence.moveInDate];
+  NSDate *moveOutDate = [_offer.residence moveOutDateDate];
+  if (_offer.residence.moveOutDate)
+    moveOutDate = [NSDate dateWithTimeIntervalSince1970:
+                   _offer.residence.moveOutDate];
+  typeLabel.text = [NSString stringWithFormat: @"%@ - %@",
+    [dateFormatter stringFromDate: moveInDate],
+      [dateFormatter stringFromDate: moveOutDate]];
+  typeLabel.textColor = [UIColor grayMedium];
 }
 
 - (void) loadOfferForLandlord: (OMBOffer *) object
@@ -314,7 +399,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
           options: SDWebImageRetryFailed completed:
             ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
               weakUserImageView.image = img;
-              [_offer.residence.coverPhotoSizeDictionary setObject: 
+              [_offer.residence.coverPhotoSizeDictionary setObject:
                 weakUserImageView.image forKey: sizeKey];
             }
           ];
@@ -366,9 +451,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
       color = [UIColor pink];
       notesLabel.hidden = NO;
       notesLabel.text = [NSString stringWithFormat:
-        @"You have %@ to confirm or reject. "
-        @"You may secure the place by signing the lease and "
-        @"paying the 1st month's rent and deposit.",
+        @"Your offer has been accepted! You have %@ to "
+        @"secure the place by signing the lease and paying "
+        @"the remainder of the 1st month’s rent and deposit.",
         [self.offer timelineStringForStudent]
       ];
       timeLabel.hidden = NO;
@@ -414,6 +499,12 @@ reuseIdentifier: (NSString *) reuseIdentifier
   //   [NSString numberToCurrencyString: _offer.amount],
   //     [_offer.residence.address capitalizedString]];
   addressLabel.text = [self.offer.residence.address capitalizedString];
+}
+
+- (NSArray *) roommates
+{
+  return [[OMBUser currentUser].renterApplication objectsWithModelName:
+    [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES];
 }
 
 - (void) timerFireMethod: (NSTimer *) timer

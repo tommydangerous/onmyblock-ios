@@ -639,7 +639,7 @@
 - (void) JSONDictionary:(NSDictionary *)json
 {
   [[self renterApplication] readFromDictionary:json
-    forModelName:[OMBRoommate resourceName]];
+    forModelName:[OMBRoommate modelName]];
   [self.table reloadData];
 }
 

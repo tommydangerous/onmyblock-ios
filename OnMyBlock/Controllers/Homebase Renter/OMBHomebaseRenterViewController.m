@@ -735,8 +735,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
             UITableViewCellStyleDefault reuseIdentifier: 
               ConfirmedTenantIdentifier];
           // Account for empty row
-          [cell1 loadConfirmedTenant:
-            [[self movedIn] objectAtIndex: indexPath.row - 1]];
+          /*[cell1 loadConfirmedTenant:
+            [[self movedIn] objectAtIndex: indexPath.row - 1]];*/
+          
+          [cell1 loadMoveInConfirmedTenant:
+           [[self movedIn] objectAtIndex: indexPath.row - 1]];
+          [cell1 adjustFramesWithoutImage];
         }
         return cell1;
       }
