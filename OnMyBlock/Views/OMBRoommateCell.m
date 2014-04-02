@@ -125,4 +125,21 @@
   }
 }
 
+- (void) loadDataFromUser: (OMBUser *) object
+{
+  OMBUser *user = object;
+  
+  nameLabel.text = [user fullName];
+  emailLabel.text = @"OnMyBlock user";
+  if (user.image) {
+    userImageView.image = [user imageForSize: userImageView.bounds.size];
+  }
+  else {
+    [user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+      userImageView.image = [user imageForSize: userImageView.bounds.size];
+    }];
+    userImageView.image = [OMBUser placeholderImage];
+  }
+}
+
 @end

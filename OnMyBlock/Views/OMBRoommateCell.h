@@ -10,6 +10,7 @@
 
 @class OMBCenteredImageView;
 @class OMBRoommate;
+@class OMBUser;
 
 @interface OMBRoommateCell : OMBTableViewCell
 {
@@ -25,5 +26,6 @@
 #pragma mark - Instance Methods
 
 - (void) loadData: (OMBRoommate *) object;
+- (void) loadDataFromUser: (OMBUser *) object;
 
 @end

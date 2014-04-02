@@ -701,7 +701,7 @@
           cell1.leaseMonthsLabel.text = [NSString stringWithFormat:
             @"%i month lease", [offer numberOfMonthsBetweenMovingDates]];
           NSDateFormatter *dateFormmater = [NSDateFormatter new];
-          dateFormmater.dateFormat = @"MMM d, yy";
+          dateFormmater.dateFormat = @"MMM d, yyyy";
           // Move in date
           cell1.moveInBackground.backgroundColor  = [UIColor whiteColor];
           cell1.moveInDateLabel.text = [dateFormmater stringFromDate:
@@ -760,6 +760,11 @@
         if (indexPath.row == OMBOfferInquirySectionOfferRowPriceBreakdown) {
           cell.textLabel.text = @"Price Breakdown";
         }
+        else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
+          cell.detailTextLabel.text = [NSString numberToCurrencyString:
+            offer.amount];
+          cell.textLabel.text = @"Offer";
+        }
         else if (indexPath.row ==
           OMBOfferInquirySectionOfferRowSecurityDeposit) {
 
@@ -780,11 +785,6 @@
           cell.detailTextLabel.text = [NSString numberToCurrencyString:
                                        [offer remainingBalanceAmount]];
           cell.textLabel.text = @"Remaining Payment";
-        }
-        else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
-          cell.detailTextLabel.text = [NSString numberToCurrencyString:
-                                       offer.amount];
-          cell.textLabel.text = @"Offer";
         }
         return cell;
       }
@@ -877,31 +877,28 @@
   }
   // Profile
   else if (tableView == _profileTableView) {
-    if(row == 0){
-      static NSString *CellIdentifier = @"CellIdentifier";
-      OMBHomebaseLandlordConfirmedTenantCell *cell =
-      [tableView dequeueReusableCellWithIdentifier: CellIdentifier];
-      if (!cell)
-        cell = [[OMBHomebaseLandlordConfirmedTenantCell alloc] initWithStyle:
-                UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
-      // Will eventually need an accessory type
-      cell.accessoryType = UITableViewCellAccessoryNone;
-      cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      [cell loadUser: offer.user];
-      return cell;
+    
+    static NSString *RoommateCellID = @"RoommateCellID";
+    OMBRoommateCell *cell = [tableView dequeueReusableCellWithIdentifier:
+      RoommateCellID];
+    if(!cell){
+      cell = [[OMBRoommateCell alloc] initWithStyle:UITableViewCellStyleDefault
+        reuseIdentifier:RoommateCellID];
     }
-    else{
-      static NSString *RoommateCellID = @"RoommateCellID";
-      OMBRoommateCell *cell = [tableView dequeueReusableCellWithIdentifier:
-        RoommateCellID];
-      if(!cell){
-        cell = [[OMBRoommateCell alloc] initWithStyle:UITableViewCellStyleDefault
-          reuseIdentifier:RoommateCellID];
-      }
-      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    // if is a OMB user
+    if(indexPath.row == 0){
+      [cell loadDataFromUser: offer.user];
+      
+    }else{
+      OMBRoommate *aux = [[self objects] objectAtIndex: indexPath.row - 1];
+      if(!aux.roommate)
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
       [cell loadData: [[self objects] objectAtIndex: row - 1]];
-      return cell;
     }
+    
+    return cell;
     
     // Name, school, about
     /*if (indexPath.section == 0) {
@@ -1210,6 +1207,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       else if (indexPath.row == OMBOfferInquirySectionOfferRowPriceBreakdown) {
         return standardHeight;
       }
+      // Offer
+      else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
+        return standardHeight;
+      }
       // Security deposit
       else if (indexPath.row == OMBOfferInquirySectionOfferRowSecurityDeposit) {
         return standardHeight;
@@ -1220,10 +1221,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // Remaining Payment
       else if (indexPath.row == OMBOfferInquirySectionOfferRowRemainingPayment) {
-        return standardHeight;
-      }
-      // Offer
-      else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
         return standardHeight;
       }
       // Remember detail
@@ -1248,9 +1245,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Profile
   else if (tableView == _profileTableView) {
-    if(indexPath.row == 0)
-      return [OMBHomebaseLandlordConfirmedTenantCell heightForCell];
-    else
       return [OMBRoommateCell heightForCell];
     
     // Name & school, about
@@ -2201,7 +2195,7 @@ viewForHeaderInSection: (NSInteger) section
     [alertBlur setQuestionDetails: [NSString stringWithFormat:
       @"Accept: Charges a non refundable down payment of %@ to %@ and "
       @"gives the applicant party %@ to sign the lease and pay the remainder "
-      @"of the 1st month’s rent and deposit.\n"
+      @"of the 1st month’s rent and deposit.\n\n"
       @"Decline: Tells the student to look for another place to rent.",
         [NSString numberToCurrencyString: [offer downPaymentAmount]],
         [[offer.user firstName] capitalizedString],

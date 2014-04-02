@@ -296,6 +296,7 @@ forButton: (UIButton *) button
     closeButtonView.alpha = 1.0f;
   }];
 }
+
 - (void) showInView: (UIView *) view withDetails:(BOOL) show
 {
   [_backgroundBlurView refreshWithView: view];
@@ -309,6 +310,10 @@ forButton: (UIButton *) button
   [_animator removeBehavior: _itemBehavior];
 
   alertView.transform = CGAffineTransformIdentity;
+  if(show){
+    questionDetailsLabel.alpha = 1.0f;
+    isShowingQuestionDetails = YES;
+  }
   [self updateFrames];
 
   [self showBothButtons];
@@ -348,8 +353,6 @@ forButton: (UIButton *) button
           rect.origin.y = (screen.size.height - 
             alertView.frame.size.height) * 0.5f;
           alertView.frame = rect;
-          if(show)
-             [self questionButtonSelected];
         }];
       }];
     }
