@@ -7,11 +7,13 @@
 //
 
 #import <NewRelicAgent/NewRelicAgent.h>
+#import <Parse/Parse.h>
 #import "GAI.h"
 #import "TestFlight.h"
 
 #import "NSError+OnMyBlock.h"
 #import "NSString+Extensions.h"
+#import "NSString+OnMyBlock.h"
 #import "OMBAppDelegate.h"
 #import "OMBIntroStillImagesViewController.h"
 #import "OMBLoginViewController.h"
@@ -71,6 +73,12 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
       break;
     }
   }
+
+  // Parse setup
+  [Parse setApplicationId: ParseApplicationId clientKey: ParseClientKey];
+  // Register for push notifications
+  [application registerForRemoteNotificationTypes:
+    UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge];
     
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
@@ -175,6 +183,65 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   //   purplePlane.transform = t;
 
   return YES;
+}
+
+- (void) application: (UIApplication *) application
+didFailToRegisterForRemoteNotificationsWithError: (NSError *) error
+{
+  NSLog(@"Application failed to register for remote notifications: %@",
+    error.localizedDescription);
+}
+
+- (void) application: (UIApplication *) application
+didReceiveRemoteNotification: (NSDictionary *) userInfo
+{
+  // // In app alert view pop up
+  // // [PFPush handlePush: userInfo];
+  // // If user is in the program
+  // if (application.applicationState == UIApplicationStateActive) {
+  //   [self updateAllCounts];
+  // }
+  // // If user is not in the program
+  // else {
+  //   // Open the choice detail view controller
+  //   [self.tabBarController switchToViewController: (UIViewController *) 
+  //     self.tabBarController.requestsNav];
+  //   UINavigationController *nav = self.tabBarController.requestsNav;
+  //   // Extract the notification data when an app is opened from a notification
+  //   int choiceId = [[userInfo objectForKey: @"choice_id"] integerValue];
+  //   Choice *choice = [[ChoiceListStore sharedStore] choiceForId: choiceId];
+  //   void (^showChoiceDetailViewController) (Choice *choiceObject) =
+  //     ^(Choice *choiceObject) {
+  //       ChoiceDetailViewController *choiceDetail = 
+  //         [[ChoiceDetailViewController alloc] initWithChoice: choiceObject];
+  //         [nav pushViewController: choiceDetail animated: NO];
+  //     };
+  //   if (choice) {
+  //     showChoiceDetailViewController(choice);
+  //   }
+  //   else {
+  //     // Download choice if its not in the choice list store
+  //     ChoiceInfoConnection *connection =
+  //       [[ChoiceInfoConnection alloc] initWithChoiceId: choiceId];
+  //     connection.completionBlock = ^(NSError *error) {
+  //       if (!error) {
+  //         Choice *newChoice = [[ChoiceListStore sharedStore] choiceForId: 
+  //           choiceId];
+  //         showChoiceDetailViewController(newChoice);
+  //       }
+  //     };
+  //     [connection start];
+  //   }
+  // }
+}
+
+- (void) application: (UIApplication *) application
+didRegisterForRemoteNotificationsWithDeviceToken: (NSData *) deviceToken
+{
+  // Store the deviceToken in the current installation and save it to Parse.
+  PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+  [currentInstallation setDeviceTokenFromData: deviceToken];
+  [currentInstallation saveInBackground];
 }
 
 - (BOOL) application: (UIApplication *) application openURL: (NSURL *) url

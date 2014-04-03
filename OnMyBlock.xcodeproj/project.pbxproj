@@ -54,6 +54,7 @@
 		AB0E984918ED330A0086AF3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984818ED330A0086AF3D /* MobileCoreServices.framework */; };
 		AB0E984B18ED332C0086AF3D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984A18ED332C0086AF3D /* Security.framework */; };
 		AB0E984D18ED33380086AF3D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984C18ED33380086AF3D /* StoreKit.framework */; };
+		AB0E985018EDA9D40086AF3D /* NSString+OnMyBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0E984F18EDA9D40086AF3D /* NSString+OnMyBlock.m */; };
 		AB131F2D1885C87B0057D769 /* OMBResidenceDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB131F2A1885C87B0057D769 /* OMBResidenceDetailViewController.m */; };
 		AB131F2E1885C87B0057D769 /* OMBResidenceImageSlideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB131F2C1885C87B0057D769 /* OMBResidenceImageSlideViewController.m */; };
 		AB131F311885CE450057D769 /* OMBResidenceOffersConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB131F301885CE450057D769 /* OMBResidenceOffersConnection.m */; };
@@ -591,6 +592,8 @@
 		AB0E984818ED330A0086AF3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		AB0E984A18ED332C0086AF3D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		AB0E984C18ED33380086AF3D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		AB0E984E18EDA9D40086AF3D /* NSString+OnMyBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+OnMyBlock.h"; sourceTree = "<group>"; };
+		AB0E984F18EDA9D40086AF3D /* NSString+OnMyBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+OnMyBlock.m"; sourceTree = "<group>"; };
 		AB131F291885C87B0057D769 /* OMBResidenceDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceDetailViewController.h; sourceTree = "<group>"; };
 		AB131F2A1885C87B0057D769 /* OMBResidenceDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceDetailViewController.m; sourceTree = "<group>"; };
 		AB131F2B1885C87B0057D769 /* OMBResidenceImageSlideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceImageSlideViewController.h; sourceTree = "<group>"; };
@@ -2147,34 +2150,36 @@
 		AB9B263D1811CB1300E6DAC4 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				ABED5FE61896EE5D00AD630C /* UIImage+ImageEffects.h */,
-				ABED5FE71896EE5D00AD630C /* UIImage+ImageEffects.m */,
-				ABE679B618932A3100A494FB /* NSString+UAObfuscatedString.h */,
-				ABE679B718932A3100A494FB /* NSString+UAObfuscatedString.m */,
 				AB9B263E1811CB1300E6DAC4 /* NSDate+TimeAgo.h */,
 				AB9B263F1811CB1300E6DAC4 /* NSDate+TimeAgo.m */,
-				AB9B26401811CB1300E6DAC4 /* NSString+Extensions.h */,
-				AB9B26411811CB1300E6DAC4 /* NSString+Extensions.m */,
-				AB9B26421811CB1300E6DAC4 /* UIColor+Extensions.h */,
-				AB9B26431811CB1300E6DAC4 /* UIColor+Extensions.m */,
-				AB9B26441811CB1300E6DAC4 /* UIImage+Resize.h */,
-				AB9B26451811CB1300E6DAC4 /* UIImage+Resize.m */,
-				AB76C0DE18187B3F006354FB /* UIImage+Color.h */,
-				AB76C0DF18187B3F006354FB /* UIImage+Color.m */,
-				AB0269BB182293DC00E72F53 /* UIImage+NegativeImage.h */,
-				AB0269BC182293DC00E72F53 /* UIImage+NegativeImage.m */,
-				AB6155DA1850DB3600A193C7 /* UIImage+FixOrientation.h */,
-				AB6155DB1850DB3600A193C7 /* UIImage+FixOrientation.m */,
-				AB1C217918516D7F00ED7C06 /* NSString+PhoneNumber.h */,
-				AB1C217A18516D7F00ED7C06 /* NSString+PhoneNumber.m */,
 				ABE4FBE018902D6A0009D643 /* NSDateFormatter+JSON.h */,
 				ABE4FBE118902D6A0009D643 /* NSDateFormatter+JSON.m */,
-				ABE679B01892D1F900A494FB /* UIFont+OnMyBlock.h */,
-				ABE679B11892D1F900A494FB /* UIFont+OnMyBlock.m */,
-				ABB173C0189ECA9B0010D28F /* NSError+OnMyBlock.h */,
-				ABB173C1189ECA9B0010D28F /* NSError+OnMyBlock.m */,
 				AB18CF2018DE12680022ABF1 /* NSDictionary+DictionaryWithObject.h */,
 				AB18CF2118DE12680022ABF1 /* NSDictionary+DictionaryWithObject.m */,
+				ABB173C0189ECA9B0010D28F /* NSError+OnMyBlock.h */,
+				ABB173C1189ECA9B0010D28F /* NSError+OnMyBlock.m */,
+				AB9B26401811CB1300E6DAC4 /* NSString+Extensions.h */,
+				AB9B26411811CB1300E6DAC4 /* NSString+Extensions.m */,
+				AB1C217918516D7F00ED7C06 /* NSString+PhoneNumber.h */,
+				AB1C217A18516D7F00ED7C06 /* NSString+PhoneNumber.m */,
+				ABE679B618932A3100A494FB /* NSString+UAObfuscatedString.h */,
+				ABE679B718932A3100A494FB /* NSString+UAObfuscatedString.m */,
+				AB9B26421811CB1300E6DAC4 /* UIColor+Extensions.h */,
+				AB9B26431811CB1300E6DAC4 /* UIColor+Extensions.m */,
+				ABE679B01892D1F900A494FB /* UIFont+OnMyBlock.h */,
+				ABE679B11892D1F900A494FB /* UIFont+OnMyBlock.m */,
+				AB76C0DE18187B3F006354FB /* UIImage+Color.h */,
+				AB76C0DF18187B3F006354FB /* UIImage+Color.m */,
+				AB6155DA1850DB3600A193C7 /* UIImage+FixOrientation.h */,
+				AB6155DB1850DB3600A193C7 /* UIImage+FixOrientation.m */,
+				ABED5FE61896EE5D00AD630C /* UIImage+ImageEffects.h */,
+				ABED5FE71896EE5D00AD630C /* UIImage+ImageEffects.m */,
+				AB0269BB182293DC00E72F53 /* UIImage+NegativeImage.h */,
+				AB0269BC182293DC00E72F53 /* UIImage+NegativeImage.m */,
+				AB9B26441811CB1300E6DAC4 /* UIImage+Resize.h */,
+				AB9B26451811CB1300E6DAC4 /* UIImage+Resize.m */,
+				AB0E984E18EDA9D40086AF3D /* NSString+OnMyBlock.h */,
+				AB0E984F18EDA9D40086AF3D /* NSString+OnMyBlock.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -3228,6 +3233,7 @@
 				AB9D6112188CEFDE00C9AC64 /* SDWebImageDecoder.m in Sources */,
 				ABB911BF18998FB30046611F /* AFHTTPRequestOperationManager.m in Sources */,
 				AB034B151837D3DC00811074 /* OMBGradientView.m in Sources */,
+				AB0E985018EDA9D40086AF3D /* NSString+OnMyBlock.m in Sources */,
 				AB4ED3021884C738009AFB01 /* OMBResidencePublishConnection.m in Sources */,
 				AB8C8C1F1815969700A1B087 /* OMBResidenceStore.m in Sources */,
 				ABA4F21B187DF2CC00D725D4 /* OMBResidenceImageDeleteConnection.m in Sources */,
