@@ -49,6 +49,11 @@
 		AB0C36B218406779006DC3AD /* OMBStopwatchView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0C36B118406779006DC3AD /* OMBStopwatchView.m */; };
 		AB0C36B5184074A8006DC3AD /* OMBHouseGraphicView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0C36B4184074A8006DC3AD /* OMBHouseGraphicView.m */; };
 		AB0C36B818407590006DC3AD /* OMBTriangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0C36B718407590006DC3AD /* OMBTriangleView.m */; };
+		AB0E984518ED32630086AF3D /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984418ED32620086AF3D /* Parse.framework */; };
+		AB0E984718ED32D00086AF3D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984618ED32D00086AF3D /* AudioToolbox.framework */; };
+		AB0E984918ED330A0086AF3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984818ED330A0086AF3D /* MobileCoreServices.framework */; };
+		AB0E984B18ED332C0086AF3D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984A18ED332C0086AF3D /* Security.framework */; };
+		AB0E984D18ED33380086AF3D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984C18ED33380086AF3D /* StoreKit.framework */; };
 		AB131F2D1885C87B0057D769 /* OMBResidenceDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB131F2A1885C87B0057D769 /* OMBResidenceDetailViewController.m */; };
 		AB131F2E1885C87B0057D769 /* OMBResidenceImageSlideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB131F2C1885C87B0057D769 /* OMBResidenceImageSlideViewController.m */; };
 		AB131F311885CE450057D769 /* OMBResidenceOffersConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB131F301885CE450057D769 /* OMBResidenceOffersConnection.m */; };
@@ -581,6 +586,11 @@
 		AB0C36B4184074A8006DC3AD /* OMBHouseGraphicView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHouseGraphicView.m; sourceTree = "<group>"; };
 		AB0C36B618407590006DC3AD /* OMBTriangleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTriangleView.h; sourceTree = "<group>"; };
 		AB0C36B718407590006DC3AD /* OMBTriangleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTriangleView.m; sourceTree = "<group>"; };
+		AB0E984418ED32620086AF3D /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		AB0E984618ED32D00086AF3D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		AB0E984818ED330A0086AF3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		AB0E984A18ED332C0086AF3D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		AB0E984C18ED33380086AF3D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		AB131F291885C87B0057D769 /* OMBResidenceDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceDetailViewController.h; sourceTree = "<group>"; };
 		AB131F2A1885C87B0057D769 /* OMBResidenceDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceDetailViewController.m; sourceTree = "<group>"; };
 		AB131F2B1885C87B0057D769 /* OMBResidenceImageSlideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceImageSlideViewController.h; sourceTree = "<group>"; };
@@ -1430,12 +1440,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB0E984D18ED33380086AF3D /* StoreKit.framework in Frameworks */,
+				AB0E984B18ED332C0086AF3D /* Security.framework in Frameworks */,
+				AB0E984918ED330A0086AF3D /* MobileCoreServices.framework in Frameworks */,
+				AB0E984718ED32D00086AF3D /* AudioToolbox.framework in Frameworks */,
 				AB01ED71185966C800333390 /* MessageUI.framework in Frameworks */,
 				6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */,
 				AB01ED6D185966B500333390 /* AVFoundation.framework in Frameworks */,
 				ABB022D3182490D700F98544 /* CoreData.framework in Frameworks */,
 				AB802EA018109E5200E04D11 /* CoreGraphics.framework in Frameworks */,
 				AB0269B9182292F500E72F53 /* CoreImage.framework in Frameworks */,
+				AB0E984518ED32630086AF3D /* Parse.framework in Frameworks */,
 				ABB3C58918117C2200DD91C9 /* CoreLocation.framework in Frameworks */,
 				ABB022C518248D9100F98544 /* CoreTelephony.framework in Frameworks */,
 				AB01ED6F185966BD00333390 /* CFNetwork.framework in Frameworks */,
@@ -1705,30 +1720,30 @@
 		AB802E9118109E5200E04D11 = {
 			isa = PBXGroup;
 			children = (
-				AB2EA4C518A9E79700ACE53C /* LEffectLabel */,
-				DE95E8C418A03B5500A2A341 /* MNCalendarView */,
-				DE8D2D4F18BD05F4000E6BF4 /* SVPullToRefresh */,
 				ABB911AA18998FB20046611F /* AFNetworking */,
-				ABB9119818998CA80046611F /* IOSLinkedInAPI */,
+				AB6155D6184FF9D400A193C7 /* Base64 */,
 				ABED5FE91896FAED00AD630C /* DKLiveBlur */,
 				ABED5FD51896E8CD00AD630C /* DRNRealTimeBlurView */,
-				ABED5FDA1896E8CE00AD630C /* UIERealTimeBlurView */,
-				AB9D60F3188CEFDE00C9AC64 /* SDWebImage */,
 				ABBA58811870C59700E9BF4E /* ELCImagePicker */,
-				ABE28175186A187E00A5D14E /* TestFlightSDK2.1.3 */,
-				AB01ED641859653800333390 /* PayPalMobile */,
-				AB6155D6184FF9D400A193C7 /* Base64 */,
 				AB802E9C18109E5200E04D11 /* Frameworks */,
-				A685EF92188F27C70074E336 /* ProgressIndicator */,
 				ABB022D4182491FD00F98544 /* GoogleAnalytics */,
 				AB0269D31822A12600E72F53 /* iOS-Blur */,
+				ABB9119818998CA80046611F /* IOSLinkedInAPI */,
+				AB2EA4C518A9E79700ACE53C /* LEffectLabel */,
 				AB9B2601181196F400E6DAC4 /* location.gpx */,
-				B484A9C118B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m */,
 				ABB3C57B1811781C00DD91C9 /* MFSideMenu */,
+				DE95E8C418A03B5500A2A341 /* MNCalendarView */,
 				AB9B262E1811B7ED00E6DAC4 /* OCMapView */,
 				AB802EA318109E5200E04D11 /* OnMyBlock */,
 				AB802EBC18109E5200E04D11 /* OnMyBlockTests */,
+				AB01ED641859653800333390 /* PayPalMobile */,
 				AB802E9B18109E5200E04D11 /* Products */,
+				A685EF92188F27C70074E336 /* ProgressIndicator */,
+				B484A9C118B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m */,
+				AB9D60F3188CEFDE00C9AC64 /* SDWebImage */,
+				DE8D2D4F18BD05F4000E6BF4 /* SVPullToRefresh */,
+				ABE28175186A187E00A5D14E /* TestFlightSDK2.1.3 */,
+				ABED5FDA1896E8CE00AD630C /* UIERealTimeBlurView */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1744,25 +1759,30 @@
 		AB802E9C18109E5200E04D11 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DE93158618916D1800111CF6 /* FacebookSDK.framework */,
-				ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */,
-				AB01ED70185966C800333390 /* MessageUI.framework */,
-				AB01ED6E185966BD00333390 /* CFNetwork.framework */,
-				AB01ED6C185966B500333390 /* AVFoundation.framework */,
-				AB01ED6A185966AC00333390 /* libxml2.dylib */,
-				ABB022D2182490D700F98544 /* CoreData.framework */,
-				ABB022C618248D9800F98544 /* SystemConfiguration.framework */,
-				ABB022C418248D9100F98544 /* CoreTelephony.framework */,
-				ABB022C218248D6E00F98544 /* NewRelicAgent.framework */,
-				ABBB18E8182458E200211499 /* libz.dylib */,
 				AB8C8C291815C31000A1B087 /* Accelerate.framework */,
+				AB0E984618ED32D00086AF3D /* AudioToolbox.framework */,
+				AB01ED6C185966B500333390 /* AVFoundation.framework */,
+				AB01ED6E185966BD00333390 /* CFNetwork.framework */,
+				ABB022D2182490D700F98544 /* CoreData.framework */,
 				AB802E9F18109E5200E04D11 /* CoreGraphics.framework */,
 				AB0269B8182292F500E72F53 /* CoreImage.framework */,
 				ABB3C58818117C2200DD91C9 /* CoreLocation.framework */,
+				ABB022C418248D9100F98544 /* CoreTelephony.framework */,
+				DE93158618916D1800111CF6 /* FacebookSDK.framework */,
 				AB802E9D18109E5200E04D11 /* Foundation.framework */,
+				AB01ED6A185966AC00333390 /* libxml2.dylib */,
+				ABBB18E8182458E200211499 /* libz.dylib */,
 				ABB3C58618117C1C00DD91C9 /* MapKit.framework */,
+				AB01ED70185966C800333390 /* MessageUI.framework */,
+				AB0E984818ED330A0086AF3D /* MobileCoreServices.framework */,
+				ABB022C218248D6E00F98544 /* NewRelicAgent.framework */,
+				AB0E984418ED32620086AF3D /* Parse.framework */,
 				ABC48E791812397300F01D8D /* QuartzCore.framework */,
+				AB0E984A18ED332C0086AF3D /* Security.framework */,
+				AB0E984C18ED33380086AF3D /* StoreKit.framework */,
+				ABB022C618248D9800F98544 /* SystemConfiguration.framework */,
 				AB802EA118109E5200E04D11 /* UIKit.framework */,
+				ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */,
 				AB802EB618109E5200E04D11 /* XCTest.framework */,
 			);
 			name = Frameworks;
@@ -1771,17 +1791,17 @@
 		AB802EA318109E5200E04D11 /* OnMyBlock */ = {
 			isa = PBXGroup;
 			children = (
-				AB18CF5D18E0904E0022ABF1 /* Documents */,
-				AB00B9C718BD48340050D6F4 /* Protocol */,
 				ABB3C56C1811719B00DD91C9 /* AppDelegate */,
 				AB9B263D1811CB1300E6DAC4 /* Categories */,
 				AB9B264A1811CE5E00E6DAC4 /* Connections */,
 				ABB3C5711811775300DD91C9 /* Controllers */,
+				AB18CF5D18E0904E0022ABF1 /* Documents */,
 				AB8C8C101815783A00A1B087 /* Downloaders */,
 				ABB3C56F1811719B00DD91C9 /* Images */,
 				AB802EAF18109E5200E04D11 /* Images.xcassets */,
 				AB26131B18198E260053A8AA /* Layouts */,
 				AB9B260C1811AA6600E6DAC4 /* Models */,
+				AB00B9C718BD48340050D6F4 /* Protocol */,
 				AB9B26241811AF6C00E6DAC4 /* Stores */,
 				AB802EA418109E5200E04D11 /* Supporting Files */,
 				AB9B26031811A49200E6DAC4 /* Views */,
@@ -3678,10 +3698,12 @@
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
 					"$(SRCROOT)/",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OnMyBlock/OnMyBlock-Prefix.pch";
 				INFOPLIST_FILE = "OnMyBlock/OnMyBlock-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/GoogleAnalytics",
@@ -3710,10 +3732,12 @@
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
 					"$(SRCROOT)/",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OnMyBlock/OnMyBlock-Prefix.pch";
 				INFOPLIST_FILE = "OnMyBlock/OnMyBlock-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/GoogleAnalytics",
