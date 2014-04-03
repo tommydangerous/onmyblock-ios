@@ -379,7 +379,7 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
     cell.imageView.alpha = 1.0f;
   else if (row == 3 && user.renterApplication.linkedinAuthenticated)
     cell.imageView.alpha = 1.0f;
-
+  cell.clipsToBounds = YES;
   return cell;
 }
 
@@ -522,6 +522,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.backgroundColor = [UIColor grayUltraLight];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.separatorInset  = maxInsets;
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -540,6 +541,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.backgroundColor = [UIColor grayUltraLight];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.separatorInset  = maxInsets;
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -559,7 +561,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [UIImage imageNamed: @"group_icon.png"]
           size: cell.iconView.bounds.size];
       cell.headLabel.text = @"Co-Applicants";
-
+      cell.clipsToBounds = YES;
       return cell;
     }
     else{
@@ -570,6 +572,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBRoommateCell alloc] initWithStyle: UITableViewCellStyleDefault
           reuseIdentifier: RoommateID];
       [cell loadData: [[self objectsFromRoommates] objectAtIndex: row - 1]];
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -588,7 +591,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [UIImage imageNamed: @"landlord_icon.png"]
           size: cell.iconView.bounds.size];
       cell.headLabel.text = @"Co-Signer";
-      
+      cell.clipsToBounds = YES;
       return cell;
     }
     else{
@@ -609,6 +612,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         action:@selector(phoneCallCosigner:)
           forControlEvents:UIControlEventTouchUpInside];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -628,6 +632,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.iconView.image = [UIImage image:
         [UIImage imageNamed: @"dogs_icon.png"]
           size: cell.iconView.bounds.size];
+      cell.clipsToBounds = YES;
       return cell;
     }
     else{
@@ -659,6 +664,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell.textLabel.text = @"I do not have a cat";
       }
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -678,7 +684,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [UIImage imageNamed: @"house_icon.png"]
           size: cell.iconView.bounds.size];
       cell.headLabel.text = @"Rental History";
-
+      cell.clipsToBounds = YES;
       return cell;
     }
     else{
@@ -690,6 +696,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           reuseIdentifier: PreviousRentalID];
       [cell loadData2: [[self objectsFromPreviousRental] objectAtIndex: row - 1]];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -709,7 +716,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [UIImage imageNamed: @"document_icon_black.png"]
           size: cell.iconView.bounds.size];
       cell.headLabel.text = @"Work & School History";
-      
+      cell.clipsToBounds = YES;
       return cell;
     }
     else {
@@ -723,6 +730,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [[user.renterApplication employmentsSortedByStartDate] 
           objectAtIndex: row - 1]];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -742,7 +750,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [UIImage imageNamed: @"law_icon_black.png"]
           size: cell.iconView.bounds.size];
       cell.headLabel.text = @"Legal Questions";
-      
+      cell.clipsToBounds = YES;
       return cell;
     }
     else{
@@ -763,6 +771,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       OMBLegalAnswer *legalAnswer = [legalAnswers objectForKey:
         [NSNumber numberWithInt: legalQuestion.uid]];
       [cell loadLegalAnswerForOtherUser: legalAnswer];
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -782,7 +791,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [UIImage imageNamed: @"house_icon.png"]
           size: cell.iconView.bounds.size];
       cell.headLabel.text = @"Listings";
-      
+      cell.clipsToBounds = YES;
       return cell;
     }
     // Listings
@@ -798,9 +807,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         indexPath.row - 1]];
       cell.separatorInset = UIEdgeInsetsZero;
       cell.statusLabel.hidden = YES;
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
+  emptyCell.clipsToBounds = YES;
   return emptyCell;
 }
 

@@ -448,6 +448,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         UILabel *label = (UILabel *) [cell viewWithTag: labelTag];
         label.text = [user shortName];
       }
+      cell.clipsToBounds = YES;
       return cell;
     }
     // About
@@ -470,6 +471,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.separatorInset = maxInsets;
+      cell.clipsToBounds = YES;
       return cell;
     }
     // Everything else
@@ -539,8 +541,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.secondTextFieldLabel.text = lastNameLabelString;
         [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
                        forControlEvents: UIControlEventEditingChanged];
+        cell.clipsToBounds = YES;
         return cell;
-        
       }
       // School
       else if (row == OMBMyRenterProfileSectionUserInfoRowSchool) {
@@ -573,6 +575,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.textFieldLabel.text = labelString;
       [cell.textField addTarget: self action: @selector(textFieldDidChange:)
         forControlEvents: UIControlEventEditingChanged];
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -626,10 +629,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.label.text = string;
       if ([[self renterapplicationUserDefaults] objectForKey: key])
         [cell fillCheckmark];
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
-
+  emptyCell.clipsToBounds = YES;
   return emptyCell;
 }
 

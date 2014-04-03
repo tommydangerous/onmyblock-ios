@@ -75,8 +75,8 @@
   OMBPreviousRentalCell *cell = [tableView dequeueReusableCellWithIdentifier:
     PreviousRentalID];
   if (!cell)
-    cell = [[OMBPreviousRentalCell alloc] initWithStyle: UITableViewCellStyleDefault
-      reuseIdentifier: PreviousRentalID];
+    cell = [[OMBPreviousRentalCell alloc] initWithStyle: 
+      UITableViewCellStyleDefault reuseIdentifier: PreviousRentalID];
   [cell loadData2: [[self objects] objectAtIndex: row]];
   
   // Last row
@@ -87,6 +87,7 @@
   else {
     cell.separatorInset = tableView.separatorInset;
   }
+  cell.clipsToBounds = YES;
   return cell;
 }
 

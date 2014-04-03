@@ -152,6 +152,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       [cell.layer addSublayer: border];
     }
   }
+  cell.clipsToBounds = YES;
   return cell;
 }
 
