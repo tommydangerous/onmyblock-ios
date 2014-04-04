@@ -740,6 +740,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       [cell.yourOfferTextField addTarget: self
                                   action: @selector(textFieldDidChange:)
                         forControlEvents: UIControlEventEditingChanged];
+        cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -777,6 +778,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
           action: @selector(showMoveOutCalendar)
             forControlEvents: UIControlEventTouchUpInside];
       }
+        cell.clipsToBounds = YES;
       return cell;
     }
     // The calendar
@@ -800,6 +802,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       else
         leaseMonthsLabel.text = @"month to month";
 
+        cell.clipsToBounds = YES;
       return cell;
       
       // if (selectedIndexPath &&
@@ -834,6 +837,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
                                              0.0f, 0.0f);
+        cell.clipsToBounds = YES;
       return cell;
     }
     // View lease details
@@ -862,6 +866,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
                                              0.0f, 0.0f);
+        cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -887,6 +892,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell.textLabel.textColor = [UIColor textColor];
       cell.textLabel.text = @"Co-applicants";
       
+        cell.clipsToBounds = YES;
       return cell;
     }else{
       static NSString *RoommateCellID = @"RoommateCellID";
@@ -896,6 +902,15 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         cell = [[OMBRoommateCell alloc] initWithStyle:UITableViewCellStyleDefault
           reuseIdentifier: RoommateCellID];
       [cell loadData: [[self roommates] objectAtIndex: indexPath.row - 1]];
+        
+        OMBRoommate *aux = [[self roommates] objectAtIndex: indexPath.row - 1];
+        // if is a OMB user
+        if(!aux.roommate)
+        {
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        }
+
+        cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -952,6 +967,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         cell.detailTextLabel.text = [NSString numberToCurrencyString:[offer remainingBalanceAmount]];
         cell.textLabel.text = @"Remaining Payment";
       }
+        cell.clipsToBounds = YES;
       return cell;
     }
     // Total
@@ -981,7 +997,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       [UIFont fontWithName: @"HelveticaNeue-Light" size: 27];
       cell.textLabel.text = @"Total";
       cell.textLabel.textColor = [UIColor textColor];
-      return cell;
+        cell.clipsToBounds = YES;
+return cell;
     }
     // Extra information, notes, etc.
     else if (indexPath.row == 6) {
@@ -1011,6 +1028,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
                                              0.0f, 0.0f);
+        cell.clipsToBounds = YES;
       return cell;
     }
     // Price Breakdown arrow (Not being used)!!!
@@ -1045,6 +1063,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
       cell.textLabel.text = @"Price Breakdown";
       cell.textLabel.textColor = [UIColor grayMedium];
+        cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -1070,6 +1089,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       else
         cell.userInteractionEnabled = YES;
       
+        cell.clipsToBounds = YES;
       return cell;
     }
     else {
@@ -1104,6 +1124,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.separatorInset = UIEdgeInsetsMake(0.0f,
                                              tableView.frame.size.width, 0.0f, 0.0f);
+        cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -1143,6 +1164,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         [cell.contentView addSubview: bor];
       }
       [cell loadUser: [OMBUser currentUser]];
+        cell.clipsToBounds = YES;
       return cell;
     }
     // My Renter Profile
@@ -1173,6 +1195,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell.selectionStyle = UITableViewCellSelectionStyleDefault;
       cell.textLabel.text = @"My Renter Profile";
       cell.textLabel.textColor = [UIColor textColor];
+        cell.clipsToBounds = YES;
       return cell;
     }
     // Add a personal note
@@ -1207,6 +1230,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
       cell.textLabel.text = @"Add a personal note";
       cell.textLabel.textColor = [UIColor textColor];
+        cell.clipsToBounds = YES;
       return cell;
     }
     // Personal note text view
@@ -1228,6 +1252,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       }
       personalNoteTextView.text = personalNote;
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.clipsToBounds = YES;
       return cell;
     }
   }
@@ -1254,6 +1279,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
                                            0.0f, 0.0f);
+      cell.clipsToBounds = YES;
     return cell;
   }
   // Spacing
@@ -1263,6 +1289,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     emptyCell.separatorInset = UIEdgeInsetsMake(0.0f,
                                                 tableView.frame.size.width, 0.0f, 0.0f);
   }
+    emptyCell.clipsToBounds = YES;
   return emptyCell;
 }
 
@@ -1516,10 +1543,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   //
   else if (indexPath.section == OMBResidenceBookItConfirmDetailsSectionCoapplicants){
-    if(indexPath.row == 0)
-      return spacing;
-    else
-      return [OMBRoommateCell heightForCell];
+      if(indexPath.row == 0)
+          return spacing;
+      else
+          if (indexPath.row ==  [self roommates].count) {
+              return [OMBRoommateCell heightForCell]  + OMBStandardHeight / 2.0f;
+          }
+          else
+              return [OMBRoommateCell heightForCell];
   }
   // Price breakdown
   else if (indexPath.section ==

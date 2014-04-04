@@ -64,6 +64,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 
 - (CGFloat) downPaymentAmount
 {
+
   return [self totalAmount] * [OMBOffer downPaymentPercentage];
 }
 
