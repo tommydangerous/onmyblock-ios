@@ -46,7 +46,6 @@
 #import "UIImage+Resize.h"
 #import "UIImageView+WebCache.h"
 
-
 @implementation OMBResidenceBookItConfirmDetailsViewController
 
 #pragma mark - Initializer
@@ -584,62 +583,6 @@
   return YES;
 }
 
-// - (void)oldcalendarView:(MNCalendarView *)calendarView didSelectDate:(NSDate *)date {
-//   NSDateFormatter *dateFormmater = [NSDateFormatter new];
-//   dateFormmater.dateFormat = @"MMM d, yyyy";
-//   OMBResidenceBookItCalendarCell *calendarCell =
-//   (OMBResidenceBookItCalendarCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 1 inSection: 1]];
-//   OMBResidenceConfirmDetailsDatesCell *detailsCell =
-//   (OMBResidenceConfirmDetailsDatesCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 0 inSection: 1]];
-
-//   if([calendarCell respondsToSelector:@selector(calendarView)]){
-//     if(!calendarCell.calendarView.selectedFirst){
-//       [detailsCell.moveInDateLabel setTitle:[dateFormmater stringFromDate:date]
-//                                    forState:UIControlStateNormal];
-//       [detailsCell.moveOutDateLabel setTitle:@"-"
-//                                     forState:UIControlStateNormal];
-//       calendarCell.calendarView.selectedFirst = date;
-
-//       // update residence or offer
-//       // residence.moveInDate || offer
-//     }
-//     else{
-//       [detailsCell.moveOutDateLabel setTitle:[dateFormmater stringFromDate: date]
-//                                     forState:UIControlStateNormal];
-//       calendarCell.calendarView.selectedSecond = date;
-//       // update residence or offer
-//     }
-//   }
-//   NSLog(@"DID SELECT: %@", [dateFormmater stringFromDate: date]);
-// }
-
-// - (BOOL)oldcalendarView:(MNCalendarView *)calendarView shouldSelectDate:(NSDate *)date {
-
-//   OMBResidenceBookItCalendarCell *calendarCell = (OMBResidenceBookItCalendarCell *)[self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow: 1 inSection: 1]];
-
-//   //Set days it cannot be selected
-
-//   if([date timeIntervalSinceDate: [NSDate date]] < 0){
-//     return NO;
-//   }
-
-//   if([calendarCell respondsToSelector:@selector(calendarView)]){
-//     if(calendarCell.calendarView.selectedFirst){
-//       NSTimeInterval timeInterval = [date timeIntervalSinceDate: calendarCell.calendarView.selectedFirst];
-
-//       if(timeInterval < 0 || (timeInterval > MN_YEAR / 2)) // until 6 months
-//         return NO;
-
-//       if(calendarCell.calendarView.selectedSecond){
-//         if([date timeIntervalSinceDate: calendarCell.calendarView.selectedSecond] > 0)
-//           return NO;
-//       }
-//     }
-//   }
-
-//   return YES;
-// }
-
 #pragma mark - Protocol OMBConnectionProtocol
 
 - (void) JSONDictionary:(NSDictionary *)json
@@ -647,6 +590,28 @@
   [[self renterApplication] readFromDictionary:json
     forModelName:[OMBRoommate modelName]];
   [self.table reloadData];
+}
+
+#pragma mark - Protocol PayPalPaymentDelegate
+
+- (void) payPalPaymentViewController: (PayPalPaymentViewController *)
+paymentViewController
+didCompletePayment: (PayPalPayment *) completedPayment
+{
+  // Payment was processed successfully;
+  // send to server for verification and fulfillment.
+  NSLog(@"%@", completedPayment);
+  // [self verifyCompletedPayment: completedPayment];
+
+  // Dismiss the PayPalPaymentViewController.
+  [paymentViewController dismissViewControllerAnimated: YES completion: nil];
+}
+
+- (void) payPalPaymentDidCancel: (PayPalPaymentViewController *)
+paymentViewController
+{
+  // The payment was canceled; dismiss the PayPalPaymentViewController.
+  [paymentViewController dismissViewControllerAnimated: YES completion: nil];
 }
 
 #pragma mark - Protocol UIAlertViewDelegate
@@ -2024,50 +1989,57 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) submitOfferConfirmed
 {
-  [[OMBUser currentUser] createOffer: offer completion: ^(NSError *error) {
-    if (offer.uid && !error) {
-      // save move in & move out preferences
-      [self saveDatePreferences];
+  // PayPal
+  if ([[OMBUser currentUser].primaryPaymentPayoutMethod isPayPal]) {
+    NSString *shortDescription = [NSString stringWithFormat:
+      @"Down Payment for %@", [residence.address capitalizedString]];
+    [self closeAlertBlur];
+    // Down payment
+    [self presentViewController:
+      [self payPalPaymentViewControllerWithAmount: [offer downPaymentAmount]
+        intent: PayPalPaymentIntentAuthorize shortDescription: shortDescription
+          delegate: self] animated: YES completion: nil];
+  }
+  // Venmo
+  else if ([[OMBUser currentUser].primaryPaymentPayoutMethod isVenmo]) {
+    [[OMBUser currentUser] createOffer: offer completion: ^(NSError *error) {
+      if (offer.uid && !error) {
+        // save move in & move out preferences
+        [self saveDatePreferences];
 
-      NSString *userTypeString = @"landlord";
-      if ([residence.propertyType isEqualToString: @"sublet"])
-        userTypeString = @"subletter";
+        NSString *userTypeString = @"landlord";
+        if ([residence.propertyType isEqualToString: @"sublet"])
+          userTypeString = @"subletter";
 
-      [alertBlur setTitle: @"Offer Placed!"];
-      // [alertBlur setMessage: [NSString stringWithFormat:
-      //   @"If the %@ accepts your offer, you will receive a lease "
-      //   @"via email to e-sign. You will have 48 hours to confirm, "
-      //   @"sign the lease, and pay the 1st month's rent "
-      //   @"and deposit using your selected payment method.", userTypeString]];
-      NSUInteger weeks = kMaxHoursForStudentToConfirm / 7;
-      [alertBlur setMessage: [NSString stringWithFormat:
-        @"If the landlord accepts your offer, we will immediately email you "
-        @"the lease, and you (and your roommates if applicable) will have %@ "
-        @"to secure the place by electronically signing the lease and paying "
-        @"the 1st month's rent and deposit through OnMyBlock. Some places may "
-        @"also require a signed co-signer agreement. If your offer is "
-        @"retracted, declined, or expires, "
-        @"any payment authorization is voided.",
-        [NSString stringWithFormat: @"%i %@", weeks,
-          weeks == 1 ? @"week" : @"weeks"]
-      ]];
-      [alertBlur resetQuestionDetails];
-      [alertBlur hideQuestionButton];
-      // Buttons
-      [alertBlur setConfirmButtonTitle: @"Okay"];
-      [alertBlur addTargetForConfirmButton: self
-        action: @selector(submitOfferConfirmedOkay)];
-      [alertBlur showOnlyConfirmButton];
-      [alertBlur animateChangeOfContent];
-    }
-    else {
-      [self showAlertViewWithError: error];
-      // Try again
-      [self submitOfferFinalAnswer];
-    }
-    [[self appDelegate].container stopSpinning];
-  }];
-  [[self appDelegate].container startSpinning];
+        [alertBlur setTitle: @"Offer Placed!"];
+        [alertBlur setMessage: [NSString stringWithFormat:
+          @"If the landlord accepts your offer, we will immediately email you "
+          @"the lease, and you (and your roommates if applicable) will have %@ "
+          @"to secure the place by electronically signing the lease and paying "
+          @"the 1st month's rent and deposit through OnMyBlock. "
+          @"Some places may also require a signed co-signer agreement. "
+          @"If your offer is retracted, declined, or expires, "
+          @"any payment authorization is voided.",
+          [offer timelineStringForStudent]
+        ]];
+        [alertBlur resetQuestionDetails];
+        [alertBlur hideQuestionButton];
+        // Buttons
+        [alertBlur setConfirmButtonTitle: @"Okay"];
+        [alertBlur addTargetForConfirmButton: self
+          action: @selector(submitOfferConfirmedOkay)];
+        [alertBlur showOnlyConfirmButton];
+        [alertBlur animateChangeOfContent];
+      }
+      else {
+        [self showAlertViewWithError: error];
+        // Try again
+        [self submitOfferFinalAnswer];
+      }
+      [self containerStopSpinning];
+    }];
+    [self containerStartSpinning];
+  }
 }
 
 - (void) submitOfferConfirmedOkay

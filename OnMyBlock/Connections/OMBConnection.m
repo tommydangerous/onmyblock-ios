@@ -17,9 +17,9 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
   // Development server
   // NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
   // Josselyn
-  // NSString *const OnMyBlockAPIURL = @"http://10.0.1.8:3000/api-v1";
+  NSString *const OnMyBlockAPIURL = @"http://10.0.1.8:3000/api-v1";
   // Santa Clara
-  NSString *const OnMyBlockAPIURL = @"http://192.168.1.107:3000/api-v1";
+  // NSString *const OnMyBlockAPIURL = @"http://192.168.1.107:3000/api-v1";
 #elif __ENVIRONMENT__ == 2
   // Staging server
   NSString *const OnMyBlockAPIURL = @"http://ombrb.nodelist.com/api-v1";
@@ -124,9 +124,19 @@ didFailWithError: (NSError *) error
 - (void) createInternalErrorWithDomain: (NSString *) domain
 code: (NSInteger) code
 {
+  id errorMessage = [self errorMessage];
+  id errorTitle   = [self errorTitle];
+  if ([self errorMessage] == (id) [NSNull null])
+    errorMessage = @"Please try again.";
+  else
+    errorMessage = [errorMessage capitalizedString];
+  if ([self errorTitle] == (id) [NSNull null])
+    errorTitle = @"Error";
+  else
+    errorTitle = [errorTitle capitalizedString];
   internalError = [NSError errorWithDomain: domain code: code userInfo: @{
-    NSLocalizedDescriptionKey:        [[self errorTitle] capitalizedString],
-    NSLocalizedFailureReasonErrorKey: [[self errorMessage] capitalizedString]
+    NSLocalizedDescriptionKey:        errorTitle,
+    NSLocalizedFailureReasonErrorKey: errorMessage,
   }];
 }
 

@@ -7,7 +7,9 @@
 //
 
 #import "OMBTableViewController.h"
+
 #import "MNCalendarView.h"
+#import "OMBViewController+PayPalPayment.h"
 
 @class LEffectLabel;
 @class OMBAlertView;
@@ -39,9 +41,9 @@ typedef NS_ENUM(NSInteger, OMBResidenceBookItConfirmDetailsSectionDatesRows) {
 };
 
 @interface OMBResidenceBookItConfirmDetailsViewController :
-OMBTableViewController
-<UIAlertViewDelegate, UIScrollViewDelegate, UITextFieldDelegate,
-UITextViewDelegate, MNCalendarViewDelegate>
+  OMBTableViewController
+<PayPalPaymentDelegate, UIAlertViewDelegate, UIScrollViewDelegate,
+UITextFieldDelegate, UITextViewDelegate, MNCalendarViewDelegate>
 {
   OMBAlertView *alert;
   OMBAlertViewBlur *alertBlur;

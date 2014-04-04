@@ -39,8 +39,8 @@ typedef NS_ENUM(NSInteger, OMBOfferInquirySectionOfferRow) {
 };
 
 @interface OMBOfferInquiryViewController : OMBViewController
-<PayPalPaymentDelegate, UIScrollViewDelegate, UITableViewDataSource, 
-  UITableViewDelegate>
+<PayPalPaymentDelegate, UIScrollViewDelegate, UITableViewDataSource,
+UITableViewDelegate>
 {
   BOOL accepted;
   BOOL acceptedConfirmed;

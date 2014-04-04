@@ -25,6 +25,7 @@
 #import "OMBPayoutMethod.h"
 #import "OMBViewControllerContainer.h"
 #import "OMBUser.h"
+#import "PayPalMobile.h"
 #import "UIColor+Extensions.h"
 
 NSString *const FBSessionStateChangedNotification =
@@ -137,8 +138,13 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // #warning Remove container showing controller
   // [self.container showMyRenterProfile];
 
+  // PayPal
+  [PayPalMobile initializeWithClientIdsForEnvironments: @{
+    PayPalEnvironmentProduction: PayPalClientID,
+    PayPalEnvironmentSandbox:    PayPalClientIDSandbox
+  }];
   // Venmo
-  _venmoClient = [VenmoClient clientWithAppId: VenmoClientID
+  self.venmoClient = [VenmoClient clientWithAppId: VenmoClientID
     secret: VenmoClientSecret];
 
   // Handle push notification

@@ -12,6 +12,7 @@
 // Keys
 // PayPal
 extern NSString *const PayPalClientID;
+extern NSString *const PayPalClientIDSandbox;
 extern NSString *const PayPalReceiverEmail;
 // Venmo
 extern NSString *const VenmoClientID;
