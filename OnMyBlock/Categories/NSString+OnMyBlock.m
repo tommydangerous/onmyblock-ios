@@ -11,7 +11,9 @@
 // Parse
 NSString *const ParseApplicationId = 
   @"bWIQ3XlYQjUmHZfIGH4RnKc2ZLAnvWGok6woKbWU";
-NSString *const ParseClientKey = @"2JhMpdLpnx892oxZpHpjZqEQLV4C6VOapaX1XwIL";
+NSString *const ParseBadgeIncrement = @"Increment";
+NSString *const ParseChannelsKey = @"channels";
+NSString *const ParseClientKey   = @"2JhMpdLpnx892oxZpHpjZqEQLV4C6VOapaX1XwIL";
 
 @implementation NSString (OnMyBlock)
 

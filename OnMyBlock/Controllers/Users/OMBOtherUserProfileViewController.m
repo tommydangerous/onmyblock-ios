@@ -1202,7 +1202,16 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // User images
-  backImageView.image = user.image;
+  if (user.image)
+    backImageView.image = user.image;
+  else {
+    [user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+      if (!error) {
+        backImageView.image = user.image;
+      }
+    }];
+    backImageView.image = [OMBUser defaultUserImage];
+  }
   // NSInteger index = user.uid % [backViewImageArray count];
   // backImageView.image = [UIImage imageNamed: 
   //   [backViewImageArray objectAtIndex: index]];

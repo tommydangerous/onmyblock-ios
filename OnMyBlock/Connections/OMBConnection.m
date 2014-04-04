@@ -15,11 +15,11 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
 // Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
 #if __ENVIRONMENT__ == 1
   // Development server
-  NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
+  // NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
   // Josselyn
-  // NSString *const OnMyBlockAPIURL = @"http://10.0.1.7:3000/api-v1";
+  // NSString *const OnMyBlockAPIURL = @"http://10.0.1.8:3000/api-v1";
   // Santa Clara
-  // NSString *const OnMyBlockAPIURL = @"http://192.168.1.107:3000/api-v1";
+  NSString *const OnMyBlockAPIURL = @"http://192.168.1.107:3000/api-v1";
 #elif __ENVIRONMENT__ == 2
   // Staging server
   NSString *const OnMyBlockAPIURL = @"http://ombrb.nodelist.com/api-v1";
@@ -79,15 +79,15 @@ didReceiveData: (NSData *) data
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
-- (void) connection: (NSURLConnection *) connection 
-didSendBodyData: (NSInteger) bytesWritten 
-totalBytesWritten: (NSInteger) totalBytesWritten 
+- (void) connection: (NSURLConnection *) connection
+didSendBodyData: (NSInteger) bytesWritten
+totalBytesWritten: (NSInteger) totalBytesWritten
 totalBytesExpectedToWrite: (NSInteger) totalBytesExpectedToWrite
 {
   CGFloat x = (CGFloat) totalBytesWritten;
   CGFloat y = (CGFloat) totalBytesExpectedToWrite;
   CGFloat percentage = x / y;
-    
+
   // Use to notify the progress indicator
   [[NSNotificationCenter defaultCenter] postNotificationName:
     @"progressConnection" object: [NSNumber numberWithFloat: percentage]];
@@ -186,7 +186,7 @@ withParameters: (NSDictionary *) dictionary
   _request = [NSMutableURLRequest requestWithURL: url];
 }
 
-- (void) setRequestWithString: (NSString *) requestString 
+- (void) setRequestWithString: (NSString *) requestString
 parameters: (NSDictionary *) dictionary
 {
   requestString = [requestString stringByAppendingString: @"?"];

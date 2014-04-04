@@ -84,6 +84,7 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 + (OMBUser *) fakeUser;
 + (OMBUser *) landlordUser;
 + (UIImage *) placeholderImage;
++ (NSString *) pushNotificationChannelForConversations: (NSUInteger) userUID;
 
 #pragma mark - Instance Methods
 
@@ -149,6 +150,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (OMBPayoutMethod *) primaryDepositPayoutMethod;
 - (OMBPayoutMethod *) primaryPaymentPayoutMethod;
 - (NSInteger) profilePercentage;
+- (NSString *) pushNotificationChannelForConversations;
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromConfirmedTenantsDictionary: (NSDictionary *) dictionary;
 - (void) readFromDepositPayoutTransactionDictionary: 

@@ -105,6 +105,17 @@ delegate: (id) delegate completion: (void (^)(NSError *error)) block
   return [messages count];
 }
 
+- (NSArray *) otherUserIDs: (OMBUser *) user
+{
+  NSMutableArray *newArray = [NSMutableArray array];
+  for (NSString *string in [self.userIDs componentsSeparatedByString: @","]) {
+    if ([string intValue] != user.uid) {
+      [newArray addObject: [NSNumber numberWithInt: [string intValue]]];
+    }
+  }
+  return newArray;
+}
+
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
   NSDateFormatter *dateFormatter = [NSDateFormatter JSONDateParser];

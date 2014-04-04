@@ -15,8 +15,10 @@
 #import "NSString+Extensions.h"
 #import "NSString+OnMyBlock.h"
 #import "OMBAppDelegate.h"
+#import "OMBConversation.h"
 #import "OMBIntroStillImagesViewController.h"
 #import "OMBLoginViewController.h"
+#import "OMBMessageDetailViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOffer.h"
 #import "OMBOfferVerifyVenmoConnection.h"
@@ -25,31 +27,38 @@
 #import "OMBUser.h"
 #import "UIColor+Extensions.h"
 
-NSString *const FBSessionStateChangedNotification = 
+NSString *const FBSessionStateChangedNotification =
   @"com.onmyblock.Login:FBSessionStateChangedNotification";
 NSString *const OMBUserDefaults = @"OMBUserDefaults";
 NSString *const OMBUserDefaultsAPIKey = @"OMBUserDefaultsAPIKey";
-NSString *const OMBUserDefaultsAPIKeyAccessToken = 
+NSString *const OMBUserDefaultsAPIKeyAccessToken =
   @"OMBUserDefaultsAPIKeyAccessToken";
-NSString *const OMBUserDefaultsAPIKeyExpiresAt = 
+NSString *const OMBUserDefaultsAPIKeyExpiresAt =
   @"OMBUserDefaultsAPIKeyExpiresAt";
-NSString *const OMBUserDefaultsRenterApplication = 
+NSString *const OMBUserDefaultsRenterApplication =
   @"OMBUserDefaultsRenterApplication";
-NSString *const OMBUserDefaultsRenterApplicationCheckedCoapplicants = 
+NSString *const OMBUserDefaultsRenterApplicationCheckedCoapplicants =
   @"OMBUserDefaultsRenterApplicationCheckedCoapplicants";
-NSString *const OMBUserDefaultsRenterApplicationCheckedCosigners = 
+NSString *const OMBUserDefaultsRenterApplicationCheckedCosigners =
   @"OMBUserDefaultsRenterApplicationCheckedCosigners";
 NSString *const OMBUserDefaultsRenterApplicationCheckedLegalQuestions =
   @"OMBUserDefaultsRenterApplicationCheckedLegalQuestions";
-NSString *const OMBUserDefaultsRenterApplicationCheckedRentalHistory = 
+NSString *const OMBUserDefaultsRenterApplicationCheckedRentalHistory =
   @"OMBUserDefaultsRenterApplicationCheckedRentalHistory";
-NSString *const OMBUserDefaultsRenterApplicationCheckedWorkHistory = 
+NSString *const OMBUserDefaultsRenterApplicationCheckedWorkHistory =
   @"OMBUserDefaultsRenterApplicationCheckedWorkHistory";
 NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
 
+@interface OMBAppDelegate ()
+{
+  void (^completionBlock) (void);
+}
+
+@end
+
 @implementation OMBAppDelegate
 
-- (BOOL) application: (UIApplication *) application 
+- (BOOL) application: (UIApplication *) application
 didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 {
   switch (__ENVIRONMENT__) {
@@ -79,7 +88,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // Register for push notifications
   [application registerForRemoteNotificationTypes:
     UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge];
-    
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
 
@@ -105,10 +114,10 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // NSLog(@"%@", [defaults objectForKey: @"OMBUserDefaultsAPIKey"]);
 
   BOOL shouldShowIntro = NO;
-  
+
   id viewedIntro = [defaults objectForKey: OMBUserDefaultsViewedIntro];
   if (!viewedIntro) {
-    [defaults setObject: [NSNumber numberWithBool: NO] 
+    [defaults setObject: [NSNumber numberWithBool: NO]
       forKey: OMBUserDefaultsViewedIntro];
   }
   NSNumber *number = [defaults objectForKey: OMBUserDefaultsViewedIntro];
@@ -128,59 +137,15 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // #warning Remove container showing controller
   // [self.container showMyRenterProfile];
 
-  // Use this to show whatever view controller you are working on
-  // [_container showMyRenterProfile];
-  // [_container showMyRenterApp];
-  // [_container showOtherUserProfile];
-  // [_container showIntroAnimatedDissolve: NO];
-
   // Venmo
   _venmoClient = [VenmoClient clientWithAppId: VenmoClientID
     secret: VenmoClientSecret];
 
-  // VenmoTransaction *venmoTransaction = [[VenmoTransaction alloc] init];
-  // venmoTransaction.type = VenmoTransactionTypePay;
-  // venmoTransaction.amount = [NSDecimalNumber decimalNumberWithString: 
-  //   @"0.01"];
-  // venmoTransaction.note = [NSString stringWithFormat: @"%@", [NSDate date]];
-  // venmoTransaction.toUserHandle = @"tommy@onmyblock.com";
-
-  // VenmoViewController *venmoViewController = 
-  //   [_venmoClient viewControllerWithTransaction: venmoTransaction];
-  // venmoViewController.completionHandler = 
-  //   ^(VenmoViewController *viewController, BOOL canceled) {
-  //     if (canceled) {
-  //       NSLog(@"CANCELLLLLED");
-  //     }
-  //     [viewController dismissViewControllerAnimated: YES
-  //       completion: nil];
-  //   };
-  // if (venmoViewController)
-  //   [_container presentViewController: venmoViewController animated: YES
-  //     completion: nil];
-
-  // UIViewController *vc = [[UIViewController alloc] init];
-  // UIView *view = [[UIView alloc] initWithFrame: screen];
-  // vc.view = view;
-  // self.window.rootViewController = vc;
-
-  // //Create the container
-  //   CALayer *container = [CALayer layer];
-  //   container.frame = CGRectMake(0, 0, 640, 300);
-  //   [view.layer addSublayer:container];
-
-  //   CALayer *purplePlane = 
-  //           [self addPlaneToLayer:container
-  //           size:CGSizeMake(100, 100)
-  //           position:CGPointMake(100, 100)
-  //           color:[UIColor purpleColor]];
-
-  //           //Apply transformation to the PLANE
-  //   CATransform3D t = CATransform3DIdentity;
-  //   //Add the perspective!!!
-  //   t.m34 = 1.0/ 500;
-  //   t = CATransform3DRotate(t, 45.0f * M_PI / 180.0f, 0, 1, 0);
-  //   purplePlane.transform = t;
+  // Handle push notification
+  // Extract the notification data
+  NSDictionary *notificationPayload =
+    launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+  [self handlePushNotification: notificationPayload];
 
   return YES;
 }
@@ -188,6 +153,14 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 - (void) application: (UIApplication *) application
 didFailToRegisterForRemoteNotificationsWithError: (NSError *) error
 {
+  id vc = self.container.currentDetailViewController;
+  if ([vc isKindOfClass: [OMBNavigationController class]]) {
+    id topVc = [(OMBNavigationController *) vc topViewController];
+    [(OMBViewController *) topVc showAlertViewWithError: error];
+  }
+  else if ([vc isKindOfClass: [OMBViewController class]]) {
+    [(OMBViewController *) vc showAlertViewWithError: error];
+  }
   NSLog(@"Application failed to register for remote notifications: %@",
     error.localizedDescription);
 }
@@ -195,44 +168,17 @@ didFailToRegisterForRemoteNotificationsWithError: (NSError *) error
 - (void) application: (UIApplication *) application
 didReceiveRemoteNotification: (NSDictionary *) userInfo
 {
-  // // In app alert view pop up
-  // // [PFPush handlePush: userInfo];
-  // // If user is in the program
-  // if (application.applicationState == UIApplicationStateActive) {
-  //   [self updateAllCounts];
-  // }
-  // // If user is not in the program
-  // else {
-  //   // Open the choice detail view controller
-  //   [self.tabBarController switchToViewController: (UIViewController *) 
-  //     self.tabBarController.requestsNav];
-  //   UINavigationController *nav = self.tabBarController.requestsNav;
-  //   // Extract the notification data when an app is opened from a notification
-  //   int choiceId = [[userInfo objectForKey: @"choice_id"] integerValue];
-  //   Choice *choice = [[ChoiceListStore sharedStore] choiceForId: choiceId];
-  //   void (^showChoiceDetailViewController) (Choice *choiceObject) =
-  //     ^(Choice *choiceObject) {
-  //       ChoiceDetailViewController *choiceDetail = 
-  //         [[ChoiceDetailViewController alloc] initWithChoice: choiceObject];
-  //         [nav pushViewController: choiceDetail animated: NO];
-  //     };
-  //   if (choice) {
-  //     showChoiceDetailViewController(choice);
-  //   }
-  //   else {
-  //     // Download choice if its not in the choice list store
-  //     ChoiceInfoConnection *connection =
-  //       [[ChoiceInfoConnection alloc] initWithChoiceId: choiceId];
-  //     connection.completionBlock = ^(NSError *error) {
-  //       if (!error) {
-  //         Choice *newChoice = [[ChoiceListStore sharedStore] choiceForId: 
-  //           choiceId];
-  //         showChoiceDetailViewController(newChoice);
-  //       }
-  //     };
-  //     [connection start];
-  //   }
-  // }
+  // In app alert view pop up
+  // [PFPush handlePush: userInfo];
+
+  // If user is in the program
+  if (application.applicationState == UIApplicationStateActive) {
+    [self updateAllCounts];
+  }
+  // If user is not in the program
+  else {
+    [self handlePushNotification: userInfo];
+  }
 }
 
 - (void) application: (UIApplication *) application
@@ -247,7 +193,7 @@ didRegisterForRemoteNotificationsWithDeviceToken: (NSData *) deviceToken
 - (BOOL) application: (UIApplication *) application openURL: (NSURL *) url
 sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
 {
-  // Delegate method to call the Facebook session object 
+  // Delegate method to call the Facebook session object
   // that handles the incoming URL
   // [[NSNotificationCenter defaultCenter] postNotificationName:
   //   OMBActivityIndicatorViewStartAnimatingNotification object: nil];
@@ -257,7 +203,7 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
   // NSLog(@"Annotation: %@", annotation);
 
   // Facebook
-  if ([[url absoluteString] rangeOfString: @"facebook"].location != 
+  if ([[url absoluteString] rangeOfString: @"facebook"].location !=
     NSNotFound) {
 
     return [FBSession.activeSession handleOpenURL: url];
@@ -267,7 +213,7 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
   if ([[url absoluteString] rangeOfString: @"venmo"].location != NSNotFound) {
     NSDictionary *params = [[url absoluteString] dictionaryFromString];
     if ([params objectForKey: @"signed_request"]) {
-      if ([[params objectForKey: @"signed_request"] rangeOfString: 
+      if ([[params objectForKey: @"signed_request"] rangeOfString:
         @"null"].location != NSNotFound) {
 
         [[NSNotificationCenter defaultCenter] postNotificationName:
@@ -295,7 +241,7 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
                 ];
               conn.completionBlock = ^(NSError *error) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:
-                  OMBOfferNotificationPaidWithVenmo object: nil 
+                  OMBOfferNotificationPaidWithVenmo object: nil
                     userInfo: @{
                       @"error": error ? error : [NSNull null]
                     }];
@@ -309,10 +255,10 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
             }
             // The current user charged OnMyBlock instead of paid
             else {
-              error = [NSError errorWithDomain: VenmoErrorDomain 
+              error = [NSError errorWithDomain: VenmoErrorDomain
                 code: VenmoErrorDomainCodeTransactionTypeIncorrect userInfo: @{
                   NSLocalizedDescriptionKey: @"Venmo Payment Failed",
-                  NSLocalizedFailureReasonErrorKey: 
+                  NSLocalizedFailureReasonErrorKey:
                     @"You made a charge instead of a payment."
                 }
               ];
@@ -320,17 +266,17 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
           }
           // The transaction was not successful
           else {
-            error = [NSError errorWithDomain: VenmoErrorDomain 
+            error = [NSError errorWithDomain: VenmoErrorDomain
               code: VenmoErrorDomainCodeTransactionUnsuccessful userInfo: @{
                 NSLocalizedDescriptionKey: @"Venmo Payment Failed",
-                NSLocalizedFailureReasonErrorKey: 
+                NSLocalizedFailureReasonErrorKey:
                   @"The transaction was not successful."
               }
             ];
-          }  
+          }
         }
         if (error)
-          [(OMBViewController *) nav.topViewController showAlertViewWithError: 
+          [(OMBViewController *) nav.topViewController showAlertViewWithError:
             error];
       }
     ];
@@ -355,11 +301,19 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
   // Stop all the spinners
   [[NSNotificationCenter defaultCenter] postNotificationName:
     OMBActivityIndicatorViewStopAnimatingNotification object: nil];
-  [_container stopSpinning];
+  [self.container stopSpinning];
+
+  // Clearing the badge
+  PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+  if (currentInstallation.badge != 0) {
+    currentInstallation.badge = 0;
+    [currentInstallation saveEventually];
+  }
 }
 
 - (void) applicationWillTerminate: (UIApplication *) application
 {
+  exit(0);
 }
 
 #pragma mark - Methods
@@ -380,6 +334,43 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
   }
 }
 
+- (void) handlePushNotification: (NSDictionary *) dictionary
+{
+  if (dictionary) {
+    // Conversations
+    if (dictionary[@"conversation_id"]) {
+      __weak typeof(self.container) weakContainer = self.container;
+      completionBlock = ^(void) {
+        // Set the completion block to open the correct view controller
+        OMBUser *otherUser = [[OMBUser alloc] init];
+        otherUser.uid = [dictionary[@"user_id"] intValue];
+        [otherUser fetchUserProfileWithCompletion: ^(NSError *error) {
+          if (!error) {
+            OMBConversation *conversation = [[OMBConversation alloc] init];
+            conversation.nameOfConversation = dictionary[@"conversation_name"];
+            conversation.otherUser = otherUser;
+            conversation.uid = [dictionary[@"conversation_id"] intValue];
+            [weakContainer showInbox];
+            [weakContainer.inboxNavigationController pushViewController:
+              [[OMBMessageDetailViewController alloc] initWithConversation:
+                conversation] animated: NO];
+          }
+        }];
+      };
+    }
+    if ([[OMBUser currentUser] loggedIn]) {
+      [self launchCompletionBlock];
+    }
+    else {
+      // Add observer so when a user fetches their user info,
+      // the proper view controller will show
+      [[NSNotificationCenter defaultCenter] addObserver: self
+        selector: @selector(launchCompletionBlock)
+          name: OMBUserLoggedInNotification object: nil];
+    }
+  }
+}
+
 - (void) hideIntro
 {
   [_container.introViewController dismissViewControllerAnimated: NO
@@ -392,6 +383,12 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
     completion: nil];
 }
 
+- (void) launchCompletionBlock
+{
+  if (completionBlock)
+    completionBlock();
+}
+
 - (void) openSession
 {
   NSArray *facebookPermissions = @[
@@ -401,7 +398,7 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
     @"user_work_history"
   ];
   [FBSession openActiveSessionWithReadPermissions: facebookPermissions
-    allowLoginUI: YES completionHandler: 
+    allowLoginUI: YES completionHandler:
       ^(FBSession *session, FBSessionState state, NSError *error) {
         [self sessionStateChanged: session state: state error: error];
       }
@@ -470,6 +467,11 @@ state: (FBSessionState) state error: (NSError *) error
 - (void) testFlightTakeOff
 {
   [TestFlight takeOff: @"c093afcb-4e1f-449d-8663-cfe23e1dbd74"];
+}
+
+- (void) updateAllCounts
+{
+
 }
 
 @end

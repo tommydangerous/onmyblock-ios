@@ -34,8 +34,10 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *dict = [[self json] objectForKey: @"renter_application"];
-  [user.renterApplication readFromDictionary: dict];
+  [user readFromDictionary: [self objectDictionary]];
+  NSLog(@"%@", [self objectDictionary]);
+  [user.renterApplication readFromDictionary: 
+    [[self json] objectForKey: @"renter_application"]];
 
   [super connectionDidFinishLoading: connection];
 }

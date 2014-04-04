@@ -24,7 +24,7 @@
 #import "UIImage+Resize.h"
 
 @interface OMBMessageDetailViewController ()
-<UICollectionViewDataSource, UICollectionViewDelegate, 
+<UICollectionViewDataSource, UICollectionViewDelegate,
   UICollectionViewDelegateFlowLayout, UIScrollViewDelegate, UITextViewDelegate>
 {
   OMBMessageInputToolbar *bottomToolbar;
@@ -119,7 +119,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 
   // Collection view
   _collection = [[UICollectionView alloc] initWithFrame: screen
-    collectionViewLayout: 
+    collectionViewLayout:
       [[OMBMessageDetailCollectionViewFlowLayout alloc] init]];
   _collection.alwaysBounceVertical = YES;
   _collection.clipsToBounds = NO;
@@ -131,36 +131,36 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   [self.view addSubview: _collection];
 
   contactBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Contact"
-    style: UIBarButtonItemStylePlain target: self 
+    style: UIBarButtonItemStylePlain target: self
       action: @selector(showContactMore)];
   doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
-    style: UIBarButtonItemStylePlain target: self 
+    style: UIBarButtonItemStylePlain target: self
       action: @selector(done)];
   self.navigationItem.rightBarButtonItem = contactBarButtonItem;
 
   // Left padding
-  UIBarButtonItem *leftPadding = 
+  UIBarButtonItem *leftPadding =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
       UIBarButtonSystemItemFixedSpace target: nil action: nil];
   // iOS 7 toolbar spacing is 16px; 20px on iPad
   leftPadding.width = 4.0f;
   // Renter application
-  renterApplicationBarButtonItem = 
+  renterApplicationBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @"Profile"
       style: UIBarButtonItemStylePlain target: self
         action: @selector(showRenterProfile)];
   // Spacing
-  UIBarButtonItem *flexibleSpace = 
-    [[UIBarButtonItem alloc] initWithBarButtonSystemItem: 
+  UIBarButtonItem *flexibleSpace =
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
       UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
   // Phone
   UIImage *phoneIcon = [UIImage image: [UIImage imageNamed: @"phone_icon.png"]
     size: CGSizeMake(22.0f, 22.0f)];
-  phoneBarButtonItem = 
+  phoneBarButtonItem =
     [[UIBarButtonItem alloc] initWithImage: phoneIcon style:
       UIBarButtonItemStylePlain target: self action: @selector(phoneCallUser)];
   // Right padding
-  UIBarButtonItem *rightPadding = 
+  UIBarButtonItem *rightPadding =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
       UIBarButtonSystemItemFixedSpace target: nil action: nil];
   // iOS 7 toolbar spacing is 16px; 20px on iPad
@@ -168,10 +168,10 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 
   contactToolbar = [UIToolbar new];
   contactToolbar.clipsToBounds = YES;
-  contactToolbar.frame = CGRectMake(0.0f, 20.0f, 
+  contactToolbar.frame = CGRectMake(0.0f, 20.0f,
     screen.size.width, toolbarHeight);
   contactToolbar.hidden = YES;
-  contactToolbar.items = @[leftPadding, renterApplicationBarButtonItem, 
+  contactToolbar.items = @[leftPadding, renterApplicationBarButtonItem,
     flexibleSpace, phoneBarButtonItem, rightPadding];
   contactToolbar.tintColor = [UIColor blue];
   [self.view addSubview: contactToolbar];
@@ -200,7 +200,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 {
   [super viewDidLoad];
 
-  // Before the collection view dequeues a cell, you must tell the collection 
+  // Before the collection view dequeues a cell, you must tell the collection
   // view how to create the corresponding view if one does not already exist
   // Register a class for use in creating new collection view cells
   [_collection registerClass: [OMBMessageCollectionViewCell class]
@@ -212,11 +212,11 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     forCellWithReuseIdentifier: HeaderIdentifier];
 
   // [_collection registerClass: [UICollectionReusableView class]
-  //   forSupplementaryViewOfKind: UICollectionElementKindSectionHeader 
+  //   forSupplementaryViewOfKind: UICollectionElementKindSectionHeader
   //     withReuseIdentifier: HeaderIdentifier];
 
   [_collection registerClass: [UICollectionReusableView class]
-    forSupplementaryViewOfKind: UICollectionElementKindSectionFooter 
+    forSupplementaryViewOfKind: UICollectionElementKindSectionFooter
       withReuseIdentifier: FooterIdentifier];
 }
 
@@ -245,18 +245,17 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
       name: UIKeyboardWillHideNotification object: nil];
 
   // If no phone number
-  if (user.phone && [[user phoneString] length]) {
+  if ([self otherUser] && [[[self otherUser] phoneString] length]) {
     phoneBarButtonItem.enabled = YES;
   }
   else {
     phoneBarButtonItem.enabled = NO;
   }
 
-  
   if (conversation) {
     [self assignMessages];
     if (isFirstTime && [self.messages count]) {
-      [self scrollToBottomAnimated: NO 
+      [self scrollToBottomAnimated: NO
         additionalOffsetY: OMBPadding + OMBStandardHeight];
     }
     [self fetchMessages];
@@ -264,7 +263,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   // If there is no conversation, fetch one
   else if (residence) {
     conversation = [[OMBConversation alloc] init];
-    [conversation fetchConversationWithResidenceUID: residence.uid completion: 
+    [conversation fetchConversationWithResidenceUID: residence.uid completion:
       ^(NSError *error) {
         [self fetchMessages];
       }
@@ -273,7 +272,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   }
   else if (user) {
     conversation = [[OMBConversation alloc] init];
-    [conversation fetchConversationWithUserUID: user.uid completion: 
+    [conversation fetchConversationWithUserUID: user.uid completion:
       ^(NSError *error) {
         [self fetchMessages];
       }
@@ -306,13 +305,13 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 
 #pragma mark - Protocol UICollectionViewDataSource
 
-- (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView 
+- (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView
 cellForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   // if (indexPath.row == 0) {
-  //   UICollectionViewCell *cell = 
-  //     [collectionView dequeueReusableCellWithReuseIdentifier: 
-  //       HeaderIdentifier 
+  //   UICollectionViewCell *cell =
+  //     [collectionView dequeueReusableCellWithReuseIdentifier:
+  //       HeaderIdentifier
   //       forIndexPath: indexPath];
   //   UILabel *label = (UILabel *) [cell viewWithTag: 9999];
   //   if (!label) {
@@ -330,24 +329,24 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
 
   // Last row, empty row
   // if (indexPath.row == [_messages count]) {
-  //   UICollectionViewCell *emptyCell = 
-  //     [collectionView dequeueReusableCellWithReuseIdentifier: 
+  //   UICollectionViewCell *emptyCell =
+  //     [collectionView dequeueReusableCellWithReuseIdentifier:
   //       EmptyCellID forIndexPath: indexPath];
   //   emptyCell.backgroundColor = [UIColor redColor];
   //   return emptyCell;
   // }
 
-  OMBMessageCollectionViewCell *cell = 
-    [collectionView dequeueReusableCellWithReuseIdentifier: CellIdentifier 
+  OMBMessageCollectionViewCell *cell =
+    [collectionView dequeueReusableCellWithReuseIdentifier: CellIdentifier
       forIndexPath: indexPath];
   OMBMessage *message = [self messageAtIndexPath: indexPath];
   [cell loadMessageData: message];
-  
+
   // Minus 1, account for the last empty row
-  if (indexPath.row != 
+  if (indexPath.row !=
     [collectionView numberOfItemsInSection: indexPath.section] - 1) {
-    OMBMessage *nextMessage = [self messageAtIndexPath: 
-      [NSIndexPath indexPathForRow: indexPath.row + 1 
+    OMBMessage *nextMessage = [self messageAtIndexPath:
+      [NSIndexPath indexPathForRow: indexPath.row + 1
         inSection: indexPath.section]];
     // If the next message is from another user
     if (![message isFromUser: nextMessage.user]) {
@@ -362,7 +361,7 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
   return cell;
 }
 
-- (NSInteger) collectionView: (UICollectionView *) collectionView 
+- (NSInteger) collectionView: (UICollectionView *) collectionView
 numberOfItemsInSection: (NSInteger) section
 {
   // Load Earlier Messages
@@ -372,14 +371,14 @@ numberOfItemsInSection: (NSInteger) section
   return [self.messages count];
 }
 
-- (UICollectionReusableView *) collectionView: 
-(UICollectionView *) collectionView 
-viewForSupplementaryElementOfKind: (NSString *) kind 
+- (UICollectionReusableView *) collectionView:
+(UICollectionView *) collectionView
+viewForSupplementaryElementOfKind: (NSString *) kind
 atIndexPath: (NSIndexPath *) indexPath
 {
-  // UICollectionReusableView *reusableView = 
+  // UICollectionReusableView *reusableView =
   //   [collectionView dequeueReusableSupplementaryViewOfKind:
-  //     UICollectionElementKindSectionHeader 
+  //     UICollectionElementKindSectionHeader
   //     withReuseIdentifier: HeaderIdentifier forIndexPath: indexPath];
 
   // if (!reusableView) {
@@ -397,8 +396,8 @@ atIndexPath: (NSIndexPath *) indexPath
   // [reusableView addSubview: label];
   // return reusableView;
   if ([kind isEqualToString: UICollectionElementKindSectionFooter]) {
-    UICollectionReusableView *reusableView = 
-      [collectionView dequeueReusableSupplementaryViewOfKind: kind 
+    UICollectionReusableView *reusableView =
+      [collectionView dequeueReusableSupplementaryViewOfKind: kind
         withReuseIdentifier: FooterIdentifier forIndexPath: indexPath];
     if (!reusableView) {
       reusableView = [[UICollectionReusableView alloc] initWithFrame:
@@ -409,7 +408,7 @@ atIndexPath: (NSIndexPath *) indexPath
   return nil;
 }
 
-- (NSInteger) numberOfSectionsInCollectionView: 
+- (NSInteger) numberOfSectionsInCollectionView:
 (UICollectionView *) collectionView
 {
   return 1;
@@ -417,7 +416,7 @@ atIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Protocol UICollectionViewDelegate
 
-- (void) collectionView: (UICollectionView *) collectionView 
+- (void) collectionView: (UICollectionView *) collectionView
 didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 {
   // Load Earlier Messages
@@ -428,8 +427,8 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Protocol UICollectionViewDelegateFlowLayout
 
-- (CGSize) collectionView: (UICollectionView *) collectionView 
-layout: (UICollectionViewLayout *) collectionViewLayout 
+- (CGSize) collectionView: (UICollectionView *) collectionView
+layout: (UICollectionViewLayout *) collectionViewLayout
 referenceSizeForFooterInSection: (NSInteger) section
 {
   // Returning some size makes it so that the 1st message doesn't show up
@@ -442,33 +441,33 @@ referenceSizeForFooterInSection: (NSInteger) section
   return CGSizeMake(collectionView.frame.size.width, height);
 }
 
-// - (CGSize) collectionView: (UICollectionView *) collectionView 
-// layout: (UICollectionViewLayout *) collectionViewLayout 
+// - (CGSize) collectionView: (UICollectionView *) collectionView
+// layout: (UICollectionViewLayout *) collectionViewLayout
 // referenceSizeForHeaderInSection: (NSInteger) section
 // {
 //   return CGSizeMake(collectionView.frame.size.width, 44.0f);
 // }
 
-- (UIEdgeInsets) collectionView: (UICollectionView *) collectionView 
-layout: (UICollectionViewLayout*) collectionViewLayout 
+- (UIEdgeInsets) collectionView: (UICollectionView *) collectionView
+layout: (UICollectionViewLayout*) collectionViewLayout
 insetForSectionAtIndex: (NSInteger) section
 {
   // The margins used to lay out content in a section
   // return UIEdgeInsetsMake(30.0f, 10.0f, 10.0f, 10.0f);
-  return UIEdgeInsetsMake(OMBPadding, 0.0f, 
+  return UIEdgeInsetsMake(OMBPadding, 0.0f,
     bottomToolbar.frame.size.height, 0.0f);
 }
 
-- (CGFloat) collectionView: (UICollectionView *) collectionView 
-layout: (UICollectionViewLayout*) collectionViewLayout 
+- (CGFloat) collectionView: (UICollectionView *) collectionView
+layout: (UICollectionViewLayout*) collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex: (NSInteger) section
 {
   // The minimum spacing to use between items in the same row
   return 0.0f;
 }
 
-- (CGFloat) collectionView: (UICollectionView *) collectionView 
-layout: (UICollectionViewLayout*) collectionViewLayout 
+- (CGFloat) collectionView: (UICollectionView *) collectionView
+layout: (UICollectionViewLayout*) collectionViewLayout
 minimumLineSpacingForSectionAtIndex: (NSInteger) section
 {
   // The minimum spacing to use between lines of items in the grid
@@ -476,8 +475,8 @@ minimumLineSpacingForSectionAtIndex: (NSInteger) section
   return 0.0f;
 }
 
-- (CGSize) collectionView: (UICollectionView * ) collectionView 
-layout: (UICollectionViewLayout*) collectionViewLayout 
+- (CGSize) collectionView: (UICollectionView * ) collectionView
+layout: (UICollectionViewLayout*) collectionViewLayout
 sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   // Last row, empty row
@@ -497,12 +496,12 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   // }
   OMBMessage *message = [self messageAtIndexPath: indexPath];
   // NSAttributedString *aString = [message.content attributedStringWithFont:
-  //   [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] 
+  //   [UIFont fontWithName: @"HelveticaNeue-Light" size: 15]
   //     lineHeight: 22.0f];
 
   CGRect screen   = [[UIScreen mainScreen] bounds];
   CGFloat padding = [OMBMessageCollectionViewCell paddingForCell];
-  // CGFloat maxWidth = 
+  // CGFloat maxWidth =
   //   [OMBMessageCollectionViewCell maxWidthForMessageContentView];
 
   // THIS IS SLOWING IT DOWN TREMENDOUSLY
@@ -518,10 +517,10 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
   CGFloat spacing = padding;
   // Minus 1, account for the last empty row
-  if (indexPath.row != 
+  if (indexPath.row !=
     [collectionView numberOfItemsInSection: indexPath.section] - 1) {
-    OMBMessage *nextMessage = [self messageAtIndexPath: 
-      [NSIndexPath indexPathForRow: indexPath.row + 1 
+    OMBMessage *nextMessage = [self messageAtIndexPath:
+      [NSIndexPath indexPathForRow: indexPath.row + 1
         inSection: indexPath.section]];
     // If 2 consecutive messages are from the same person
     if ([message isFromUser: nextMessage.user]) {
@@ -532,7 +531,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // NSLog(@"%f", rect.size.height);
-  return CGSizeMake(screen.size.width, 
+  return CGSizeMake(screen.size.width,
     padding + rect.size.height + padding + (padding * 0.5) + spacing);
 }
 
@@ -572,10 +571,10 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   }
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat lineHeight = 20.0f;
-  CGFloat padding = 
+  CGFloat padding =
     bottomToolbar.messageContentTextView.textContainerInset.left;
-  CGRect rect = [textView.text boundingRectWithSize: 
-    CGSizeMake(bottomToolbar.messageContentTextView.frame.size.width - 
+  CGRect rect = [textView.text boundingRectWithSize:
+    CGSizeMake(bottomToolbar.messageContentTextView.frame.size.width -
       (padding * 2), 200.0f) font: bottomToolbar.messageContentTextView.font];
   CGRect textViewRect = bottomToolbar.messageContentTextView.frame;
   if (rect.size.height > lineHeight) {
@@ -587,9 +586,9 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   bottomToolbar.messageContentTextView.frame = textViewRect;
 
   CGRect toolbarRect = bottomToolbar.frame;
-  toolbarRect.size.height = 
+  toolbarRect.size.height =
     bottomToolbar.messageContentTextView.frame.size.height + (44.0f - 32.0f);
-  toolbarRect.origin.y = screen.size.height - 
+  toolbarRect.origin.y = screen.size.height -
     (toolbarRect.size.height + 216.0f);
   bottomToolbar.frame = toolbarRect;
 }
@@ -612,7 +611,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) done
 {
-  [self.navigationItem setRightBarButtonItem: contactBarButtonItem 
+  [self.navigationItem setRightBarButtonItem: contactBarButtonItem
     animated: YES];
   [UIView animateWithDuration: 0.15 animations: ^{
     CGRect rect = contactToolbar.frame;
@@ -639,15 +638,15 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) keyboardWillHide: (NSNotification *) notification
 {
-  NSTimeInterval duration = [[notification.userInfo objectForKey: 
+  NSTimeInterval duration = [[notification.userInfo objectForKey:
     UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-  [UIView animateWithDuration: duration delay: 0.0f 
+  [UIView animateWithDuration: duration delay: 0.0f
     options: UIViewAnimationOptionCurveEaseOut animations: ^{
       CGRect screen = [[UIScreen mainScreen] bounds];
       CGRect rect = bottomToolbar.frame;
       rect.origin.y = screen.size.height - bottomToolbar.frame.size.height;
       bottomToolbar.frame = rect;
-    } 
+    }
     completion: nil
   ];
 
@@ -657,17 +656,17 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) keyboardWillShow: (NSNotification *) notification
 {
-  NSTimeInterval duration = [[notification.userInfo objectForKey: 
+  NSTimeInterval duration = [[notification.userInfo objectForKey:
     UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
-  [UIView animateWithDuration: duration delay: 0.0f 
+  [UIView animateWithDuration: duration delay: 0.0f
     options: UIViewAnimationOptionCurveEaseOut animations: ^{
       CGRect screen = [[UIScreen mainScreen] bounds];
       CGRect rect = bottomToolbar.frame;
-      rect.origin.y = screen.size.height - 
+      rect.origin.y = screen.size.height -
         (bottomToolbar.frame.size.height + 216.0f);
       bottomToolbar.frame = rect;
-    } 
+    }
     completion: nil
   ];
 
@@ -685,7 +684,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) loadDefaultMessage
 {
-  bottomToolbar.messageContentTextView.text = 
+  bottomToolbar.messageContentTextView.text =
     @"Hi, I’m very interested in your place. "
     @"When would be a good time for me to visit to check it out? Thank you!";
   [self textViewDidChange: bottomToolbar.messageContentTextView];
@@ -709,10 +708,25 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   return [self.messages objectAtIndex: indexPath.row];
 }
 
+- (OMBUser *) otherUser
+{
+  OMBUser *object;
+  if (conversation && conversation.otherUser)
+    object = conversation.otherUser;
+  else if (residence && residence.user)
+    object = residence.user;
+  else if (user)
+    object = user;
+  return object;
+}
+
 - (void) phoneCallUser
 {
-  NSString *string = [@"telprompt:" stringByAppendingString: user.phone];
-  [[UIApplication sharedApplication] openURL: [NSURL URLWithString: string]];
+  if ([self otherUser]) {
+    NSString *string = [@"telprompt:" stringByAppendingString:
+      [[self otherUser] phone]];
+    [[UIApplication sharedApplication] openURL: [NSURL URLWithString: string]];
+  }
 }
 
 - (void) scrollToBottomAnimated: (BOOL) animated
@@ -723,7 +737,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 - (void) scrollToBottomAnimated: (BOOL) animated
 additionalOffsetY: (CGFloat) offsetY
 {
-  CGFloat contentSizeHeight = 
+  CGFloat contentSizeHeight =
     [self.collection.collectionViewLayout collectionViewContentSize].height;
   CGFloat frameSizeHeight = self.collection.frame.size.height;
   frameSizeHeight -= offsetY;
@@ -734,24 +748,16 @@ additionalOffsetY: (CGFloat) offsetY
   // NSLog(@"Bottom: %f", bottom);
 
   if (bottom > 0)
-    [self.collection setContentOffset: CGPointMake(0.0f, bottom) 
+    [self.collection setContentOffset: CGPointMake(0.0f, bottom)
       animated: animated];
 }
 
 - (void) send
 {
   OMBMessage *message = [[OMBMessage alloc] init];
-  message.content     = bottomToolbar.messageContentTextView.text;
-  NSInteger offset    = kWebServerTimeOffsetInSeconds;
-  if (offset > 0)
-    offset += 11; // Server time is ahead by X + 11 seconds
-  offset += [[NSDate date] timeIntervalSince1970];
-  message.createdAt = offset;
-  message.uid       = -999 + arc4random_uniform(100);
-  message.updatedAt = offset;
-  message.user      = [OMBUser currentUser];
-  message.viewedUserIDs = [NSString stringWithFormat: @"%i", message.user.uid];
 
+  [message createMessageWithContent: bottomToolbar.messageContentTextView.text
+    forConversation: conversation];
   [conversation addMessage: message];
   [self assignMessages];
   // Create the message
@@ -763,7 +769,7 @@ additionalOffsetY: (CGFloat) offsetY
 
   if ([self.collection.collectionViewLayout collectionViewContentSize].height >
     self.collection.frame.size.height + bottomToolbar.frame.size.height) {
-    
+
     [self scrollToBottomAnimated: YES];
   }
 
@@ -789,14 +795,10 @@ additionalOffsetY: (CGFloat) offsetY
 
 - (void) showRenterProfile
 {
-  OMBUser *u;
-  if (conversation)
-    u = conversation.otherUser;
-  else if (user)
-    u = user;
-  if (u) {
+  if ([self otherUser]) {
     OMBOtherUserProfileViewController *vc =
-      [[OMBOtherUserProfileViewController alloc] initWithUser: u];
+      [[OMBOtherUserProfileViewController alloc] initWithUser:
+        [self otherUser]];
     [self.navigationController pushViewController: vc animated: YES];
   }
 }
@@ -812,7 +814,7 @@ additionalOffsetY: (CGFloat) offsetY
 - (void) timerFireMethod: (NSTimer *) timer
 {
   NSInteger currentCount = [_messages count];
-  
+
   if (!isFetching) {
     [conversation fetchMessagesWithTimeInterval: lastFetched delegate: self
       completion: ^(NSError *error) {

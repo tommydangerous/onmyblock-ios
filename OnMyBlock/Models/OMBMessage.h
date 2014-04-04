@@ -31,6 +31,8 @@
 - (void) calculateSizeForMessageCell;
 - (void) createMessageConnectionWithConversation: 
 (OMBConversation *) conversation;
+- (void) createMessageWithContent: (NSString *) string
+forConversation: (OMBConversation *) conversation;
 - (BOOL) isFromUser: (OMBUser *) user;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (BOOL) viewedByUser: (OMBUser *) user;
