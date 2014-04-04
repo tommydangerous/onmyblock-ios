@@ -85,10 +85,11 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 + (OMBUser *) landlordUser;
 + (UIImage *) placeholderImage;
 + (NSString *) pushNotificationChannelForConversations: (NSUInteger) userUID;
++ (NSString *) pushNotificationChannelForOffersPlaced: (NSUInteger) userUID;
 
 #pragma mark - Instance Methods
 
-- (void) acceptOffer: (OMBOffer *) offer 
+- (void) acceptOffer: (OMBOffer *) offer
   withCompletion: (void (^) (NSError *error)) block;
 - (void) addEmployment: (OMBEmployment *) employment;
 - (void) addLegalAnswer: (OMBLegalAnswer *) object;
@@ -98,14 +99,14 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
 - (void) addResidence: (OMBResidence *) residence;
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence;
-- (void) authenticateVenmoWithCode: (NSString *) code 
+- (void) authenticateVenmoWithCode: (NSString *) code
 depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block;
 - (void) changeOtherSamePrimaryPayoutMethods: (OMBPayoutMethod *) payoutMethod;
 - (void) checkForUserDefaultsAPIKey;
 - (BOOL) compareUser: (OMBUser *) user;
 - (void) confirmOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
-- (void) createAuthenticationForFacebookWithCompletion: 
+- (void) createAuthenticationForFacebookWithCompletion:
   (void (^) (NSError *error)) block;
 - (void) createAuthenticationForLinkedInWithAccessToken: (NSString *) string
   completion: (void (^) (NSError *error)) block;
@@ -117,7 +118,7 @@ withCompletion: (void (^) (NSError *error)) block;
 - (void) declineOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
 - (NSArray *) depositPayoutMethods;
-- (void) downloadImageFromImageURLWithCompletion: 
+- (void) downloadImageFromImageURLWithCompletion:
 (void (^) (NSError *error)) block;
 - (BOOL) emailContactPermission;
 - (NSArray *) favoritesArray;
@@ -150,10 +151,9 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (OMBPayoutMethod *) primaryDepositPayoutMethod;
 - (OMBPayoutMethod *) primaryPaymentPayoutMethod;
 - (NSInteger) profilePercentage;
-- (NSString *) pushNotificationChannelForConversations;
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromConfirmedTenantsDictionary: (NSDictionary *) dictionary;
-- (void) readFromDepositPayoutTransactionDictionary: 
+- (void) readFromDepositPayoutTransactionDictionary:
 (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) readFromEmploymentDictionary: (NSDictionary *) dictionary;
@@ -164,25 +164,25 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromPayoutMethodsDictionary: (NSDictionary *) dictionary;
 - (void) readFromReceivedOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromResidencesDictionary: (NSDictionary *) dictionary;
-- (void) rejectOffer: (OMBOffer *) offer 
+- (void) rejectOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block;
 - (void) removeAllReceivedOffersWithOffer: (OMBOffer *) offer;
 - (void) removeOffer: (OMBOffer *) offer type: (OMBUserOfferType) type;
 - (void) removeReceivedOffer: (OMBOffer *) offer;
 - (void) removeResidence: (OMBResidence *) residence;
 - (void) removeResidenceFromFavorite: (OMBResidence *) residence;
-- (NSArray *) residencesActive: (BOOL) active sortedWithKey: (NSString *) key 
+- (NSArray *) residencesActive: (BOOL) active sortedWithKey: (NSString *) key
   ascending: (BOOL) ascending;
-- (NSArray *) residencesSortedWithKey: (NSString *) key 
+- (NSArray *) residencesSortedWithKey: (NSString *) key
   ascending: (BOOL) ascending;
 - (NSString *) shortName;
-- (NSArray *) sortedOffersType: (OMBUserOfferType) type 
+- (NSArray *) sortedOffersType: (OMBUserOfferType) type
   withKeys: (NSArray *) keys ascending: (BOOL) ascending;
 - (NSArray *) sortedPayoutMethodsWithKey: (NSString *) key
 ascending: (BOOL) ascending;
-- (void) updateWithDictionary: (NSDictionary *) dictionary 
+- (void) updateWithDictionary: (NSDictionary *) dictionary
 completion: (void (^) (NSError *error)) block;
-- (void) uploadImage: (UIImage *) img 
+- (void) uploadImage: (UIImage *) img
 withCompletion: (void (^) (NSError *error)) block;
 
 @end

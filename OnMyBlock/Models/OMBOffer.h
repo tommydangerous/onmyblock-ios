@@ -83,6 +83,7 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 - (OMBOfferStatusForStudent) statusForStudent;
 - (NSString *) statusStringForLandlord;
 - (NSString *) statusStringForStudent;
+- (void) sendPushNotificationAccepted;
 - (NSInteger) timeLeftForLandlord;
 - (NSInteger) timeLeftForStudent;
 - (CGFloat) timeLeftPercentageForLandlord;

@@ -1390,6 +1390,8 @@ viewForHeaderInSection: (NSInteger) section
 
          // Decline and put other offers on hold
          [[OMBUser currentUser] declineAndPutOtherOffersOnHold: offer];
+
+         [offer sendPushNotificationAccepted];
        }
        else {
          [self showAlertViewWithError: error];

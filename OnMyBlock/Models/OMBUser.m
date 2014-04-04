@@ -60,7 +60,7 @@ NSString *const OMBActivityIndicatorViewStartAnimatingNotification =
   @"OMBActivityIndicatorViewStartAnimatingNotification";
 NSString *const OMBActivityIndicatorViewStopAnimatingNotification =
   @"OMBActivityIndicatorViewStopAnimatingNotification";
-NSString *const OMBCurrentUserChangedFavorite = 
+NSString *const OMBCurrentUserChangedFavorite =
   @"OMBCurrentUserChangedFavorite";
 // Observers:
 // - OMBViewControllerContainer
@@ -69,7 +69,7 @@ NSString *const OMBCurrentUserLandlordTypeChangeNotification =
   @"OMBCurrentUserLandlordTypeChangeNotification";
 // Menu view controller posts this, and user listens for it
 // Unused
-// NSString *const OMBCurrentUserLogoutNotification = 
+// NSString *const OMBCurrentUserLogoutNotification =
 //   @"OMBCurrentUserLogoutNotification";
 NSString *const OMBCurrentUserUploadedImage = @"OMBCurrentUserUploadedImage";
 // When authenticating with Facebook while logged in
@@ -94,10 +94,10 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   // Development server
   // #warning Change This!!!
   // Landlord (Fake User)
-  NSString *const OMBFakeUserAccessToken = 
+  NSString *const OMBFakeUserAccessToken =
     @"cea246ff2139e0fa5b17ae255e9a946d";
   // Student
-  // NSString *const OMBFakeUserAccessToken = 
+  // NSString *const OMBFakeUserAccessToken =
   //   @"6591173fc1a1f1ac409c0efb3a0a05b1";
     int kNotificationTimerInterval = 10000;
 #elif __ENVIRONMENT__ == 2
@@ -183,7 +183,7 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   [OMBUser currentUser].accessToken = OMBFakeUserAccessToken;
   [OMBUser currentUser].email     = @"fake_user@gmail.com";
   [OMBUser currentUser].firstName = @"fake";
-  [OMBUser currentUser].imageURL  = [NSURL URLWithString: 
+  [OMBUser currentUser].imageURL  = [NSURL URLWithString:
     @"http://localhost:3000/user_image.png"];
   [OMBUser currentUser].lastName  = @"user";
   [OMBUser currentUser].phone     = @"4088581234";
@@ -198,7 +198,7 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   [[OMBUserStore sharedStore] addUser: [OMBUser currentUser]];
 
   // Post notification for logging in
-  [[NSNotificationCenter defaultCenter] postNotificationName: 
+  [[NSNotificationCenter defaultCenter] postNotificationName:
     OMBUserLoggedInNotification object: nil];
 }
 
@@ -247,9 +247,14 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   return [NSString stringWithFormat: @"user_%i_conversations", userUID];
 }
 
++ (NSString *) pushNotificationChannelForOffersPlaced: (NSUInteger) userUID
+{
+  return [NSString stringWithFormat: @"user_%i_offersplaced", userUID];
+}
+
 #pragma mark - Instance Methods
 
-- (void) acceptOffer: (OMBOffer *) offer 
+- (void) acceptOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block
 {
   OMBOfferDecisionConnection *conn =
@@ -288,7 +293,7 @@ withCompletion: (void (^) (NSError *error)) block
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence
 {
   if (![_favorites objectForKey: [favoriteResidence dictionaryKey]]) {
-    [_favorites setObject: favoriteResidence forKey: 
+    [_favorites setObject: favoriteResidence forKey:
       [favoriteResidence dictionaryKey]];
     [[NSNotificationCenter defaultCenter] postNotificationName:
       OMBCurrentUserChangedFavorite object: nil];
@@ -366,16 +371,16 @@ withCompletion: (void (^) (NSError *error)) block
 
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence
 {
-  if ([_favorites objectForKey: [NSString stringWithFormat: @"%i", 
+  if ([_favorites objectForKey: [NSString stringWithFormat: @"%i",
     residence.uid]])
     return YES;
   return NO;
 }
 
-- (void) authenticateVenmoWithCode: (NSString *) code 
+- (void) authenticateVenmoWithCode: (NSString *) code
 depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
 {
-  OMBAuthenticationVenmoConnection *conn = 
+  OMBAuthenticationVenmoConnection *conn =
     [[OMBAuthenticationVenmoConnection alloc] initWithCode: code
       depositMethod: deposit];
   conn.completionBlock = block;
@@ -384,16 +389,16 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
 
 - (void) authenticateWithServer: (void (^) (NSError *error)) block
 {
-  OMBUserFacebookAuthenticationConnection *connection = 
+  OMBUserFacebookAuthenticationConnection *connection =
     [[OMBUserFacebookAuthenticationConnection alloc] initWithUser: self];
   connection.completionBlock = ^(NSError *error) {
     if ([[OMBUser currentUser] loggedIn]) {
       // Post notification
-      [[NSNotificationCenter defaultCenter] postNotificationName: 
+      [[NSNotificationCenter defaultCenter] postNotificationName:
         OMBUserLoggedInNotification object: nil];
       // Hide the intro view controller
       OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-      [appDelegate.container.introViewController dismissViewControllerAnimated: 
+      [appDelegate.container.introViewController dismissViewControllerAnimated:
         YES completion: nil];
     }
     // Tell all the activity indicators to stop spinning
@@ -406,14 +411,14 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
 
 - (void) changeOtherSamePrimaryPayoutMethods: (OMBPayoutMethod *) payoutMethod
 {
-  // NSPredicate *predicate = [NSPredicate predicateWithFormat: 
-  //   @"%K == %@ && %K == %@ && %K != %i", 
-  //     @"deposit", [NSNumber numberWithBool: payoutMethod.deposit], 
-  //       @"primary", [NSNumber numberWithBool: payoutMethod.primary], 
+  // NSPredicate *predicate = [NSPredicate predicateWithFormat:
+  //   @"%K == %@ && %K == %@ && %K != %i",
+  //     @"deposit", [NSNumber numberWithBool: payoutMethod.deposit],
+  //       @"primary", [NSNumber numberWithBool: payoutMethod.primary],
   //         @"uid", payoutMethod.uid];
-  NSPredicate *predicate = [NSPredicate predicateWithFormat: 
+  NSPredicate *predicate = [NSPredicate predicateWithFormat:
     @"%K == %@ && %K != %i",
-      @"primary", [NSNumber numberWithBool: payoutMethod.primary], 
+      @"primary", [NSNumber numberWithBool: payoutMethod.primary],
         @"uid", payoutMethod.uid];
   for (OMBPayoutMethod *object in
     [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate]) {
@@ -430,12 +435,12 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
     OMBUserDefaultsAPIKey];
   if (apiKeyDict) {
     if ([apiKeyDict objectForKey: OMBUserDefaultsAPIKeyExpiresAt]) {
-      NSTimeInterval expiresAt = 
+      NSTimeInterval expiresAt =
         [[apiKeyDict objectForKey: OMBUserDefaultsAPIKeyExpiresAt] floatValue];
       NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
       // If it has not expired
       if (expiresAt > now) {
-        id previousAccessToken = 
+        id previousAccessToken =
           [apiKeyDict objectForKey: OMBUserDefaultsAPIKeyAccessToken];
         if (previousAccessToken && previousAccessToken != [NSNull null]) {
           _accessToken = (NSString *) previousAccessToken;
@@ -446,7 +451,7 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
       else {
         // Clear the user defaults for the api key
         apiKeyDict = [NSMutableDictionary dictionary];
-        [[NSUserDefaults standardUserDefaults] setObject: apiKeyDict 
+        [[NSUserDefaults standardUserDefaults] setObject: apiKeyDict
           forKey: OMBUserDefaultsAPIKey];
         [defaults synchronize];
       }
@@ -469,7 +474,7 @@ withCompletion: (void (^) (NSError *error)) block
   [conn start];
 }
 
-- (void) createAuthenticationForFacebookWithCompletion: 
+- (void) createAuthenticationForFacebookWithCompletion:
   (void (^) (NSError *error)) block
 {
   OMBAuthenticationFacebookConnection *conn =
@@ -481,7 +486,7 @@ withCompletion: (void (^) (NSError *error)) block
 - (void) createAuthenticationForLinkedInWithAccessToken: (NSString *) string
 completion: (void (^) (NSError *error)) block
 {
-  OMBAuthenticationLinkedInConnection *conn = 
+  OMBAuthenticationLinkedInConnection *conn =
     [[OMBAuthenticationLinkedInConnection alloc] initWithLinkedInAccessToken:
       string];
   conn.completionBlock = block;
@@ -491,7 +496,7 @@ completion: (void (^) (NSError *error)) block
 - (void) createOffer: (OMBOffer *) offer
 completion: (void (^) (NSError *error)) block
 {
-  OMBOfferCreateConnection *conn = 
+  OMBOfferCreateConnection *conn =
     [[OMBOfferCreateConnection alloc] initWithOffer: offer];
   conn.completionBlock = block;
   [conn start];
@@ -500,7 +505,7 @@ completion: (void (^) (NSError *error)) block
 - (void) createPayoutMethodWithDictionary: (NSDictionary *) dictionary
 withCompletion: (void (^) (NSError *error)) block
 {
-  OMBPayoutMethodCreateConnection *conn = 
+  OMBPayoutMethodCreateConnection *conn =
     [[OMBPayoutMethodCreateConnection alloc] initWithDictionary:
       dictionary];
   conn.completionBlock = block;
@@ -511,7 +516,7 @@ withCompletion: (void (^) (NSError *error)) block
 {
   NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
     @"residence.uid", offer.residence.uid];
-  NSArray *array = [[_receivedOffers allValues] filteredArrayUsingPredicate: 
+  NSArray *array = [[_receivedOffers allValues] filteredArrayUsingPredicate:
     predicate];
   for (OMBOffer *o in array) {
     if (o.uid != offer.uid) {
@@ -535,17 +540,17 @@ withCompletion: (void (^) (NSError *error)) block
 
 - (NSArray *) depositPayoutMethods
 {
-  NSPredicate *predicate = 
+  NSPredicate *predicate =
     [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
-      @"deposit", [NSNumber numberWithBool: YES], 
+      @"deposit", [NSNumber numberWithBool: YES],
         @"primary", [NSNumber numberWithBool: YES]];
   return [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate];
 }
 
-- (void) downloadImageFromImageURLWithCompletion: 
+- (void) downloadImageFromImageURLWithCompletion:
 (void (^) (NSError *error)) block
 {
-  OMBUserImageDownloader *downloader = 
+  OMBUserImageDownloader *downloader =
     [[OMBUserImageDownloader alloc] initWithUser: self];
   downloader.completionBlock = block;
   [downloader startDownload];
@@ -553,7 +558,7 @@ withCompletion: (void (^) (NSError *error)) block
 
 - (BOOL) emailContactPermission
 {
-  if ([[_email matchingResultsWithRegularExpression: 
+  if ([[_email matchingResultsWithRegularExpression:
     @"(landlord_user_[0-9]+@gmail.com)"] count])
     return NO;
   return YES;
@@ -569,7 +574,7 @@ withCompletion: (void (^) (NSError *error)) block
 
 - (void) fetchAcceptedOffersWithCompletion: (void (^) (NSError *error)) block
 {
-  OMBOffersAcceptedConnection *conn = 
+  OMBOffersAcceptedConnection *conn =
     [[OMBOffersAcceptedConnection alloc] init];
   conn.completionBlock = block;
   [conn start];
@@ -585,11 +590,11 @@ withCompletion: (void (^) (NSError *error)) block
 
 - (void) fetchCurrentUserInfo
 {
-  OMBUserCurrentUserInfoConnection *conn = 
+  OMBUserCurrentUserInfoConnection *conn =
     [[OMBUserCurrentUserInfoConnection alloc] init];
   conn.completionBlock = ^(NSError *error) {
     if (_uid && !error) {
-      [[NSNotificationCenter defaultCenter] postNotificationName: 
+      [[NSNotificationCenter defaultCenter] postNotificationName:
         OMBUserLoggedInNotification object: nil];
     }
   };
@@ -620,7 +625,7 @@ withCompletion: (void (^) (NSError *error)) block
 
 - (void) fetchListingsWithCompletion: (void (^) (NSError *error)) block
 {
-  OMBUserListingsConnection *conn = 
+  OMBUserListingsConnection *conn =
     [[OMBUserListingsConnection alloc] initWithUser: self];
   conn.completionBlock = block;
   [conn start];
@@ -629,7 +634,7 @@ withCompletion: (void (^) (NSError *error)) block
 - (void) fetchMessagesAtPage: (NSInteger) page withUser: (OMBUser *) user
 delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
-  OMBMessageDetailConnection *conn = 
+  OMBMessageDetailConnection *conn =
     [[OMBMessageDetailConnection alloc] initWithPage: page withUser: user];
   conn.completionBlock = block;
   conn.delegate = delegate;
@@ -670,7 +675,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (void) fetchUserProfileWithCompletion: (void (^) (NSError *error)) block
 {
-  OMBUserProfileConnection *conn = 
+  OMBUserProfileConnection *conn =
     [[OMBUserProfileConnection alloc] initWithUser: self];
   conn.completionBlock = block;
   [conn start];
@@ -680,10 +685,10 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
   NSString *nameString = @"";
   if (_firstName && [_firstName length])
-    nameString = [nameString stringByAppendingString: 
+    nameString = [nameString stringByAppendingString:
       [_firstName capitalizedString]];
   if (_lastName && [_lastName length])
-    nameString = [nameString stringByAppendingString: 
+    nameString = [nameString stringByAppendingString:
       [NSString stringWithFormat: @" %@", [_lastName capitalizedString]]];
   return nameString;
 }
@@ -704,8 +709,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   if (!height || [height floatValue] == 0.0f) {
     NSAttributedString *aString = [_about attributedStringWithFont:
       [UIFont normalTextFont] lineHeight: 22.0f];
-    CGRect rect = [aString boundingRectWithSize: 
-      CGSizeMake(width, 9999) options: NSStringDrawingUsesLineFragmentOrigin 
+    CGRect rect = [aString boundingRectWithSize:
+      CGSizeMake(width, 9999) options: NSStringDrawingUsesLineFragmentOrigin
         context: nil];
     height = [NSNumber numberWithFloat: rect.size.height];
     [_heightForAboutTextDictionary setObject: height forKey: key];
@@ -715,7 +720,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (UIImage *) imageForSize: (CGSize) size
 {
-  return [self imageForSizeKey: [NSString stringWithFormat: @"%f,%f", 
+  return [self imageForSizeKey: [NSString stringWithFormat: @"%f,%f",
     size.width, size.height]];
 }
 
@@ -730,10 +735,10 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
       NSInteger width  = [[words objectAtIndex: 0] floatValue];
       NSInteger height = [[words objectAtIndex: 1] floatValue];
       // Leave it up to the object that uses this to set the image
-      // into the dictionary; e.g. the OMBMangeListingsCell 
-      // resizes this image in it's OMBCenteredImageView then sets 
+      // into the dictionary; e.g. the OMBMangeListingsCell
+      // resizes this image in it's OMBCenteredImageView then sets
       // the object for key in the imagesSizedictionary
-      img = [UIImage image: _image proportionatelySized: 
+      img = [UIImage image: _image proportionatelySized:
         CGSizeMake(width, height)];
       if (width == height)
         [_imageSizeDictionary setObject: img forKey: string];
@@ -756,7 +761,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (BOOL) loggedIn
 {
-  if ([OMBUser currentUser].accessToken && 
+  if ([OMBUser currentUser].accessToken &&
     [[OMBUser currentUser].accessToken length] && [OMBUser currentUser].uid)
     return YES;
   return NO;
@@ -806,7 +811,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
       key];
     [dict removeAllObjects];
   }
-  
+
   [OMBUser currentUser].uid = 0;
 
   // Clear conversations
@@ -816,13 +821,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSMutableDictionary *apiKeyDict = [NSMutableDictionary dictionary];
   // Set the dictionary in the defaults
-  [[NSUserDefaults standardUserDefaults] setObject: apiKeyDict 
+  [[NSUserDefaults standardUserDefaults] setObject: apiKeyDict
     forKey: OMBUserDefaultsAPIKey];
-  [[NSUserDefaults standardUserDefaults] setObject: 
+  [[NSUserDefaults standardUserDefaults] setObject:
     [NSMutableDictionary dictionary] forKey: OMBUserDefaultsRenterApplication];
   [defaults synchronize];
 
-  [[NSNotificationCenter defaultCenter] postNotificationName: 
+  [[NSNotificationCenter defaultCenter] postNotificationName:
     OMBUserLoggedOutNotification object: nil];
 
   // Clear Facebook token information
@@ -842,13 +847,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (NSArray *) paymentPayoutMethods
 {
-  // NSPredicate *predicate = 
+  // NSPredicate *predicate =
   //   [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
-  //     @"deposit", [NSNumber numberWithBool: NO], 
+  //     @"deposit", [NSNumber numberWithBool: NO],
   //       @"primary", [NSNumber numberWithBool: YES]];
-  NSPredicate *predicate = 
+  NSPredicate *predicate =
     [NSPredicate predicateWithFormat: @"%K == %@ && %K == %@",
-      @"payment", [NSNumber numberWithBool: YES], 
+      @"payment", [NSNumber numberWithBool: YES],
         @"primary", [NSNumber numberWithBool: YES]];
   return [[_payoutMethods allValues] filteredArrayUsingPredicate: predicate];
 }
@@ -862,7 +867,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
   // Store the access token in the user defaults
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  NSDictionary *apiKeyDict = (NSMutableDictionary *) 
+  NSDictionary *apiKeyDict = (NSMutableDictionary *)
     [defaults objectForKey: OMBUserDefaultsAPIKey];
   if (!apiKeyDict) {
     apiKeyDict = [NSMutableDictionary dictionary];
@@ -871,7 +876,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   BOOL refreshExpiresAt = YES;
   // Access token
   if (_accessToken) {
-    id previousAccessToken = 
+    id previousAccessToken =
       [apiKeyDict objectForKey: OMBUserDefaultsAPIKeyAccessToken];
     if (previousAccessToken && previousAccessToken != [NSNull null]) {
       // If the old key matches the new key, don't refresh the expires at
@@ -889,14 +894,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   if (refreshExpiresAt) {
     apiKeyDict = @{
       OMBUserDefaultsAPIKeyAccessToken: _accessToken,
-      OMBUserDefaultsAPIKeyExpiresAt: [NSNumber numberWithFloat: 
+      OMBUserDefaultsAPIKeyExpiresAt: [NSNumber numberWithFloat:
         now + threeDays]
     };
   }
   else {
     NSTimeInterval expiresAt = [[NSDate date] timeIntervalSince1970];
     if ([apiKeyDict objectForKey: OMBUserDefaultsAPIKeyExpiresAt])
-      expiresAt = [[apiKeyDict objectForKey: 
+      expiresAt = [[apiKeyDict objectForKey:
         OMBUserDefaultsAPIKeyExpiresAt] floatValue];
     apiKeyDict = @{
       OMBUserDefaultsAPIKeyAccessToken: _accessToken,
@@ -904,14 +909,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     };
   }
   // Set the dictionary in the defaults
-  [[NSUserDefaults standardUserDefaults] setObject: apiKeyDict 
+  [[NSUserDefaults standardUserDefaults] setObject: apiKeyDict
     forKey: OMBUserDefaultsAPIKey];
   [defaults synchronize];
 
   // Timer for fetching notifications
-  _notificationFetchTimer = [NSTimer timerWithTimeInterval: 
+  _notificationFetchTimer = [NSTimer timerWithTimeInterval:
     kNotificationTimerInterval target: self
-      selector: @selector(fetchNotificationCounts:) userInfo: nil 
+      selector: @selector(fetchNotificationCounts:) userInfo: nil
         repeats: YES];
   // NSRunLoopCommonModes, mode used for tracking events
   [[NSRunLoop currentRunLoop] addTimer: _notificationFetchTimer
@@ -928,24 +933,24 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 - (NSString *) phoneString
 {
   if (_phone && [_phone length] > 0) {
-    NSRegularExpression *regex = 
-      [NSRegularExpression regularExpressionWithPattern: @"([0-9]+)" 
+    NSRegularExpression *regex =
+      [NSRegularExpression regularExpressionWithPattern: @"([0-9]+)"
         options: 0 error: nil];
-    NSArray *matches = [regex matchesInString: _phone options: 0 
+    NSArray *matches = [regex matchesInString: _phone options: 0
       range: NSMakeRange(0, [_phone length])];
     NSString *newPhone = @"";
     for (NSTextCheckingResult *result in matches) {
-      newPhone = [newPhone stringByAppendingString: 
+      newPhone = [newPhone stringByAppendingString:
         [_phone substringWithRange: result.range]];
     }
     if ([newPhone length] >= 10) {
-      NSString *areaCodeString = [newPhone substringWithRange: 
+      NSString *areaCodeString = [newPhone substringWithRange:
         NSMakeRange(0, 3)];
-      NSString *phoneString1   = [newPhone substringWithRange: 
+      NSString *phoneString1   = [newPhone substringWithRange:
         NSMakeRange(3, 3)];
-      NSString *phoneString2   = [newPhone substringWithRange: 
+      NSString *phoneString2   = [newPhone substringWithRange:
         NSMakeRange(6, 4)];
-      return [NSString stringWithFormat: @"(%@) %@-%@", 
+      return [NSString stringWithFormat: @"(%@) %@-%@",
         areaCodeString, phoneString1, phoneString2];
     }
   }
@@ -966,7 +971,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (OMBPayoutMethod *) primaryDepositPayoutMethod
 {
-  
+
   return [[self depositPayoutMethods] firstObject];
 }
 
@@ -1006,17 +1011,12 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   return (NSInteger) percent;
 }
 
-- (NSString *) pushNotificationChannelForConversations
-{
-  return [OMBUser pushNotificationChannelForConversations: self.uid];
-}
-
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary
 {
   NSMutableSet *newSet = [NSMutableSet set];
   for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
     NSInteger offerUID = [[dict objectForKey: @"id"] intValue];
-    OMBOffer *offer = [_acceptedOffers objectForKey: 
+    OMBOffer *offer = [_acceptedOffers objectForKey:
       [NSNumber numberWithInt: offerUID]];
     if (!offer) {
       offer = [[OMBOffer alloc] init];
@@ -1037,7 +1037,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   for (NSNumber *number in [oldSet allObjects]) {
     [_acceptedOffers removeObjectForKey: number];
   }
-    
+
     if (_acceptedOffers.count > 0) {
         NSArray *offers = [_acceptedOffers allValues];
         __block int waitingOffers = 0;
@@ -1046,7 +1046,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
                 waitingOffers++;
             }
         }];
-        
+
         [[NSNotificationCenter defaultCenter] postNotificationName:OMBOffersRenterAcceptedCountNotification object:@(waitingOffers)];
     }
 }
@@ -1128,7 +1128,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     userUID = [[dictionary objectForKey: @"id"] intValue];
     _uid = userUID;
   }
-  // Make sure readFromDictionary doesn't overwrite the 
+  // Make sure readFromDictionary doesn't overwrite the
   // current user's access token
   if ([OMBUser currentUser].uid && [OMBUser currentUser].uid == userUID) {
     if ([dictionary objectForKey: @"access_token"]) {
@@ -1154,7 +1154,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     string = [@"http:" stringByAppendingString: string];
   }
   else if (![string hasPrefix: @"http"]) {
-    NSString *baseURLString = [[OnMyBlockAPIURL componentsSeparatedByString: 
+    NSString *baseURLString = [[OnMyBlockAPIURL componentsSeparatedByString:
       OnMyBlockAPI] objectAtIndex: 0];
     // If user has no image
     if ([string isEqualToString: @"default_user_image.png"]) {
@@ -1191,7 +1191,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
   // Renter application
   if ([dictionary objectForKey: @"renter_application"]) {
-    [_renterApplication readFromDictionary: 
+    [_renterApplication readFromDictionary:
       [dictionary objectForKey: @"renter_application"]];
   }
 
@@ -1217,7 +1217,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   //     {
   //       created: "2013-10-31 13:26:00 -0700",
   //       residence: {
-  //         address: "8482 Fun Way"        
+  //         address: "8482 Fun Way"
   //       },
   //       user: {
   //
@@ -1236,7 +1236,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     // key = 32,-117-8550 fun street
     NSString *key = [NSString stringWithFormat: @"%f,%f-%@",
       latitude, longitude, address];
-    OMBResidence *residence = 
+    OMBResidence *residence =
       [[OMBResidenceStore sharedStore].residences objectForKey: key];
     if (!residence) {
       residence = [[OMBResidence alloc] init];
@@ -1259,7 +1259,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
       [user readFromDictionary: userDict];
 
     // Favorite residence
-    OMBFavoriteResidence *favoriteResidence = 
+    OMBFavoriteResidence *favoriteResidence =
       [[OMBFavoriteResidence alloc] init];
     favoriteResidence.createdAt = createdAt;
     favoriteResidence.residence = residence;
@@ -1287,7 +1287,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     user = [[OMBUser alloc] init];
     [user readFromDictionary: userDict];
   }
-  NSMutableArray *array = [_messages objectForKey: 
+  NSMutableArray *array = [_messages objectForKey:
     [NSNumber numberWithInt: user.uid]];
   if (!array) {
     array = [NSMutableArray array];
@@ -1364,7 +1364,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   NSMutableSet *newSet = [NSMutableSet set];
   for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
     NSInteger offerUID = [[dict objectForKey: @"id"] intValue];
-    OMBOffer *offer = [_receivedOffers objectForKey: 
+    OMBOffer *offer = [_receivedOffers objectForKey:
       [NSNumber numberWithInt: offerUID]];
     if (!offer) {
       offer = [[OMBOffer alloc] init];
@@ -1393,7 +1393,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
                 waitingOffers++;
             }
         }];
-        
+
         [[NSNotificationCenter defaultCenter] postNotificationName:OMBOffersLandordPendingCountNotification object:@(waitingOffers)];
     }
 }
@@ -1412,7 +1412,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
       [[OMBResidenceStore sharedStore] addResidence: residence];
     }
     else {
-      OMBTemporaryResidence *temporaryResidence = 
+      OMBTemporaryResidence *temporaryResidence =
         [[OMBTemporaryResidence alloc] init];
       [temporaryResidence readFromResidenceDictionary: dict];
 
@@ -1421,7 +1421,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   }
 }
 
-- (void) rejectOffer: (OMBOffer *) offer 
+- (void) rejectOffer: (OMBOffer *) offer
 withCompletion: (void (^) (NSError *error)) block
 {
   OMBOfferDecisionConnection *conn =
@@ -1435,7 +1435,7 @@ withCompletion: (void (^) (NSError *error)) block
 {
   NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
     @"residence.uid", offer.residence.uid];
-  NSArray *array = [[_receivedOffers allValues] filteredArrayUsingPredicate: 
+  NSArray *array = [[_receivedOffers allValues] filteredArrayUsingPredicate:
     predicate];
   for (OMBOffer *o in array) {
     if (o.uid != offer.uid)
@@ -1487,11 +1487,11 @@ withCompletion: (void (^) (NSError *error)) block
   }
 }
 
-- (NSArray *) residencesActive: (BOOL) active sortedWithKey: (NSString *) key 
+- (NSArray *) residencesActive: (BOOL) active sortedWithKey: (NSString *) key
 ascending: (BOOL) ascending
 {
   NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %@",
-    @"inactive", active ? [NSNumber numberWithBool: NO] : 
+    @"inactive", active ? [NSNumber numberWithBool: NO] :
       [NSNumber numberWithBool: YES]];
   NSArray *array = [[_residences objectForKey: @"residences"] allValues];
   array = [array filteredArrayUsingPredicate: predicate];
@@ -1500,7 +1500,7 @@ ascending: (BOOL) ascending
   return [array sortedArrayUsingDescriptors: @[sort]];
 }
 
-- (NSArray *) residencesSortedWithKey: (NSString *) key 
+- (NSArray *) residencesSortedWithKey: (NSString *) key
 ascending: (BOOL) ascending
 {
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
@@ -1515,7 +1515,7 @@ ascending: (BOOL) ascending
 - (void) sessionStateChanged: (NSNotification *) notification
 {
   void (^completion) (FBRequestConnection *connection, id <FBGraphUser> user,
-    NSError *error) = ^(FBRequestConnection *connection, 
+    NSError *error) = ^(FBRequestConnection *connection,
       id <FBGraphUser> user, NSError *error) {
 
     if (error) {
@@ -1535,13 +1535,13 @@ ascending: (BOOL) ascending
       if ([[OMBUser currentUser] loggedIn]) {
         // If the user successfully has a facebook access token
         // and a facebook id
-        if ([OMBUser currentUser].facebookAccessToken && 
+        if ([OMBUser currentUser].facebookAccessToken &&
           [OMBUser currentUser].facebookId) {
           // Create an authentication model for provider Facebook
           // in the database on the web server
           [[OMBUser currentUser] createAuthenticationForFacebookWithCompletion:
             ^(NSError *error) {
-              NSMutableDictionary *userInfoDict = 
+              NSMutableDictionary *userInfoDict =
                 [NSMutableDictionary dictionary];
               if (error)
                 [userInfoDict setObject: error forKey: @"error"];
@@ -1588,7 +1588,7 @@ ascending: (BOOL) ascending
           currentSchoolYear = thisYear;
           if ([dict objectForKey: @"year"]) {
             if ([[dict objectForKey: @"year"] objectForKey: @"name"]) {
-              currentSchoolYear = [[[dict objectForKey: @"year"] objectForKey: 
+              currentSchoolYear = [[[dict objectForKey: @"year"] objectForKey:
                 @"name"] intValue];
             }
             currentlyInSchool = NO;
@@ -1634,7 +1634,7 @@ ascending: (BOOL) ascending
       // Start date
       currentWorkDate = today;
       if ([dict objectForKey: @"start_date"]) {
-        currentWorkDate = [[dateFormatter dateFromString: 
+        currentWorkDate = [[dateFormatter dateFromString:
           [dict objectForKey: @"start_date"]] timeIntervalSince1970];
       }
       // If this is the most recent job
@@ -1658,7 +1658,7 @@ ascending: (BOOL) ascending
     [self fullName]];
   // Location
   if (location && [location length]) {
-    aboutString = [aboutString stringByAppendingString: 
+    aboutString = [aboutString stringByAppendingString:
       [NSString stringWithFormat: @" from %@.", location]];
   }
   else {
@@ -1669,7 +1669,7 @@ ascending: (BOOL) ascending
     NSString *studyString = @"studied";
     if (currentlyInSchool)
       studyString = @"study";
-    aboutString = [aboutString stringByAppendingString: 
+    aboutString = [aboutString stringByAppendingString:
       [NSString stringWithFormat: @" I %@ at %@.", studyString, _school]];
   }
   // Work
@@ -1677,7 +1677,7 @@ ascending: (BOOL) ascending
     if (position && [position length]) {
       NSString *aString = @"a";
       NSString *firstLetter = [position substringToIndex: 1];
-      if ([[[firstLetter lowercaseString] matchingResultsWithRegularExpression: 
+      if ([[[firstLetter lowercaseString] matchingResultsWithRegularExpression:
         @"[aiouy]"] count]) {
 
         aString = @"an";
@@ -1698,12 +1698,12 @@ ascending: (BOOL) ascending
 {
   if (_firstName && [_firstName length] && _lastName && [_lastName length])
     return [NSString stringWithFormat: @"%@ %@.",
-      [self.firstName capitalizedString], 
+      [self.firstName capitalizedString],
         [[self.lastName substringToIndex: 1] capitalizedString]];
   return @"";
 }
 
-- (NSArray *) sortedOffersType: (OMBUserOfferType) type 
+- (NSArray *) sortedOffersType: (OMBUserOfferType) type
 withKeys: (NSArray *) keys ascending: (BOOL) ascending
 {
   NSMutableArray *arrayOfKeys = [NSMutableArray array];
@@ -1731,13 +1731,17 @@ ascending: (BOOL) ascending
 {
   PFInstallation *currentInstallation = [PFInstallation currentInstallation];
   // Conversations
-  [currentInstallation addUniqueObject: 
-    [self pushNotificationChannelForConversations]
+  [currentInstallation addUniqueObject:
+    [OMBUser pushNotificationChannelForConversations: self.uid]
       forKey: ParseChannelsKey];
   [currentInstallation saveInBackground];
+  // Offers placed
+  [currentInstallation addUniqueObject:
+    [OMBUser pushNotificationChannelForOffersPlaced: self.uid]
+      forKey: ParseChannelsKey];
 }
 
-- (void) updateWithDictionary: (NSDictionary *) dictionary 
+- (void) updateWithDictionary: (NSDictionary *) dictionary
 completion: (void (^) (NSError *error)) block
 {
   OMBUserUpdateConnection *conn =
@@ -1746,7 +1750,7 @@ completion: (void (^) (NSError *error)) block
   [conn start];
 }
 
-- (void) uploadImage: (UIImage *) img 
+- (void) uploadImage: (UIImage *) img
 withCompletion: (void (^) (NSError *error)) block
 {
   CGSize newSize = CGSizeMake(640.0f, 320.0f);
@@ -1754,7 +1758,7 @@ withCompletion: (void (^) (NSError *error)) block
   UIImage *image = [UIImage image: img proportionatelySized: newSize];
   [OMBUser currentUser].image = image;
 
-  OMBUserUploadImageConnection *conn = 
+  OMBUserUploadImageConnection *conn =
     [[OMBUserUploadImageConnection alloc] init];
   conn.completionBlock = block;
   [conn start];

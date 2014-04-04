@@ -8,7 +8,10 @@
 
 #import "OMBOffer.h"
 
+#import <Parse/Parse.h>
+
 #import "NSString+Extensions.h"
+#import "NSString+OnMyBlock.h"
 #import "OMBAllResidenceStore.h"
 #import "OMBPayoutTransaction.h"
 #import "OMBResidence.h"
@@ -253,6 +256,23 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 - (CGFloat) remainingBalanceAmount
 {
   return [self totalAmount] - [self downPaymentAmount];
+}
+
+- (void) sendPushNotificationAccepted
+{
+  NSString *alert = [NSString stringWithFormat:
+    @"Your offer for %@ has been accepted!",
+      [self.residence.address capitalizedString]];
+  PFPush *push = [[PFPush alloc] init];
+  [push expireAfterTimeInterval: 60 * 60 * 24 * 7];
+  [push setChannel: [OMBUser pushNotificationChannelForOffersPlaced:
+    self.user.uid]];
+  [push setData: @{
+    @"alert": alert,
+    @"badge": ParseBadgeIncrement,
+    @"offer_id": [NSNumber numberWithInt: self.uid]
+  }];
+  [push sendPushInBackground];
 }
 
 - (OMBOfferStatusForLandlord) statusForLandlord
