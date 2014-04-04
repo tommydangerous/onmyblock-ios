@@ -49,8 +49,6 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
 
 #pragma mark - Protocol
 
-
-
 #pragma mark - Protocol NSURLConnectionDataDelegate
 
 - (void) connection: (NSURLConnection *) connection

@@ -40,8 +40,8 @@ shortDescription: (NSString *) shortDescription delegate: (id) delegate
   payPalConfiguration.rememberUser = YES;
   payPalConfiguration.languageOrLocale = @"en";
 
-  // [PayPalMobile preconnectWithEnvironment: PayPalEnvironmentSandbox];
-  [PayPalMobile preconnectWithEnvironment: PayPalEnvironmentProduction];
+  [PayPalMobile preconnectWithEnvironment: PayPalEnvironmentSandbox];
+  // [PayPalMobile preconnectWithEnvironment: PayPalEnvironmentProduction];
 
   NSDecimalNumber *amt;
   if (__ENVIRONMENT__ == 1) {

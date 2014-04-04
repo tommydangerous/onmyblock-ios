@@ -23,8 +23,10 @@
 #import "OMBOffer.h"
 #import "OMBOfferVerifyVenmoConnection.h"
 #import "OMBPayoutMethod.h"
-#import "OMBViewControllerContainer.h"
+#import "OMBResidence.h"
+#import "OMBResidenceDetailViewController.h"
 #import "OMBUser.h"
+#import "OMBViewControllerContainer.h"
 #import "PayPalMobile.h"
 #import "UIColor+Extensions.h"
 
@@ -199,14 +201,34 @@ didRegisterForRemoteNotificationsWithDeviceToken: (NSData *) deviceToken
 - (BOOL) application: (UIApplication *) application openURL: (NSURL *) url
 sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
 {
-  // Delegate method to call the Facebook session object
-  // that handles the incoming URL
-  // [[NSNotificationCenter defaultCenter] postNotificationName:
-  //   OMBActivityIndicatorViewStartAnimatingNotification object: nil];
+  NSLog(@"Calling Application Bundle ID: %@", sourceApplication);
+  NSLog(@"URL scheme:%@", [url scheme]);
+  NSLog(@"URL query: %@", [url query]);
 
-  // NSLog(@"Open URL: %@", url);
-  // NSLog(@"Source Application: %@", sourceApplication);
-  // NSLog(@"Annotation: %@", annotation);
+  // OnMyBlock
+  if ([[[url scheme] lowercaseString] isEqualToString: @"onmyblockios"]) {
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    for (NSString *param in [[url query] componentsSeparatedByString: @"&"]) {
+      NSArray *array = [param componentsSeparatedByString: @"="];
+      if ([array count] >= 2) {
+        [parameters setObject: [array objectAtIndex: 1]
+          forKey: [array objectAtIndex: 0]];
+      }
+      // Residence
+      if ([parameters objectForKey: @"residence_id"]) {
+        OMBResidence *residence = [[OMBResidence alloc] init];
+        residence.uid = [[parameters objectForKey: @"residence_id"] intValue];
+        [residence fetchDetailsWithCompletion: ^(NSError *error) {
+          [self.container showDiscover];
+          [(OMBNavigationController *)
+            self.container.currentDetailViewController pushViewController:
+              [[OMBResidenceDetailViewController alloc] initWithResidence:
+                residence] animated: NO];
+        }];
+      }
+    }
+    return YES;
+  }
 
   // Facebook
   if ([[url absoluteString] rangeOfString: @"facebook"].location !=
