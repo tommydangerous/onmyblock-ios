@@ -8,13 +8,11 @@
 
 #import "OMBObject.h"
 
-#import "OMBConnectionProtocol.h"
-
 @class OMBMessage;
 @class OMBResidence;
 @class OMBUser;
 
-@interface OMBConversation : OMBObject <OMBConnectionProtocol>
+@interface OMBConversation : OMBObject
 
 @property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic, strong) NSString *mostRecentMessageContent;
@@ -45,9 +43,9 @@ delegate: (id) delegate completion: (void (^)(NSError *error)) block;
 - (NSArray *) otherUserIDs: (OMBUser *) user;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) readFromMessagesDictionary: (NSDictionary *) dictionary;
-- (NSArray *) sortedMessagesWithKey: (NSString *) key 
+- (NSArray *) sortedMessagesWithKey: (NSString *) key
 ascending: (BOOL) ascending;
-- (void) updateMessageUID: (OMBMessage *) message 
+- (void) updateMessageUID: (OMBMessage *) message
 withUID: (NSUInteger) messageUID;
 - (BOOL) viewedByUser: (OMBUser *) user;
 

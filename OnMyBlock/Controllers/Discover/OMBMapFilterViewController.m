@@ -51,7 +51,7 @@
   [self resetValuesDictionary];
 
   self.title = @"Filter";
-  
+
   return self;
 }
 
@@ -67,16 +67,16 @@
   rentPickerViewRows = 8000 / 500;
 
   // Navigation item
-  doneBarButtonItem = 
+  doneBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @"Done"
       style: UIBarButtonItemStylePlain target: self action: @selector(done)];
   // Left bar button item
-  self.navigationItem.leftBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithTitle: @"Cancel" 
+  self.navigationItem.leftBarButtonItem =
+    [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
       style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
   // Right bar button item
   searchBarButtonItem =
-    [[UIBarButtonItem alloc] initWithTitle: @"Search" 
+    [[UIBarButtonItem alloc] initWithTitle: @"Search"
       style: UIBarButtonItemStylePlain target: self action: @selector(search)];
   UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
   [searchBarButtonItem setTitleTextAttributes: @{
@@ -91,7 +91,7 @@
 
   self.table.backgroundColor = [UIColor grayUltraLight];
   self.table.separatorInset  = UIEdgeInsetsMake(0.0f, padding, 0.0f, 0.0f);
-  self.table.tableFooterView = [[UIView alloc] initWithFrame: 
+  self.table.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectMake(0.0f, 0.0f, screenWidth, padding)];
 
   fadedBackground = [[UIView alloc] init];
@@ -99,25 +99,25 @@
   fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
   fadedBackground.frame = screen;
   [self.view addSubview: fadedBackground];
-  UITapGestureRecognizer *tapGesture = 
-    [[UITapGestureRecognizer alloc] initWithTarget: self 
+  UITapGestureRecognizer *tapGesture =
+    [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(hidePickerView)];
   [fadedBackground addGestureRecognizer: tapGesture];
 
   neighborhoodTableViewContainer = [[UIView alloc] init];
-  neighborhoodTableViewContainer.frame = CGRectMake(0.0f, 
+  neighborhoodTableViewContainer.frame = CGRectMake(0.0f,
     screenHeight, screenWidth, screenHeight * 0.8);
   [self.view addSubview: neighborhoodTableViewContainer];
 
   // Header for the neighborhood table view
   AMBlurView *headerView = [[AMBlurView alloc] init];
   headerView.blurTintColor = [UIColor grayVeryLight];
-  headerView.frame = CGRectMake(0.0f, 0.0f, 
+  headerView.frame = CGRectMake(0.0f, 0.0f,
     neighborhoodTableViewContainer.frame.size.width, OMBStandardHeight);
   [neighborhoodTableViewContainer addSubview: headerView];
   UILabel *headerLabel = [[UILabel alloc] init];
   headerLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
-  headerLabel.frame = CGRectMake(0.0f, 0.0f, 
+  headerLabel.frame = CGRectMake(0.0f, 0.0f,
     headerView.frame.size.width, headerView.frame.size.height);
   headerLabel.text = @"School or Neighborhood";
   headerLabel.textAlignment = NSTextAlignmentCenter;
@@ -125,26 +125,26 @@
   [headerView addSubview: headerLabel];
   // Cancel button
   UIButton *neighborhoodCancelButton = [UIButton new];
-  neighborhoodCancelButton.titleLabel.font = [UIFont fontWithName: 
+  neighborhoodCancelButton.titleLabel.font = [UIFont fontWithName:
     @"HelveticaNeue-Medium" size: 15];
   CGRect neighborhoodCancelButtonRect = [@"Cancel" boundingRectWithSize:
     CGSizeMake(headerView.frame.size.width, headerView.frame.size.height)
       font: neighborhoodCancelButton.titleLabel.font];
   neighborhoodCancelButton.frame = CGRectMake(padding, 0.0f,
     neighborhoodCancelButtonRect.size.width, headerView.frame.size.height);
-  [neighborhoodCancelButton addTarget: self 
-    action: @selector(cancelSelectNeighborhood) 
+  [neighborhoodCancelButton addTarget: self
+    action: @selector(cancelSelectNeighborhood)
       forControlEvents: UIControlEventTouchUpInside];
   [neighborhoodCancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
-  [neighborhoodCancelButton setTitleColor: [UIColor blueDark] 
+  [neighborhoodCancelButton setTitleColor: [UIColor blueDark]
     forState: UIControlStateNormal];
   [headerView addSubview: neighborhoodCancelButton];
 
   // Neighborhood selection
   /*neighborhoodTableView = [[UITableView alloc] initWithFrame:
-    CGRectMake(0.0f, headerView.frame.size.height, 
+    CGRectMake(0.0f, headerView.frame.size.height,
       neighborhoodTableViewContainer.frame.size.width,
-      neighborhoodTableViewContainer.frame.size.height - 
+      neighborhoodTableViewContainer.frame.size.height -
       headerView.frame.size.height)
         style: UITableViewStylePlain];
   neighborhoodTableView.alwaysBounceVertical = YES;
@@ -152,7 +152,7 @@
   neighborhoodTableView.dataSource = self;
   neighborhoodTableView.delegate = self;
   neighborhoodTableView.separatorColor = [UIColor grayLight];
-  neighborhoodTableView.separatorInset = UIEdgeInsetsMake(0.0f, padding, 
+  neighborhoodTableView.separatorInset = UIEdgeInsetsMake(0.0f, padding,
     0.0f, 0.0f);
   temporaryNeighborhoods = [[OMBNeighborhoodStore sharedStore]
     sortedNeighborhoodsForName:@""];
@@ -186,7 +186,7 @@
     (neighborhoodTableHeaderView.frame.size.height - sizeImage) * 0.5f,
       sizeImage , sizeImage);
   [neighborhoodTableHeaderView addSubview: filterImageView];
-  
+
   // Label
   UILabel *currentLocationLabel = [UILabel new];
   currentLocationLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
@@ -201,7 +201,7 @@
   CGFloat imageSize = padding;
   UIImageView *headerImageView = [UIImageView new];
   headerImageView.frame = CGRectMake(
-    neighborhoodTableHeaderView.frame.size.width - (imageSize + padding), 
+    neighborhoodTableHeaderView.frame.size.width - (imageSize + padding),
       OMBStandardHeight + (OMBStandardHeight - imageSize) * 0.5,
         imageSize, imageSize);
   headerImageView.image = [UIImage imageNamed: @"gps_cursor_blue.png"];
@@ -231,7 +231,7 @@
   pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
     self.view.frame.size.width, OMBStandardHeight);
 	[pickerViewContainer addSubview:pickerViewHeader];
-	
+
   // Header label
   pickerViewHeaderLabel = [UILabel new];
   pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
@@ -248,7 +248,7 @@
     action: @selector(cancelPicker)
       forControlEvents: UIControlEventTouchUpInside];
   [rentCancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
-  [rentCancelButton setTitleColor: [UIColor blueDark] 
+  [rentCancelButton setTitleColor: [UIColor blueDark]
     forState: UIControlStateNormal];
   [pickerViewHeader addSubview: rentCancelButton];
   // Done button
@@ -261,11 +261,11 @@
   rentDoneButton.frame = CGRectMake(pickerViewHeader.frame.size.width -
     (padding + rentDoneButtonRect.size.width), 0.0f,
       rentDoneButtonRect.size.width, pickerViewHeader.frame.size.height);
-  [rentDoneButton addTarget: self 
-    action: @selector(done) 
+  [rentDoneButton addTarget: self
+    action: @selector(done)
       forControlEvents: UIControlEventTouchUpInside];
   [rentDoneButton setTitle: @"Done" forState: UIControlStateNormal];
-  [rentDoneButton setTitleColor: [UIColor blueDark] 
+  [rentDoneButton setTitleColor: [UIColor blueDark]
     forState: UIControlStateNormal];
   [pickerViewHeader addSubview: rentDoneButton];
 
@@ -291,16 +291,16 @@
   hyphenLabel.textAlignment = NSTextAlignmentCenter;
   hyphenLabel.textColor = [UIColor textColor];
   [rentPickerView addSubview:hyphenLabel];
-  
+
 	// Date Available scroller
 	availabilityPickerView = [[UIPickerView alloc] init];
 	availabilityPickerView.backgroundColor = [UIColor whiteColor];
 	availabilityPickerView.dataSource = self;
 	availabilityPickerView.delegate = self;
 	availabilityPickerView.frame = rentPickerView.frame;
-	
+
   pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
-    rentPickerView.frame.size.width, 
+    rentPickerView.frame.size.width,
       pickerViewHeader.frame.size.height +
       rentPickerView.frame.size.height);
   filterViewController = [[OMBMapFilterLocationViewController alloc]
@@ -325,11 +325,11 @@
   }
   else
     [_valuesDictionary setObject: @"" forKey: @"neighborhood"];
-  
-  
+
+
   moveInDates = [NSMutableDictionary dictionary];
 
-  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit | 
+  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit |
     NSWeekdayCalendarUnit | NSYearCalendarUnit);
   NSDate *today = [NSDate date];
 
@@ -382,10 +382,10 @@
 - (void) locationManager: (CLLocationManager *) manager
 didFailWithError: (NSError *) error
 {
-  NSLog(@"Location manager did fail with error: %@", 
+  NSLog(@"Location manager did fail with error: %@",
     error.localizedDescription);
-  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-    @"Could not locate" message: error.localizedDescription delegate: nil 
+  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+    @"Could not locate" message: error.localizedDescription delegate: nil
       cancelButtonTitle: @"OK" otherButtonTitles: nil];
   [alertView show];
 }
@@ -411,7 +411,7 @@ didUpdateLocations: (NSArray *) locations
 	return 0;
 }
 
-- (NSInteger) pickerView: (UIPickerView *) pickerView 
+- (NSInteger) pickerView: (UIPickerView *) pickerView
 numberOfRowsInComponent: (NSInteger) component
 {
 	if (pickerView == rentPickerView)
@@ -430,7 +430,7 @@ numberOfRowsInComponent: (NSInteger) component
 
 #pragma mark - Protocol UIPickerViewDelegate
 
-- (void) pickerView: (UIPickerView *) pickerView didSelectRow: (NSInteger) row 
+- (void) pickerView: (UIPickerView *) pickerView didSelectRow: (NSInteger) row
 inComponent: (NSInteger) component
 {
 	if (pickerView == rentPickerView)
@@ -458,8 +458,8 @@ inComponent: (NSInteger) component
 		  [self.table cellForRowAtIndexPath:
 		    [NSIndexPath indexPathForRow:1 inSection: 5]];
     cell.dateAvailable.text = [self moveInDateStringAtIndex: row];
-    [_valuesDictionary setObject: 
-      [[self moveInDatesSortedArray] objectAtIndex: row] 
+    [_valuesDictionary setObject:
+      [[self moveInDatesSortedArray] objectAtIndex: row]
         forKey: @"moveInDate"];
 		// NSString *string = [self pickerView: pickerView titleForRow: row
 		// 					   forComponent: component];
@@ -469,7 +469,7 @@ inComponent: (NSInteger) component
 	}
 }
 
-- (CGFloat) pickerView: (UIPickerView *) pickerView 
+- (CGFloat) pickerView: (UIPickerView *) pickerView
 rowHeightForComponent: (NSInteger) component
 {
   return 44.0f;
@@ -505,11 +505,11 @@ rowHeightForComponent: (NSInteger) component
 
     return [self moveInDateStringAtIndex: row];
 	}
-	
+
   return nil;
 }
 
-- (CGFloat) pickerView: (UIPickerView *) pickerView 
+- (CGFloat) pickerView: (UIPickerView *) pickerView
 widthForComponent: (NSInteger) component
 {
 	if (pickerView == rentPickerView)
@@ -560,7 +560,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     UITableViewCell *headerCell = [tableView dequeueReusableCellWithIdentifier:
       HeaderCellIdentifier];
     if (!headerCell)
-      headerCell = [[UITableViewCell alloc] initWithStyle: 
+      headerCell = [[UITableViewCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: HeaderCellIdentifier];
     headerCell.backgroundColor = tableView.backgroundColor;
     headerCell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -575,15 +575,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         headerCell.textLabel.text = @"Choose Location";
       }
       else if (indexPath.row == 1) {
-        static NSString *NeighborhoodCellIdentifier = 
+        static NSString *NeighborhoodCellIdentifier =
           @"NeighborhoodCellIdentifier";
-        OMBMapFilterNeighborhoodCell *cell = 
-          [tableView dequeueReusableCellWithIdentifier: 
+        OMBMapFilterNeighborhoodCell *cell =
+          [tableView dequeueReusableCellWithIdentifier:
             NeighborhoodCellIdentifier];
         if (!cell)
           cell = [[OMBMapFilterNeighborhoodCell alloc] initWithStyle:
-            UITableViewCellStyleDefault reuseIdentifier: 
+            UITableViewCellStyleDefault reuseIdentifier:
               NeighborhoodCellIdentifier];
+        cell.clipsToBounds = YES;
         return cell;
       }
     }
@@ -594,12 +595,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       else if (indexPath.row == 1) {
         static NSString *RentCellIdentifier = @"RentCellIdentifier";
-        OMBMapFilterRentCell *cell = 
+        OMBMapFilterRentCell *cell =
           [tableView dequeueReusableCellWithIdentifier: RentCellIdentifier];
         if (!cell)
           cell = [[OMBMapFilterRentCell alloc] initWithStyle:
-            UITableViewCellStyleDefault reuseIdentifier: 
+            UITableViewCellStyleDefault reuseIdentifier:
               RentCellIdentifier];
+        cell.clipsToBounds = YES;
         return cell;
       }
     }
@@ -609,16 +611,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         headerCell.textLabel.text = @"Bedrooms";
       }
       else if (indexPath.row == 1) {
-        static NSString *BedroomsCellIdentifier = 
+        static NSString *BedroomsCellIdentifier =
           @"BedroomsCellIdentifier";
-        OMBMapFilterBedroomsCell *cell = 
-          [tableView dequeueReusableCellWithIdentifier: 
+        OMBMapFilterBedroomsCell *cell =
+          [tableView dequeueReusableCellWithIdentifier:
             BedroomsCellIdentifier];
         if (!cell)
           cell = [[OMBMapFilterBedroomsCell alloc] initWithStyle:
-            UITableViewCellStyleDefault reuseIdentifier: 
+            UITableViewCellStyleDefault reuseIdentifier:
               BedroomsCellIdentifier];
         cell.delegate = self;
+        cell.clipsToBounds = YES;
         return cell;
       }
     }
@@ -628,16 +631,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         headerCell.textLabel.text = @"Bathrooms";
       }
       else if (indexPath.row == 1) {
-        static NSString *BathroomsCellIdentifier = 
+        static NSString *BathroomsCellIdentifier =
           @"BathroomsCellIdentifier";
-        OMBMapFilterBathroomsCell *cell = 
-          [tableView dequeueReusableCellWithIdentifier: 
+        OMBMapFilterBathroomsCell *cell =
+          [tableView dequeueReusableCellWithIdentifier:
             BathroomsCellIdentifier];
         if (!cell)
           cell = [[OMBMapFilterBathroomsCell alloc] initWithStyle:
-            UITableViewCellStyleDefault reuseIdentifier: 
+            UITableViewCellStyleDefault reuseIdentifier:
               BathroomsCellIdentifier];
         cell.delegate = self;
+        cell.clipsToBounds = YES;
         return cell;
       }
     }
@@ -647,48 +651,51 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         headerCell.textLabel.text = @"Property Type";
       }
       else if (indexPath.row == 1) {
-        static NSString *PropertyTypeCellIdentifier = 
+        static NSString *PropertyTypeCellIdentifier =
           @"PropertyTypeCellIdentifier";
-        OMBMapFilterPropertyTypeCell *cell = 
-          [tableView dequeueReusableCellWithIdentifier: 
+        OMBMapFilterPropertyTypeCell *cell =
+          [tableView dequeueReusableCellWithIdentifier:
             PropertyTypeCellIdentifier];
         if (!cell)
           cell = [[OMBMapFilterPropertyTypeCell alloc] initWithStyle:
-            UITableViewCellStyleDefault reuseIdentifier: 
+            UITableViewCellStyleDefault reuseIdentifier:
               PropertyTypeCellIdentifier];
+        cell.clipsToBounds = YES;
         return cell;
       }
     }
 	  // Date Available
-	else if (indexPath.section == 5) {
-		if (indexPath.row == 0) {
-			headerCell.textLabel.text = @"Date Available";
-		}
-		else if (indexPath.row == 1) {
-			static NSString *PropertyTypeCellIdentifier =
-			@"DateAvailableCellIdentifier";
-			OMBMapFilterDateAvailableCell *cell =
-        [tableView dequeueReusableCellWithIdentifier: 
-          PropertyTypeCellIdentifier];
-			if (!cell)
-				cell = [[OMBMapFilterDateAvailableCell alloc] initWithStyle:
-					UITableViewCellStyleDefault reuseIdentifier:
+    else if (indexPath.section == 5) {
+  		if (indexPath.row == 0) {
+  			headerCell.textLabel.text = @"Date Available";
+  		}
+  		else if (indexPath.row == 1) {
+  			static NSString *PropertyTypeCellIdentifier =
+  			@"DateAvailableCellIdentifier";
+  			OMBMapFilterDateAvailableCell *cell =
+          [tableView dequeueReusableCellWithIdentifier:
             PropertyTypeCellIdentifier];
-			return cell;
-		}
-	}
+  			if (!cell)
+  				cell = [[OMBMapFilterDateAvailableCell alloc] initWithStyle:
+  					UITableViewCellStyleDefault reuseIdentifier:
+              PropertyTypeCellIdentifier];
+        cell.clipsToBounds = YES;
+  			return cell;
+  		}
+  	}
+    headerCell.clipsToBounds = YES;
     return headerCell;
   }
   // Neighborhood slide up selection
   else if (tableView == neighborhoodTableView) {
-    static NSString *NeighborhoodNameCellIdentifier = 
+    static NSString *NeighborhoodNameCellIdentifier =
       @"NeighborhoodNameCellIdentifier";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
       NeighborhoodNameCellIdentifier];
     if (!cell)
       cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
         reuseIdentifier: NeighborhoodNameCellIdentifier];
-  
+
     NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
                            @selector(localizedCaseInsensitiveCompare:)];
     OMBNeighborhood *neighborhoodCity = [[temporaryNeighborhoods objectForKey:keys[indexPath.section]] objectAtIndex:
@@ -704,29 +711,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
                                           size: 15];
     cell.textLabel.text = neighborhoodCity.name;
     cell.textLabel.textColor = [UIColor textColor];
+    cell.clipsToBounds = YES;
     return cell;
-    
-    /*NSString *city =
-     [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex:
-     indexPath.section];
-    NSArray *neighborhoods =
-      [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity: city];
-    OMBNeighborhood *neighborhood = [neighborhoods objectAtIndex: 
-      indexPath.row];
-    if (selectedNeighborhood == neighborhood) {
-      cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    }
-    else {
-      cell.accessoryType = UITableViewCellAccessoryNone;
-    }
-    cell.backgroundColor = [UIColor grayUltraLight];
-    cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
-      size: 15];
-    cell.textLabel.text = neighborhood.name;
-    cell.textLabel.textColor = [UIColor textColor];
-    return cell;*/
   }
-  return [[UITableViewCell alloc] init]; 
+  return [[UITableViewCell alloc] init];
 }
 
 - (NSInteger) tableView: (UITableView *) tableView
@@ -741,10 +729,10 @@ numberOfRowsInSection: (NSInteger) section
     NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
                      @selector(localizedCaseInsensitiveCompare:)];
     return [[temporaryNeighborhoods objectForKey:keys[section]] count];
-    
+
     /*NSString *city =
       [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: section];
-    NSArray *neighborhoods = 
+    NSArray *neighborhoods =
       [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity: city];
     return [neighborhoods count];*/
   }
@@ -760,16 +748,16 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   if (tableView == self.table) {
     // Neighborhoods
     if (indexPath.section == 0 && indexPath.row == 1) {
-      [self.table scrollToRowAtIndexPath: 
-        [NSIndexPath indexPathForRow: 0 inSection: indexPath.section] 
+      [self.table scrollToRowAtIndexPath:
+        [NSIndexPath indexPathForRow: 0 inSection: indexPath.section]
           atScrollPosition: UITableViewScrollPositionTop animated: YES];
       [self hidePickerView];
       [self showNeighborhoodTableViewContainer];
     }
     // Rent
     else if (indexPath.section == 1 && indexPath.row == 1) {
-      [self.table scrollToRowAtIndexPath: 
-        [NSIndexPath indexPathForRow: 0 inSection: indexPath.section] 
+      [self.table scrollToRowAtIndexPath:
+        [NSIndexPath indexPathForRow: 0 inSection: indexPath.section]
           atScrollPosition: UITableViewScrollPositionTop animated: YES];
       [self hideNeighborhoodTableViewContainer];
 		[self showPickerView: rentPickerView];
@@ -790,13 +778,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     OMBNeighborhood *neighborhood = [[temporaryNeighborhoods
       objectForKey:keys[indexPath.section]]
         objectAtIndex: indexPath.row];
-    
+
     /*NSString *city =
-      [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: 
+      [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex:
         indexPath.section];
-    NSArray *neighborhoods = 
+    NSArray *neighborhoods =
       [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity: city];
-    OMBNeighborhood *neighborhood = 
+    OMBNeighborhood *neighborhood =
       [neighborhoods objectAtIndex: indexPath.row];*/
     if (selectedNeighborhood == neighborhood) {
       selectedNeighborhood = nil;
@@ -806,12 +794,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       //selectedNeighborhood = [neighborhoods objectAtIndex: indexPath.row];
     }
     OMBMapFilterNeighborhoodCell *cell = (OMBMapFilterNeighborhoodCell *)
-      [self.table cellForRowAtIndexPath: 
+      [self.table cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 1 inSection: 0]];
     NSString *string = @"";
     if (selectedNeighborhood) {
       string = selectedNeighborhood.name;
-    }    
+    }
     cell.neighborhoodTextField.text = string;
     [tableView deselectRowAtIndexPath: indexPath animated: YES];
     [tableView reloadData];
@@ -827,7 +815,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
-- (CGFloat) tableView: (UITableView *) tableView 
+- (CGFloat) tableView: (UITableView *) tableView
 heightForHeaderInSection: (NSInteger) section
 {
   if (tableView == neighborhoodTableView) {
@@ -844,12 +832,12 @@ heightForHeaderInSection: (NSInteger) section
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  CGFloat standardHeight = 44.0f; 
+  CGFloat standardHeight = 44.0f;
   if (tableView == self.table) {
     // Property Type
     if (indexPath.section == 4)
       return 0.0f;
-    
+
     // Date Available
     if (indexPath.section == 5)
       return 0.0f;
@@ -869,7 +857,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   return 0.0f;
 }
 
-- (UIView *) tableView: (UITableView *) tableView 
+- (UIView *) tableView: (UITableView *) tableView
 viewForHeaderInSection: (NSInteger) section
 {
   if (tableView == neighborhoodTableView) {
@@ -887,15 +875,15 @@ viewForHeaderInSection: (NSInteger) section
     label.textColor = [UIColor blue];
     [blur addSubview: label];
     return blur;
-    
+
     /*AMBlurView *blur = [[AMBlurView alloc] init];
     blur.blurTintColor = [UIColor grayVeryLight];
-    blur.frame = CGRectMake(0.0f, 0.0f, 
+    blur.frame = CGRectMake(0.0f, 0.0f,
       tableView.frame.size.width, 13.0f * 2);
     UILabel *label = [UILabel new];
     label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 13];
     label.frame = blur.frame;
-    label.text = [[[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: 
+    label.text = [[[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex:
       section] capitalizedString];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor blue];
@@ -931,8 +919,8 @@ viewForHeaderInSection: (NSInteger) section
 
   [self dismissViewControllerWithCompletion: ^{
     // Neighborhood
-    OMBMapFilterNeighborhoodCell *neighborhoodCell = 
-      (OMBMapFilterNeighborhoodCell *) [self.table cellForRowAtIndexPath: 
+    OMBMapFilterNeighborhoodCell *neighborhoodCell =
+      (OMBMapFilterNeighborhoodCell *) [self.table cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 1 inSection: 0]];
     neighborhoodCell.neighborhoodTextField.text = @"";
     selectedNeighborhood = nil;
@@ -944,10 +932,10 @@ viewForHeaderInSection: (NSInteger) section
     rentCell.rentRangeTextField.text = @"";
     [rentPickerView selectRow: 0 inComponent: 0 animated: NO];
     [rentPickerView selectRow:([self pickerView:rentPickerView numberOfRowsInComponent:1]-1) inComponent: 1 animated: NO];
-	  
+
     // Clear the bedroom buttons
     OMBMapFilterBedroomsCell *bedroomsCell = (OMBMapFilterBedroomsCell *)
-      [self.table cellForRowAtIndexPath: 
+      [self.table cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 1 inSection: 2]];
     [bedroomsCell resetButtons];
     // Clear the bathrooms
@@ -956,9 +944,9 @@ viewForHeaderInSection: (NSInteger) section
         [NSIndexPath indexPathForRow: 1 inSection: 3]];
     [bathroomsCell resetButtons];
     // Property type
-    OMBMapFilterPropertyTypeCell *propertyTypeCell = 
+    OMBMapFilterPropertyTypeCell *propertyTypeCell =
       (OMBMapFilterPropertyTypeCell *)
-        [self.table cellForRowAtIndexPath: 
+        [self.table cellForRowAtIndexPath:
           [NSIndexPath indexPathForRow: 1 inSection: 4]];
     [propertyTypeCell resetButtons];
 	  // Date Available
@@ -972,7 +960,7 @@ viewForHeaderInSection: (NSInteger) section
 {
   selectedNeighborhood = nil;
   OMBMapFilterNeighborhoodCell *cell = (OMBMapFilterNeighborhoodCell *)
-    [self.table cellForRowAtIndexPath: 
+    [self.table cellForRowAtIndexPath:
       [NSIndexPath indexPathForRow: 1 inSection: 0]];
   cell.neighborhoodTextField.text = @"";
   [neighborhoodTableView reloadData];
@@ -992,13 +980,13 @@ viewForHeaderInSection: (NSInteger) section
 	}
 	else if ([availabilityPickerView superview]) {
 		OMBMapFilterDateAvailableCell *cell = (OMBMapFilterDateAvailableCell *)
-		  [self.table cellForRowAtIndexPath: 
+		  [self.table cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 1 inSection: 5]];
 		cell.dateAvailable.text = @"";
 		[availabilityPickerView selectRow: 0 inComponent: 0 animated: YES];
     [_valuesDictionary setObject: [NSNull null] forKey: @"moveInDate"];
 	}
-	
+
   [self hidePickerView];
 }
 
@@ -1038,7 +1026,7 @@ viewForHeaderInSection: (NSInteger) section
   // Dates Available
   else if ([availabilityPickerView superview]) {
     if ([_valuesDictionary objectForKey: @"moveInDate"] == [NSNull null])
-      [self pickerView: availabilityPickerView didSelectRow: 0 
+      [self pickerView: availabilityPickerView didSelectRow: 0
         inComponent: 0];
   }
 }
@@ -1083,7 +1071,7 @@ viewForHeaderInSection: (NSInteger) section
 
 - (NSArray *) moveInDatesSortedArray
 {
-  return [[moveInDates allValues] sortedArrayUsingComparator: 
+  return [[moveInDates allValues] sortedArrayUsingComparator:
     ^(id obj1, id obj2) {
       return [obj1 compare: obj2];
     }
@@ -1124,7 +1112,7 @@ viewForHeaderInSection: (NSInteger) section
 
 - (NSString *) moveInDateStringAtIndex: (NSInteger) index
 {
-  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit | 
+  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit |
     NSWeekdayCalendarUnit | NSYearCalendarUnit);
   NSDateComponents *comps = [calendar components: unitFlags
     fromDate: [[self moveInDatesSortedArray] objectAtIndex: index]];
@@ -1143,7 +1131,7 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) resetValuesDictionary
 {
-  _valuesDictionary = [NSMutableDictionary dictionaryWithDictionary: 
+  _valuesDictionary = [NSMutableDictionary dictionaryWithDictionary:
     @{
       @"bathrooms":    [NSNull null],
       @"bedrooms":     [NSMutableArray array],
@@ -1174,7 +1162,7 @@ viewForHeaderInSection: (NSInteger) section
   [self presentViewController:
    [[OMBNavigationController alloc] initWithRootViewController:
     filterViewController] animated: YES completion: nil];
-  
+
   /*CGRect rect = neighborhoodTableViewContainer.frame;
   rect.origin.y = self.view.frame.size.height -
     neighborhoodTableViewContainer.frame.size.height;
@@ -1189,17 +1177,17 @@ viewForHeaderInSection: (NSInteger) section
 {
 	if (rentPickerView == pickerView) {
 		pickerViewHeaderLabel.text = @"Rent Range";
-		
+
 		[availabilityPickerView removeFromSuperview];
 		[pickerViewContainer addSubview:rentPickerView];
 	}
 	else if (availabilityPickerView == pickerView) {
 		pickerViewHeaderLabel.text = @"Date Available";
-		
+
 		[rentPickerView removeFromSuperview];
 		[pickerViewContainer addSubview:availabilityPickerView];
 	}
-	
+
   CGRect rect = pickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height -
     pickerViewContainer.frame.size.height;
@@ -1221,8 +1209,8 @@ viewForHeaderInSection: (NSInteger) section
   // currentLocation.coordinate = CLLocationCoordinate2DMake(0, 0);
   // currentLocation.name       = @"current location";
   // Neighborhood
-  OMBMapFilterNeighborhoodCell *neighborhoodCell = 
-    (OMBMapFilterNeighborhoodCell *) [self.table cellForRowAtIndexPath: 
+  OMBMapFilterNeighborhoodCell *neighborhoodCell =
+    (OMBMapFilterNeighborhoodCell *) [self.table cellForRowAtIndexPath:
       [NSIndexPath indexPathForRow: 1 inSection: 0]];
   neighborhoodCell.neighborhoodTextField.text = @"Current Location";
   [self hideNeighborhoodTableViewContainer];

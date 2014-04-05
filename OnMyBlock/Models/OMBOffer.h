@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "OMBObject.h"
 
 @class OMBPayoutTransaction;
 @class OMBResidence;
@@ -43,7 +43,7 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
   OMBOfferStatusForStudentOfferPaidExpired
 };
 
-@interface OMBOffer : NSObject
+@interface OMBOffer : OMBObject
 
 @property (nonatomic) BOOL accepted;
 @property (nonatomic) BOOL onHold;
@@ -62,7 +62,6 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 
 @property (nonatomic, strong) OMBUser *landlordUser;
 @property (nonatomic, strong) OMBResidence *residence;
-@property (nonatomic) NSInteger uid;
 @property (nonatomic, strong) OMBUser *user;
 
 #pragma mark - Methods
@@ -74,6 +73,7 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 #pragma mark - Instance Methods
 
 - (CGFloat) downPaymentAmount;
+- (void) fetchDetailsWithCompletion: (void (^) (NSError *error)) block;
 - (BOOL) isExpiredForLandlord;
 - (BOOL) isExpiredForStudent;
 - (void) readFromDictionary: (NSDictionary *) dictionary;

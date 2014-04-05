@@ -13,6 +13,7 @@
 #import "NSString+Extensions.h"
 #import "NSString+OnMyBlock.h"
 #import "OMBAllResidenceStore.h"
+#import "OMBModelDetailConnection.h"
 #import "OMBPayoutTransaction.h"
 #import "OMBResidence.h"
 #import "OMBUser.h"
@@ -63,12 +64,30 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   return kOfferDownPaymentPercentage;
 }
 
++ (NSString *) modelName
+{
+  return @"offer";
+}
+
++ (NSString *) resourceName
+{
+  return [NSString stringWithFormat: @"%@s", [OMBOffer modelName]];
+}
+
 #pragma mark - Instance Methods
 
 - (CGFloat) downPaymentAmount
 {
-
   return [self totalAmount] * [OMBOffer downPaymentPercentage];
+}
+
+- (void) fetchDetailsWithCompletion: (void (^) (NSError *error)) block
+{
+  OMBModelDetailConnection *conn =
+    [[OMBModelDetailConnection alloc] initWithModel: self];
+  conn.completionBlock = block;
+  conn.delegate = self;
+  [conn start];
 }
 
 - (BOOL) isExpiredForLandlord
@@ -239,7 +258,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
       [dictionary objectForKey: @"updated_at"]] timeIntervalSince1970];
   // UID
   if ([dictionary objectForKey: @"id"] != [NSNull null])
-    _uid = [[dictionary objectForKey: @"id"] intValue];
+    self.uid = [[dictionary objectForKey: @"id"] intValue];
   // User
   if ([dictionary objectForKey: @"user"] != [NSNull null]) {
     NSDictionary *userDict = [dictionary objectForKey: @"user"];

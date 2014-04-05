@@ -86,12 +86,6 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     }
   }
 
-  // Parse setup
-  [Parse setApplicationId: ParseApplicationId clientKey: ParseClientKey];
-  // Register for push notifications
-  [application registerForRemoteNotificationTypes:
-    UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge];
-
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
 
@@ -140,6 +134,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // #warning Remove container showing controller
   // [self.container showMyRenterProfile];
 
+  // Parse setup
+  [Parse setApplicationId: ParseApplicationId clientKey: ParseClientKey];
   // PayPal
   [PayPalMobile initializeWithClientIdsForEnvironments: @{
     PayPalEnvironmentProduction: PayPalClientID,
@@ -365,9 +361,9 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
 - (void) handlePushNotification: (NSDictionary *) dictionary
 {
   if (dictionary) {
+    __weak typeof(self.container) weakContainer = self.container;
     // Conversations
     if (dictionary[@"conversation_id"]) {
-      __weak typeof(self.container) weakContainer = self.container;
       completionBlock = ^(void) {
         // Set the completion block to open the correct view controller
         OMBUser *otherUser = [[OMBUser alloc] init];
@@ -383,6 +379,16 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
               [[OMBMessageDetailViewController alloc] initWithConversation:
                 conversation] animated: NO];
           }
+        }];
+      };
+    }
+    // Offer
+    else if (dictionary[@"offer_id"]) {
+      completionBlock = ^(void) {
+        OMBOffer *offer = [[OMBOffer alloc] init];
+        offer.uid = [dictionary[@"offer_id"] intValue];
+        [offer fetchDetailsWithCompletion: ^(NSError *error) {
+          [weakContainer showOfferAccepted: offer];
         }];
       };
     }
@@ -431,6 +437,13 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
         [self sessionStateChanged: session state: state error: error];
       }
     ];
+}
+
+- (void) registerForPushNotifications
+{
+  // Register for push notifications
+  [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+    UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge];
 }
 
 - (void) sessionStateChanged: (FBSession *) session

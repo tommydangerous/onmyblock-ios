@@ -60,17 +60,17 @@ CGFloat kBackgroundMaxScale = 5.0f;
 #pragma mark - Setter & Getters
 // Both
 // Account
-- (OMBNavigationController *) accountNavigationController 
+- (OMBNavigationController *) accountNavigationController
 {
   if (!_accountNavigationController)
-    _accountNavigationController = 
+    _accountNavigationController =
       [[OMBNavigationController alloc] initWithRootViewController:
         [[OMBAccountViewController alloc] init]];
   return _accountNavigationController;
 }
 
 // Intro
-- (OMBIntroStillImagesViewController *) introViewController 
+- (OMBIntroStillImagesViewController *) introViewController
 {
   if (!_introViewController)
     _introViewController = [[OMBIntroStillImagesViewController alloc] init];
@@ -78,7 +78,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
 }
 
 // Login
-- (OMBLoginViewController *) loginViewController 
+- (OMBLoginViewController *) loginViewController
 {
   if (!_loginViewController)
     _loginViewController = [[OMBLoginViewController alloc] init];
@@ -89,7 +89,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
 - (OMBPayoutMethodsViewController *) payoutMethodsViewController
 {
   if (!_payoutMethodsViewController)
-    _payoutMethodsViewController = 
+    _payoutMethodsViewController =
       [[OMBPayoutMethodsViewController alloc] init];
   return _payoutMethodsViewController;
 }
@@ -98,7 +98,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
 - (OMBNavigationController *) payoutMethodsNavigationController
 {
   if (!_payoutMethodsNavigationController)
-    _payoutMethodsNavigationController = 
+    _payoutMethodsNavigationController =
       [[OMBNavigationController alloc] initWithRootViewController:
         self.payoutMethodsViewController];
   return _payoutMethodsNavigationController;
@@ -108,44 +108,44 @@ CGFloat kBackgroundMaxScale = 5.0f;
 - (OMBRenterApplicationViewController *) renterApplicationViewController
 {
   if (!_renterApplicationViewController)
-    _renterApplicationViewController = 
+    _renterApplicationViewController =
       [[OMBRenterApplicationViewController alloc] init];
   return _renterApplicationViewController;
 }
 
 // Renter profile
-- (OMBRenterProfileViewController *) renterProfileViewController 
+- (OMBRenterProfileViewController *) renterProfileViewController
 {
   if (!_renterProfileViewController)
-    _renterProfileViewController = 
+    _renterProfileViewController =
       [[OMBRenterProfileViewController alloc] init];
   return _renterProfileViewController;
 }
 
 // Renter profile navigation
-- (OMBNavigationController *) renterProfileNavigationController 
+- (OMBNavigationController *) renterProfileNavigationController
 {
   if (!_renterProfileNavigationController)
-    _renterProfileNavigationController = 
+    _renterProfileNavigationController =
       [[OMBNavigationController alloc] initWithRootViewController:
         self.renterProfileViewController];
   return _renterProfileNavigationController;
 }
 
 // My Renter Profile
-- (OMBMyRenterProfileViewController *) myRenterProfileViewController 
+- (OMBMyRenterProfileViewController *) myRenterProfileViewController
 {
   if (!_myRenterProfileViewController)
-    _myRenterProfileViewController = 
+    _myRenterProfileViewController =
       [[OMBMyRenterProfileViewController alloc] init];
   return _myRenterProfileViewController;
 }
 
 // My Renter Profile navigation
-- (OMBNavigationController *) myRenterProfileNavigationController 
+- (OMBNavigationController *) myRenterProfileNavigationController
 {
   if (!_myRenterProfileNavigationController)
-    _myRenterProfileNavigationController = 
+    _myRenterProfileNavigationController =
       [[OMBNavigationController alloc] initWithRootViewController:
         self.myRenterProfileViewController];
   return _myRenterProfileNavigationController;
@@ -154,17 +154,17 @@ CGFloat kBackgroundMaxScale = 5.0f;
 // Renter
 
 // Search and discover are in the method showDiscover
-- (OMBNavigationController *) mapNavigationController 
+- (OMBNavigationController *) mapNavigationController
 {
   if (!_mapNavigationController)
-    _mapNavigationController = 
-      [[OMBNavigationController alloc] initWithRootViewController: 
+    _mapNavigationController =
+      [[OMBNavigationController alloc] initWithRootViewController:
         [[OMBMapViewController alloc] init]];
   return _mapNavigationController;
 }
 
 // Search (Map Filter)
-- (OMBMapFilterViewController *) mapFilterViewController 
+- (OMBMapFilterViewController *) mapFilterViewController
 {
   if (!_mapFilterViewController)
     _mapFilterViewController = [[OMBMapFilterViewController alloc] init];
@@ -172,40 +172,40 @@ CGFloat kBackgroundMaxScale = 5.0f;
 }
 
 // Search (Map Filter) navigation
-- (OMBNavigationController *) mapFilterNavigationController 
+- (OMBNavigationController *) mapFilterNavigationController
 {
   if (!_mapFilterNavigationController)
-    _mapFilterNavigationController = 
+    _mapFilterNavigationController =
       [[OMBNavigationController alloc] initWithRootViewController:
         self.mapFilterViewController];
   return _mapFilterNavigationController;
 }
 
 // Favorites
-- (OMBNavigationController *) favoritesNavigationController 
+- (OMBNavigationController *) favoritesNavigationController
 {
   if (!_favoritesNavigationController)
-    _favoritesNavigationController = 
+    _favoritesNavigationController =
       [[OMBNavigationController alloc] initWithRootViewController:
         [[OMBFavoritesListViewController alloc] init]];
   return _favoritesNavigationController;
 }
 
 // Homebase Renter
-- (OMBNavigationController *) homebaseRenterNavigationController 
+- (OMBNavigationController *) homebaseRenterNavigationController
 {
   if (!_homebaseRenterNavigationController)
-      _homebaseRenterNavigationController = 
+      _homebaseRenterNavigationController =
         [[OMBNavigationController alloc] initWithRootViewController:
           [[OMBHomebaseRenterViewController alloc] init]];
   return _homebaseRenterNavigationController;
 }
 
 // Inbox
-- (OMBNavigationController *) inboxNavigationController 
+- (OMBNavigationController *) inboxNavigationController
 {
   if (!_inboxNavigationController)
-    _inboxNavigationController = 
+    _inboxNavigationController =
       [[OMBNavigationController alloc] initWithRootViewController:
         [[OMBInboxViewController alloc] init]];
   return _inboxNavigationController;
@@ -214,20 +214,20 @@ CGFloat kBackgroundMaxScale = 5.0f;
 // Seller
 // Create Listing
 // Homebase
-- (OMBNavigationController *) homebaseLandlordNavigationController 
+- (OMBNavigationController *) homebaseLandlordNavigationController
 {
   if (!_homebaseLandlordNavigationController)
-    _homebaseLandlordNavigationController = 
+    _homebaseLandlordNavigationController =
       [[OMBNavigationController alloc] initWithRootViewController:
         [[OMBHomebaseLandlordViewController alloc] init]];
   return _homebaseLandlordNavigationController;
 }
 
 // Manage Listings
-- (OMBNavigationController *) manageListingsNavigationController 
+- (OMBNavigationController *) manageListingsNavigationController
 {
   if (!_manageListingsNavigationController)
-    _manageListingsNavigationController = 
+    _manageListingsNavigationController =
       [[OMBNavigationController alloc] initWithRootViewController:
         [[OMBManageListingsViewController alloc] init]];
   return _manageListingsNavigationController;
@@ -235,7 +235,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
 
 //- (<#paramName#>*)<#paramName#> {
 //    if (!<#paramName#>){
-//        
+//
 //    }
 //    return <#paramName#>;
 //}
@@ -300,7 +300,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   [self.view addSubview: blackView];
 
   // Gesture for sliding the menu
-  panGesture = [[UIPanGestureRecognizer alloc] initWithTarget: self 
+  panGesture = [[UIPanGestureRecognizer alloc] initWithTarget: self
     action: @selector(drag:)];
   panGesture.cancelsTouchesInView   = YES;
   panGesture.delegate               = self;
@@ -350,7 +350,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   // _menuScroll.alwaysBounceVertical = YES;
   // Don't let it scroll because there are other buttons at the bottom
   // and if it scrolls, the menu will intersect with those buttons;
-  // The two buttons at the bottom when logged out are 
+  // The two buttons at the bottom when logged out are
   // Create Listing and Sign Up
   _menuScroll.alwaysBounceVertical = NO;
   _menuScroll.frame = CGRectMake(0, 0, menuWidth, screenHeight);
@@ -378,15 +378,15 @@ CGFloat kBackgroundMaxScale = 5.0f;
   _infiniteScroll.showsVerticalScrollIndicator = NO;
   [hitArea addSubview: _infiniteScroll];
 
-  // This gesture recognizer enables the user to 
+  // This gesture recognizer enables the user to
   // tap the bottom of the infinite scroll (hit area)
   // and makes the infinite scroll scroll up
-	UITapGestureRecognizer *toggleMenuTap = 
-    [[UITapGestureRecognizer alloc] initWithTarget: self 
+	UITapGestureRecognizer *toggleMenuTap =
+    [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(toggleMenu:)];
   toggleMenuTap.cancelsTouchesInView = NO;
 	[hitArea addGestureRecognizer: toggleMenuTap];
-	
+
   // This is set when user creates a listing
   _infiniteScroll.scrollEnabled = NO;
   // hitArea.scrollView = _infiniteScroll;
@@ -397,7 +397,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   // Logged out
   // Search
   searchButton = [UIButton new];
-  searchButton.frame = CGRectMake(-1 * menuWidth, 0.0f, 
+  searchButton.frame = CGRectMake(-1 * menuWidth, 0.0f,
     menuWidth, 10.0f + 40.0f + 10.0f);
   [searchButton addTarget: self action: @selector(showSearch)
     forControlEvents: UIControlEventTouchUpInside];
@@ -405,11 +405,11 @@ CGFloat kBackgroundMaxScale = 5.0f;
   [buttonsLoggedOut addObject: searchButton];
   // Image view
   UIImageView *searchImageView = [[UIImageView alloc] init];
-  searchImageView.frame = CGRectMake(leftPad, 
-    ((searchButton.frame.size.height - imageSize) * 0.5), 
+  searchImageView.frame = CGRectMake(leftPad,
+    ((searchButton.frame.size.height - imageSize) * 0.5),
       imageSize, imageSize);
-  searchImageView.image = [UIImage image: 
-    [UIImage imageNamed: @"search_icon.png"] 
+  searchImageView.image = [UIImage image:
+    [UIImage imageNamed: @"search_icon.png"]
       size: searchImageView.frame.size];
   [searchButton addSubview: searchImageView];
 
@@ -422,8 +422,8 @@ CGFloat kBackgroundMaxScale = 5.0f;
   // Image view
   UIImageView *discoverImageView = [[UIImageView alloc] init];
   discoverImageView.frame = searchImageView.frame;
-  discoverImageView.image = [UIImage image: 
-    [UIImage imageNamed: @"discover_icon.png"] 
+  discoverImageView.image = [UIImage image:
+    [UIImage imageNamed: @"discover_icon.png"]
       size: discoverImageView.frame.size];
   discoverImageView.image.accessibilityIdentifier = @"discover_icon.png";
   discoverImageView.tag = 11;
@@ -479,7 +479,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   userMenu4 = [[OMBUserMenu alloc] initWithFrame: _infiniteScroll.frame];
   userMenu5 = [[OMBUserMenu alloc] initWithFrame: _infiniteScroll.frame];
   userMenu6 = [[OMBUserMenu alloc] initWithFrame: _infiniteScroll.frame];
-  userMenuArray = [NSMutableArray arrayWithArray: 
+  userMenuArray = [NSMutableArray arrayWithArray:
     @[userMenu1, userMenu2, userMenu3, userMenu4, userMenu5, userMenu6]
   ];
   _infiniteScroll.contentSize = CGSizeMake(_infiniteScroll.frame.size.width,
@@ -489,7 +489,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
     int index = [userMenuArray indexOfObject: m];
     if (index > 0) {
       OMBUserMenu *previous = [userMenuArray objectAtIndex: index - 1];
-      CGRect rect = CGRectMake(previous.frame.origin.x, 
+      CGRect rect = CGRectMake(previous.frame.origin.x,
         previous.frame.origin.y + previous.frame.size.height,
           previous.frame.size.width, previous.frame.size.height);
       m.frame = rect;
@@ -503,28 +503,28 @@ CGFloat kBackgroundMaxScale = 5.0f;
     [_infiniteScroll addSubview: m];
   }
   // Scroll to renter menu
-  [_infiniteScroll setContentOffset: 
+  [_infiniteScroll setContentOffset:
     CGPointMake(0, userMenu1.frame.size.height * 2) animated: NO];
 
   // Create listing button at the bottom when the user hasn't
   // created a listing yet
   createListingButton = [UIButton new];
   createListingButton.backgroundColor = [UIColor blueAlpha: 0.0f];
-  createListingButton.contentEdgeInsets = 
+  createListingButton.contentEdgeInsets =
     userMenu1.headerButton.contentEdgeInsets;
   createListingButton.contentHorizontalAlignment =
     userMenu1.headerButton.contentHorizontalAlignment;
-  // createListingButton.frame = CGRectMake(0.0f, 
-  //   screenHeight - userMenu1.headerButton.frame.size.height, 
-  //     userMenu1.headerButton.frame.size.width, 
+  // createListingButton.frame = CGRectMake(0.0f,
+  //   screenHeight - userMenu1.headerButton.frame.size.height,
+  //     userMenu1.headerButton.frame.size.width,
   //       userMenu1.headerButton.frame.size.height);
-  createListingButton.frame = CGRectMake(0.0f, 
-    screenHeight - userMenu1.headerButton.frame.size.height, 
+  createListingButton.frame = CGRectMake(0.0f,
+    screenHeight - userMenu1.headerButton.frame.size.height,
       screenWidth * 0.5f, userMenu1.headerButton.frame.size.height);
   createListingButton.titleLabel.font = userMenu1.headerButton.titleLabel.font;
   [createListingButton addTarget: self action: @selector(showCreateListing)
     forControlEvents: UIControlEventTouchUpInside];
-  [createListingButton setTitle: @"Create Listing" 
+  [createListingButton setTitle: @"Create Listing"
     forState: UIControlStateNormal];
   [createListingButton setTitleColor: [UIColor colorWithWhite: 1.0f alpha: 1.0f]
     forState: UIControlStateNormal];
@@ -535,18 +535,18 @@ CGFloat kBackgroundMaxScale = 5.0f;
   signUpButtonBottom.backgroundColor = createListingButton.backgroundColor;
   signUpButtonBottom.contentEdgeInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f,
     createListingButton.contentEdgeInsets.left);
-  signUpButtonBottom.contentHorizontalAlignment = 
+  signUpButtonBottom.contentHorizontalAlignment =
     UIControlContentHorizontalAlignmentRight;
   signUpButtonBottom.frame = CGRectMake(createListingButton.frame.origin.x +
     createListingButton.frame.size.width, createListingButton.frame.origin.y,
-      createListingButton.frame.size.width, 
+      createListingButton.frame.size.width,
         createListingButton.frame.size.height);
   signUpButtonBottom.titleLabel.font = createListingButton.titleLabel.font;
   [signUpButtonBottom addTarget: self action: @selector(showSignUp)
     forControlEvents: UIControlEventTouchUpInside];
   [signUpButtonBottom setTitle: @"Sign Up" forState: UIControlStateNormal];
-  [signUpButtonBottom setTitleColor: 
-    [createListingButton titleColorForState: UIControlStateNormal] 
+  [signUpButtonBottom setTitleColor:
+    [createListingButton titleColorForState: UIControlStateNormal]
       forState: UIControlStateNormal];
   [self.view addSubview: signUpButtonBottom];
 
@@ -561,26 +561,26 @@ CGFloat kBackgroundMaxScale = 5.0f;
   arrowView.hidden = YES;
   // insert below so the user can touch at hitArea
   [self.view insertSubview: arrowView belowSubview: hitArea];
-  
+
   UIView *left = [[UIView alloc] init];
   left.backgroundColor = UIColor.whiteColor;
   left.frame = CGRectMake((arrowHeight * 0.25f), 0.0f,
     2.0f, (arrowView.frame.size.height * 0.5) * sqrt(2.0));
   left.layer.cornerRadius = 1.0f;
   [arrowView addSubview: left];
-  
+
   UIView *right = [[UIView alloc] init];
   right.backgroundColor = left.backgroundColor;
   right.frame = CGRectMake(arrowHeight * 0.75f - 1, 0.0f,
     2.0f, (arrowView.frame.size.height * 0.5) * sqrt(2.0));
   right.layer.cornerRadius = left.layer.cornerRadius;
   [arrowView addSubview: right];
-  
+
   left.transform =
     CGAffineTransformMakeRotation( M_PI * -45 / 180.0);
   right.transform =
     CGAffineTransformMakeRotation( M_PI * 45 / 180.0);
-  
+
   // Detail view
   _detailView = [[UIView alloc] initWithFrame: screen];
   [self.view addSubview: _detailView];
@@ -592,7 +592,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   [_detailViewOverlay addGestureRecognizer: tapGesture];
 
   // Bottom right
-  float accountImageSize = screenHeight * 0.13;  
+  float accountImageSize = screenHeight * 0.13;
   // The distance between the bottom of the detail view scaled
   // and the bottom of the screen
   float _accountViewPadding = (screenHeight * (1 - zoomScale)) * 0.5;
@@ -600,15 +600,15 @@ CGFloat kBackgroundMaxScale = 5.0f;
   _accountViewPadding = (_accountViewPadding - accountImageSize) * 0.5;
   // CGRect _accountViewRect = CGRectMake(
   //   (screenWidth - (accountImageSize + _accountViewPadding)),
-  //     (screenHeight - (accountImageSize + _accountViewPadding)), 
+  //     (screenHeight - (accountImageSize + _accountViewPadding)),
   //       accountImageSize, accountImageSize);
   CGRect _accountViewRect = CGRectMake(
     screenWidth - (accountImageSize + _accountViewPadding),
       _accountViewPadding, accountImageSize, accountImageSize);
   _accountView = [[OMBCenteredImageView alloc] initWithFrame: _accountViewRect];
-  _accountView.alpha = 0.0;  
+  _accountView.alpha = 0.0;
   _accountView.layer.borderColor = [UIColor whiteColor].CGColor;
-  _accountView.layer.borderWidth = 1.0;  
+  _accountView.layer.borderWidth = 1.0;
   _accountView.layer.cornerRadius = accountImageSize * 0.5f;
   // Button
   /*accountButton = [[UIButton alloc] init];
@@ -619,7 +619,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   [_accountView addSubview: accountButton];*/
   _accountView.transform = CGAffineTransformMakeScale(0, 0);
 
-  
+
   // Top detail view
   CGRect topDetailViewRect = CGRectMake(0.0f, 0.0f,
     screenWidth, 64.f);
@@ -647,7 +647,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   [self addCurrentMenuButtonsToMenuScroll];
 }
 
-- (void) presentViewController: (UIViewController *) viewControllerToPresent 
+- (void) presentViewController: (UIViewController *) viewControllerToPresent
 animated: (BOOL) flag completion: (void (^)(void)) completion
 {
   [super presentViewController: viewControllerToPresent animated: flag
@@ -672,7 +672,7 @@ animated: (BOOL) flag completion: (void (^)(void)) completion
 
 #pragma mark - UIAlertViewDelegate Protocol
 
-- (void) alertView: (UIAlertView *) alertView 
+- (void) alertView: (UIAlertView *) alertView
 clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   if (buttonIndex == 1)
@@ -681,8 +681,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
 #pragma mark - UIGestureRecognizerProtocol
 
-- (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer 
-shouldRecognizeSimultaneouslyWithGestureRecognizer: 
+- (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer
+shouldRecognizeSimultaneouslyWithGestureRecognizer:
 (UIGestureRecognizer *) otherGestureRecognizer
 {
   if (gestureRecognizer == panGesture)
@@ -699,8 +699,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   return YES;
 }
 
-// - (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer 
-// shouldRequireFailureOfGestureRecognizer: 
+// - (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer
+// shouldRequireFailureOfGestureRecognizer:
 // (UIGestureRecognizer *) otherGestureRecognizer
 // {
 //   if (gestureRecognizer == panGesture &&
@@ -711,8 +711,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 //   return NO;
 // }
 
-// - (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer 
-// shouldBeRequiredToFailByGestureRecognizer: 
+// - (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer
+// shouldBeRequiredToFailByGestureRecognizer:
 // (UIGestureRecognizer *) otherGestureRecognizer
 // {
 //   return NO;
@@ -782,8 +782,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   // float screenHeight = screen.size.height;
   // float screenWidth  = screen.size.width;
 
-  float scaledWidthDifference = 
-    (self.view.frame.size.width - (self.view.frame.size.width * zoomScale)) 
+  float scaledWidthDifference =
+    (self.view.frame.size.width - (self.view.frame.size.width * zoomScale))
       * 0.5;
   float maxTranslationX = menuWidth - scaledWidthDifference;
 
@@ -791,7 +791,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   CGPoint velocity = [gesture velocityInView: self.view];
 
   NSLog(@"%f, %f", point.x, point.y);
-  
+
   // Began
   if (gesture.state == UIGestureRecognizerStateBegan) {
     lastPointX = point.x;
@@ -808,7 +808,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
     float currentPointX = point.x;
 
     float horizontalDifference = currentPointX - lastPointX;
-    float percentComplete = 1 - 
+    float percentComplete = 1 -
       ((menuWidth - currentDetailViewOffsetX) / menuWidth);
 
     // Scale the detail view
@@ -835,7 +835,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
       translationX = maxTranslationX;
     else if (translationX < 0)
       translationX = 0;
-    CGAffineTransform transformTranslation = 
+    CGAffineTransform transformTranslation =
       CGAffineTransformMakeTranslation(translationX, 0);
 
     // Zoom into the background image view
@@ -844,7 +844,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
       newBlurViewScale = 2;
     else if (newBlurViewScale < 1)
       newBlurViewScale = 1;
-    
+
     // If there is horizontal movement
     if (horizontalDifference != 0) {
       _detailView.transform = CGAffineTransformConcat(
@@ -857,7 +857,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
       for (OMBUserMenu *m in userMenuArray) {
         for (UIButton *button in m.currentButtons) {
           float index = 1 + [m.currentButtons indexOfObject: button];
-          float speed = 1 + 
+          float speed = 1 +
             (buttonSpeedFactor * (index / [m.currentButtons count]));
           CGRect rect = button.frame;
           rect.origin.x = (-1 * menuWidth) * (1 - (percentComplete * speed));
@@ -869,7 +869,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
       // Buttons when logged out
       for (UIButton *button in buttonsLoggedOut) {
         float index = 1 + [buttonsLoggedOut indexOfObject: button];
-        float speed = 1 + 
+        float speed = 1 +
           (buttonSpeedFactor * (index / [buttonsLoggedOut count]));
         CGRect rect = button.frame;
         rect.origin.x = (-1 * menuWidth) * (1 - (percentComplete * speed));
@@ -877,12 +877,12 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
           rect.origin.x = 0;
         button.frame = rect;
       }
-      
+
       // Animate the account view
       _accountView.alpha     = percentComplete;
       _accountView.transform = CGAffineTransformMakeScale(percentComplete,
         percentComplete);
-      
+
       // Animate the top detail view
       CGRect topDetailFrame = _topDetailView.frame;
       topDetailFrame.origin.y =  topDetailFrame.size.height * (percentComplete - 1.f);
@@ -917,7 +917,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   [self hideMenuWithFactor: factor completion: nil];
 }
 
-- (void) hideMenuWithFactor: (CGFloat) factor 
+- (void) hideMenuWithFactor: (CGFloat) factor
 completion: (void (^) (void)) block
 {
   float duration = defaultDurationOfMenuAnimation;
@@ -928,7 +928,7 @@ completion: (void (^) (void)) block
   [UIView animateWithDuration: duration animations: ^{
 
     CGAffineTransform transformScale = CGAffineTransformMakeScale(1, 1);
-    CGAffineTransform transformTranslation = 
+    CGAffineTransform transformTranslation =
       CGAffineTransformMakeTranslation(0, 0);
     _detailView.transform = CGAffineTransformConcat(
       transformScale, transformTranslation);
@@ -937,16 +937,16 @@ completion: (void (^) (void)) block
     backgroundView.transform = CGAffineTransformScale(
       CGAffineTransformIdentity, kBackgroundMaxScale, kBackgroundMaxScale);
     // blurView.transform = CGAffineTransformMakeScale(2, 2);
-    
+
     // Hide the account image view
     _accountView.alpha     = 0.0;
     _accountView.transform = CGAffineTransformMakeScale(0, 0);
-    
+
     // Hide the top detail view
     CGRect topDetailFrame = _topDetailView.frame;
     topDetailFrame.origin.y = -topDetailFrame.size.height;
     _topDetailView.frame = topDetailFrame;
-    
+
   } completion: ^(BOOL finished) {
     if (block)
       block();
@@ -961,7 +961,7 @@ completion: (void (^) (void)) block
   for (OMBUserMenu *m in userMenuArray) {
     for (UIButton *button in m.currentButtons) {
       float index = 1 + [m.currentButtons indexOfObject: button];
-      float speed = 1 + 
+      float speed = 1 +
         (buttonSpeedFactor * (([m.currentButtons count] - index) /
           [m.currentButtons count]));
       [UIView animateWithDuration: duration / speed animations: ^{
@@ -974,7 +974,7 @@ completion: (void (^) (void)) block
   // Buttons when logged out
   for (UIButton *button in buttonsLoggedOut) {
     float index = 1 + [buttonsLoggedOut indexOfObject: button];
-    float speed = 1 + 
+    float speed = 1 +
       (buttonSpeedFactor * (([buttonsLoggedOut count] - index) /
         [buttonsLoggedOut count]));
     [UIView animateWithDuration: duration / speed animations: ^{
@@ -1012,7 +1012,7 @@ completion: (void (^) (void)) block
 - (void) logout
 {
   [self changeTitleLabelColor:discoverButton];
-  // This is received by OMBUser and 
+  // This is received by OMBUser and
   // then OMBUser posts OMBUserLoggedOutNotification
   // [[NSNotificationCenter defaultCenter] postNotificationName:
   //   OMBCurrentUserLogoutNotification object: nil];
@@ -1036,7 +1036,7 @@ completion: (void (^) (void)) block
   _infiniteScroll.scrollEnabled = NO;
   hitArea.scrollView = nil;
   // Reset the infinite scroll to a renter side for the next login
-  [_infiniteScroll setContentOffset: CGPointMake(0.0f, 
+  [_infiniteScroll setContentOffset: CGPointMake(0.0f,
     _infiniteScroll.frame.size.height * 2) animated: NO];
   [self setCurrentUserMenuHeaderTextColor];
 
@@ -1064,7 +1064,7 @@ completion: (void (^) (void)) block
   //[self showMenuWithFactor: 1.0];
   // Hide the title for the create listing button
   createListingButton.hidden = NO;
-  [createListingButton setTitle: @"Create Listing" 
+  [createListingButton setTitle: @"Create Listing"
     forState: UIControlStateNormal];
   // Hide the sign up button at the bottom
   signUpButtonBottom.hidden = NO;
@@ -1082,7 +1082,7 @@ completion: (void (^) (void)) block
   viewController.view.frame = [self frameForDetailViewController];
 
   [_detailView addSubview: viewController.view];
-  // [_detailView insertSubview: viewController.view belowSubview: 
+  // [_detailView insertSubview: viewController.view belowSubview:
   //   activityView];
   _currentDetailViewController = viewController;
 
@@ -1091,7 +1091,7 @@ completion: (void (^) (void)) block
 
 - (void) presentLoginViewController
 {
-  [self presentViewController: self.loginViewController 
+  [self presentViewController: self.loginViewController
     animated: YES completion: nil];
 }
 
@@ -1105,7 +1105,7 @@ completion: (void (^) (void)) block
 - (void) removeCurrentDetailViewController
 {
   // Call the willMoveToParentViewController with nil
-  // This is the last method where your detailViewController 
+  // This is the last method where your detailViewController
   // can perform some operations before neing removed
   [_currentDetailViewController willMoveToParentViewController: nil];
 
@@ -1113,7 +1113,7 @@ completion: (void (^) (void)) block
   [_currentDetailViewController.view removeFromSuperview];
 
   // Update the hierarchy
-  // Automatically the method didMoveToParentViewController: 
+  // Automatically the method didMoveToParentViewController:
   // will be called on the detailViewController)
   [_currentDetailViewController removeFromParentViewController];
 }
@@ -1132,7 +1132,7 @@ completion: (void (^) (void)) block
   else {
     multiplier = 3;
   }
-  [_infiniteScroll setContentOffset: CGPointMake(0.0f, 
+  [_infiniteScroll setContentOffset: CGPointMake(0.0f,
     _infiniteScroll.frame.size.height * multiplier) animated: NO];
   [self setCurrentUserMenuHeaderTextColor];
 }
@@ -1142,7 +1142,7 @@ completion: (void (^) (void)) block
   for (OMBUserMenu *m in userMenuArray) {
     [m setHeaderInactive];
   }
-  int index = _infiniteScroll.contentOffset.y / 
+  int index = _infiniteScroll.contentOffset.y /
     _infiniteScroll.frame.size.height;
   OMBUserMenu *userMenu = [userMenuArray objectAtIndex: index];
   [userMenu setHeaderActive];
@@ -1155,7 +1155,7 @@ completion: (void (^) (void)) block
     if (index > 0) {
       UIButton *previousButton = (UIButton *) [array objectAtIndex: index - 1];
       CGRect rect = previousButton.frame;
-      button.frame = CGRectMake(rect.origin.x, 
+      button.frame = CGRectMake(rect.origin.x,
         (rect.origin.y + rect.size.height),
           rect.size.width, rect.size.height);
     }
@@ -1167,9 +1167,10 @@ completion: (void (^) (void)) block
   //_accountView.layer.borderColor = [UIColor whiteColor].CGColor;
   for (OMBUserMenu *m in userMenuArray) {
     for (UIButton *button in m.currentButtons) {
-      [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+      [button setTitleColor: [UIColor whiteColor]
+        forState: UIControlStateNormal];
       UIImageView *iv = (UIImageView *)[button viewWithTag:11];
-      
+
       NSString *identifier = iv.image.accessibilityIdentifier;
       iv.image = [UIImage imageNamed:identifier];
       iv.image.accessibilityIdentifier = identifier;
@@ -1194,15 +1195,15 @@ completion: (void (^) (void)) block
   CGFloat imageSize = 22.0f;
   CGFloat leftPad   = 25.0f;
   for (UIButton *button in array) {
-    button.contentEdgeInsets = UIEdgeInsetsMake(0.0f, 
+    button.contentEdgeInsets = UIEdgeInsetsMake(0.0f,
       leftPad + imageSize + leftPad, 0.0f, 20.0f);
-    button.contentHorizontalAlignment = 
+    button.contentHorizontalAlignment =
       UIControlContentHorizontalAlignmentLeft;
     button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
       size: 15];
-    [button setTitleColor: [UIColor whiteColor] 
+    [button setTitleColor: [UIColor whiteColor]
       forState: UIControlStateNormal];
-    [button setTitleColor: [UIColor grayMedium] 
+    [button setTitleColor: [UIColor grayMedium]
       forState: UIControlStateHighlighted];
   }
 }
@@ -1211,7 +1212,7 @@ completion: (void (^) (void)) block
 {
   // Add the account view
   //[self.view addSubview: _accountView];
-  
+
   // Show top detail view
   _topDetailView.hidden = NO;
   arrowView.hidden = NO;
@@ -1235,25 +1236,25 @@ completion: (void (^) (void)) block
   // Hide the login view controller that was presented by
   // the view controller container
   if (self.loginViewController.presentingViewController) {
-    [self.loginViewController dismissViewControllerAnimated: YES 
+    [self.loginViewController dismissViewControllerAnimated: YES
       completion: completion];
   }
   else if (self.introViewController.presentingViewController) {
     if (self.introViewController.loginViewController.presentingViewController) {
       // Hide the login view controller inside the intro view controller
       // that was presented by the view controller container
-      [self.introViewController.loginViewController 
+      [self.introViewController.loginViewController
         dismissViewControllerAnimated: YES completion: ^{
           // Then hide the intro view controller
-          [self.introViewController dismissViewControllerAnimated: YES 
+          [self.introViewController dismissViewControllerAnimated: YES
             completion: completion];
         }
       ];
     }
     else {
-      // Hide the intro view controller that was presented by the 
+      // Hide the intro view controller that was presented by the
       // view controller container
-      [self.introViewController dismissViewControllerAnimated: YES 
+      [self.introViewController dismissViewControllerAnimated: YES
         completion: completion];
     }
   }
@@ -1262,14 +1263,14 @@ completion: (void (^) (void)) block
   }
 
   // Download the user's profile image and set it to the account image view
-  [[OMBUser currentUser] downloadImageFromImageURLWithCompletion: 
+  [[OMBUser currentUser] downloadImageFromImageURLWithCompletion:
     ^(NSError *error) {
       UIImage *image;
       if ([OMBUser currentUser].image) {
         image = [OMBUser currentUser].image;
       }
       else {
-        image = [UIImage imageNamed: 
+        image = [UIImage imageNamed:
           @"default_user_image.png"];
       }
       //[_accountView setImage: image];
@@ -1279,8 +1280,8 @@ completion: (void (^) (void)) block
   ];
 
   // Create renter app navigation controller
-  self.myRenterAppNavigationController =  
-    [[OMBNavigationController alloc] initWithRootViewController: 
+  self.myRenterAppNavigationController =
+    [[OMBNavigationController alloc] initWithRootViewController:
       [[OMBMyRenterApplicationViewController alloc] initWithUser:
         [OMBUser currentUser]]];
 
@@ -1307,12 +1308,12 @@ completion: (void (^) (void)) block
         [[OMBCreateListingViewController alloc] init]]];
     /*[self presentViewController:
       [[OMBNavigationController alloc] initWithRootViewController:
-        [[OMBCreateListingViewController alloc] init]] animated: YES 
+        [[OMBCreateListingViewController alloc] init]] animated: YES
           completion: ^{
             [self hideMenuWithFactor: 1.0f];
             // Only show the manage listings if user has created a listing
             if ([[OMBUser currentUser] hasLandlordType])
-              [self presentDetailViewController: 
+              [self presentDetailViewController:
                 self.manageListingsNavigationController];
           }
         ];*/
@@ -1333,8 +1334,8 @@ completion: (void (^) (void)) block
   //     [[OMBNavigationController alloc] initWithRootViewController:
   //       _mapFilterViewController];
   //   // Map, Discover
-  //   _mapNavigationController = 
-  //     [[OMBNavigationController alloc] initWithRootViewController: 
+  //   _mapNavigationController =
+  //     [[OMBNavigationController alloc] initWithRootViewController:
   //       [[OMBMapViewController alloc] init]];
   // }
   [self hideMenuWithFactor: 1.0f];
@@ -1352,7 +1353,7 @@ completion: (void (^) (void)) block
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: self.manageListingsNavigationController];
   [self.manageListingsNavigationController pushViewController:
-    [[OMBFinishListingViewController alloc] initWithResidence: nil] 
+    [[OMBFinishListingViewController alloc] initWithResidence: nil]
       animated: YES];
 }
 
@@ -1384,12 +1385,12 @@ completion: (void (^) (void)) block
 {
   // CGRect screen = [[UIScreen mainScreen] bounds];
 
-  // CGRect getStartedButtonRect = 
+  // CGRect getStartedButtonRect =
   //   _introViewController.getStartedView.getStartedButton.frame;
   // getStartedButtonRect.origin.x = screen.size.width;
-  // _introViewController.getStartedView.getStartedButton.frame = 
+  // _introViewController.getStartedView.getStartedButton.frame =
   //   getStartedButtonRect;
-  
+
   [self.introViewController resetViews];
   // [self hideMenuWithFactor: 1.0f completion: ^{
   //   [self presentViewController: self.introViewController animated: animated
@@ -1401,14 +1402,14 @@ completion: (void (^) (void)) block
 
 - (void) showIntroAnimatedDissolve: (BOOL) animated
 {
-  self.introViewController.modalTransitionStyle = 
+  self.introViewController.modalTransitionStyle =
     UIModalTransitionStyleCrossDissolve;
   [self showIntroAnimated: animated];
 }
 
 - (void) showIntroAnimatedVertical: (BOOL) animated
 {
-  self.introViewController.modalTransitionStyle = 
+  self.introViewController.modalTransitionStyle =
     UIModalTransitionStyleCoverVertical;
   [self showIntroAnimated: animated];
 }
@@ -1438,7 +1439,7 @@ completion: (void (^) (void)) block
 
 - (void) showLogout
 {
-  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
+  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
     @"Logout" message: @"Are you sure?" delegate: self
       cancelButtonTitle: @"No" otherButtonTitles: @"Yes", nil];
   [alertView show];
@@ -1462,11 +1463,11 @@ completion: (void (^) (void)) block
 
     CGAffineTransform transformScale = CGAffineTransformMakeScale(
       zoomScale, zoomScale);
-    float scaledWidthDifference = 
-      (self.view.frame.size.width - (self.view.frame.size.width * zoomScale)) 
+    float scaledWidthDifference =
+      (self.view.frame.size.width - (self.view.frame.size.width * zoomScale))
         * 0.5;
     float maxTranslationX = menuWidth - scaledWidthDifference;
-    CGAffineTransform transformTranslation = 
+    CGAffineTransform transformTranslation =
       CGAffineTransformMakeTranslation(maxTranslationX, 0);
     _detailView.transform = CGAffineTransformConcat(
       transformScale, transformTranslation);
@@ -1474,7 +1475,7 @@ completion: (void (^) (void)) block
     // Zoom into the background image view
     backgroundView.transform = CGAffineTransformIdentity;
     // blurView.transform = CGAffineTransformMakeScale(1, 1);
-    
+
     // Show the account image view
     _accountView.alpha     = 1.0;
     _accountView.transform = CGAffineTransformMakeScale(1, 1);
@@ -1494,7 +1495,7 @@ completion: (void (^) (void)) block
   for (OMBUserMenu *m in userMenuArray) {
     for (UIButton *button in m.currentButtons) {
       float index = 1 + [m.currentButtons indexOfObject: button];
-      float speed = 1 + 
+      float speed = 1 +
         (buttonSpeedFactor * (index / [m.currentButtons count]));
       [UIView animateWithDuration: duration / speed animations: ^{
         CGRect rect   = button.frame;
@@ -1506,7 +1507,7 @@ completion: (void (^) (void)) block
   // Buttons logged out
   for (UIButton *button in buttonsLoggedOut) {
     float index = 1 + [buttonsLoggedOut indexOfObject: button];
-    float speed = 1 + 
+    float speed = 1 +
       (buttonSpeedFactor * (index / [buttonsLoggedOut count]));
     [UIView animateWithDuration: duration / speed animations: ^{
       CGRect rect   = button.frame;
@@ -1514,7 +1515,7 @@ completion: (void (^) (void)) block
       button.frame  = rect;
     }];
   }
-    
+
   menuIsVisible = YES;
 }
 
@@ -1531,19 +1532,19 @@ completion: (void (^) (void)) block
   [self presentDetailViewController: self.myRenterProfileNavigationController];
 }
 
-- (void) showOfferAccepted
+- (void) showOfferAccepted: (OMBOffer *) offer
 {
-  offerAcceptedView = [[OMBOfferAcceptedView alloc] initWithOffer: nil];
-  [self.view addSubview: offerAcceptedView];
+  offerAcceptedView = [[OMBOfferAcceptedView alloc] initWithOffer: offer];
+  // [self.view addSubview: offerAcceptedView];
   [offerAcceptedView show];
 }
 
 - (void) showOtherUserProfile
 {
-  OMBOtherUserProfileViewController *vc = 
-    [[OMBOtherUserProfileViewController alloc] initWithUser: 
+  OMBOtherUserProfileViewController *vc =
+    [[OMBOtherUserProfileViewController alloc] initWithUser:
       [OMBUser currentUser]];
-  [self presentDetailViewController: 
+  [self presentDetailViewController:
     [[OMBNavigationController alloc] initWithRootViewController: vc]];
 }
 
@@ -1556,7 +1557,7 @@ completion: (void (^) (void)) block
 
 - (void) showRenterApplication
 {
-  [self presentViewController: self.renterApplicationViewController 
+  [self presentViewController: self.renterApplicationViewController
     animated: YES completion: nil];
 }
 
@@ -1620,7 +1621,7 @@ completion: (void (^) (void)) block
 {
   // When the tap finishes
   if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-    NSAssert(gestureRecognizer.view == hitArea, 
+    NSAssert(gestureRecognizer.view == hitArea,
       @"Tap gesture recognizer is assumed to be set on the hitArea view");
     // The point where the user lifts their finger
     CGPoint touchPoint = [gestureRecognizer locationInView:
@@ -1628,7 +1629,7 @@ completion: (void (^) (void)) block
     // The frame that goes from the top of the screen to
     // almost all the way down to the screen minus
     // the user menu header button height (100px)
-    CGRect intersection = CGRectIntersection(hitArea.bounds, 
+    CGRect intersection = CGRectIntersection(hitArea.bounds,
       _infiniteScroll.frame);
     // If the point, where the user lifts their finger, is not
     // within the frame of the infinite scroll, then
@@ -1638,11 +1639,10 @@ completion: (void (^) (void)) block
       offset.y += _infiniteScroll.frame.size.height;
       [UIView animateWithDuration: OMBStandardDuration
         animations: ^{
-          [_infiniteScroll setContentOffset:offset];
+          [self.infiniteScroll setContentOffset: offset];
         }
-        completion: ^(BOOL finished) { 
-          if (finished)
-            [self resetInfiniteScroll];
+        completion: ^(BOOL finished) {
+          [self resetInfiniteScroll];
         }
       ];
     }

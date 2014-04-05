@@ -8,24 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@class OMBCenteredImageView;
+@class OMBOffer;
 
 @interface OMBOfferAcceptedView : UIView
-{
-  UIDynamicAnimator *animatorLeft;
-  UIDynamicAnimator *animatorRight;
-  UIButton *cancelButton;
-  UIButton *confirmButton;
-  UIView *fadedBackground;
-  OMBCenteredImageView *leftImageView;
-  UILabel *middleLabel;
-  OMBCenteredImageView *rightImageView;
-  UILabel *topLabel;
-}
 
 #pragma mark - Initializer
 
-- (id) initWithOffer: (id) object;
+- (id) initWithOffer: (OMBOffer *) object;
 
 #pragma mark - Methods
 

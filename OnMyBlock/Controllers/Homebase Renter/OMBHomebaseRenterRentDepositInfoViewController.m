@@ -56,7 +56,7 @@
   } forState: UIControlStateNormal];
   saveBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @"Save"
-      style: UIBarButtonItemStylePlain target: self 
+      style: UIBarButtonItemStylePlain target: self
         action: @selector(save)];
   [saveBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: boldFont
@@ -76,8 +76,8 @@
 
   // Back view that will move up and down
   backView = [UIView new];
-  backView.frame = CGRectMake(0.0f, 0.0f, screenWidth, 
-    padding + standardHeight + (screenHeight * 0.4f) + 
+  backView.frame = CGRectMake(0.0f, 0.0f, screenWidth,
+    padding + standardHeight + (screenHeight * 0.4f) +
     standardHeight + padding);
   [self.view insertSubview: backView belowSubview: self.table];
   // Residence image view
@@ -93,7 +93,7 @@
   // Blur
   DRNRealTimeBlurView *blurView = [[DRNRealTimeBlurView alloc] init];
 
-  blurView.frame = residenceImageView.frame;  
+  blurView.frame = residenceImageView.frame;
   blurView.renderStatic = YES;
   [backView addSubview: blurView];
 
@@ -105,15 +105,15 @@
   CGFloat topSpacing = ((screenHeight * 0.4f) - ((22.0f * 2.5) * 3)) * 0.5f;
   // First Month Rent Label
   firstMonthRentLabel = [UILabel new];
-  firstMonthRentLabel.frame = CGRectMake(padding, 
+  firstMonthRentLabel.frame = CGRectMake(padding,
     padding + standardHeight + topSpacing,
       tableHeaderView.frame.size.width - (padding * 2), 22.0f * 2.5);
   NSMutableAttributedString *aString1 = (NSMutableAttributedString *)
-    [@"First Month's Rent" attributedStringWithFont: 
-      [UIFont fontWithName: @"HelveticaNeue-Light" size: 22] 
+    [@"First Month's Rent" attributedStringWithFont:
+      [UIFont fontWithName: @"HelveticaNeue-Light" size: 22]
         lineHeight: 26];
   [aString1 appendAttributedString: [@" $1,750" attributedStringWithFont:
-    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 24] 
+    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 24]
       lineHeight: 26]];
   firstMonthRentLabel.attributedText = aString1;
   firstMonthRentLabel.textColor = [UIColor whiteColor];
@@ -123,14 +123,14 @@
   depositLabel = [UILabel new];
   depositLabel.frame = CGRectMake(firstMonthRentLabel.frame.origin.x,
     firstMonthRentLabel.frame.origin.y + firstMonthRentLabel.frame.size.height,
-      firstMonthRentLabel.frame.size.width, 
+      firstMonthRentLabel.frame.size.width,
         firstMonthRentLabel.frame.size.height);
   NSMutableAttributedString *aString2 = (NSMutableAttributedString *)
-    [@"Deposit" attributedStringWithFont: 
-      [UIFont fontWithName: @"HelveticaNeue-Light" size: 22] 
+    [@"Deposit" attributedStringWithFont:
+      [UIFont fontWithName: @"HelveticaNeue-Light" size: 22]
         lineHeight: 26];
   [aString2 appendAttributedString: [@" $3,250" attributedStringWithFont:
-    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 24] 
+    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 24]
       lineHeight: 26]];
   depositLabel.attributedText = aString2;
   depositLabel.textColor = firstMonthRentLabel.textColor;
@@ -143,12 +143,12 @@
       depositLabel.frame.size.width,
         depositLabel.frame.size.height);
   NSMutableAttributedString *aString3 = (NSMutableAttributedString *)
-    [@"Due in" attributedStringWithFont: 
-      [UIFont fontWithName: @"HelveticaNeue-Light" size: 22] 
+    [@"Due in" attributedStringWithFont:
+      [UIFont fontWithName: @"HelveticaNeue-Light" size: 22]
         lineHeight: 26];
-  [aString3 appendAttributedString: 
+  [aString3 appendAttributedString:
     [@" 3 weeks 5 days" attributedStringWithFont:
-      [UIFont fontWithName: @"HelveticaNeue-Medium" size: 24] 
+      [UIFont fontWithName: @"HelveticaNeue-Medium" size: 24]
         lineHeight: 26]];
   dueLabel.attributedText = aString3;
   dueLabel.textColor = depositLabel.textColor;
@@ -157,7 +157,7 @@
   CGFloat cellLabelWidth = (screenWidth - (padding * 4)) / 3.0f;
   // Total deposit label
   totalDepositLabel = [UILabel new];
-  totalDepositLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
+  totalDepositLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
     size: 20];
   totalDepositLabel.frame = CGRectMake(padding + cellLabelWidth + padding, 0.0f,
     cellLabelWidth, standardHeight);
@@ -168,7 +168,7 @@
   totalRentLabel = [UILabel new];
   totalRentLabel.font = totalDepositLabel.font;
   totalRentLabel.frame = CGRectMake(
-    totalDepositLabel.frame.origin.x + totalDepositLabel.frame.size.width + 
+    totalDepositLabel.frame.origin.x + totalDepositLabel.frame.size.width +
     padding, totalDepositLabel.frame.origin.y,
       totalDepositLabel.frame.size.width, totalDepositLabel.frame.size.height);
   totalRentLabel.text = @"$725";
@@ -179,13 +179,13 @@
   addButton = [UIButton new];
   addButton.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.95f];
   addButton.clipsToBounds = YES;
-  addButton.frame = CGRectMake(padding, 
+  addButton.frame = CGRectMake(padding,
     screenHeight - (standardHeight + padding), screenWidth - (padding * 2),
       standardHeight);
   addButton.layer.borderColor = [UIColor blue].CGColor;
   addButton.layer.borderWidth = 1.0f;
   addButton.layer.cornerRadius = addButton.frame.size.height * 0.5f;
-  addButton.titleLabel.font = 
+  addButton.titleLabel.font =
     [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   [addButton setBackgroundImage: [UIImage imageWithColor: [UIColor blue]]
     forState: UIControlStateHighlighted];
@@ -193,12 +193,12 @@
     forControlEvents: UIControlEventTouchUpInside];
   [addButton setTitle: @"Add/Remove Roommates" forState: UIControlStateNormal];
   [addButton setTitleColor: [UIColor blue] forState: UIControlStateNormal];
-  [addButton setTitleColor: [UIColor whiteColor] 
+  [addButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateHighlighted];
   [self.view addSubview: addButton];
 
   self.table.tableFooterView = [[UIView alloc] initWithFrame:
-    CGRectMake(0.0f, 0.0f, self.table.frame.size.width, 
+    CGRectMake(0.0f, 0.0f, self.table.frame.size.width,
       padding + addButton.frame.size.height + padding)];
 }
 
@@ -248,12 +248,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
       HeaderCellIdentifier];
     if (!cell1) {
-      cell1 = [[UITableViewCell alloc] initWithStyle: 
+      cell1 = [[UITableViewCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: HeaderCellIdentifier];
       // Deposit
       UILabel *dLabel = [UILabel new];
       dLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 17];
-      dLabel.frame = CGRectMake(padding + width + padding, 0.0f, 
+      dLabel.frame = CGRectMake(padding + width + padding, 0.0f,
         width, standardHeight);
       dLabel.text = @"Deposit";
       dLabel.textAlignment = NSTextAlignmentCenter;
@@ -267,7 +267,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       rLabel.font = dLabel.font;
       rLabel.frame = CGRectMake(
         dLabel.frame.origin.x + dLabel.frame.size.width + padding,
-          dLabel.frame.origin.y, dLabel.frame.size.width, 
+          dLabel.frame.origin.y, dLabel.frame.size.width,
             dLabel.frame.size.height);
       rLabel.text = @"Rent";
       rLabel.textAlignment = dLabel.textAlignment;
@@ -280,10 +280,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Price splitting
   else if (indexPath.section == 1) {
     static NSString *RentDepositIdentifier = @"RentDepositIdentifier";
-    OMBRentDepositInfoCell *cell1 = 
+    OMBRentDepositInfoCell *cell1 =
       [tableView dequeueReusableCellWithIdentifier: RentDepositIdentifier];
     if (!cell1)
-      cell1 = [[OMBRentDepositInfoCell alloc] initWithStyle: 
+      cell1 = [[OMBRentDepositInfoCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: RentDepositIdentifier];
     if (indexPath.row == 0) {
       cell1.nameLabel.text = @"You";
@@ -313,7 +313,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     [totalDepositLabel removeFromSuperview];
     [totalRentLabel removeFromSuperview];
     if (!cell1) {
-      cell1 = [[UITableViewCell alloc] initWithStyle: 
+      cell1 = [[UITableViewCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: TotalCellIdentifier];
       // Total
       UILabel *totalLabel = [UILabel new];
@@ -394,11 +394,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   isEditing = YES;
   [self.table reloadRowsAtIndexPaths: @[
-    [NSIndexPath indexPathForRow: 0 
-        inSection: [self.table numberOfSections] - 1] 
+    [NSIndexPath indexPathForRow: 0
+        inSection: [self.table numberOfSections] - 1]
   ] withRowAnimation: UITableViewRowAnimationFade];
   // Scroll to that row
-  [self.table scrollToRowAtIndexPath: 
+  [self.table scrollToRowAtIndexPath:
     [NSIndexPath indexPathForRow: textField.tag inSection: 1]
       atScrollPosition: UITableViewScrollPositionMiddle animated: YES];
   [self.navigationItem setRightBarButtonItem: doneBarButtonItem animated: YES];
@@ -418,8 +418,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   isEditing = NO;
   [self.table reloadRowsAtIndexPaths: @[
-    [NSIndexPath indexPathForRow: 0 
-        inSection: [self.table numberOfSections] - 1] 
+    [NSIndexPath indexPathForRow: 0
+        inSection: [self.table numberOfSections] - 1]
   ] withRowAnimation: UITableViewRowAnimationFade];
   [self.navigationItem setRightBarButtonItem: saveBarButtonItem animated: YES];
 }
@@ -430,13 +430,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) save
 {
-  OMBHomebaseRenterViewController *vc = 
+  OMBHomebaseRenterViewController *vc =
     (OMBHomebaseRenterViewController *) _delegate;
   [vc switchToPaymentsTableView];
   [self.navigationController popViewControllerAnimated: YES];
 
   NSLog(@"REMOVE THIS");
-  [[self appDelegate].container showOfferAccepted];
+  [[self appDelegate].container showOfferAccepted: nil];
 }
 
 - (void) setupForEditRentalPayments
@@ -453,14 +453,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
   // Rent
   NSMutableAttributedString *aString1 = (NSMutableAttributedString *)
-    [@"Next Month's Rent" attributedStringWithFont: 
-      [UIFont fontWithName: @"HelveticaNeue-Light" size: 22] 
+    [@"Next Month's Rent" attributedStringWithFont:
+      [UIFont fontWithName: @"HelveticaNeue-Light" size: 22]
         lineHeight: 26];
   [aString1 appendAttributedString: [@" $1,750" attributedStringWithFont:
-    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 24] 
+    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 24]
       lineHeight: 26]];
   firstMonthRentLabel.attributedText = aString1;
-  firstMonthRentLabel.frame = CGRectMake(firstMonthRentLabel.frame.origin.x, 
+  firstMonthRentLabel.frame = CGRectMake(firstMonthRentLabel.frame.origin.x,
     padding + standardHeight + topSpacing, firstMonthRentLabel.frame.size.width,
       firstMonthRentLabel.frame.size.height);
 
@@ -469,16 +469,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
   // Due
   NSMutableAttributedString *aString3 = (NSMutableAttributedString *)
-    [@"Due in" attributedStringWithFont: 
-      [UIFont fontWithName: @"HelveticaNeue-Light" size: 22] 
+    [@"Due in" attributedStringWithFont:
+      [UIFont fontWithName: @"HelveticaNeue-Light" size: 22]
         lineHeight: 26];
-  [aString3 appendAttributedString: 
+  [aString3 appendAttributedString:
     [@" 1 week 3 days" attributedStringWithFont:
-      [UIFont fontWithName: @"HelveticaNeue-Medium" size: 24] 
+      [UIFont fontWithName: @"HelveticaNeue-Medium" size: 24]
         lineHeight: 26]];
   dueLabel.attributedText = aString3;
-  dueLabel.frame = CGRectMake(dueLabel.frame.origin.x, 
-    firstMonthRentLabel.frame.origin.y + firstMonthRentLabel.frame.size.height, 
+  dueLabel.frame = CGRectMake(dueLabel.frame.origin.x,
+    firstMonthRentLabel.frame.origin.y + firstMonthRentLabel.frame.size.height,
       dueLabel.frame.size.width, dueLabel.frame.size.height);
 
   // Total deposit label
@@ -489,8 +489,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showAddRemoveRoommates
 {
-  [self.navigationController pushViewController: 
-    [[OMBHomebaseRenterAddRemoveRoommatesViewController alloc] init] 
+  [self.navigationController pushViewController:
+    [[OMBHomebaseRenterAddRemoveRoommatesViewController alloc] init]
       animated: YES];
 }
 

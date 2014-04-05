@@ -27,17 +27,17 @@
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(updateLandlordType:)
       name: OMBCurrentUserLandlordTypeChangeNotification object: nil];
-  
+
   // Messages badge
   [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(updateMessagesUnviewedCount:) 
+    selector: @selector(updateMessagesUnviewedCount:)
       name: OMBMessagesUnviewedCountNotification object: nil];
 
   // When user logs out
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(userLogout:)
       name: OMBUserLoggedOutNotification object: nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(updateLandlordOffersPendingCount:)
                                                  name: OMBOffersLandordPendingCountNotification object: nil];
@@ -56,7 +56,7 @@
     buttonHeight = OMBStandardButtonHeight;
   else
     buttonHeight = 47.f;
-  
+
   CGFloat padding = OMBPadding;
 
   // Button
@@ -65,10 +65,10 @@
   _headerButton.contentHorizontalAlignment =
     UIControlContentHorizontalAlignmentLeft;
   _headerButton.frame = CGRectMake(0, 35, rect.size.width, 100);
-  // _headerButton.titleLabel.font = [UIFont fontWithName: 
+  // _headerButton.titleLabel.font = [UIFont fontWithName:
   //   @"HelveticaNeue-Light" size: 27];
   _headerButton.titleLabel.font = [UIFont mediumLargeTextFont];
-  [_headerButton addTarget: self action: @selector(headerButtonSelected) 
+  [_headerButton addTarget: self action: @selector(headerButtonSelected)
     forControlEvents: UIControlEventTouchUpInside];
   [self addSubview: _headerButton];
 
@@ -77,7 +77,7 @@
 
   // Search
   _searchButton = [UIButton new];
-  _searchButton.frame = CGRectMake(-1 * rect.size.width, 0.0f, rect.size.width, 
+  _searchButton.frame = CGRectMake(-1 * rect.size.width, 0.0f, rect.size.width,
     buttonHeight);
   [_searchButton addTarget: self action: @selector(showSearch)
     forControlEvents: UIControlEventTouchUpInside];
@@ -85,11 +85,11 @@
 
   // Image view
   UIImageView *searchImageView = [[UIImageView alloc] init];
-  searchImageView.frame = CGRectMake(leftPad, 
-    ((_searchButton.frame.size.height - imageSize) * 0.5), 
+  searchImageView.frame = CGRectMake(leftPad,
+    ((_searchButton.frame.size.height - imageSize) * 0.5),
       imageSize, imageSize);
-  searchImageView.image = [UIImage image: 
-    [UIImage imageNamed: @"search_icon.png"] 
+  searchImageView.image = [UIImage image:
+    [UIImage imageNamed: @"search_icon.png"]
       size: searchImageView.frame.size];
   searchImageView.image.accessibilityIdentifier = @"search_icon.png";
   searchImageView.tag = 11;
@@ -98,18 +98,18 @@
 
   // Discover
   _discoverButton = [[UIButton alloc] init];
-  // _discoverButton.frame = CGRectMake(-1 * rect.size.width, 0.0f, 
+  // _discoverButton.frame = CGRectMake(-1 * rect.size.width, 0.0f,
   //   rect.size.width, 10.0f + 40.0f + 10.0f);
   [_discoverButton addTarget: self action: @selector(showDiscover)
     forControlEvents: UIControlEventTouchUpInside];
   [_discoverButton setTitle: @"Discover" forState: UIControlStateNormal];
   // Image view
   UIImageView *discoverImageView = [[UIImageView alloc] init];
-  discoverImageView.frame = CGRectMake(leftPad, 
-    ((_searchButton.frame.size.height - imageSize) * 0.5), 
+  discoverImageView.frame = CGRectMake(leftPad,
+    ((_searchButton.frame.size.height - imageSize) * 0.5),
       imageSize, imageSize);
-  discoverImageView.image = [UIImage image: 
-    [UIImage imageNamed: @"discover_icon.png"] 
+  discoverImageView.image = [UIImage image:
+    [UIImage imageNamed: @"discover_icon.png"]
       size: discoverImageView.frame.size];
   discoverImageView.image.accessibilityIdentifier = @"discover_icon.png";
   discoverImageView.tag = 11;
@@ -120,7 +120,7 @@
   _myRenterAppButton = [[UIButton alloc] init];
   [_myRenterAppButton addTarget: self action: @selector(showMyRenterApp)
     forControlEvents: UIControlEventTouchUpInside];
-  [_myRenterAppButton setTitle: @"My Renter App" 
+  [_myRenterAppButton setTitle: @"My Renter App"
     forState: UIControlStateNormal];
   UIImageView *myRenterAppImageView = [[UIImageView alloc] init];
   myRenterAppImageView.frame = discoverImageView.frame;
@@ -171,7 +171,7 @@
   [_inboxButton setTitle: @"Messages" forState: UIControlStateNormal];
   UIImageView *inboxImageView = [UIImageView new];
   inboxImageView.frame = discoverImageView.frame;
-  inboxImageView.image = [UIImage image: 
+  inboxImageView.image = [UIImage image:
     [UIImage imageNamed: @"messages_icon_white.png"]
       size: inboxImageView.frame.size];
   inboxImageView.image.accessibilityIdentifier = @"messages_icon_white.png";
@@ -189,7 +189,7 @@
   _createListingButton.frame = _searchButton.frame;
   [_createListingButton addTarget: self action: @selector(showCreateListing)
     forControlEvents: UIControlEventTouchUpInside];
-  [_createListingButton setTitle: @"Create Listing" 
+  [_createListingButton setTitle: @"Create Listing"
     forState: UIControlStateNormal];
   UIImageView *createListingImageView = [[UIImageView alloc] init];
   createListingImageView.frame = discoverImageView.frame;
@@ -206,7 +206,7 @@
   _sellerHomebaseButton = [[UIButton alloc] init];
   [_sellerHomebaseButton addTarget: self action: @selector(showHomebaseLandlord)
     forControlEvents: UIControlEventTouchUpInside];
-  [_sellerHomebaseButton setTitle: @"Landlord Homebase" 
+  [_sellerHomebaseButton setTitle: @"Landlord Homebase"
     forState: UIControlStateNormal];
   UIImageView *sellerHomebaseImageView = [[UIImageView alloc] init];
   sellerHomebaseImageView.frame = discoverImageView.frame;
@@ -226,11 +226,11 @@
   _manageListingsButton = [[UIButton alloc] init];
   [_manageListingsButton addTarget: self action: @selector(showManageListings)
     forControlEvents: UIControlEventTouchUpInside];
-  [_manageListingsButton setTitle: @"Manage Listings" 
+  [_manageListingsButton setTitle: @"Manage Listings"
     forState: UIControlStateNormal];
   UIImageView *manageListingImageView = [[UIImageView alloc] init];
   manageListingImageView.frame = discoverImageView.frame;
-  UIImage *manageListingImage = [UIImage imageNamed: 
+  UIImage *manageListingImage = [UIImage imageNamed:
     @"account_icon.png"];
   manageListingImageView.image = [UIImage image: manageListingImage
     size: manageListingImageView.frame.size];
@@ -256,12 +256,12 @@
   // Notification badge
   _inboxNotificationBadge = [UILabel new];
   [_sellerInboxButton addSubview: _inboxNotificationBadge];*/
-  
+
   // Set attributes for buttons
   NSArray *buttonsArray = @[
     // Renter
     _searchButton,
-    _discoverButton, 
+    _discoverButton,
     _myRenterAppButton,
     _renterHomebaseButton,
     _favoritesButton,
@@ -273,13 +273,13 @@
     //_sellerInboxButton
   ];
   for (UIButton *button in buttonsArray) {
-    button.contentEdgeInsets = UIEdgeInsetsMake(0.0f, 
+    button.contentEdgeInsets = UIEdgeInsetsMake(0.0f,
       leftPad + imageSize + leftPad, 0.0f, padding);
     button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
       size: 17];
     [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
-    [button setTitleColor: [UIColor grayLight] 
+    [button setTitleColor: [UIColor grayLight]
       forState: UIControlStateHighlighted];
   }
 
@@ -293,7 +293,7 @@
     //label.backgroundColor = [UIColor blue];
     label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
     label.frame = CGRectMake(
-      discoverImageView.frame.origin.x - (padding * 0.5f), 
+      discoverImageView.frame.origin.x - (padding * 0.5f),
         discoverImageView.frame.origin.y - (padding * 0.5f),
           padding, padding);
     label.hidden = YES;
@@ -359,7 +359,7 @@
     if (index > 0) {
       UIButton *previousButton = (UIButton *) [array objectAtIndex: index - 1];
       CGRect rect = previousButton.frame;
-      button.frame = CGRectMake(rect.origin.x, 
+      button.frame = CGRectMake(rect.origin.x,
         rect.origin.y + rect.size.height,
           rect.size.width, rect.size.height);
     }
@@ -487,7 +487,7 @@
   [[self container] showSearchAndSwitchToList: YES];
 }
 
-- (void) updateNotificationBadgeLabel: (UILabel *) label 
+- (void) updateNotificationBadgeLabel: (UILabel *) label
 withNumber: (NSNumber *) number
 {
   int count = [number intValue];
@@ -521,7 +521,7 @@ withNumber: (NSNumber *) number
         title = (NSString *) landlordType;
       }
     }
-    [_headerButton setTitle: [title capitalizedString] 
+    [_headerButton setTitle: [title capitalizedString]
       forState: UIControlStateNormal];
   }
 }

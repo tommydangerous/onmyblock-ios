@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OMBObject : NSObject
+#import "OMBConnectionProtocol.h"
+
+@interface OMBObject : NSObject <OMBConnectionProtocol>
 
 @property (nonatomic) NSUInteger uid;
 

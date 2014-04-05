@@ -22,6 +22,7 @@
     [self readFromDictionary: dictionary];
   else
     [self readFromDictionary: [dictionary objectForKey: @"object"]];
+  NSLog(@"%@", dictionary);
 }
 
 #pragma mark - Methods
@@ -44,7 +45,7 @@
 {
   NSString *string = [[NSStringFromClass([self class])
     componentsSeparatedByString: @"OMB"] lastObject];
-  return [[[string stringSeparatedByUppercaseStrings] componentsJoinedByString: 
+  return [[[string stringSeparatedByUppercaseStrings] componentsJoinedByString:
     @"_"] lowercaseString];
 }
 

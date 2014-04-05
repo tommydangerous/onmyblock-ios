@@ -28,8 +28,10 @@
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
   if ([self successful]) {
-    if([self.delegate respondsToSelector: @selector(JSONDictionary:forResourceName:)]){
-      [self.delegate JSONDictionary:[self json] forResourceName: _resourceName];
+    if ([self.delegate respondsToSelector:
+      @selector(JSONDictionary:forResourceName:)]){
+      [self.delegate JSONDictionary: [self json]
+        forResourceName: self.resourceName];
     }
     else if ([self.delegate respondsToSelector: @selector(JSONDictionary:)]) {
       [self.delegate JSONDictionary: [self json]];

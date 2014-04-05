@@ -18,6 +18,7 @@
 @class OMBMapFilterViewController;
 @class OMBMyRenterProfileViewController;
 @class OMBNavigationController;
+@class OMBOffer;
 @class OMBOfferAcceptedView;
 @class OMBPayoutMethodsViewController;
 @class OMBRenterApplicationViewController;
@@ -32,7 +33,7 @@
   NSMutableArray *buttonsLoggedIn;
   NSMutableArray *buttonsLoggedOut;
   NSArray *currentMenuButtons;
-  
+
   // Buttons on the left that go in the menu scroll
   // Logged in
   NSMutableArray *userMenuArray;
@@ -80,7 +81,7 @@
   OMBOfferAcceptedView *offerAcceptedView;
   UIButton *signUpButtonBottom;
   UIView *viewForScrollingInfiniteScroll;
-  
+
   // BOOL slideEnabled;
 }
 
@@ -99,10 +100,10 @@
 
 // Both
 // Account
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBNavigationController *accountNavigationController;
 // Intro (How it Works)
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBIntroStillImagesViewController *introViewController;
 // Login, Sign Up
 @property (nonatomic, strong) OMBLoginViewController *loginViewController;
@@ -113,12 +114,12 @@
 @property (nonatomic, strong)
   OMBPayoutMethodsViewController *payoutMethodsViewController;
 // Renter Application
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBRenterApplicationViewController *renterApplicationViewController;
 
 // Renter
 // Search (Map Filter) navigation
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBNavigationController *mapFilterNavigationController;
 // Search (Map Filter)
 @property (nonatomic, strong)
@@ -126,37 +127,37 @@
 // Discover (Map)
 @property (nonatomic, strong) OMBNavigationController *mapNavigationController;
 // My Renter App
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBNavigationController *myRenterAppNavigationController;
 // Favorites
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBNavigationController *favoritesNavigationController;
 // Homebase
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBNavigationController *homebaseRenterNavigationController;
 // Inbox
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBNavigationController *inboxNavigationController;
 // Renter Profile
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBRenterProfileViewController *renterProfileViewController;
 // Renter Profile navigation
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBNavigationController *renterProfileNavigationController;
 // My Renter Profile
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBMyRenterProfileViewController *myRenterProfileViewController;
 // My Renter Profile navigation
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBNavigationController *myRenterProfileNavigationController;
 
 // Seller
 // Create Listing
 // Homebase Landlord
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBNavigationController *homebaseLandlordNavigationController;
 // Manage Listings
-@property (nonatomic, strong) 
+@property (nonatomic, strong)
   OMBNavigationController *manageListingsNavigationController;
 
 #pragma mark - Methods
@@ -183,7 +184,7 @@
 - (void) showManageListings;
 - (void) showMyRenterApp;
 - (void) showMyRenterProfile;
-- (void) showOfferAccepted;
+- (void) showOfferAccepted: (OMBOffer *) offer;
 - (void) showOtherUserProfile;
 - (void) showPayoutMethods;
 - (void) showRenterApplication;

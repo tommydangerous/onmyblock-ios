@@ -401,6 +401,7 @@
 		ABCE30F718945E6F00D134F5 /* OMBCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABCE30F618945E6F00D134F5 /* OMBCollectionView.m */; };
 		ABD19B9F18D7698C007DF1E5 /* OMBRoommate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD19B9E18D7698C007DF1E5 /* OMBRoommate.m */; };
 		ABD8EF4F1820071600C28686 /* OMBResidenceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD8EF4E1820071600C28686 /* OMBResidenceTests.m */; };
+		ABDD0BC518F05D8400F837B5 /* OMBModelDetailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDD0BC418F05D8400F837B5 /* OMBModelDetailConnection.m */; };
 		ABDF174A1866396C004E2755 /* OMBResidenceBookItViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDF17491866396C004E2755 /* OMBResidenceBookItViewController.m */; };
 		ABDF174D18663AE8004E2755 /* OMBResidenceBookItCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDF174C18663AE8004E2755 /* OMBResidenceBookItCell.m */; };
 		ABDF17501866B5F6004E2755 /* OMBResidenceBookItConfirmDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDF174F1866B5F6004E2755 /* OMBResidenceBookItConfirmDetailsViewController.m */; };
@@ -1260,6 +1261,8 @@
 		ABD19B9E18D7698C007DF1E5 /* OMBRoommate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRoommate.m; sourceTree = "<group>"; };
 		ABD8EF4E1820071600C28686 /* OMBResidenceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceTests.m; sourceTree = "<group>"; };
 		ABDAA81B181563310027F04C /* OMBMapViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapViewControllerTests.m; sourceTree = "<group>"; };
+		ABDD0BC318F05D8400F837B5 /* OMBModelDetailConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBModelDetailConnection.h; sourceTree = "<group>"; };
+		ABDD0BC418F05D8400F837B5 /* OMBModelDetailConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBModelDetailConnection.m; sourceTree = "<group>"; };
 		ABDF17481866396C004E2755 /* OMBResidenceBookItViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceBookItViewController.h; sourceTree = "<group>"; };
 		ABDF17491866396C004E2755 /* OMBResidenceBookItViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceBookItViewController.m; sourceTree = "<group>"; };
 		ABDF174B18663AE8004E2755 /* OMBResidenceBookItCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceBookItCell.h; sourceTree = "<group>"; };
@@ -2253,6 +2256,8 @@
 				ABA4F218187DF2B500D725D4 /* Residence Image */,
 				ABA4F20B187D18BB00D725D4 /* Residences */,
 				ABB9114F18971C690046611F /* Users */,
+				ABDD0BC318F05D8400F837B5 /* OMBModelDetailConnection.h */,
+				ABDD0BC418F05D8400F837B5 /* OMBModelDetailConnection.m */,
 			);
 			path = Connections;
 			sourceTree = "<group>";
@@ -3401,6 +3406,7 @@
 				AB3396EF18ACA69C00F49064 /* OMBOfferVerifyVenmoConnection.m in Sources */,
 				AB4F9D1E181AAAED0086D618 /* OMBMenuViewController.m in Sources */,
 				ABE706A018889713007A4E29 /* OMBResidenceListConnection.m in Sources */,
+				ABDD0BC518F05D8400F837B5 /* OMBModelDetailConnection.m in Sources */,
 				ABABEC4F1864D6E1008B6768 /* OMBMapFilterViewController.m in Sources */,
 				AB9D6113188CEFDE00C9AC64 /* SDWebImageDownloader.m in Sources */,
 				ABCB36C4187CCFAB008A0EEF /* OMBScrollView.m in Sources */,
