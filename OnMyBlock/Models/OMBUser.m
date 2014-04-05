@@ -8,7 +8,10 @@
 
 #import "OMBUser.h"
 
+#import <Parse/Parse.h>
+
 #import "NSString+Extensions.h"
+#import "NSString+OnMyBlock.h"
 #import "OMBAppDelegate.h"
 #import "OMBAuthenticationFacebookConnection.h"
 #import "OMBAuthenticationLinkedInConnection.h"
@@ -237,6 +240,11 @@ NSString *const OMBUserTypeLandlord = @"landlord";
 + (UIImage *) placeholderImage
 {
   return [UIImage imageNamed: @"profile_default_pic.png"];
+}
+
++ (NSString *) pushNotificationChannelForConversations: (NSUInteger) userUID
+{
+  return [NSString stringWithFormat: @"user_%i_conversations", userUID];
 }
 
 #pragma mark - Instance Methods
@@ -687,6 +695,24 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   return NO;
 }
 
+- (CGFloat) heightForAboutTextWithWidth: (CGFloat) width
+{
+  // This only stores the about text with [UIFont normalFontText] and
+  // line height of 22.0f
+  NSNumber *key = [NSNumber numberWithFloat: width];
+  NSNumber *height = [_heightForAboutTextDictionary objectForKey: key];
+  if (!height || [height floatValue] == 0.0f) {
+    NSAttributedString *aString = [_about attributedStringWithFont:
+      [UIFont normalTextFont] lineHeight: 22.0f];
+    CGRect rect = [aString boundingRectWithSize: 
+      CGSizeMake(width, 9999) options: NSStringDrawingUsesLineFragmentOrigin 
+        context: nil];
+    height = [NSNumber numberWithFloat: rect.size.height];
+    [_heightForAboutTextDictionary setObject: height forKey: key];
+  }
+  return [height floatValue];
+}
+
 - (UIImage *) imageForSize: (CGSize) size
 {
   return [self imageForSizeKey: [NSString stringWithFormat: @"%f,%f", 
@@ -802,6 +828,11 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   // Clear Facebook token information
   OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
   [appDelegate clearFacebookTokenInformation];
+
+  // Unsubscribe from all push notification channels
+  PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+  currentInstallation.channels = [NSArray array];
+  [currentInstallation saveEventually];
 }
 
 - (NSArray *) messagesWithUser: (OMBUser *) user
@@ -889,6 +920,9 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   // Update landlord type visuals in the view controller container
   // and the user menus
   [self postLandlordTypeChangeNotification];
+
+  // Subscribe to push notification channels
+  [self subscribeToPushNotificationChannels];
 }
 
 - (NSString *) phoneString
@@ -970,6 +1004,11 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   CGFloat percent = count / total;
   percent *= 100.0f;
   return (NSInteger) percent;
+}
+
+- (NSString *) pushNotificationChannelForConversations
+{
+  return [OMBUser pushNotificationChannelForConversations: self.uid];
 }
 
 - (void) readFromAcceptedOffersDictionary: (NSDictionary *) dictionary
@@ -1664,24 +1703,6 @@ ascending: (BOOL) ascending
   return @"";
 }
 
-- (CGFloat) heightForAboutTextWithWidth: (CGFloat) width
-{
-  // This only stores the about text with [UIFont normalFontText] and
-  // line height of 22.0f
-  NSNumber *key = [NSNumber numberWithFloat: width];
-  NSNumber *height = [_heightForAboutTextDictionary objectForKey: key];
-  if (!height || [height floatValue] == 0.0f) {
-    NSAttributedString *aString = [_about attributedStringWithFont:
-      [UIFont normalTextFont] lineHeight: 22.0f];
-    CGRect rect = [aString boundingRectWithSize: 
-      CGSizeMake(width, 9999) options: NSStringDrawingUsesLineFragmentOrigin 
-        context: nil];
-    height = [NSNumber numberWithFloat: rect.size.height];
-    [_heightForAboutTextDictionary setObject: height forKey: key];
-  }
-  return [height floatValue];
-}
-
 - (NSArray *) sortedOffersType: (OMBUserOfferType) type 
 withKeys: (NSArray *) keys ascending: (BOOL) ascending
 {
@@ -1704,6 +1725,16 @@ ascending: (BOOL) ascending
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
     ascending: ascending];
   return [[_payoutMethods allValues] sortedArrayUsingDescriptors: @[sort]];
+}
+
+- (void) subscribeToPushNotificationChannels
+{
+  PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+  // Conversations
+  [currentInstallation addUniqueObject: 
+    [self pushNotificationChannelForConversations]
+      forKey: ParseChannelsKey];
+  [currentInstallation saveInBackground];
 }
 
 - (void) updateWithDictionary: (NSDictionary *) dictionary 

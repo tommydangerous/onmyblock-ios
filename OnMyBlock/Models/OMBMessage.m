@@ -8,11 +8,15 @@
 
 #import "OMBMessage.h"
 
+#import <Parse/Parse.h>
+
 #import "NSDateFormatter+JSON.h"
 #import "NSString+Extensions.h"
+#import "NSString+OnMyBlock.h"
 #import "OMBConversation.h"
 #import "OMBMessageCollectionViewCell.h"
 #import "OMBMessageCreateConnection.h"
+#import "OMBOffer.h"
 #import "OMBUser.h"
 #import "OMBUserStore.h"
 
@@ -40,6 +44,41 @@
     [[OMBMessageCreateConnection alloc] initWithMessage: self
       conversation: conversation];
   [conn start];
+}
+
+- (void) createMessageWithContent: (NSString *) string
+forConversation: (OMBConversation *) conversation
+{
+  self.content = string;
+  NSInteger offset = kWebServerTimeOffsetInSeconds;
+  if (offset > 0)
+    offset += 11; // Server time is ahead by X + 11 seconds
+  offset += [[NSDate date] timeIntervalSince1970];
+  self.createdAt = offset;
+  self.uid       = -999 + arc4random_uniform(100);
+  self.updatedAt = offset;
+  self.user      = [OMBUser currentUser];
+  self.viewedUserIDs = [NSString stringWithFormat: @"%i", self.user.uid];
+
+  NSString *alert = [NSString stringWithFormat: @"%@: %@",
+    [self.user.firstName capitalizedString], self.content];
+  NSTimeInterval interval = 60 * 60 * 24 * 7;
+  NSDictionary *data = @{
+    @"alert": alert,
+    @"badge": ParseBadgeIncrement,
+    @"conversation_name": [self.user shortName],
+    @"conversation_id":   [NSNumber numberWithInt: conversation.uid],
+    @"user_id":           [NSNumber numberWithInt: self.user.uid]
+  };
+  // Sending push notifications
+  for (NSNumber *number in [conversation otherUserIDs: self.user]) {
+    PFPush *push = [[PFPush alloc] init];
+    [push expireAfterTimeInterval: interval];
+    [push setChannel: 
+      [OMBUser pushNotificationChannelForConversations: [number intValue]]];
+    [push setData: data];
+    [push sendPushInBackground];
+  }
 }
 
 - (BOOL) isFromUser: (OMBUser *) user

@@ -12,8 +12,10 @@
 
 // Keys
 // PayPal
-NSString *const PayPalClientID = 
+NSString *const PayPalClientID =
   @"AYF4PhAsNUDPRLYpTmTqtoo04_n7rmum1Q1fgpmApKJOF_eTrtxajPEFDK4Y";
+NSString *const PayPalClientIDSandbox =
+  @"AetqKxBgNs-WXu7L7mhq_kpihxGdOUSo0mgLppw0wvTw_pCdP6n3ANLYt4X6";
 NSString *const PayPalReceiverEmail = @"tommydangerouss@gmail.com";
 // Venmo
 NSString *const VenmoClientID = @"1522";
@@ -32,7 +34,7 @@ NSString *const OMBPayoutMethodNotificationFirst =
   if (!(self = [super init])) return nil;
 
   _uid = -9999 - arc4random_uniform(1000);
-  
+
   return self;
 }
 

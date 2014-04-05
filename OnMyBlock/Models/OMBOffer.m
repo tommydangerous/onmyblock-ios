@@ -26,9 +26,9 @@ CGFloat kOfferDownPaymentPercentage    = 0.1;
   NSInteger kWebServerTimeOffsetInSeconds = 60 + 37;
 #endif
 
-NSString *const OMBOfferNotificationPaidWithVenmo = 
+NSString *const OMBOfferNotificationPaidWithVenmo =
   @"OMBOfferNotificationPaidWithVenmo";
-NSString *const OMBOfferNotificationProcessingWithServer = 
+NSString *const OMBOfferNotificationProcessingWithServer =
   @"OMBOfferNotificationProcessingWithServer";
 NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   @"OMBOfferNotificationVenmoAppSwitchCancelled";
@@ -101,7 +101,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 - (NSInteger) numberOfMonthsBetweenMovingDates
 {
   NSCalendar *calendar = [NSCalendar currentCalendar];
-  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit | 
+  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit |
     NSWeekdayCalendarUnit | NSYearCalendarUnit);
 
   NSDateComponents *moveInComps = [calendar components: unitFlags
@@ -208,7 +208,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   // Payout Transaction
   if ([dictionary objectForKey: @"payout_transaction"] != [NSNull null]) {
     OMBPayoutTransaction *object = [[OMBPayoutTransaction alloc] init];
-    [object readFromDictionary: 
+    [object readFromDictionary:
       [dictionary objectForKey: @"payout_transaction"]];
     _payoutTransaction = object;
   }
@@ -269,7 +269,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
         return OMBOfferStatusForLandlordOfferPaidExpired;
       }
       else {
-        return OMBOfferStatusForLandlordConfirmed;  
+        return OMBOfferStatusForLandlordConfirmed;
       }
     }
     else {
@@ -447,13 +447,13 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 
 - (CGFloat) timeLeftPercentageForLandlord
 {
-  return [self timeLeftForLandlord] / 
+  return [self timeLeftForLandlord] /
     (CGFloat) (60 * 60 * kMaxHoursForLandlordToAccept);
 }
 
 - (CGFloat) timeLeftPercentageForStudent
 {
-  return [self timeLeftForStudent] / 
+  return [self timeLeftForStudent] /
     (CGFloat) (60 * 60 * kMaxHoursForStudentToConfirm);
 }
 
@@ -502,7 +502,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 
 - (CGFloat) totalAmount
 {
-  return _amount + [_residence deposit];
+  return self.amount + [self.residence deposit];
 }
 
 @end

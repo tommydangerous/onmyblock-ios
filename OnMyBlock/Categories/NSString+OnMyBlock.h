@@ -10,6 +10,8 @@
 
 // Parse
 extern NSString *const ParseApplicationId;
+extern NSString *const ParseBadgeIncrement;
+extern NSString *const ParseChannelsKey;
 extern NSString *const ParseClientKey;
 
 @interface NSString (OnMyBlock)

@@ -23,10 +23,10 @@
 
 #pragma mark - Initializer
 
-- (id) initWithStyle: (UITableViewCellStyle) style 
+- (id) initWithStyle: (UITableViewCellStyle) style
 reuseIdentifier: (NSString *) reuseIdentifier
 {
-  if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
+  if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier]))
     return nil;
 
   self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -47,15 +47,15 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // Time; countdown: 1d 23h 23m 12s
   timeLabel = [UILabel new];
   timeLabel.font = [UIFont smallTextFontBold];
-  timeLabel.frame = CGRectMake(userImageView.frame.origin.x + 
+  timeLabel.frame = CGRectMake(userImageView.frame.origin.x +
     userImageView.frame.size.width + padding, padding, width, 22.0f);
   timeLabel.textAlignment = NSTextAlignmentRight;
   [self.contentView addSubview: timeLabel];
-  
+
   // Name; James J.
   nameLabel = [UILabel new];
   nameLabel.font = [UIFont normalTextFontBold];
-  nameLabel.frame = CGRectMake(timeLabel.frame.origin.x, 
+  nameLabel.frame = CGRectMake(timeLabel.frame.origin.x,
     timeLabel.frame.origin.y, timeLabel.frame.size.width, 22.0f);
   nameLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: nameLabel];
@@ -93,7 +93,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   notesLabel.numberOfLines = 0;
   notesLabel.textColor = [UIColor grayMedium];
   // 17 = line height of font size 13
-  notesLabel.frame = CGRectMake(padding, 
+  notesLabel.frame = CGRectMake(padding,
     typeLabel.frame.origin.y + typeLabel.frame.size.height,
       screenWidth - (padding * 2), padding + (17.0f * 3));
   // notesLabel.textAlignment = NSTextAlignmentRight;
@@ -117,11 +117,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
 {
   [[OMBUser currentUser].renterApplication readFromDictionary:dictionary
     forModelName:[OMBRoommate modelName]];
-  
+
   NSString *coapplicants = @"";
   if([[self roommates] count] > 0)
     coapplicants = [NSString stringWithFormat:@"and %i others", [[self roommates] count]];
-  
+
   nameLabel.text = [NSString stringWithFormat:@"%@ %@", _offer.user.fullName,coapplicants];
 }
 
@@ -151,34 +151,34 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat padding     = 20.0f;
 
   // Time
-  CGRect timeLabelRect = [timeLabel.text boundingRectWithSize: 
+  CGRect timeLabelRect = [timeLabel.text boundingRectWithSize:
     CGSizeMake(screenWidth, 15.0f) font: timeLabel.font];
   timeLabel.frame = CGRectMake(
     screenWidth - (timeLabelRect.size.width + padding), padding,
       timeLabelRect.size.width, 15.0f);
 
   // Name
-  CGFloat nameLabelOriginX = userImageView.frame.origin.x + 
+  CGFloat nameLabelOriginX = userImageView.frame.origin.x +
     userImageView.frame.size.width + padding;
-  nameLabel.frame = CGRectMake(nameLabelOriginX, padding, 
-    screenWidth - 
-    (nameLabelOriginX + padding + timeLabel.frame.size.width + padding), 
+  nameLabel.frame = CGRectMake(nameLabelOriginX, padding,
+    screenWidth -
+    (nameLabelOriginX + padding + timeLabel.frame.size.width + padding),
       22.0f);
 
   // Rent
-  CGRect rentLabelRect = [rentLabel.text boundingRectWithSize: 
-    CGSizeMake(screenWidth, typeLabel.frame.size.height) 
+  CGRect rentLabelRect = [rentLabel.text boundingRectWithSize:
+    CGSizeMake(screenWidth, typeLabel.frame.size.height)
       font: rentLabel.font];
   rentLabel.frame = CGRectMake(nameLabel.frame.origin.x,
-    typeLabel.frame.origin.y + typeLabel.frame.size.height, 
+    typeLabel.frame.origin.y + typeLabel.frame.size.height,
       rentLabelRect.size.width, nameLabel.frame.size.height);
 
   // Address
-  CGFloat addressMaxWidth = screenWidth - 
-    (rentLabel.frame.origin.x + rentLabel.frame.size.width + 
+  CGFloat addressMaxWidth = screenWidth -
+    (rentLabel.frame.origin.x + rentLabel.frame.size.width +
       (padding * 0.5) + padding);
   addressLabel.frame = CGRectMake(
-    rentLabel.frame.origin.x + rentLabel.frame.size.width + (padding * 0.5f), 
+    rentLabel.frame.origin.x + rentLabel.frame.size.width + (padding * 0.5f),
       rentLabel.frame.origin.y, addressMaxWidth, rentLabel.frame.size.height);
 }
 
@@ -187,18 +187,18 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGRect screen       = [[UIScreen mainScreen] bounds];
   CGFloat screenWidth = screen.size.width;
   CGFloat padding     = 20.0f;
-  
+
   // Name
   CGFloat addressOriginX = padding;
   addressLabel.frame = CGRectMake(addressOriginX, padding,
     screenWidth - padding, 22.0f);
-  
+
   // Address
   CGRect nameLabelRect = addressLabel.frame;
   nameLabel.frame = CGRectMake(nameLabelRect.origin.x,
     nameLabelRect.origin.y + nameLabelRect.size.height,
       nameLabelRect.size.width, nameLabelRect.size.height);
-  
+
   // Type Label
   CGRect typeLabelRect = nameLabel.frame;
   typeLabel.frame = CGRectMake(typeLabelRect.origin.x,
@@ -210,14 +210,14 @@ reuseIdentifier: (NSString *) reuseIdentifier
 {
   _offer = object;
   [countdownTimer invalidate];
-  
+
   // Image
   if (_offer.user.image) {
     userImageView.image = [_offer.user imageForSize: userImageView.frame.size];
   }
   else {
     [_offer.user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
-      userImageView.image = [_offer.user imageForSize: 
+      userImageView.image = [_offer.user imageForSize:
         userImageView.frame.size];
     }];
     userImageView.image = [UIImage imageNamed: @"user_icon.png"];
@@ -236,7 +236,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // Dates
   NSDateFormatter *dateFormatter = [NSDateFormatter new];
   dateFormatter.dateFormat = @"M/d/yy";
-  NSDate *moveInDate = [NSDate dateWithTimeIntervalSince1970: 
+  NSDate *moveInDate = [NSDate dateWithTimeIntervalSince1970:
     _offer.residence.moveInDate];
   NSDate *moveOutDate = [_offer.residence moveOutDateDate];
   if (_offer.residence.moveOutDate)
@@ -251,30 +251,30 @@ reuseIdentifier: (NSString *) reuseIdentifier
 - (void) loadMoveInConfirmedTenant: (OMBOffer *) object
 {
   _offer = object;
-  
+
   // Image
-  
+
   userImageView.image = nil;
   userImageView.hidden = YES;
-  
+
   nameLabel.font = [UIFont normalTextFont];
   nameLabel.text = _offer.user.fullName;
   // Name
   [[OMBUser currentUser].renterApplication fetchListForResourceName: [OMBRoommate resourceName]
     userUID: [OMBUser currentUser].uid delegate: self completion: ^(NSError *error) {
-      
+
   }];
-  
+
   // Time
   timeLabel.hidden = YES;
-  
+
   // Address
   addressLabel.font = [UIFont normalTextFontBold];
   addressLabel.text = [NSString stringWithFormat:@"%@ - %@",
     [NSString numberToCurrencyString: _offer.amount],
       _offer.residence.address];
   addressLabel.textColor = [UIColor textColor];
-  
+
   // Dates
   NSDateFormatter *dateFormatter = [NSDateFormatter new];
   dateFormatter.dateFormat = @"M/d/yy";
@@ -300,7 +300,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   }
   else {
     [_offer.user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
-      userImageView.image = [_offer.user imageForSize: 
+      userImageView.image = [_offer.user imageForSize:
         userImageView.frame.size];
     }];
     userImageView.image = [UIImage imageNamed: @"user_icon.png"];
@@ -316,7 +316,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   // Name
   nameLabel.text = [_offer.user shortName];
-  
+
   // Status
   UIColor *color;
   switch ([_offer statusForLandlord]) {
@@ -335,7 +335,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
       notesLabel.hidden = NO;
       notesLabel.text = [NSString stringWithFormat: @"Student has %i "
         @"hours to confirm, pay, and sign the lease. Once the lease has been "
-        @"signed, we will send it to you via email.", 
+        @"signed, we will send it to you via email.",
           kMaxHoursForStudentToConfirm];
       timeLabel.hidden = NO;
       break;
@@ -343,9 +343,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
     case OMBOfferStatusForLandlordOnHold: {
       color = [UIColor grayMedium];
       notesLabel.hidden = NO;
-      notesLabel.text = [NSString stringWithFormat: 
+      notesLabel.text = [NSString stringWithFormat:
         @"This offer will become live if the previously accepted offer for "
-        @"%@ is rejected by the student who made the offer.", 
+        @"%@ is rejected by the student who made the offer.",
           [_offer.residence.address capitalizedString]];
       break;
     }
@@ -394,18 +394,20 @@ reuseIdentifier: (NSString *) reuseIdentifier
   else {
     __weak typeof(userImageView) weakUserImageView = userImageView;
     [_offer.residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
-      [weakUserImageView.imageView setImageWithURL: 
-        _offer.residence.coverPhotoURL placeholderImage: nil 
+      [weakUserImageView.imageView setImageWithURL:
+        _offer.residence.coverPhotoURL placeholderImage: nil
           options: SDWebImageRetryFailed completed:
             ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
-              weakUserImageView.image = img;
-              [_offer.residence.coverPhotoSizeDictionary setObject:
-                weakUserImageView.image forKey: sizeKey];
+              if (!error && img) {
+                weakUserImageView.image = img;
+                [_offer.residence.coverPhotoSizeDictionary setObject:
+                  weakUserImageView.image forKey: sizeKey];
+              }
             }
           ];
       // if ([_offer.residence coverPhoto]) {
       //   userImageView.image = [_offer.residence coverPhoto];
-      //   [_offer.residence.coverPhotoSizeDictionary setObject: 
+      //   [_offer.residence.coverPhotoSizeDictionary setObject:
       //     userImageView.image forKey: sizeKey];
       // }
     }];
@@ -413,14 +415,14 @@ reuseIdentifier: (NSString *) reuseIdentifier
   }
 
   // nameLabel.text = [_offer.residence.user shortName];
-  // NSMutableAttributedString *aString1 = (NSMutableAttributedString *) 
-  //   [[NSString numberToCurrencyString: 
-  //     self.offer.amount] attributedStringWithFont: 
+  // NSMutableAttributedString *aString1 = (NSMutableAttributedString *)
+  //   [[NSString numberToCurrencyString:
+  //     self.offer.amount] attributedStringWithFont:
   //       [UIFont normalTextFontBold]];
-  // NSMutableAttributedString *aString2 = (NSMutableAttributedString *) 
-  //   [[NSString stringWithFormat: @" %i bd / %i ba", 
-  //     (NSUInteger) self.offer.residence.bedrooms, 
-  //       (NSUInteger) self.offer.residence.bathrooms] 
+  // NSMutableAttributedString *aString2 = (NSMutableAttributedString *)
+  //   [[NSString stringWithFormat: @" %i bd / %i ba",
+  //     (NSUInteger) self.offer.residence.bedrooms,
+  //       (NSUInteger) self.offer.residence.bathrooms]
   //         attributedStringWithFont: [UIFont normalTextFont]];
   // [aString1 appendAttributedString: aString2];
   // nameLabel.attributedText = aString1;
@@ -477,7 +479,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
       notesLabel.text = [NSString stringWithFormat:
         @"Once you submit your offer, the landlord will have %@ "
         @"to review your offer, your renter profile, and your roommates' "
-        @"renter profiles if applicable.", 
+        @"renter profiles if applicable.",
         [self.offer timelineStringForLandlord]
       ];
       timeLabel.hidden = NO;

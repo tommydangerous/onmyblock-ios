@@ -61,24 +61,11 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   residence = object;
 
-  // Do not need this anymore because clicking the image in the slides
-  // will show a view with the images
-
-  // _imageSlideViewController = 
-  //   [[OMBResidenceImageSlideViewController alloc] initWithResidence: 
-  //     residence];
-  // _imageSlideViewController.modalTransitionStyle = 
-  //   UIModalTransitionStyleCrossDissolve;
-  // _imageSlideViewController.residenceDetailViewController = self;
-
-  self.screenName = [NSString stringWithFormat:
-    @"Residence Detail View Controller - Residence ID: %i", residence.uid];
-  
   if ([residence.address length]){
     UIView *labelView = [UIView new];
     labelView.frame = CGRectMake( -OMBPadding, 0,
       [[UIScreen mainScreen] bounds].size.width - (4 * OMBPadding), 36.f);
-    
+
     UILabel *label =
       [[UILabel alloc] initWithFrame: CGRectMake( 0, 0,
         labelView.frame.size.width, 18.f)];
@@ -91,7 +78,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
     label.textColor = [UIColor textColor];
     label.text = residence.address;
     [labelView addSubview:label];
-    
+
     UILabel *label2 =
       [[UILabel alloc] initWithFrame:CGRectMake( 0, label.frame.size.height,
         label.frame.size.width, 18.f)];
@@ -102,15 +89,17 @@ float kResidenceDetailImagePercentage   = 0.5f;
     label2.shadowOffset    = label.shadowOffset;
     label2.textAlignment = label.textAlignment;
     label2.textColor = [UIColor grayMedium];
-    label2.text = [NSString stringWithFormat:@"%@, %@",residence.city,residence.state];
+    label2.text = [NSString stringWithFormat:@"%@, %@",
+      residence.city,residence.state];
     [labelView addSubview:label2];
     self.navigationItem.titleView = labelView;
-  }else{
+  }
+  else {
     self.title = residence.title;
   }
 
   [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(currentUserLogout) name: OMBUserLoggedOutNotification 
+    selector: @selector(currentUserLogout) name: OMBUserLoggedOutNotification
       object: nil];
 
   return self;
@@ -133,7 +122,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [super loadView];
 
   self.navigationItem.rightBarButtonItem = shareBarButtonItem;
-    
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view     = [[OMBBlurView alloc] initWithFrame: screen];
 
@@ -154,14 +143,14 @@ float kResidenceDetailImagePercentage   = 0.5f;
   imageCollectionViewLayout.headerReferenceSize = CGSizeZero;
   imageCollectionViewLayout.minimumInteritemSpacing = 0.0f;
   imageCollectionViewLayout.minimumLineSpacing = 0.0f;
-  imageCollectionViewLayout.scrollDirection = 
+  imageCollectionViewLayout.scrollDirection =
     UICollectionViewScrollDirectionHorizontal;
   imageCollectionViewLayout.sectionInset = UIEdgeInsetsMake(0.0f, 0.0f,
     0.0f, 0.0f);
   // Collection view
   imageCollectionView = [[OMBCollectionView alloc] initWithFrame:
     CGRectMake(0.0f, backViewOffsetY,
-      imageCollectionSize.width, imageCollectionSize.height) 
+      imageCollectionSize.width, imageCollectionSize.height)
         collectionViewLayout: imageCollectionViewLayout];
   imageCollectionView.alwaysBounceHorizontal = YES;
   imageCollectionView.bounces       = YES;
@@ -170,17 +159,17 @@ float kResidenceDetailImagePercentage   = 0.5f;
   imageCollectionView.pagingEnabled = YES;
   imageCollectionView.showsHorizontalScrollIndicator = NO;
   [self.view addSubview: imageCollectionView];
-  
+
   // Show when there aren't images
   placeholderImageView = [[UIImageView alloc] initWithFrame:
     imageCollectionView.frame];
   placeholderImageView.hidden = NO;
   placeholderImageView.image = [OMBResidence placeholderImage];
   [self.view addSubview: placeholderImageView];
-  
+
   // Tap gesture when user clicks the images
   UITapGestureRecognizer *tapGesture =
-    [[UITapGestureRecognizer alloc] initWithTarget: self 
+    [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(showImageSlides)];
   [imageCollectionView addGestureRecognizer: tapGesture];
 
@@ -197,9 +186,9 @@ float kResidenceDetailImagePercentage   = 0.5f;
   _table.separatorStyle               = UITableViewCellSeparatorStyleNone;
   _table.showsVerticalScrollIndicator = NO;
   // Table header view
-  _table.tableHeaderView = [[UIView alloc] initWithFrame: 
-    CGRectMake(0.0f, 0.0f, screenWidth, 
-      imageCollectionView.frame.origin.y + 
+  _table.tableHeaderView = [[UIView alloc] initWithFrame:
+    CGRectMake(0.0f, 0.0f, screenWidth,
+      imageCollectionView.frame.origin.y +
       imageCollectionView.frame.size.height)];
   [self.view addSubview: _table];
 
@@ -220,14 +209,14 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [self.view addSubview: headerView];
 
   // Activity indicator view
-  activityIndicatorView = 
-    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
+  activityIndicatorView =
+    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
       UIActivityIndicatorViewStyleWhiteLarge];
   activityIndicatorView.color = [UIColor whiteColor];
   CGRect activityFrame = activityIndicatorView.frame;
-  activityFrame.origin.x = (imageCollectionView.frame.size.width - 
+  activityFrame.origin.x = (imageCollectionView.frame.size.width -
     activityFrame.size.width) * 0.5f;
-  activityFrame.origin.y = (imageCollectionView.frame.size.height - 
+  activityFrame.origin.y = (imageCollectionView.frame.size.height -
     activityFrame.size.height) * 0.5f;
   activityIndicatorView.frame = activityFrame;
   activityIndicatorView.layer.zPosition = 9999;
@@ -235,11 +224,11 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   // Page of images
   _pageOfImagesLabel = [[UILabel alloc] init];
-  _pageOfImagesLabel.backgroundColor = [UIColor colorWithWhite: 0.0f 
+  _pageOfImagesLabel.backgroundColor = [UIColor colorWithWhite: 0.0f
     alpha: 0.5f];
   _pageOfImagesLabel.font = [UIFont smallTextFont];
   _pageOfImagesLabel.frame = CGRectMake(
-    imageCollectionView.frame.size.width - (50 + headerViewPadding), 
+    imageCollectionView.frame.size.width - (50 + headerViewPadding),
       headerViewPadding, 50.0f, 30.0f);
   _pageOfImagesLabel.layer.cornerRadius = 2.0f;
   _pageOfImagesLabel.textAlignment = NSTextAlignmentCenter;
@@ -253,12 +242,12 @@ float kResidenceDetailImagePercentage   = 0.5f;
     forControlEvents: UIControlEventTouchUpInside];
   [headerView addSubview: _favoritesButton];
   // When favorited
-  favoritedImage = [UIImage image: 
-    [UIImage imageNamed: @"favorite_filled_white.png"] 
+  favoritedImage = [UIImage image:
+    [UIImage imageNamed: @"favorite_filled_white.png"]
       size: _favoritesButton.frame.size];
   // When not favorited
-  notFavoritedImage = [UIImage image: 
-    [UIImage imageNamed: @"favorite_outline_white.png"] 
+  notFavoritedImage = [UIImage image:
+    [UIImage imageNamed: @"favorite_outline_white.png"]
       size: _favoritesButton.frame.size];
 
   // Number of offers
@@ -270,7 +259,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   // [_imagesView addSubview: _numberOfOffersLabel];
 
   // Current offer
-  currentOfferOriginY = (imageCollectionView.frame.origin.y + 
+  currentOfferOriginY = (imageCollectionView.frame.origin.y +
     imageCollectionView.frame.size.height) - (36.0f + (headerViewPadding * 2));
   _currentOfferLabel = [UILabel new];
   _currentOfferLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
@@ -290,7 +279,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   float bottomButtonViewHeight = 23.0f + 44.0f + 1.0f;
   // bottomButtonViewHeight = 44.0f;
   bottomButtonViewHeight = OMBStandardButtonHeight;
-  _bottomButtonView.frame = CGRectMake(0.0f, 
+  _bottomButtonView.frame = CGRectMake(0.0f,
     screenHeight - bottomButtonViewHeight, screenWidth, bottomButtonViewHeight);
   [self.view addSubview: _bottomButtonView];
 
@@ -299,7 +288,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   _countDownTimerLabel.backgroundColor = [UIColor greenAlpha: 0.8f];
   _countDownTimerLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
     size: 15];
-  _countDownTimerLabel.frame = CGRectMake(0.0f, 0.0f, 
+  _countDownTimerLabel.frame = CGRectMake(0.0f, 0.0f,
     _bottomButtonView.frame.size.width, 23.0f);
   _countDownTimerLabel.textColor = [UIColor whiteColor];
   _countDownTimerLabel.textAlignment = NSTextAlignmentCenter;
@@ -308,23 +297,23 @@ float kResidenceDetailImagePercentage   = 0.5f;
   // Contact me button
   _contactMeButton = [[UIButton alloc] init];
   _contactMeButton.backgroundColor = [UIColor blueAlpha: 0.8f];
-  // _contactMeButton.frame = CGRectMake(0.0f, 
-  //   _countDownTimerLabel.frame.origin.y + 
-  //   _countDownTimerLabel.frame.size.height + 1.0f, 
+  // _contactMeButton.frame = CGRectMake(0.0f,
+  //   _countDownTimerLabel.frame.origin.y +
+  //   _countDownTimerLabel.frame.size.height + 1.0f,
   //     (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
-  _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
-    (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 
+  _contactMeButton.frame = CGRectMake(0.0f, 0.0f,
+    (_bottomButtonView.frame.size.width - 1.0f) * 0.5,
       bottomButtonViewHeight);
-  // _contactMeButton.frame = CGRectMake(0.0f, 0.0f, 
+  // _contactMeButton.frame = CGRectMake(0.0f, 0.0f,
   //   _bottomButtonView.frame.size.width, 44.0f);
   _contactMeButton.titleLabel.font = [UIFont mediumTextFontBold];
   // _contactMeButton.titleLabel.font = [UIFont mediumTextFontBold];
   [_contactMeButton addTarget: self action: @selector(contactMeButtonSelected)
     forControlEvents: UIControlEventTouchUpInside];
-  [_contactMeButton setBackgroundImage: 
+  [_contactMeButton setBackgroundImage:
     [UIImage imageWithColor: [UIColor blueHighlighted]]
       forState: UIControlStateHighlighted];
-  [_contactMeButton setTitle: @"Contact" 
+  [_contactMeButton setTitle: @"Contact"
     forState: UIControlStateNormal];
   [_contactMeButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
@@ -334,16 +323,16 @@ float kResidenceDetailImagePercentage   = 0.5f;
   _bookItButton = [[UIButton alloc] init];
   _bookItButton.backgroundColor = _contactMeButton.backgroundColor;
   _bookItButton.frame = CGRectMake(
-    _bottomButtonView.frame.size.width - _contactMeButton.frame.size.width, 
-      _contactMeButton.frame.origin.y, _contactMeButton.frame.size.width, 
+    _bottomButtonView.frame.size.width - _contactMeButton.frame.size.width,
+      _contactMeButton.frame.origin.y, _contactMeButton.frame.size.width,
         _contactMeButton.frame.size.height);
   _bookItButton.titleLabel.font = _contactMeButton.titleLabel.font;
   [_bookItButton addTarget: self action: @selector(showPlaceOffer)
     forControlEvents: UIControlEventTouchUpInside];
-  [_bookItButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor blueHighlighted]] 
+  [_bookItButton setBackgroundImage:
+    [UIImage imageWithColor: [UIColor blueHighlighted]]
       forState: UIControlStateHighlighted];
-  [_bookItButton setTitle: @"Place Offer" // @"Book It!" 
+  [_bookItButton setTitle: @"Place Offer" // @"Book It!"
     forState: UIControlStateNormal];
   [_bookItButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
@@ -361,13 +350,13 @@ float kResidenceDetailImagePercentage   = 0.5f;
   CGFloat closeButtonPadding = padding * 0.5f;
   CGFloat closeButtonViewHeight = 30.0f;
   CGFloat closeButtonViewWidth  = closeButtonViewHeight;
-  CGRect closeButtonRect = CGRectMake(imageScrollView.frame.size.width - 
-    (closeButtonViewWidth + closeButtonPadding), 
-      padding + closeButtonPadding, closeButtonViewWidth, 
+  CGRect closeButtonRect = CGRectMake(imageScrollView.frame.size.width -
+    (closeButtonViewWidth + closeButtonPadding),
+      padding + closeButtonPadding, closeButtonViewWidth,
         closeButtonViewHeight);
   imageScrollViewCloseButton = [[OMBCloseButtonView alloc] initWithFrame:
     closeButtonRect color: [UIColor whiteColor]];
-  [imageScrollViewCloseButton.closeButton addTarget: self 
+  [imageScrollViewCloseButton.closeButton addTarget: self
     action: @selector(closeImageSlides)
       forControlEvents: UIControlEventTouchUpInside];
   [imageScrollView addSubview: imageScrollViewCloseButton];
@@ -385,8 +374,8 @@ float kResidenceDetailImagePercentage   = 0.5f;
   map.scrollEnabled = NO;
   map.showsPointsOfInterest = NO;
   map.zoomEnabled = NO;
-  UITapGestureRecognizer *tap = 
-    [[UITapGestureRecognizer alloc] initWithTarget: self 
+  UITapGestureRecognizer *tap =
+    [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(showMap)];
   [map addGestureRecognizer: tap];
 }
@@ -407,8 +396,8 @@ float kResidenceDetailImagePercentage   = 0.5f;
   self.automaticallyAdjustsScrollViewInsets = NO;
 
   // Register collection view cell for the collection view
-  [imageCollectionView registerClass: 
-    [OMBResidenceDetailImageCollectionViewCell class] 
+  [imageCollectionView registerClass:
+    [OMBResidenceDetailImageCollectionViewCell class]
       forCellWithReuseIdentifier:
         [OMBResidenceDetailImageCollectionViewCell reuseIdentifierString]];
 }
@@ -417,7 +406,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
 {
   [super viewWillAppear: animated];
 
-  // Need to set this again because when the view disappears, 
+  // Need to set this again because when the view disappears,
   // the _table.delegate is set to nil
   // if (!_table.delegate)
   //   _table.delegate = self;
@@ -450,7 +439,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   // Table footer view
   CGFloat footerHeight = _bottomButtonView.frame.size.height;
   // If this residence belongs to the current user
-  if ([[OMBUser currentUser] loggedIn] && 
+  if ([[OMBUser currentUser] loggedIn] &&
     residence.landlordUserID == [OMBUser currentUser].uid) {
     // Hide the table footer view and buttons at the bottom
     footerHeight = 0.0f;
@@ -462,7 +451,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
     footerHeight = 0.0f;
     _bottomButtonView.hidden = YES;
   }
-  _table.tableFooterView = [[UIView alloc] initWithFrame: 
+  _table.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectMake(0.0f, 0.0f, _table.frame.size.width, footerHeight)];
 
   // Fetch the offers (Do this in another phase, we aren't showing offers)
@@ -506,8 +495,8 @@ viewForAnnotation: (id <MKAnnotation>) annotation
   OMBAnnotationView *annotationView = (OMBAnnotationView *)
     [map dequeueReusableAnnotationViewWithIdentifier: ReuseIdentifier];
   if (!annotationView) {
-    annotationView = 
-      [[OMBAnnotationView alloc] initWithAnnotation: annotation 
+    annotationView =
+      [[OMBAnnotationView alloc] initWithAnnotation: annotation
         reuseIdentifier: ReuseIdentifier];
   }
   [annotationView loadAnnotation: annotation];
@@ -516,25 +505,25 @@ viewForAnnotation: (id <MKAnnotation>) annotation
 
 #pragma mark - Protocol UICollectionViewDataSource
 
-- (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView 
+- (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView
 cellForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   OMBResidenceDetailImageCollectionViewCell *cell =
     [collectionView dequeueReusableCellWithReuseIdentifier:
       [OMBResidenceDetailImageCollectionViewCell reuseIdentifierString]
         forIndexPath: indexPath];
-  [cell loadResidenceImage: 
+  [cell loadResidenceImage:
     [[residence imagesArray] objectAtIndex: indexPath.row]];
   return cell;
 }
 
-- (NSInteger) collectionView: (UICollectionView *) collectionView 
+- (NSInteger) collectionView: (UICollectionView *) collectionView
 numberOfItemsInSection: (NSInteger) section
 {
   return [[residence imagesArray] count];
 }
 
-- (NSInteger) numberOfSectionsInCollectionView: 
+- (NSInteger) numberOfSectionsInCollectionView:
 (UICollectionView *) collectionView
 {
   return 1;
@@ -542,7 +531,7 @@ numberOfItemsInSection: (NSInteger) section
 
 #pragma mark - Protocol UICollectionViewDelegate
 
-- (void) collectionView: (UICollectionView *) collectionView 
+- (void) collectionView: (UICollectionView *) collectionView
 didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 {
   NSLog(@"COLLECTION VIEW DID SELECT ITEM");
@@ -555,7 +544,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   if (scrollView == imageScrollView) {
     NSInteger page = scrollView.contentOffset.x / scrollView.frame.size.width;
     imageCollectionView.contentOffset = CGPointMake(
-      imageCollectionView.frame.size.width * page, 0.0f); 
+      imageCollectionView.frame.size.width * page, 0.0f);
   }
 }
 
@@ -576,7 +565,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     // Adjust the gradient
     gradientView.frame = backRect;
     placeholderImageView.frame = backRect;
-    
+
     // Header view
     backRect.size.height = imageCollectionView.frame.size.height - y + adjustment;
     headerView.frame = backRect;
@@ -585,7 +574,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     CGRect currentOfferRect = _currentOfferLabel.frame;
     currentOfferRect.origin.y = currentOfferOriginY - adjustment;
     _currentOfferLabel.frame = currentOfferRect;
-    
+
     if(y > backViewOffsetY + imageCollectionView.frame.size.height)
       _table.backgroundColor = [UIColor grayUltraLight];
     else
@@ -601,7 +590,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   // If the image scroll view is scrolling, move the close button
   else if (scrollView == imageScrollView) {
     CGRect rect = imageScrollViewCloseButton.frame;
-    rect.origin.x = 
+    rect.origin.x =
       (scrollView.frame.size.width - (rect.size.width + (padding * 0.5f))) + x;
     imageScrollViewCloseButton.frame = rect;
   }
@@ -622,14 +611,14 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
       CGRect frameToCenter = imageView.frame;
       // Center horizontally
       if (frameToCenter.size.width < boundsSize.width) {
-        frameToCenter.origin.x = 
+        frameToCenter.origin.x =
           (boundsSize.width - frameToCenter.size.width) / 2.0;
       }
       else
         frameToCenter.origin.x = 0;
       // Center vertically
       if (frameToCenter.size.height < boundsSize.height)
-        frameToCenter.origin.y = 
+        frameToCenter.origin.y =
           (boundsSize.height - frameToCenter.size.height) / 2.0;
       else
         frameToCenter.origin.y = 0;
@@ -647,7 +636,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
       }
     ];
     if (index != NSNotFound)
-      return [scrollView.subviews objectAtIndex: index]; 
+      return [scrollView.subviews objectAtIndex: index];
   }
   return nil;
 }
@@ -659,7 +648,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   return 6;
 }
 
-- (UITableViewCell *) tableView: (UITableView *) tableView 
+- (UITableViewCell *) tableView: (UITableView *) tableView
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   static NSString *CellIdentifier = @"CellIdentifier";
@@ -682,7 +671,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       OMBResidenceDetailAddressCell *cell =
         [tableView dequeueReusableCellWithIdentifier: AddressCellIdentifier];
       if (!cell) {
-        cell = [[OMBResidenceDetailAddressCell alloc] initWithStyle: 
+        cell = [[OMBResidenceDetailAddressCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: AddressCellIdentifier];
       }
       // Main Label
@@ -700,8 +689,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           [residence.city capitalizedString], residence.state];
       // Bed / Bath/ Lease Months
       cell.bedBathLeaseMonthLabel.text = [NSString stringWithFormat:
-        @"%.0f bd  /  %.0f ba  /  %@", 
-          residence.bedrooms, residence.bathrooms, 
+        @"%.0f bd  /  %.0f ba  /  %@",
+          residence.bedrooms, residence.bathrooms,
             [residence leaseMonthsStringShort]];
       // Property Type - Move in Date
       NSString *propertyType = @"";
@@ -713,14 +702,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           NSDateFormatter *dateFormatter = [NSDateFormatter new];
           dateFormatter.dateFormat = @"MMM d, yyyy";
           availableDateString = [NSString stringWithFormat: @"- available %@",
-            [dateFormatter stringFromDate: 
+            [dateFormatter stringFromDate:
               [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]]];
         }
         else {
           availableDateString = @"- available immediately";
         }
       }
-      cell.propertyTypeLabel.text = [NSString stringWithFormat: 
+      cell.propertyTypeLabel.text = [NSString stringWithFormat:
         @"%@ %@", propertyType, availableDateString];
       return cell;
     }
@@ -755,7 +744,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.section == 2) {
     if (indexPath.row == 1) {
       static NSString *AmentiesCellIdentifier = @"AmentiesCellIdentifier";
-      OMBResidenceDetailAmenitiesCell *cell = 
+      OMBResidenceDetailAmenitiesCell *cell =
         [tableView dequeueReusableCellWithIdentifier: AmentiesCellIdentifier];
       if (!cell) {
         cell = [[OMBResidenceDetailAmenitiesCell alloc] initWithStyle:
@@ -770,12 +759,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.section == 3) {
     if (indexPath.row == 1) {
       static NSString *DescriptionCellIdentifier = @"DescriptionCellIdentifier";
-      OMBResidenceDetailDescriptionCell *cell = 
-        [tableView dequeueReusableCellWithIdentifier: 
+      OMBResidenceDetailDescriptionCell *cell =
+        [tableView dequeueReusableCellWithIdentifier:
           DescriptionCellIdentifier];
       if (!cell) {
         cell = [[OMBResidenceDetailDescriptionCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier: 
+          UITableViewCellStyleDefault reuseIdentifier:
             DescriptionCellIdentifier];
         [cell loadData: residence.description];
       }
@@ -788,7 +777,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.row == 1) {
       if (residence.user && residence.user.uid) {
         static NSString *SellerCellIdentifier = @"SellerCellIdentifier";
-        OMBResidenceDetailSellerCell *cell = 
+        OMBResidenceDetailSellerCell *cell =
           [tableView dequeueReusableCellWithIdentifier: SellerCellIdentifier];
         if (!cell) {
           cell = [[OMBResidenceDetailSellerCell alloc] initWithStyle:
@@ -804,7 +793,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.section == 5) {
     if (indexPath.row == 1) {
       static NSString *MapCellIdentifier = @"MapCellIdentifier";
-      OMBResidenceDetailMapCell *cell = 
+      OMBResidenceDetailMapCell *cell =
         [tableView dequeueReusableCellWithIdentifier: MapCellIdentifier];
       if (!cell) {
         cell = [[OMBResidenceDetailMapCell alloc] initWithStyle:
@@ -824,11 +813,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         // [cell.mapView addAnnotation: annotation];
         [map removeFromSuperview];
         [cell.contentView addSubview: map];
-        
+
         // Add street view
         if(!cell.streetView.image){
           NSLog(@"download street view");
-          
+
           cell.imageView.image = nil;
           dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
           dispatch_async(queue, ^{
@@ -843,16 +832,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           });
         }
         // Tap
-        // UITapGestureRecognizer *tap = 
-        //   [[UITapGestureRecognizer alloc] initWithTarget: self 
+        // UITapGestureRecognizer *tap =
+        //   [[UITapGestureRecognizer alloc] initWithTarget: self
         //     action: @selector(showMap)];
         // [cell.mapView addGestureRecognizer: tap];
-        
+
         [cell.segmentedControl addTarget:self action:@selector(changeStateSegmented:) forControlEvents:UIControlEventValueChanged];
       }
       if ([residence.city length] && [residence.state length])
         cell.titleLabel.text = [NSString stringWithFormat: @"%@, %@",
-          [[residence.city capitalizedString] stripWhiteSpace], 
+          [[residence.city capitalizedString] stripWhiteSpace],
             [residence.state stripWhiteSpace]];
       return cell;
     }
@@ -908,8 +897,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   if (indexPath.section == 4) {
     if (indexPath.row == 1) {
       if (residence.user) {
-        OMBOtherUserProfileViewController *vc = 
-          [[OMBOtherUserProfileViewController alloc] initWithUser: 
+        OMBOtherUserProfileViewController *vc =
+          [[OMBOtherUserProfileViewController alloc] initWithUser:
             residence.user];
         [self.navigationController pushViewController: vc animated: YES];
       }
@@ -954,7 +943,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         if (count % 2) {
           rows += 1;
         }
-        return kResidenceDetailCellSpacingHeight + 
+        return kResidenceDetailCellSpacingHeight +
           padding + (23.0f * rows) + padding;
       }
     }
@@ -967,9 +956,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     else if (indexPath.row == 1) {
       if (residence.description && [residence.description length]) {
-        NSAttributedString *aString = 
-          [residence.description attributedStringWithFont: 
-            [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] 
+        NSAttributedString *aString =
+          [residence.description attributedStringWithFont:
+            [UIFont fontWithName: @"HelveticaNeue-Light" size: 15]
               lineHeight: 23.0f];
         CGRect rect = [aString boundingRectWithSize:
           CGSizeMake(tableView.frame.size.width - (padding * 2), 9999.0f)
@@ -1034,24 +1023,24 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // Padding on each side
   CGFloat pageWidth = (_pageOfImagesLabel.frame.origin.y * 2.0f) +
     pageRect.size.width;
-  _pageOfImagesLabel.frame = CGRectMake(imageCollectionView.frame.size.width - 
-    (pageWidth + _pageOfImagesLabel.frame.origin.y), 
+  _pageOfImagesLabel.frame = CGRectMake(imageCollectionView.frame.size.width -
+    (pageWidth + _pageOfImagesLabel.frame.origin.y),
       _pageOfImagesLabel.frame.origin.y, pageWidth,
         _pageOfImagesLabel.frame.size.height);
 }
 
 - (void)changeStateSegmented:(UISegmentedControl *) control{
-  
+
   OMBResidenceDetailMapCell *cell = (OMBResidenceDetailMapCell *)
   [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow:1 inSection:5]];
-  
+
   switch (control.selectedSegmentIndex) {
       // Show map
     case 0: {
       // cell.mapView.hidden = NO;
       map.hidden = NO;
       cell.streetView.hidden = YES;
-      
+
       break;
     }
       // Show street
@@ -1064,7 +1053,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     default:
       break;
   }
-  
+
 }
 
 - (void) closeImageSlides
@@ -1081,7 +1070,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [blurView removeFromSuperview];
     [imageScrollView removeFromSuperview];
     // Remove all subviews
-    [imageScrollView.subviews enumerateObjectsUsingBlock: 
+    [imageScrollView.subviews enumerateObjectsUsingBlock:
       ^(UIView *v, NSUInteger idx, BOOL *stop) {
         // Don't remove the X close button
         if (![v isKindOfClass: [OMBCloseButtonView class]])
@@ -1094,9 +1083,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) contactMeButtonSelected
 {
   if ([[OMBUser currentUser] loggedIn]) {
-    // messageDetailViewController = 
+    // messageDetailViewController =
     //   [[OMBMessageDetailViewController alloc] initWithUser: residence.user];
-    // [self.navigationController pushViewController: 
+    // [self.navigationController pushViewController:
     //   messageDetailViewController
     //     animated: YES];
     // OMBUser *user = residence.user;
@@ -1104,21 +1093,21 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     //   user = [OMBUser landlordUser];
     if (residence.user) {
       /*[[self appDelegate].container presentViewController:
-        [[OMBNavigationController alloc] initWithRootViewController: 
-          [[OMBMessageNewViewController alloc] initWithUser: residence.user 
+        [[OMBNavigationController alloc] initWithRootViewController:
+          [[OMBMessageNewViewController alloc] initWithUser: residence.user
             residence: residence]] animated: YES completion: nil];*/
-      
+
       // [self.navigationController pushViewController:
       //   [[OMBMessageNewViewController alloc] initWithUser: residence.user
       //     residence: residence] animated: YES];
 
-      OMBMessageDetailViewController *vc = 
+      OMBMessageDetailViewController *vc =
         [[OMBMessageDetailViewController alloc] initWithUser: residence.user];
       [vc loadDefaultMessage];
       [self.navigationController pushViewController: vc animated: YES];
     }
     else {
-      OMBMessageDetailViewController *vc = 
+      OMBMessageDetailViewController *vc =
         [[OMBMessageDetailViewController alloc] initWithResidence: residence];
       [vc loadDefaultMessage];
       [self.navigationController pushViewController: vc animated: YES];
@@ -1131,7 +1120,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (int) currentPageOfImages
 {
-  return (1 + 
+  return (1 +
     imageCollectionView.contentOffset.x / imageCollectionView.frame.size.width);
 }
 
@@ -1151,7 +1140,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       }];
     }
     else {
-      OMBFavoriteResidence *favoriteResidence = 
+      OMBFavoriteResidence *favoriteResidence =
         [[OMBFavoriteResidence alloc] init];
       favoriteResidence.createdAt = [[NSDate date] timeIntervalSince1970];
       favoriteResidence.residence = residence;
@@ -1170,7 +1159,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
           }
         ];
     }
-    OMBFavoriteResidenceConnection *connection = 
+    OMBFavoriteResidenceConnection *connection =
       [[OMBFavoriteResidenceConnection alloc] initWithResidence: residence];
     [connection start];
   }
@@ -1191,7 +1180,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     placeholderImageView.hidden = YES;
   else
     placeholderImageView.hidden = NO;
-  
+
   [self adjustPageOfImagesLabelFrame];
 }
 
@@ -1223,21 +1212,21 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) shareButtonSelected
 {
   NSArray *dataToShare = @[[residence shareString]];
-  UIActivityViewController *activityViewController = 
+  UIActivityViewController *activityViewController =
     [[UIActivityViewController alloc] initWithActivityItems: dataToShare
       applicationActivities: nil];
   [activityViewController setValue: @"Check out this listing on OnMyBlock!"
      forKey: @"subject"];
-  [[self appDelegate].container.currentDetailViewController 
-    presentViewController: activityViewController 
+  [[self appDelegate].container.currentDetailViewController
+    presentViewController: activityViewController
       animated: YES completion: nil];
 }
 
 - (void) showBookItNow
 {
   if ([[OMBUser currentUser] loggedIn])
-    [self.navigationController pushViewController: 
-      [[OMBResidenceBookItViewController alloc] initWithResidence: residence] 
+    [self.navigationController pushViewController:
+      [[OMBResidenceBookItViewController alloc] initWithResidence: residence]
         animated: YES];
   else
     [[self appDelegate].container showSignUp];
@@ -1254,7 +1243,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     scroll.frame = CGRectMake(
       [array indexOfObject: residenceImage] * rect.size.width, 0.0f,
         rect.size.width, rect.size.height);
-    [imageScrollView insertSubview: scroll belowSubview: 
+    [imageScrollView insertSubview: scroll belowSubview:
       imageScrollViewCloseButton];
 
     // UIImage *image         = residenceImage.image;
@@ -1263,8 +1252,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
     __weak typeof(scroll) weakScroll = scroll;
     [scroll.imageView setImageWithURL: residenceImage.imageURL
-      placeholderImage: nil options: SDWebImageRetryFailed 
-        completed: 
+      placeholderImage: nil options: SDWebImageRetryFailed
+        completed:
           ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             if (error) {
               weakScroll.imageView.image = [OMBResidence placeholderImage];
@@ -1272,10 +1261,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
             }
             else {
               // Image view
-              weakScroll.imageView.frame = CGRectMake(0.0f, 0.0f, 
+              weakScroll.imageView.frame = CGRectMake(0.0f, 0.0f,
                 image.size.width, image.size.height);
               // Scroll
-              weakScroll.minimumZoomScale = 
+              weakScroll.minimumZoomScale =
                 rect.size.width / weakScroll.imageView.image.size.width;
               weakScroll.maximumZoomScale = 1.0;
               weakScroll.showsHorizontalScrollIndicator = NO;
@@ -1310,7 +1299,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   imageScrollView.transform = CGAffineTransformScale(CGAffineTransformIdentity,
     0.0f, 0.0f);
   // Add the image scroll view
-  [[[UIApplication sharedApplication] keyWindow] addSubview: 
+  [[[UIApplication sharedApplication] keyWindow] addSubview:
     imageScrollView];
 
   [UIView animateWithDuration: OMBStandardDuration animations: ^{
@@ -1329,7 +1318,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
     residence.latitude, residence.longitude);
   [self.navigationController pushViewController:
-    [[OMBMapViewViewController alloc] initWithCoordinate: coordinate 
+    [[OMBMapViewViewController alloc] initWithCoordinate: coordinate
       title: [residence.address capitalizedString]] animated: YES];
 }
 
@@ -1348,11 +1337,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // Countdown timer
   NSInteger secondsRemaining = 0;
   if ([[NSDate date] timeIntervalSince1970] < residence.auctionStartDate) {
-    secondsRemaining = residence.auctionStartDate - 
+    secondsRemaining = residence.auctionStartDate -
       [[NSDate date] timeIntervalSince1970];
   }
   else {
-    secondsRemaining = (residence.auctionStartDate + 
+    secondsRemaining = (residence.auctionStartDate +
       (residence.auctionDuration * 24 * 60 * 60)) -
         [[NSDate date] timeIntervalSince1970];
   }
@@ -1381,12 +1370,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
   // Auction hasn't started yet
   if ([[NSDate date] timeIntervalSince1970] < residence.auctionStartDate) {
-    _countDownTimerLabel.text = [NSString stringWithFormat: 
+    _countDownTimerLabel.text = [NSString stringWithFormat:
       @"Auction starts in: %@", timeString];
   }
   // Ongoing
   else
-    _countDownTimerLabel.text = [NSString stringWithFormat: 
+    _countDownTimerLabel.text = [NSString stringWithFormat:
       @"Time left in auction: %@", timeString];
 }
 

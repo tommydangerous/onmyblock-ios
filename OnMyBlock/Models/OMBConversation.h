@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "OMBObject.h"
 
 #import "OMBConnectionProtocol.h"
 
@@ -14,7 +14,7 @@
 @class OMBResidence;
 @class OMBUser;
 
-@interface OMBConversation : NSObject <OMBConnectionProtocol>
+@interface OMBConversation : OMBObject <OMBConnectionProtocol>
 
 @property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic, strong) NSString *mostRecentMessageContent;
@@ -23,7 +23,7 @@
 @property (nonatomic, strong) OMBResidence *residence;
 @property (nonatomic) NSTimeInterval updatedAt;
 @property (nonatomic, strong) NSString *userIDs;
-@property (nonatomic) NSInteger uid;
+@property (nonatomic) NSUInteger uid;
 
 @property (nonatomic, strong) OMBUser *otherUser;
 @property (nonatomic, strong) NSString *viewedUserIDs;
@@ -42,6 +42,7 @@ completion: (void (^) (NSError *error)) block;
 - (void) fetchMessagesWithTimeInterval: (NSTimeInterval) lastFetched
 delegate: (id) delegate completion: (void (^)(NSError *error)) block;
 - (NSUInteger) numberOfMessages;
+- (NSArray *) otherUserIDs: (OMBUser *) user;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) readFromMessagesDictionary: (NSDictionary *) dictionary;
 - (NSArray *) sortedMessagesWithKey: (NSString *) key 

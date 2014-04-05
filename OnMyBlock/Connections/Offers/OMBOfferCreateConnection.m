@@ -35,22 +35,22 @@
   NSInteger residenceID = object.residence.uid;
   if (!residenceID)
     residenceID = 0;
-  NSMutableDictionary *objectParams = 
+  NSMutableDictionary *objectParams =
     [NSMutableDictionary dictionaryWithDictionary: @{
-      @"amount": [NSNumber numberWithFloat: amount],
-      @"note": note,
+      @"amount":       [NSNumber numberWithFloat: amount],
+      @"note":         note,
       @"residence_id": [NSNumber numberWithInt: residenceID]
     }];
 
   // Move-in date
   if (offer.moveInDate) {
-    [objectParams setObject: [dateFormatter stringFromDate: 
+    [objectParams setObject: [dateFormatter stringFromDate:
       [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]]
         forKey: @"move_in_date"];
   }
   // Move-out date
   if (offer.moveOutDate) {
-    [objectParams setObject: [dateFormatter stringFromDate: 
+    [objectParams setObject: [dateFormatter stringFromDate:
       [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]]
         forKey: @"move_out_date"];
   }
@@ -70,7 +70,6 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBOfferCreateConnection\n%@", [self json]);
   if ([self successful]) {
     offer.uid = [self objectUID];
   }

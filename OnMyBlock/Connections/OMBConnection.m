@@ -15,9 +15,9 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
 // Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
 #if __ENVIRONMENT__ == 1
   // Development server
-  NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
+  // NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
   // Josselyn
-  // NSString *const OnMyBlockAPIURL = @"http://10.0.1.7:3000/api-v1";
+  NSString *const OnMyBlockAPIURL = @"http://10.0.1.8:3000/api-v1";
   // Santa Clara
   // NSString *const OnMyBlockAPIURL = @"http://192.168.1.107:3000/api-v1";
 #elif __ENVIRONMENT__ == 2
@@ -49,8 +49,6 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
 
 #pragma mark - Protocol
 
-
-
 #pragma mark - Protocol NSURLConnectionDataDelegate
 
 - (void) connection: (NSURLConnection *) connection
@@ -79,15 +77,15 @@ didReceiveData: (NSData *) data
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
-- (void) connection: (NSURLConnection *) connection 
-didSendBodyData: (NSInteger) bytesWritten 
-totalBytesWritten: (NSInteger) totalBytesWritten 
+- (void) connection: (NSURLConnection *) connection
+didSendBodyData: (NSInteger) bytesWritten
+totalBytesWritten: (NSInteger) totalBytesWritten
 totalBytesExpectedToWrite: (NSInteger) totalBytesExpectedToWrite
 {
   CGFloat x = (CGFloat) totalBytesWritten;
   CGFloat y = (CGFloat) totalBytesExpectedToWrite;
   CGFloat percentage = x / y;
-    
+
   // Use to notify the progress indicator
   [[NSNotificationCenter defaultCenter] postNotificationName:
     @"progressConnection" object: [NSNumber numberWithFloat: percentage]];
@@ -124,9 +122,19 @@ didFailWithError: (NSError *) error
 - (void) createInternalErrorWithDomain: (NSString *) domain
 code: (NSInteger) code
 {
+  id errorMessage = [self errorMessage];
+  id errorTitle   = [self errorTitle];
+  if ([self errorMessage] == (id) [NSNull null])
+    errorMessage = @"Please try again.";
+  else
+    errorMessage = [errorMessage capitalizedString];
+  if ([self errorTitle] == (id) [NSNull null])
+    errorTitle = @"Error";
+  else
+    errorTitle = [errorTitle capitalizedString];
   internalError = [NSError errorWithDomain: domain code: code userInfo: @{
-    NSLocalizedDescriptionKey:        [[self errorTitle] capitalizedString],
-    NSLocalizedFailureReasonErrorKey: [[self errorMessage] capitalizedString]
+    NSLocalizedDescriptionKey:        errorTitle,
+    NSLocalizedFailureReasonErrorKey: errorMessage,
   }];
 }
 
@@ -186,7 +194,7 @@ withParameters: (NSDictionary *) dictionary
   _request = [NSMutableURLRequest requestWithURL: url];
 }
 
-- (void) setRequestWithString: (NSString *) requestString 
+- (void) setRequestWithString: (NSString *) requestString
 parameters: (NSDictionary *) dictionary
 {
   requestString = [requestString stringByAppendingString: @"?"];

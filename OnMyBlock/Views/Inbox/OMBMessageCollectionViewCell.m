@@ -178,8 +178,14 @@
   if (![message isFromUser: [OMBUser currentUser]]) {
     if (message.user.image)
       otherUserImageView.image = message.user.image;
-    else
+    else {
       otherUserImageView.image = [OMBUser defaultUserImage];
+      [message.user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+        if (!error) {
+          otherUserImageView.image = message.user.image;
+        }
+      }];
+    }
   }
 }
 

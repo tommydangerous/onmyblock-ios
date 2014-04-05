@@ -1,37 +1,41 @@
 //
 //  PayPalPayment.h
 //
-//  Version 1.4.6
+//  Version 2.0.2
 //
-//  Copyright (c) 2013, PayPal
+//  Copyright (c) 2014, PayPal
 //  All rights reserved.
-//
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//  1. Redistributions of source code must retain the above copyright notice, this
-//  list of conditions and the following disclaimer.
-//  2. Redistributions in binary form must reproduce the above copyright notice,
-//  this list of conditions and the following disclaimer in the documentation
-//  and/or other materials provided with the distribution.
-//
-//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-//  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-//  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-//  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-//  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-//  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-//   LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-//  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-//  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//  The views and conclusions contained in the software and documentation are those
-//  of the authors and should not be interpreted as representing official policies,
-//  either expressed or implied, of the FreeBSD Project.
 //
 
 #import <Foundation/Foundation.h>
+
+#pragma mark - PayPalPaymentIntent
+
+typedef NS_ENUM(NSInteger, PayPalPaymentIntent) {
+  PayPalPaymentIntentSale = 0,
+  PayPalPaymentIntentAuthorize = 1,
+  };
+
+
+#pragma mark - PayPalPaymentDetails
+
+/// The PayPalPaymentDetails class defines optional amount details.
+/// @see https://developer.paypal.com/webapps/developer/docs/api/#details-object for more details.
+@interface PayPalPaymentDetails : NSObject <NSCopying>
+
+/// Amount charged for shipping. 10 characters max with support for 2 decimal places.
+@property(nonatomic, copy, readwrite) NSDecimalNumber *shipping;
+
+/// Sub-total (amount) of items being paid for. 10 characters max with support for 2 decimal places.
+@property(nonatomic, copy, readwrite) NSDecimalNumber *subtotal;
+
+/// Amount charged for tax. 10 characters max with support for 2 decimal places.
+@property(nonatomic, copy, readwrite) NSDecimalNumber *tax;
+
+@end
+
+
+#pragma mark - PayPalPayment
 
 @interface PayPalPayment : NSObject <NSCopying>
 
@@ -40,12 +44,15 @@
 /// @param amount The amount of the payment.
 /// @param currencyCode The ISO 4217 currency for the payment.
 /// @param shortDescription A short descripton of the payment.
+/// @param intent PayPalPaymentIntentSale for an immediate payment;
+///                PayPalPaymentIntentAuthorize for payment authorization only, to be captured separately at a later time.
 + (PayPalPayment *)paymentWithAmount:(NSDecimalNumber *)amount
                         currencyCode:(NSString *)currencyCode
-                    shortDescription:(NSString *)shortDescription;
+                    shortDescription:(NSString *)shortDescription
+                              intent:(PayPalPaymentIntent)intent;
 
 
-#pragma mark - Required properties
+#pragma mark Required properties
 
 /// ISO standard currency code (http://en.wikipedia.org/wiki/ISO_4217).
 @property(nonatomic, copy, readwrite) NSString *currencyCode;
@@ -58,8 +65,27 @@
 /// limiting it to about 20 characters should prevent truncation in most cases.
 @property(nonatomic, copy, readwrite) NSString *shortDescription;
 
+/// The intent of this payment:
+/// - PayPalPaymentIntentSale for an immediate payment
+/// - PayPalPaymentIntentAuthorize for payment authorization only,
+///   to be captured separately at a later time.
+/// Defaults to PayPalPaymentIntentSale.
+@property(nonatomic, assign, readwrite) PayPalPaymentIntent intent;
 
-#pragma mark - Convenience getters
+
+#pragma mark Optional properties
+
+/// Optional payment details @see PayPalPaymentDetails properties.
+/// @note If you provide payment details, be sure that `subtotal`, `shipping`, and `tax`
+/// sum exactly to the payment `amount`.
+@property (nonatomic, copy, readwrite) PayPalPaymentDetails *paymentDetails;
+
+/// Optional Build Notation code ("BN code"), obtained from partnerprogram@paypal.com,
+/// for your tracking purposes.
+@property(nonatomic, copy, readwrite) NSString *bnCode;
+
+
+#pragma mark Convenience getters
 
 /// Can this payment be processed?
 /// A payment might not be processable if, for example:
@@ -74,7 +100,7 @@
 @property(nonatomic, copy, readonly) NSString *localizedAmountForDisplay;
 
 
-#pragma mark - Properties available on completed purchases
+#pragma mark Properties available on completed purchases
 
 /// Full payment confirmation, with lots of details including the proof
 /// of payment token. You should send the entire confirmation

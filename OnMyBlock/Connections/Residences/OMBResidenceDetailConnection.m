@@ -25,12 +25,12 @@
   if ([object isKindOfClass: [OMBTemporaryResidence class]])
     resource = @"temporary_residences";
 
-  NSString *string = [NSString stringWithFormat: 
+  NSString *string = [NSString stringWithFormat:
     @"%@/%@/%i", OnMyBlockAPIURL, resource, residence.uid];
 
   if ([object isKindOfClass: [OMBTemporaryResidence class]])
-    string = [string stringByAppendingString: 
-      [NSString stringWithFormat: @"/?access_token=%@", 
+    string = [string stringByAppendingString:
+      [NSString stringWithFormat: @"/?access_token=%@",
         [OMBUser currentUser].accessToken]];
 
   [self setRequestWithString: string];
@@ -66,8 +66,9 @@
   //   updated_at: "2013-10-11 17:34:06 -0700",
   //   zip: "92111"
   // }
-  
+
   [residence readFromResidenceDictionary: [self json]];
+  NSLog(@"%@", [self json]);
   [super connectionDidFinishLoading: connection];
 }
 

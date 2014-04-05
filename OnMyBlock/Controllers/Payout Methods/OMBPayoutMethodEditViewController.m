@@ -36,7 +36,7 @@
   NSString *string;
   if ([[payoutMethod.payoutType lowercaseString] isEqualToString: @"paypal"])
     string = @"PayPal";
-  else if ([[payoutMethod.payoutType lowercaseString] isEqualToString: 
+  else if ([[payoutMethod.payoutType lowercaseString] isEqualToString:
     @"venmo"])
     string = @"Venmo";
   else if ([[payoutMethod.payoutType lowercaseString] isEqualToString:
@@ -55,7 +55,7 @@
 {
   [super loadView];
 
-  saveBarButtonItem = 
+  saveBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @"Save"
       style: UIBarButtonItemStylePlain target: self action: @selector(save)];
   [saveBarButtonItem setTitleTextAttributes: @{
@@ -112,15 +112,15 @@
   primaryButton = [UIButton new];
   primaryButton.backgroundColor = [UIColor blue];
   primaryButton.clipsToBounds = YES;
-  primaryButton.frame = CGRectMake(padding, 
-    label3.frame.origin.y + label3.frame.size.height + OMBStandardHeight, 
+  primaryButton.frame = CGRectMake(padding,
+    label3.frame.origin.y + label3.frame.size.height + OMBStandardHeight,
       width, OMBStandardButtonHeight);
   primaryButton.layer.cornerRadius = OMBCornerRadius;
   primaryButton.titleLabel.font = [UIFont mediumTextFont];
   [primaryButton addTarget: self action: @selector(setAsPrimary)
     forControlEvents: UIControlEventTouchUpInside];
-  [primaryButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor blueHighlighted]] 
+  [primaryButton setBackgroundImage:
+    [UIImage imageWithColor: [UIColor blueHighlighted]]
       forState: UIControlStateHighlighted];
   [primaryButton setTitle: @"Set as Primary Funding Source"
     forState: UIControlStateNormal];
@@ -150,17 +150,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
     CellIdentifier];
   if (!cell) {
-    cell = [[UITableViewCell alloc] initWithStyle: 
+    cell = [[UITableViewCell alloc] initWithStyle:
       UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier];
   }
   // Switch
   NSInteger switchTag = 9999;
-  UISwitch *switchButton = (UISwitch *) [cell.contentView viewWithTag: 
+  UISwitch *switchButton = (UISwitch *) [cell.contentView viewWithTag:
     switchTag];
   if (!switchButton) {
     switchButton = [UISwitch new];
     switchButton.frame = CGRectMake(
-      tableView.frame.size.width - (switchButton.frame.size.width + 20), 
+      tableView.frame.size.width - (switchButton.frame.size.width + 20),
         (44 - switchButton.frame.size.height) * 0.5f,
           switchButton.frame.size.width, switchButton.frame.size.height);
     switchButton.onTintColor = [UIColor blue];
@@ -173,7 +173,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!topBorder) {
     topBorder = [UIView new];
     topBorder.backgroundColor = tableView.separatorColor;
-    topBorder.frame = CGRectMake(0.0f, 0.0f, 
+    topBorder.frame = CGRectMake(0.0f, 0.0f,
       tableView.frame.size.width, 0.5f);
     topBorder.tag = topBorderTag;
   }
@@ -183,7 +183,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!bottomBorder) {
     bottomBorder = [UIView new];
     bottomBorder.backgroundColor = tableView.separatorColor;
-    bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f, 
+    bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f,
       tableView.frame.size.width, 0.5f);
     bottomBorder.tag = bottomBorderTag;
   }
@@ -211,7 +211,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     OMBLabelTextFieldCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
       PrimaryID];
     if (!cell1) {
-      cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle: 
+      cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: PrimaryID];
       [cell1 setFramesUsingString: @"Primary funding source"];
     }
@@ -227,6 +227,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell1.textFieldLabel.text = @"Primary funding source";
     [topBorder removeFromSuperview];
     [cell1.contentView addSubview: topBorder];
+    cell1.clipsToBounds = YES;
     return cell1;
   }
   // Deposit
@@ -244,7 +245,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     OMBLabelTextFieldCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
       LabelCellIdentifier];
     if (!cell1) {
-      cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle: 
+      cell1 = [[OMBLabelTextFieldCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: LabelCellIdentifier];
       [cell1 setFrameUsingSize: sizeForLabelTextFieldCell];
     }
@@ -256,8 +257,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell1.textFieldLabel.text = @"Email";
     [bottomBorder removeFromSuperview];
     [cell1.contentView addSubview: bottomBorder];
+    cell1.clipsToBounds = YES;
     return cell1;
   }
+  cell.clipsToBounds = YES;
   return cell;
 }
 
@@ -298,7 +301,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // If payout method is the primary and user is making it not primary
   // or if payout method is primary and is changing the deposit/payment type
-  if ((payoutMethod.primary && !primary) || 
+  if ((payoutMethod.primary && !primary) ||
     (payoutMethod.primary && payoutMethod.deposit == !deposit)) {
     NSArray *array;
     if (deposit)
@@ -308,22 +311,22 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if ([array count] < 2) {
       NSString *title = @"Whoops";
       NSString *message = [NSString stringWithFormat:
-        @"Please have at least one primary %@ method.", 
+        @"Please have at least one primary %@ method.",
           deposit ? @"deposit" : @"payment"];
       UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title
-        message: message delegate: nil cancelButtonTitle: @"OK" 
+        message: message delegate: nil cancelButtonTitle: @"OK"
           otherButtonTitles: nil];
       [alertView show];
 
       UITableViewCell *cell1 = [self.table cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 0 inSection: 0]];
-      UISwitch *switchButton1 = 
+      UISwitch *switchButton1 =
         (UISwitch *) [cell1.contentView viewWithTag: 9999];
       [switchButton1 setOn: payoutMethod.primary animated: YES];
 
       UITableViewCell *cell2 = [self.table cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 1 inSection: 0]];
-      UISwitch *switchButton2 = 
+      UISwitch *switchButton2 =
         (UISwitch *) [cell2.contentView viewWithTag: 9999];
       [switchButton2 setOn: payoutMethod.deposit animated: YES];
       return;
@@ -336,9 +339,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [[OMBPayoutMethodUpdateConnection alloc] initWithPayoutMethod:
       payoutMethod attributes: @[@"deposit", @"primary"]];
   conn.completionBlock = ^(NSError *error) {
-    if (payoutMethod.deposit == deposit && 
+    if (payoutMethod.deposit == deposit &&
       payoutMethod.primary == primary && !error) {
-      // Make all other payout methods that are primary and the 
+      // Make all other payout methods that are primary and the
       // same deposit (or payment) not primary
       if (payoutMethod.primary)
         [[OMBUser currentUser] changeOtherSamePrimaryPayoutMethods:
@@ -362,7 +365,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       payoutMethod attributes: @[@"primary"]];
   conn.completionBlock = ^(NSError *error) {
     if (payoutMethod.primary == YES && !error) {
-      // Make all other payout methods that are primary and the 
+      // Make all other payout methods that are primary and the
       // same deposit (or payment) not primary
       if (payoutMethod.primary)
         [[OMBUser currentUser] changeOtherSamePrimaryPayoutMethods:
