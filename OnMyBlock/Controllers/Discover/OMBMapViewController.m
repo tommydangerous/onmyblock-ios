@@ -21,6 +21,7 @@
 #import "OMBAnnotationView.h"
 #import "OMBEmptyBackgroundWithImageAndLabel.h"
 #import "OMBMapFilterViewController.h"
+#import "OMBMapResidenceDetailCell.h"
 #import "OMBNavigationController.h"
 #import "OMBNeighborhood.h"
 #import "OMBNeighborhoodStore.h"
@@ -320,7 +321,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       action: @selector(mapViewTapped)];
   [_mapView addGestureRecognizer: mapViewTap];
   [self.view addSubview: _mapView];
-
+  
   // Filter
   // View
   filterView = [[UIView alloc] init];
@@ -368,6 +369,23 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       self action: @selector(showResidenceDetailViewController)];
   [propertyInfoView addGestureRecognizer: tap];
 
+  // Resident list on MapView(when cluster<=10)
+  residentAnnotations = [NSMutableArray array];
+  CGFloat originYreslist = _mapView.frame.size.height;
+  CGRect reslistRect =
+  CGRectMake(_mapView.frame.origin.x,
+    originYreslist, _mapView.frame.size.width,
+      originYreslist * 0.5f);
+  _residentListMap = [UITableView new];
+  _residentListMap.backgroundColor = UIColor.whiteColor;
+  _residentListMap.dataSource = self;
+  _residentListMap.delegate   = self;
+  _residentListMap.frame      = reslistRect;
+  _residentListMap.separatorColor    = [UIColor grayLight];;
+  _residentListMap.separatorStyle    = UITableViewCellSeparatorStyleSingleLine;
+  _residentListMap.showsVerticalScrollIndicator = NO;
+  [_mapView addSubview: _residentListMap];
+  
   // Activity indicator view
   activityIndicatorView = 
     [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
@@ -614,6 +632,7 @@ didUpdateLocations: (NSArray *) locations
 
   [self deselectAnnotations];
   [self hidePropertyInfoView];
+  [self hideResidentListAnnotation];
 
   if (![self isOnList]) {
     // If the center coordinate changed
@@ -655,18 +674,36 @@ didDeselectAnnotationView: (MKAnnotationView *) annotationView
 - (void) mapView: (MKMapView *) map 
 didSelectAnnotationView: (MKAnnotationView *) annotationView
 {
+  [residentAnnotations removeAllObjects];
+  
   // If user clicked on a cluster
   if ([annotationView.annotation isKindOfClass: [OCAnnotation class]]) {
-    [self zoomClusterAtAnnotation: (OCAnnotation *) annotationView.annotation];
+    int numberAnnotations = [(OCAnnotation *)annotationView.annotation annotationsInCluster].count;
+    NSLog(@"NUMERO %i",numberAnnotations);
+    
+    if(numberAnnotations <= 10){
+      for(id object in [(OCAnnotation *)annotationView.annotation annotationsInCluster]){
+        if([object isKindOfClass: [OMBAnnotation class]]){
+          OMBResidence *residence =
+            [[OMBAllResidenceStore sharedStore]
+              residenceForUID: ((OMBAnnotation *)object).residenceUID];
+          [residentAnnotations addObject: residence];
+        }
+      }
+      [_residentListMap reloadData];
+      [self showResidentListAnnotation];
+    }else
+      [self zoomClusterAtAnnotation: (OCAnnotation *) annotationView.annotation];
   }
   // City
-  else if ([annotationView.annotation isKindOfClass: [OMBAnnotationCity class]])
+  else if ([annotationView.annotation isKindOfClass: [OMBAnnotationCity class]]){
     [self setMapViewRegion: annotationView.annotation.coordinate
       withMiles: DEFAULT_MILE_RADIUS * 0.8f animated: YES];
   // If user clicked on a single residence
-  else if ([[NSString stringWithFormat: @"%@",
+  }else if ([[NSString stringWithFormat: @"%@",
     [annotationView class]] isEqualToString: @"MKModernUserLocationView"]) {
     [self hidePropertyInfoView];
+    [self hideResidentListAnnotation];
   }
   else {
     id annotation = annotationView.annotation;
@@ -932,34 +969,69 @@ targetContentOffset: (inout CGPoint *) targetContentOffset
 - (UITableViewCell *) tableView: (UITableView *) tableView
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  static NSString *CellIdentifier = @"CellIdentifier";
-  OMBResidenceCell *cell = [tableView dequeueReusableCellWithIdentifier:
-    CellIdentifier];
-  if (!cell) {
-    cell = [[OMBResidenceCell alloc] initWithStyle: 
-      UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
-  }
-  OMBResidence *residence = [[self residencesForList] objectAtIndex: 
-    indexPath.row];
-  [cell loadResidenceData: residence];
-  __weak OMBMapViewController *weakSelf = self;
-  cell.residencePartialView.selected = 
+  static NSString *EmptyCellID = @"EmptyCellID";
+  UITableViewCell *emptyCell = [tableView dequeueReusableCellWithIdentifier:
+    EmptyCellID];
+  if (!emptyCell)
+    emptyCell = [[UITableViewCell alloc] initWithStyle:
+      UITableViewCellStyleDefault reuseIdentifier: EmptyCellID];
+  
+  // Resident list
+  if(tableView == _listView){
+    static NSString *CellIdentifier = @"CellIdentifier";
+    OMBResidenceCell *cell = [tableView dequeueReusableCellWithIdentifier:
+      CellIdentifier];
+    if (!cell) {
+      cell = [[OMBResidenceCell alloc] initWithStyle:
+        UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+    }
+    OMBResidence *residence = [[self residencesForList] objectAtIndex:
+      indexPath.row];
+    [cell loadResidenceData: residence];
+    __weak OMBMapViewController *weakSelf = self;
+    cell.residencePartialView.selected =
     ^(OMBResidence *residence, NSInteger __unused imageIndex) {
       [weakSelf.navigationController pushViewController:
-        [[OMBResidenceDetailViewController alloc] initWithResidence: 
-          residence] animated: YES];
-  };
-  return cell;
+       [[OMBResidenceDetailViewController alloc] initWithResidence:
+        residence] animated: YES];
+    };
+    return cell;
+  }
+  // Resident annotation
+  else if(tableView == _residentListMap)
+  {
+    static NSString *AnnotationResidentID = @"AnnotationResidentID";
+    OMBMapResidenceDetailCell *cell = [tableView
+      dequeueReusableCellWithIdentifier:AnnotationResidentID];
+    if (!cell) {
+      cell = [[OMBMapResidenceDetailCell alloc] initWithStyle:
+        UITableViewCellStyleDefault reuseIdentifier: AnnotationResidentID];
+      cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    [cell loadResidenceData:[residentAnnotations objectAtIndex:
+      indexPath.row]];
+    return cell;
+  }
+  
+  return emptyCell;
 }
 
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  if([currentResidencesForList count] < (pagination + 1) * 10)
-    return [currentResidencesForList count];
-  else
-    return (pagination + 1) * 10;
+  // Resident list
+  if(tableView == _listView){
+    if([currentResidencesForList count] < (pagination + 1) * 10)
+      return [currentResidencesForList count];
+    else
+      return (pagination + 1) * 10;
+  }
+  // Resident annotation
+  else if(tableView == _residentListMap){
+    return residentAnnotations.count;
+  }
   
+  return 0;
   // return [currentResidencesForList count];
   // return [[OMBResidenceListStore sharedStore].residences count];
   // return [[self propertiesSortedBy: @"" ascending: NO] count];
@@ -980,28 +1052,32 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
-// - (void) tableView: (UITableView *) tableView
-// didSelectRowAtIndexPath: (NSIndexPath *) indexPath
-// {
-//  // OMBResidence *residence = [[self propertiesSortedBy: @"" 
-//  //   ascending: NO] objectAtIndex: indexPath.row];
-
-//  if (tableView == _listView && 
-//     [[self residencesForList] count] > indexPath.row) {
-
-//     OMBResidence *residence = [[self residencesForList] objectAtIndex: 
-//       indexPath.row];
-//     [self.navigationController pushViewController:
-//       [[OMBResidenceDetailViewController alloc] initWithResidence: 
-//         residence] animated: YES];
-//   }
-// }
+- (void) tableView: (UITableView *) tableView
+didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  if (tableView == _residentListMap &&
+     [[self residencesForList] count] > indexPath.row) {
+    OMBResidence *residence = [[self residencesForList] objectAtIndex:
+      indexPath.row];
+    [self.navigationController pushViewController:
+      [[OMBResidenceDetailViewController alloc] initWithResidence:
+        residence] animated: YES];
+  }
+}
 
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
-  return screen.size.height * PropertyInfoViewImageHeightPercentage;
+  // Resident list
+  if(tableView == _listView){
+    return screen.size.height * PropertyInfoViewImageHeightPercentage;
+  }
+  // Resident annotation
+  else if(tableView == _residentListMap){
+    return _residentListMap.frame.size.height / 3.0f;
+  }
+  return 0;
 }
 
 #pragma mark - Methods
@@ -1237,6 +1313,23 @@ withTitle: (NSString *) title;
   }
 }
 
+- (void) hideResidentListAnnotation
+{
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  if (_residentListMap.frame.origin.y != screen.size.height) {
+    CGRect frame = _residentListMap.frame;
+    void (^animations) (void) = ^(void) {
+      _residentListMap.frame = CGRectMake(frame.origin.x,
+        screen.size.height, frame.size.width, frame.size.height);
+    };
+    [UIView animateWithDuration: 0.15 delay: 0
+      options: UIViewAnimationOptionCurveLinear
+        animations:animations completion:^(BOOL finished) {
+          //
+    }];
+  }
+}
+
 - (BOOL) isOnList
 {
   if (segmentedControl.selectedSegmentIndex == 1)
@@ -1315,6 +1408,7 @@ withTitle: (NSString *) title;
 {
   [self deselectAnnotations];
   [self hidePropertyInfoView];
+  [self hideResidentListAnnotation];
 }
 
 // - (NSArray *) propertiesSortedBy: (NSString *) key ascending: (BOOL) ascending
@@ -1487,6 +1581,20 @@ withMiles: (int) miles animated: (BOOL) animated
     [[OMBResidenceDetailViewController alloc] initWithResidence: 
       propertyInfoView.residence] animated: YES];
   // NSLog(@"SHOW RESIDENCE VIEW CONTROLLER");
+}
+
+- (void) showResidentListAnnotation
+{
+  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGRect frame = _residentListMap.frame;
+  void (^animations) (void) = ^(void) {
+    _residentListMap.frame = CGRectMake(frame.origin.x,
+      (screen.size.height - frame.size.height), frame.size.width,
+        frame.size.height);
+  };
+  [UIView animateWithDuration: 0.15 delay: 0
+     options: UIViewAnimationOptionCurveLinear
+       animations: animations completion: nil];
 }
 
 - (void) showSortButtons
