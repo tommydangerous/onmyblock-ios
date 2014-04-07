@@ -319,6 +319,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   UITapGestureRecognizer *mapViewTap =
     [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(mapViewTapped)];
+  mapViewTap.delegate = self;
   [_mapView addGestureRecognizer: mapViewTap];
   [self.view addSubview: _mapView];
 
@@ -373,11 +374,11 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   residentAnnotations = [NSMutableArray array];
   CGFloat originYreslist = _mapView.frame.size.height;
   CGRect reslistRect =
-  CGRectMake(_mapView.frame.origin.x,
-    originYreslist, _mapView.frame.size.width,
-      originYreslist * 0.5f);
+    CGRectMake(_mapView.frame.origin.x,
+      originYreslist, _mapView.frame.size.width,
+        originYreslist * 0.5f);
   _residentListMap = [UITableView new];
-  _residentListMap.backgroundColor = UIColor.whiteColor;
+  _residentListMap.backgroundColor = [UIColor backgroundColor];
   _residentListMap.dataSource = self;
   _residentListMap.delegate   = self;
   _residentListMap.frame      = reslistRect;
@@ -385,7 +386,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   _residentListMap.separatorStyle    = UITableViewCellSeparatorStyleSingleLine;
   _residentListMap.showsVerticalScrollIndicator = NO;
   [_mapView addSubview: _residentListMap];
-
+  [_residentListMap removeGestureRecognizer: mapViewTap];
   // Activity indicator view
   activityIndicatorView =
     [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
@@ -671,14 +672,14 @@ didDeselectAnnotationView: (MKAnnotationView *) annotationView
 - (void) mapView: (MKMapView *) map
 didSelectAnnotationView: (MKAnnotationView *) annotationView
 {
-  [residentAnnotations removeAllObjects];
+  // [residentAnnotations removeAllObjects];
 
   // If user clicked on a cluster
   if ([annotationView.annotation isKindOfClass: [OCAnnotation class]]) {
-    int numberAnnotations = [(OCAnnotation *)annotationView.annotation annotationsInCluster].count;
-    NSLog(@"NUMERO %i",numberAnnotations);
-
-    if(numberAnnotations <= 10){
+    int numberAnnotations =
+      [(OCAnnotation *) annotationView.annotation annotationsInCluster].count;
+    if (numberAnnotations <= 5) {
+      [residentAnnotations removeAllObjects];
       for(id object in [(OCAnnotation *)annotationView.annotation annotationsInCluster]){
         if([object isKindOfClass: [OMBAnnotation class]]){
           OMBResidence *residence =
@@ -814,6 +815,18 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     [[self userDefaults] permissionCurrentLocationSet: YES];
     [self goToCurrentLocation];
   }
+}
+
+#pragma mark - Protocol UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+  if(gestureRecognizer.view == _mapView){
+    CGPoint touchPoint = [touch locationInView:_mapView];
+    return !CGRectContainsPoint(_residentListMap.frame, touchPoint);
+  }
+
+  return YES;
 }
 
 #pragma mark - Protocol UIScrollViewDelegate
@@ -1009,8 +1022,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     return cell;
   }
   // Resident annotation
-  else if(tableView == _residentListMap)
-  {
+  else if(tableView == _residentListMap) {
     static NSString *AnnotationResidentID = @"AnnotationResidentID";
     OMBMapResidenceDetailCell *cell = [tableView
       dequeueReusableCellWithIdentifier:AnnotationResidentID];
@@ -1067,13 +1079,15 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (tableView == _residentListMap &&
-     [[self residencesForList] count] > indexPath.row) {
-    OMBResidence *residence = [[self residencesForList] objectAtIndex:
+     [residentAnnotations count] > indexPath.row) {
+    OMBResidence *residence = [residentAnnotations objectAtIndex:
       indexPath.row];
     [self.navigationController pushViewController:
       [[OMBResidenceDetailViewController alloc] initWithResidence:
         residence] animated: YES];
   }
+
+  [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
 - (CGFloat) tableView: (UITableView *) tableView
@@ -1344,7 +1358,7 @@ withTitle: (NSString *) title;
     CGRect frame = _residentListMap.frame;
     void (^animations) (void) = ^(void) {
       _residentListMap.frame = CGRectMake(frame.origin.x,
-        screen.size.height, frame.size.width, frame.size.height);
+        screen.size.height, frame.size.width, screen.size.height * 0.5f);
     };
     [UIView animateWithDuration: 0.15 delay: 0
       options: UIViewAnimationOptionCurveLinear
@@ -1609,12 +1623,20 @@ withMiles: (int) miles animated: (BOOL) animated
 
 - (void) showResidentListAnnotation
 {
-  CGRect screen = [[UIScreen mainScreen] bounds];
+  CGRect screen = [UIScreen mainScreen].bounds;
   CGRect frame = _residentListMap.frame;
+  CGFloat originY = screen.size.height * 0.5f;
+  CGFloat height = screen.size.height * 0.5f;
+
+  if([residentAnnotations count] < 3){
+    CGFloat adjusment =  (3 - [residentAnnotations count]) *
+      _residentListMap.frame.size.height / 3.0f ;
+    originY += adjusment;
+    height -= adjusment;
+  }
   void (^animations) (void) = ^(void) {
     _residentListMap.frame = CGRectMake(frame.origin.x,
-      (screen.size.height - frame.size.height), frame.size.width,
-        frame.size.height);
+      originY, frame.size.width, height);
   };
   [UIView animateWithDuration: 0.15 delay: 0
      options: UIViewAnimationOptionCurveLinear

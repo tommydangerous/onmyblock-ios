@@ -9,52 +9,64 @@
 #import "OMBMapResidenceDetailCell.h"
 
 #import "NSString+Extensions.h"
+#import "OMBCenteredImageView.h"
 #import "OMBResidence.h"
+#import "OMBResidenceCoverPhotoDownloader.h"
 #import "OMBViewController.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIColor+Extensions.h"
+#import "UIImageView+WebCache.h"
+
+@interface OMBMapResidenceDetailCell ()
+{
+  OMBCenteredImageView *coverPhoto;
+  UILabel *bedBathLabel;
+  UILabel *rentLabel;
+  UILabel *titleLabel;
+}
+
+@end
 
 @implementation OMBMapResidenceDetailCell
 
 #pragma mark - Initialize
 
 - (id) initWithStyle: (UITableViewCellStyle) style
-     reuseIdentifier: (NSString *)reuseIdentifier
+reuseIdentifier: (NSString *) reuseIdentifier
 {
   if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier]))
     return nil;
-  
-  self.backgroundColor = UIColor.whiteColor;
-  
-  CGRect screen = [UIScreen mainScreen].bounds;
+
+  self.backgroundColor = [UIColor whiteColor];
+
+  CGRect screen   = [UIScreen mainScreen].bounds;
   CGFloat padding = OMBPadding;
-  CGFloat heightCell = (screen.size.height * 0.5f) / 3.0f;
-  CGFloat originLabely = (heightCell - 25.f - 22.f - padding * 0.5f) * 0.5f;
-  
+  CGFloat heightCell   = (screen.size.height * 0.5f) / 3.0f;
+  CGFloat originLabely = (heightCell - (33 + 22 + (padding * 0.5f))) * 0.5f;
+
   // Image residence
-  coverPhoto = [UIImageView new];
-  coverPhoto.frame = CGRectMake(0.0f, 0.0f,
-    heightCell, heightCell);
+  coverPhoto = [[OMBCenteredImageView alloc] init];
+  coverPhoto.frame = CGRectMake(0.0f, 0.0f, heightCell, heightCell);
   coverPhoto.image = [OMBResidence placeholderImage];
-  [self addSubview: coverPhoto];
+  [self.contentView addSubview: coverPhoto];
 
   rentLabel = [UILabel new];
   rentLabel.font = [UIFont mediumLargeTextFont];
   rentLabel.frame = CGRectMake(coverPhoto.frame.origin.x +
     coverPhoto.frame.size.width + padding, originLabely,
-      0.0f, 22.f);
+      0.0f, 33.f);
   rentLabel.textAlignment = NSTextAlignmentLeft;
   rentLabel.textColor = [UIColor textColor];
-  [self addSubview: rentLabel];
-  
+  [self.contentView addSubview: rentLabel];
+
   bedBathLabel = [UILabel new];
   bedBathLabel.font = [UIFont normalTextFont];
   bedBathLabel.frame = CGRectMake(self.frame.size.width * 0.5f,
-    rentLabel.frame.origin.y, 0.f, 22.f);
+    rentLabel.frame.origin.y + (padding * 0.25f), 0.f, 22.f);
   bedBathLabel.textAlignment = rentLabel.textAlignment;
   bedBathLabel.textColor = [UIColor textColor];
-  [self addSubview: bedBathLabel];
-  
+  [self.contentView addSubview: bedBathLabel];
+
   titleLabel = [UILabel new];
   titleLabel.font = [UIFont normalTextFont];
   titleLabel.frame = CGRectMake(rentLabel.frame.origin.x,
@@ -63,8 +75,8 @@
         padding - padding, 22.f);
   titleLabel.textAlignment = rentLabel.textAlignment;
   titleLabel.textColor = [UIColor grayMedium];
-  [self addSubview: titleLabel];
-  
+  [self.contentView addSubview: titleLabel];
+
   return self;
 }
 
@@ -74,22 +86,36 @@
 
 - (void) loadResidenceData:(OMBResidence *)object;
 {
-  
   _residence = object;
-  
+
   CGRect screen = [UIScreen mainScreen].bounds;
   CGFloat padding = OMBPadding;
   CGFloat heightCell = (screen.size.height * 0.5f) / 3.0f;
-  
-  coverPhoto.image = [OMBResidence placeholderImage];
-  /*if(_residence.coverPhoto)
-    coverPhoto.image = _residence.coverPhoto;
+
+  // Image
+  NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
+    coverPhoto.frame.size.width, coverPhoto.frame.size.height];
+  UIImage *image = [object coverPhotoForSizeKey: sizeKey];
+  if (image) {
+    coverPhoto.image = image;
+  }
   else {
-    // Download cover photo
-    [_residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
-      coverPhoto.image = _residence.coverPhoto;
+    __weak typeof(coverPhoto) weakCoverPhoto = coverPhoto;
+    [object downloadCoverPhotoWithCompletion: ^(NSError *error) {
+      [weakCoverPhoto.imageView setImageWithURL:
+         object.coverPhotoURL placeholderImage: nil
+           options: SDWebImageRetryFailed completed:
+           ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+            if (img) {
+              weakCoverPhoto.image = img;
+              [object.coverPhotoSizeDictionary setObject:
+                weakCoverPhoto.image forKey: sizeKey];
+            }
+         }
+       ];
     }];
-  }*/
+    coverPhoto.image = [OMBResidence placeholderImage];
+  }
 
   // Rent
   rentLabel.text = [NSString numberToCurrencyString:_residence.minRent];
@@ -100,9 +126,9 @@
   CGRect rentRect = rentLabel.frame;
   rentRect.size.width = rentWidth;
   rentLabel.frame = rentRect;
-  
+
   // Bedrooms / Bathrooms
-  
+
   // Bedrooms
   NSString *bedsString = @"bd";
   // if (_residence.bedrooms == 1)
@@ -129,7 +155,7 @@
       _residence.bathrooms];
   NSString *baths = [NSString stringWithFormat: @"%@ %@",
     bathsNumberString, bathsString];
-  
+
   bedBathLabel.text = [NSString stringWithFormat: @"%@ / %@", beds, baths];
   CGRect bedBathRect = bedBathLabel.frame;
   bedBathRect.origin.x = rentLabel.frame.origin.x +
@@ -144,13 +170,13 @@
     widthBedBath = maxWidtBedBath;
   bedBathRect.size.width = widthBedBath;
   bedBathLabel.frame = bedBathRect;
-  
+
   // Title or address
   if ([_residence validTitle])
     titleLabel.text = _residence.title;
   else
     titleLabel.text = [_residence.address capitalizedString];
-  
+
 }
 
 @end

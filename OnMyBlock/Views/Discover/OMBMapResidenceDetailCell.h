@@ -11,12 +11,6 @@
 @class OMBResidence;
 
 @interface OMBMapResidenceDetailCell : OMBTableViewCell
-{
-  UIImageView *coverPhoto;
-  UILabel *bedBathLabel;
-  UILabel *rentLabel;
-  UILabel *titleLabel;
-}
 
 @property (nonatomic, strong)  OMBResidence *residence;
 
@@ -24,6 +18,6 @@
 
 #pragma mark - Instance Methods
 
-- (void) loadResidenceData:(OMBResidence *)object;
+- (void) loadResidenceData: (OMBResidence *) object;
 
 @end
