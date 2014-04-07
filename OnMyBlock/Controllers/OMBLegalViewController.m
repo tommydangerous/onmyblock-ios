@@ -57,7 +57,7 @@
 {
   [super viewWillAppear: animated];
 
-  [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion: 
+  [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
     ^(NSError *error) {
       OMBLegalAnswerListConnection *connection =
         [[OMBLegalAnswerListConnection alloc] initWithUser: user];
@@ -90,12 +90,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     OMBLegalQuestionCell *cell = [tableView dequeueReusableCellWithIdentifier:
       CellIdentifier];
     if (!cell)
-      cell = [[OMBLegalQuestionCell alloc] initWithStyle: 
+      cell = [[OMBLegalQuestionCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
     cell.delegate = self;
     cell.explanationTextView.delegate = self;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    OMBLegalQuestion *legalQuestion = [[[OMBLegalQuestionStore sharedStore] 
+    OMBLegalQuestion *legalQuestion = [[[OMBLegalQuestionStore sharedStore]
       questionsSortedByQuestion] objectAtIndex: indexPath.row];
     // Load the question
     [cell loadData: legalQuestion atIndexPath: indexPath];
@@ -103,9 +103,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     OMBLegalAnswer *legalAnswer = [legalAnswers objectForKey:
       [NSNumber numberWithInt: legalQuestion.uid]];
     [cell loadLegalAnswer: legalAnswer];
+    cell.clipsToBounds = YES;
     return cell;
   }
   UITableViewCell *emptyCell = [[UITableViewCell alloc] init];
+  emptyCell.clipsToBounds = YES;
   emptyCell.selectionStyle = UITableViewCellSelectionStyleNone;
   return emptyCell;
 }
@@ -114,7 +116,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 numberOfRowsInSection: (NSInteger) section
 {
   if (section == 0)
-    return [[[OMBLegalQuestionStore sharedStore] 
+    return [[[OMBLegalQuestionStore sharedStore]
       questionsSortedByQuestion] count];
   else if (section == 1)
     return 1;
@@ -127,18 +129,18 @@ numberOfRowsInSection: (NSInteger) section
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (indexPath.section == 0) {
-    OMBLegalQuestion *legalQuestion = [[[OMBLegalQuestionStore sharedStore] 
+    OMBLegalQuestion *legalQuestion = [[[OMBLegalQuestionStore sharedStore]
       questionsSortedByQuestion] objectAtIndex: indexPath.row];
     NSString *text = [NSString stringWithFormat: @"%i. %@",
       indexPath.row + 1, legalQuestion.question];
     CGRect rect = [text boundingRectWithSize:
       CGSizeMake([OMBLegalQuestionCell widthForQuestionLabel], 9999)
         options: NSStringDrawingUsesLineFragmentOrigin
-          attributes: @{ NSFontAttributeName: 
+          attributes: @{ NSFontAttributeName:
           [OMBLegalQuestionCell fontForQuestionLabel] }
             context: nil];
     float padding = 20.0f;
-    float height  = padding + rect.size.height + padding + 
+    float height  = padding + rect.size.height + padding +
       [OMBLegalQuestionCell buttonSize] + padding;
     // If the answer is yes, show explain
     OMBLegalAnswer *legalAnswer = [legalAnswers objectForKey:
@@ -150,8 +152,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.section == 1) {
     if (isEditing)
       return 216.0f;
-  } 
-  return 0.0f;     
+  }
+  return 0.0f;
 }
 
 #pragma mark - Protocol UITextViewDelegate
@@ -167,14 +169,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   [self.navigationItem setRightBarButtonItem: doneBarButtonItem
     animated: YES];
-  [self.table scrollToRowAtIndexPath: 
-    [NSIndexPath indexPathForRow: textView.tag inSection: 0] 
+  [self.table scrollToRowAtIndexPath:
+    [NSIndexPath indexPathForRow: textView.tag inSection: 0]
       atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
 - (void) textViewDidChange: (UITextView *) textView
 {
-  OMBLegalQuestionCell *cell = (OMBLegalQuestionCell *) 
+  OMBLegalQuestionCell *cell = (OMBLegalQuestionCell *)
     [self.table cellForRowAtIndexPath:
       [NSIndexPath indexPathForRow: textView.tag inSection: 0]];
   cell.legalAnswer.explanation = textView.text;
