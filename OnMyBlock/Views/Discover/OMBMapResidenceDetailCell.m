@@ -13,6 +13,7 @@
 #import "OMBViewController.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIColor+Extensions.h"
+#import "OMBResidenceCoverPhotoDownloader.h"
 
 @implementation OMBMapResidenceDetailCell
 
@@ -74,22 +75,36 @@
 
 - (void) loadResidenceData:(OMBResidence *)object;
 {
-  
   _residence = object;
   
   CGRect screen = [UIScreen mainScreen].bounds;
   CGFloat padding = OMBPadding;
   CGFloat heightCell = (screen.size.height * 0.5f) / 3.0f;
   
-  coverPhoto.image = [OMBResidence placeholderImage];
-  /*if(_residence.coverPhoto)
-    coverPhoto.image = _residence.coverPhoto;
+  // Image
+  NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
+    coverPhoto.frame.size.width, coverPhoto.frame.size.height];
+  UIImage *image = [object coverPhotoForSizeKey: sizeKey];
+  if (image) {
+    coverPhoto.image = image;
+  }
   else {
-    // Download cover photo
-    [_residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
-      coverPhoto.image = _residence.coverPhoto;
+    coverPhoto.image = [UIImage imageNamed:@"residence_placeholder_image.png"];
+    __weak typeof(coverPhoto) weakCoverPhoto = coverPhoto;
+    [object downloadCoverPhotoWithCompletion: ^(NSError *error) {
+      [weakCoverPhoto setImageWithURL:
+         object.coverPhotoURL placeholderImage: nil
+           options: SDWebImageRetryFailed completed:
+           ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+            if (img) {
+              weakCoverPhoto.image = img;
+              [object.coverPhotoSizeDictionary setObject:
+                weakCoverPhoto.image forKey: sizeKey];
+            }
+         }
+       ];
     }];
-  }*/
+  }
 
   // Rent
   rentLabel.text = [NSString numberToCurrencyString:_residence.minRent];
