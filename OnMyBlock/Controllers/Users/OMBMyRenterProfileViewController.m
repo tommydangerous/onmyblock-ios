@@ -9,6 +9,7 @@
 #import "OMBMyRenterProfileViewController.h"
 
 #import "CustomLoading.h"
+#import "NSString+OnMyBlock.h"
 #import "LIALinkedInApplication.h"
 #import "LIALinkedInHttpClient.h"
 #import "OMBBecomeVerifiedViewController.h"
@@ -33,7 +34,7 @@
 #import "UIImage+Resize.h"
 
 @interface OMBMyRenterProfileViewController ()
-<UIActionSheetDelegate, UIImagePickerControllerDelegate, 
+<UIActionSheetDelegate, UIImagePickerControllerDelegate,
   UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
 {
   UILabel *aboutTextViewPlaceholder;
@@ -92,7 +93,7 @@
 
   [[CustomLoading getInstance] clearInstance];
 
-  previewBarButtonItem = 
+  previewBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @"Preview"
       style: UIBarButtonItemStylePlain target: self action: @selector(preview)];
   self.navigationItem.rightBarButtonItem = previewBarButtonItem;
@@ -109,7 +110,7 @@
   // Back view
   backViewOriginY = padding + OMBStandardHeight;
   backView = [UIView new];
-  backView.frame = CGRectMake(0.0f, backViewOriginY, 
+  backView.frame = CGRectMake(0.0f, backViewOriginY,
     screenWidth, screenHeight * 0.4f);
   [self.view insertSubview: backView belowSubview: self.table];
   // Scale back view
@@ -135,16 +136,16 @@
   // Name view
   CGFloat nameViewHeight = OMBStandardButtonHeight;
   nameViewHeight = OMBStandardHeight;
-  nameViewOriginY = (backView.frame.origin.y + backView.frame.size.height) - 
+  nameViewOriginY = (backView.frame.origin.y + backView.frame.size.height) -
     (nameViewHeight + padding);
   nameView = [UIView new];
   // nameView.backgroundColor = [UIColor redColor];
-  nameView.frame = CGRectMake(0.0f, nameViewOriginY, 
+  nameView.frame = CGRectMake(0.0f, nameViewOriginY,
     screenWidth, nameViewHeight);
   [self.view insertSubview: nameView belowSubview: self.table];
   // User icon
   userIconView = [[OMBCenteredImageView alloc] init];
-  // userIconView.frame = CGRectMake(padding, 0.0f, 
+  // userIconView.frame = CGRectMake(padding, 0.0f,
   //   nameViewHeight, nameViewHeight);
   userIconView.frame = CGRectZero;
   userIconView.layer.cornerRadius = userIconView.frame.size.width * 0.5f;
@@ -153,10 +154,10 @@
   fullNameLabel = [UILabel new];
   fullNameLabel.font = [UIFont largeTextFont];
   // fullNameLabel.frame = CGRectMake(
-  //   userIconView.frame.origin.x + userIconView.frame.size.width + padding, 
-  //     0.0f, nameView.frame.size.width - (userIconView.frame.origin.x + 
+  //   userIconView.frame.origin.x + userIconView.frame.size.width + padding,
+  //     0.0f, nameView.frame.size.width - (userIconView.frame.origin.x +
   //     userIconView.frame.size.width + padding + padding), nameViewHeight);
-  fullNameLabel.frame = CGRectMake(padding, 0.0f, 
+  fullNameLabel.frame = CGRectMake(padding, 0.0f,
     nameView.frame.size.width - (padding * 2), nameView.frame.size.height);
   fullNameLabel.textColor = [UIColor whiteColor];
   [nameView addSubview: fullNameLabel];
@@ -164,22 +165,22 @@
   CGFloat cameraSize = 26.0f;
   UIImageView *cameraImageView = [UIImageView new];
   cameraImageView.frame = CGRectMake(
-    screenWidth - (cameraSize + padding), 
-      (nameView.frame.size.height - cameraSize) * 0.5f, 
+    screenWidth - (cameraSize + padding),
+      (nameView.frame.size.height - cameraSize) * 0.5f,
         cameraSize, cameraSize);
-  cameraImageView.image = [UIImage image: 
+  cameraImageView.image = [UIImage image:
     [UIImage imageNamed: @"camera_icon.png"] size: cameraImageView.bounds.size];
   [nameView addSubview: cameraImageView];
 
   // Table header view
   UIView *tableHeaderView = [UIView new];
   tableHeaderView.backgroundColor = [UIColor clearColor];
-  tableHeaderView.frame = CGRectMake(0.0f, 0.0f, screenWidth, 
+  tableHeaderView.frame = CGRectMake(0.0f, 0.0f, screenWidth,
     backViewOriginY + backView.frame.size.height);
   self.table.tableHeaderView = tableHeaderView;
 
-  UITapGestureRecognizer *tapGesture = 
-    [[UITapGestureRecognizer alloc] initWithTarget: self 
+  UITapGestureRecognizer *tapGesture =
+    [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(showUploadActionSheet)];
   [tableHeaderView addGestureRecognizer: tapGesture];
 
@@ -188,51 +189,51 @@
   aboutTextView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
   aboutTextView.delegate = self;
   aboutTextView.font = [UIFont normalTextFont];
-  aboutTextView.frame = CGRectMake(padding, padding, 
+  aboutTextView.frame = CGRectMake(padding, padding,
     screenWidth - (padding * 2), padding * 5); // 5 times the line height
   aboutTextView.textColor = [UIColor blueDark];
 
   // About text view placeholder
   aboutTextViewPlaceholder = [UILabel new];
   aboutTextViewPlaceholder.font = aboutTextView.font;
-  aboutTextViewPlaceholder.frame = CGRectMake(5.0f, 8.0f, 
+  aboutTextViewPlaceholder.frame = CGRectMake(5.0f, 8.0f,
     aboutTextView.frame.size.width, 20.0f);
   aboutTextViewPlaceholder.text = @"Share a little about you…";
   aboutTextViewPlaceholder.textColor = [UIColor grayMedium];
   [aboutTextView addSubview: aboutTextViewPlaceholder];
 
   // Action sheet
-  uploadActionSheet = [[UIActionSheet alloc] initWithTitle: nil delegate: self 
-    cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil 
+  uploadActionSheet = [[UIActionSheet alloc] initWithTitle: nil delegate: self
+    cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil
       otherButtonTitles: @"Take Photo", @"Choose Existing", nil];
   [self.view addSubview: uploadActionSheet];
 
   // Spacing
-  UIBarButtonItem *flexibleSpace = 
-    [[UIBarButtonItem alloc] initWithBarButtonSystemItem: 
+  UIBarButtonItem *flexibleSpace =
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
       UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
-		
+
 	// Left padding
 	UIBarButtonItem *leftPadding =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
 	 UIBarButtonSystemItemFixedSpace target: nil action: nil];
 	// iOS 7 toolbar spacing is 16px; 20px on iPad
 	leftPadding.width = 4.0f;
-	
+
 	// Cancel
 	UIBarButtonItem *cancelBarButtonItemForTextFieldToolbar =
     [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
 									 style: UIBarButtonItemStylePlain target: self
 									action: @selector(cancelFromInputAccessoryView)];
-	
+
 	// Done
   UIBarButtonItem *doneBarButtonItemForTextFieldToolbar =
     [[UIBarButtonItem alloc] initWithTitle: @"Done"
-      style: UIBarButtonItemStylePlain target: self 
+      style: UIBarButtonItemStylePlain target: self
         action: @selector(saveFromInputAccessoryView)];
 
 	// Right padding
-  UIBarButtonItem *rightPadding = 
+  UIBarButtonItem *rightPadding =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
       UIBarButtonSystemItemFixedSpace target: nil action: nil];
   // iOS 7 toolbar spacing is 16px; 20px on iPad
@@ -240,7 +241,7 @@
 
   textFieldToolbar = [UIToolbar new];
   textFieldToolbar.clipsToBounds = YES;
-  textFieldToolbar.frame = CGRectMake(0.0f, 0.0f, 
+  textFieldToolbar.frame = CGRectMake(0.0f, 0.0f,
     screenWidth, OMBStandardHeight);
   textFieldToolbar.items = @[
     leftPadding,
@@ -283,30 +284,30 @@
 
 #pragma mark - Protocol UIActionSheetDelegate
 
-- (void) actionSheet: (UIActionSheet *) actionSheet 
+- (void) actionSheet: (UIActionSheet *) actionSheet
 clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   // Image picker controller
-  UIImagePickerController *imagePickerController = 
+  UIImagePickerController *imagePickerController =
     [[UIImagePickerController alloc] init];
   imagePickerController.allowsEditing = YES;
   imagePickerController.delegate = self;
   if (buttonIndex == 0) {
-    if ([UIImagePickerController isSourceTypeAvailable: 
+    if ([UIImagePickerController isSourceTypeAvailable:
       UIImagePickerControllerSourceTypeCamera]) {
 
-      imagePickerController.sourceType = 
+      imagePickerController.sourceType =
         UIImagePickerControllerSourceTypeCamera;
-      imagePickerController.cameraDevice = 
+      imagePickerController.cameraDevice =
         UIImagePickerControllerCameraDeviceFront;
     }
     else {
-      imagePickerController.sourceType = 
+      imagePickerController.sourceType =
         UIImagePickerControllerSourceTypePhotoLibrary;
     }
   }
   else if (buttonIndex == 1) {
-    imagePickerController.sourceType = 
+    imagePickerController.sourceType =
       UIImagePickerControllerSourceTypePhotoLibrary;
   }
   if (buttonIndex == 0 || buttonIndex == 1) {
@@ -317,7 +318,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
 #pragma mark - Protocol UIImagePickerControllerDelegate
 
-- (void) imagePickerController: (UIImagePickerController *) picker 
+- (void) imagePickerController: (UIImagePickerController *) picker
 didFinishPickingMediaWithInfo: (NSDictionary *) info
 {
   UIImage *image = [info objectForKey: UIImagePickerControllerEditedImage];
@@ -344,7 +345,7 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 {
   CGFloat y = scrollView.contentOffset.y;
   CGFloat adjustment = y / 3.0f;
-  
+
   // Move up
   // Back view
   CGRect backViewRect = backView.frame;
@@ -403,7 +404,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   UITableViewCell *emptyCell = [tableView dequeueReusableCellWithIdentifier:
     EmptyCellID];
   if (!emptyCell)
-    emptyCell = [[UITableViewCell alloc] initWithStyle: 
+    emptyCell = [[UITableViewCell alloc] initWithStyle:
       UITableViewCellStyleDefault reuseIdentifier: EmptyCellID];
 
   // User info
@@ -416,7 +417,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       NSInteger imageViewTag = 9999;
       NSInteger labelTag     = 9998;
       if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle: 
+        cell = [[UITableViewCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: ImageID];
         // Image
         OMBCenteredImageView *imageView = [[OMBCenteredImageView alloc] init];
@@ -426,12 +427,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         imageView.tag = imageViewTag;
         [cell.contentView addSubview: imageView];
         // Name
-        CGFloat originX = 
+        CGFloat originX =
           imageView.frame.origin.x + imageView.frame.size.width + padding;
         UILabel *label = [UILabel new];
         label.font = [UIFont mediumLargeTextFontBold];
         label.frame = CGRectMake(originX, imageView.frame.origin.y,
-          tableRect.size.width - (originX + padding), 
+          tableRect.size.width - (originX + padding),
             imageView.frame.size.height);
         label.tag = labelTag;
         label.textColor = [UIColor textColor];
@@ -439,7 +440,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // Image view
       if ([cell viewWithTag: imageViewTag]) {
-        OMBCenteredImageView *imageView = 
+        OMBCenteredImageView *imageView =
           (OMBCenteredImageView *) [cell viewWithTag: imageViewTag];
         imageView.image = user.image;
       }
@@ -477,7 +478,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     // Everything else
     else {
       static NSString *LabelTextCellID = @"LabelTextCellID";
-      OMBLabelTextFieldCell *cell = 
+      OMBLabelTextFieldCell *cell =
         [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
       if (!cell) {
         cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
@@ -498,7 +499,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         imageName = @"user_icon.png";
         NSString *nameLabelString = @"First name";
         NSString *lastNameLabelString = @"Last name";
-        
+
         static NSString *LabelTextCellID = @"TwoLabelTextCellID";
         OMBTwoLabelTextFieldCell *cell =
         [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
@@ -523,7 +524,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.firstTextFieldLabel.text = nameLabelString;
         [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
                  forControlEvents: UIControlEventEditingChanged];
-        
+
         cell.secondTextField.font = cell.firstTextField.font;
         cell.secondTextField.textColor = cell.firstTextField.textColor;
         cell.secondTextFieldLabel.font = cell.firstTextFieldLabel.font;
@@ -587,7 +588,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     else {
       static NSString *RenterID = @"RenterID";
-      OMBRenterProfileUserInfoCell *cell = 
+      OMBRenterProfileUserInfoCell *cell =
         [tableView dequeueReusableCellWithIdentifier: RenterID];
       if (!cell)
         cell = [[OMBRenterProfileUserInfoCell alloc] initWithStyle:
@@ -623,8 +624,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         key = OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
         string = @"Legal Questions";
       }
-      cell.iconImageView.image = [UIImage image: 
-        [UIImage imageNamed: iconImageName] 
+      cell.iconImageView.image = [UIImage image:
+        [UIImage imageNamed: iconImageName]
           size: cell.iconImageView.bounds.size];
       cell.label.text = string;
       if ([[self renterapplicationUserDefaults] objectForKey: key])
@@ -683,25 +684,25 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Co-applicants
     if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
       key = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
-      vc  = [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser: 
+      vc  = [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser:
         user];
     }
     // Co-signers
     else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
       key = OMBUserDefaultsRenterApplicationCheckedCosigners;
-      vc  = [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser: 
+      vc  = [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser:
         user];
     }
     // Rental History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
       key = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
-      vc  = [[OMBRenterInfoSectionPreviousRentalViewController alloc] 
+      vc  = [[OMBRenterInfoSectionPreviousRentalViewController alloc]
         initWithUser: user];
     }
     // Work History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
       key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
-      vc  = [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser: 
+      vc  = [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser:
         user];
     }
     // Legal Questions
@@ -710,11 +711,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       vc  = [[OMBLegalViewController alloc] initWithUser: user];
     }
     if (vc) {
-      NSMutableDictionary *dictionary = 
-        [NSMutableDictionary dictionaryWithDictionary: 
+      NSMutableDictionary *dictionary =
+        [NSMutableDictionary dictionaryWithDictionary:
           [self renterapplicationUserDefaults]];
       [dictionary setObject: [NSNumber numberWithBool: YES] forKey: key];
-      [[NSUserDefaults standardUserDefaults] setObject: dictionary 
+      [[NSUserDefaults standardUserDefaults] setObject: dictionary
         forKey: OMBUserDefaultsRenterApplication];
       [[NSUserDefaults standardUserDefaults] synchronize];
       [self.navigationController pushViewController: vc animated: YES];
@@ -757,7 +758,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
     if([user isLandlord])
       return 0.0;
-    
+
     // Top spacing
     if (row == OMBMyRenterProfileSectionRenterInfoTopSpacing) {
       return OMBStandardHeight;
@@ -810,7 +811,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table beginUpdates];
   [self.table endUpdates];
 
-  NSIndexPath *indexPath = [NSIndexPath indexPathForRow: 
+  NSIndexPath *indexPath = [NSIndexPath indexPathForRow:
     OMBMyRenterProfileSectionUserInfoRowAbout
       inSection: OMBMyRenterProfileSectionUserInfo];
   [self scrollToRectAtIndexPath: indexPath];
@@ -835,17 +836,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (editingTextField)
     editingTextField.text = savedTextString;
-  
+
   if (editingTextView)
     editingTextView.text = savedTextString;
-  
+
   [self done];
 }
 
 - (NSMutableDictionary *) renterapplicationUserDefaults
 {
-  NSMutableDictionary *dictionary = 
-    [[NSUserDefaults standardUserDefaults] objectForKey: 
+  NSMutableDictionary *dictionary =
+    [[NSUserDefaults standardUserDefaults] objectForKey:
       OMBUserDefaultsRenterApplication];
   if (!dictionary)
     dictionary = [NSMutableDictionary dictionary];
@@ -864,14 +865,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) linkedInButtonSelected
 {
-  LIALinkedInApplication *app = 
+  LIALinkedInApplication *app =
     [LIALinkedInApplication applicationWithRedirectURL: @"https://onmyblock.com"
       clientId: @"75zr1yumwx0wld" clientSecret: @"XNY3VsMzvdhyR1ej"
         state: @"DCEEFWF45453sdffef424" grantedAccess: @[@"r_fullprofile"]];
-  linkedInClient = [LIALinkedInHttpClient clientForApplication: app 
+  linkedInClient = [LIALinkedInHttpClient clientForApplication: app
     presentingViewController: self];
   [linkedInClient getAuthorizationCode: ^(NSString *code) {
-    [linkedInClient getAccessToken: code success: 
+    [linkedInClient getAccessToken: code success:
       ^(NSDictionary *accessTokenData) {
         NSString *accessToken = [accessTokenData objectForKey: @"access_token"];
         [user createAuthenticationForLinkedInWithAccessToken:
@@ -922,7 +923,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) progressConnection: (NSNotification *) notification
 {
   float value = ([[notification object] floatValue]);
-  
+
   CustomLoading *custom = [CustomLoading getInstance];
 
   if (value == 1.0) {
@@ -986,13 +987,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   else if (row == OMBMyRenterProfileSectionUserInfoRowLastName) {
     if ([textField.text length])
-      [valueDictionary setObject: textField.text forKey: @"lastName"]; 
+      [valueDictionary setObject: textField.text forKey: @"lastName"];
   }
   else if (row == OMBMyRenterProfileSectionUserInfoRowSchool) {
-    [valueDictionary setObject: textField.text forKey: @"school"]; 
+    [valueDictionary setObject: textField.text forKey: @"school"];
   }
   else if (row == OMBMyRenterProfileSectionUserInfoRowEmail) {
-    [valueDictionary setObject: textField.text forKey: @"email"]; 
+    [valueDictionary setObject: textField.text forKey: @"email"];
   }
   else if (row == OMBMyRenterProfileSectionUserInfoRowPhone) {
     [valueDictionary setObject: textField.text forKey: @"phone"];

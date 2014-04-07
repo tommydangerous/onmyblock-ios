@@ -11,17 +11,6 @@
 #import <VenmoAppSwitch/Venmo.h>
 
 extern NSString *const FBSessionStateChangedNotification;
-extern NSString *const OMBUserDefaults;
-extern NSString *const OMBUserDefaultsAPIKey;
-extern NSString *const OMBUserDefaultsAPIKeyAccessToken;
-extern NSString *const OMBUserDefaultsAPIKeyExpiresAt;
-extern NSString *const OMBUserDefaultsRenterApplication;
-extern NSString *const OMBUserDefaultsRenterApplicationCheckedCoapplicants;
-extern NSString *const OMBUserDefaultsRenterApplicationCheckedCosigners;
-extern NSString *const OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
-extern NSString *const OMBUserDefaultsRenterApplicationCheckedRentalHistory;
-extern NSString *const OMBUserDefaultsRenterApplicationCheckedWorkHistory;
-extern NSString *const OMBUserDefaultsViewedIntro;
 
 @class OMBOffer;
 @class OMBViewControllerContainer;
@@ -39,15 +28,8 @@ extern NSString *const OMBUserDefaultsViewedIntro;
 
 - (void) clearFacebookTokenInformation;
 - (void) openSession;
+- (void) registerForPushNotifications;
 - (void) showLogin;
 - (void) showSignUp;
 
 @end
-
-// UIFont size - line height
-// 13 - 17
-// 14 - 18
-// 15 - 20
-// 18 - 23
-// 20 - 26
-// 27 - 33

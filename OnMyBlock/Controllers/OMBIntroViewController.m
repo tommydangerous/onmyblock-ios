@@ -59,7 +59,7 @@
 
   float screenHeight = screen.size.height;
   float screenWidth  = screen.size.width;
-  
+
   // It needs it's own login view controller
   // because it cannot present the container's login view controller
   _loginViewController = [[OMBLoginViewController alloc] init];
@@ -68,7 +68,7 @@
 
   _scroll               = [[UIScrollView alloc] init];
   _scroll.bounces       = YES;
-  _scroll.contentSize   = CGSizeMake((screen.size.width * numberOfPages), 
+  _scroll.contentSize   = CGSizeMake((screen.size.width * numberOfPages),
     screen.size.height);
   _scroll.delegate      = self;
   _scroll.frame         = screen;
@@ -77,18 +77,18 @@
   [self.view addSubview: _scroll];
 
   _introWelcomeView = [[OMBIntroWelcomeView alloc] init];
-  _introWelcomeView.frame = CGRectMake(screenWidth * 0, 0, 
+  _introWelcomeView.frame = CGRectMake(screenWidth * 0, 0,
     screenWidth, screenHeight);
   [_scroll addSubview: _introWelcomeView];
 
   _welcomeView = [[OMBWelcomeView alloc] init];
-  _welcomeView.frame = CGRectMake(screenWidth * 1, 
-    _introWelcomeView.frame.origin.y, _introWelcomeView.frame.size.width, 
+  _welcomeView.frame = CGRectMake(screenWidth * 1,
+    _introWelcomeView.frame.origin.y, _introWelcomeView.frame.size.width,
       _introWelcomeView.frame.size.height);
 
   // 2. Discover
   _introDiscoverView = [[OMBIntroDiscoverView alloc] init];
-  _introDiscoverView.frame = CGRectMake((screen.size.width * 2), 0, 
+  _introDiscoverView.frame = CGRectMake((screen.size.width * 2), 0,
     _welcomeView.frame.size.width, _welcomeView.frame.size.height);
   [_scroll addSubview: _introDiscoverView];
 
@@ -97,7 +97,7 @@
 
   // 3. Bid
   _introBidView = [[OMBIntroBidView alloc] init];
-  _introBidView.frame = CGRectMake((screen.size.width * 3), 0, 
+  _introBidView.frame = CGRectMake((screen.size.width * 3), 0,
     _welcomeView.frame.size.width, _welcomeView.frame.size.height);
   [_scroll addSubview: _introBidView];
 
@@ -127,7 +127,7 @@
   _pageControl.offColor = [UIColor blue];
   _pageControl.onColor = [UIColor blue];
   _pageControl.type = DDPageControlTypeOnFullOffEmpty;
-  _pageControl.frame = CGRectMake(0.0f, (screenHeight - 60.0f), 
+  _pageControl.frame = CGRectMake(0.0f, (screenHeight - 60.0f),
     screenWidth, 60.0f);
   [_pageControl addTarget: self action: @selector(scrollToCurrentPage:)
     forControlEvents: UIControlEventValueChanged];
@@ -140,13 +140,13 @@
   CGRect closeRect = [@"Skip" boundingRectWithSize:
     CGSizeMake(closeButtonViewWidth, closeButtonViewHeight)
       options: NSStringDrawingUsesLineFragmentOrigin
-        attributes: @{ NSFontAttributeName: 
-        [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] } 
+        attributes: @{ NSFontAttributeName:
+        [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] }
           context: nil];
   closeButtonViewHeight = closeRect.size.height + 10;
   closeButtonViewWidth  = closeRect.size.width + 20;
   closeButtonView.frame = CGRectMake(
-    (screen.size.width - (closeButtonViewWidth + 10)), (20 + 10), 
+    (screen.size.width - (closeButtonViewWidth + 10)), (20 + 10),
       closeButtonViewWidth, closeButtonViewHeight);
   closeButtonView.layer.borderColor = [UIColor grayLight].CGColor;
   closeButtonView.layer.borderWidth = 1.0;
@@ -160,9 +160,9 @@
   [closeButton addTarget: self action: @selector(close)
     forControlEvents: UIControlEventTouchUpInside];
   [closeButton setTitle: @"Skip" forState: UIControlStateNormal];
-  [closeButton setTitleColor: [UIColor grayMedium] 
+  [closeButton setTitleColor: [UIColor grayMedium]
     forState: UIControlStateNormal];
-  [closeButton setTitleColor: [UIColor grayLight] 
+  [closeButton setTitleColor: [UIColor grayLight]
     forState: UIControlStateHighlighted];
   [closeButtonView addSubview: closeButton];
 
@@ -172,20 +172,20 @@
   [_scroll addSubview: houseGraphicView];
   houseGraphicView.frame = CGRectMake(
     screenWidth + ((screenWidth - houseGraphicView.frame.size.width) * 0.5),
-      ((screen.size.height - houseGraphicView.frame.size.height) * 0.5), 
+      ((screen.size.height - houseGraphicView.frame.size.height) * 0.5),
         houseGraphicView.frame.size.width, houseGraphicView.frame.size.height);
   houseGraphicView.image = [UIImage imageNamed: @"house_image.png"];
   houseGraphicView.transform = CGAffineTransformMakeScale(0, 0);
 
   // Activity indicator spinner
-  _activityIndicatorView = 
-    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
+  _activityIndicatorView =
+    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
       UIActivityIndicatorViewStyleWhiteLarge];
   _activityIndicatorView.color = [UIColor grayDark];
   CGRect activityFrame = _activityIndicatorView.frame;
-  activityFrame.origin.x = (self.view.frame.size.width - 
+  activityFrame.origin.x = (self.view.frame.size.width -
     activityFrame.size.width) * 0.5;
-  activityFrame.origin.y = (self.view.frame.size.height - 
+  activityFrame.origin.y = (self.view.frame.size.height -
     activityFrame.size.height) * 0.5;
   _activityIndicatorView.frame = activityFrame;
   [self.view addSubview: _activityIndicatorView];
@@ -202,7 +202,7 @@
   _pageControl.currentPage = currentPage;
 }
 
-- (void) scrollViewDidEndDragging: (UIScrollView *) scrollView 
+- (void) scrollViewDidEndDragging: (UIScrollView *) scrollView
 willDecelerate: (BOOL)decelerate
 {
   [_signUpView resetViewOrigins];
@@ -216,7 +216,7 @@ willDecelerate: (BOOL)decelerate
   CGRect screen = [[UIScreen mainScreen] bounds];
   float screenHeight = screen.size.height;
   float screenWidth  = screen.size.width;
-  
+
   float percent = 0.0;
   float width   = scrollView.frame.size.width;
   float x       = scrollView.contentOffset.x;
@@ -225,11 +225,11 @@ willDecelerate: (BOOL)decelerate
     percent = (x - (width * 0)) / width;
 
     // Move the intro welcome view labels
-    _introWelcomeView.welcomeLabel.transform = 
+    _introWelcomeView.welcomeLabel.transform =
       CGAffineTransformMakeTranslation(-1 * 3 * percent * screenWidth, 0);
-    _introWelcomeView.logoImageView.transform = 
+    _introWelcomeView.logoImageView.transform =
       CGAffineTransformMakeTranslation(-1 * 2 * percent * screenWidth, 0);
-    _introWelcomeView.onmyblockLabel.transform = 
+    _introWelcomeView.onmyblockLabel.transform =
       CGAffineTransformMakeTranslation(-1 * 1 * percent * screenWidth, 0);
 
     // Scale the house
@@ -244,11 +244,11 @@ willDecelerate: (BOOL)decelerate
     // Turn the hands on the stop watch
     _welcomeView.stopwatchView.minuteHand.transform =
       CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(360 * percent * 12.0));
-    _welcomeView.stopwatchView.hourHand.transform = 
+    _welcomeView.stopwatchView.hourHand.transform =
       CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(360 * percent));
     // Move the stop watch
     _welcomeView.stopwatchView.frame = CGRectMake((x - screenWidth) * 3,
-      _welcomeView.stopwatchView.frame.origin.y, 
+      _welcomeView.stopwatchView.frame.origin.y,
         _welcomeView.stopwatchView.frame.size.width,
           _welcomeView.stopwatchView.frame.size.height);
     _welcomeView.stopwatchView.alpha = 1 - percent;
@@ -257,16 +257,16 @@ willDecelerate: (BOOL)decelerate
     float paddleHeight = _welcomeView.paddleView.frame.size.height;
     float paddleWidth  = _welcomeView.paddleView.frame.size.width;
     _welcomeView.paddleView.frame = CGRectMake(
-      (screenWidth - paddleWidth) - (percent * paddleWidth), 
+      (screenWidth - paddleWidth) - (percent * paddleWidth),
         ((screenHeight - paddleHeight) * 0.25) + (percent * paddleHeight),
           paddleWidth, paddleHeight);
 
     // Move and resize house
     float houseWidth = houseGraphicView.frame.size.width;
-    float houseOriginX = 
+    float houseOriginX =
       (((screen.size.width - houseWidth) * 0.5) + x);
     float houseOriginY = ((screen.size.height - houseWidth) * 0.5);
-    houseGraphicView.frame = CGRectMake(houseOriginX, houseOriginY, 
+    houseGraphicView.frame = CGRectMake(houseOriginX, houseOriginY,
       houseWidth, houseWidth);
   }
   // 1 - 2 pages
@@ -285,16 +285,16 @@ willDecelerate: (BOOL)decelerate
       if (newPercent > 1)
         newPercent = 1;
       _introDiscoverView.marker1.frame = CGRectMake(
-        _introDiscoverView.marker1.frame.origin.x, 
+        _introDiscoverView.marker1.frame.origin.x,
           ((screenHeight * 0.5) * newPercent),
-            _introDiscoverView.marker1.frame.size.width, 
+            _introDiscoverView.marker1.frame.size.width,
               _introDiscoverView.marker1.frame.size.height);
     }
     // Marker 3
     _introDiscoverView.marker3.frame = CGRectMake(
-      _introDiscoverView.marker3.frame.origin.x, 
+      _introDiscoverView.marker3.frame.origin.x,
         ((screenHeight * 0.1) * percent),
-          _introDiscoverView.marker3.frame.size.width, 
+          _introDiscoverView.marker3.frame.size.width,
             _introDiscoverView.marker3.frame.size.height);
     // Marker 2
     if (percent <= 1) {
@@ -302,9 +302,9 @@ willDecelerate: (BOOL)decelerate
       if (newPercent > 1)
         newPercent = 1;
       _introDiscoverView.marker2.frame = CGRectMake(
-        _introDiscoverView.marker2.frame.origin.x, 
+        _introDiscoverView.marker2.frame.origin.x,
           (screenHeight * 0.5) * newPercent,
-            _introDiscoverView.marker2.frame.size.width, 
+            _introDiscoverView.marker2.frame.size.width,
               _introDiscoverView.marker2.frame.size.height);
     }
   }
@@ -318,24 +318,24 @@ willDecelerate: (BOOL)decelerate
     if (percent <= 1) {
       float newPercent = percent * 2;
       _introDiscoverView.marker1.frame = CGRectMake(
-        _introDiscoverView.marker1.frame.origin.x, 
+        _introDiscoverView.marker1.frame.origin.x,
           ((screenHeight * 0.5) * (1 - newPercent)),
-            _introDiscoverView.marker1.frame.size.width, 
+            _introDiscoverView.marker1.frame.size.width,
               _introDiscoverView.marker1.frame.size.height);
     }
     // Marker 3
     _introDiscoverView.marker3.frame = CGRectMake(
-      _introDiscoverView.marker3.frame.origin.x, 
+      _introDiscoverView.marker3.frame.origin.x,
         ((screenHeight * 0.1) * (1 - percent)),
-          _introDiscoverView.marker3.frame.size.width, 
+          _introDiscoverView.marker3.frame.size.width,
             _introDiscoverView.marker3.frame.size.height);
     // Marker 2
     if (percent <= 1) {
       float newPercent = percent * 4.5;
       _introDiscoverView.marker2.frame = CGRectMake(
-        _introDiscoverView.marker2.frame.origin.x, 
+        _introDiscoverView.marker2.frame.origin.x,
           (screenHeight * 0.5) * (1 - newPercent),
-            _introDiscoverView.marker2.frame.size.width, 
+            _introDiscoverView.marker2.frame.size.width,
               _introDiscoverView.marker2.frame.size.height);
     }
 
@@ -343,9 +343,9 @@ willDecelerate: (BOOL)decelerate
     float bottomLine = _introBidView.bottomView.frame.origin.y;
     // Paddle 1
     _introBidView.paddleView1.frame = CGRectMake(
-      _introBidView.paddleView1.frame.origin.x, 
-        (bottomLine - 
-        ((_introBidView.paddleView1.frame.size.height - 0) * percent)), 
+      _introBidView.paddleView1.frame.origin.x,
+        (bottomLine -
+        ((_introBidView.paddleView1.frame.size.height - 0) * percent)),
           _introBidView.paddleView1.frame.size.width,
             _introBidView.paddleView1.frame.size.height);
     // Paddle 2
@@ -354,10 +354,10 @@ willDecelerate: (BOOL)decelerate
       if (newPercent > 1)
         newPercent = 1;
       _introBidView.paddleView2.frame = CGRectMake(
-        _introBidView.paddleView2.frame.origin.x, 
-          (bottomLine - 
-          ((_introBidView.paddleView2.frame.size.height + 
-          (screenHeight * 0.05)) * newPercent)), 
+        _introBidView.paddleView2.frame.origin.x,
+          (bottomLine -
+          ((_introBidView.paddleView2.frame.size.height +
+          (screenHeight * 0.05)) * newPercent)),
             _introBidView.paddleView2.frame.size.width,
               _introBidView.paddleView2.frame.size.height);
     }
@@ -367,9 +367,9 @@ willDecelerate: (BOOL)decelerate
       if (newPercent > 1)
         newPercent = 1;
       _introBidView.paddleView3.frame = CGRectMake(
-        _introBidView.paddleView3.frame.origin.x, 
-          (bottomLine - 
-          ((_introBidView.paddleView3.frame.size.height - 0) * newPercent)), 
+        _introBidView.paddleView3.frame.origin.x,
+          (bottomLine -
+          ((_introBidView.paddleView3.frame.size.height - 0) * newPercent)),
             _introBidView.paddleView3.frame.size.width,
               _introBidView.paddleView3.frame.size.height);
     }
@@ -382,19 +382,19 @@ willDecelerate: (BOOL)decelerate
     float bottomLine = _introBidView.bottomView.frame.origin.y;
     // Paddle 1
     _introBidView.paddleView1.frame = CGRectMake(
-      _introBidView.paddleView1.frame.origin.x, 
-        (bottomLine - 
-        ((_introBidView.paddleView1.frame.size.height - 0) * (1 - percent))), 
+      _introBidView.paddleView1.frame.origin.x,
+        (bottomLine -
+        ((_introBidView.paddleView1.frame.size.height - 0) * (1 - percent))),
           _introBidView.paddleView1.frame.size.width,
             _introBidView.paddleView1.frame.size.height);
     // Paddle 2
     if (percent <= 1) {
       float newPercent = percent * 2;
       _introBidView.paddleView2.frame = CGRectMake(
-        _introBidView.paddleView2.frame.origin.x, 
-          (bottomLine - 
-          ((_introBidView.paddleView2.frame.size.height + 
-          (screenHeight * 0.05)) * (1 - newPercent))), 
+        _introBidView.paddleView2.frame.origin.x,
+          (bottomLine -
+          ((_introBidView.paddleView2.frame.size.height +
+          (screenHeight * 0.05)) * (1 - newPercent))),
             _introBidView.paddleView2.frame.size.width,
               _introBidView.paddleView2.frame.size.height);
     }
@@ -402,10 +402,10 @@ willDecelerate: (BOOL)decelerate
     if (percent <= 1) {
       float newPercent = percent * 4;
       _introBidView.paddleView3.frame = CGRectMake(
-        _introBidView.paddleView3.frame.origin.x, 
-          (bottomLine - 
-          ((_introBidView.paddleView3.frame.size.height - 0) * 
-          (1 - newPercent))), 
+        _introBidView.paddleView3.frame.origin.x,
+          (bottomLine -
+          ((_introBidView.paddleView3.frame.size.height - 0) *
+          (1 - newPercent))),
             _introBidView.paddleView3.frame.size.width,
               _introBidView.paddleView3.frame.size.height);
     }
@@ -418,7 +418,7 @@ willDecelerate: (BOOL)decelerate
         newPercent = 1;
       _introAuctionView.iphoneView.frame = CGRectMake(
         _introAuctionView.iphoneView.frame.origin.x,
-          (((screenHeight - _introAuctionView.iphoneView.frame.size.height) * 
+          (((screenHeight - _introAuctionView.iphoneView.frame.size.height) *
           0.35) * newPercent),
             _introAuctionView.iphoneView.frame.size.width,
               _introAuctionView.iphoneView.frame.size.height);
@@ -440,9 +440,9 @@ willDecelerate: (BOOL)decelerate
   if (page > 4 && page <= 5) {
     percent = (x - (width * 4)) / width;
 
-    float getStartedViewOriginX = 
+    float getStartedViewOriginX =
       ((screenWidth - _getStartedView.getStartedButton.frame.size.width) * 0.5);
-    float getStartedViewNewOriginX = 
+    float getStartedViewNewOriginX =
       screenWidth - ((screenWidth - getStartedViewOriginX) * percent);
     _getStartedView.getStartedButton.frame = CGRectMake(
       getStartedViewNewOriginX,
@@ -452,13 +452,13 @@ willDecelerate: (BOOL)decelerate
   }
   // Scroll the close button view and the page control
   if (page <= 5) {
-    _pageControl.frame = CGRectMake(x, 
-      _pageControl.frame.origin.y, 
+    _pageControl.frame = CGRectMake(x,
+      _pageControl.frame.origin.y,
         _pageControl.frame.size.width, _pageControl.frame.size.height);
 
     closeButtonView.frame = CGRectMake(
-      (screen.size.width - (closeButtonView.frame.size.width + 10)) + x, 
-        closeButtonView.frame.origin.y, 
+      (screen.size.width - (closeButtonView.frame.size.width + 10)) + x,
+        closeButtonView.frame.origin.y,
           closeButtonView.frame.size.width, closeButtonView.frame.size.height);
   }
   // 5 - 6
@@ -466,9 +466,9 @@ willDecelerate: (BOOL)decelerate
     percent = (x - (width * 5)) / width;
 
     // Get started view
-    float getStartedViewOriginX = 
+    float getStartedViewOriginX =
       ((screenWidth - _getStartedView.getStartedButton.frame.size.width) * 0.5);
-    float getStartedViewNewOriginX = 
+    float getStartedViewNewOriginX =
       getStartedViewOriginX - ((screenWidth - getStartedViewOriginX) * percent);
     _getStartedView.getStartedButton.frame = CGRectMake(
       getStartedViewNewOriginX,
@@ -558,8 +558,7 @@ willDecelerate: (BOOL)decelerate
 
 - (void) close
 {
-  [self dismissViewControllerAnimated: YES
-    completion: nil];
+  [self dismissViewControllerAnimated: YES completion: nil];
 }
 
 - (void) scrollToCurrentPage: (UIPageControl *) control
@@ -570,7 +569,7 @@ willDecelerate: (BOOL)decelerate
 - (void) scrollToPage: (int) page
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
-  [_scroll setContentOffset: 
+  [_scroll setContentOffset:
     CGPointMake((page * screen.size.width), 0) animated: YES];
 }
 
@@ -579,10 +578,10 @@ willDecelerate: (BOOL)decelerate
   _getStartedView.hidden     = YES;
   _signUpView.hidden         = YES;
   _pageControl.numberOfPages = 5;
-  _pageControl.frame = CGRectMake(0.0f, (_scroll.frame.size.height - 60.0f), 
+  _pageControl.frame = CGRectMake(0.0f, (_scroll.frame.size.height - 60.0f),
     _scroll.frame.size.width, 60.0f);
   _scroll.contentSize = CGSizeMake(
-    (_scroll.frame.size.width * _pageControl.numberOfPages), 
+    (_scroll.frame.size.width * _pageControl.numberOfPages),
       _scroll.frame.size.height);
 }
 
@@ -591,18 +590,18 @@ willDecelerate: (BOOL)decelerate
   _getStartedView.hidden     = NO;
   _signUpView.hidden         = NO;
   _pageControl.numberOfPages = 6;
-  _pageControl.frame = CGRectMake(0.0f, (_scroll.frame.size.height - 60.0f), 
+  _pageControl.frame = CGRectMake(0.0f, (_scroll.frame.size.height - 60.0f),
     _scroll.frame.size.width, 60.0f);
   // Number of pages + 1 for the sign up view at the end of the intro
   _scroll.contentSize = CGSizeMake(
-    (_scroll.frame.size.width * (_pageControl.numberOfPages + 1)), 
+    (_scroll.frame.size.width * (_pageControl.numberOfPages + 1)),
       _scroll.frame.size.height);
 }
 
 - (void) showLogin
 {
   [_loginViewController showLogin];
-  [self presentViewController: _loginViewController 
+  [self presentViewController: _loginViewController
     animated: YES completion: nil];
 }
 

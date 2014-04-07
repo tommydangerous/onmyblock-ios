@@ -47,5 +47,6 @@ extern CGFloat const OMBStandardHeight;
 - (void) setMenuBarButtonItem;
 - (void) shareButtonSelected;
 - (void) showAlertViewWithError: (NSError *) error;
+- (NSUserDefaults *) userDefaults;
 
 @end

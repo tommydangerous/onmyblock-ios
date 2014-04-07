@@ -9,6 +9,7 @@
 #import "OMBMessageDetailViewController.h"
 
 #import "NSString+Extensions.h"
+#import "NSUserDefaults+OnMyBlock.h"
 #import "OMBConversation.h"
 #import "OMBMessage.h"
 #import "OMBMessageCollectionViewCell.h"
@@ -301,6 +302,20 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 - (void) numberOfPages: (NSUInteger) pages
 {
   self.maxPages = pages;
+}
+
+#pragma mark - UIAlertViewDelegate Protocol
+
+- (void) alertView: (UIAlertView *) alertView
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  if (buttonIndex == 0) {
+    [[self userDefaults] permissionPushNotificationsSet: NO];
+  }
+  else if (buttonIndex == 1) {
+    [[self userDefaults] permissionPushNotificationsSet: YES];
+    [[self appDelegate] registerForPushNotifications];
+  }
 }
 
 #pragma mark - Protocol UICollectionViewDataSource
@@ -755,7 +770,6 @@ additionalOffsetY: (CGFloat) offsetY
 - (void) send
 {
   OMBMessage *message = [[OMBMessage alloc] init];
-
   [message createMessageWithContent: bottomToolbar.messageContentTextView.text
     forConversation: conversation];
   [conversation addMessage: message];
@@ -769,12 +783,22 @@ additionalOffsetY: (CGFloat) offsetY
 
   if ([self.collection.collectionViewLayout collectionViewContentSize].height >
     self.collection.frame.size.height + bottomToolbar.frame.size.height) {
-
     [self scrollToBottomAnimated: YES];
   }
 
+  // Clear the text field
   bottomToolbar.messageContentTextView.text = @"";
   [self textViewDidChange: bottomToolbar.messageContentTextView];
+
+  // Ask to register for push notifications
+  if (![[self userDefaults] permissionPushNotifications]) {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+      @"Message Notifications" message: @"Would you like to be notified "
+      @"as soon as you receive a response to your message?"
+        delegate: self cancelButtonTitle: @"Not now"
+          otherButtonTitles: @"Yes", nil];
+    [alertView show];
+  }
 }
 
 - (void) showContactMore

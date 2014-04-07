@@ -12,6 +12,7 @@
 
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
+#import "NSUserDefaults+OnMyBlock.h"
 #import "OCMapView.h"
 #import "OMBActivityViewFullScreen.h"
 #import "OMBActivityView.h"
@@ -78,28 +79,27 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   fetching           = NO;
   firstLoad          = YES;
   self.radiusInMiles = 0;
-  
+
   // Location manager
   locationManager                 = [[CLLocationManager alloc] init];
   locationManager.delegate        = self;
   locationManager.desiredAccuracy = kCLLocationAccuracyBest;
   locationManager.distanceFilter  = 50;
-  // [OMBResidenceStore sharedStore].mapViewController = self;
 
   neighborhoodAnnotationArray = [NSMutableArray array];
   // Create neighborhood annotations
   if ([neighborhoodAnnotationArray count] == 0) {
-  
+
   }
   for (NSString *cityName in [[OMBNeighborhoodStore sharedStore] cities]) {
-    for (OMBNeighborhood *neighborhood in 
-      [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity: 
+    for (OMBNeighborhood *neighborhood in
+      [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity:
         cityName]) {
 
       OMBAnnotationCity *annotationCity = [[OMBAnnotationCity alloc] init];
       annotationCity.cityName   = neighborhood.name;
       annotationCity.coordinate = neighborhood.coordinate;
-      
+
       [neighborhoodAnnotationArray addObject: annotationCity];
       // [self.mapView.annotationsToIgnore addObject: annotationCity];
       // [self.mapView removeAnnotation: annotationCity];
@@ -111,8 +111,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   self.screenName = @"Map View Controller";
 
-  [[NSNotificationCenter defaultCenter] addObserver: self 
-    selector: @selector(refreshProperties) 
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(refreshProperties)
       name: OMBUserLoggedInNotification object: nil];
 
   return self;
@@ -136,14 +136,14 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // Left bar button item
   [self setMenuBarButtonItem];
   // Right bar button item
-  self.navigationItem.rightBarButtonItem = 
+  self.navigationItem.rightBarButtonItem =
     [[UIBarButtonItem alloc] initWithImage: [UIImage image:
       [UIImage imageNamed: @"search_icon.png"] size: CGSizeMake(26, 26)]
-        style: UIBarButtonItemStylePlain target: self 
+        style: UIBarButtonItemStylePlain target: self
           action: @selector(showSearch)];
 
   // Title view
-  segmentedControl = [[UISegmentedControl alloc] initWithItems: 
+  segmentedControl = [[UISegmentedControl alloc] initWithItems:
     @[@"Map", @"List"]];
   segmentedControl.selectedSegmentIndex = 1;
   CGRect segmentedFrame = segmentedControl.frame;
@@ -162,18 +162,18 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   navigationBarCover = [[AMBlurView alloc] init];
   navigationBarCover.alpha = 0.0f;
   navigationBarCover.blurTintColor = [UIColor whiteColor];
-  navigationBarCover.frame = CGRectMake(0.0f, -20.0f, 
+  navigationBarCover.frame = CGRectMake(0.0f, -20.0f,
     screen.size.width, 20.0f + 44.0f);
   [self.view addSubview: navigationBarCover];
 
   // Sort
   sortView = [[AMBlurView alloc] init];
   sortView.blurTintColor = [UIColor grayVeryLight];
-  sortView.frame = CGRectMake(0.0f, 44.0f, 
+  sortView.frame = CGRectMake(0.0f, 44.0f,
     _listViewContainer.frame.size.width, 20.0f + 37.0f);
   [_listViewContainer addSubview: sortView];
-  UITapGestureRecognizer *sortViewTap = 
-    [[UITapGestureRecognizer alloc] initWithTarget: self 
+  UITapGestureRecognizer *sortViewTap =
+    [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(showSortButtons)];
   [sortView.toolbar addGestureRecognizer: sortViewTap];
   // Sort label
@@ -183,18 +183,18 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     0.0f, 37.0f);
   sortLabel.text = @"Sort by";
   sortLabel.textColor = [UIColor blue];
-  CGRect sortRect = [sortLabel.text boundingRectWithSize: 
-    CGSizeMake(screenWidth, sortLabel.frame.size.height) 
+  CGRect sortRect = [sortLabel.text boundingRectWithSize:
+    CGSizeMake(screenWidth, sortLabel.frame.size.height)
       options: NSStringDrawingUsesLineFragmentOrigin
         attributes: @{ NSFontAttributeName: sortLabel.font }
           context: nil];
-  sortLabel.frame = CGRectMake(sortLabel.frame.origin.x, 
+  sortLabel.frame = CGRectMake(sortLabel.frame.origin.x,
     sortLabel.frame.origin.y, sortRect.size.width, sortLabel.frame.size.height);
   //[sortView addSubview: sortLabel];
   // Sort selection label
   sortSelectionLabel = [[UILabel alloc] init];
   sortSelectionLabel.font = sortLabel.font;
-  sortSelectionLabel.frame = CGRectMake(0.0f, sortLabel.frame.origin.y, 
+  sortSelectionLabel.frame = CGRectMake(0.0f, sortLabel.frame.origin.y,
     screenWidth, sortLabel.frame.size.height);
   sortSelectionLabel.text = @"Sort your Rental Results";
   sortSelectionLabel.textAlignment = NSTextAlignmentCenter;
@@ -203,9 +203,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // Sort arrow
   CGFloat sortArrowSize = sortLabel.frame.size.height - padding;
   sortArrow = [[UIImageView alloc] init];
-  sortArrow.frame = CGRectMake(screenWidth - (sortArrowSize + padding), 
-    sortLabel.frame.origin.y + 
-    ((sortLabel.frame.size.height - sortArrowSize) * 0.5), 
+  sortArrow.frame = CGRectMake(screenWidth - (sortArrowSize + padding),
+    sortLabel.frame.origin.y +
+    ((sortLabel.frame.size.height - sortArrowSize) * 0.5),
       sortArrowSize, sortArrowSize);
   sortArrow.image = [UIImage changeColorForImage:
     [UIImage  imageNamed: @"arrow_left_white.png"] toColor:[UIColor blue]];
@@ -230,10 +230,10 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     sortButtonHighestPrice,
     sortButtonLowestPrice
   ]];
-  CGFloat sortButtonViewHeight = sortView.frame.size.height + 
+  CGFloat sortButtonViewHeight = sortView.frame.size.height +
     ((1 + 37) * [sortButtonArray count]);
   sortButtonsView = [[UIView alloc] init];
-  sortButtonsView.frame = CGRectMake(0.0f, sortView.frame.origin.y, 
+  sortButtonsView.frame = CGRectMake(0.0f, sortView.frame.origin.y,
     sortView.frame.size.width, sortButtonViewHeight);
   sortButtonsView.hidden = YES;
   // for (int i = 0; i < [sortKeys count]; i++) {
@@ -248,11 +248,11 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   //     forControlEvents: UIControlEventTouchUpInside];
   //   [button setBackgroundImage: [UIImage imageWithColor: [UIColor blue]]
   //     forState: UIControlStateHighlighted];
-  //   [button setTitle: [[sortKeys objectAtIndex: i] capitalizedString] 
+  //   [button setTitle: [[sortKeys objectAtIndex: i] capitalizedString]
   //     forState: UIControlStateNormal];
-    // [button setTitleColor: [UIColor textColor] 
+    // [button setTitleColor: [UIColor textColor]
     //   forState: UIControlStateNormal];
-  //   [button setTitleColor: [UIColor whiteColor] 
+  //   [button setTitleColor: [UIColor whiteColor]
   //     forState: UIControlStateHighlighted];
   //   [sortButtonArray addObject: button];
   //   [sortButtonsView addSubview: button];
@@ -283,9 +283,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     [button setBackgroundImage: [UIImage imageWithColor: [UIColor blue]]
       forState: UIControlStateHighlighted];
     [button setTitle: string forState: UIControlStateNormal];
-    [button setTitleColor: [UIColor textColor] 
+    [button setTitleColor: [UIColor textColor]
       forState: UIControlStateNormal];
-    [button setTitleColor: [UIColor whiteColor] 
+    [button setTitleColor: [UIColor whiteColor]
       forState: UIControlStateHighlighted];
     [sortButtonsView addSubview: button];
   }
@@ -301,27 +301,27 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   _listView.separatorColor               = nil;
   _listView.separatorStyle               = UITableViewCellSeparatorStyleNone;
   // _listView.showsVerticalScrollIndicator = NO;
-  _listView.tableHeaderView = [[UIView alloc] initWithFrame: 
-    CGRectMake(0.0f, 0.0f, _listView.frame.size.width, 
+  _listView.tableHeaderView = [[UIView alloc] initWithFrame:
+    CGRectMake(0.0f, 0.0f, _listView.frame.size.width,
       sortLabel.frame.size.height)];
   [_listViewContainer insertSubview: _listView atIndex: 0];
 
   // Map view
-  _mapView          = [[OCMapView alloc] init];
-  _mapView.alpha    = 0.0f;
+  self.mapView          = [[OCMapView alloc] init];
+  self.mapView.alpha    = 0.0f;
   // _mapView.clusteringEnabled = NO;
-  _mapView.delegate = self;
-  _mapView.frame    = screen;
-  _mapView.mapType  = MKMapTypeStandard;
+  self.mapView.delegate = self;
+  self.mapView.frame    = screen;
+  self.mapView.mapType  = MKMapTypeStandard;
   // _mapView.minimumAnnotationCountPerCluster = 5;
-  // mapView.rotateEnabled = NO;
-  _mapView.showsPointsOfInterest = NO;
-  UITapGestureRecognizer *mapViewTap = 
-    [[UITapGestureRecognizer alloc] initWithTarget: self 
+  self.mapView.showsPointsOfInterest = NO;
+  self.mapView.showsUserLocation = NO;
+  UITapGestureRecognizer *mapViewTap =
+    [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(mapViewTapped)];
   [_mapView addGestureRecognizer: mapViewTap];
   [self.view addSubview: _mapView];
-  
+
   // Filter
   // View
   filterView = [[UIView alloc] init];
@@ -333,7 +333,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   filterLabel = [[UILabel alloc] init];
   filterLabel.backgroundColor = [UIColor clearColor];
   filterLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
-  filterLabel.frame = CGRectMake(10.0f, 0.0f, 
+  filterLabel.frame = CGRectMake(10.0f, 0.0f,
     filterView.frame.size.width - (10 * 2), filterView.frame.size.height);
   filterLabel.text = @"";
   filterLabel.textAlignment = NSTextAlignmentCenter;
@@ -364,7 +364,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   propertyInfoView = [[OMBPropertyInfoView alloc] init];
   [_mapView addSubview: propertyInfoView];
   // Add a tap gesture to property info view
-  UITapGestureRecognizer *tap = 
+  UITapGestureRecognizer *tap =
     [[UITapGestureRecognizer alloc] initWithTarget:
       self action: @selector(showResidenceDetailViewController)];
   [propertyInfoView addGestureRecognizer: tap];
@@ -385,10 +385,10 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   _residentListMap.separatorStyle    = UITableViewCellSeparatorStyleSingleLine;
   _residentListMap.showsVerticalScrollIndicator = NO;
   [_mapView addSubview: _residentListMap];
-  
+
   // Activity indicator view
-  activityIndicatorView = 
-    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
+  activityIndicatorView =
+    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
       UIActivityIndicatorViewStyleWhiteLarge];
   activityIndicatorView.frame = CGRectMake(
     (screenWidth - activityIndicatorView.frame.size.width) * 0.5f,
@@ -401,8 +401,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [_listViewContainer addSubview: activityView];
   activityView.spinnerView.backgroundColor = [UIColor clearColor];
   CGRect spinRect = activityView.spinner.frame;
-  spinRect.origin.y = screenHeight - 
-    ((spinRect.size.height * 0.5f) + 
+  spinRect.origin.y = screenHeight -
+    ((spinRect.size.height * 0.5f) +
       activityView.spinnerView.frame.size.height);
   activityView.spinner.frame = spinRect;
 
@@ -411,7 +411,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Empty background
   CGFloat emptyBackgroundHeight = screenHeight - sortView.frame.size.height;
-  CGRect emptyBackgroundRect = CGRectMake(0.0f, 
+  CGRect emptyBackgroundRect = CGRectMake(0.0f,
     screenHeight - emptyBackgroundHeight,
       screenWidth, emptyBackgroundHeight);
   emptyBackground = [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame:
@@ -439,10 +439,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 {
   [super viewDidLoad];
 
-  self.mapView.showsUserLocation = YES;
-  
   __weak OMBMapViewController *weakSelf = self;
-  
+
   pagination = 0;
   // setup infinite scrolling
   [_listView addInfiniteScrollingWithActionHandler:^{
@@ -463,10 +461,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   if (centerCoordinate.latitude == 0.0f && centerCoordinate.longitude == 0.0f) {
     centerCoordinate = CLLocationCoordinate2DMake(32.78166389765503,
       -117.16957478041991);
-    [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS 
+    [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
       animated: YES];
     // Find user's location
-    [locationManager startUpdatingLocation];
   }
 
   // This is so that the spinner doesn't freeze and just stay there
@@ -485,11 +482,11 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // Filter
   // Neighborhood
   if ([dictionary objectForKey: @"neighborhood"] != [NSNull null] &&
-    [[dictionary objectForKey: @"neighborhood"] isKindOfClass: 
+    [[dictionary objectForKey: @"neighborhood"] isKindOfClass:
       [OMBNeighborhood class]]) {
-    OMBNeighborhood *neighborhood = [dictionary objectForKey: 
+    OMBNeighborhood *neighborhood = [dictionary objectForKey:
       @"neighborhood"];
-    
+
     // If the current center coordinate is not equal to the neighborhood's
     if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate)) {
       centerCoordinate = neighborhood.coordinate;
@@ -502,7 +499,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     }
     // Remove this object so that whenever the user comes back from the
     // residence detail view, it doesn't refresh everything
-    // [[self appDelegate].container.mapFilterViewController.valuesDictionary 
+    // [[self appDelegate].container.mapFilterViewController.valuesDictionary
     //   removeObjectForKey: @"neighborhood"];
   }
   // If there are filter values, apply and search
@@ -535,7 +532,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 - (void) locationManager: (CLLocationManager *) manager
 didFailWithError: (NSError *) error
 {
-  NSLog(@"Location manager did fail with error: %@", 
+  NSLog(@"Location manager did fail with error: %@",
     error.localizedDescription);
 }
 
@@ -557,7 +554,7 @@ didUpdateLocations: (NSArray *) locations
   // [_mapView addAnnotation: annotation];
   // [_mapView removeAnnotation: annotation];
 
-  NSUInteger currentZoomLevel = 
+  NSUInteger currentZoomLevel =
     [self zoomLevelForMapRect: self.mapView.visibleMapRect
       withMapViewSizeInPixels: self.mapView.bounds.size];
   if (previousZoomLevel == currentZoomLevel) {
@@ -580,7 +577,7 @@ didUpdateLocations: (NSArray *) locations
       // [[self.mapView viewForAnnotation: annotationCity] setHidden: YES];
       [self.mapView removeAnnotation: annotationCity];
     }
-    // [[self.mapView viewForAnnotation: 
+    // [[self.mapView viewForAnnotation:
     //   sanDiegoAnnotationCity] setHidden: YES];
   }
   else {
@@ -601,11 +598,11 @@ didUpdateLocations: (NSArray *) locations
   maxLatitude  = region.center.latitude + (region.span.latitudeDelta / 2.0);
   minLongitude = region.center.longitude - (region.span.longitudeDelta / 2.0);
   minLatitude  = region.center.latitude - (region.span.latitudeDelta / 2.0);
-  maxLongitude = region.center.longitude + (region.span.longitudeDelta / 2.0);  
+  maxLongitude = region.center.longitude + (region.span.longitudeDelta / 2.0);
   NSString *bounds = [NSString stringWithFormat: @"[%f,%f,%f,%f]",
     minLongitude, maxLatitude, maxLongitude, minLatitude];
 
-  NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary: 
+  NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:
     @{
       @"bounds": bounds
     }
@@ -644,7 +641,7 @@ didUpdateLocations: (NSArray *) locations
   previousZoomLevel = currentZoomLevel;
 }
 
-- (void) DONOTHINGmapView: (MKMapView *) map 
+- (void) DONOTHINGmapView: (MKMapView *) map
 regionWillChangeAnimated: (BOOL) animated
 {
   // This messes up the map because it drag/scrolls every other time
@@ -653,7 +650,7 @@ regionWillChangeAnimated: (BOOL) animated
   // 1609 meters = 1 mile
   int distanceInMiles = 1609 * 5;
   MKCoordinateRegion maxRegion =
-    MKCoordinateRegionMakeWithDistance(map.region.center, distanceInMiles, 
+    MKCoordinateRegionMakeWithDistance(map.region.center, distanceInMiles,
       distanceInMiles);
 
   if (map.region.span.latitudeDelta > maxRegion.span.latitudeDelta ||
@@ -661,7 +658,7 @@ regionWillChangeAnimated: (BOOL) animated
     [_mapView setRegion: maxRegion animated: YES];
 }
 
-- (void) mapView: (MKMapView *) map 
+- (void) mapView: (MKMapView *) map
 didDeselectAnnotationView: (MKAnnotationView *) annotationView
 {
   if (![[NSString stringWithFormat: @"%@",
@@ -671,16 +668,16 @@ didDeselectAnnotationView: (MKAnnotationView *) annotationView
   }
 }
 
-- (void) mapView: (MKMapView *) map 
+- (void) mapView: (MKMapView *) map
 didSelectAnnotationView: (MKAnnotationView *) annotationView
 {
   [residentAnnotations removeAllObjects];
-  
+
   // If user clicked on a cluster
   if ([annotationView.annotation isKindOfClass: [OCAnnotation class]]) {
     int numberAnnotations = [(OCAnnotation *)annotationView.annotation annotationsInCluster].count;
     NSLog(@"NUMERO %i",numberAnnotations);
-    
+
     if(numberAnnotations <= 10){
       for(id object in [(OCAnnotation *)annotationView.annotation annotationsInCluster]){
         if([object isKindOfClass: [OMBAnnotation class]]){
@@ -711,7 +708,7 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
       OMBAnnotationView *annView = (OMBAnnotationView *) annotationView;
       [annView select];
       OMBAnnotation *ann = (OMBAnnotation *) annView.annotation;
-      OMBResidence *residence = 
+      OMBResidence *residence =
         [[OMBAllResidenceStore sharedStore] residenceForUID: ann.residenceUID];
       [self showPropertyInfoViewWithResidence: residence];
     }
@@ -719,15 +716,15 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
 
     // CLLocationCoordinate2D coordinate = annotationView.annotation.coordinate;
     // NSString *key = [NSString stringWithFormat: @"%f,%f-%@",
-    //   coordinate.latitude, coordinate.longitude, 
+    //   coordinate.latitude, coordinate.longitude,
     //     annotationView.annotation.title];
-    // OMBResidence *residence = 
+    // OMBResidence *residence =
     //   [[OMBResidenceStore sharedStore].residences objectForKey: key];
     // [self showPropertyInfoViewWithResidence: residence];
   }
 }
 
-- (MKAnnotationView *) mapView: (MKMapView *) map 
+- (MKAnnotationView *) mapView: (MKMapView *) map
 viewForAnnotation: (id <MKAnnotation>) annotation
 {
   // If the annotation is the user's location, show the default pulsing circle
@@ -738,8 +735,8 @@ viewForAnnotation: (id <MKAnnotation>) annotation
   OMBAnnotationView *annotationView = (OMBAnnotationView *)
     [map dequeueReusableAnnotationViewWithIdentifier: ReuseIdentifier];
   if (!annotationView) {
-    annotationView = 
-      [[OMBAnnotationView alloc] initWithAnnotation: annotation 
+    annotationView =
+      [[OMBAnnotationView alloc] initWithAnnotation: annotation
         reuseIdentifier: ReuseIdentifier];
   }
   else
@@ -763,10 +760,10 @@ viewForAnnotation: (id <MKAnnotation>) annotation
       // NSMutableSet *masterSet = [NSMutableSet setWithSet:
       //   [[OMBResidenceMapStore sharedStore] annotations]];
       // [masterSet minusSet: [NSSet setWithArray: self.mapView.annotations]];
-      
+
       // NSLog(@"ADDING: %i", [[masterSet allObjects] count]);
       // [self.mapView addAnnotations: [masterSet allObjects]];
-      [self.mapView addAnnotations: 
+      [self.mapView addAnnotations:
         [[OMBResidenceMapStore sharedStore] annotations]];
 
       // NSMutableArray *arrayOfDictonaries = [NSMutableArray array];
@@ -778,7 +775,7 @@ viewForAnnotation: (id <MKAnnotation>) annotation
       //   NSUInteger length   = arrayCount - location;
       //   if (length > size)
       //     length = size;
-      //   NSArray *subarray = [array subarrayWithRange: 
+      //   NSArray *subarray = [array subarrayWithRange:
       //     NSMakeRange(location, length)];
       //   [arrayOfDictonaries addObject: @{
       //     @"objects": subarray
@@ -791,17 +788,31 @@ viewForAnnotation: (id <MKAnnotation>) annotation
       //     // Add annotations that don't exist
       //     NSMutableSet *masterSet = [NSMutableSet setWithSet:
       //       [[OMBResidenceMapStore sharedStore] annotations]];
-      //     [masterSet minusSet: 
+      //     [masterSet minusSet:
       //       [NSSet setWithArray: self.mapView.annotations]];
-          
+
       //     NSLog(@"ADDING: %i", [[masterSet allObjects] count]);
       //     [self.mapView addAnnotations: [masterSet allObjects]];
-      //     [self addAnnotations: [masterSet allObjects]];      
-      //     [self addAnnotations: 
+      //     [self addAnnotations: [masterSet allObjects]];
+      //     [self addAnnotations:
       //       [[[OMBResidenceMapStore sharedStore] annotations] allObjects]];
       //   });
       // }
     }
+  }
+}
+
+#pragma mark - UIAlertViewDelegate Protocol
+
+- (void) alertView: (UIAlertView *) alertView
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  if (buttonIndex == 0) {
+    [[self userDefaults] permissionCurrentLocationSet: NO];
+  }
+  else if (buttonIndex == 1) {
+    [[self userDefaults] permissionCurrentLocationSet: YES];
+    [self goToCurrentLocation];
   }
 }
 
@@ -814,7 +825,7 @@ viewForAnnotation: (id <MKAnnotation>) annotation
   }
 }
 
-- (void) scrollViewDidEndDragging: (UIScrollView *) scrollView 
+- (void) scrollViewDidEndDragging: (UIScrollView *) scrollView
 willDecelerate: (BOOL) decelerate
 {
   if (scrollView == _listView) {
@@ -823,8 +834,8 @@ willDecelerate: (BOOL) decelerate
   }
 }
 
-- (void) scrollViewWillEndDragging: (UIScrollView *) scrollView 
-withVelocity: (CGPoint) velocity 
+- (void) scrollViewWillEndDragging: (UIScrollView *) scrollView
+withVelocity: (CGPoint) velocity
 targetContentOffset: (inout CGPoint *) targetContentOffset
 {
   if (scrollView == _listView) {
@@ -842,7 +853,7 @@ targetContentOffset: (inout CGPoint *) targetContentOffset
     currentDistanceOfScrolling = 0.0f;
     if (isShowingSortButtons) {
       [UIView animateWithDuration: 0.1 animations: ^{
-        sortArrow.transform = 
+        sortArrow.transform =
           CGAffineTransformMakeRotation(-90 * M_PI / 180.0f);
         for (UIButton *button in sortButtonArray) {
           button.alpha = 0.0f;
@@ -913,7 +924,7 @@ targetContentOffset: (inout CGPoint *) targetContentOffset
       if (barOriginY >= 20.0f) {
         barOriginY = 20.0f;
       }
-      CGFloat percentage = 
+      CGFloat percentage =
         (barOriginY + 24.0f) / bar.frame.size.height;
       bar.alpha = percentage;
       navigationBarCover.alpha = 1 - percentage;
@@ -946,7 +957,7 @@ targetContentOffset: (inout CGPoint *) targetContentOffset
       CGFloat distance = currentOffset.y - lastOffset.y;
       // The multiply by 10, / 1000 isn't really necessary.......
       // In pixels per millisecond
-      CGFloat scrollSpeedNotAbs = (distance * 10) / 1000; 
+      CGFloat scrollSpeedNotAbs = (distance * 10) / 1000;
       CGFloat scrollSpeed = fabsf(scrollSpeedNotAbs);
 
       if (scrollSpeed > 0.3) {
@@ -975,7 +986,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!emptyCell)
     emptyCell = [[UITableViewCell alloc] initWithStyle:
       UITableViewCellStyleDefault reuseIdentifier: EmptyCellID];
-  
+
   // Resident list
   if(tableView == _listView){
     static NSString *CellIdentifier = @"CellIdentifier";
@@ -1012,7 +1023,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       indexPath.row]];
     return cell;
   }
-  
+
   return emptyCell;
 }
 
@@ -1030,7 +1041,7 @@ numberOfRowsInSection: (NSInteger) section
   else if(tableView == _residentListMap){
     return residentAnnotations.count;
   }
-  
+
   return 0;
   // return [currentResidencesForList count];
   // return [[OMBResidenceListStore sharedStore].residences count];
@@ -1039,8 +1050,8 @@ numberOfRowsInSection: (NSInteger) section
 
 #pragma mark - Protocol UITableViewDelegate
 
-- (void) tableView: (UITableView *) tableView 
-didEndDisplayingCell: (UITableViewCell *) cell 
+- (void) tableView: (UITableView *) tableView
+didEndDisplayingCell: (UITableViewCell *) cell
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (tableView == _listView) {
@@ -1103,7 +1114,7 @@ withTitle: (NSString *) title;
     });
   }
   else {
-    
+
   }
   // int count = (int) [annotations count];
   // [_mapView removeAnnotations: _mapView.annotations];
@@ -1126,7 +1137,7 @@ withTitle: (NSString *) title;
   for (OMBAnnotation *annotation in _mapView.selectedAnnotations) {
     if ([annotation class] != [MKUserLocation class] &&
       [annotation class] != [OCAnnotation class])
-      
+
       [annotation.annotationView deselect];
     [_mapView deselectAnnotation: annotation animated: NO];
   }
@@ -1145,7 +1156,7 @@ withTitle: (NSString *) title;
 - (void) fetchResidencesForList
 {
   // Fetch residences for list
-  
+
   // One degree of latitude is always approximately 111 kilometers (69 miles)
   // One degree of longitude is approximately 111 kilometers (69 miles)
 
@@ -1183,19 +1194,19 @@ withTitle: (NSString *) title;
     [self mapFilterParameters]];
   [params setObject: bounds forKey: @"bounds"];
 
-  NSInteger currentCount = 
+  NSInteger currentCount =
     [[OMBResidenceListStore sharedStore].residences count];
   NSLog(@"CURRENT COUNT: %i", currentCount);
 
-  [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters: params 
+  [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters: params
     delegate: self completion: ^(NSError *error) {
       if (firstLoad) {
         [activityViewFullScreen stopSpinning];
         firstLoad = NO;
       }
-      
+
       _listView.showsPullToRefresh = YES;
-      
+
       fetching = NO;
       [self resetCurrentResidencesForList];
       [self reloadTable];
@@ -1205,12 +1216,12 @@ withTitle: (NSString *) title;
 
       // Stop fetching residences after 100 mile radius
       if (_radiusInMiles < kMaxRadiusInMiles) {
-        NSInteger newCount = 
+        NSInteger newCount =
           [[OMBResidenceListStore sharedStore].residences count];
         NSLog(@"NEW COUNT:     %i", newCount);
 
         // If the count never changed
-        if (newCount == currentCount || 
+        if (newCount == currentCount ||
           _listView.contentSize.height <= _listView.frame.size.height) {
           // Fetch again
           [self fetchResidencesForList];
@@ -1246,7 +1257,7 @@ withTitle: (NSString *) title;
     }
     if (fetching) {
       fetching = NO;
-      [[OMBResidenceListStore sharedStore] cancelConnection];  
+      [[OMBResidenceListStore sharedStore] cancelConnection];
     }
     [self fetchResidencesForList];
     [self setMapViewRegion: centerCoordinate withMiles: 2 animated: YES];
@@ -1261,8 +1272,21 @@ withTitle: (NSString *) title;
 
 - (void) goToCurrentLocationAnimated: (BOOL) animated
 {
-  [_mapView setCenterCoordinate: [_mapView userLocation].coordinate
-    animated: animated];
+  if ([[self userDefaults] permissionCurrentLocation]) {
+    if (!self.mapView.showsUserLocation)
+      self.mapView.showsUserLocation = YES;
+    [locationManager startUpdatingLocation];
+  }
+  else {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+      @"Use Current Location" message: @"Allowing OnMyBlock to use your "
+      @"current location will help us find better listings near you."
+        delegate: self cancelButtonTitle: @"Not now"
+          otherButtonTitles: @"Yes", nil];
+    [alertView show];
+  }
+  // [_mapView setCenterCoordinate: [_mapView userLocation].coordinate
+  //   animated: animated];
 }
 
 - (void) hideNavigationBarAndSortView
@@ -1277,7 +1301,7 @@ withTitle: (NSString *) title;
     navigationBarCover.frame = CGRectMake(navigationBarCover.frame.origin.x,
       bar.frame.origin.y - 20.0f, navigationBarCover.frame.size.width,
         navigationBarCover.frame.size.height);
-    sortView.frame = CGRectMake(sortView.frame.origin.x, -44.0f, 
+    sortView.frame = CGRectMake(sortView.frame.origin.x, -44.0f,
       sortView.frame.size.width, sortView.frame.size.height);
 
     // Scroll the remainder of the navigation bar
@@ -1302,10 +1326,10 @@ withTitle: (NSString *) title;
   if (propertyInfoView.frame.origin.y != screen.size.height) {
     CGRect frame = propertyInfoView.frame;
     void (^animations) (void) = ^(void) {
-      propertyInfoView.frame = CGRectMake(frame.origin.x, 
+      propertyInfoView.frame = CGRectMake(frame.origin.x,
         screen.size.height, frame.size.width, frame.size.height);
     };
-    [UIView animateWithDuration: 0.15 delay: 0 
+    [UIView animateWithDuration: 0.15 delay: 0
       options: UIViewAnimationOptionCurveLinear
         animations: animations completion: ^(BOOL finished) {
 			[propertyInfoView.residencePartialView resetFilmstrip];
@@ -1360,7 +1384,7 @@ withTitle: (NSString *) title;
     bathrooms = @"";
 
   // Bedrooms
-  NSString *bedrooms = [[dictionary objectForKey: 
+  NSString *bedrooms = [[dictionary objectForKey:
     @"bedrooms"] componentsJoinedByString: @","];
 
   // Min rent, max rent
@@ -1413,9 +1437,9 @@ withTitle: (NSString *) title;
 
 // - (NSArray *) propertiesSortedBy: (NSString *) key ascending: (BOOL) ascending
 // {
-//   NSSet *visibleAnnotations = [_mapView annotationsInMapRect: 
+//   NSSet *visibleAnnotations = [_mapView annotationsInMapRect:
 //     _mapView.visibleMapRect];
-//   return [[OMBResidenceStore sharedStore] propertiesFromAnnotations: 
+//   return [[OMBResidenceStore sharedStore] propertiesFromAnnotations:
 //       visibleAnnotations sortedBy: key ascending: ascending];
 // }
 
@@ -1463,29 +1487,29 @@ withTitle: (NSString *) title;
   // Sort
   // Distance
   if (currentSortKey == OMBMapViewListSortKeyDistance) {
-    currentResidencesForList = [[OMBResidenceListStore sharedStore] 
+    currentResidencesForList = [[OMBResidenceListStore sharedStore]
       sortedResidencesByDistanceFromCoordinate: centerCoordinate];
   }
   // Recent
   else if (currentSortKey == OMBMapViewListSortKeyRecent) {
-    currentResidencesForList = 
-      [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
+    currentResidencesForList =
+      [[OMBResidenceListStore sharedStore] sortedResidencesWithKey:
         @"updatedAt" ascending: NO];
   }
   // Highest price
   else if (currentSortKey == OMBMapViewListSortKeyHighestPrice) {
-    currentResidencesForList = 
-      [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
+    currentResidencesForList =
+      [[OMBResidenceListStore sharedStore] sortedResidencesWithKey:
         @"minRent" ascending: NO];
   }
   // Lowest price
   else if (currentSortKey == OMBMapViewListSortKeyLowestPrice) {
-    currentResidencesForList = 
-      [[OMBResidenceListStore sharedStore] sortedResidencesWithKey: 
+    currentResidencesForList =
+      [[OMBResidenceListStore sharedStore] sortedResidencesWithKey:
         @"minRent" ascending: YES];
   }
   else {
-    currentResidencesForList = [[OMBResidenceListStore sharedStore] 
+    currentResidencesForList = [[OMBResidenceListStore sharedStore]
       sortedResidencesByDistanceFromCoordinate: centerCoordinate];
   }
 }
@@ -1498,7 +1522,7 @@ withTitle: (NSString *) title;
   [_listView reloadData];
 
   centerCoordinate = _mapView.centerCoordinate;
-  
+
   _radiusInMiles = 0.0f;
 }
 
@@ -1509,13 +1533,13 @@ withTitle: (NSString *) title;
   return currentResidencesForList;
 }
 
-- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
+- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate
 withMiles: (int) miles animated: (BOOL) animated
 {
   // 1609 meters = 1 mile
   int distanceInMiles = 1609 * miles;
   MKCoordinateRegion region =
-    MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles, 
+    MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles,
       distanceInMiles);
   [_mapView setRegion: region animated: animated];
 }
@@ -1566,19 +1590,19 @@ withMiles: (int) miles animated: (BOOL) animated
   CGRect frame = propertyInfoView.frame;
   [propertyInfoView loadResidenceData: residence];
   void (^animations) (void) = ^(void) {
-    propertyInfoView.frame = CGRectMake(frame.origin.x, 
-      (screen.size.height - frame.size.height), frame.size.width, 
+    propertyInfoView.frame = CGRectMake(frame.origin.x,
+      (screen.size.height - frame.size.height), frame.size.width,
         frame.size.height);
   };
-  [UIView animateWithDuration: 0.15 delay: 0 
+  [UIView animateWithDuration: 0.15 delay: 0
     options: UIViewAnimationOptionCurveLinear
       animations: animations completion: nil];
 }
 
 - (void) showResidenceDetailViewController
 {
-  [self.navigationController pushViewController: 
-    [[OMBResidenceDetailViewController alloc] initWithResidence: 
+  [self.navigationController pushViewController:
+    [[OMBResidenceDetailViewController alloc] initWithResidence:
       propertyInfoView.residence] animated: YES];
   // NSLog(@"SHOW RESIDENCE VIEW CONTROLLER");
 }
@@ -1600,14 +1624,14 @@ withMiles: (int) miles animated: (BOOL) animated
 - (void) showSortButtons
 {
   CGFloat slowestDuration = 0.5;
-  CGFloat fastestDuration = slowestDuration - 
+  CGFloat fastestDuration = slowestDuration -
     (0.1 * ([sortButtonArray count] - 1));
   CGFloat degrees = 0.0f;
   if (isShowingSortButtons) {
     degrees = -90.0f;
   }
   // Show all the buttons
-  else { 
+  else {
     [self makeSortButtonsVisible: YES];
   }
   [UIView animateWithDuration: fastestDuration animations: ^{
@@ -1617,7 +1641,7 @@ withMiles: (int) miles animated: (BOOL) animated
   for (UIButton *button in sortButtonArray) {
     CGFloat index    = [sortButtonArray indexOfObject: button];
     CGFloat duration = slowestDuration - (0.1 * index);
-    CGFloat originY  = sortView.frame.size.height + 1 + 
+    CGFloat originY  = sortView.frame.size.height + 1 +
       ((1.0f + 37.0f) * index);
     if (isShowingSortButtons)
       originY = 20.0f;
@@ -1643,7 +1667,7 @@ withMiles: (int) miles animated: (BOOL) animated
 
 - (void) showSortViewAnimated: (BOOL) animated
 {
-  CGRect rect = CGRectMake(sortView.frame.origin.x, 44.0f, 
+  CGRect rect = CGRectMake(sortView.frame.origin.x, 44.0f,
     sortView.frame.size.width, sortView.frame.size.height);
   if (animated)
     [UIView animateWithDuration: 0.25f animations: ^{
@@ -1660,9 +1684,9 @@ withMiles: (int) miles animated: (BOOL) animated
     [self resetCurrentResidencesForList];
     [_listView reloadData];
   }
-  
+
   CGFloat slowestDuration = 0.5;
-  CGFloat originalY = sortView.frame.origin.y + sortLabel.frame.origin.y + 
+  CGFloat originalY = sortView.frame.origin.y + sortLabel.frame.origin.y +
     ((sortLabel.frame.size.height - sortArrow.frame.size.height) * 0.5);
   NSInteger index = [sortButtonArray indexOfObject: button];
   CGFloat originY = originalY + ((1 + 37.0f) * (index + 1));
@@ -1764,7 +1788,7 @@ withMiles: (int) miles animated: (BOOL) animated
 
 - (void) updateFilterLabel
 {
-  NSDictionary *dictionary = 
+  NSDictionary *dictionary =
     [self appDelegate].container.mapFilterViewController.valuesDictionary;
 
   filterLabel.text = @"";
@@ -1784,9 +1808,9 @@ withMiles: (int) miles animated: (BOOL) animated
     minRentString = [NSString numberToCurrencyString: [minRent intValue]];
 
   // $1,234 - $5,678
-  if (maxRent != [NSNull null] && [maxRent intValue] > 0 && 
+  if (maxRent != [NSNull null] && [maxRent intValue] > 0 &&
     minRent != [NSNull null] && [minRent intValue] > 0)
-    rentString = [NSString stringWithFormat: @"%@ - %@", 
+    rentString = [NSString stringWithFormat: @"%@ - %@",
       minRentString, maxRentString];
   // Below $5,678
   else if ((maxRent != [NSNull null] && [maxRent intValue] > 0) &&
@@ -1802,8 +1826,8 @@ withMiles: (int) miles animated: (BOOL) animated
   // Bedrooms
   NSString *bedString = @"";
   NSString *lastBed   = @"";
-  NSArray *bedroomsArray = 
-    [[dictionary objectForKey: @"bedrooms"] sortedArrayUsingComparator: 
+  NSArray *bedroomsArray =
+    [[dictionary objectForKey: @"bedrooms"] sortedArrayUsingComparator:
       ^(id obj1, id obj2) {
         if ([obj1 intValue] > [obj2 intValue])
           return (NSComparisonResult) NSOrderedDescending;
@@ -1836,7 +1860,7 @@ withMiles: (int) miles animated: (BOOL) animated
 
   // Bathrooms
   if ([dictionary objectForKey: @"bathrooms"] != [NSNull null])
-    [strings addObject: [NSString stringWithFormat: @"%i+ baths", 
+    [strings addObject: [NSString stringWithFormat: @"%i+ baths",
       [[dictionary objectForKey: @"bathrooms"] intValue]]];
 
   // Put everything together
@@ -1847,7 +1871,7 @@ withMiles: (int) miles animated: (BOOL) animated
     filterView.hidden = NO;
   else
     filterView.hidden = YES;
-    
+
     [self switchViews:segmentedControl];
 }
 
@@ -1856,7 +1880,7 @@ withMiles: (int) miles animated: (BOOL) animated
   MKMapRect zoomRect = MKMapRectNull;
   for (id <MKAnnotation> annotation in [cluster annotationsInCluster]) {
     MKMapPoint annotationPoint = MKMapPointForCoordinate(annotation.coordinate);
-    MKMapRect pointRect = MKMapRectMake(annotationPoint.x, annotationPoint.y, 
+    MKMapRect pointRect = MKMapRectMake(annotationPoint.x, annotationPoint.y,
       0, 0);
     if (MKMapRectIsNull(zoomRect))
       zoomRect = pointRect;
@@ -1866,13 +1890,13 @@ withMiles: (int) miles animated: (BOOL) animated
   [_mapView setVisibleMapRect: zoomRect animated: YES];
 }
 
-- (NSUInteger) zoomLevelForMapRect: (MKMapRect) mRect 
+- (NSUInteger) zoomLevelForMapRect: (MKMapRect) mRect
 withMapViewSizeInPixels: (CGSize) viewSizeInPixels
 {
   NSUInteger MAXIMUM_ZOOM = 20;
   NSUInteger zoomLevel = MAXIMUM_ZOOM;
   // MKZoomScale is just a CGFloat typedef
-  MKZoomScale zoomScale = mRect.size.width / viewSizeInPixels.width; 
+  MKZoomScale zoomScale = mRect.size.width / viewSizeInPixels.width;
   double zoomExponent = log2(zoomScale);
   zoomLevel = (NSUInteger)(MAXIMUM_ZOOM - ceil(zoomExponent));
   return zoomLevel;

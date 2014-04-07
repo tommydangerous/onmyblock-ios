@@ -10,17 +10,6 @@
 
 #import "NSDateFormatter+JSON.h"
 
-// Keys
-// PayPal
-NSString *const PayPalClientID =
-  @"AYF4PhAsNUDPRLYpTmTqtoo04_n7rmum1Q1fgpmApKJOF_eTrtxajPEFDK4Y";
-NSString *const PayPalClientIDSandbox =
-  @"AetqKxBgNs-WXu7L7mhq_kpihxGdOUSo0mgLppw0wvTw_pCdP6n3ANLYt4X6";
-NSString *const PayPalReceiverEmail = @"tommydangerouss@gmail.com";
-// Venmo
-NSString *const VenmoClientID = @"1522";
-NSString *const VenmoClientSecret = @"gxjvjYcXZDWh3KGSx4m6HTSkmZ8zBHqf";
-
 // Notifications
 NSString *const OMBPayoutMethodNotificationFirst =
   @"OMBPayoutMethodNotificationFirst";

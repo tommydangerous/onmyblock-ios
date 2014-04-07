@@ -12,6 +12,7 @@
 #import "DRNRealTimeBlurView.h"
 #import "LEffectLabel.h"
 #import "NSString+Extensions.h"
+#import "NSUserDefaults+OnMyBlock.h"
 #import "OMBAlertView.h"
 #import "OMBAlertViewBlur.h"
 #import "OMBCenteredImageView.h"
@@ -94,10 +95,24 @@
     NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
   } forState: UIControlStateNormal];
 
-  infoBarButtonItem = [[UIBarButtonItem alloc] initWithImage:
-    [UIImage image: [UIImage imageNamed: @"info_icon.png"]
-      size: CGSizeMake(26.0f, 26.0f)] style: UIBarButtonItemStylePlain
-        target: self action: @selector(showPlaceOfferHowItWorks)];
+  UIButton *infoButton = [UIButton new];
+  infoButton.frame = CGRectMake(0.0f, 0.0f, 26.0f, 26.0f);
+  infoButton.layer.borderColor = [UIColor blue].CGColor;
+  infoButton.layer.borderWidth = 1.0f;
+  infoButton.layer.cornerRadius = 26.0f * 0.5f;
+  infoButton.titleLabel.font = [UIFont normalTextFontBold];
+  [infoButton addTarget: self action: @selector(showPlaceOfferHowItWorks)
+    forControlEvents: UIControlEventTouchUpInside];
+  [infoButton setTitle: @"i" forState: UIControlStateNormal];
+  [infoButton setTitleColor: [UIColor blue] forState: UIControlStateNormal];
+  infoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView: infoButton];
+  // infoBarButtonItem.action = @selector(showPlaceOfferHowItWorks);
+  // infoBarButtonItem.style = UIBarButtonItemStylePlain;
+  // infoBarButtonItem.target = self;
+  // infoBarButtonItem = [[UIBarButtonItem alloc] initWithImage:
+  //   [UIImage image: [UIImage imageNamed: @"info_icon.png"]
+  //     size: CGSizeMake(26.0f, 26.0f)] style: UIBarButtonItemStylePlain
+  //       target: self action: @selector(showPlaceOfferHowItWorks)];
   self.navigationItem.rightBarButtonItem = infoBarButtonItem;
 
   [self setupForTable];
@@ -583,6 +598,28 @@
   return YES;
 }
 
+#pragma mark - Protocol UIAlertViewDelegate
+
+// - (void) alertView: (UIAlertView *) alertView
+// clickedButtonAtIndex: (NSInteger) buttonIndex
+// {
+//   [self.navigationController popViewControllerAnimated: YES];
+// }
+
+- (void) alertView: (UIAlertView *) alertView
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  if (buttonIndex == 0) {
+    [[self userDefaults] permissionPushNotificationsSet: NO];
+  }
+  else if (buttonIndex == 1) {
+    [[self userDefaults] permissionPushNotificationsSet: YES];
+    [[self appDelegate] registerForPushNotifications];
+  }
+  [[self appDelegate].container showHomebaseRenter];
+  [self hideAlertBlurAndPopController];
+}
+
 #pragma mark - Protocol OMBConnectionProtocol
 
 - (void) JSONDictionary:(NSDictionary *)json
@@ -612,14 +649,6 @@ paymentViewController
 {
   // The payment was canceled; dismiss the PayPalPaymentViewController.
   [paymentViewController dismissViewControllerAnimated: YES completion: nil];
-}
-
-#pragma mark - Protocol UIAlertViewDelegate
-
-- (void) alertView: (UIAlertView *) alertView
-clickedButtonAtIndex: (NSInteger) buttonIndex
-{
-  [self.navigationController popViewControllerAnimated: YES];
 }
 
 #pragma mark - Protocol UIScrollViewDelegate
@@ -2044,8 +2073,19 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) submitOfferConfirmedOkay
 {
-  [[self appDelegate].container showHomebaseRenter];
-  [self hideAlertBlurAndPopController];
+  // Ask to register for push notifications
+  if ([[self userDefaults] permissionPushNotifications]) {
+    [[self appDelegate].container showHomebaseRenter];
+    [self hideAlertBlurAndPopController];
+  }
+  else {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+      @"Offer Notifications" message: @"Would you like to be notified "
+      @"as soon as your offer is accepted?"
+        delegate: self cancelButtonTitle: @"Not now"
+          otherButtonTitles: @"Yes", nil];
+    [alertView show];
+  }
 }
 
 - (void) submitOffer

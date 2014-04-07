@@ -10,6 +10,7 @@
 
 #import "AMBlurView.h"
 #import "LEffectLabel.h"
+#import "NSUserDefaults+OnMyBlock.h"
 #import "OMBActivityView.h"
 #import "OMBAlertViewBlur.h"
 #import "OMBCenteredImageView.h"
@@ -68,14 +69,14 @@
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat padding = 20.0f;
 
-  previewBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithTitle: @"Preview" 
+  previewBarButtonItem =
+    [[UIBarButtonItem alloc] initWithTitle: @"Preview"
       style: UIBarButtonItemStylePlain target: self action: @selector(preview)];
   [previewBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
   } forState: UIControlStateNormal];
-  unlistBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithTitle: @"Unlist" 
+  unlistBarButtonItem =
+    [[UIBarButtonItem alloc] initWithTitle: @"Unlist"
       style: UIBarButtonItemStylePlain target: self action: @selector(unlist)];
   [unlistBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: [UIFont boldSystemFontOfSize: 17]
@@ -90,8 +91,8 @@
   CGFloat publishHeight = OMBStandardButtonHeight;
   publishNowView = [[AMBlurView alloc] init];
   publishNowView.blurTintColor = [UIColor blue];
-  publishNowView.frame = CGRectMake(0.0f, 
-    screen.size.height - publishHeight, screen.size.width, 
+  publishNowView.frame = CGRectMake(0.0f,
+    screen.size.height - publishHeight, screen.size.width,
       publishHeight);
   [self.view addSubview: publishNowView];
   // Publish Now button
@@ -101,10 +102,10 @@
   publishNowButton.titleLabel.font = [UIFont mediumTextFontBold];
   [publishNowButton addTarget: self action: @selector(publishNow)
     forControlEvents:UIControlEventTouchUpInside];
-  [publishNowButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor blueHighlightedAlpha: 0.3f]] 
+  [publishNowButton setBackgroundImage:
+    [UIImage imageWithColor: [UIColor blueHighlightedAlpha: 0.3f]]
       forState: UIControlStateHighlighted];
-  [publishNowButton setTitleColor: [UIColor whiteColor] 
+  [publishNowButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [publishNowView addSubview: publishNowButton];
 
@@ -118,7 +119,7 @@
   effectLabel.text = @"Publish Now";
   effectLabel.textColor = [UIColor whiteColor];
   effectLabel.textAlignment = NSTextAlignmentCenter;
-  [publishNowView insertSubview: effectLabel 
+  [publishNowView insertSubview: effectLabel
     belowSubview: publishNowButton];
 
   // Unlist view
@@ -132,23 +133,23 @@
   unlistButton.titleLabel.font = publishNowButton.titleLabel.font;
   [unlistButton addTarget: self action: @selector(unlist)
     forControlEvents: UIControlEventTouchUpInside];
-  [unlistButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor grayUltraLight]] 
+  [unlistButton setBackgroundImage:
+    [UIImage imageWithColor: [UIColor grayUltraLight]]
       forState: UIControlStateHighlighted];
   [unlistButton setTitle: @"Unlist" forState: UIControlStateNormal];
-  [unlistButton setTitleColor: [UIColor grayMedium] 
+  [unlistButton setTitleColor: [UIColor grayMedium]
     forState: UIControlStateNormal];
   [unlistView addSubview: unlistButton];
 
-  CGFloat visibleImageHeight = screen.size.height * 
+  CGFloat visibleImageHeight = screen.size.height *
     PropertyInfoViewImageHeightPercentage; // ... * 0.4
   CGFloat headerImageHeight = 44.0f + visibleImageHeight + 44.0f;
 
   // Table header view
   UIView *headerView = [UIView new];
-  headerView.frame = CGRectMake(0.0f, 0.0f, 
+  headerView.frame = CGRectMake(0.0f, 0.0f,
     screen.size.width, headerImageHeight - 44.0f);
-  UITapGestureRecognizer *tap = 
+  UITapGestureRecognizer *tap =
     [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(addPhotos)];
   [headerView addGestureRecognizer: tap];
@@ -156,7 +157,7 @@
 
   // Table footer view
   UIView *footerView = [UIView new];
-  footerView.frame = CGRectMake(0.0f, 0.0f, 
+  footerView.frame = CGRectMake(0.0f, 0.0f,
     screen.size.width, publishNowView.frame.size.height);
   self.table.tableFooterView = footerView;
 
@@ -183,27 +184,27 @@
   [headerImageView addSubview:imageView];
   imageView.alpha = 0.2f;
   imageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
-  
+
   // Camera view for add photo button
   cameraView = [UIView new];
   cameraView.frame = CGRectMake(0.0f, padding + 44.0f,
-    headerView.frame.size.width, 
+    headerView.frame.size.width,
       headerView.frame.size.height - (padding + 44.0f));
   [self.view insertSubview: cameraView belowSubview: self.table];
   CGFloat cameraImageSize = visibleImageHeight * 0.3f;
   // Camera icon
   UIImageView *cameraImageView = [UIImageView new];
   cameraImageView.frame = CGRectMake(
-    (cameraView.frame.size.width - cameraImageSize) * 0.5, 
-      (cameraView.frame.size.height - cameraImageSize) * 0.5, 
+    (cameraView.frame.size.width - cameraImageSize) * 0.5,
+      (cameraView.frame.size.height - cameraImageSize) * 0.5,
         cameraImageSize, cameraImageSize);
   cameraImageView.image = [UIImage imageNamed: @"camera_icon.png"];
   [cameraView addSubview: cameraImageView];
   // Add Photos label
   UILabel *addPhotosLabel = [UILabel new];
   addPhotosLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
-  addPhotosLabel.frame = CGRectMake(0.0f, 
-    cameraImageView.frame.origin.y + cameraImageView.frame.size.height, 
+  addPhotosLabel.frame = CGRectMake(0.0f,
+    cameraImageView.frame.origin.y + cameraImageView.frame.size.height,
       cameraView.frame.size.width, 27.0f);
   addPhotosLabel.text = @"Add Photos";
   addPhotosLabel.textAlignment = NSTextAlignmentCenter;
@@ -222,8 +223,8 @@
   // // Bottom border
   // UIView *stepsBottomBorder = [UIView new];
   // stepsBottomBorder.backgroundColor = [UIColor grayMedium];
-  // stepsBottomBorder.frame = CGRectMake(0.0f, 
-  //   stepsRemainingView.frame.size.height - 0.5f, 
+  // stepsBottomBorder.frame = CGRectMake(0.0f,
+  //   stepsRemainingView.frame.size.height - 0.5f,
   //     stepsRemainingView.frame.size.width, 0.5f);
 
   // CGFloat stepViewWidth = screen.size.width / numberOfSteps;
@@ -236,7 +237,7 @@
   //   if (i > 0) {
   //     CALayer *leftBorder = [CALayer layer];
   //     leftBorder.backgroundColor = stepsBottomBorder.backgroundColor.CGColor;
-  //     leftBorder.frame = CGRectMake(0.0f, 0.0f, 
+  //     leftBorder.frame = CGRectMake(0.0f, 0.0f,
   //       stepsBottomBorder.frame.size.height, stepView.frame.size.height);
   //     [stepView.layer addSublayer: leftBorder];
   //   }
@@ -255,12 +256,12 @@
   [super viewWillAppear: animated];
 
   // Download the residence's images
-  OMBResidenceImagesConnection *conn = 
+  OMBResidenceImagesConnection *conn =
     [[OMBResidenceImagesConnection alloc] initWithResidence: residence];
   conn.completionBlock = ^(NSError *error) {
     // Add the cover photo
     if (!headerImageView.image)
-      [residence setImageForCenteredImageView: headerImageView 
+      [residence setImageForCenteredImageView: headerImageView
         withURL: residence.coverPhotoURL completion: nil];
 
     // Update the Photos (X) count
@@ -273,7 +274,7 @@
   //   headerImageView.image = [residence coverPhoto];
   // else
   //   [headerImageView clearImage];
-  [residence setImageForCenteredImageView: headerImageView 
+  [residence setImageForCenteredImageView: headerImageView
     withURL: residence.coverPhotoURL completion: nil];
 
   // Reload
@@ -294,7 +295,7 @@
   else {
     effectLabel.hidden = NO;
   }
-  [publishNowButton setTitle: publishNowButtonTitle 
+  [publishNowButton setTitle: publishNowButtonTitle
     forState: UIControlStateNormal];
   [effectLabel performEffectAnimation];
 
@@ -319,7 +320,7 @@
       unlistView.hidden     = NO;
       // // Table footer view
       // UIView *footerView = [UIView new];
-      // footerView.frame = CGRectMake(0.0f, 0.0f, 
+      // footerView.frame = CGRectMake(0.0f, 0.0f,
       //   self.table.frame.size.width, 0.0f);
       // self.table.tableFooterView = footerView;
     }
@@ -335,7 +336,7 @@
   //   }
   // }
 
-  // [self tableView: self.table didSelectRowAtIndexPath: 
+  // [self tableView: self.table didSelectRowAtIndexPath:
   //   [NSIndexPath indexPathForRow: 5 inSection: 0]];
 }
 
@@ -362,7 +363,7 @@ didFinishPickingMediaWithInfo: (NSArray *) info
 
 #pragma mark - Protocol UIActionSheetDelegate
 
-- (void) actionSheet: (UIActionSheet *) actionSheet 
+- (void) actionSheet: (UIActionSheet *) actionSheet
 clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   UIImagePickerController *cameraImagePicker =
@@ -371,7 +372,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   cameraImagePicker.delegate = self;
 
   // Select multiple images
-  ELCImagePickerController *libraryImagePicker = 
+  ELCImagePickerController *libraryImagePicker =
     [[ELCImagePickerController alloc] initImagePicker];
   libraryImagePicker.imagePickerDelegate = self;
   // Set the maximum number of images to select, defaults to 4
@@ -384,10 +385,10 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     // Show camera
     if ([UIImagePickerController isSourceTypeAvailable:
       UIImagePickerControllerSourceTypeCamera]) {
-      
+
       cameraImagePicker.sourceType =
         UIImagePickerControllerSourceTypeCamera;
-      [self presentViewController: cameraImagePicker animated: YES 
+      [self presentViewController: cameraImagePicker animated: YES
         completion: nil];
     }
     // Default to the library
@@ -403,9 +404,24 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   }
 }
 
+#pragma mark - Protocol UIAlertViewDelegate
+
+- (void) alertView: (UIAlertView *) alertView
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  if (buttonIndex == 0) {
+    [[self userDefaults] permissionPushNotificationsSet: NO];
+  }
+  else if (buttonIndex == 1) {
+    [[self userDefaults] permissionPushNotificationsSet: YES];
+    [[self appDelegate] registerForPushNotifications];
+  }
+  [self hideAlertBlurAndPopController];
+}
+
 #pragma mark - Protocol UIImagePickerControllerDelegate
 
-- (void) imagePickerController: (UIImagePickerController *) picker 
+- (void) imagePickerController: (UIImagePickerController *) picker
 didFinishPickingMediaWithInfo: (NSDictionary *) info
 {
   [self createResidenceImageWithDictionary: info];
@@ -423,7 +439,7 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
   CGFloat y = scrollView.contentOffset.y;
   CGFloat adjustment = y / 2.1f;
   // Adjust the header image view
-  CGRect headerImageFrame = headerImageView.frame;  
+  CGRect headerImageFrame = headerImageView.frame;
   headerImageFrame.origin.y = headerImageOffsetY - adjustment;
   [headerImageView setFrame: headerImageFrame redrawImage: NO];
   headerImageViewGradient.frame = headerImageFrame;
@@ -445,7 +461,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleValue1
       reuseIdentifier: CellIdentifier];
   cell.accessoryType = UITableViewCellAccessoryNone;
-  cell.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
+  cell.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
   cell.detailTextLabel.text = @"";
   cell.detailTextLabel.textColor = [UIColor grayMedium];
@@ -459,7 +475,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     imageView = [UIImageView new];
     // Need 0.75 instead of 0.5 to push it down further midway
     imageView.frame = CGRectMake(
-      tableView.frame.size.width - (imageSize + padding), 
+      tableView.frame.size.width - (imageSize + padding),
         (58.0f - imageSize) * 0.5f, imageSize, imageSize);
     imageView.tag   = 8888;
     [cell.contentView addSubview: imageView];
@@ -467,7 +483,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   imageView.alpha = 0.2f;
   imageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
   NSString *string = @"";
-  
+
   // Title
   if (indexPath.row == 0) {
     string = @"Title";
@@ -506,7 +522,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
-  }  
+  }
   // Lease Details
   else if (indexPath.row == 4) {
     string = @"Lease Details";
@@ -558,25 +574,25 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   // Title
   if (indexPath.row == 0) {
     [self.navigationController pushViewController:
-      [[OMBFinishListingTitleViewController alloc] initWithResidence: 
+      [[OMBFinishListingTitleViewController alloc] initWithResidence:
         residence] animated: YES];
   }
   // Description
   else if (indexPath.row == 1) {
     [self.navigationController pushViewController:
-      [[OMBFinishListingDescriptionViewController alloc] initWithResidence: 
+      [[OMBFinishListingDescriptionViewController alloc] initWithResidence:
         residence] animated: YES];
   }
   // Rent / Auction Details
   else if (indexPath.row == 2) {
     [self.navigationController pushViewController:
-      [[OMBFinishListingRentAuctionDetailsViewController alloc] 
-        initWithResidence: residence] animated: YES]; 
+      [[OMBFinishListingRentAuctionDetailsViewController alloc]
+        initWithResidence: residence] animated: YES];
   }
   // Address
   else if (indexPath.row == 3) {
     [self.navigationController pushViewController:
-      [[OMBFinishListingAddressViewController alloc] initWithResidence: 
+      [[OMBFinishListingAddressViewController alloc] initWithResidence:
         residence] animated: YES];
   }
   // Lease Details
@@ -618,7 +634,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         residence] animated: YES];
   }
   else {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle: nil 
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle: nil
       delegate: self cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil
         otherButtonTitles: @"Take Photo", @"Choose Existing", nil];
     [self.view addSubview: actionSheet];
@@ -630,7 +646,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSString *absoluteString = [NSString stringWithFormat: @"%f",
     [[NSDate date] timeIntervalSince1970]];
-  UIImage *image = [dictionary objectForKey: 
+  UIImage *image = [dictionary objectForKey:
     UIImagePickerControllerOriginalImage];
   int position = 0;
   NSArray *array = [residence imagesArray];
@@ -652,8 +668,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [residence addResidenceImage: residenceImage];
 
   // Upload image
-  OMBResidenceUploadImageConnection *conn = 
-    [[OMBResidenceUploadImageConnection alloc] initWithResidence: residence 
+  OMBResidenceUploadImageConnection *conn =
+    [[OMBResidenceUploadImageConnection alloc] initWithResidence: residence
       residenceImage: residenceImage];
   [conn start];
 }
@@ -686,7 +702,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (!residence.minRent)
     string = @"Please set a price for monthly rent.";
   // Address
-  else if (![residence.address length] || ![residence.city length] || 
+  else if (![residence.address length] || ![residence.city length] ||
     ![residence.state length] || ![residence.zip length])
     string = @"Please specify an address for your place.";
   // Lease Details
@@ -712,65 +728,86 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // NSString *stepsString = @"steps";
     // if (numberOfStepsLeft == 1)
     //   stepsString = @"step";
-    // UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-    //   @"Almost Finished" message: [NSString stringWithFormat: 
-    //     @"%i more %@ to go.", numberOfStepsLeft, stepsString] delegate: nil 
+    // UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+    //   @"Almost Finished" message: [NSString stringWithFormat:
+    //     @"%i more %@ to go.", numberOfStepsLeft, stepsString] delegate: nil
     //       cancelButtonTitle: @"Continue" otherButtonTitles: nil];
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-      @"Almost Finished" message: [self incompleteStepString] delegate: nil 
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+      @"Almost Finished" message: [self incompleteStepString] delegate: nil
         cancelButtonTitle: @"Continue" otherButtonTitles: nil];
     [alertView show];
   }
   else if (!isPublishing) {
-    OMBResidence *newResidence = [[OMBResidence alloc] init];
-    OMBResidencePublishConnection *conn = 
-      [[OMBResidencePublishConnection alloc] initWithResidence: residence
-        newResidence: newResidence];
-    conn.completionBlock = ^(NSError *error) {
-      if (!error && 
-        (newResidence.uid || 
-          ![residence isKindOfClass: [OMBTemporaryResidence class]])) {
+    [self publishObject];
+  }
+}
 
-        publishNowView.hidden = YES;
-        unlistView.hidden     = NO;
+- (void) publishObject
+{
+  OMBResidence *newResidence = [[OMBResidence alloc] init];
+  OMBResidencePublishConnection *conn =
+    [[OMBResidencePublishConnection alloc] initWithResidence: residence
+      newResidence: newResidence];
+  conn.completionBlock = ^(NSError *error) {
+    if (!error &&
+      (newResidence.uid ||
+        ![residence isKindOfClass: [OMBTemporaryResidence class]])) {
 
-        [alertBlur setTitle: @"Published"];
-        [alertBlur setMessage: @"Your place has been published, "
-          @"now you can start accepting offers."];
-        // Buttons
-        [alertBlur setConfirmButtonTitle: @"Okay"];
-        [alertBlur addTargetForConfirmButton: self 
-          action: @selector(hideAlertBlurAndPopController)];
-        [alertBlur showInView: self.view withDetails: NO];
-        [alertBlur showOnlyConfirmButton];
-        [alertBlur hideQuestionButton];
-      }
-      else {
-        [self showAlertViewWithError: error];
-      }
-      [[self appDelegate].container stopSpinning];
-      isPublishing = NO;
-    };
-    [[self appDelegate].container startSpinning];
-    isPublishing = YES;
-    [conn start];
+      publishNowView.hidden = YES;
+      unlistView.hidden     = NO;
+
+      [alertBlur setTitle: @"Published"];
+      [alertBlur setMessage: @"Your place has been published, "
+        @"now you can start accepting offers."];
+      // Buttons
+      [alertBlur setConfirmButtonTitle: @"Okay"];
+      [alertBlur addTargetForConfirmButton: self
+        action: @selector(registerForPushNotifications)];
+      [alertBlur showInView: self.view withDetails: NO];
+      [alertBlur showOnlyConfirmButton];
+      [alertBlur hideQuestionButton];
+    }
+    else {
+      [self showAlertViewWithError: error];
+    }
+    [[self appDelegate].container stopSpinning];
+    isPublishing = NO;
+  };
+  [[self appDelegate].container startSpinning];
+  isPublishing = YES;
+  [conn start];
+}
+
+- (void) registerForPushNotifications
+{
+  // Ask to register for push notifications
+  if ([[self userDefaults] permissionPushNotifications]) {
+    [self hideAlertBlurAndPopController];
+  }
+  else {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+      @"Offer Notifications" message: @"Would you like to be notified "
+      @"when someone places an offer on this listing?"
+        delegate: self cancelButtonTitle: @"Not now"
+          otherButtonTitles: @"Yes", nil];
+    [alertView show];
   }
 }
 
 - (void) reloadPhotosRow
 {
-  [self.table reloadRowsAtIndexPaths: 
+  [self.table reloadRowsAtIndexPaths:
     @[[NSIndexPath indexPathForRow: 0 inSection: 0]]
-      withRowAnimation: UITableViewRowAnimationNone]; 
+      withRowAnimation: UITableViewRowAnimationNone];
 }
 
 - (void) verifyPhotos
 {
-  UIImageView *checkImageView = (UIImageView *) [headerImageView viewWithTag: 
+  UIImageView *checkImageView = (UIImageView *) [headerImageView viewWithTag:
     8888];
   if ([residence.images count]) {
     checkImageView.alpha =  1.0f;
-    checkImageView.image = [UIImage imageNamed: 
+    checkImageView.image = [UIImage imageNamed:
       @"checkmark_outline_filled.png"];
   }
   else{
@@ -786,7 +823,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
   residence.inactive = YES;
 
-  OMBResidenceUpdateConnection *conn = 
+  OMBResidenceUpdateConnection *conn =
     [[OMBResidenceUpdateConnection alloc] initWithResidence: residence
       attributes: @[@"inactive"]];
   conn.completionBlock = ^(NSError *error) {
@@ -797,13 +834,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       unlistView.hidden     = YES;
       // Table footer view
       // UIView *footerView = [UIView new];
-      // footerView.frame = CGRectMake(0.0f, 0.0f, 
+      // footerView.frame = CGRectMake(0.0f, 0.0f,
       //   self.table.frame.size.width, publishNowView.frame.size.height);
       // self.table.tableFooterView = footerView;
     }
     else {
-      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Error" 
-        message: @"Please try again" delegate: nil 
+      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Error"
+        message: @"Please try again" delegate: nil
           cancelButtonTitle: @"OK"
             otherButtonTitles: nil];
       [alertView show];

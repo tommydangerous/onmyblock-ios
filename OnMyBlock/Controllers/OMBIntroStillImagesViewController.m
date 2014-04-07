@@ -34,7 +34,7 @@
   if (!(self = [super init])) return nil;
 
   self.screenName = self.title = @"Intro Still Images";
-  
+
   // It needs it's own login view controller
   // because it cannot present the container's login view controller
   _loginViewController = [[OMBLoginViewController alloc] init];
@@ -56,13 +56,13 @@
   CGFloat screenHeight = screen.size.height;
   CGFloat screenWidth  = screen.size.width;
   CGFloat padding      = 20.0f;
-  
+
   [[NSNotificationCenter defaultCenter]addObserver:self
                                           selector:@selector(becomeActive)
                                               name:UIApplicationDidBecomeActiveNotification
                                             object:nil];
   animate = NO;
-  
+
   NSArray *imageNames = @[
     @"intro_still_image_slide_1_background.jpg",
     @"intro_still_image_slide_2_background.jpg",
@@ -79,7 +79,7 @@
     // If this is the last image, the get started view
     if ([imageNames indexOfObject: string] == [imageNames count] - 1)
       blur.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
-    else 
+    else
       blur.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
     [blur refreshWithImage: [UIImage imageNamed: string]];
     [self.view insertSubview: blur atIndex: 0];
@@ -127,54 +127,54 @@
   _scroll.showsHorizontalScrollIndicator = NO;
   [self.view addSubview: _scroll];
 
-  OMBIntroStillImageSlide *slide1 = 
+  OMBIntroStillImageSlide *slide1 =
     [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: nil];
   slide1.frame = CGRectMake(screenWidth * 0.0f, 0.0f,
     slide1.frame.size.width, slide1.frame.size.height);
   slide1.imageView.image = [UIImage imageNamed: @"logo_white.png"];
   slide1.titleLabel.text = @"OnMyBlock";
-  // [slide1 setDetailLabelText: 
+  // [slide1 setDetailLabelText:
   //   @"The auction marketplace\nfor student housing."];
-  [slide1 setDetailLabelText: 
+  [slide1 setDetailLabelText:
     @"The marketplace\nfor student housing."];
   [_scroll addSubview: slide1];
 
-  OMBIntroStillImageSlide *slide2 = 
+  OMBIntroStillImageSlide *slide2 =
     [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: nil];
   slide2.frame = CGRectMake(screenWidth * 1.0f, 0.0f,
     slide2.frame.size.width, slide2.frame.size.height);
   // slide2.imageView.image = [UIImage imageNamed: @"search_icon.png"];
-  slide2.imageView.image = 
+  slide2.imageView.image =
     [[UIImage imageNamed: @"map_marker_icon.png"] negativeImage];
   slide2.titleLabel.text = @"Discover";
   [slide2 setDetailLabelText: @"Find the best college houses,\n"
     @"apartments, and sublets."];
   [_scroll addSubview: slide2];
 
-  OMBIntroStillImageSlide *slide3 = 
+  OMBIntroStillImageSlide *slide3 =
     [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: nil];
   slide3.frame = CGRectMake(screenWidth * 2.0f, 0.0f,
     slide3.frame.size.width, slide3.frame.size.height);
   // slide3.imageView.image = [UIImage imageNamed: @"book_icon.png"];
-  slide3.imageView.image = 
+  slide3.imageView.image =
     [UIImage imageNamed: @"book_it_icon.png"];
   // slide3.secondDetailLabel.text = @"When your offer is accepted...";
   slide3.titleLabel.text = @"Book";
-  // [slide3 setDetailLabelText: @"Bid on your favorite rentals\n" 
+  // [slide3 setDetailLabelText: @"Bid on your favorite rentals\n"
   //   @"through a live auction."];
   [slide3 setDetailLabelText: @"Submit offers on your favorite places.\n"
     @"Once you’re approved..."];
   [_scroll addSubview: slide3];
 
-  OMBIntroStillImageSlide *slide4 = 
+  OMBIntroStillImageSlide *slide4 =
     [[OMBIntroStillImageSlide alloc] initWithBackgroundImage: nil];
   slide4.frame = CGRectMake(screenWidth * 3.0f, 0.0f,
     slide4.frame.size.width, slide4.frame.size.height);
   // slide4.imageView.image = [UIImage imageNamed: @"celebrate_icon.png"];
-  slide4.imageView.image = 
+  slide4.imageView.image =
     [UIImage imageNamed: @"seal_the_deal_icon.png"];
   slide4.titleLabel.text = @"Seal the Deal";
-  // [slide4 setDetailLabelText: @"You are ready to move\n" 
+  // [slide4 setDetailLabelText: @"You are ready to move\n"
   //   @"into your new college pad."];
   [slide4 setDetailLabelText: @"Sign the lease and pay rent through\n"
     @"OnMyBlock. It’s that easy!"];
@@ -185,23 +185,23 @@
   ];
 
   _getStartedView = [[OMBGetStartedView alloc] init];
-  _getStartedView.frame = CGRectMake(screenWidth * 4.0f, 0.0f, 
+  _getStartedView.frame = CGRectMake(screenWidth * 4.0f, 0.0f,
     screenWidth, screenHeight);
   // Facebook
-  [_getStartedView.facebookButton addTarget: self 
-    action: @selector(showFacebook) 
+  [_getStartedView.facebookButton addTarget: self
+    action: @selector(showFacebook)
       forControlEvents: UIControlEventTouchUpInside];
   // Sign up
-  [_getStartedView.getStartedButton addTarget: self 
-    action: @selector(showSignUp) 
+  [_getStartedView.getStartedButton addTarget: self
+    action: @selector(showSignUp)
       forControlEvents: UIControlEventTouchUpInside];
   // Login
   [_getStartedView.loginButton addTarget: self
     action: @selector(showLogin)
       forControlEvents: UIControlEventTouchUpInside];
   // Landlords
-  [_getStartedView.landlordButton addTarget: self 
-    action: @selector(showLandlordSignUp) 
+  [_getStartedView.landlordButton addTarget: self
+    action: @selector(showLandlordSignUp)
       forControlEvents: UIControlEventTouchUpInside];
   [_scroll addSubview: _getStartedView];
 
@@ -218,13 +218,13 @@
     screenWidth, bottomViewHeight);
   [self.view addSubview: bottomView];
   UIView *bottomViewBorder = [UIView new];
-  bottomViewBorder.frame = CGRectMake(0.0f, 0.0f, 
+  bottomViewBorder.frame = CGRectMake(0.0f, 0.0f,
     bottomView.frame.size.width, 1.0f);
   bottomViewBorder.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.5f];
   [bottomView addSubview: bottomViewBorder];
 
   signUpButton = [UIButton new];
-  signUpButton.frame = CGRectMake(0.0f, 0.0f, 
+  signUpButton.frame = CGRectMake(0.0f, 0.0f,
     bottomView.frame.size.width * 0.5f, bottomView.frame.size.height);
   signUpButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
     size: 17];
@@ -235,7 +235,7 @@
 
   loginButton = [UIButton new];
   loginButton.frame = CGRectMake(
-    signUpButton.frame.origin.x + signUpButton.frame.size.width, 
+    signUpButton.frame.origin.x + signUpButton.frame.size.width,
       signUpButton.frame.origin.y, signUpButton.frame.size.width,
         signUpButton.frame.size.height);
   loginButton.titleLabel.font = signUpButton.titleLabel.font;
@@ -252,7 +252,7 @@
   _pageControl.offColor          = [UIColor whiteColor];
   _pageControl.onColor           = [UIColor whiteColor];
   _pageControl.type = DDPageControlTypeOnFullOffEmpty;
-  _pageControl.frame = CGRectMake(0.0f, 
+  _pageControl.frame = CGRectMake(0.0f,
     screenHeight - (60.0f + bottomView.frame.size.height), screenWidth, 60.0f);
   [_pageControl addTarget: self action: @selector(scrollToCurrentPage:)
     forControlEvents: UIControlEventValueChanged];
@@ -265,13 +265,13 @@
   CGRect closeRect = [@"Skip" boundingRectWithSize:
     CGSizeMake(skipButtonViewWidth, skipButtonViewHeight)
       options: NSStringDrawingUsesLineFragmentOrigin
-        attributes: @{ NSFontAttributeName: 
-        [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] } 
+        attributes: @{ NSFontAttributeName:
+        [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] }
           context: nil];
   skipButtonViewHeight = closeRect.size.height + 10;
   skipButtonViewWidth  = closeRect.size.width + 20 + 10;
   skipButtonView.frame = CGRectMake(
-    (screen.size.width - (skipButtonViewWidth + 10)), (20 + 10), 
+    (screen.size.width - (skipButtonViewWidth + 10)), (20 + 10),
       skipButtonViewWidth, skipButtonViewHeight);
   skipButtonView.layer.borderColor = [UIColor whiteColor].CGColor;
   skipButtonView.layer.borderWidth = 1.0f;
@@ -285,9 +285,9 @@
   [closeButton addTarget: self action: @selector(scrollToSignUp)
     forControlEvents: UIControlEventTouchUpInside];
   [closeButton setTitle: @"Skip" forState: UIControlStateNormal];
-  [closeButton setTitleColor: [UIColor whiteColor] 
+  [closeButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
-  [closeButton setTitleColor: [UIColor whiteColor] 
+  [closeButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateHighlighted];
   [skipButtonView addSubview: closeButton];
   doneButton = [[UIButton alloc] init];
@@ -302,22 +302,22 @@
                    forState: UIControlStateHighlighted];
   [skipButtonView addSubview: doneButton];
   doneButton.hidden = YES;
-  
+
   // Close button for get started view
   CGFloat closeButtonPadding = padding * 0.5f;
   CGFloat closeButtonViewHeight = 30.0f;
   CGFloat closeButtonViewWidth  = closeButtonViewHeight;
-  CGRect closeButtonRect = CGRectMake(_getStartedView.frame.size.width - 
-    (closeButtonViewWidth + closeButtonPadding), 
-      padding + closeButtonPadding, closeButtonViewWidth, 
+  CGRect closeButtonRect = CGRectMake(_getStartedView.frame.size.width -
+    (closeButtonViewWidth + closeButtonPadding),
+      padding + closeButtonPadding, closeButtonViewWidth,
         closeButtonViewHeight);
   OMBCloseButtonView *closeXButton = [[OMBCloseButtonView alloc] initWithFrame:
     closeButtonRect color: [UIColor whiteColor]];
-  [closeXButton.closeButton addTarget: self 
+  [closeXButton.closeButton addTarget: self
     action: @selector(close)
       forControlEvents: UIControlEventTouchUpInside];
   [_getStartedView addSubview: closeXButton];
-  
+
   // Activity indicator spinner
   _activityView = [[OMBActivityView alloc] init];
   [self.view addSubview: _activityView];
@@ -326,11 +326,11 @@
   studentLandlordView = [[OMBStudentOrLandlordView alloc] init];
   [self.view addSubview: studentLandlordView];
   // Setup the buttons
-  [studentLandlordView.landlordButton addTarget: self 
-    action: @selector(showLandlordSignUp) 
+  [studentLandlordView.landlordButton addTarget: self
+    action: @selector(showLandlordSignUp)
       forControlEvents: UIControlEventTouchUpInside];
-  [studentLandlordView.studentButton addTarget: self 
-    action: @selector(showStudentSignUp) 
+  [studentLandlordView.studentButton addTarget: self
+    action: @selector(showStudentSignUp)
       forControlEvents: UIControlEventTouchUpInside];
 }
 
@@ -361,7 +361,7 @@
 - (void) viewWillDisappear: (BOOL) animated
 {
   [super viewWillDisappear: animated];
-  
+
   [[UIApplication sharedApplication] setStatusBarStyle:
     UIStatusBarStyleDefault];
 
@@ -372,7 +372,7 @@
     if (![self appDelegate].container.currentDetailViewController)
       [[self appDelegate].container showDiscover];
   }
-  
+
   animate = NO;
 }
 
@@ -394,13 +394,13 @@
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   float screenWidth = screen.size.width;
-  
+
   float percent = 0.0;
   float width   = scrollView.frame.size.width;
   float x       = scrollView.contentOffset.x;
   float page    = x / width;
   _pageControl.currentPage = (int)(page+0.5);
-  
+
   // Fade the background image views in and out
   for (UIView *bView in backgroundViewArray) {
     NSInteger index = [backgroundViewArray indexOfObject: bView];
@@ -428,26 +428,26 @@
 
   // Scroll the close button view and the page control
   if (page <= 4) {
-    // _pageControl.frame = CGRectMake(x, 
-    //   _pageControl.frame.origin.y, 
+    // _pageControl.frame = CGRectMake(x,
+    //   _pageControl.frame.origin.y,
     //     _pageControl.frame.size.width, _pageControl.frame.size.height);
 
     // skipButtonView.frame = CGRectMake(
-    //   (screen.size.width - (skipButtonView.frame.size.width + 10)) + x, 
-    //     skipButtonView.frame.origin.y, 
+    //   (screen.size.width - (skipButtonView.frame.size.width + 10)) + x,
+    //     skipButtonView.frame.origin.y,
     //       skipButtonView.frame.size.width, skipButtonView.frame.size.height);
   }
   // Fade the page control and bottom view and skip button
   if (page < 99) {
     percent = (x - (width * 3)) / width;
-    skipButtonView.alpha = bottomView.alpha = 
+    skipButtonView.alpha = bottomView.alpha =
       _pageControl.alpha = 1 - percent;
   }
   // Get started view
   if (page <= _pageControl.numberOfPages) {
     percent = (x - (width * 3)) / width;
 
-    CGFloat stopOriginX = 
+    CGFloat stopOriginX =
       (screenWidth - _getStartedView.facebookButtonView.frame.size.width) * 0.5;
     CGFloat facebookFactor = 1.4f;
     CGFloat facebookPercent = percent * facebookFactor;
@@ -476,7 +476,7 @@
         getStartedPercent = 1 + ((percent - 1) * getStartedFactor);
       }
     }
-    float getStartedOriginX = 
+    float getStartedOriginX =
       screenWidth - ((screenWidth - stopOriginX) * getStartedPercent);
     _getStartedView.getStartedButtonView.frame = CGRectMake(
       getStartedOriginX,
@@ -484,7 +484,7 @@
           _getStartedView.getStartedButtonView.frame.size.width,
             _getStartedView.getStartedButtonView.frame.size.height);
     CGRect landlordButtonRect = _getStartedView.landlordButton.frame;
-    CGFloat landlordButtonOriginX = screenWidth - 
+    CGFloat landlordButtonOriginX = screenWidth -
       ((landlordButtonRect.size.width + (screenWidth * 0.5f * 0.5f)) * percent);
     landlordButtonRect.origin.x = landlordButtonOriginX;
     _getStartedView.landlordButton.frame = landlordButtonRect;
@@ -493,7 +493,7 @@
   if (page >= 4) {
     percent = (x - (width * 4)) / width;
 
-    // float stopOriginX = 
+    // float stopOriginX =
     //   (screenWidth - _getStartedView.getStartedButton.frame.size.width) * 0.5;
     // float facebookPercent = percent * 1.3;
     // float facebookOriginX =
@@ -503,7 +503,7 @@
     //     _getStartedView.facebookButton.frame.origin.y,
     //       _getStartedView.facebookButton.frame.size.width,
     //         _getStartedView.facebookButton.frame.size.height);
-    // float getStartedOriginX = 
+    // float getStartedOriginX =
     //   stopOriginX - ((screenWidth - stopOriginX) * percent);
     // _getStartedView.getStartedButton.frame = CGRectMake(
     //   getStartedOriginX,
@@ -642,11 +642,11 @@
   _signUpView.hidden         = YES;
   _pageControl.numberOfPages = numberOfPages - 1;
   // 60.0f = height of page control
-  _pageControl.frame = CGRectMake(0.0f, 
-    _scroll.frame.size.height - (60.0f + bottomView.frame.size.height), 
+  _pageControl.frame = CGRectMake(0.0f,
+    _scroll.frame.size.height - (60.0f + bottomView.frame.size.height),
       _scroll.frame.size.width, 60.0f);
   _scroll.contentSize = CGSizeMake(
-    (_scroll.frame.size.width * _pageControl.numberOfPages), 
+    (_scroll.frame.size.width * _pageControl.numberOfPages),
       _scroll.frame.size.height);
   closeButton.hidden = YES;
   doneButton.hidden = NO;
@@ -660,8 +660,8 @@
   _signUpView.hidden         = NO;
   _pageControl.numberOfPages = numberOfPages;
   // 60.0f = height of page control
-  _pageControl.frame = CGRectMake(0.0f, 
-    _scroll.frame.size.height - (60.0f + bottomView.frame.size.height), 
+  _pageControl.frame = CGRectMake(0.0f,
+    _scroll.frame.size.height - (60.0f + bottomView.frame.size.height),
       _scroll.frame.size.width, 60.0f);
   // Number of pages + 1 for the sign up view at the end of the intro
   _scroll.contentSize = CGSizeMake(
@@ -687,14 +687,14 @@
 - (void) showLogin
 {
   [_loginViewController showLogin];
-  [self presentViewController: _loginViewController 
+  [self presentViewController: _loginViewController
     animated: YES completion: nil];
 }
 
 - (void) showSignUp
 {
   [_loginViewController showSignUp];
-  [self presentViewController: _loginViewController 
+  [self presentViewController: _loginViewController
     animated: YES completion: nil];
 }
 

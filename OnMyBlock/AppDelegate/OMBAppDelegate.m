@@ -32,25 +32,6 @@
 
 NSString *const FBSessionStateChangedNotification =
   @"com.onmyblock.Login:FBSessionStateChangedNotification";
-NSString *const OMBUserDefaults = @"OMBUserDefaults";
-NSString *const OMBUserDefaultsAPIKey = @"OMBUserDefaultsAPIKey";
-NSString *const OMBUserDefaultsAPIKeyAccessToken =
-  @"OMBUserDefaultsAPIKeyAccessToken";
-NSString *const OMBUserDefaultsAPIKeyExpiresAt =
-  @"OMBUserDefaultsAPIKeyExpiresAt";
-NSString *const OMBUserDefaultsRenterApplication =
-  @"OMBUserDefaultsRenterApplication";
-NSString *const OMBUserDefaultsRenterApplicationCheckedCoapplicants =
-  @"OMBUserDefaultsRenterApplicationCheckedCoapplicants";
-NSString *const OMBUserDefaultsRenterApplicationCheckedCosigners =
-  @"OMBUserDefaultsRenterApplicationCheckedCosigners";
-NSString *const OMBUserDefaultsRenterApplicationCheckedLegalQuestions =
-  @"OMBUserDefaultsRenterApplicationCheckedLegalQuestions";
-NSString *const OMBUserDefaultsRenterApplicationCheckedRentalHistory =
-  @"OMBUserDefaultsRenterApplicationCheckedRentalHistory";
-NSString *const OMBUserDefaultsRenterApplicationCheckedWorkHistory =
-  @"OMBUserDefaultsRenterApplicationCheckedWorkHistory";
-NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
 
 @interface OMBAppDelegate ()
 {
@@ -192,6 +173,11 @@ didRegisterForRemoteNotificationsWithDeviceToken: (NSData *) deviceToken
   PFInstallation *currentInstallation = [PFInstallation currentInstallation];
   [currentInstallation setDeviceTokenFromData: deviceToken];
   [currentInstallation saveInBackground];
+  // Subsscribe current user to push notification channels
+  [[NSNotificationCenter defaultCenter] postNotificationName:
+    OMBUserSubscribeToPushNotificationChannels object: nil userInfo: nil];
+  NSLog(@"Application did register for remote notifications: %@",
+    deviceToken);
 }
 
 - (BOOL) application: (UIApplication *) application openURL: (NSURL *) url

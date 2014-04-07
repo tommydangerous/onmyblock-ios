@@ -167,6 +167,11 @@ NSString *const OMBUserTypeLandlord = @"landlord";
     [[NSNotificationCenter defaultCenter] addObserver: user
       selector: @selector(performInitialLoginSetup)
         name: OMBUserLoggedInNotification object: nil];
+
+    // Subscribe to push notifications channel
+    [[NSNotificationCenter defaultCenter] addObserver: user
+      selector: @selector(subscribeToPushNotificationChannels)
+        name: OMBUserSubscribeToPushNotificationChannels object: nil];
   }
   return user;
 }
@@ -250,6 +255,11 @@ NSString *const OMBUserTypeLandlord = @"landlord";
 + (NSString *) pushNotificationChannelForOffersPlaced: (NSUInteger) userUID
 {
   return [NSString stringWithFormat: @"user_%i_offersplaced", userUID];
+}
+
++ (NSString *) pushNotificationChannelForOffersReceived: (NSUInteger) userUID
+{
+  return [NSString stringWithFormat: @"user_%i_offersreceived", userUID];
 }
 
 #pragma mark - Instance Methods
@@ -927,7 +937,9 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [self postLandlordTypeChangeNotification];
 
   // Subscribe to push notification channels
-  [self subscribeToPushNotificationChannels];
+  [[NSNotificationCenter defaultCenter] postNotificationName:
+    OMBUserSubscribeToPushNotificationChannels object: nil
+      userInfo: nil];
 }
 
 - (NSString *) phoneString
@@ -1739,6 +1751,12 @@ ascending: (BOOL) ascending
   [currentInstallation addUniqueObject:
     [OMBUser pushNotificationChannelForOffersPlaced: self.uid]
       forKey: ParseChannelsKey];
+  [currentInstallation saveInBackground];
+  // Offers received
+  [currentInstallation addUniqueObject:
+    [OMBUser pushNotificationChannelForOffersReceived: self.uid]
+      forKey: ParseChannelsKey];
+  [currentInstallation saveInBackground];
 }
 
 - (void) updateWithDictionary: (NSDictionary *) dictionary

@@ -303,11 +303,4 @@ fromButton: (UIButton *) button;
   // }];
 }
 
-- (void) unselectAllButtons
-{
-  for (UIButton *b in buttons) {
-
-  }
-}
-
 @end

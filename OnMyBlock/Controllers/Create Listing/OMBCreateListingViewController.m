@@ -9,6 +9,7 @@
 #import "OMBCreateListingViewController.h"
 
 #import "AMBlurView.h"
+#import "NSUserDefaults+OnMyBlock.h"
 #import "OMBActivityView.h"
 #import "OMBCreateListingConnection.h"
 #import "OMBCreateListingDetailCell.h"
@@ -49,9 +50,9 @@
   self.title      = @"Step 1";
 
   valuesDictionary = [NSMutableDictionary dictionary];
-  [valuesDictionary setObject: [NSNumber numberWithInt: 1] 
+  [valuesDictionary setObject: [NSNumber numberWithInt: 1]
     forKey: @"bathrooms"];
-  [valuesDictionary setObject: [NSNumber numberWithInt: 1] 
+  [valuesDictionary setObject: [NSNumber numberWithInt: 1]
     forKey: @"bedrooms"];
   [valuesDictionary setObject: @"" forKey: @"city"];
   [valuesDictionary setObject: [NSNumber numberWithInt: 0]
@@ -109,12 +110,12 @@
 
   progressBar = [UIView new];
   progressBar.backgroundColor = [UIColor blue];
-  progressBar.frame = CGRectMake(0.0f, 0.0f, 0.0f, 
+  progressBar.frame = CGRectMake(0.0f, 0.0f, 0.0f,
     progressBarBackground.frame.size.height);
   [progressBarBackground addSubview: progressBar];
 
   stepLabel = [UILabel new];
-  stepLabel.frame = CGRectMake(0.0f, progressBarBackground.frame.origin.y + 
+  stepLabel.frame = CGRectMake(0.0f, progressBarBackground.frame.origin.y +
     progressBarBackground.frame.size.height, screenWidth, 0.0f);
   stepLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 36];
   stepLabel.text = @"Step 1";
@@ -131,16 +132,16 @@
   questionLabel.textColor = [UIColor textColor];
   [headerView addSubview: questionLabel];
 
-  headerView.frame = CGRectMake(0.0f, padding + 44.0f, screenWidth, 
+  headerView.frame = CGRectMake(0.0f, padding + 44.0f, screenWidth,
     progressBarBackground.frame.size.height + stepLabel.frame.size.height +
       padding + questionLabel.frame.size.height + padding);
 
-  CGFloat tableViewHeight = screen.size.height - 
+  CGFloat tableViewHeight = screen.size.height -
     (headerView.frame.origin.y + headerView.frame.size.height);
 
   // Step 1
   propertyTypeTableView = [[UITableView alloc] initWithFrame: CGRectMake(
-    0.0f, screen.size.height - tableViewHeight, screenWidth, tableViewHeight) 
+    0.0f, screen.size.height - tableViewHeight, screenWidth, tableViewHeight)
       style: UITableViewStylePlain];
   propertyTypeTableView.alwaysBounceVertical = NO;
   propertyTypeTableView.dataSource = self;
@@ -150,13 +151,13 @@
   [self.view addSubview: propertyTypeTableView];
   CALayer *topBorder = [CALayer layer];
   topBorder.backgroundColor = propertyTypeTableView.separatorColor.CGColor;
-  topBorder.frame = CGRectMake(0.0f, 0.0f, 
+  topBorder.frame = CGRectMake(0.0f, 0.0f,
     propertyTypeTableView.frame.size.width, 0.5f);
   [propertyTypeTableView.layer addSublayer: topBorder];
 
   // Step 2
   locationView = [UIView new];
-  locationView.frame = CGRectMake(screenWidth, 
+  locationView.frame = CGRectMake(screenWidth,
     propertyTypeTableView.frame.origin.y, screenWidth, tableViewHeight);
   [self.view addSubview: locationView];
 
@@ -164,7 +165,7 @@
   cityTextField.backgroundColor = [UIColor grayVeryLight];
   cityTextField.delegate = self;
   cityTextField.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  cityTextField.frame = CGRectMake(padding, 0.0f, 
+  cityTextField.frame = CGRectMake(padding, 0.0f,
     screenWidth - (padding * 2), 44.0f);
   cityTextField.layer.cornerRadius = 2.0f;
   cityTextField.leftPaddingX = padding * 0.75f;
@@ -181,19 +182,19 @@
   currentLocationButton = [UIButton new];
   currentLocationButton.frame = CGRectMake(0.0f, 0.0f,
     padding * 2, padding);
-  UIImage *currentLocationButtonImage = [UIImage image: [UIImage imageNamed: 
+  UIImage *currentLocationButtonImage = [UIImage image: [UIImage imageNamed:
     @"gps_cursor_blue.png"] size: CGSizeMake(padding, padding)];
   [currentLocationButton addTarget: self action: @selector(useCurrentLocation)
     forControlEvents: UIControlEventTouchUpInside];
-  [currentLocationButton setImage: currentLocationButtonImage 
+  [currentLocationButton setImage: currentLocationButtonImage
     forState: UIControlStateNormal];
   cityTextField.rightView = currentLocationButton;
 
-  CGFloat mapOriginY = cityTextField.frame.origin.y + 
+  CGFloat mapOriginY = cityTextField.frame.origin.y +
     cityTextField.frame.size.height + padding;
   map = [[MKMapView alloc] init];
   map.delegate = self;
-  map.frame = CGRectMake(0.0f, mapOriginY, screenWidth, 
+  map.frame = CGRectMake(0.0f, mapOriginY, screenWidth,
     locationView.frame.size.height - mapOriginY);
   map.mapType = MKMapTypeStandard;
   map.rotateEnabled = NO;
@@ -203,9 +204,9 @@
   [locationView addSubview: map];
 
   // City table view
-  cityTableView = [[UITableView alloc] initWithFrame: 
-    CGRectMake(map.frame.origin.x, map.frame.origin.y, 
-      map.frame.size.width, map.frame.size.height) 
+  cityTableView = [[UITableView alloc] initWithFrame:
+    CGRectMake(map.frame.origin.x, map.frame.origin.y,
+      map.frame.size.width, map.frame.size.height)
         style: UITableViewStylePlain];
   cityTableView.alwaysBounceVertical = YES;
   cityTableView.dataSource = self;
@@ -216,10 +217,10 @@
   [locationView addSubview: cityTableView];
 
   // Step 3
-  
+
   detailsTableView = [[UITableView alloc] initWithFrame: CGRectMake(
     locationView.frame.origin.x, propertyTypeTableView.frame.origin.y,
-     propertyTypeTableView.frame.size.width, 
+     propertyTypeTableView.frame.size.width,
       propertyTypeTableView.frame.size.height) style: UITableViewStylePlain];
   detailsTableView.alwaysBounceVertical = YES;
   detailsTableView.dataSource = self;
@@ -282,12 +283,12 @@
   [lengthLeaseDoneButton setTitleColor: [UIColor blueDark]
                        forState: UIControlStateNormal];
   [pickerViewHeader addSubview: lengthLeaseDoneButton];
-  
+
   pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
                                          lengthLeasePickerView.frame.size.width,
                                          pickerViewHeader.frame.size.height +
                                          lengthLeasePickerView.frame.size.height);
-  
+
   fadedBackground = [[UIView alloc] init];
   fadedBackground.alpha = 0.0f;
   fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
@@ -300,7 +301,7 @@
   [fadedBackground addGestureRecognizer: tapGesture];
   // fadedBackground must to be behind pickerViewContainer
   [self.view addSubview: pickerViewContainer];
-  
+
   // Activity spinner
   activityView = [[OMBActivityView alloc] init];
   [self.view addSubview: activityView];
@@ -318,25 +319,25 @@
   nextButton.titleLabel.font = [UIFont mediumTextFontBold];
   [nextButton addTarget: self action: @selector(next)
     forControlEvents: UIControlEventTouchUpInside];
-  [nextButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor blueHighlighted]] 
+  [nextButton setBackgroundImage:
+    [UIImage imageWithColor: [UIColor blueHighlighted]]
       forState: UIControlStateHighlighted];
   [nextButton setTitle: @"Next" forState: UIControlStateNormal];
-  [nextButton setTitleColor: [UIColor whiteColor] 
+  [nextButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [nextView addSubview: nextButton];
 
   // City table view footer
   cityTableView.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectMake(0.0f, 0.0f, screenWidth, nextView.frame.size.height)];
-  
+
   stepNumber = 0;
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-  
+
   [self verifyMenu];
 }
 
@@ -347,7 +348,7 @@
 - (void) locationManager: (CLLocationManager *) manager
 didFailWithError: (NSError *) error
 {
-  NSLog(@"Location manager did fail with error: %@", 
+  NSLog(@"Location manager did fail with error: %@",
     error.localizedDescription);
 }
 
@@ -364,6 +365,20 @@ didUpdateLocations: (NSArray *) locations
   [self foundLocation: coordinate];
 }
 
+#pragma mark - UIAlertViewDelegate Protocol
+
+- (void) alertView: (UIAlertView *) alertView
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  if (buttonIndex == 0) {
+    [[self userDefaults] permissionCurrentLocationSet: NO];
+  }
+  else if (buttonIndex == 1) {
+    [[self userDefaults] permissionCurrentLocationSet: YES];
+    [self useCurrentLocation];
+  }
+}
+
 #pragma mark - Protocol UITableViewDataSource
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -373,18 +388,18 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
     CellIdentifier];
   if (!cell)
-    cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault 
+    cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
       reuseIdentifier: CellIdentifier];
   cell.selectionStyle = UITableViewCellSelectionStyleNone;
   // Property type
   if (tableView == propertyTypeTableView) {
     static NSString *PropertyTypeCellIdentifier = @"PropertyTypeCellIdentifier";
-    OMBCreateListingPropertyTypeCell *c = 
+    OMBCreateListingPropertyTypeCell *c =
       [tableView dequeueReusableCellWithIdentifier:
           PropertyTypeCellIdentifier];
     if (!c)
       c = [[OMBCreateListingPropertyTypeCell alloc] initWithStyle:
-        UITableViewCellStyleDefault reuseIdentifier: 
+        UITableViewCellStyleDefault reuseIdentifier:
           PropertyTypeCellIdentifier];
     NSString *imageName;
     NSString *string = @"";
@@ -403,7 +418,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     [c setFramesForSubviewsWithSize: CGSizeMake(tableView.frame.size.width,
       tableView.frame.size.height / 3.0f)];
     c.propertyTypeImageView.alpha = 1.0f;
-    c.propertyTypeImageView.image = 
+    c.propertyTypeImageView.image =
       [UIImage changeColorForImage: [UIImage imageNamed: imageName]
         toColor: [UIColor blue]];
     c.propertyTypeLabel.text = string;
@@ -415,10 +430,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
       CityCellIdentifier];
     if (!cell1)
-      cell1 = [[UITableViewCell alloc] initWithStyle: 
+      cell1 = [[UITableViewCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: CityCellIdentifier];
     cell1.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell1.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
+    cell1.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
       size: 15];
     cell1.textLabel.text = [_citiesArray objectAtIndex: indexPath.row];
     cell1.textLabel.textColor = [UIColor textColor];
@@ -427,10 +442,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Details
   else if (tableView == detailsTableView) {
     static NSString *DetailCellIdentifier = @"DetailCellIdentifier";
-    OMBCreateListingDetailCell *c = 
+    OMBCreateListingDetailCell *c =
       [tableView dequeueReusableCellWithIdentifier: DetailCellIdentifier];
     if (!c)
-      c = [[OMBCreateListingDetailCell alloc] initWithStyle: 
+      c = [[OMBCreateListingDetailCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: DetailCellIdentifier];
     c.selectionStyle = UITableViewCellSelectionStyleNone;
     NSString *string      = @"";
@@ -446,7 +461,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [[valuesDictionary objectForKey: @"bathrooms"] intValue]];
     }
     else if (indexPath.row == 2) {
-      
+
       static NSString *PropertyTypeCellIdentifier =
 			@"LengthLeaseCellIdentifier";
 			OMBCreateListingDetailLeaseCell *cell =
@@ -461,7 +476,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         tableView.frame.size.height * 0.3f)];
 			return cell;
     }
-    
+
     [c setFramesForSubviewsWithSize: CGSizeMake(tableView.frame.size.width,
       tableView.frame.size.height * 0.3f)];
     c.detailNameLabel.text = string;
@@ -565,7 +580,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) pickerView: (UIPickerView *) pickerView
  numberOfRowsInComponent: (NSInteger) component
 {
-	
+
 	if (pickerView == lengthLeasePickerView)
 	{
 		// Months
@@ -587,7 +602,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 		NSString *string = [self pickerView: pickerView titleForRow: row
                            forComponent: component];
 		cell.lenghtLease.text = string;
-    
+
 		[valuesDictionary setObject:[NSNumber numberWithInteger:row]
                           forKey:@"leaseMonths"];
 	}
@@ -611,7 +626,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 		NSString *string = [NSString stringWithFormat:@"%i month%@ lease",row, (row > 1 ? @"s":@"")];
 		return string;
 	}
-	
+
   return nil;
 }
 
@@ -627,8 +642,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Protocol UITextFieldDelegate
 
-- (BOOL) textField: (UITextField *) textField 
-shouldChangeCharactersInRange: (NSRange) range 
+- (BOOL) textField: (UITextField *) textField
+shouldChangeCharactersInRange: (NSRange) range
 replacementString: (NSString *) string
 {
   if (textField == cityTextField)
@@ -657,7 +672,7 @@ replacementString: (NSString *) string
     [UIView animateWithDuration: 0.25f animations: ^{
       progressBar.frame = progressBarRect;
     }];
- 
+
     if (stepNumber == 0) {
       [self.navigationItem setLeftBarButtonItem: cancelBarButtonItem
         animated: YES];
@@ -681,8 +696,8 @@ replacementString: (NSString *) string
     if (stepNumber == 1) {
       animations = ^(void) {
         stepLabel.text     = @"Step 2";
-        questionLabel.text = [NSString stringWithFormat: 
-          @"What city is this %@ in?", 
+        questionLabel.text = [NSString stringWithFormat:
+          @"What city is this %@ in?",
             [valuesDictionary objectForKey: @"propertyType"]];
         UILabel *label = (UILabel *) self.navigationItem.titleView;
         label.text = @"Step 2";
@@ -716,7 +731,7 @@ replacementString: (NSString *) string
         locationView.frame = rect2;
       };
     }
-    [UIView animateWithDuration: 0.25f animations: animations 
+    [UIView animateWithDuration: 0.25f animations: animations
       completion: completion];
   }
   [self.view endEditing: YES];
@@ -742,14 +757,14 @@ replacementString: (NSString *) string
     [valuesDictionary setObject: [NSNumber numberWithInt: 0]
                          forKey: @"leaseMonths"];
 	}
-	
+
   [self hidePickerView];
 }
 
 - (void ) changeDetailValueAtIndex: (int) index plus: (BOOL) plus
 {
   NSString *key = @"";
-  
+
   // Bedrooms
   if (index == 0) {
     key = @"bedrooms";
@@ -800,12 +815,12 @@ replacementString: (NSString *) string
   [self setMapViewRegion: coordinate withMiles: 5 animated: YES];
   // Use Google Places API with coordinate as opposed to search text
   // Search for places via Google
-  OMBGoogleMapsReverseGeocodingConnection *conn = 
+  OMBGoogleMapsReverseGeocodingConnection *conn =
     [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithCoordinate:
       coordinate];
   conn.completionBlock = ^(NSError *error) {
     cityTableView.hidden = YES;
-    // [self.navigationItem setRightBarButtonItem: nextBarButtonItem 
+    // [self.navigationItem setRightBarButtonItem: nextBarButtonItem
     //   animated: YES];
     [valuesDictionary setObject: cityTextField.text forKey: @"city"];
     [self checkValidationForCity];
@@ -835,14 +850,14 @@ replacementString: (NSString *) string
 {
   if (stepNumber < 2) {
     stepNumber += 1;
-    
+
     CGRect screen = [[UIScreen mainScreen] bounds];
     CGRect progressBarRect = progressBar.frame;
     progressBarRect.size.width = screen.size.width * (stepNumber / 3.0f);
     [UIView animateWithDuration: 0.25f animations: ^{
       progressBar.frame = progressBarRect;
     }];
-    
+
     [self.navigationItem setLeftBarButtonItem: backBarButtonItem
       animated: YES];
     // Last step; details
@@ -863,8 +878,8 @@ replacementString: (NSString *) string
     if (stepNumber == 1) {
       animations = ^(void) {
         stepLabel.text     = @"Step 2";
-        questionLabel.text = [NSString stringWithFormat: 
-          @"What city is this %@ in?", 
+        questionLabel.text = [NSString stringWithFormat:
+          @"What city is this %@ in?",
             [valuesDictionary objectForKey: @"propertyType"]];
         UILabel *label = (UILabel *) self.navigationItem.titleView;
         label.text = @"Step 2";
@@ -886,8 +901,8 @@ replacementString: (NSString *) string
     else if (stepNumber == 2) {
       animations = ^(void) {
         stepLabel.text     = @"Step 3";
-        questionLabel.text = [NSString stringWithFormat: 
-          @"Details about your %@?", 
+        questionLabel.text = [NSString stringWithFormat:
+          @"Details about your %@?",
             [valuesDictionary objectForKey: @"propertyType"]];
         UILabel *label = (UILabel *) self.navigationItem.titleView;
         label.text = @"Step 3";
@@ -901,9 +916,9 @@ replacementString: (NSString *) string
         rect3.origin.x         = 0.0f;
         detailsTableView.frame = rect3;
       };
-      
+
       NSString *propertyType = [valuesDictionary objectForKey: @"propertyType"];
-      
+
       // which propertyType
       OMBCreateListingDetailLeaseCell *cell = (OMBCreateListingDetailLeaseCell *)
       [detailsTableView cellForRowAtIndexPath:
@@ -919,10 +934,10 @@ replacementString: (NSString *) string
         [valuesDictionary setObject: [NSNumber numberWithInt: 0]
                              forKey: @"leaseMonths"];
       }
-      
+
       [self checkValidationForCity];
     }
-    [UIView animateWithDuration: 0.25f animations: animations 
+    [UIView animateWithDuration: 0.25f animations: animations
       completion: completion];
   }
   // Save
@@ -945,15 +960,15 @@ replacementString: (NSString *) string
   [activityView startSpinning];
 
   nextButton.enabled = NO;
-  
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGRect progressBarRect = progressBar.frame;
   progressBarRect.size.width = screen.size.width * (stepNumber / 3.0f);
   [UIView animateWithDuration: 0.25f animations: ^{
     progressBar.frame = progressBarRect;
   } completion: ^(BOOL finished) {
-    OMBCreateListingConnection *conn = 
-      [[OMBCreateListingConnection alloc] initWithTemporaryResidence: 
+    OMBCreateListingConnection *conn =
+      [[OMBCreateListingConnection alloc] initWithTemporaryResidence:
         _temporaryResidence dictionary: valuesDictionary];
     conn.completionBlock = ^(NSError *error) {
       if (_temporaryResidence.uid && !error) {
@@ -963,7 +978,7 @@ replacementString: (NSString *) string
 
         if (![[OMBUser currentUser] hasLandlordType]) {
           NSString *landlordType;
-          if ([_temporaryResidence.propertyType isEqualToString: 
+          if ([_temporaryResidence.propertyType isEqualToString:
             OMBResidencePropertyTypeSublet]) {
             landlordType = @"subletter";
           }
@@ -976,13 +991,13 @@ replacementString: (NSString *) string
         [[OMBUser currentUser] updateWithDictionary: @{
           @"landlordType": [OMBUser currentUser].landlordType
         } completion: ^(NSError *error) {
-          
+
         }];
         if ([self.navigationController.viewControllers count] == 1)
           [[self appDelegate].container showManageListings];
         else
           [self.navigationController popViewControllerAnimated: NO];
-        
+
         [[self appDelegate].container setTitleColorWhite];
         [[self appDelegate].container.manageListingsNavigationController
           pushViewController:
@@ -990,11 +1005,11 @@ replacementString: (NSString *) string
               _temporaryResidence] animated: YES];
       }
       else {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-          @"Save failed" message: @"Please try again" 
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+          @"Save failed" message: @"Please try again"
             delegate: nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
         [alertView show];
-        
+
         nextButton.enabled = YES;
         stepNumber -= 1;
         CGRect newRect = progressBar.frame;
@@ -1006,7 +1021,7 @@ replacementString: (NSString *) string
       [activityView stopSpinning];
       // [[self appDelegate].container stopSpinning];
     };
-    [conn start]; 
+    [conn start];
   }];
 }
 
@@ -1015,13 +1030,13 @@ replacementString: (NSString *) string
   cityTextField.text = string;
 }
 
-- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
+- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate
 withMiles: (int) miles animated: (BOOL) animated
 {
   // 1609 meters = 1 mile
   int distanceInMiles = 1609 * miles;
   MKCoordinateRegion region =
-    MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles, 
+    MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles,
       distanceInMiles);
   [map setRegion: region animated: animated];
 }
@@ -1044,12 +1059,12 @@ withMiles: (int) miles animated: (BOOL) animated
 	if (lengthLeasePickerView == pickerView)
 	{
 		pickerViewHeaderLabel.text = @"Length of Lease";
-		
+
 		//[rentPickerView removeFromSuperview];
 		[pickerViewContainer addSubview:lengthLeasePickerView];
     [self showNextButton:NO];
 	}
-	
+
   CGRect rect = pickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height -
   pickerViewContainer.frame.size.height;
@@ -1062,7 +1077,7 @@ withMiles: (int) miles animated: (BOOL) animated
 - (void) startGooglePlacesConnection
 {
   // Search for places via Google
-  OMBGooglePlacesConnection *conn = 
+  OMBGooglePlacesConnection *conn =
     [[OMBGooglePlacesConnection alloc] initWithString: cityTextField.text
       citiesOnly: YES];
   conn.completionBlock = ^(NSError *error) {
@@ -1080,8 +1095,8 @@ withMiles: (int) miles animated: (BOOL) animated
     [typingTimer invalidate];
     // Start timer
     if ([[textField.text stripWhiteSpace] length]) {
-      typingTimer = [NSTimer scheduledTimerWithTimeInterval: 0.5f target: self 
-        selector: @selector(startGooglePlacesConnection) userInfo: nil 
+      typingTimer = [NSTimer scheduledTimerWithTimeInterval: 0.5f target: self
+        selector: @selector(startGooglePlacesConnection) userInfo: nil
           repeats: NO];
       cityTextField.clearButtonMode = UITextFieldViewModeAlways;
       cityTextField.rightViewMode   = UITextFieldViewModeNever;
@@ -1095,12 +1110,22 @@ withMiles: (int) miles animated: (BOOL) animated
     }
     [valuesDictionary setObject: @"" forKey: @"city"];
     [self checkValidationForCity];
-  } 
+  }
 }
 
 - (void) useCurrentLocation
 {
-  [locationManager startUpdatingLocation];
+  if ([[self userDefaults] permissionCurrentLocation]) {
+    [locationManager startUpdatingLocation];
+  }
+  else {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+      @"Use Current Location" message: @"Using your current location "
+      @"will make creating a listing easier and faster."
+        delegate: self cancelButtonTitle: @"Not now"
+          otherButtonTitles: @"Yes", nil];
+    [alertView show];
+  }
 }
 
 - (void) verifyMenu

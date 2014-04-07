@@ -10,6 +10,7 @@
 
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
+#import "NSUserDefaults+OnMyBlock.h"
 #import "OMBAnnotation.h"
 #import "OMBAnnotationView.h"
 #import "OMBResidenceUpdateConnection.h"
@@ -62,7 +63,7 @@
   CGFloat screenWidth = screen.size.width;
   CGFloat padding     = 20.0f;
 
-  // Map  
+  // Map
   map = [[MKMapView alloc] init];
   map.delegate = self;
   map.frame = CGRectMake(0.0f, 0.0f, screenWidth, screen.size.height);
@@ -70,25 +71,25 @@
   [self.view addSubview: map];
 
   addressTextFieldView = [[AMBlurView alloc] init];
-  addressTextFieldView.frame = CGRectMake(0.0f, 20.0f + 44.0f, 
+  addressTextFieldView.frame = CGRectMake(0.0f, 20.0f + 44.0f,
     screenWidth, padding + 44.0f + padding);
   [self.view addSubview: addressTextFieldView];
   // Bottom border
   CALayer *addressTextFieldViewBottomBorder = [CALayer layer];
-  addressTextFieldViewBottomBorder.backgroundColor = 
+  addressTextFieldViewBottomBorder.backgroundColor =
     [UIColor grayLight].CGColor;
-  addressTextFieldViewBottomBorder.frame = CGRectMake(0.0f, 
-    addressTextFieldView.frame.size.height - 1.0f, 
+  addressTextFieldViewBottomBorder.frame = CGRectMake(0.0f,
+    addressTextFieldView.frame.size.height - 1.0f,
       addressTextFieldView.frame.size.width, 1.0f);
-  [addressTextFieldView.layer addSublayer: 
+  [addressTextFieldView.layer addSublayer:
     addressTextFieldViewBottomBorder];
   // Address text field when searching for location
   addressTextField = [[TextFieldPadding alloc] init];
   addressTextField.backgroundColor = [UIColor grayVeryLight];
   addressTextField.delegate = self;
-  addressTextField.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
+  addressTextField.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
-  addressTextField.frame = CGRectMake(padding, padding, 
+  addressTextField.frame = CGRectMake(padding, padding,
     addressTextFieldView.frame.size.width - (padding * 2), 44.0f);
   addressTextField.layer.cornerRadius = 2.0f;
   addressTextField.paddingX = padding * 0.5f;
@@ -104,21 +105,21 @@
   currentLocationButton = [UIButton new];
   currentLocationButton.frame = CGRectMake(0.0f, 0.0f,
     addressTextField.frame.size.height, addressTextField.frame.size.height);
-  UIImage *currentLocationButtonImage = [UIImage image: [UIImage imageNamed: 
+  UIImage *currentLocationButtonImage = [UIImage image: [UIImage imageNamed:
     @"gps_cursor_blue.png"] size: CGSizeMake(padding, padding)];
   [currentLocationButton addTarget: self action: @selector(useCurrentLocation)
     forControlEvents: UIControlEventTouchUpInside];
-  [currentLocationButton setImage: currentLocationButtonImage 
+  [currentLocationButton setImage: currentLocationButtonImage
     forState: UIControlStateNormal];
   addressTextField.rightView = currentLocationButton;
 
   // List of address results
-  CGFloat addressTableViewHeight = screen.size.height - 
-    (addressTextFieldView.frame.origin.y + 
+  CGFloat addressTableViewHeight = screen.size.height -
+    (addressTextFieldView.frame.origin.y +
       addressTextFieldView.frame.size.height);
   addressTableView = [[UITableView alloc] initWithFrame: CGRectMake(0.0f,
-    addressTextFieldView.frame.origin.y + 
-    addressTextFieldView.frame.size.height, 
+    addressTextFieldView.frame.origin.y +
+    addressTextFieldView.frame.size.height,
       screenWidth,  addressTableViewHeight)
     style: UITableViewStylePlain];
   addressTableView.backgroundColor = [UIColor grayUltraLight];
@@ -131,7 +132,7 @@
   addressTableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
   [self.view addSubview: addressTableView];
 
-  CGFloat textFieldTableViewHeight = screen.size.height - 
+  CGFloat textFieldTableViewHeight = screen.size.height -
     addressTableView.frame.origin.y;
   textFieldTableView = [[UITableView alloc] initWithFrame: CGRectMake(0.0f,
     screen.size.height, screenWidth, textFieldTableViewHeight)
@@ -143,7 +144,7 @@
   textFieldTableView.separatorColor = [UIColor grayLight];
   textFieldTableView.separatorInset = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
   textFieldTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-  textFieldTableView.tableFooterView = [[UIView alloc] initWithFrame: 
+  textFieldTableView.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectZero];
   [self.view addSubview: textFieldTableView];
 }
@@ -172,7 +173,7 @@
   }
   else {
     conn = [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithAddress:
-      [NSString stringWithFormat: @"%@, %@", city, state] 
+      [NSString stringWithFormat: @"%@, %@", city, state]
         city: city state: state];
   }
   conn.delegate = self;
@@ -205,7 +206,7 @@
 - (void) locationManager: (CLLocationManager *) manager
 didFailWithError: (NSError *) error
 {
-  NSLog(@"Location manager did fail with error: %@", 
+  NSLog(@"Location manager did fail with error: %@",
     error.localizedDescription);
 }
 
@@ -235,12 +236,26 @@ viewForAnnotation: (id <MKAnnotation>) annotation
   OMBAnnotationView *annotationView = (OMBAnnotationView *)
     [map dequeueReusableAnnotationViewWithIdentifier: ReuseIdentifier];
   if (!annotationView) {
-    annotationView = 
-      [[OMBAnnotationView alloc] initWithAnnotation: annotation 
+    annotationView =
+      [[OMBAnnotationView alloc] initWithAnnotation: annotation
         reuseIdentifier: ReuseIdentifier];
   }
   [annotationView loadAnnotation: annotation];
   return annotationView;
+}
+
+#pragma mark - UIAlertViewDelegate Protocol
+
+- (void) alertView: (UIAlertView *) alertView
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  if (buttonIndex == 0) {
+    [[self userDefaults] permissionCurrentLocationSet: NO];
+  }
+  else if (buttonIndex == 1) {
+    [[self userDefaults] permissionCurrentLocationSet: YES];
+    [self useCurrentLocation];
+  }
 }
 
 #pragma mark - Protocol UITableViewDataSource
@@ -253,23 +268,23 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
     CellIdentifier];
   if (!cell)
-    cell = [[UITableViewCell alloc] initWithStyle: 
+    cell = [[UITableViewCell alloc] initWithStyle:
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
   // Address
   if (tableView == addressTableView) {
     // If this is not the last row ("Address Form")
-    if (indexPath.row < 
+    if (indexPath.row <
       [tableView numberOfRowsInSection: indexPath.section] - 1 &&
       indexPath.row < [_addressArray count]) {
 
       NSDictionary *dict = [_addressArray objectAtIndex: indexPath.row];
-      cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
+      cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
         size: 15];
       cell.textLabel.text = [dict objectForKey: @"formatted_address"];
       cell.textLabel.textColor = [UIColor textColor];
     }
     else {
-      cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
+      cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
         size: 15];
       cell.textLabel.text = @"Use address form";
       cell.textLabel.textColor = [UIColor blue];
@@ -281,7 +296,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     OMBLabelTextFieldCell *c = [tableView dequeueReusableCellWithIdentifier:
       TextFieldCellIdentifier];
     if (!c) {
-      c = [[OMBLabelTextFieldCell alloc] initWithStyle: 
+      c = [[OMBLabelTextFieldCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: TextFieldCellIdentifier];
       [c setFrameUsingSize: sizeForLabelTextFieldCell];
     }
@@ -296,7 +311,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     else {
       topBorder = [UIView new];
       topBorder.backgroundColor = [UIColor grayLight];
-      topBorder.frame = CGRectMake(0.0f, 0.0f, 
+      topBorder.frame = CGRectMake(0.0f, 0.0f,
         tableView.frame.size.width, 0.5f);
       topBorder.tag = 9998;
     }
@@ -307,7 +322,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     else {
       bottomBorder = [UIView new];
       bottomBorder.backgroundColor = [UIColor grayLight];
-      bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f, 
+      bottomBorder.frame = CGRectMake(0.0f, 44.0f - 0.5f,
         tableView.frame.size.width, 0.5f);
       bottomBorder.tag = 9999;
     }
@@ -334,7 +349,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       string = @"Zip";
       [c.contentView addSubview: bottomBorder];
     }
-    
+
     c.textFieldLabel.text = string;
     return c;
   }
@@ -360,10 +375,10 @@ numberOfRowsInSection: (NSInteger) section
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (tableView == addressTableView) {
-    if (indexPath.row < 
+    if (indexPath.row <
       [tableView numberOfRowsInSection: indexPath.section] - 1) {
 
-      NSString *formattedAddress = [[_addressArray objectAtIndex: 
+      NSString *formattedAddress = [[_addressArray objectAtIndex:
         indexPath.row] objectForKey: @"formatted_address"];
       [self setAddressInfoFromString: formattedAddress];
     }
@@ -395,7 +410,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self setMapViewRegion: coordinate withMiles: 0.5f animated: YES];
   // Use Google Places API with coordinate as opposed to search text
   // Search for places via Google
-  OMBGoogleMapsReverseGeocodingConnection *conn = 
+  OMBGoogleMapsReverseGeocodingConnection *conn =
     [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithCoordinate:
       coordinate];
   conn.completionBlock = ^(NSError *error) {
@@ -404,7 +419,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
     // Enabled the save button
     saveBarButtonItem.enabled = YES;
-    [self.navigationItem setRightBarButtonItem: saveBarButtonItem 
+    [self.navigationItem setRightBarButtonItem: saveBarButtonItem
       animated: YES];
 
     // Set address from the formatted string
@@ -412,22 +427,22 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
     // Address
     OMBLabelTextFieldCell *addressCell = (OMBLabelTextFieldCell *)
-      [textFieldTableView cellForRowAtIndexPath: 
+      [textFieldTableView cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 0 inSection: 0]];
     addressCell.textField.text = address;
     // City
     OMBLabelTextFieldCell *cityCell = (OMBLabelTextFieldCell *)
-      [textFieldTableView cellForRowAtIndexPath: 
+      [textFieldTableView cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 2 inSection: 0]];
     cityCell.textField.text = city;
     // State
     OMBLabelTextFieldCell *stateCell = (OMBLabelTextFieldCell *)
-      [textFieldTableView cellForRowAtIndexPath: 
+      [textFieldTableView cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 3 inSection: 0]];
     stateCell.textField.text = state;
     // Zip
     OMBLabelTextFieldCell *zipCell = (OMBLabelTextFieldCell *)
-      [textFieldTableView cellForRowAtIndexPath: 
+      [textFieldTableView cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 4 inSection: 0]];
     zipCell.textField.text = zip;
   };
@@ -442,14 +457,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) makeTableViewLarger: (NSNotification *) notification
 {
-  NSTimeInterval duration = [[notification.userInfo objectForKey: 
+  NSTimeInterval duration = [[notification.userInfo objectForKey:
     UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-  [UIView animateWithDuration: duration delay: 0.0f 
-    options: UIViewAnimationOptionCurveEaseOut animations: 
+  [UIView animateWithDuration: duration delay: 0.0f
+    options: UIViewAnimationOptionCurveEaseOut animations:
     ^{
       CGRect screen = [[UIScreen mainScreen] bounds];
-      CGFloat addressTableViewHeight = screen.size.height - 
-        (addressTextFieldView.frame.origin.y + 
+      CGFloat addressTableViewHeight = screen.size.height -
+        (addressTextFieldView.frame.origin.y +
           addressTextFieldView.frame.size.height);
       CGRect rect = addressTableView.frame;
       rect.size.height = addressTableViewHeight;
@@ -459,21 +474,21 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       CGRect rect2 = textFieldTableView.frame;
       rect2.size.height = screen.size.height - (20.0f + 44.0f);
       textFieldTableView.frame = rect2;
-    } 
+    }
     completion: nil
   ];
 }
 
 - (void) makeTableViewSmaller: (NSNotification *) notification
 {
-  NSTimeInterval duration = [[notification.userInfo objectForKey: 
+  NSTimeInterval duration = [[notification.userInfo objectForKey:
     UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-  [UIView animateWithDuration: duration delay: 0.0f 
-    options: UIViewAnimationOptionCurveEaseOut animations: 
+  [UIView animateWithDuration: duration delay: 0.0f
+    options: UIViewAnimationOptionCurveEaseOut animations:
     ^{
       CGRect screen = [[UIScreen mainScreen] bounds];
-      CGFloat addressTableViewHeight = screen.size.height - 
-        (addressTextFieldView.frame.origin.y + 
+      CGFloat addressTableViewHeight = screen.size.height -
+        (addressTextFieldView.frame.origin.y +
           addressTextFieldView.frame.size.height);
       CGRect rect = addressTableView.frame;
       rect.size.height = addressTableViewHeight - 216.0f;
@@ -483,18 +498,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       CGRect rect2 = textFieldTableView.frame;
       rect2.size.height = (screen.size.height - (20.0f + 44.0f)) - 216.0f;
       textFieldTableView.frame = rect2;
-    } 
+    }
     completion: nil
   ];
 }
 
-- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
+- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate
 withMiles: (CGFloat) miles animated: (BOOL) animated
 {
   // 1609 meters = 1 mile
   int distanceInMiles = 1609 * miles;
   MKCoordinateRegion region =
-    MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles, 
+    MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles,
       distanceInMiles);
   [map setRegion: region animated: animated];
 }
@@ -519,7 +534,7 @@ withMiles: (CGFloat) miles animated: (BOOL) animated
     textFieldTableView.frame = rect;
   } completion: ^(BOOL finished) {
     addressTableView.hidden = YES;
-    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *) 
+    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
       [textFieldTableView cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 0 inSection: 0]];
     [cell.textField becomeFirstResponder];
@@ -531,8 +546,8 @@ withMiles: (CGFloat) miles animated: (BOOL) animated
 - (void) startGooglePlacesConnection
 {
   // Search for places via Google
-  OMBGoogleMapsReverseGeocodingConnection *conn = 
-    [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithAddress: 
+  OMBGoogleMapsReverseGeocodingConnection *conn =
+    [[OMBGoogleMapsReverseGeocodingConnection alloc] initWithAddress:
       addressTextField.text city: city state: state];
   conn.completionBlock = ^(NSError *error) {
     [addressTableView reloadData];
@@ -558,7 +573,7 @@ withMiles: (CGFloat) miles animated: (BOOL) animated
     [typingTimer invalidate];
     // Start timer
     typingTimer = [NSTimer scheduledTimerWithTimeInterval: 0.5f target: self
-      selector: @selector(startGooglePlacesConnection) userInfo: nil 
+      selector: @selector(startGooglePlacesConnection) userInfo: nil
         repeats: NO];
 
   }
@@ -575,27 +590,27 @@ withMiles: (CGFloat) miles animated: (BOOL) animated
 {
   // Address
   OMBLabelTextFieldCell *addressCell = (OMBLabelTextFieldCell *)
-    [textFieldTableView cellForRowAtIndexPath: 
+    [textFieldTableView cellForRowAtIndexPath:
       [NSIndexPath indexPathForRow: 0 inSection: 0]];
   residence.address = addressCell.textField.text;
   // Unit
   OMBLabelTextFieldCell *unitCell = (OMBLabelTextFieldCell *)
-    [textFieldTableView cellForRowAtIndexPath: 
+    [textFieldTableView cellForRowAtIndexPath:
       [NSIndexPath indexPathForRow: 1 inSection: 0]];
   residence.unit = unitCell.textField.text;
   // City
   OMBLabelTextFieldCell *cityCell = (OMBLabelTextFieldCell *)
-    [textFieldTableView cellForRowAtIndexPath: 
+    [textFieldTableView cellForRowAtIndexPath:
       [NSIndexPath indexPathForRow: 2 inSection: 0]];
   residence.city = cityCell.textField.text;
   // State
   OMBLabelTextFieldCell *stateCell = (OMBLabelTextFieldCell *)
-    [textFieldTableView cellForRowAtIndexPath: 
+    [textFieldTableView cellForRowAtIndexPath:
       [NSIndexPath indexPathForRow: 3 inSection: 0]];
   residence.state = stateCell.textField.text;
   // Zip
   OMBLabelTextFieldCell *zipCell = (OMBLabelTextFieldCell *)
-    [textFieldTableView cellForRowAtIndexPath: 
+    [textFieldTableView cellForRowAtIndexPath:
       [NSIndexPath indexPathForRow: 4 inSection: 0]];
   residence.zip = zipCell.textField.text;
 
@@ -612,8 +627,8 @@ withMiles: (CGFloat) miles animated: (BOOL) animated
     [zipCell.textField becomeFirstResponder];
   }
   else {
-    OMBResidenceUpdateConnection *conn = 
-      [[OMBResidenceUpdateConnection alloc] initWithResidence: residence 
+    OMBResidenceUpdateConnection *conn =
+      [[OMBResidenceUpdateConnection alloc] initWithResidence: residence
         attributes: @[
           @"address",
           @"city",
@@ -665,7 +680,17 @@ withMiles: (CGFloat) miles animated: (BOOL) animated
 
 - (void) useCurrentLocation
 {
-  [locationManager startUpdatingLocation];
+  if ([[self userDefaults] permissionCurrentLocation]) {
+    [locationManager startUpdatingLocation];
+  }
+  else {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+      @"Use Current Location" message: @"You won't have to type in the "
+      @"full address of your place if you use your current location."
+        delegate: self cancelButtonTitle: @"Not now"
+          otherButtonTitles: @"Yes", nil];
+    [alertView show];
+  }
 }
 
 @end

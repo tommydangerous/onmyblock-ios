@@ -10,6 +10,7 @@
 
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
+#import "NSUserDefaults+OnMyBlock.h"
 #import "OMBMapFilterBathroomsCell.h"
 #import "OMBMapFilterViewController.h"
 #import "OMBMapFilterBedroomsCell.h"
@@ -45,7 +46,7 @@
   locationManager.distanceFilter  = 50;
 
   _selectedNeighborhood = selectedNeighborhood;
-  
+
   self.title = @"Choose Location";
 
   return self;
@@ -58,17 +59,17 @@
 - (void) loadView
 {
   [super loadView];
-  
+
   [self setupForTable];
-  
-  self.navigationItem.leftBarButtonItem = 
+
+  self.navigationItem.leftBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
       style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
-  
+
   // CGRect screen = [self screen];
   // CGFloat screenWidth = screen.size.width;
   CGFloat padding = OMBPadding;
-  
+
   // Neighborhood table
   self.table.alwaysBounceVertical = YES;
   self.table.backgroundColor = [UIColor grayUltraLight];
@@ -85,7 +86,7 @@
   // neighborhoodTableHeaderView.backgroundColor = [UIColor blue];
   neighborhoodTableHeaderView.blurTintColor = [UIColor grayLight];
   neighborhoodTableHeaderView.frame = CGRectMake(0.0f, 0.0f,
-    self.table.frame.size.width, (OMBPadding * 0.5f) + OMBStandardHeight + 
+    self.table.frame.size.width, (OMBPadding * 0.5f) + OMBStandardHeight +
       (OMBPadding * 0.5f) + OMBStandardHeight);
   self.table.tableHeaderView = neighborhoodTableHeaderView;
   // Filter
@@ -96,7 +97,7 @@
   filterTextField.delegate = self;
   filterTextField.font = [UIFont normalTextFont];
   filterTextField.frame = CGRectMake(padding * 0.5f, padding * 0.5f,
-    neighborhoodTableHeaderView.frame.size.width - padding, 
+    neighborhoodTableHeaderView.frame.size.width - padding,
       OMBStandardHeight);
   filterTextField.layer.cornerRadius = OMBCornerRadius;
   filterTextField.leftPaddingX = padding * 0.5f;
@@ -119,22 +120,22 @@
   //     0.0f, sizeImage, sizeImage);
   // [neighborhoodTableHeaderView addSubview: filterImageView];
   // [neighborhoodTableHeaderView setBackgroundColor:[UIColor grayUltraLight]];
-  
+
   // Label
   UIButton *currentLocationButton = [UIButton new];
   // currentLocationButton.contentHorizontalAlignment =
   //   UIControlContentHorizontalAlignmentLeft;
   currentLocationButton.backgroundColor = [UIColor whiteColor];
-  currentLocationButton.frame = CGRectMake(0.0f, 
-    filterTextField.frame.origin.y + filterTextField.frame.size.height + 
-      filterTextField.frame.origin.y, 
+  currentLocationButton.frame = CGRectMake(0.0f,
+    filterTextField.frame.origin.y + filterTextField.frame.size.height +
+      filterTextField.frame.origin.y,
         neighborhoodTableHeaderView.frame.size.width, OMBStandardHeight);
   currentLocationButton.titleLabel.font = [UIFont normalTextFontBold];
-  [currentLocationButton addTarget: self action: @selector(useCurrentLocation) 
+  [currentLocationButton addTarget: self action: @selector(useCurrentLocation)
     forControlEvents: UIControlEventTouchUpInside];
-  [currentLocationButton setTitle: @"Use My Current Location" 
+  [currentLocationButton setTitle: @"Use My Current Location"
     forState:UIControlStateNormal];
-  [currentLocationButton setTitleColor: [UIColor blue] 
+  [currentLocationButton setTitleColor: [UIColor blue]
     forState: UIControlStateNormal];
   [neighborhoodTableHeaderView addSubview: currentLocationButton];
 
@@ -151,11 +152,9 @@
   // CGRect buttonFrame = neighborhoodTableHeaderView.frame;
   // buttonFrame.origin.y = OMBStandardHeight;
   // buttonFrame.size.height = OMBStandardHeight;
-  
+
   // Footer view
   self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
-  
-  
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -170,10 +169,10 @@
 - (void) locationManager: (CLLocationManager *) manager
 didFailWithError: (NSError *) error
 {
-  NSLog(@"Location manager did fail with error: %@", 
+  NSLog(@"Location manager did fail with error: %@",
     error.localizedDescription);
-  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-    @"Could not locate" message: error.localizedDescription delegate: nil 
+  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+    @"Could not locate" message: error.localizedDescription delegate: nil
       cancelButtonTitle: @"OK" otherButtonTitles: nil];
   [alertView show];
 }
@@ -182,6 +181,20 @@ didFailWithError: (NSError *) error
 didUpdateLocations: (NSArray *) locations
 {
   [self foundLocations: locations];
+}
+
+#pragma mark - UIAlertViewDelegate Protocol
+
+- (void) alertView: (UIAlertView *) alertView
+clickedButtonAtIndex: (NSInteger) buttonIndex
+{
+  if (buttonIndex == 0) {
+    [[self userDefaults] permissionCurrentLocationSet: NO];
+  }
+  else if (buttonIndex == 1) {
+    [[self userDefaults] permissionCurrentLocationSet: YES];
+    [self useCurrentLocation];
+  }
 }
 
 #pragma mark - Protocol UIScrollViewDelegate
@@ -212,7 +225,7 @@ didUpdateLocations: (NSArray *) locations
     if (!cell)
       cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
                                     reuseIdentifier: NeighborhoodNameCellIdentifier];
-    
+
     NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
                      @selector(localizedCaseInsensitiveCompare:)];
     OMBNeighborhood *neighborhoodCity = [[temporaryNeighborhoods objectForKey:keys[indexPath.section]] objectAtIndex:
@@ -228,7 +241,7 @@ didUpdateLocations: (NSArray *) locations
     cell.textLabel.text = neighborhoodCity.name;
     cell.textLabel.textColor = [UIColor textColor];
     return cell;
-    
+
     /*NSString *city =
      [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex:
      indexPath.section];
@@ -260,7 +273,7 @@ didUpdateLocations: (NSArray *) locations
     NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
                      @selector(localizedCaseInsensitiveCompare:)];
     return [[temporaryNeighborhoods objectForKey:keys[section]] count];
-    
+
     /*NSString *city =
      [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex: section];
      NSArray *neighborhoods =
@@ -281,7 +294,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     OMBNeighborhood *neighborhood = [[temporaryNeighborhoods
                                       objectForKey:keys[indexPath.section]]
                                      objectAtIndex: indexPath.row];
-    
+
     /*NSString *city =
      [[[OMBNeighborhoodStore sharedStore] cities] objectAtIndex:
      indexPath.section];
@@ -296,7 +309,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       _selectedNeighborhood = neighborhood;
       //selectedNeighborhood = [neighborhoods objectAtIndex: indexPath.row];
     }
-    
+
     [tableView deselectRowAtIndexPath: indexPath animated: YES];
     [tableView reloadData];
     [self done];
@@ -306,7 +319,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
      }
      else
      [_valuesDictionary setObject: @"" forKey: @"neighborhood"];*/
-    
+
   }
 }
 
@@ -430,13 +443,23 @@ viewForHeaderInSection: (NSInteger) section
   temporaryNeighborhoods = [[OMBNeighborhoodStore sharedStore]
                             sortedNeighborhoodsForName: [textField.text lowercaseString]];
   [self.table reloadData];
-  
+
 }
 
 - (void) useCurrentLocation
 {
-  self.selectedNeighborhood = nil;
-  [locationManager startUpdatingLocation];
+  if ([[self userDefaults] permissionCurrentLocation]) {
+    self.selectedNeighborhood = nil;
+    [locationManager startUpdatingLocation];
+  }
+  else {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+      @"Use Current Location" message: @"Allowing OnMyBlock to use your "
+      @"current location will help us find better listings near you."
+        delegate: self cancelButtonTitle: @"Not now"
+          otherButtonTitles: @"Yes", nil];
+    [alertView show];
+  }
 }
 
 @end

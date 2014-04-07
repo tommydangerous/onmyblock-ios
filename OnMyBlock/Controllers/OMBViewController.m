@@ -75,13 +75,13 @@ CGFloat const OMBStandardHeight       = 44.0f;
 
   // Menu
   menuBarButtonItem =
-    [[UIBarButtonItem alloc] initWithImage: 
-      [UIImage image:  [UIImage imageNamed: @"menu_icon_staggered.png"] 
-        size: CGSizeMake(26.0f, 26.0f)] style: UIBarButtonItemStylePlain 
+    [[UIBarButtonItem alloc] initWithImage:
+      [UIImage image:  [UIImage imageNamed: @"menu_icon_staggered.png"]
+        size: CGSizeMake(26.0f, 26.0f)] style: UIBarButtonItemStylePlain
           target: self action: @selector(showContainer)];
 
-  self.navigationItem.backBarButtonItem = 
-    [[UIBarButtonItem alloc] initWithTitle: @"" 
+  self.navigationItem.backBarButtonItem =
+    [[UIBarButtonItem alloc] initWithTitle: @""
       style: UIBarButtonItemStylePlain target: nil action: nil];
 }
 
@@ -90,7 +90,7 @@ CGFloat const OMBStandardHeight       = 44.0f;
   [super setTitle: string];
   UILabel *label = [[UILabel alloc] init];
   label.backgroundColor = [UIColor clearColor];
-  label.font            = [UIFont fontWithName: @"HelveticaNeue-Light" 
+  label.font            = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 18];
   label.frame           = CGRectMake(0, 0, 0, 44);
   label.shadowColor     = [UIColor clearColor];
@@ -120,7 +120,7 @@ CGFloat const OMBStandardHeight       = 44.0f;
 
 - (void) back
 {
-  // Subclasses implement this 
+  // Subclasses implement this
 }
 
 - (void) cancel
@@ -165,13 +165,13 @@ CGFloat const OMBStandardHeight       = 44.0f;
 
 - (void) showAlertViewWithError:(NSError *) error
 {
-  NSString *message = error.localizedFailureReason != (id) [NSNull null] ? 
+  NSString *message = error.localizedFailureReason != (id) [NSNull null] ?
     error.localizedFailureReason : @"Please try again.";
-  NSString *title =  error.localizedDescription != (id) [NSNull null] ? 
+  NSString *title =  error.localizedDescription != (id) [NSNull null] ?
     error.localizedDescription : @"Unsuccessful";
 
   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title
-    message: message delegate: nil cancelButtonTitle: @"Okay" 
+    message: message delegate: nil cancelButtonTitle: @"Okay"
       otherButtonTitles: nil];
   [alertView show];
 }
@@ -179,6 +179,11 @@ CGFloat const OMBStandardHeight       = 44.0f;
 - (void) showContainer
 {
   [[self appDelegate].container showMenuWithFactor: 1];
+}
+
+- (NSUserDefaults *) userDefaults
+{
+  return [NSUserDefaults standardUserDefaults];
 }
 
 @end

@@ -13,6 +13,14 @@ NSString *const OMBFontNameBold = @"HelveticaNeue-Medium";
 
 @implementation UIFont (OnMyBlock)
 
+// UIFont size - line height
+// 13 - 17
+// 14 - 18
+// 15 - 20
+// 18 - 23
+// 20 - 26
+// 27 - 33
+
 #pragma mark - Methods
 
 #pragma mark - Class Methods
@@ -32,7 +40,7 @@ NSString *const OMBFontNameBold = @"HelveticaNeue-Medium";
 
 + (UIFont *) largeTextFontBold
 {
-  return [UIFont fontWithSize: 27 bold: YES]; 
+  return [UIFont fontWithSize: 27 bold: YES];
 }
 
 + (UIFont *) mediumLargeTextFont
@@ -52,7 +60,7 @@ NSString *const OMBFontNameBold = @"HelveticaNeue-Medium";
 
 + (UIFont *) mediumTextFontBold
 {
-  return [UIFont fontWithSize: 18 bold: YES]; 
+  return [UIFont fontWithSize: 18 bold: YES];
 }
 
 + (UIFont *) normalTextFont
@@ -62,7 +70,7 @@ NSString *const OMBFontNameBold = @"HelveticaNeue-Medium";
 
 + (UIFont *) normalTextFontBold
 {
-  return [UIFont fontWithSize: 15 bold: YES]; 
+  return [UIFont fontWithSize: 15 bold: YES];
 }
 
 + (UIFont *) smallTextFont
@@ -72,7 +80,7 @@ NSString *const OMBFontNameBold = @"HelveticaNeue-Medium";
 
 + (UIFont *) smallTextFontBold
 {
-  return [UIFont fontWithSize: 13 bold: YES]; 
+  return [UIFont fontWithSize: 13 bold: YES];
 }
 
 @end

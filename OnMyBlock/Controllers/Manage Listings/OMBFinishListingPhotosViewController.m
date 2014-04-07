@@ -308,10 +308,11 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     @"stopwatch_image.png",
     @"favorite_pink.png"
   ];
-  for (NSString *string in imageNames) {
+  NSLog(@"%@", imageNames);
+  // for (NSString *string in imageNames) {
     // Used for fake photos
     // [residenceImages addObject: [UIImage imageNamed: string]];
-  }
+  // }
 }
 
 - (void) createResidenceImageWithDictionary: (NSDictionary *) dictionary

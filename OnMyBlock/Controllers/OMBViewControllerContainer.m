@@ -718,6 +718,20 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 //   return NO;
 // }
 
+- (BOOL) gestureRecognizerShouldBegin: (UIGestureRecognizer *)recognizer
+{
+  if ([recognizer isKindOfClass: [UIPanGestureRecognizer class]]) {
+    UIPanGestureRecognizer *panRecognizer =
+      (UIPanGestureRecognizer *) recognizer;
+    CGPoint velocity = [panRecognizer velocityInView: self.view];
+    // Horizontal panning
+    return ABS(velocity.x) > ABS(velocity.y);
+    // Vertical panning
+    // return ABS(velocity.x) < ABS(velocity.y);
+  }
+  return YES;
+}
+
 #pragma mark - Protocol UIScrollViewDelegate
 
 - (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView
@@ -789,8 +803,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
 
   CGPoint point    = [gesture locationInView: self.view];
   CGPoint velocity = [gesture velocityInView: self.view];
-
-  NSLog(@"%f, %f", point.x, point.y);
 
   // Began
   if (gesture.state == UIGestureRecognizerStateBegan) {

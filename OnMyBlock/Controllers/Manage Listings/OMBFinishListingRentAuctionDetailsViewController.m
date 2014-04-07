@@ -74,11 +74,11 @@
   self.table            = nil;
 
   // Segmented control
-//  segmentedControl = [[UISegmentedControl alloc] initWithItems: 
+//  segmentedControl = [[UISegmentedControl alloc] initWithItems:
 //    @[@"Monthly Rental Price"]];
-//  // segmentedControl = [[UISegmentedControl alloc] initWithItems: 
+//  // segmentedControl = [[UISegmentedControl alloc] initWithItems:
 //  //   @[@"Rental Auction", @"Fixed Rental Price"]];
-//  // segmentedControl = [[UISegmentedControl alloc] initWithItems: 
+//  // segmentedControl = [[UISegmentedControl alloc] initWithItems:
 //  //   @[@"Fixed Rental Price"]];
 //  segmentedControl.backgroundColor = [UIColor whiteColor];
 //  segmentedControl.frame = CGRectMake(padding, 20.0f + 44.0f + padding,
@@ -91,9 +91,9 @@
 
   UIView *segmentedControlBorder = [UIView new];
   segmentedControlBorder.backgroundColor = [UIColor grayLight];
-  segmentedControlBorder.frame = CGRectMake(0.0f, 
-    (segmentedControl.frame.origin.y + segmentedControl.frame.size.height + 
-    padding) - 0.5f, 
+  segmentedControlBorder.frame = CGRectMake(0.0f,
+    (segmentedControl.frame.origin.y + segmentedControl.frame.size.height +
+    padding) - 0.5f,
       screenWidth, 0.5f);
   [self.view addSubview: segmentedControlBorder];
 
@@ -110,7 +110,7 @@
   auctionTableView.showsVerticalScrollIndicator = NO;
   auctionTableView.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectZero];
-  // auctionTableView.tableHeaderView = [[UIView alloc] initWithFrame: 
+  // auctionTableView.tableHeaderView = [[UIView alloc] initWithFrame:
   //   CGRectMake(0.0f, 0.0f, screenWidth, 44.0f)];
   [self.view addSubview: auctionTableView];
 
@@ -127,26 +127,26 @@
   fixedRentalPriceTextField.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
     size: 18];
   fixedRentalPriceTextField.frame = CGRectMake(
-    (fixedRentalPriceView.frame.size.width - textFieldWidth) * 0.5f, 
-      (fixedRentalPriceView.frame.size.height - 
-      (textFieldHeight + 216.0f)) * 0.5f, 
+    (fixedRentalPriceView.frame.size.width - textFieldWidth) * 0.5f,
+      (fixedRentalPriceView.frame.size.height -
+      (textFieldHeight + 216.0f)) * 0.5f,
         textFieldWidth, textFieldHeight);
   fixedRentalPriceTextField.keyboardType = UIKeyboardTypeDecimalPad;
   fixedRentalPriceTextField.layer.borderColor = [UIColor grayLight].CGColor;
   fixedRentalPriceTextField.layer.borderWidth = 1.0f;
   fixedRentalPriceTextField.layer.cornerRadius = 5.0f;
-	
+
   // Left view
   UILabel *leftView = [UILabel new];
   leftView.font = fixedRentalPriceTextField.font;
   leftView.text = @"$";
   leftView.textAlignment = NSTextAlignmentCenter;
   leftView.textColor = [UIColor grayMedium];
-  CGSize maxSize = CGSizeMake(fixedRentalPriceTextField.frame.size.width, 
+  CGSize maxSize = CGSizeMake(fixedRentalPriceTextField.frame.size.width,
     fixedRentalPriceTextField.frame.size.height);
   CGRect leftViewRect = [leftView.text boundingRectWithSize: maxSize
     font: leftView.font];
-  leftView.frame = CGRectMake(0.0f, 0.0f, 
+  leftView.frame = CGRectMake(0.0f, 0.0f,
     (padding * 0.5) + leftViewRect.size.width + (padding * 0.5),
       leftViewRect.size.height);
   fixedRentalPriceTextField.leftView = leftView;
@@ -154,7 +154,7 @@
   fixedRentalPriceTextField.leftPaddingX = leftView.frame.size.width;
   fixedRentalPriceTextField.rightPaddingX = padding;
   fixedRentalPriceTextField.textColor = [UIColor blueDark];
-  [fixedRentalPriceTextField addTarget: self 
+  [fixedRentalPriceTextField addTarget: self
     action: @selector(textFieldDidChange:)
       forControlEvents: UIControlEventEditingChanged];
   [fixedRentalPriceView addSubview: fixedRentalPriceTextField];
@@ -162,45 +162,45 @@
   fixedRentalPriceLabel = [UILabel new];
   fixedRentalPriceLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
     size: 15];
-  fixedRentalPriceLabel.frame = CGRectMake(0.0f, 
+  fixedRentalPriceLabel.frame = CGRectMake(0.0f,
     fixedRentalPriceTextField.frame.origin.y - 30.0f,
       fixedRentalPriceView.frame.size.width, 30.0f);
   fixedRentalPriceLabel.text = @"Rent per month";
   fixedRentalPriceLabel.textAlignment = NSTextAlignmentCenter;
   fixedRentalPriceLabel.textColor = [UIColor grayMedium];
   [fixedRentalPriceView addSubview: fixedRentalPriceLabel];
-	
+
 	// Spacing
 	UIBarButtonItem *flexibleSpace =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
 	 UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
-	
+
 	// Left padding
 	UIBarButtonItem *leftPadding =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
 	 UIBarButtonSystemItemFixedSpace target: nil action: nil];
 	// iOS 7 toolbar spacing is 16px; 20px on iPad
 	leftPadding.width = 4.0f;
-	
+
 	// Cancel
 	UIBarButtonItem *cancelBarButtonItemForTextFieldToolbar =
     [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
 									 style: UIBarButtonItemStylePlain target: self
 									action: @selector(cancelFromInputAccessoryView)];
-	
+
 	// Done
 	UIBarButtonItem *doneBarButtonItemForTextFieldToolbar =
     [[UIBarButtonItem alloc] initWithTitle: @"Done"
 									 style: UIBarButtonItemStylePlain target: self
 									action: @selector(saveFromInputAccessoryView)];
-	
+
 	// Right padding
 	UIBarButtonItem *rightPadding =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
 	 UIBarButtonSystemItemFixedSpace target: nil action: nil];
 	// iOS 7 toolbar spacing is 16px; 20px on iPad
 	rightPadding.width = 4.0f;
-	
+
 	textFieldToolbar = [UIToolbar new];
 	textFieldToolbar.clipsToBounds = YES;
 	textFieldToolbar.frame = CGRectMake(0.0f, 0.0f,
@@ -211,7 +211,7 @@
 							   doneBarButtonItemForTextFieldToolbar,
 							   rightPadding];
 	textFieldToolbar.tintColor = [UIColor blue];
-	
+
 }
 
 - (void) cancelFromInputAccessoryView
@@ -253,8 +253,8 @@
   if (!residence.isAuction)
     residence.rentItNowPrice = 0.0f;
 
-  OMBResidenceUpdateConnection *conn = 
-    [[OMBResidenceUpdateConnection alloc] initWithResidence: residence 
+  OMBResidenceUpdateConnection *conn =
+    [[OMBResidenceUpdateConnection alloc] initWithResidence: residence
       attributes: @[
         // @"auctionDuration",
         // @"auctionStartDate",
@@ -353,11 +353,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     // Auction Start Price
     if (indexPath.row == 0) {
       static NSString *CellIdentifier0 = @"CellIdentifier0";
-      OMBFinishListingAuctionStartPriceCell *cell1 = 
+      OMBFinishListingAuctionStartPriceCell *cell1 =
         [tableView dequeueReusableCellWithIdentifier:
           CellIdentifier0];
       if (!cell1)
-        cell1 = [[OMBFinishListingAuctionStartPriceCell alloc] initWithStyle: 
+        cell1 = [[OMBFinishListingAuctionStartPriceCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: CellIdentifier0];
       cell1.textField.delegate  = self;
       cell1.textField.indexPath = indexPath;
@@ -370,16 +370,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           residence.minRent];
       [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
         forControlEvents: UIControlEventEditingChanged];
+      cell1.clipsToBounds = YES;
       return cell1;
     }
     // Rent it Now Price
     else if (indexPath.row == 1) {
       static NSString *CellIdentifier1 = @"CellIdentifier1";
-      OMBFinishListingRentItNowPriceCell *cell1 = 
+      OMBFinishListingRentItNowPriceCell *cell1 =
         [tableView dequeueReusableCellWithIdentifier:
           CellIdentifier1];
       if (!cell1)
-        cell1 = [[OMBFinishListingRentItNowPriceCell alloc] initWithStyle: 
+        cell1 = [[OMBFinishListingRentItNowPriceCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: CellIdentifier1];
       cell1.textField.delegate  = self;
       cell1.textField.indexPath = indexPath;
@@ -389,9 +390,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (residence.deposit)
         cell1.textField.text = [NSString stringWithFormat: @"%.2f",
           residence.deposit];
-		cell1.textField.inputAccessoryView = textFieldToolbar;
+		  cell1.textField.inputAccessoryView = textFieldToolbar;
       [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
         forControlEvents: UIControlEventEditingChanged];
+      cell1.clipsToBounds = YES;
       return cell1;
     }
     // Duration
@@ -400,7 +402,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
         CellIdentifier2];
       if (!cell1)
-        cell1 = [[UITableViewCell alloc] initWithStyle: 
+        cell1 = [[UITableViewCell alloc] initWithStyle:
           UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier2];
       cell1.backgroundColor = [UIColor whiteColor];
       cell1.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
@@ -421,6 +423,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       else {
         cell1.detailTextLabel.textColor = [UIColor textColor];
       }
+      cell1.clipsToBounds = YES;
       return cell1;
     }
     // Duration Picker
@@ -433,12 +436,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         OMBPickerViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
           CellIdentifier3];
         if (!cell1)
-          cell1 = [[OMBPickerViewCell alloc] initWithStyle: 
+          cell1 = [[OMBPickerViewCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier: CellIdentifier3];
         cell1.pickerView.dataSource = self;
         cell1.pickerView.delegate   = self;
 
-        NSUInteger selectedRow = [durationOptions indexOfObjectPassingTest: 
+        NSUInteger selectedRow = [durationOptions indexOfObjectPassingTest:
           ^BOOL (id obj, NSUInteger idx, BOOL *stop) {
             return [(NSNumber *) obj intValue] == residence.auctionDuration;
           }
@@ -446,6 +449,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         if (selectedRow == NSNotFound)
           selectedRow = 0;
         [cell1.pickerView selectRow: selectedRow inComponent: 0 animated: NO];
+        cell1.clipsToBounds = YES;
         return cell1;
       }
     }
@@ -453,12 +457,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     else if (indexPath.row == 4) {
       NSDateFormatter *dateFormatter = [NSDateFormatter new];
       dateFormatter.dateFormat = @"MMMM d, yyyy";
-      
+
       static NSString *CellIdentifier4 = @"CellIdentifier4";
       UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
         CellIdentifier4];
       if (!cell1)
-        cell1 = [[UITableViewCell alloc] initWithStyle: 
+        cell1 = [[UITableViewCell alloc] initWithStyle:
           UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier4];
       cell1.backgroundColor = [UIColor whiteColor];
       cell1.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
@@ -474,12 +478,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (selectedIndexPath &&
         selectedIndexPath.section == indexPath.section &&
         selectedIndexPath.row == indexPath.row) {
-        
+
         cell1.detailTextLabel.textColor = [UIColor blueDark];
       }
       else {
         cell1.detailTextLabel.textColor = [UIColor textColor];
       }
+      cell1.clipsToBounds = YES;
       return cell1;
     }
     // Start Date Picker
@@ -489,28 +494,29 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         selectedIndexPath.row == indexPath.row - 1) {
 
         static NSString *CellIdentifier5 = @"CellIdentifier5";
-        OMBDatePickerCell *cell1 = 
+        OMBDatePickerCell *cell1 =
           [tableView dequeueReusableCellWithIdentifier:
             CellIdentifier5];
         if (!cell1)
-          cell1 = [[OMBDatePickerCell alloc] initWithStyle: 
+          cell1 = [[OMBDatePickerCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier: CellIdentifier5];
         [cell1.datePicker addTarget: self action: @selector(datePickerChanged:)
           forControlEvents: UIControlEventValueChanged];
-        [cell1.datePicker setDate: 
-          [NSDate dateWithTimeIntervalSince1970: residence.auctionStartDate] 
+        [cell1.datePicker setDate:
+          [NSDate dateWithTimeIntervalSince1970: residence.auctionStartDate]
             animated: NO];
+        cell1.clipsToBounds = YES;
         return cell1;
       }
     }
     // Show More / Show Less
     else if (indexPath.row == 6) {
       static NSString *CellIdentifier6 = @"CellIdentifier6";
-      OMBFinishListingShowMoreCell *cell1 = 
+      OMBFinishListingShowMoreCell *cell1 =
         [tableView dequeueReusableCellWithIdentifier:
           CellIdentifier6];
       if (!cell1)
-        cell1 = [[OMBFinishListingShowMoreCell alloc] initWithStyle: 
+        cell1 = [[OMBFinishListingShowMoreCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: CellIdentifier6];
       int degrees = 90;
       if (showMore) {
@@ -522,14 +528,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       cell1.arrowImageView.transform = CGAffineTransformMakeRotation(
         DEGREES_TO_RADIANS(degrees));
+      cell1.clipsToBounds = YES;
       return cell1;
     }
   }
   else if (indexPath.section == 1) {
     cell.backgroundColor = tableView.backgroundColor;
-    cell.separatorInset  = UIEdgeInsetsMake(0, tableView.frame.size.width, 
+    cell.separatorInset  = UIEdgeInsetsMake(0, tableView.frame.size.width,
       0, 0);
   }
+  cell.clipsToBounds = YES;
   return cell;
 }
 
@@ -601,7 +609,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       }
 
       [tableView reloadRowsAtIndexPaths: @[
-        [NSIndexPath indexPathForRow: 
+        [NSIndexPath indexPathForRow:
           indexPath.row + 1 inSection: indexPath.section]
         ] withRowAnimation: UITableViewRowAnimationFade];
 
@@ -611,7 +619,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Show More / Show Less
     else if (indexPath.row == 6) {
       showMore = !showMore;
-      
+
       [tableView reloadRowsAtIndexPaths: @[
         [NSIndexPath indexPathForRow: 2 inSection: indexPath.section],
         [NSIndexPath indexPathForRow: 3 inSection: indexPath.section],
@@ -620,8 +628,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         [NSIndexPath indexPathForRow: 6 inSection: indexPath.section]
         ]
         withRowAnimation: UITableViewRowAnimationFade];
-      
-      OMBFinishListingShowMoreCell *cell = (OMBFinishListingShowMoreCell *) 
+
+      OMBFinishListingShowMoreCell *cell = (OMBFinishListingShowMoreCell *)
         [tableView cellForRowAtIndexPath: indexPath];
       int degrees = 90;
       if (showMore)
@@ -654,7 +662,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Duration Picker
     else if (indexPath.row == 3) {
-      if (showMore && selectedIndexPath && 
+      if (showMore && selectedIndexPath &&
         selectedIndexPath.section == indexPath.section &&
         selectedIndexPath.row == indexPath.row - 1) {
 
@@ -668,10 +676,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Start Date Picker
     else if (indexPath.row == 5) {
-      if (showMore && selectedIndexPath && 
+      if (showMore && selectedIndexPath &&
         selectedIndexPath.section == indexPath.section &&
         selectedIndexPath.row == indexPath.row - 1) {
-        
+
         return [OMBDatePickerCell heightForCell];
       }
     }
@@ -692,12 +700,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 #pragma mark - Protocol UITextFieldDelegate
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-  
+
   if([[textField.text stringByReplacingCharactersInRange: range
        withString:string] floatValue] > 15000.00) {
     return NO;
   };
-  
+
   return YES;
 }
 
@@ -705,7 +713,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
 	editingTextField = textField;
 	savedTextFieldString = textField.text;
-	
+
   if (selectedIndexPath) {
     NSIndexPath *previousIndexPath = selectedIndexPath;
     selectedIndexPath = nil;
@@ -716,7 +724,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [auctionTableView beginUpdates];
     [auctionTableView endUpdates];
   }
-  
+
   // [auctionTableView beginUpdates];
   // [auctionTableView endUpdates];
 
@@ -729,16 +737,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // datePickerCell.detailTextLabel.textColor = [UIColor textColor];
 
   // // Picker View
-  // [auctionTableView reloadRowsAtIndexPaths: 
-  //   @[[NSIndexPath indexPathForRow: 3 inSection: 0]] 
+  // [auctionTableView reloadRowsAtIndexPaths:
+  //   @[[NSIndexPath indexPathForRow: 3 inSection: 0]]
   //     withRowAnimation: UITableViewRowAnimationFade];
   // // Date Picker
-  // [auctionTableView reloadRowsAtIndexPaths: 
-  //   @[[NSIndexPath indexPathForRow: 5 inSection: 0]] 
+  // [auctionTableView reloadRowsAtIndexPaths:
+  //   @[[NSIndexPath indexPathForRow: 5 inSection: 0]]
   //     withRowAnimation: UITableViewRowAnimationFade];
   // // Section spacing bottom
-  // [auctionTableView reloadRowsAtIndexPaths: 
-  //   @[[NSIndexPath indexPathForRow: 0 inSection: 1]] 
+  // [auctionTableView reloadRowsAtIndexPaths:
+  //   @[[NSIndexPath indexPathForRow: 0 inSection: 1]]
   //     withRowAnimation: UITableViewRowAnimationFade];
 
   // Scroll
@@ -747,7 +755,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [auctionTableView scrollToRowAtIndexPath: tf.indexPath
       atScrollPosition: UITableViewScrollPositionTop animated: YES];
   }
-  
+
   [self animateTextField: textField up: YES];
 }
 
@@ -763,9 +771,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) animateTextField: (UITextField*) textField up: (BOOL) up
 {
   const int movementDistance = 25;
-  
+
   int movement = (up ? -movementDistance : movementDistance);
-  
+
   [UIView beginAnimations: @"anim" context: nil];
   [UIView setAnimationBeginsFromCurrentState: YES];
   [UIView setAnimationDuration: 0.3f];
@@ -780,7 +788,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     dateFormatter.dateFormat = @"MMMM d, yyyy";
     NSString *todayString = [dateFormatter stringFromDate: [NSDate date]];
-    NSString *dateSelectedString = [dateFormatter stringFromDate: 
+    NSString *dateSelectedString = [dateFormatter stringFromDate:
       datePicker.date];
     UITableViewCell *cell = [auctionTableView cellForRowAtIndexPath:
       selectedIndexPath];
@@ -801,14 +809,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 	editingTextField = nil;
 	savedTextFieldString = nil;
   [auctionTableView reloadRowsAtIndexPaths:
-    @[[NSIndexPath indexPathForRow: 0 inSection: 1]] 
+    @[[NSIndexPath indexPathForRow: 0 inSection: 1]]
       withRowAnimation: UITableViewRowAnimationFade];
 }
 
 - (void) keyboardWillHide: (NSNotification *) notification
 {
   // Animate the fixed rental price label and text field
-  // NSTimeInterval duration = [[notification.userInfo objectForKey: 
+  // NSTimeInterval duration = [[notification.userInfo objectForKey:
   //   UIKeyboardAnimationDurationUserInfoKey] doubleValue];
   // [UIView animateWithDuration: duration animations: ^{
   //   CGRect screen = [[UIScreen mainScreen] bounds];
@@ -817,13 +825,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   //     (segmentedControl.frame.origin.y + segmentedControl.frame.size.height +
   //       padding);
   //   CGFloat height = tableViewHeight;
-  // 
+  //
   //   CGRect rect1 = fixedRentalPriceTextField.frame;
   //   rect1.origin.y = (height - rect1.size.height) * 0.5f;
   //   fixedRentalPriceTextField.frame = rect1;
-  // 
+  //
   //   CGRect rect2 = fixedRentalPriceLabel.frame;
-  //   rect2.origin.y = fixedRentalPriceTextField.frame.origin.y - 
+  //   rect2.origin.y = fixedRentalPriceTextField.frame.origin.y -
   //     rect2.size.height;
   //   fixedRentalPriceLabel.frame = rect2;
   // }];
@@ -843,13 +851,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // if (isEditingStartDate) {
   //   isEditingStartDate = NO;
   //   [auctionTableView beginUpdates];
-  //   [auctionTableView reloadRowsAtIndexPaths: 
+  //   [auctionTableView reloadRowsAtIndexPaths:
   //     @[[NSIndexPath indexPathForRow: 4 inSection: 0]]
   //       withRowAnimation: UITableViewRowAnimationFade];
   //   [auctionTableView endUpdates];
   // }
   // Animate the fixed rental price label and text field
-  // NSTimeInterval duration = [[notification.userInfo objectForKey: 
+  // NSTimeInterval duration = [[notification.userInfo objectForKey:
   //   UIKeyboardAnimationDurationUserInfoKey] doubleValue];
   // [UIView animateWithDuration: duration animations: ^{
   //   CGRect screen = [[UIScreen mainScreen] bounds];
@@ -864,7 +872,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   //   fixedRentalPriceTextField.frame = rect1;
 
   //   CGRect rect2 = fixedRentalPriceLabel.frame;
-  //   rect2.origin.y = fixedRentalPriceTextField.frame.origin.y - 
+  //   rect2.origin.y = fixedRentalPriceTextField.frame.origin.y -
   //     rect2.size.height;
   //   fixedRentalPriceLabel.frame = rect2;
   // }];

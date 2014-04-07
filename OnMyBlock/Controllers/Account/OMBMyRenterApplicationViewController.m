@@ -76,7 +76,7 @@
   backViewOffsetY = padding + standardHeight;
   // The image in the back
   backView = [UIView new];
-  backView.frame = CGRectMake(0.0f, backViewOffsetY, 
+  backView.frame = CGRectMake(0.0f, backViewOffsetY,
     screenWidth, screenHeight * 0.4f);
   [self.view insertSubview: backView belowSubview: self.table];
   // Image of user
@@ -89,7 +89,7 @@
 
   // Table header view
   UIView *headerView = [UIView new];
-  headerView.frame = CGRectMake(0.0f, 0.0f, screen.size.width, 
+  headerView.frame = CGRectMake(0.0f, 0.0f, screen.size.width,
     userImageView.frame.size.height);
   self.table.tableHeaderView = headerView;
 }
@@ -105,7 +105,7 @@
   }
 
   // Download cosigners
-  // OMBCosignerListConnection *cosignerConn = 
+  // OMBCosignerListConnection *cosignerConn =
   //   [[OMBCosignerListConnection alloc] initWithUser: user];
   // cosignerConn.completionBlock = ^(NSError *error) {
   //   // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 2]
@@ -115,7 +115,7 @@
   // [cosignerConn start];
 
   // Rental History
-  OMBPreviousRentalListConnection *rentalListConn = 
+  OMBPreviousRentalListConnection *rentalListConn =
     [[OMBPreviousRentalListConnection alloc] initWithUser: user];
   rentalListConn.completionBlock = ^(NSError *error) {
     // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 4]
@@ -135,9 +135,9 @@
   [employmentConn start];
 
   // Legal Questions
-  [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion: 
+  [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
     ^(NSError *error) {
-      legalQuestions = 
+      legalQuestions =
         [[OMBLegalQuestionStore sharedStore] questionsSortedByQuestion];
       // Legal answers
       OMBLegalAnswerListConnection *connection =
@@ -205,7 +205,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!cell)
     cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleValue1
       reuseIdentifier: CellIdentifier];
-  cell.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
+  cell.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
   cell.detailTextLabel.text = @"";
   cell.detailTextLabel.textColor = [UIColor blueDark];
@@ -222,9 +222,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
         NameCellIdentifier];
       if (!cell1)
-        cell1 = [[UITableViewCell alloc] initWithStyle: 
+        cell1 = [[UITableViewCell alloc] initWithStyle:
           UITableViewCellStyleSubtitle reuseIdentifier: NameCellIdentifier];
-      cell1.detailTextLabel.font = 
+      cell1.detailTextLabel.font =
         [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
       cell1.detailTextLabel.text = @"University of California - Berkeley";
       cell1.detailTextLabel.textColor = [UIColor grayMedium];
@@ -237,20 +237,20 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // About
     else if (indexPath.row == 1) {
-      cell.textLabel.attributedText = 
-        [user.about attributedStringWithFont: 
+      cell.textLabel.attributedText =
+        [user.about attributedStringWithFont:
           cell.textLabel.font lineHeight: 22.0f];
       cell.textLabel.numberOfLines = 0;
     }
     // Email, phone
     else if (indexPath.row == 2) {
       static NSString *EmailPhoneCellIdentifier = @"EmailPhoneCellIdentifier";
-      OMBMyRenterApplicationEmailPhoneCell *cell1 = 
+      OMBMyRenterApplicationEmailPhoneCell *cell1 =
         [tableView dequeueReusableCellWithIdentifier:
           EmailPhoneCellIdentifier];
       if (!cell1)
-        cell1 = [[OMBMyRenterApplicationEmailPhoneCell alloc] initWithStyle: 
-          UITableViewCellStyleDefault 
+        cell1 = [[OMBMyRenterApplicationEmailPhoneCell alloc] initWithStyle:
+          UITableViewCellStyleDefault
             reuseIdentifier: EmailPhoneCellIdentifier];
       cell1.selectionStyle = UITableViewCellSelectionStyleNone;
       cell1.emailLabel.text = user.email;
@@ -261,11 +261,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Co-applicants
   else if (indexPath.section == 1) {
     static NSString *CoapplicantCellIdentifier = @"CoapplicantCellIdentifier";
-    OMBCoapplicantCell *cell1 = 
-      [tableView dequeueReusableCellWithIdentifier: 
+    OMBCoapplicantCell *cell1 =
+      [tableView dequeueReusableCellWithIdentifier:
         CoapplicantCellIdentifier];
     if (!cell1)
-      cell1 = [[OMBCoapplicantCell alloc] initWithStyle: 
+      cell1 = [[OMBCoapplicantCell alloc] initWithStyle:
         UITableViewCellStyleDefault
           reuseIdentifier: CoapplicantCellIdentifier];
     if (indexPath.row % 2) {
@@ -279,29 +279,29 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Co-signers
   else if (indexPath.section == 2) {
     static NSString *CosignerCellIdentifier = @"CosignerCellIdentifier";
-    OMBCosignerCell *cell1 = 
+    OMBCosignerCell *cell1 =
       [tableView dequeueReusableCellWithIdentifier: CosignerCellIdentifier];
     if (!cell1)
-      cell1 = [[OMBCosignerCell alloc] initWithStyle: 
+      cell1 = [[OMBCosignerCell alloc] initWithStyle:
         UITableViewCellStyleDefault
           reuseIdentifier: CosignerCellIdentifier];
-    [cell1 loadData: 
-    [[user.renterApplication cosignersSortedByFirstName] 
+    [cell1 loadData:
+    [[user.renterApplication cosignersSortedByFirstName]
       objectAtIndex: indexPath.row]];
     return cell1;
   }
   // Pets
   else if (indexPath.section == 3) {
     static NSString *PetCellIdentifier = @"PetCellIdentifier";
-    UITableViewCell *cell1 = 
-      [tableView dequeueReusableCellWithIdentifier: 
+    UITableViewCell *cell1 =
+      [tableView dequeueReusableCellWithIdentifier:
         PetCellIdentifier];
     if (!cell1) {
-      cell1 = [[UITableViewCell alloc] initWithStyle: 
+      cell1 = [[UITableViewCell alloc] initWithStyle:
         UITableViewCellStyleDefault
           reuseIdentifier: PetCellIdentifier];
       UIImageView *imageView1 = [UIImageView new];
-      imageView1.frame = CGRectMake(padding, padding, 
+      imageView1.frame = CGRectMake(padding, padding,
         standardHeight, standardHeight);
       if (user.renterApplication.cats) {
         imageView1.image = [UIImage imageNamed: @"cats_icon.png"];
@@ -312,7 +312,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       [cell1.contentView addSubview: imageView1];
       if (user.renterApplication.cats && user.renterApplication.dogs) {
         UIImageView *imageView2 = [UIImageView new];
-        imageView2.frame = CGRectMake(padding + standardHeight + padding, 
+        imageView2.frame = CGRectMake(padding + standardHeight + padding,
           padding, standardHeight, standardHeight);
         imageView2.image = [UIImage imageNamed: @"dogs_icon.png"];
         [cell1.contentView addSubview: imageView2];
@@ -323,29 +323,29 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Rental History
   else if (indexPath.section == 4) {
     static NSString *RentalCellIdentifier = @"RentalCellIdentifier";
-    OMBPreviousRentalCell *cell1 = 
-      [tableView dequeueReusableCellWithIdentifier: 
+    OMBPreviousRentalCell *cell1 =
+      [tableView dequeueReusableCellWithIdentifier:
         RentalCellIdentifier];
     if (!cell1)
-      cell1 = [[OMBPreviousRentalCell alloc] initWithStyle: 
+      cell1 = [[OMBPreviousRentalCell alloc] initWithStyle:
         UITableViewCellStyleDefault
           reuseIdentifier: RentalCellIdentifier];
-//    [cell1 loadData: 
+//    [cell1 loadData:
 //      [user.renterApplication.previousRentals objectAtIndex: indexPath.row]];
     return cell1;
   }
   // Work History
   else if (indexPath.section == 5) {
     static NSString *EmploymentCellIdentifier = @"EmploymentCellIdentifier";
-    OMBEmploymentCell *cell1 = 
-      [tableView dequeueReusableCellWithIdentifier: 
+    OMBEmploymentCell *cell1 =
+      [tableView dequeueReusableCellWithIdentifier:
         EmploymentCellIdentifier];
     if (!cell1)
-      cell1 = [[OMBEmploymentCell alloc] initWithStyle: 
+      cell1 = [[OMBEmploymentCell alloc] initWithStyle:
         UITableViewCellStyleDefault
           reuseIdentifier: EmploymentCellIdentifier];
-    [cell1 loadData: 
-      [[user.renterApplication employmentsSortedByStartDate] 
+    [cell1 loadData:
+      [[user.renterApplication employmentsSortedByStartDate]
         objectAtIndex: indexPath.row]];
     cell1.delegate = self;
     return cell1;
@@ -353,18 +353,18 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Legal Stuff
   else if (indexPath.section == 6) {
     static NSString *LegalCellIdentifier = @"LegalCellIdentifier";
-    OMBLegalQuestionAndAnswerCell *cell1 = 
-      [tableView dequeueReusableCellWithIdentifier: 
+    OMBLegalQuestionAndAnswerCell *cell1 =
+      [tableView dequeueReusableCellWithIdentifier:
         LegalCellIdentifier];
     if (!cell1)
-      cell1 = [[OMBLegalQuestionAndAnswerCell alloc] initWithStyle: 
+      cell1 = [[OMBLegalQuestionAndAnswerCell alloc] initWithStyle:
         UITableViewCellStyleDefault
           reuseIdentifier: LegalCellIdentifier];
-    OMBLegalQuestion *legalQuestion = [legalQuestions objectAtIndex: 
+    OMBLegalQuestion *legalQuestion = [legalQuestions objectAtIndex:
       indexPath.row];
-    OMBLegalAnswer *legalAnswer = 
+    OMBLegalAnswer *legalAnswer =
       [user.renterApplication legalAnswerForLegalQuestion: legalQuestion];
-    [cell1 loadQuestion: legalQuestion answer: legalAnswer 
+    [cell1 loadQuestion: legalQuestion answer: legalAnswer
       atIndexPath: indexPath];
     return cell1;
   }
@@ -418,7 +418,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
-- (CGFloat) tableView: (UITableView *) tableView 
+- (CGFloat) tableView: (UITableView *) tableView
 heightForHeaderInSection: (NSInteger) section
 {
   if (section > 0) {
@@ -446,12 +446,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // About
     else if (indexPath.row == 1) {
-      NSAttributedString *aString = 
-        [user.about attributedStringWithFont: 
-          [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] 
+      NSAttributedString *aString =
+        [user.about attributedStringWithFont:
+          [UIFont fontWithName: @"HelveticaNeue-Light" size: 15]
             lineHeight: 22.0f];
-      CGRect rect = [aString boundingRectWithSize: 
-        CGSizeMake(tableView.frame.size.width - (padding * 2), 9999) 
+      CGRect rect = [aString boundingRectWithSize:
+        CGSizeMake(tableView.frame.size.width - (padding * 2), 9999)
           options: NSStringDrawingUsesLineFragmentOrigin context: nil];
       return padding + rect.size.height + padding;
     }
@@ -482,7 +482,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Legal Stuff
   else if (indexPath.section == 6) {
-    OMBLegalQuestion *legalQuestion = [legalQuestions objectAtIndex: 
+    OMBLegalQuestion *legalQuestion = [legalQuestions objectAtIndex:
       indexPath.row];
     CGRect rect = [legalQuestion.question boundingRectWithSize:
       CGSizeMake([OMBLegalQuestionAndAnswerCell widthForQuestionLabel], 9999)
@@ -492,17 +492,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   return 0.0f;
 }
 
-- (UIView *) tableView: (UITableView *) tableView 
+- (UIView *) tableView: (UITableView *) tableView
 viewForHeaderInSection: (NSInteger) section
 {
   CGFloat padding = 20.0f;
   AMBlurView *blurView = [[AMBlurView alloc] init];
   blurView.blurTintColor = [UIColor blueLight];
-  blurView.frame = CGRectMake(0.0f, 0.0f, 
+  blurView.frame = CGRectMake(0.0f, 0.0f,
     tableView.frame.size.width, 13.0f * 2);
   UILabel *label = [UILabel new];
   label.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 13];
-  label.frame = CGRectMake(padding, 0.0f, 
+  label.frame = CGRectMake(padding, 0.0f,
     blurView.frame.size.width - (padding * 2), blurView.frame.size.height);
   label.textColor = [UIColor blueDark];
   [blurView addSubview: label];
@@ -551,7 +551,7 @@ viewForHeaderInSection: (NSInteger) section
   OMBWebViewController *webViewController = [[OMBWebViewController alloc] init];
   webViewController.title = [employment.companyName capitalizedString];
   [webViewController.webView loadRequest: request];
-  [self.navigationController pushViewController: webViewController 
+  [self.navigationController pushViewController: webViewController
     animated: YES];
 }
 

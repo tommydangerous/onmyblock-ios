@@ -29,8 +29,8 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
 };
 
 @interface OMBMapViewController : OMBViewController
-<CLLocationManagerDelegate, MKMapViewDelegate, 
-  UIGestureRecognizerDelegate, UIScrollViewDelegate, UITableViewDataSource, 
+<CLLocationManagerDelegate, MKMapViewDelegate, UIAlertViewDelegate,
+  UIGestureRecognizerDelegate, UIScrollViewDelegate, UITableViewDataSource,
   UITableViewDelegate>
 {
   UIActivityIndicatorView *activityIndicatorView;
@@ -88,7 +88,7 @@ withTitle: (NSString *) title;
 - (void) refreshProperties;
 - (void) reloadTable;
 - (void) removeAllAnnotations;
-- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
+- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate
 withMiles: (int) miles animated: (BOOL) animated;
 - (void) switchToListView;
 - (void) updateFilterLabel;
