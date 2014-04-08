@@ -35,9 +35,10 @@ state: (NSString *) state
     @"address=%@&"
     @"components="
     @"country:%@|"
+    @"locality:%@|"
     @"administrative_area:%@&"
     @"sensor=true", 
-    address, @"us", state];
+    address, @"us",city, state];
 
   NSLog(@"STRING: %@", string);
   [self setRequestWithString: string];
