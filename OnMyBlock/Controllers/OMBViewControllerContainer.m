@@ -790,6 +790,30 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   iv.image.accessibilityIdentifier = identifier;
 }
 
+- (void) changeTitleLabelColorUserMenu:(NSString *)idButton
+{
+  for (OMBUserMenu *m in userMenuArray) {
+    for (UIButton *button in m.currentButtons) {
+      // change text color
+      UIImageView *iv = (UIImageView *)[button viewWithTag:11];
+      NSString *identifier = iv.image.accessibilityIdentifier;
+      if([idButton isEqualToString:button.titleLabel.text]){
+        [button setTitleColor: [UIColor blue]
+          forState: UIControlStateNormal];
+        iv.image =
+          [UIImage changeColorForImage:
+            [UIImage imageNamed:identifier]
+              toColor:[UIColor blue]];
+      }else{
+        [button setTitleColor: [UIColor whiteColor]
+          forState: UIControlStateNormal];
+        iv.image = [UIImage imageNamed:identifier];
+      }
+      iv.image.accessibilityIdentifier = identifier;
+    }
+  }
+}
+
 - (void) drag: (UIPanGestureRecognizer *) gesture
 {
   // CGRect screen      = [[UIScreen mainScreen] bounds];
@@ -1313,6 +1337,10 @@ completion: (void (^) (void)) block
 
 - (void) showCreateListing
 {
+  NSString *idButton = ((OMBUserMenu *)
+    [userMenuArray objectAtIndex: 0]).createListingButton.titleLabel.text;
+  [self changeTitleLabelColorUserMenu: idButton];
+  
   if ([[OMBUser currentUser] loggedIn]) {
     [self hideMenuWithFactor: 1.0f];
     [self presentDetailViewController:
@@ -1337,7 +1365,10 @@ completion: (void (^) (void)) block
 
 - (void) showDiscover
 {
-  [self highlightDiscover];
+  NSString *idButton = ((OMBUserMenu *)
+    [userMenuArray objectAtIndex: 0]).discoverButton.titleLabel.text;
+  [self changeTitleLabelColorUserMenu: idButton];
+  //[self highlightDiscover];
   [self changeTitleLabelColor: discoverButton];
   // if (!_mapNavigationController) {
   //   // Search
@@ -1356,6 +1387,9 @@ completion: (void (^) (void)) block
 
 - (void) showFavorites
 {
+  NSString *idButton = ((OMBUserMenu *)
+    [userMenuArray objectAtIndex: 0]).favoritesButton.titleLabel.text;
+  [self changeTitleLabelColorUserMenu: idButton];
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: self.favoritesNavigationController];
 }
@@ -1371,18 +1405,27 @@ completion: (void (^) (void)) block
 
 - (void) showHomebaseLandlord
 {
+  NSString *idButton = ((OMBUserMenu *)
+    [userMenuArray objectAtIndex: 0]).sellerHomebaseButton.titleLabel.text;
+  [self changeTitleLabelColorUserMenu: idButton];
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: self.homebaseLandlordNavigationController];
 }
 
 - (void) showHomebaseRenter
 {
+  NSString *idButton = ((OMBUserMenu *)
+    [userMenuArray objectAtIndex: 0]).renterHomebaseButton.titleLabel.text;
+  [self changeTitleLabelColorUserMenu: idButton];
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: self.homebaseRenterNavigationController];
 }
 
 - (void) showInbox
 {
+  NSString *idButton = ((OMBUserMenu *)
+    [userMenuArray objectAtIndex: 0]).inboxButton.titleLabel.text;
+  [self changeTitleLabelColorUserMenu: idButton];
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: self.inboxNavigationController];
 }
@@ -1460,6 +1503,9 @@ completion: (void (^) (void)) block
 
 - (void) showManageListings
 {
+  NSString *idButton = ((OMBUserMenu *)
+    [userMenuArray objectAtIndex: 0]).manageListingsButton.titleLabel.text;
+  [self changeTitleLabelColorUserMenu: idButton];
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: self.manageListingsNavigationController];
 }
@@ -1589,6 +1635,9 @@ completion: (void (^) (void)) block
 
 - (void) showSearchAndSwitchToList: (BOOL) switchToList
 {
+  NSString *idButton = ((OMBUserMenu *)
+    [userMenuArray objectAtIndex: 0]).searchButton.titleLabel.text;
+  [self changeTitleLabelColorUserMenu: idButton];
   [self presentViewController: self.mapFilterNavigationController
     animated: YES completion: ^{
       OMBMapViewController *mapViewController = (OMBMapViewController *)

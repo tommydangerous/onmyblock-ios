@@ -322,19 +322,6 @@
   return [UIApplication sharedApplication].delegate;
 }
 
-- (void) changeTitleLabelColor:(UIButton *)button
-{
-  // there are six OMBUserMenu in container
-  [[self container] setTitleColorWhite];
-  // change text color
-  [button setTitleColor: [UIColor blue] forState: UIControlStateNormal];
-  // changd image color
-  UIImageView *iv = (UIImageView *)[button viewWithTag:11];
-  NSString *identifier = iv.image.accessibilityIdentifier;
-  iv.image = [UIImage changeColorForImage: [UIImage imageNamed:identifier]  toColor:[UIColor blue]];
-  iv.image.accessibilityIdentifier = identifier;
-}
-
 - (OMBViewControllerContainer *) container
 {
   return [self appDelegate].container;
@@ -430,49 +417,41 @@
 
 - (void) showCreateListing
 {
-  [self changeTitleLabelColor:_createListingButton];
   [[self container] showCreateListing];
 }
 
 - (void) showDiscover
 {
-  [self changeTitleLabelColor:_discoverButton];
   [[self container] showDiscover];
 }
 
 - (void) showFavorites
 {
-  [self changeTitleLabelColor:_favoritesButton];
   [[self container] showFavorites];
 }
 
 - (void) showHomebaseLandlord
 {
-  [self changeTitleLabelColor:_sellerHomebaseButton];
   [[self container] showHomebaseLandlord];
 }
 
 - (void) showHomebaseRenter
 {
-  [self changeTitleLabelColor:_renterHomebaseButton];
   [[self container] showHomebaseRenter];
 }
 
 - (void) showInbox
 {
-  [self changeTitleLabelColor:_inboxButton];
   [[self container] showInbox];
 }
 
 - (void) showInboxSeller
 {
-  [self changeTitleLabelColor:_sellerInboxButton];
   [[self container] showInbox];
 }
 
 - (void) showManageListings
 {
-  [self changeTitleLabelColor:_manageListingsButton];
   [[self container] showManageListings];
 }
 
@@ -483,7 +462,6 @@
 
 - (void) showSearch
 {
-  [self changeTitleLabelColor:_searchButton];
   [[self container] showSearchAndSwitchToList: YES];
 }
 
@@ -547,7 +525,7 @@ withNumber: (NSNumber *) number
 
 - (void) userLogout: (NSNotification *) notification
 {
-  [self changeTitleLabelColor:nil];
+  [[self container] setTitleColorWhite];
   // Inbox
   [self updateNotificationBadgeLabel: _inboxNotificationBadge withNumber: @0];
     [self updateNotificationBadgeLabel:_renterHomebaseNotificationBadge
