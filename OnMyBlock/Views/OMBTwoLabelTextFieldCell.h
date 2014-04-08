@@ -17,14 +17,21 @@
 @property (nonatomic, strong) TextFieldPadding *secondTextField;
 @property (nonatomic, strong) UILabel *secondTextFieldLabel;
 
+@property (nonatomic, strong) UIView *viewBackground;
+//Added for handling Expiry date
+@property (nonatomic, strong) TextFieldPadding *thirdTextField;
+@property (nonatomic, strong) UILabel *labelSeparator;
+
 #pragma mark - Methods
 
 #pragma mark - Class Methods
 
 + (CGFloat) heightForCellWithIconImageView;
++ (CGFloat) heightForCellWithLeftLabelIconImageView;
 
 #pragma mark - Instance Methods
 
 - (void) setFrameUsingIconImageView;
+- (void) setFrameUsingLeftLabelIconImageView;
 
 @end

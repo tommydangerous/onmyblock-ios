@@ -27,7 +27,7 @@
   if (!(self = [super init])) return nil;
   
   self.screenName = @"Payout Method Credit Card";
-  self.title      = @"Payout";
+  self.title      = @"Add payment";
   
   return self;
 }
@@ -42,6 +42,8 @@
   
   [self setupForTable];
   
+    [self.table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    
   cancelBarButton =
     [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
       style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
@@ -131,10 +133,9 @@
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
   // Personal Information
-  // Spacing
   // Credit Card Information
   // Keyboard
-  return 4;
+  return 2;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -154,132 +155,230 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   
   // Fields
   if (section == OMBPayoutMethodCreditCardSectionPersonal) {
-    static NSString *PersonalID = @"PersonalID";
-    OMBLabelTextFieldCell *cell =
-      [tableView dequeueReusableCellWithIdentifier: PersonalID];
-    if (!cell) {
-      cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
-        UITableViewCellStyleDefault reuseIdentifier: PersonalID];
-      [cell setFrameUsingIconImageView];
-    }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.textField.keyboardType = UIKeyboardTypeDefault;
-    cell.textField.userInteractionEnabled = YES;
-    NSString *imageName;
-    NSString *labelString;
-    NSString *key;
-    if (row == OMBPayoutMethodCreditCardSectionPersonalRowBilling ) {
-      imageName         = @"business_icon_black";
-      labelString = @"Billing address";
-      key = @"billing_address";
-      cell.textField.keyboardType = UIKeyboardTypeDefault;
-    }
-    if (row == OMBPayoutMethodCreditCardSectionPersonalRowZip) {
-      imageName         = @"location_icon_black.png";
-      labelString = @"Zip";
-      key = @"zip";
-      cell.textField.keyboardType = UIKeyboardTypeNumberPad;
-    }
-    
-    cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
-      size: cell.iconImageView.bounds.size];
-    cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    cell.textField.delegate  = self;
-    cell.textField.indexPath = indexPath;
-    cell.textField.placeholder = labelString;
-    [cell.textField addTarget: self
-      action: @selector(textFieldDidChange:)
-        forControlEvents: UIControlEventEditingChanged];
-    return cell;
+      if (indexPath.row == OMBPayoutMethodCreditCardSectionPersonalRowTitle) {
+          [empty setBackgroundColor:[UIColor clearColor]];
+          [empty setSelectionStyle:UITableViewCellSelectionStyleNone];
+          
+          UILabel *lbTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 55.0f)];
+          [lbTitle setBackgroundColor:[UIColor clearColor]];
+          [lbTitle setTextColor:[UIColor grayMedium]];
+          [lbTitle setFont:[UIFont mediumLargeTextFont]];
+          [lbTitle setText:@"Personal Information"];
+          [lbTitle setTextAlignment:NSTextAlignmentCenter];
+          [empty addSubview:lbTitle];
+          return empty;
+      }
+      if (indexPath.row > OMBPayoutMethodCreditCardSectionPersonalRowTitle) {
+          static NSString *PersonalID = @"PersonalID";
+          OMBLabelTextFieldCell *cell =
+          [tableView dequeueReusableCellWithIdentifier: PersonalID];
+          if (!cell) {
+              cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
+                      UITableViewCellStyleDefault reuseIdentifier: PersonalID];
+          }
+          cell.selectionStyle = UITableViewCellSelectionStyleNone;
+          [cell setBackgroundColor:[UIColor clearColor]];
+          cell.textField.keyboardType = UIKeyboardTypeDefault;
+          cell.textField.userInteractionEnabled = YES;
+          NSString *imageName;
+          NSString *labelString;
+          NSString *key;
+          if (row == OMBPayoutMethodCreditCardSectionPersonalRowCountry ) {
+
+              [cell setFrameUsingLeftLabelWithFirstCell:YES];
+              cell.backgroundColor = [UIColor clearColor];
+
+              imageName         = @"business_icon_black";
+              labelString = @"Country";
+              key = @"country";
+              cell.textField.keyboardType = UIKeyboardTypeDefault;
+              cell.textField.textColor = [UIColor textColor];
+              cell.textField.font = [UIFont normalTextFontBold];
+
+              cell.textFieldLabel.text = @"Country";
+              cell.textFieldLabel.textAlignment = NSTextAlignmentLeft;
+              cell.textFieldLabel.font = [UIFont normalTextFont];
+              cell.textFieldLabel.textColor = [UIColor grayMedium];
+          }
+          if (row == OMBPayoutMethodCreditCardSectionPersonalRowZip) {
+              [cell setFrameUsingLeftLabelWithFirstCell:NO];
+              cell.backgroundColor = [UIColor clearColor];
+
+              imageName         = @"location_icon_black.png";
+              labelString = @"Zip";
+              key = @"zip";
+              cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+              cell.textField.textColor = [UIColor textColor];
+              cell.textField.font = [UIFont normalTextFontBold];
+              
+              cell.textFieldLabel.text = @"Zip Code";
+              cell.textFieldLabel.textAlignment = NSTextAlignmentLeft;
+              cell.textFieldLabel.font = [UIFont normalTextFont];
+              cell.textFieldLabel.textColor = [UIColor grayMedium];
+          }
+          
+          
+          cell.iconImageView.image = [UIImage image: [UIImage imageNamed: @""]
+                                               size: cell.iconImageView.bounds.size];
+          cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+          cell.textField.delegate  = self;
+          cell.textField.indexPath = indexPath;
+          cell.textField.placeholder = labelString;
+          [cell.textField addTarget: self
+                             action: @selector(textFieldDidChange:)
+                   forControlEvents: UIControlEventEditingChanged];
+          return cell;
+          
+      }
+   
   }
-  // Empty
-  else if (section == OMBPayoutMethodCreditCardSectionEmpty) {
-    empty.contentView.backgroundColor = self.table.backgroundColor;
-    empty.selectedBackgroundView = nil;
-    empty.selectionStyle = UITableViewCellSelectionStyleNone;
-    empty.textLabel.text = @"";
-    empty.separatorInset = UIEdgeInsetsMake(0, 10000, 0, 0);
-  }
+
   // Credit Card
   else if (section == OMBPayoutMethodCreditCardSectionCreditCard){
-    static NSString *CreditCardID = @"CreditCardID";
-    OMBLabelTextFieldCell *cell =
-      [tableView dequeueReusableCellWithIdentifier: CreditCardID];
-    if (!cell) {
-      cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
-        UITableViewCellStyleDefault reuseIdentifier: CreditCardID];
-      [cell setFrameUsingIconImageView];
-    }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.textField.keyboardType = UIKeyboardTypeDefault;
-    cell.textField.userInteractionEnabled = YES;
-    NSString *imageName;
-    NSString *labelString;
-    NSString *key;
-    // Card Number
-    if (row == OMBPayoutMethodCreditCardSectionCreditCardRowNumber) {
-      imageName         = @"credit_card_icon.png";
-      labelString = @"Card number";
-      key = @"card_number";
-      CALayer *border = [CALayer layer];
-      border.backgroundColor = [UIColor grayLight].CGColor;
-      border.frame = CGRectMake(20.0f, 0.0f,
-        cell.contentView.frame.size.width - 20.0f, borderHeight);
-      [cell.layer addSublayer: border];
-      cell.textField.keyboardType = UIKeyboardTypeNumberPad;
-    }
-    // Expiry CCV
-    else if (row == OMBPayoutMethodCreditCardSectionCreditCardRowExpiration) {
-      imageName = @"globe_icon_black.png";
-      static NSString *LabelTextCellID = @"TwoLabelTextCellID";
-      OMBTwoLabelTextFieldCell *cell =
-      [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
-      if (!cell) {
-        cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
-        [cell setFrameUsingIconImageView];
+      if (indexPath.row == OMBPayoutMethodCreditCardSectionCreditCardRowTitle) {
+          [empty setBackgroundColor:[UIColor clearColor]];
+          [empty setSelectionStyle:UITableViewCellSelectionStyleNone];
+          
+          UILabel *lbTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 55.0f)];
+          [lbTitle setBackgroundColor:[UIColor clearColor]];
+          [lbTitle setTextColor:[UIColor grayMedium]];
+          [lbTitle setFont:[UIFont mediumLargeTextFont]];
+          [lbTitle setText:@"Credit Card Information"];
+          [lbTitle setTextAlignment:NSTextAlignmentCenter];
+          [empty addSubview:lbTitle];
+          return empty;
       }
-      cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      
-      NSString *firstlabelString = @"Expiry";
-      NSString *secondlabelString = @"CCV";
-      
-      // Expiry
-      cell.firstIconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
-        size: cell.firstIconImageView.bounds.size];
-      cell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-      cell.firstTextField.delegate  = self;
-      cell.firstTextField.font = [UIFont normalTextFont];
-      cell.firstTextField.indexPath = indexPath;
-      cell.firstTextField.keyboardType = UIKeyboardTypeNumberPad;
-      cell.firstTextField.placeholder = firstlabelString;
-      [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
-        forControlEvents: UIControlEventEditingChanged];
-      
-      // CCV
-      cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-      cell.secondTextField.delegate  = self;
-      cell.secondTextField.font = cell.firstTextField.font;
-      cell.secondTextField.indexPath =
-      [NSIndexPath indexPathForRow: OMBPayoutMethodCreditCardSectionCreditCardRowCCV
-        inSection: indexPath.section] ;
-      cell.secondTextField.keyboardType = UIKeyboardTypeNumberPad;
-      cell.secondTextField.placeholder = secondlabelString;
-      [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
-        forControlEvents: UIControlEventEditingChanged];
-      return cell;
-    }
-    
-    cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
-      size: cell.iconImageView.bounds.size];
-    cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    cell.textField.delegate  = self;
-    cell.textField.indexPath = indexPath;
-    cell.textField.placeholder = labelString;
-    [cell.textField addTarget: self
-      action: @selector(textFieldDidChange:)
-        forControlEvents: UIControlEventEditingChanged];
-    return cell;
+      if (indexPath.row > OMBPayoutMethodCreditCardSectionCreditCardRowTitle) {
+          static NSString *CreditCardID = @"CreditCardID";
+          OMBLabelTextFieldCell *cell =
+          [tableView dequeueReusableCellWithIdentifier: CreditCardID];
+          if (!cell) {
+              cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
+                      UITableViewCellStyleDefault reuseIdentifier: CreditCardID];
+          }
+          cell.selectionStyle = UITableViewCellSelectionStyleNone;
+          [cell setBackgroundColor:[UIColor clearColor]];
+          cell.textField.keyboardType = UIKeyboardTypeDefault;
+          cell.textField.userInteractionEnabled = YES;
+          NSString *imageName;
+          NSString *labelString;
+          NSString *key;
+          // Card Number
+          if (row == OMBPayoutMethodCreditCardSectionCreditCardRowNumber) {
+              
+              [cell setFrameUsingLeftLabelAndIconWithFirstCell:YES];
+              cell.backgroundColor = [UIColor clearColor];
+
+              imageName         = @"credit_card_icon.png";
+              labelString = @"Card number";
+              key = @"card_number";
+
+              cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+              cell.textField.textColor = [UIColor textColor];
+              cell.textField.font = [UIFont normalTextFontBold];
+              
+              cell.textFieldLabel.text = @"Number";
+              cell.textFieldLabel.textAlignment = NSTextAlignmentLeft;
+              cell.textFieldLabel.font = [UIFont normalTextFont];
+              cell.textFieldLabel.textColor = [UIColor grayMedium];
+          
+              cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
+                                                   size: cell.iconImageView.bounds.size];
+
+          }
+          // Expiry CCV
+          else if (row == OMBPayoutMethodCreditCardSectionCreditCardRowExpiration) {
+              
+              //imageName = @"globe_icon_black.png";
+              imageName         = @"credit_card_icon.png";
+              static NSString *LabelTextCellID = @"TwoLabelTextCellID";
+              
+              OMBTwoLabelTextFieldCell *cell =
+              [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
+              
+              if (!cell) {
+                  cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
+                          UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
+                  [cell setFrameUsingLeftLabelIconImageView];
+              }
+              
+              cell.selectionStyle = UITableViewCellSelectionStyleNone;
+              cell.backgroundColor = [UIColor clearColor];
+
+              NSString *firstlabelString = @"mm";
+              NSString *thirdlabelString = @"yy";
+              NSString *secondlabelString = @"CCV";
+              
+              // Expiry
+              cell.firstIconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
+                                                        size: cell.firstIconImageView.bounds.size];
+              
+              
+              cell.firstTextFieldLabel.text = @"Expiry";
+              cell.firstTextFieldLabel.textAlignment = NSTextAlignmentLeft;
+              cell.firstTextFieldLabel.font = [UIFont normalTextFont];
+              cell.firstTextFieldLabel.textColor = [UIColor grayMedium];
+
+              cell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+              cell.firstTextField.delegate  = self;
+              cell.firstTextField.textColor = [UIColor textColor];
+              cell.firstTextField.font = [UIFont normalTextFontBold];
+              cell.firstTextField.indexPath = indexPath;
+              cell.firstTextField.keyboardType = UIKeyboardTypeNumberPad;
+              cell.firstTextField.placeholder = firstlabelString;
+              cell.firstTextField.textAlignment = NSTextAlignmentCenter;
+              [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
+                            forControlEvents: UIControlEventEditingChanged];
+
+              cell.labelSeparator.text = @"/";
+              cell.labelSeparator.textAlignment = NSTextAlignmentCenter;
+              cell.labelSeparator.textColor = [UIColor textColor];
+              cell.labelSeparator.font = [UIFont normalTextFontBold];
+
+              cell.thirdTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+              cell.thirdTextField.delegate  = self;
+              cell.thirdTextField.textColor = [UIColor textColor];
+              cell.thirdTextField.font = [UIFont normalTextFontBold];
+              cell.thirdTextField.indexPath = indexPath;
+              cell.thirdTextField.keyboardType = UIKeyboardTypeNumberPad;
+              cell.thirdTextField.placeholder = thirdlabelString;
+              cell.thirdTextField.textAlignment = NSTextAlignmentCenter;
+              [cell.thirdTextField addTarget: self action: @selector(textFieldDidChange:)
+                            forControlEvents: UIControlEventEditingChanged];
+
+              // CCV
+              cell.secondIconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
+                                                        size: cell.secondIconImageView.bounds.size];
+
+              cell.secondTextFieldLabel.text = @"CCV";
+              cell.secondTextFieldLabel.textAlignment = NSTextAlignmentLeft;
+              cell.secondTextFieldLabel.font = [UIFont normalTextFont];
+              cell.secondTextFieldLabel.textColor = [UIColor grayMedium];
+
+              cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+              cell.secondTextField.delegate  = self;
+              cell.secondTextField.textColor = [UIColor textColor];
+              cell.secondTextField.font = [UIFont normalTextFontBold];
+              cell.secondTextField.indexPath =
+              [NSIndexPath indexPathForRow: OMBPayoutMethodCreditCardSectionCreditCardRowCCV
+                                 inSection: indexPath.section] ;
+              cell.secondTextField.keyboardType = UIKeyboardTypeNumberPad;
+              cell.secondTextField.placeholder = secondlabelString;
+              cell.secondTextField.textAlignment = NSTextAlignmentCenter;
+              [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
+                             forControlEvents: UIControlEventEditingChanged];
+              return cell;
+          }
+          
+          cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+          cell.textField.delegate  = self;
+          cell.textField.indexPath = indexPath;
+          cell.textField.placeholder = labelString;
+          [cell.textField addTarget: self
+                             action: @selector(textFieldDidChange:)
+                   forControlEvents: UIControlEventEditingChanged];
+          return cell;
+      }
   }
   // Spacing Keyboard
   else if (section == OMBPayoutMethodCreditCardSectionSpacingKeyboard) {
@@ -296,11 +395,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // Personal
   if (section == OMBPayoutMethodCreditCardSectionPersonal) {
-    return 2;
-  }
-  // Empty
-  if (section == OMBPayoutMethodCreditCardSectionEmpty) {
-    return 1;
+    return 3;
   }
   // CreditCard
   if (section == OMBPayoutMethodCreditCardSectionCreditCard ) {
@@ -321,18 +416,19 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   
   // Personal
   if (section == OMBPayoutMethodCreditCardSectionPersonal) {
-    return [OMBLabelTextFieldCell heightForCellWithIconImageView];
-  }
-  // Empty
-  else if (section == OMBPayoutMethodCreditCardSectionEmpty) {
-    return OMBStandardHeight;
+      
+      if (row == OMBPayoutMethodCreditCardSectionPersonalRowTitle) {
+          return [OMBLabelTextFieldCell heightForCellWithSectionTitle];
+      }
+      return [OMBLabelTextFieldCell heightForCellWithLeftLabel];
   }
   // Credit Card
   else if (section == OMBPayoutMethodCreditCardSectionCreditCard) {
-    if (row == OMBPayoutMethodCreditCardSectionCreditCardRowCCV)
-      return 0.0f;
-    
-    return [OMBLabelTextFieldCell heightForCellWithIconImageView];
+      
+      if (row == OMBPayoutMethodCreditCardSectionCreditCardRowTitle) {
+          return [OMBLabelTextFieldCell heightForCellWithSectionTitle];
+      }
+      return [OMBLabelTextFieldCell heightForCellWithLeftLabel];
   }
   // Spacing Keyboard
   else if (section == OMBPayoutMethodCreditCardSectionSpacingKeyboard) {
@@ -422,7 +518,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   NSString *string = textField.text;
   
   if ([string length]) {
-    if (row == OMBPayoutMethodCreditCardSectionPersonalRowBilling ) {
+    if (row == OMBPayoutMethodCreditCardSectionPersonalRowCountry ) {
     }
   }
 }

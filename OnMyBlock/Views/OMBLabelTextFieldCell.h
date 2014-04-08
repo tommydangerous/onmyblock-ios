@@ -13,17 +13,22 @@
 @property (nonatomic, strong) UIImageView *iconImageView;
 @property (nonatomic, strong) TextFieldPadding *textField;
 @property (nonatomic, strong) UILabel *textFieldLabel;
+@property (nonatomic, strong) UIView *viewBackground;
 
 #pragma mark - Methods
 
 #pragma mark - Class Methods
 
 + (CGFloat) heightForCellWithIconImageView;
++ (CGFloat) heightForCellWithLeftLabel;
++ (CGFloat) heightForCellWithSectionTitle;
 
 #pragma mark - Instance Methods
 
 - (void) setFrameUsingIconImageView;
 - (void) setFrameUsingSize: (CGSize) size;
 - (void) setFramesUsingString: (NSString *) string;
+- (void) setFrameUsingLeftLabelWithFirstCell:(BOOL) isFirstCell;
+- (void) setFrameUsingLeftLabelAndIconWithFirstCell:(BOOL) isFirstCell;
 
 @end
