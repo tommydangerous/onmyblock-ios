@@ -22,11 +22,10 @@ NSString *const ParseClientKey   = @"2JhMpdLpnx892oxZpHpjZqEQLV4C6VOapaX1XwIL";
 
 // PayPal
 NSString *const PayPalClientID =
-  @"AQLc8BAp2oQFlkUk3ElSsltm6yz1Isdbk8e0nMzOY7ORTBAlY0BcmQK_A2kI";
-  // @"AYF4PhAsNUDPRLYpTmTqtoo04_n7rmum1Q1fgpmApKJOF_eTrtxajPEFDK4Y";
+  @"ATIk_BALZlUpfIrMPnbcHE6G8Ng7Lhw7DlURT4LhMMYhSq8vM7TvyIvUZpW4";
 NSString *const PayPalClientIDSandbox =
-  @"AetqKxBgNs-WXu7L7mhq_kpihxGdOUSo0mgLppw0wvTw_pCdP6n3ANLYt4X6";
-NSString *const PayPalReceiverEmail = @"tommydangerouss@gmail.com";
+  @"AQny7RCftfSrmsvMhQgH0epVnzoBSe2KdD9ZneEcoWmZ1G7QjGUTc-29bKR2";
+NSString *const PayPalReceiverEmail = @"john@onmyblock.com";
 
 // User defaults
 NSString *const OMBUserDefaults = @"OMBUserDefaults";

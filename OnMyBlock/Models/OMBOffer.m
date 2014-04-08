@@ -279,6 +279,8 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 
 - (void) sendPushNotificationAccepted
 {
+  if (!self.user)
+    return;
   NSString *alert = [NSString stringWithFormat:
     @"Your offer for %@ has been accepted!",
       [self.residence.address capitalizedString]];
@@ -289,7 +291,28 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   [push setData: @{
     @"alert": alert,
     @"badge": ParseBadgeIncrement,
-    @"offer_id": [NSNumber numberWithInt: self.uid]
+    @"offer_placed_id": [NSNumber numberWithInt: self.uid]
+  }];
+  [push sendPushInBackground];
+}
+
+- (void) sendPushNotificationSubmitted
+{
+  if (!self.residence)
+    if (!self.residence.user)
+      return;
+  NSString *alert = [NSString stringWithFormat:
+    @"%@ has placed an offer on your place at %@.",
+      [self.user.firstName capitalizedString],
+        [self.residence.address capitalizedString]];
+  PFPush *push = [[PFPush alloc] init];
+  [push expireAfterTimeInterval: 60 * 60 * 24 * 7];
+  [push setChannel: [OMBUser pushNotificationChannelForOffersReceived:
+    self.residence.user.uid]];
+  [push setData: @{
+    @"alert": alert,
+    @"badge": ParseBadgeIncrement,
+    @"offer_received_id": [NSNumber numberWithInt: self.uid]
   }];
   [push sendPushInBackground];
 }

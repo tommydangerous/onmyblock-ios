@@ -631,26 +631,63 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
 #pragma mark - Protocol PayPalPaymentDelegate
 
-- (void) payPalPaymentViewController: (PayPalPaymentViewController *)
-paymentViewController
-didCompletePayment: (PayPalPayment *) completedPayment
+- (void) payPalFuturePaymentDidCancel: (PayPalFuturePaymentViewController *)futurePaymentViewController
 {
-  // Payment was processed successfully;
-  // send to server for verification and fulfillment.
-  NSLog(@"%@", completedPayment);
-  // [self verifyCompletedPayment: completedPayment];
+  // The payment was canceled; dismiss
+  [futurePaymentViewController dismissViewControllerAnimated: YES
+    completion: nil];
+}
 
-  // Dismiss the PayPalPaymentViewController.
-  [paymentViewController dismissViewControllerAnimated: YES completion: nil];
+- (void) payPalFuturePaymentViewController: (PayPalFuturePaymentViewController *) futurePaymentViewController
+didAuthorizeFuturePayment: (NSDictionary *) futurePaymentAuthorization
+{
+  // The user has successfully logged into PayPal,
+  // and has consented to future payments.
+
+  // Your code must now send the authorization response to your server.
+  // [self sendAuthorizationToServer:futurePaymentAuthorization];
+  NSLog(@"Future:\n%@", futurePaymentAuthorization);
+
+  // When your server makes its payment request to PayPal, it must include a
+  // Paypal-Application-Correlation-Id HTTP header with this Application
+  // Correlation ID value obtained from the SDK.
+  NSString *correlationId =
+    [PayPalMobile applicationCorrelationIDForEnvironment:
+      PayPalEnvironmentProduction];
+  NSLog(@"Correlation:\n%@", correlationId);
+
+  // {
+  //   client = {
+  //     environment = live;
+  //     "paypal_sdk_version" = "2.0.2";
+  //     platform = iOS;
+  //     "product_name" = "PayPal iOS SDK";
+  //   };
+  //   response = {
+  //     code = "EDKaJltkpsu3S_ZAnskVGfy9yOxPOTw750RHZJkS-9i20mSr8ARMbis4oWAqQQJB0lXHA_uev9lcU8214ggaKpzV93lHDj6tTwKn0pBffzRKPvL99_4B4dqZkY-901Z9gtHMFgshlPwURBYwWZRU44s";
+  //   };
+  //   "response_type" = "authorization_code";
+  // }
+
+  // Dismiss
+  [futurePaymentViewController dismissViewControllerAnimated: YES
+    completion: nil];
 }
 
 - (void) payPalPaymentDidCancel: (PayPalPaymentViewController *)
 paymentViewController
 {
-  // The payment was canceled; dismiss the PayPalPaymentViewController.
   [paymentViewController dismissViewControllerAnimated: YES completion: nil];
 }
 
+
+- (void) payPalPaymentViewController: (PayPalPaymentViewController *)
+paymentViewController
+didCompletePayment: (PayPalPayment *) completedPayment
+{
+  NSLog(@"%@", completedPayment);
+  [paymentViewController dismissViewControllerAnimated: YES completion: nil];
+}
 #pragma mark - Protocol UIScrollViewDelegate
 
 - (void) scrollViewWillBeginDragging: (UIScrollView *) scrollView
@@ -2024,10 +2061,12 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
       @"Down Payment for %@", [residence.address capitalizedString]];
     [self closeAlertBlur];
     // Down payment
-    [self presentViewController:
+    UINavigationController *nav = (UINavigationController *)
       [self payPalPaymentViewControllerWithAmount: [offer downPaymentAmount]
         intent: PayPalPaymentIntentAuthorize shortDescription: shortDescription
-          delegate: self] animated: YES completion: nil];
+          delegate: self];
+    if (nav)
+      [self presentViewController: nav animated: YES completion: nil];
   }
   // Venmo
   else if ([[OMBUser currentUser].primaryPaymentPayoutMethod isVenmo]) {
@@ -2059,6 +2098,9 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
           action: @selector(submitOfferConfirmedOkay)];
         [alertBlur showOnlyConfirmButton];
         [alertBlur animateChangeOfContent];
+
+        // Send push notification to landlord saying they received an offer
+        [offer sendPushNotificationSubmitted];
       }
       else {
         [self showAlertViewWithError: error];

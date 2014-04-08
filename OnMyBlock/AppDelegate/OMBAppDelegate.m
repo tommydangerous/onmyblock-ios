@@ -21,6 +21,7 @@
 #import "OMBMessageDetailViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOffer.h"
+#import "OMBOfferInquiryViewController.h"
 #import "OMBOfferVerifyVenmoConnection.h"
 #import "OMBPayoutMethod.h"
 #import "OMBResidence.h"
@@ -368,13 +369,26 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
         }];
       };
     }
-    // Offer
-    else if (dictionary[@"offer_id"]) {
+    // Offers placed
+    else if (dictionary[@"offer_placed_id"]) {
       completionBlock = ^(void) {
         OMBOffer *offer = [[OMBOffer alloc] init];
-        offer.uid = [dictionary[@"offer_id"] intValue];
+        offer.uid = [dictionary[@"offer_placed_id"] intValue];
         [offer fetchDetailsWithCompletion: ^(NSError *error) {
           [weakContainer showOfferAccepted: offer];
+        }];
+      };
+    }
+    // Offers received
+    else if (dictionary[@"offer_received_id"]) {
+      completionBlock = ^(void) {
+        OMBOffer *offer = [[OMBOffer alloc] init];
+        offer.uid = [dictionary[@"offer_received_id"] intValue];
+        [offer fetchDetailsWithCompletion: ^(NSError *error) {
+          [weakContainer showHomebaseLandlord];
+          [weakContainer.homebaseLandlordNavigationController
+            pushViewController: [[OMBOfferInquiryViewController alloc]
+              initWithOffer: offer] animated: NO];
         }];
       };
     }

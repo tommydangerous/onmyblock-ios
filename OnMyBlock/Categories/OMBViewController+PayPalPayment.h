@@ -12,8 +12,7 @@
 
 @interface OMBViewController (PayPalPayment)
 
-- (PayPalPaymentViewController *) payPalPaymentViewControllerWithAmount:
-(CGFloat) amount
+- (id) payPalPaymentViewControllerWithAmount: (CGFloat) amount
 intent: (PayPalPaymentIntent) intent
 shortDescription: (NSString *) shortDescription delegate: (id) delegate;
 

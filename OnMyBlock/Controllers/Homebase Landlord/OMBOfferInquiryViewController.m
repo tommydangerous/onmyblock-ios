@@ -1391,6 +1391,7 @@ viewForHeaderInSection: (NSInteger) section
          // Decline and put other offers on hold
          [[OMBUser currentUser] declineAndPutOtherOffersOnHold: offer];
 
+         // Send push notifications for when an offer is accepted
          [offer sendPushNotificationAccepted];
        }
        else {

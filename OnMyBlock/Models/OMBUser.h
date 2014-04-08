@@ -86,6 +86,7 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 + (UIImage *) placeholderImage;
 + (NSString *) pushNotificationChannelForConversations: (NSUInteger) userUID;
 + (NSString *) pushNotificationChannelForOffersPlaced: (NSUInteger) userUID;
++ (NSString *) pushNotificationChannelForOffersReceived: (NSUInteger) userUID;
 
 #pragma mark - Instance Methods
 

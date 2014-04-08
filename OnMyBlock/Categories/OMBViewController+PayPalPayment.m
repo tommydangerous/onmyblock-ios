@@ -17,8 +17,7 @@
 
 #pragma mark - Instance Methods
 
-- (PayPalPaymentViewController *) payPalPaymentViewControllerWithAmount:
-(CGFloat) amount
+- (id) payPalPaymentViewControllerWithAmount: (CGFloat) amount
 intent: (PayPalPaymentIntent) intent
 shortDescription: (NSString *) shortDescription delegate: (id) delegate
 {
@@ -35,10 +34,14 @@ shortDescription: (NSString *) shortDescription delegate: (id) delegate
   if ([[[OMBUser currentUser] phoneString] length])
     payPalConfiguration.defaultUserPhoneNumber =
       [[OMBUser currentUser] phoneString];
+  payPalConfiguration.acceptCreditCards = YES;
+  payPalConfiguration.languageOrLocale  = @"en";
   payPalConfiguration.merchantName = @"OnMyBlock";
-  payPalConfiguration.acceptCreditCards = NO;
+  payPalConfiguration.merchantUserAgreementURL = [NSURL URLWithString:
+    @"https://onmyblock.com/terms-of-service"];
+  payPalConfiguration.merchantPrivacyPolicyURL = [NSURL URLWithString:
+    @"https://onmyblock.com/privacy-policy"];
   payPalConfiguration.rememberUser = YES;
-  payPalConfiguration.languageOrLocale = @"en";
 
   // [PayPalMobile preconnectWithEnvironment: PayPalEnvironmentSandbox];
   [PayPalMobile preconnectWithEnvironment: PayPalEnvironmentProduction];
@@ -64,9 +67,19 @@ shortDescription: (NSString *) shortDescription delegate: (id) delegate
 
   }
 
-  PayPalPaymentViewController *paymentViewController =
-    [[PayPalPaymentViewController alloc] initWithPayment: payment
-      configuration: payPalConfiguration delegate: delegate];
+  id paymentViewController;
+  // Sale
+  if (intent == PayPalPaymentIntentSale) {
+    paymentViewController =
+      [[PayPalPaymentViewController alloc] initWithPayment: payment
+        configuration: payPalConfiguration delegate: delegate];
+  }
+  // Authorize
+  else if (intent == PayPalPaymentIntentAuthorize) {
+    paymentViewController =
+      [[PayPalFuturePaymentViewController alloc] initWithConfiguration:
+        payPalConfiguration delegate: delegate];
+  }
 
   return paymentViewController;
 }
