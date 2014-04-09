@@ -59,7 +59,7 @@ decision: (OMBOfferDecisionConnectionType) type
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  // NSLog(@"OMBOfferDecisionConnection\n%@", [self json]);
+  NSLog(@"OMBOfferDecisionConnection\n%@", [self json]);
 
   if ([self successful]) {
     [offer readFromDictionary: [self objectDictionary]];
