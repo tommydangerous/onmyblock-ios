@@ -39,7 +39,7 @@
   [self addSubview: _backgroundBlurView];
 
   closeButton = [UIButton new];
-  closeButton.frame = CGRectMake((screenWidth - standardHeight) * 0.5f, 
+  closeButton.frame = CGRectMake((screenWidth - standardHeight) * 0.5f,
     screenHeight - (standardHeight + padding), standardHeight, standardHeight);
   closeButton.layer.borderColor = [UIColor whiteColor].CGColor;
   closeButton.layer.borderWidth = 1.0f;
@@ -49,13 +49,13 @@
   [_backgroundBlurView addSubview: closeButton];
 
   CGFloat xSize = closeButton.frame.size.width * 0.5f;
-  closeButtonView = 
-    [[OMBCloseButtonView alloc] initWithFrame: 
+  closeButtonView =
+    [[OMBCloseButtonView alloc] initWithFrame:
       CGRectMake((screenWidth - xSize) * 0.5f,
-        closeButton.frame.origin.y + 
+        closeButton.frame.origin.y +
         (closeButton.frame.size.height - xSize) * 0.5f,
           xSize, xSize) color: [UIColor whiteColor]];
-  [_backgroundBlurView insertSubview: closeButtonView 
+  [_backgroundBlurView insertSubview: closeButtonView
     belowSubview: closeButton];
 
   alertView = [UIView new];
@@ -95,14 +95,14 @@
   cancelButton = [UIButton new];
   cancelButton.titleLabel.font = [UIFont mediumTextFontBold];
   [cancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
-  [cancelButton setTitleColor: [UIColor grayMedium] 
+  [cancelButton setTitleColor: [UIColor grayMedium]
     forState: UIControlStateNormal];
   [buttonView addSubview: cancelButton];
 
   confirmButton = [UIButton new];
   confirmButton.titleLabel.font = cancelButton.titleLabel.font;
   [confirmButton setTitle: @"Confirm" forState: UIControlStateNormal];
-  [confirmButton setTitleColor: [UIColor blue] 
+  [confirmButton setTitleColor: [UIColor blue]
     forState: UIControlStateNormal];
   [buttonView addSubview: confirmButton];
 
@@ -120,7 +120,7 @@
 
   questionDetailsView = [UIView new];
   questionDetailsView.backgroundColor = [UIColor grayUltraLight];
-  questionDetailsView.frame = CGRectMake(0.0f, 0.0f, 
+  questionDetailsView.frame = CGRectMake(0.0f, 0.0f,
     buttonView.frame.size.width, 0.0f);
   [alertView addSubview: questionDetailsView];
   UIView *topBorder2 = [UIView new];
@@ -146,16 +146,16 @@
 
 #pragma mark - Instance Methods
 
-- (void) addTarget: (id) target action: (SEL) action 
+- (void) addTarget: (id) target action: (SEL) action
 forButton: (UIButton *) button
 {
-  [button removeTarget: target action: nil 
+  [button removeTarget: target action: nil
     forControlEvents: UIControlEventTouchUpInside];
-  [button addTarget: target action: action 
+  [button addTarget: target action: action
     forControlEvents: UIControlEventTouchUpInside];
 }
 
-- (void) addTargetForCancelButton: (id) target action: (SEL) action 
+- (void) addTargetForCancelButton: (id) target action: (SEL) action
 {
   [self addTarget: target action: action forButton: cancelButton];
 }
@@ -182,11 +182,11 @@ forButton: (UIButton *) button
 - (void) close
 {
   // Gravity
-  _gravityBehavior = 
+  _gravityBehavior =
     [[UIGravityBehavior alloc] initWithItems: @[alertView]];
   _gravityBehavior.gravityDirection = CGVectorMake(0, 10);
   // Item
-  _itemBehavior = 
+  _itemBehavior =
     [[UIDynamicItemBehavior alloc] initWithItems: @[alertView]];
   CGFloat velocity = M_PI_2;
   if (arc4random_uniform(100) % 2) {
@@ -227,10 +227,15 @@ forButton: (UIButton *) button
   questionButton.hidden = YES;
 }
 
+- (BOOL) isClosed
+{
+  return self.superview ? NO : YES;
+}
+
 - (void) questionButtonSelected
 {
   isShowingQuestionDetails = YES;
-  
+
   [UIView animateWithDuration: OMBStandardDuration animations: ^{
     questionDetailsLabel.alpha = 1.0f;
     [self updateFrames];
@@ -260,13 +265,13 @@ forButton: (UIButton *) button
 - (void) setQuestionDetails: (NSString *) string
 {
   questionButton.hidden = NO;
-  questionDetailsLabel.attributedText = [string attributedStringWithFont: 
+  questionDetailsLabel.attributedText = [string attributedStringWithFont:
     questionDetailsLabel.font lineHeight: 22.0f];
 }
 
 - (void) setMessage: (NSString *) string
 {
-  messageLabel.attributedText = [string attributedStringWithFont: 
+  messageLabel.attributedText = [string attributedStringWithFont:
     messageLabel.font lineHeight: 22.0f];
 }
 
@@ -280,7 +285,7 @@ forButton: (UIButton *) button
   cancelButton.hidden = confirmButton.hidden = NO;
   middleBorder.hidden = NO;
 
-  cancelButton.frame = CGRectMake(0.0f, 0.0f, 
+  cancelButton.frame = CGRectMake(0.0f, 0.0f,
     buttonView.frame.size.width * 0.5f, buttonView.frame.size.height);
   confirmButton.frame = CGRectMake(
     cancelButton.frame.origin.x + cancelButton.frame.size.width, 0.0f,
@@ -326,7 +331,7 @@ forButton: (UIButton *) button
   // Place the alert at the top of the screen
   alertView.frame = CGRectMake(
     (screen.size.width - alertView.frame.size.width) * 0.5f,
-      -1 * alertView.frame.size.height, alertView.frame.size.width, 
+      -1 * alertView.frame.size.height, alertView.frame.size.width,
         alertView.frame.size.height);
 
   CGFloat bounceDistance = screen.size.height * 0.05f;
@@ -335,7 +340,7 @@ forButton: (UIButton *) button
     _backgroundBlurView.alpha = 1.0f;
     // Animate a little down more
     CGRect rect = alertView.frame;
-    rect.origin.y = (screen.size.height - 
+    rect.origin.y = (screen.size.height -
       (alertView.frame.size.height - bounceDistance)) * 0.5f;
     alertView.frame = rect;
   } completion: ^(BOOL finished) {
@@ -343,20 +348,22 @@ forButton: (UIButton *) button
       [UIView animateWithDuration: 0.15f animations: ^{
         // Bounce up
         CGRect rect = alertView.frame;
-        rect.origin.y = (screen.size.height - 
+        rect.origin.y = (screen.size.height -
           (alertView.frame.size.height + (bounceDistance * 0.5))) * 0.5f;
         alertView.frame = rect;
       } completion: ^(BOOL finished) {
         [UIView animateWithDuration: 0.05f animations: ^{
           // Animate to center
           CGRect rect = alertView.frame;
-          rect.origin.y = (screen.size.height - 
+          rect.origin.y = (screen.size.height -
             alertView.frame.size.height) * 0.5f;
           alertView.frame = rect;
         }];
       }];
     }
   }];
+
+  closeButton.hidden = closeButtonView.hidden = NO;
 }
 
 - (void) showOnlyConfirmButton
@@ -366,6 +373,8 @@ forButton: (UIButton *) button
   middleBorder.hidden = YES;
   confirmButton.frame = CGRectMake(0.0f, 0.0f,
     buttonView.frame.size.width, cancelButton.frame.size.height);
+
+  closeButton.hidden = closeButtonView.hidden = YES;
 }
 
 - (void) startSpinning
@@ -395,15 +404,15 @@ forButton: (UIButton *) button
 
   // Alert view
   // Question button
-  questionButton.frame = CGRectMake(alertView.frame.size.width - 
+  questionButton.frame = CGRectMake(alertView.frame.size.width -
     (questionButton.frame.size.width + (padding * 0.5f)), padding * 0.5f,
       questionButton.frame.size.width, questionButton.frame.size.height);
   // Title
-  titleLabel.frame = CGRectMake(padding, padding, 
+  titleLabel.frame = CGRectMake(padding, padding,
     alertView.frame.size.width - (padding * 2), 33.0f);
   // Message
   CGRect messageRect = [messageLabel.attributedText boundingRectWithSize:
-    CGSizeMake(titleLabel.frame.size.width, 9999) 
+    CGSizeMake(titleLabel.frame.size.width, 9999)
       options: NSStringDrawingUsesLineFragmentOrigin context: nil];
   messageLabel.frame = CGRectMake(titleLabel.frame.origin.x,
     titleLabel.frame.origin.y + titleLabel.frame.size.height,
@@ -411,13 +420,13 @@ forButton: (UIButton *) button
   messageLabel.textAlignment = titleLabel.textAlignment;
 
   // Question
-  CGRect questionRect = 
+  CGRect questionRect =
     [questionDetailsLabel.attributedText boundingRectWithSize:
-      CGSizeMake(alertView.frame.size.width - (padding * 2), 9999) 
+      CGSizeMake(alertView.frame.size.width - (padding * 2), 9999)
         options: NSStringDrawingUsesLineFragmentOrigin context: nil];
   questionDetailsView.frame = CGRectMake(questionDetailsView.frame.origin.x,
     messageLabel.frame.origin.y + messageLabel.frame.size.height,
-      questionDetailsView.frame.size.width, 
+      questionDetailsView.frame.size.width,
         questionRect.size.height + (padding * 2));
   questionDetailsLabel.frame = CGRectMake(padding, padding,
     questionRect.size.width, questionRect.size.height);
@@ -429,12 +438,12 @@ forButton: (UIButton *) button
   }
 
   // Buttons
-  buttonView.frame = CGRectMake(0.0f, 
-    questionDetailsView.frame.origin.y + questionDetailsView.frame.size.height, 
+  buttonView.frame = CGRectMake(0.0f,
+    questionDetailsView.frame.origin.y + questionDetailsView.frame.size.height,
       buttonView.frame.size.width, buttonView.frame.size.height);
 
   // Alert view position and height
-  CGFloat alertViewHeight = 
+  CGFloat alertViewHeight =
     buttonView.frame.origin.y + buttonView.frame.size.height;
   alertView.frame = CGRectMake(alertView.frame.origin.x,
     (screenHeight - alertViewHeight) * 0.5f,

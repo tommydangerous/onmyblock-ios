@@ -193,7 +193,9 @@
 - (void) showSignUp;
 - (void) showMenuWithFactor: (float) factor;
 - (void) startSpinning;
+- (void) startSpinningFullScreen;
 - (void) stopSpinning;
+- (void) stopSpinningFullScreen;
 // #warning Remove this
 // - (void) showTest;
 

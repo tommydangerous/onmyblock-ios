@@ -15,7 +15,7 @@
 
 #pragma mark - Initializer
 
-- (id) initWithOffer: (OMBOffer *) object 
+- (id) initWithOffer: (OMBOffer *) object
 paymentConfirmation: (NSDictionary *) dictionary
 {
   if (!(self = [super init])) return nil;
@@ -47,10 +47,10 @@ paymentConfirmation: (NSDictionary *) dictionary
   // NSLog(@"OMBPayPalVerifyMobilePaymentConnection\n%@", [self json]);
 
   if ([self successful]) {
-    OMBPayoutTransaction *payoutTransaction = 
-      [[OMBPayoutTransaction alloc] init];
-    [payoutTransaction readFromDictionary: [self objectDictionary]];
-    offer.payoutTransaction = payoutTransaction;
+    // OMBPayoutTransaction *payoutTransaction =
+    //   [[OMBPayoutTransaction alloc] init];
+    // [payoutTransaction readFromDictionary: [self objectDictionary]];
+    // offer.payoutTransaction = payoutTransaction;
   }
 
   [super connectionDidFinishLoading: connection];

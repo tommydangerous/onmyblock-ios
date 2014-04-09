@@ -22,14 +22,22 @@
 @property (nonatomic, weak) OMBUser *payee;
 @property (nonatomic, weak) OMBUser *payer;
 @property (nonatomic, weak) OMBResidence *residence;
+@property (nonatomic, strong) NSString *transactionType;
 @property (nonatomic) BOOL verified;
 
 @property (nonatomic) NSInteger uid;
 
 #pragma mark - Methods
 
+#pragma mark - Class Methods
+
++ (NSString *) transactionTypeDownPayment;
++ (NSString *) transactionTypeOfferPayment;
+
 #pragma mark - Instance Methods
 
+- (BOOL) isDownPayment;
+- (BOOL) isOfferPayment;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 
 @end

@@ -15,7 +15,7 @@
 
 #pragma mark - Initializer
 
-- (id) initWithOffer: (OMBOffer *) object 
+- (id) initWithOffer: (OMBOffer *) object
 decision: (OMBOfferDecisionConnectionType) type
 {
   if (!(self = [super init])) return nil;
@@ -35,10 +35,15 @@ decision: (OMBOfferDecisionConnectionType) type
 
   NSString *string = [NSString stringWithFormat: @"%@/offers/%i/%@",
     OnMyBlockAPIURL, offer.uid, actionString];
-  NSDictionary *params = @{
-    @"access_token": [OMBUser currentUser].accessToken
-  };
-  [self setRequestWithString: string method: @"POST" parameters: params];
+  NSMutableDictionary *params =
+    [NSMutableDictionary dictionaryWithDictionary: @{
+      @"access_token": [OMBUser currentUser].accessToken
+    }];
+  if (offer.paymentConfirmation)
+    [params setObject: offer.paymentConfirmation
+      forKey: @"payment_confirmation"];
+  [self setRequestWithString: string method: @"POST"
+    parameters: [NSDictionary dictionaryWithDictionary: params]];
 
   return self;
 }
@@ -58,15 +63,6 @@ decision: (OMBOfferDecisionConnectionType) type
 
   if ([self successful]) {
     [offer readFromDictionary: [self objectDictionary]];
-
-    // Payout Transaction
-    if ([[self json] objectForKey: @"payout_transaction"] != [NSNull null]) {
-      NSDictionary *dict = [[self json] objectForKey: @"payout_transaction"];
-      OMBPayoutTransaction *payoutTransaction = 
-        [[OMBPayoutTransaction alloc] init];
-      [payoutTransaction readFromDictionary: dict];
-      offer.payoutTransaction = payoutTransaction;
-    }
   }
   else {
     [self createInternalErrorWithDomain: OMBConnectionErrorDomainOffer
