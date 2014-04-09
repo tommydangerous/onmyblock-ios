@@ -14,6 +14,8 @@
 
 #pragma mark - Instance Methods
 
+- (CGFloat) offerPriceThreshold;
+- (void) offerPriceThresholdSet: (CGFloat) price;
 - (NSMutableDictionary *) permissionDictionary;
 - (BOOL) permissionCurrentLocation;
 - (void) permissionCurrentLocationSet: (BOOL) allow;

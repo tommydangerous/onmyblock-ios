@@ -411,7 +411,6 @@ float kHomebaseRenterImagePercentage = 0.3f;
   // If user just came back from setting up payment method
   if (selectedOffer && cameFromSettingUpPayoutMethods) {
     alert.hidden = NO;
-    [self resetAlert];
     [UIView animateWithDuration: 0.25f animations: ^{
       alert.alpha = 1.0f;
     }];
@@ -1011,7 +1010,6 @@ viewForHeaderInSection: (NSInteger) section
   selectedOffer = [[OMBUser currentUser].acceptedOffers objectForKey:
     [NSNumber numberWithInt: button.tag]];
   if (selectedOffer) {
-    [self resetAlert];
     [alert showAlert];
   }
 }
@@ -1141,25 +1139,6 @@ viewForHeaderInSection: (NSInteger) section
     forButton: alert.alertConfirm];
 
   [alert showAlert];
-}
-
-- (void) resetAlert
-{
-  if (!selectedOffer)
-    return;
-
-  alert.alertTitle.text   = @"Confirm Payment";
-  alert.alertMessage.text = [NSString stringWithFormat:
-    @"You will be charged %@ within 24 hours.",
-      [NSString numberToCurrencyString: selectedOffer.amount]];
-
-  [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
-  [alert.alertConfirm setTitle: @"Confirm" forState: UIControlStateNormal];
-
-  [alert addTarget: self action: @selector(hideAlert)
-    forButton: alert.alertCancel];
-  [alert addTarget: self action: @selector(confirmOfferConfirm)
-    forButton: alert.alertConfirm];
 }
 
 - (void) scrollTableViewIfBelowThreshold: (UITableView *) tableView

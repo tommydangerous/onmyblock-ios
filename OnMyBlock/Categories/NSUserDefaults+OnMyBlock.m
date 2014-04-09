@@ -16,6 +16,22 @@
 
 #pragma mark - Instance Methods
 
+- (CGFloat) offerPriceThreshold
+{
+  NSNumber *number = [self objectForKey: OMBOfferPriceThreshold];
+  if (!number) {
+    number = [NSNumber numberWithFloat: 1000.00f];
+    [self setObject: number forKey: OMBOfferPriceThreshold];
+  }
+  return [number floatValue];
+}
+
+- (void) offerPriceThresholdSet: (CGFloat) price
+{
+  [self setObject: [NSNumber numberWithFloat: price]
+    forKey: OMBOfferPriceThreshold];
+}
+
 - (NSMutableDictionary *) permissionDictionary
 {
   NSDictionary *dictionary = [self objectForKey: OMBUserDefaultsPermission];

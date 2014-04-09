@@ -20,7 +20,7 @@
 @class OMBScrollView;
 
 @interface OMBHomebaseRenterViewController : OMBViewController
-<PayPalPaymentDelegate, UIScrollViewDelegate, UITableViewDataSource, 
+<UIScrollViewDelegate, UITableViewDataSource,
   UITableViewDelegate>
 {
   UIButton *activityButton;

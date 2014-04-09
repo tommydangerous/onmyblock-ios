@@ -183,6 +183,7 @@
   residenceImageView = [[OMBCenteredImageView alloc] init];
   residenceImageView.backgroundColor = [UIColor redColor];
   residenceImageView.frame = backView.bounds;
+  residenceImageView.image = [OMBResidence placeholderImage];
   [backView addSubview: residenceImageView];
 
   // Gradient
@@ -385,6 +386,18 @@
   [super viewDidDisappear: animated];
 }
 
+- (void) setResidenceImageViewImage
+{
+  __weak typeof (residenceImageView) weakImageView = residenceImageView;
+  [residenceImageView.imageView setImageWithURL: residence.coverPhotoURL
+    placeholderImage: nil completed:
+      ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (image)
+          weakImageView.image = image;
+      }
+    ];
+}
+
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
@@ -393,18 +406,15 @@
   bedBathLabel.text = [NSString stringWithFormat: @"%.0f bd  /  %.0f ba",
     residence.bedrooms, residence.bathrooms];
   // Image
-  __weak typeof (residenceImageView) weakImageView = residenceImageView;
-  [residenceImageView.imageView setImageWithURL: residence.coverPhotoURL
-    placeholderImage: nil completed:
-      ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (error || !image) {
-          weakImageView.image = [OMBResidence placeholderImage];
-        }
-        if (!error) {
-          weakImageView.image = image;
-        }
-      }
-    ];
+  if (residence.coverPhotoURL) {
+    [self setResidenceImageViewImage];
+  }
+  else {
+    [residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
+      [self setResidenceImageViewImage];
+    }];
+  }
+
   // Move In & Out preferences
   NSDictionary *dates = [OMBUser currentUser].movedInOut;
   if([dates objectForKey:@1]){
@@ -439,16 +449,26 @@
       titleLabel.frame.size.height);
 
   // Total price notes
-  totalPriceNotes = [NSString stringWithFormat:
-   @"A down payment of %@ will be charged\n"
-   @"upon offer acceptance to secure the place.\n"
-   @"If your offer is accepted, you will have %@ "
-   @"to sign the lease and pay the remainder total\n"
-   @"of %@ for the 1st months rent and\n"
-   @"deposit through OnMyBlock.\n",
-     [NSString numberToCurrencyString:[offer downPaymentAmount]],
-     [offer timelineStringForStudent],
-     [NSString numberToCurrencyString:[offer remainingBalanceAmount]]];
+  if ([offer isAboveThreshold]) {
+    totalPriceNotes = [NSString stringWithFormat:
+      @"A down payment of %@ will be charged\n"
+      @"upon offer acceptance to secure the place.\n"
+      @"If your offer is accepted, you will have %@ "
+      @"to sign the lease and pay the remainder total\n"
+      @"of %@ for the 1st months rent and\n"
+      @"deposit through OnMyBlock.\n",
+      [NSString numberToCurrencyString: [offer downPaymentAmount]],
+      [offer timelineStringForStudent],
+      [NSString numberToCurrencyString: [offer remainingBalanceAmount]]];
+  }
+  else {
+    totalPriceNotes = [NSString stringWithFormat:
+      @"You will not be charged upfront when you submit your offer. "
+      @"You will authorize a future payment of %@ which will only "
+      @"be charged if the landlord or subletter accepts your offer.",
+      [NSString numberToCurrencyString: [offer downPaymentAmount]]];
+  }
+
 
 
   CGRect rect = [totalPriceNotes boundingRectWithSize:
@@ -1599,7 +1619,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Price breakdown
   else if (indexPath.section ==
-           OMBResidenceBookItConfirmDetailsSectionPriceBreakdown) {
+    OMBResidenceBookItConfirmDetailsSectionPriceBreakdown) {
     // Price Breakdown (No longer Spacing)
     if (indexPath.row == 0) {
       return spacing;
@@ -1608,7 +1628,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     else if (indexPath.row == 1 || indexPath.row == 2 ||
              indexPath.row == 3|| indexPath.row == 4) {
       // if (isShowingPriceBreakdown)
-      return spacing;
+      if (indexPath.row > 2) {
+        if ([offer isAboveThreshold]) {
+          return spacing;
+        }
+      }
+      else {
+        return spacing;
+      }
     }
     // Total
     else if (indexPath.row == 5) {
@@ -1771,16 +1798,29 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
         userTypeString = @"subletter";
 
       [alertBlur setTitle: @"Offer Placed!"];
-      [alertBlur setMessage: [NSString stringWithFormat:
-        @"If the landlord accepts your offer, we will immediately email you "
-        @"the lease, and you (and your roommates if applicable) will have %@ "
-        @"to secure the place by electronically signing the lease and paying "
-        @"the 1st month's rent and deposit through OnMyBlock. "
-        @"Some places may also require a signed co-signer agreement. "
-        @"If your offer is retracted, declined, or expires, "
-        @"any payment authorization is voided.",
-        [offer timelineStringForStudent]
-      ]];
+      NSString *message;
+      if ([offer isAboveThreshold]) {
+        message = [NSString stringWithFormat:
+          @"If the landlord accepts your offer, we will immediately email you "
+          @"the lease, and you (and your roommates if applicable) will have %@ "
+          @"to secure the place by electronically signing the lease and paying "
+          @"the 1st month's rent and deposit through OnMyBlock. "
+          @"Some places may also require a signed co-signer agreement. "
+          @"If your offer is retracted, declined, or expires, "
+          @"any payment authorization is voided.",
+          [offer timelineStringForStudent]];
+      }
+      else {
+        message = [NSString stringWithFormat:
+          @"If the landlord accepts your offer, we will immediately email you "
+          @"the lease, and you (and your roommates if applicable) will have %@ "
+          @"to secure the place by electronically signing the lease through "
+          @"OnMyBlock. Some places may also require a signed co-signer "
+          @"agreement. If your offer is retracted, declined, or expired, "
+          @"any payment authorization is voided.",
+          [offer timelineStringForStudent]];
+      }
+      [alertBlur setMessage: message];
       [alertBlur resetQuestionDetails];
       [alertBlur hideQuestionButton];
       // Buttons
@@ -2035,6 +2075,45 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showPlaceOfferHowItWorks
 {
+  NSString *info2;
+  NSString *info3;
+  if ([offer isAboveThreshold]) {
+    info2 = [NSString stringWithFormat: @"Review your offer and add a payment "
+      @"method. You will NOT be charged upfront. A down payment of %@ will be "
+      @"charged upon offer acceptance to secure the place. "
+      @"If your offer is accepted, you will have %@ to sign the lease and pay "
+      @"the remainder of the 1st month’s rent and deposit through OnMyBlock.",
+      [NSString numberToCurrencyString: [offer downPaymentAmount]],
+      [offer timelineStringForStudent]];
+    info3 = [NSString stringWithFormat: @"Once you submit your offer, the "
+      @"landlord or subletter will have %@ to review your offer, your renter "
+      @"profile, and your roommates' renter profiles if applicable.\n\n"
+      @"If your offer is accepted, a down payment of %@ will be charged and "
+      @"you will have %@ to sign the lease and pay the remainder of the 1st "
+      @"month’s rent and deposit through OnMyBlock. Some places may also "
+      @"require a signed co-signer agreement. If your offer is retracted, "
+      @"declined, or expired, any payment authorization is voided.",
+      [offer timelineStringForLandlord],
+      [NSString numberToCurrencyString: [offer downPaymentAmount]],
+      [offer timelineStringForStudent]];
+  }
+  else {
+    info2 = [NSString stringWithFormat: @"Review your offer and add a payment "
+      @"method. You will NOT be charged upfront. Only if your offer is "
+      @"accepted, then you will be charged a total amount of %@ for "
+      @"the 1st month's rent and deposit. You will then have  %@ "
+      @"to sign the lease.",
+      [NSString numberToCurrencyString: [offer downPaymentAmount]],
+      [offer timelineStringForStudent]];
+    info3 = [NSString stringWithFormat: @"Once you submit your offer, "
+      @"the landlord or subletter will have %@ to review your offer, "
+      @"your renter profile, and your roommates' renter profiles "
+      @"if applicable.\n\nIf your offer is accepted, you will be charged "
+      @"a total amount of %@. Then you will have %@ to sign the lease.",
+      [offer timelineStringForLandlord],
+      [NSString numberToCurrencyString: [offer downPaymentAmount]],
+      [offer timelineStringForStudent]];
+  }
   NSArray *array = @[
     @{
       @"title": @"Renter Profile",
@@ -2044,25 +2123,11 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
     },
     @{
       @"title": @"Authorize Payment",
-      @"information": [NSString stringWithFormat: @"Review your offer and add a payment method. You will NOT be charged "
-        @"upfront. A down payment of %@ will be charged upon offer acceptance to secure the place. "
-        @"If your offer is accepted, you will have %@ to sign the lease and pay the remainder "
-        @"of the 1st month’s rent and deposit through OnMyBlock.",
-          [NSString numberToCurrencyString:[offer downPaymentAmount]],
-          [offer timelineStringForStudent]]
+      @"information": info2
     },
     @{
       @"title": @"Wait For Response",
-      @"information": [NSString stringWithFormat: @"Once you submit your offer, the landlord or subletter will "
-        @"have %@ to review your offer, your renter profile, and your "
-        @"roommates renter profiles if applicable.\n\n"
-        @"If your offer is accepted, a down payment of %@ will be charged and you "
-        @"will have %@ to sign the lease and pay the remainder of the 1st month’s rent "
-        @"and deposit through OnMyBlock. Some places may also require a signed "
-        @"co-signer agreement. If your offer is retracted, declined, or expired, any payment authorization is voided.",
-          [offer timelineStringForLandlord],
-          [NSString numberToCurrencyString:[offer downPaymentAmount]],
-          [offer timelineStringForStudent]]
+      @"information": info3
     }
   ];
 

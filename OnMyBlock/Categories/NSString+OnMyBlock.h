@@ -29,6 +29,8 @@ extern NSString *const OMBUserDefaults;
 extern NSString *const OMBUserDefaultsAPIKey;
 extern NSString *const OMBUserDefaultsAPIKeyAccessToken;
 extern NSString *const OMBUserDefaultsAPIKeyExpiresAt;
+// Offer price threshold
+extern NSString *const OMBOfferPriceThreshold;
 // Permission dialogs
 extern NSString *const OMBUserDefaultsPermission;
 extern NSString *const OMBUserDefaultsPermissionCurrentLocation;

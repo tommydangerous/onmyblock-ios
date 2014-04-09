@@ -68,7 +68,6 @@
   // }
 
   [residence readFromResidenceDictionary: [self json]];
-  NSLog(@"%@", [self json]);
   [super connectionDidFinishLoading: connection];
 }
 

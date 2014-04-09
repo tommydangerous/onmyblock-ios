@@ -12,6 +12,7 @@
 
 #import "NSString+Extensions.h"
 #import "NSString+OnMyBlock.h"
+#import "NSUserDefaults+OnMyBlock.h"
 #import "OMBAllResidenceStore.h"
 #import "OMBModelDetailConnection.h"
 #import "OMBPayoutTransaction.h"
@@ -78,6 +79,12 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   return @"offer";
 }
 
++ (CGFloat) priceThreshold
+{
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  return [defaults offerPriceThreshold];
+}
+
 + (NSString *) resourceName
 {
   return [NSString stringWithFormat: @"%@s", [OMBOffer modelName]];
@@ -87,7 +94,10 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 
 - (CGFloat) downPaymentAmount
 {
-  return [self totalAmount] * [OMBOffer downPaymentPercentage];
+  CGFloat total = [self totalAmount];
+  if ([self isAboveThreshold])
+    total *= [OMBOffer downPaymentPercentage];
+  return total;
 }
 
 - (OMBPayoutTransaction *) downPaymentTransaction
@@ -103,6 +113,11 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   conn.completionBlock = block;
   conn.delegate = self;
   [conn start];
+}
+
+- (BOOL) isAboveThreshold
+{
+  return [self totalAmount] > [OMBOffer priceThreshold];
 }
 
 - (BOOL) isDownPaymentPaid

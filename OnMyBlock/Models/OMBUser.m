@@ -12,6 +12,7 @@
 
 #import "NSString+Extensions.h"
 #import "NSString+OnMyBlock.h"
+#import "NSUserDefaults+OnMyBlock.h"
 #import "OMBAppDelegate.h"
 #import "OMBAuthenticationFacebookConnection.h"
 #import "OMBAuthenticationLinkedInConnection.h"
@@ -1190,6 +1191,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     _lastName = [dictionary objectForKey: @"last_name"];
   else
     _lastName = @"";
+
+  // Offer price threshold
+  if ([dictionary objectForKey: @"offer_price_threshold"]) {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults offerPriceThresholdSet:
+      [[dictionary objectForKey: @"offer_price_threshold"] floatValue]];
+  }
+
   // Phone
   _phone = [dictionary objectForKey: @"phone"];
   if (!_phone)

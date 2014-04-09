@@ -35,6 +35,8 @@ NSString *const OMBUserDefaultsAPIKeyAccessToken =
   @"OMBUserDefaultsAPIKeyAccessToken";
 NSString *const OMBUserDefaultsAPIKeyExpiresAt =
   @"OMBUserDefaultsAPIKeyExpiresAt";
+// Offer price threshold
+NSString *const OMBOfferPriceThreshold = @"OMBOfferPriceThreshold";
 // Permission dialogs
 NSString *const OMBUserDefaultsPermission =
   @"OMBUserDefaultsPermission";

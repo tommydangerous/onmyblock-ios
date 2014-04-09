@@ -70,12 +70,14 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 #pragma mark - Class Methods
 
 + (CGFloat) downPaymentPercentage;
++ (CGFloat) priceThreshold;
 
 #pragma mark - Instance Methods
 
 - (CGFloat) downPaymentAmount;
 - (OMBPayoutTransaction *) downPaymentTransaction;
 - (void) fetchDetailsWithCompletion: (void (^) (NSError *error)) block;
+- (BOOL) isAboveThreshold;
 - (BOOL) isDownPaymentPaid;
 - (BOOL) isOfferPaymentPaid;
 - (BOOL) isExpiredForLandlord;
