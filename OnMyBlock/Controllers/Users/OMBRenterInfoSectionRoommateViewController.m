@@ -21,9 +21,9 @@
 - (id) initWithUser: (OMBUser *) object
 {
   if (!(self = [super initWithUser: object])) return nil;
-  
+
   self.title = @"Co-applicants";
-  
+
   return self;
 }
 
@@ -34,13 +34,13 @@
 - (void) loadView
 {
   [super loadView];
-  
+
   [self setEmptyLabelText: @"When you add a co-applicant, \n"
     @"we will send them an invitation \n"
     @"to fill out their renter profiles."];
-  
+
   [addButton setTitle: @"Add Co-applicant" forState: UIControlStateNormal];
-  [addButtonMiddle setTitle: @"Add Co-applicant" 
+  [addButtonMiddle setTitle: @"Add Co-applicant"
     forState: UIControlStateNormal];
 }
 
@@ -49,7 +49,7 @@
   [super viewWillAppear: animated];
 
   [self fetchObjects];
-  
+
   [self reloadTable];
 }
 
@@ -59,7 +59,7 @@
 
 - (void) JSONDictionary: (NSDictionary *) dictionary
 {
-  [[self renterApplication] readFromDictionary: dictionary 
+  [[self renterApplication] readFromDictionary: dictionary
     forModelName: [OMBRoommate modelName]];
   [self reloadTable];
 }
@@ -71,14 +71,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSUInteger row     = indexPath.row;
   NSUInteger section = indexPath.section;
-  
+
   static NSString *RoommateID = @"RoommateID";
   OMBRoommateCell *cell = [tableView dequeueReusableCellWithIdentifier:
     RoommateID];
   if (!cell)
     cell = [[OMBRoommateCell alloc] initWithStyle: UITableViewCellStyleDefault
       reuseIdentifier: RoommateID];
-  [cell loadData: [[self objects] objectAtIndex: row]];
+  [cell loadData: [[self objects] objectAtIndex: row] user: user];
   // Last row
   if (row == [self tableView: tableView numberOfRowsInSection: section] - 1) {
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
@@ -117,7 +117,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (NSArray *) objects
 {
-  return [[self renterApplication] objectsWithModelName: 
+  return [[self renterApplication] objectsWithModelName:
     [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES];
 }
 

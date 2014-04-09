@@ -30,7 +30,7 @@ float kKeyboardHeight = 196.0;
 - (id) initWithResidence: (OMBResidence *) object
 {
   if (!(self = [super initWithResidence: object])) return nil;
-  
+
   propertyTypeOptions = @[
     @"house",
     @"apartment",
@@ -39,7 +39,7 @@ float kKeyboardHeight = 196.0;
   CGRect rect = [@"Property Type" boundingRectWithSize:
     CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFont]];
   sizeForLabelTextFieldCell = rect.size;
-  
+
   self.screenName = self.title = @"Listing Details";
 
   return self;
@@ -52,10 +52,10 @@ float kKeyboardHeight = 196.0;
 - (void) loadView
 {
   [super loadView];
-  
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat padding = 20.0f;
-  
+
   [self setupForTable];
 
 //  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
@@ -64,8 +64,8 @@ float kKeyboardHeight = 196.0;
 //  [doneBarButtonItem setTitleTextAttributes: @{
 //    NSFontAttributeName: boldFont
 //  } forState: UIControlStateNormal];
-	
-	
+
+
   saveBarButtonItem.enabled = YES;
   self.navigationItem.rightBarButtonItem = saveBarButtonItem;
 
@@ -73,40 +73,40 @@ float kKeyboardHeight = 196.0;
     cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"Delete Listing"
       otherButtonTitles: nil];
   [self.view addSubview: deleteActionSheet];
-	
+
 	isShowPicker = NO;
-  
+
 	// Spacing
 	UIBarButtonItem *flexibleSpace =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
 	 UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
-	
+
 	// Left padding
 	UIBarButtonItem *leftPadding =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
 	 UIBarButtonSystemItemFixedSpace target: nil action: nil];
 	// iOS 7 toolbar spacing is 16px; 20px on iPad
 	leftPadding.width = 4.0f;
-	
+
 	// Cancel
 	UIBarButtonItem *cancelBarButtonItemForTextFieldToolbar =
     [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
 									 style: UIBarButtonItemStylePlain target: self
 									action: @selector(cancelFromInputAccessoryView)];
-	
+
 	// Done
 	UIBarButtonItem *doneBarButtonItemForTextFieldToolbar =
     [[UIBarButtonItem alloc] initWithTitle: @"Done"
 									 style: UIBarButtonItemStylePlain target: self
 									action: @selector(done)];
-	
+
 	// Right padding
 	UIBarButtonItem *rightPadding =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
 	 UIBarButtonSystemItemFixedSpace target: nil action: nil];
 	// iOS 7 toolbar spacing is 16px; 20px on iPad
 	rightPadding.width = 4.0f;
-	
+
 	textFieldToolbar = [UIToolbar new];
 	textFieldToolbar.clipsToBounds = YES;
 	textFieldToolbar.frame = CGRectMake(0.0f, 0.0f,
@@ -117,7 +117,7 @@ float kKeyboardHeight = 196.0;
 							   doneBarButtonItemForTextFieldToolbar,
 							   rightPadding];
 	textFieldToolbar.tintColor = [UIColor blue];
-  
+
   fadedBackground = [[UIView alloc] init];
   fadedBackground.alpha = 0.0f;
   fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
@@ -127,18 +127,18 @@ float kKeyboardHeight = 196.0;
   [[UITapGestureRecognizer alloc] initWithTarget: self
     action: @selector(hidePickerView)];
   [fadedBackground addGestureRecognizer: tapGesture];
-  
+
   // Picker view container
   pickerViewContainer = [UIView new];
   [self.view addSubview: pickerViewContainer];
-  
+
   // Header for picker view with cancel and done button
   UIView *pickerViewHeader = [[UIView alloc] init];
   pickerViewHeader.backgroundColor = [UIColor grayUltraLight];
   pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
                                       screen.size.width, 44.0f);
   [pickerViewContainer addSubview: pickerViewHeader];
-  
+
   pickerViewHeaderLabel = [[UILabel alloc] init];
   pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   pickerViewHeaderLabel.frame = pickerViewHeader.frame;
@@ -189,7 +189,7 @@ float kKeyboardHeight = 196.0;
     pickerViewHeader.frame.origin.y +
       pickerViewHeader.frame.size.height,
         propertyTypePicker.frame.size.width, propertyTypePicker.frame.size.height);
-  
+
   pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
     propertyTypePicker.frame.size.width,
       pickerViewHeader.frame.size.height +
@@ -224,7 +224,7 @@ float kKeyboardHeight = 196.0;
   [propertyTypePicker selectRow: passingIndex
                     inComponent: 0 animated: NO];
 
-  
+
   [self.table reloadData];
 }
 
@@ -233,8 +233,8 @@ float kKeyboardHeight = 196.0;
   [super viewWillDisappear: animated];
 
   if (residence) {
-    OMBResidenceUpdateConnection *conn = 
-      [[OMBResidenceUpdateConnection alloc] initWithResidence: residence 
+    OMBResidenceUpdateConnection *conn =
+      [[OMBResidenceUpdateConnection alloc] initWithResidence: residence
         attributes: @[
           @"bathrooms",
           @"bedrooms",
@@ -253,7 +253,7 @@ float kKeyboardHeight = 196.0;
 
 #pragma mark - Protocol UIActionSheetDelegate
 
-- (void) actionSheet: (UIActionSheet *) actionSheet 
+- (void) actionSheet: (UIActionSheet *) actionSheet
 clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   if (buttonIndex == 0) {
@@ -281,7 +281,7 @@ numberOfRowsInComponent: (NSInteger) component
   // Property type
   if (pickerView == propertyTypePicker)
     return [propertyTypeOptions count];
-  
+
   return 0;
 }
 
@@ -353,24 +353,27 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   cell.textLabel.text = @"";
   cell.textLabel.textColor = [UIColor textColor];
 
+  UIEdgeInsets maxEdgeInsets = UIEdgeInsetsMake(0.0f,
+    tableView.frame.size.width, 0.0f, 0.0f);
+
   // Header title cell
   static NSString *HeaderTitleCellIdentifier = @"HeaderTitleCellIdentifier";
-  OMBHeaderTitleCell *headerTitleCell = 
+  OMBHeaderTitleCell *headerTitleCell =
     [tableView dequeueReusableCellWithIdentifier: HeaderTitleCellIdentifier];
   if (!headerTitleCell)
-    headerTitleCell = [[OMBHeaderTitleCell alloc] initWithStyle: 
+    headerTitleCell = [[OMBHeaderTitleCell alloc] initWithStyle:
       UITableViewCellStyleDefault reuseIdentifier: HeaderTitleCellIdentifier];
 
   // Listing Details
   if (indexPath.section == 0) {
     // Spacing
     if (indexPath.row == 0) {
-      cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
-                                             0.0f, 0.0f);
+      cell.separatorInset = maxEdgeInsets;
     }
     // Header title
     else if (indexPath.row == 1) {
       headerTitleCell.titleLabel.text = @"Listing Details";
+      headerTitleCell.clipsToBounds = YES;
       return headerTitleCell;
     }
     // Bedrooms, Bathrooms, Property Type, picker view, Square Footage
@@ -387,33 +390,34 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell1.textField.placeholderColor = [UIColor grayLight];
       cell1.textField.placeholder = @"required";
       cell1.textField.userInteractionEnabled = YES;
-		cell1.textField.inputAccessoryView = textFieldToolbar;
+		  cell1.textField.inputAccessoryView = textFieldToolbar;
       NSString *string = @"";
       // Bedrooms
       if (indexPath.row == 2) {
         string = @"Bedrooms";
         cell1.textField.keyboardType = UIKeyboardTypeNumberPad;
         cell1.textField.text = [NSString stringWithFormat: @"%0.0f",
-                                residence.bedrooms];
+          residence.bedrooms];
       }
       // Bathrooms
       else if (indexPath.row == 3) {
         string = @"Bathrooms";
         cell1.textField.keyboardType = UIKeyboardTypeNumberPad;
         cell1.textField.text = [NSString stringWithFormat: @"%0.0f",
-                                residence.bathrooms];
+          residence.bathrooms];
       }
       // Property type
       else if (indexPath.row == 4) {
         string = @"Property Type";
         cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
+        cell1.separatorInset = maxEdgeInsets;
         cell1.textField.placeholder = @"optional";
         cell1.textField.text = [residence.propertyType capitalizedString];
         cell1.textField.userInteractionEnabled = NO;
       }
       // Picker view
       else if (indexPath.row == 5) {
-        
+
       }
       // Square footage
       else if (indexPath.row == 6) {
@@ -426,14 +430,15 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       cell1.textField.delegate = self;
       cell1.textField.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
-                                             size: 15];
+        size: 15];
       cell1.textField.indexPath = indexPath;
       cell1.textField.tag = indexPath.row;
       cell1.textField.textAlignment = NSTextAlignmentRight;
       cell1.textField.textColor = [UIColor blueDark];
       cell1.textFieldLabel.text = string;
       [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
-                forControlEvents: UIControlEventEditingChanged];
+        forControlEvents: UIControlEventEditingChanged];
+      cell1.clipsToBounds = YES;
       return cell1;
     }
   }
@@ -443,16 +448,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     // Spacing
     if (indexPath.row == 0) {
       headerTitleCell.titleLabel.text = @"";
+      headerTitleCell.clipsToBounds = YES;
       return headerTitleCell;
     }
     // Delete Listing
     else if (indexPath.row == 1) {
       // Delete Cell
       static NSString *DeleteCellIdentifier = @"DeleteCellIdentifier";
-      UITableViewCell *deleteCell = 
+      UITableViewCell *deleteCell =
         [tableView dequeueReusableCellWithIdentifier: DeleteCellIdentifier];
       if (!deleteCell)
-        deleteCell = [[UITableViewCell alloc] initWithStyle: 
+        deleteCell = [[UITableViewCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: DeleteCellIdentifier];
       deleteCell.backgroundColor = [UIColor whiteColor];
       // Delete Listing label
@@ -467,25 +473,24 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         label.textColor = [UIColor red];
       }
       [deleteCell.contentView addSubview: label];
-      
+
       // Bottom border
       // Use layer because after clicking the row, the view goes away
       CALayer *bottomBorderLayer = [CALayer layer];
       bottomBorderLayer.backgroundColor = tableView.separatorColor.CGColor;
-      bottomBorderLayer.frame = CGRectMake(0.0f, 44.0f - 0.5f, 
+      bottomBorderLayer.frame = CGRectMake(0.0f, 44.0f - 0.5f,
         tableView.frame.size.width, 0.5f);
       [deleteCell.contentView.layer addSublayer: bottomBorderLayer];
-
+      deleteCell.clipsToBounds = YES;
       return deleteCell;
     }
   }
 
   // Spacing for when typing
   else if (indexPath.section == 3) {
-    cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
-      0.0f, 0.0f);
+    cell.separatorInset = maxEdgeInsets;
   }
-
+  cell.clipsToBounds = YES;
   return cell;
 }
 
@@ -529,7 +534,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Bathrooms
     if (indexPath.row == 2 || indexPath.row == 3) {
       [((OMBLabelTextFieldCell *)
-        [self.table cellForRowAtIndexPath:indexPath]).textField becomeFirstResponder];
+        [self.table cellForRowAtIndexPath:
+          indexPath]).textField becomeFirstResponder];
     }
     // Property Type
     if (indexPath.row == 4) {
@@ -563,8 +569,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else {
     // Listing Details
     if (indexPath.section == 0) {
+      // Listing Details header
+      if (indexPath.row == 1) {
+        return 0.0f;
+      }
       // Property Type picker view
-      if (indexPath.row == 5) {
+      else if (indexPath.row == 5) {
         if (selectedIndexPath &&
             selectedIndexPath.section == indexPath.section &&
             selectedIndexPath.row == indexPath.row - 1) {
@@ -573,7 +583,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         else {
           return 0.0f;
         }
-      }else if(indexPath.row == 6){
+      }
+      else if(indexPath.row == 6){
         return 0.0f;
       }
     }
@@ -585,11 +596,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 #pragma mark - Protocol UITextFieldDelegate
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-  
+
   if([[textField.text stringByReplacingCharactersInRange:range withString:string] floatValue] > 10) {
     return NO;
   };
-  
+
   return YES;
 }
 
@@ -644,7 +655,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // [self.view addSubview: activityView];
   // [activityView startSpinning];
 
-  OMBResidenceDeleteConnection *conn = 
+  OMBResidenceDeleteConnection *conn =
     [[OMBResidenceDeleteConnection alloc] initWithResidence: residence];
   conn.completionBlock = ^(NSError *error) {
     OMBResidence *res = [[OMBUser currentUser].residences objectForKey:
@@ -657,7 +668,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       else {
         message = @"Delete unsuccessful";
       }
-      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Error" 
+      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Error"
         message: message delegate: nil cancelButtonTitle: @"Try again"
           otherButtonTitles: nil];
       [alertView show];
@@ -689,7 +700,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) donePicker
 {
   [self hidePickerView];
-  
+
   // Property type
   if ([propertyTypePicker superview]) {
     NSString *string = [propertyTypeOptions objectAtIndex: auxRow];
@@ -699,7 +710,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         [NSIndexPath indexPathForItem:4 inSection:0]];
     cell.textField.text = [string capitalizedString];
   }
-  
+
   [self updatePicker];
 }
 
@@ -717,14 +728,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (NSIndexPath *) indexPathForSpacing
 {
-  return [NSIndexPath indexPathForRow: 
+  return [NSIndexPath indexPathForRow:
       [self.table numberOfRowsInSection: [self.table numberOfSections] - 1] - 1
         inSection: [self.table numberOfSections] - 1];
 }
 
 - (void) scrollToRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  [self.table scrollToRowAtIndexPath: indexPath 
+  [self.table scrollToRowAtIndexPath: indexPath
     atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 

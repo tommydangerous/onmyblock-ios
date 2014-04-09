@@ -430,26 +430,29 @@ float kResidenceDetailImagePercentage   = 0.5f;
   // Adjust the favorites button if user already favorited
   [self adjustFavoriteButton];
 
+  CGFloat footerHeight = _bottomButtonView.frame.size.height;
   // If temporary residence, make the favorite button hidden
   if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
     _favoritesButton.hidden = YES;
     [self.navigationItem setRightBarButtonItem: nil animated: NO];
+    // Hide the bottom bar
+    footerHeight = 0.0f;
+    self.bottomButtonView.hidden = YES;
   }
 
   // Table footer view
-  CGFloat footerHeight = _bottomButtonView.frame.size.height;
   // If this residence belongs to the current user
   if ([[OMBUser currentUser] loggedIn] &&
     residence.landlordUserID == [OMBUser currentUser].uid) {
     // Hide the table footer view and buttons at the bottom
     footerHeight = 0.0f;
-    _bottomButtonView.hidden = YES;
+    self.bottomButtonView.hidden = YES;
   }
   // Inactive
   else if (residence.inactive) {
     // Hide the table footer view and buttons at the bottom
     footerHeight = 0.0f;
-    _bottomButtonView.hidden = YES;
+    self.bottomButtonView.hidden = YES;
   }
   _table.tableFooterView = [[UIView alloc] initWithFrame:
     CGRectMake(0.0f, 0.0f, _table.frame.size.width, footerHeight)];

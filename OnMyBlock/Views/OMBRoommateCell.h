@@ -25,7 +25,7 @@
 
 #pragma mark - Instance Methods
 
-- (void) loadData: (OMBRoommate *) object;
+- (void) loadData: (OMBRoommate *) object user: (OMBUser *) userObject;
 - (void) loadDataFromUser: (OMBUser *) object;
 
 @end

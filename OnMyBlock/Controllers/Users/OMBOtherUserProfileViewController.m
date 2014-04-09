@@ -85,7 +85,7 @@
   [editBarButtonItem setTitleTextAttributes: @{
     NSFontAttributeName: boldFont
       } forState: UIControlStateNormal];
-  
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenHeight   = screen.size.height;
   CGFloat screenWidth    = screen.size.width;
@@ -98,7 +98,7 @@
   // Back view
   backViewOriginY = padding + standardHeight;
   backView = [UIView new];
-  backView.frame = CGRectMake(0.0f, backViewOriginY, 
+  backView.frame = CGRectMake(0.0f, backViewOriginY,
     screenWidth, screenHeight * 0.4f);
   [self.view insertSubview: backView belowSubview: self.table];
   // Scale back view
@@ -127,15 +127,15 @@
   userViewHeight = padding + 33.0f + 27.0f + padding;
   UIView *tableHeaderView = [UIView new];
   // tableHeaderView.backgroundColor = [UIColor blueAlpha: 0.5f];
-  tableHeaderView.frame = CGRectMake(0.0f, 0.0f, screenWidth, 
+  tableHeaderView.frame = CGRectMake(0.0f, 0.0f, screenWidth,
     backViewOriginY + backView.frame.size.height + userViewHeight);
   self.table.tableHeaderView = tableHeaderView;
 
   // User view
   UIView *userView = [UIView new];
   userView.backgroundColor = [UIColor whiteColor];
-  userView.frame = CGRectMake(0.0f, 
-    tableHeaderView.frame.size.height - userViewHeight, screenWidth,  
+  userView.frame = CGRectMake(0.0f,
+    tableHeaderView.frame.size.height - userViewHeight, screenWidth,
       userViewHeight);
   [tableHeaderView addSubview: userView];
 
@@ -143,19 +143,19 @@
   userIconImageView = [[OMBCenteredImageView alloc] init];
   userIconImageView.backgroundColor = [UIColor whiteColor];
   userIconImageView.frame = CGRectMake(
-    (tableHeaderView.frame.size.width - userIconSize) * 0.5f, 
+    (tableHeaderView.frame.size.width - userIconSize) * 0.5f,
       -1 * (userIconSize * 0.5f), userIconSize, userIconSize);
-  userIconImageView.layer.cornerRadius = 
+  userIconImageView.layer.cornerRadius =
     userIconImageView.frame.size.height * 0.5f;
   // [userView addSubview: userIconImageView];
 
   // User name label
   userNameLabel = [UILabel new];
   userNameLabel.font = [UIFont mediumLargeTextFontBold];
-  // userNameLabel.frame = CGRectMake(0.0f, 
-  //   userIconImageView.frame.origin.y + userIconImageView.frame.size.height, 
+  // userNameLabel.frame = CGRectMake(0.0f,
+  //   userIconImageView.frame.origin.y + userIconImageView.frame.size.height,
   //     userView.frame.size.width, 33.0f);
-  userNameLabel.frame = CGRectMake(0.0f, padding, 
+  userNameLabel.frame = CGRectMake(0.0f, padding,
     userView.frame.size.width, 33.0f);
   userNameLabel.textAlignment = NSTextAlignmentCenter;
   userNameLabel.textColor = [UIColor textColor];
@@ -165,21 +165,21 @@
   userSchoolLabel = [UILabel new];
   userSchoolLabel.font = [UIFont normalTextFont];
   userSchoolLabel.frame = CGRectMake(userNameLabel.frame.origin.x,
-    userNameLabel.frame.origin.y + userNameLabel.frame.size.height, 
+    userNameLabel.frame.origin.y + userNameLabel.frame.size.height,
       userNameLabel.frame.size.width, 27.0f);
   userSchoolLabel.textAlignment = userNameLabel.textAlignment;
   userSchoolLabel.textColor = [UIColor grayMedium];
   [userView addSubview: userSchoolLabel];
 
   // Layout
-  UICollectionViewFlowLayout *layout = 
+  UICollectionViewFlowLayout *layout =
     [[UICollectionViewFlowLayout alloc] init];
 
   // Collection view
-  CGFloat userCollectionViewHeight = (padding * 3) + 
+  CGFloat userCollectionViewHeight = (padding * 3) +
     ([OMBOtherUserProfileCell heightForCell] * 2);
   userCollectionView = [[UICollectionView alloc] initWithFrame:
-    CGRectMake(0.0f, 0.0f, screenWidth, userCollectionViewHeight) 
+    CGRectMake(0.0f, 0.0f, screenWidth, userCollectionViewHeight)
       collectionViewLayout: layout];
   userCollectionView.backgroundColor = [UIColor whiteColor];
   userCollectionView.dataSource = self;
@@ -187,13 +187,13 @@
 
     // Contact bar button items
   // Left padding
-  UIBarButtonItem *leftPadding = 
+  UIBarButtonItem *leftPadding =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
       UIBarButtonSystemItemFixedSpace target: nil action: nil];
   // iOS 7 toolbar spacing is 16px; 20px on iPad
   leftPadding.width = 4.0f;
   // Send Message
-  UIBarButtonItem *messageBarButtonItem = 
+  UIBarButtonItem *messageBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @"Send Message"
       style: UIBarButtonItemStylePlain target: self
         action: @selector(sendMessage)];
@@ -202,23 +202,23 @@
     NSForegroundColorAttributeName: [UIColor blue]
   } forState: UIControlStateNormal];
   // Spacing
-  UIBarButtonItem *flexibleSpace = 
-    [[UIBarButtonItem alloc] initWithBarButtonSystemItem: 
+  UIBarButtonItem *flexibleSpace =
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
       UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
   // Phone
   UIImage *phoneIcon = [UIImage image: [UIImage imageNamed: @"phone_icon.png"]
     size: CGSizeMake(22.0f, 22.0f)];
-  phoneBarButtonItem = 
+  phoneBarButtonItem =
     [[UIBarButtonItem alloc] initWithImage: phoneIcon style:
       UIBarButtonItemStylePlain target: self action: @selector(phoneCallUser)];
   // Email
-  UIImage *emailIcon = [UIImage image: [UIImage imageNamed: 
+  UIImage *emailIcon = [UIImage image: [UIImage imageNamed:
     @"messages_icon_white.png"] size: CGSizeMake(22.0f, 22.0f)];
   emailBarButtonItem =
     [[UIBarButtonItem alloc] initWithImage: emailIcon style:
       UIBarButtonItemStylePlain target: self action: @selector(emailUser)];
   // Right padding
-  UIBarButtonItem *rightPadding = 
+  UIBarButtonItem *rightPadding =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
       UIBarButtonSystemItemFixedSpace target: nil action: nil];
   // iOS 7 toolbar spacing is 16px; 20px on iPad
@@ -227,7 +227,7 @@
   // Contact toolbar that drops down when you tap contact
   contactToolbar = [UIToolbar new];
   contactToolbar.clipsToBounds = YES;
-  contactToolbar.frame = CGRectMake(0.0f, padding, 
+  contactToolbar.frame = CGRectMake(0.0f, padding,
     screenWidth, standardHeight);
   contactToolbar.hidden = YES;
   contactToolbar.items = @[leftPadding, messageBarButtonItem, flexibleSpace,
@@ -252,15 +252,15 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-  
+
   if (![user isCurrentUser]) {
     self.navigationItem.rightBarButtonItem = contactBarButtonItem;
   }else{
     self.navigationItem.rightBarButtonItem = editBarButtonItem;
   }
-  
+
   legalAnswers = [NSMutableDictionary dictionary];
-  
+
   [self updateData];
 
   // Resize collection view
@@ -269,7 +269,7 @@
   CGFloat userCollectionViewHeight = (padding * 3) +
     [OMBOtherUserProfileCell heightForCell] * 2;
   if ([user isLandlord]) {
-    userCollectionViewHeight = (padding * 2) + 
+    userCollectionViewHeight = (padding * 2) +
       ([OMBOtherUserProfileCell heightForCell] * 1);
   }
   CGRect collectionViewRect = userCollectionView.frame;
@@ -288,22 +288,22 @@
     [user fetchUserProfileWithCompletion: ^(NSError *error) {
       [self updateData];
     }];
-    
+
     // Fetch coapplicants
     [self fetchObjectsForResourceName:[OMBRoommate resourceName]];
-    
+
     // Fetch cosigners
     [[self renterApplication] fetchCosignersForUserUID: user.uid
       delegate: self completion: ^(NSError *error) {
         [self updateData];
     }];
-    
+
     // Fetch rental history
     [self fetchObjectsForResourceName:[OMBPreviousRental resourceName]];
-    
+
     // Fetch work history
     [self fetchObjectsForResourceName:[OMBEmployment resourceName]];
-    
+
     // Fetch legal questions
     [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
       ^(NSError *error) {
@@ -325,7 +325,7 @@
 
 #pragma mark - Protocol MFMailComposeViewControllerDelegate
 
-- (void) mailComposeController: (MFMailComposeViewController*) controller 
+- (void) mailComposeController: (MFMailComposeViewController*) controller
 didFinishWithResult: (MFMailComposeResult) result error: (NSError*) error
 {
   [controller dismissViewControllerAnimated: YES completion: nil];
@@ -354,11 +354,11 @@ didFinishWithResult: (MFMailComposeResult) result error: (NSError*) error
 
 #pragma mark - Protocol UICollectionViewDataSource
 
-- (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView 
+- (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView
 cellForItemAtIndexPath: (NSIndexPath *) indexPath
 {
-  OMBOtherUserProfileCell *cell = 
-    [collectionView dequeueReusableCellWithReuseIdentifier: 
+  OMBOtherUserProfileCell *cell =
+    [collectionView dequeueReusableCellWithReuseIdentifier:
       [OMBOtherUserProfileCell reuseIdentifier] forIndexPath: indexPath];
 
   NSInteger row = indexPath.row;
@@ -370,7 +370,7 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
   }*/
 
   NSDictionary *dictionary = [userAttributes objectAtIndex: row];
-  UIImage *image = [UIImage image: [UIImage imageNamed: 
+  UIImage *image = [UIImage image: [UIImage imageNamed:
     [dictionary objectForKey: @"imageName"]] size: cell.imageView.frame.size];
   cell.imageView.image = image;
   cell.label.text = [dictionary objectForKey: @"name"];
@@ -383,7 +383,7 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
   return cell;
 }
 
-- (NSInteger) collectionView: (UICollectionView *) collectionView 
+- (NSInteger) collectionView: (UICollectionView *) collectionView
 numberOfItemsInSection: (NSInteger) section
 {
   if ([user isLandlord])
@@ -391,7 +391,7 @@ numberOfItemsInSection: (NSInteger) section
   return 4;
 }
 
-- (NSInteger) numberOfSectionsInCollectionView: 
+- (NSInteger) numberOfSectionsInCollectionView:
 (UICollectionView *) collectionView
 {
   return 1;
@@ -399,29 +399,29 @@ numberOfItemsInSection: (NSInteger) section
 
 #pragma mark - Protocol UICollectionViewDelegateFlowLayout
 
-- (UIEdgeInsets) collectionView: (UICollectionView *) collectionView 
-layout: (UICollectionViewLayout*) collectionViewLayout 
+- (UIEdgeInsets) collectionView: (UICollectionView *) collectionView
+layout: (UICollectionViewLayout*) collectionViewLayout
 insetForSectionAtIndex: (NSInteger) section
 {
   return UIEdgeInsetsMake(OMBPadding, OMBPadding, OMBPadding, OMBPadding);
 }
 
-- (CGFloat) collectionView: (UICollectionView *) collectionView 
-layout: (UICollectionViewLayout*) collectionViewLayout 
+- (CGFloat) collectionView: (UICollectionView *) collectionView
+layout: (UICollectionViewLayout*) collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex: (NSInteger) section
 {
   return OMBPadding;
 }
 
-- (CGFloat) collectionView: (UICollectionView *) collectionView 
-layout: (UICollectionViewLayout*) collectionViewLayout 
+- (CGFloat) collectionView: (UICollectionView *) collectionView
+layout: (UICollectionViewLayout*) collectionViewLayout
 minimumLineSpacingForSectionAtIndex: (NSInteger) section
 {
   return OMBPadding;
 }
 
-- (CGSize) collectionView: (UICollectionView * ) collectionView 
-layout: (UICollectionViewLayout*) collectionViewLayout 
+- (CGSize) collectionView: (UICollectionView * ) collectionView
+layout: (UICollectionViewLayout*) collectionViewLayout
 sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   CGFloat width = (collectionView.frame.size.width - (OMBPadding * 3)) * 0.5f;
@@ -434,7 +434,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   CGFloat y = scrollView.contentOffset.y;
   CGFloat adjustment = y / 3.0f;
-  
+
   // Move up
   // Back view
   CGRect backViewRect = backView.frame;
@@ -472,7 +472,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
     return 9;
   else
     return 8;
-    
+
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -490,7 +490,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   UITableViewCell *emptyCell = [tableView dequeueReusableCellWithIdentifier:
     EmptyCellID];
   if (!emptyCell)
-    emptyCell = [[UITableViewCell alloc] initWithStyle: 
+    emptyCell = [[UITableViewCell alloc] initWithStyle:
       UITableViewCellStyleDefault reuseIdentifier: EmptyCellID];
   // About
   if (section == OMBOtherUserProfileSectionAbout) {
@@ -500,7 +500,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
         AboutID];
       if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle: 
+        cell = [[UITableViewCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: AboutID];
         UILabel *label = [UILabel new];
         NSString *text = @"Nothing about me yet.";
@@ -508,11 +508,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           text = user.about;
         label.attributedText = [text attributedStringWithFont:
           [UIFont normalTextFont] lineHeight: 22.0f];
-        CGFloat height = 
+        CGFloat height =
           [user heightForAboutTextWithWidth: width - (padding * 2)];
         if (height < 22.0f)
           height = 22.0f;
-        label.frame = CGRectMake(padding, padding, width - (padding * 2), 
+        label.frame = CGRectMake(padding, padding, width - (padding * 2),
           height);
         label.numberOfLines = 0;
         label.textAlignment = NSTextAlignmentCenter;
@@ -534,7 +534,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
         AboutID];
       if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle: 
+        cell = [[UITableViewCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: AboutID];
         [cell.contentView addSubview: userCollectionView];
       }
@@ -552,7 +552,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *CoapplicantsHeaderID = @"CoapplicantsHeaderID";
       OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
          CoapplicantsHeaderID];
-      
+
       if (!cell) {
         cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: CoapplicantsHeaderID];
@@ -571,7 +571,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell)
         cell = [[OMBRoommateCell alloc] initWithStyle: UITableViewCellStyleDefault
           reuseIdentifier: RoommateID];
-      [cell loadData: [[self objectsFromRoommates] objectAtIndex: row - 1]];
+      [cell loadData: [[self objectsFromRoommates] objectAtIndex: row - 1] user: user];
       cell.clipsToBounds = YES;
       return cell;
     }
@@ -582,7 +582,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *CosignerHeaderID = @"CosignerHeaderID";
       OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
         CosignerHeaderID];
-      
+
       if (!cell) {
         cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: CosignerHeaderID];
@@ -606,7 +606,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       [cell.emailButton addTarget:self
         action:@selector(emailCosigner:)
           forControlEvents:UIControlEventTouchUpInside];
-      
+
       cell.phoneButton.tag = row - 1;
       [cell.phoneButton addTarget:self
         action:@selector(phoneCallCosigner:)
@@ -621,7 +621,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     // Header
     if (row == OMBOtherUserProfileSectionPetRowHeader) {
       static NSString *PetsHeaderID = @"PetsHeaderID";
-      
+
       OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
         PetsHeaderID];
       if (!cell) {
@@ -649,7 +649,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.detailTextLabel.textColor = [UIColor grayMedium];
       cell.textLabel.font = [UIFont normalTextFont];
       cell.textLabel.textColor = [UIColor textColor];
-      
+
       // NSString *string = @"";
       if (row == OMBOtherUserProfileSectionPetRowHeader + 1) {
         if ([self renterApplication].dogs)
@@ -675,7 +675,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *PreviousRentalHeaderID = @"PreviousRentalHeaderID";
       OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
         PreviousRentalHeaderID];
-      
+
       if (!cell) {
         cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: PreviousRentalHeaderID];
@@ -707,7 +707,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *EmploymentHeaderID = @"EmploymentHeaderID";
       OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
         EmploymentHeaderID];
-      
+
       if (!cell) {
         cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: EmploymentHeaderID];
@@ -724,10 +724,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       OMBEmploymentCell *cell = [tableView dequeueReusableCellWithIdentifier:
         EmploymentCellID];
       if (!cell)
-        cell = [[OMBEmploymentCell alloc] initWithStyle: 
+        cell = [[OMBEmploymentCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: EmploymentCellID];
-      [cell loadData: 
-        [[user.renterApplication employmentsSortedByStartDate] 
+      [cell loadData:
+        [[user.renterApplication employmentsSortedByStartDate]
           objectAtIndex: row - 1]];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.clipsToBounds = YES;
@@ -741,7 +741,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *LegalQuestionsHeaderID = @"LegalQuestionsHeaderID";
       OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
          LegalQuestionsHeaderID];
-      
+
       if (!cell) {
         cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: LegalQuestionsHeaderID];
@@ -760,7 +760,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell)
         cell = [[OMBLegalQuestionCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: OMBLegalQuestionID];
-      
+
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       OMBLegalQuestion *legalQuestion = [[[OMBLegalQuestionStore sharedStore]
         questionsSortedByQuestion] objectAtIndex: row - 1];
@@ -782,7 +782,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *ListingsHeaderID = @"ListingsHeaderID";
       OMBOtherUserProfileHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:
         ListingsHeaderID];
-      
+
       if (!cell) {
         cell = [[OMBOtherUserProfileHeaderCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: ListingsHeaderID];
@@ -797,13 +797,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     // Listings
     else {
       static NSString *ListingsID = @"ListingsID";
-      OMBManageListingsCell *cell = 
+      OMBManageListingsCell *cell =
         [tableView dequeueReusableCellWithIdentifier: ListingsID];
       if (!cell)
-        cell = [[OMBManageListingsCell alloc] initWithStyle: 
+        cell = [[OMBManageListingsCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: ListingsID];
       // Minus 1 to account for the extra listings header
-      [cell loadResidenceData: [[self listings] objectAtIndex: 
+      [cell loadResidenceData: [[self listings] objectAtIndex:
         indexPath.row - 1]];
       cell.separatorInset = UIEdgeInsetsZero;
       cell.statusLabel.hidden = YES;
@@ -882,12 +882,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
   CGFloat padding = OMBPadding;
   CGFloat width   = tableView.frame.size.width;
-  
+
   // About
   if (section == OMBOtherUserProfileSectionAbout) {
     // About
     if (row == OMBOtherUserProfileSectionAboutRowAbout) {
-      CGFloat height = 
+      CGFloat height =
         [user heightForAboutTextWithWidth: width - (padding * 2)];
       if (height < 22.0f)
         height = 22.0f;
@@ -944,7 +944,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
           adjusment += 22.0f;
         if([[previousRental.landlordPhone phoneNumberString] length] > 0)
           adjusment += 22.0f;
-        
+
         if(adjusment > 0.0)
           adjusment += padding;
         return [OMBPreviousRentalCell heightForCell2] + adjusment;
@@ -979,7 +979,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         CGFloat padding = OMBPadding;
         // float height  = padding + rect.size.height + padding +
         // [OMBLegalQuestionCell buttonSize] + padding;
-        CGFloat height = padding + rect.size.height + 
+        CGFloat height = padding + rect.size.height +
           (padding * 0.5) + 22.0f + padding;
         // If the answer is yes, show explain
         OMBLegalAnswer *legalAnswer = [legalAnswers objectForKey:
@@ -1013,16 +1013,16 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
   // Coapplicants
   if (section == OMBOtherUserProfileSectionCoapplicants){
-    OMBUser *userRoommate =
-      ((OMBRoommate *)[[self objectsFromRoommates]
-        objectAtIndex: row - 1]).roommate;
+    OMBRoommate *roommate = (OMBRoommate *)
+      [[self objectsFromRoommates] objectAtIndex: row - 1];
     // If is an OMB user
-    if(userRoommate){
+    if (roommate.roommate) {
       [self.navigationController pushViewController:
-       [[OMBOtherUserProfileViewController alloc] initWithUser: userRoommate] animated:YES];
+        [[OMBOtherUserProfileViewController alloc] initWithUser:
+          [roommate otherUser: user]] animated: YES];
     }
   }
-  
+
   // Listings
   if (section == OMBOtherUserProfileSectionListings) {
     if (row > OMBOtherUserProfileSectionListingsRowHeader) {
@@ -1058,7 +1058,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) done
 {
-  [self.navigationItem setRightBarButtonItem: contactBarButtonItem 
+  [self.navigationItem setRightBarButtonItem: contactBarButtonItem
     animated: YES];
   [UIView animateWithDuration: OMBStandardDuration animations: ^{
     CGRect rect = contactToolbar.frame;
@@ -1213,7 +1213,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     backImageView.image = [OMBUser defaultUserImage];
   }
   // NSInteger index = user.uid % [backViewImageArray count];
-  // backImageView.image = [UIImage imageNamed: 
+  // backImageView.image = [UIImage imageNamed:
   //   [backViewImageArray objectAtIndex: index]];
   // userIconImageView.image = user.image;
   // User name
@@ -1255,13 +1255,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     @{
       @"imageName": @"facebook_icon_blue.png",
       @"name":      @"Facebook",
-      @"value": user.renterApplication.facebookAuthenticated ? 
+      @"value": user.renterApplication.facebookAuthenticated ?
         @"Verified" : @"Not verified",
     },
     @{
       @"imageName": @"linkedin_icon.png",
       @"name": @"LinkedIn",
-      @"value": user.renterApplication.linkedinAuthenticated ? 
+      @"value": user.renterApplication.linkedinAuthenticated ?
         @"Verified" : @"Not verified",
     },
   ];

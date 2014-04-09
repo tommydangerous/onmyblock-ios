@@ -26,21 +26,21 @@
 {
   if (!(self = [super initWithStyle: style
     reuseIdentifier: reuseIdentifier])) return nil;
-  
+
   CGRect screen     = [[UIScreen mainScreen] bounds];
   float screenWidth = screen.size.width;
   float padding = OMBPadding;
   CGFloat imageSize = OMBStandardHeight;
-  
+
   self.contentView.frame = CGRectMake(0, 0,
     screenWidth, padding + (22 * 2) + padding);
-  
+
   // User image
   userImageView = [[OMBCenteredImageView alloc] init];
   userImageView.frame = CGRectMake(padding, padding, imageSize, imageSize);
   userImageView.layer.cornerRadius = userImageView.frame.size.width * 0.5f;
   [self.contentView addSubview: userImageView];
-  
+
   // Full name
   nameLabel = [[UILabel alloc] init];
   nameLabel.font = [UIFont normalTextFontBold];
@@ -49,7 +49,7 @@
       padding, screenWidth - (padding + imageSize + padding + padding), 22);
   nameLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: nameLabel];
-  
+
   // Email
   emailLabel = [[UILabel alloc] init];
   emailLabel.font = [UIFont normalTextFont];
@@ -73,10 +73,10 @@
 
 #pragma mark - Instance Methods
 
-- (void) loadData: (OMBRoommate *) object
+- (void) loadData: (OMBRoommate *) object user: (OMBUser *) userObject
 {
   self.roommate = object;
-  OMBUser *user = self.roommate.roommate;
+  OMBUser *user = [self.roommate otherUser: userObject];
 
   if (user) {
     nameLabel.text = [user fullName];
@@ -109,9 +109,9 @@
           self.roommate.providerId]];
       __weak typeof(userImageView) weakImageView = userImageView;
       [userImageView.imageView setImageWithURL: imageURL
-        placeholderImage: [OMBUser placeholderImage] options: 
+        placeholderImage: [OMBUser placeholderImage] options:
           (SDWebImageRetryFailed | SDWebImageDownloaderProgressiveDownload)
-            completed: 
+            completed:
               ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                 if (image)
                   weakImageView.image = image;
@@ -128,7 +128,7 @@
 - (void) loadDataFromUser: (OMBUser *) object
 {
   OMBUser *user = object;
-  
+
   nameLabel.text = [user fullName];
   emailLabel.text = @"OnMyBlock user";
   if (user.image) {

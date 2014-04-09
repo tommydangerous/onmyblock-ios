@@ -33,32 +33,32 @@ float k2KeyboardHeight = 216.0;
 - (id) initWithResidence: (OMBResidence *) object
 {
   if (!(self = [super initWithResidence: object])) return nil;
-  
+
   leaseTypeOptions = @[
                        @"OMB Standard Lease",
                        @"Choose My Own",
                        @"No Lease"
                        ];
-  
+
   if (!residence.leaseType || [residence.leaseType length] == 0)
     residence.leaseType = [leaseTypeOptions firstObject];
-  
+
   monthLeaseOptions = @[
                         @"Month to month",@"1 month lease",@"2 months lease",
                         @"3 months lease",@"4 months lease",@"5 months lease",
                         @"6 months lease",@"7 months lease",@"8 months lease",
                         @"9 months lease",@"10 months lease",@"11 months lease",
                         @"12 months lease"];
-  
+
   CGRect rect = [@"Move-out Date" boundingRectWithSize:
     CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFont]];
   sizeForLabelTextFieldCell = rect.size;
 
   dateFormatter = [NSDateFormatter new];
   dateFormatter.dateFormat = @"MMMM d, yyyy";
-  
+
   self.screenName = self.title = @"Lease Details";
-  
+
   return self;
 }
 
@@ -69,22 +69,22 @@ float k2KeyboardHeight = 216.0;
 - (void) loadView
 {
   [super loadView];
-  
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat padding = 20.0f;
-  
+
   [self setupForTable];
-  
+
   saveBarButtonItem.enabled = YES;
   self.navigationItem.rightBarButtonItem = saveBarButtonItem;
-  
+
   deleteActionSheet = [[UIActionSheet alloc] initWithTitle: nil delegate: self
                                          cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"Delete Listing"
                                          otherButtonTitles: nil];
   [self.view addSubview: deleteActionSheet];
-  
+
 	isShowPicker = NO;
-  
+
   fadedBackground = [[UIView alloc] init];
   fadedBackground.alpha = 0.0f;
   fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
@@ -94,18 +94,18 @@ float k2KeyboardHeight = 216.0;
     [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(hidePickerView)];
   [fadedBackground addGestureRecognizer: tapGesture];
-  
+
   // Picker view container
   pickerViewContainer = [UIView new];
   [self.view addSubview: pickerViewContainer];
-  
+
   // Header for picker view with cancel and done button
   UIView *pickerViewHeader = [[UIView alloc] init];
   pickerViewHeader.backgroundColor = [UIColor grayUltraLight];
   pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
     screen.size.width, 44.0f);
   [pickerViewContainer addSubview: pickerViewHeader];
-  
+
   pickerViewHeaderLabel = [[UILabel alloc] init];
   pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   pickerViewHeaderLabel.frame = pickerViewHeader.frame;
@@ -162,7 +162,7 @@ float k2KeyboardHeight = 216.0;
   NSDate *dateFromString1 = [[NSDate alloc] init];
   dateFromString1 = [df dateFromString:@"31-12-2015"];
   moveInPicker.maximumDate = dateFromString1;
-  
+
   // Move-out picker
   moveOutPicker = [UIDatePicker new];
 	moveOutPicker.backgroundColor = [UIColor whiteColor];
@@ -183,7 +183,7 @@ float k2KeyboardHeight = 216.0;
                                      pickerViewHeader.frame.origin.y +
                                      pickerViewHeader.frame.size.height,
                                      monthLeasePicker.frame.size.width, monthLeasePicker.frame.size.height);
-  
+
   // Lease type picker
   leaseTypePicker = [[UIPickerView alloc] init];
   leaseTypePicker.backgroundColor = [UIColor whiteColor];
@@ -193,7 +193,7 @@ float k2KeyboardHeight = 216.0;
     pickerViewHeader.frame.origin.y +
       pickerViewHeader.frame.size.height,
         leaseTypePicker.frame.size.width, leaseTypePicker.frame.size.height);
-  
+
   pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
     monthLeasePicker.frame.size.width,
       pickerViewHeader.frame.size.height +
@@ -204,7 +204,7 @@ float k2KeyboardHeight = 216.0;
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-  
+
   // List Connection
   OMBResidenceOpenHouseListConnection *conn =
   [[OMBResidenceOpenHouseListConnection alloc] initWithResidence:
@@ -215,24 +215,24 @@ float k2KeyboardHeight = 216.0;
                       withRowAnimation: UITableViewRowAnimationNone];
   };
   // [conn start];
-  
+
   // Move-in Date picker
   if (residence.moveInDate)
     [moveInPicker setDate:
       [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]
         animated: NO];
-  
+
   // Move-out Date picker
   if (residence.moveOutDate)
     [moveOutPicker setDate:
       [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]
         animated: NO];
-  
+
   // Month lease picker
   NSInteger selectedMonthRow = residence.leaseMonths;
   [monthLeasePicker selectRow: selectedMonthRow inComponent: 0
     animated: NO];
-  
+
   // Lease type picker
   NSInteger selectedLeaseRow = 0;
   if (residence.leaseType) {
@@ -254,7 +254,7 @@ float k2KeyboardHeight = 216.0;
 - (void) viewWillDisappear: (BOOL) animated
 {
   [super viewWillDisappear: animated];
-  
+
   if (residence) {
     OMBResidenceUpdateConnection *conn =
     [[OMBResidenceUpdateConnection alloc] initWithResidence: residence
@@ -298,11 +298,11 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   // Month Lease
   if (pickerView == monthLeasePicker)
     return [monthLeaseOptions count];
-    
+
   // Lease Type
   if (pickerView == leaseTypePicker)
     return [leaseTypeOptions count];
-    
+
   return 0;
 }
 
@@ -315,7 +315,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   if (pickerView == monthLeasePicker && isShowPicker) {
     auxRow = (int)row;
   }
-  
+
   if (pickerView == leaseTypePicker && isShowPicker) {
     auxRow = (int)row;
   }
@@ -388,7 +388,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
   cell.textLabel.text = @"";
   cell.textLabel.textColor = [UIColor textColor];
-  
+
   // Header title cell
   static NSString *HeaderTitleCellIdentifier = @"HeaderTitleCellIdentifier";
   OMBHeaderTitleCell *headerTitleCell =
@@ -396,7 +396,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   if (!headerTitleCell)
     headerTitleCell = [[OMBHeaderTitleCell alloc] initWithStyle:
                        UITableViewCellStyleDefault reuseIdentifier: HeaderTitleCellIdentifier];
-  
+
   // Lease Details
   if (indexPath.section == 0) {
     // Spacing
@@ -407,6 +407,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     // Header title
     else if (indexPath.row == 1) {
       headerTitleCell.titleLabel.text = @"Lease Details";
+      headerTitleCell.clipsToBounds = YES;
       return headerTitleCell;
     }
     else {
@@ -429,7 +430,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell1.textField.placeholder = @"required";
         cell1.textField.userInteractionEnabled = NO;
-        
+
         if (residence.moveInDate) {
           cell1.textField.text = [dateFormatter stringFromDate:
                                   [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]];
@@ -456,10 +457,10 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       else if (indexPath.row == 6) {
         string = @"Month Lease";
         cell1.selectionStyle = UITableViewCellSelectionStyleDefault;
-        
+
         cell1.textField.text = monthLeaseOptions[residence.leaseMonths];
         cell1.textField.userInteractionEnabled = NO;
-        
+
         // Bottom border
         // Use layer because after clicking the row, the view goes away
         // CALayer *bottomBorderLayer = [CALayer layer];
@@ -467,7 +468,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         // bottomBorderLayer.frame = CGRectMake(0.0f, 44.0f - 0.5f,
         //                                      tableView.frame.size.width, 0.5f);
         // [cell1.contentView.layer addSublayer: bottomBorderLayer];
-        
+
       }
       // Month Lease Picker View
       else if (indexPath.row == 7) {
@@ -489,13 +490,13 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
                                               @"HelveticaNeue-Medium" size: 15];
         openHouseCell.detailTextLabel.text = [NSString stringWithFormat: @"%i",
                                               [residence.openHouseDates count]];
-        
+
         openHouseCell.detailTextLabel.textColor = [UIColor blueDark];
         openHouseCell.textLabel.text = @"Open House Dates";
         openHouseCell.textLabel.font = [UIFont fontWithName:
                                         @"HelveticaNeue-Light" size: 15];
         openHouseCell.textLabel.textColor = [UIColor textColor];
-        
+        openHouseCell.clipsToBounds = YES;
         return openHouseCell;
       }
       // Lease Type
@@ -507,7 +508,9 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         else
           cell1.textField.text = [leaseTypeOptions firstObject];
         cell1.textField.userInteractionEnabled = NO;
-        
+        cell1.separatorInset = UIEdgeInsetsMake(0.0f,
+          tableView.frame.size.width, 0.0f, 0.0f);
+
         // Bottom border
         // Use layer because after clicking the row, the view goes away
         // CALayer *bottomBorderLayer = [CALayer layer];
@@ -518,7 +521,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       }
       // Lease Type Picker View
       else if (indexPath.row == 10) {
-        
+
       }
       // Lease Type Description
       else if (indexPath.row == 11) {
@@ -531,7 +534,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         }
         for (UIView *subview in [cell.contentView subviews])
             [subview removeFromSuperview];
-        
+
         UILabel *label = [UILabel new];
         label.font = [UIFont smallTextFont];
         label.frame = CGRectMake(padding, padding,
@@ -542,11 +545,12 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [UIColor grayMedium];
         [cell.contentView addSubview: label];
-        
+
         cell.backgroundColor = [UIColor grayUltraLight];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
                                                0.0f, 0.0f);
+        cell.clipsToBounds = YES;
         return cell;
       }
       // View OMB Standard Lease
@@ -572,16 +576,16 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
           label.textColor = [UIColor blue];
           [linkCell.contentView addSubview: label];
         }
-          
+
         linkCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         linkCell.backgroundColor = tableView.backgroundColor;
         linkCell.selectionStyle = UITableViewCellSelectionStyleNone;
         linkCell.separatorInset = UIEdgeInsetsMake(0.0f,
                                                    tableView.frame.size.width, 0.0f, 0.0f);
-        
+        linkCell.clipsToBounds = YES;
         return linkCell;
       }
-      
+
       cell1.textField.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
                                              size: 15];
       cell1.textField.indexPath = indexPath;
@@ -591,6 +595,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell1.textFieldLabel.text = string;
       [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
                 forControlEvents: UIControlEventEditingChanged];
+      cell1.clipsToBounds = YES;
       return cell1;
     }
   }
@@ -599,6 +604,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     // Spacing
     if (indexPath.row == 0) {
       headerTitleCell.titleLabel.text = @"";
+      headerTitleCell.clipsToBounds = YES;
       return headerTitleCell;
     }
     // Delete Listing
@@ -623,7 +629,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         label.textColor = [UIColor red];
       }
       [deleteCell.contentView addSubview: label];
-      
+
       // Bottom border
       // Use layer because after clicking the row, the view goes away
       // CALayer *bottomBorderLayer = [CALayer layer];
@@ -631,17 +637,17 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       // bottomBorderLayer.frame = CGRectMake(0.0f, 44.0f - 0.5f,
       //                                      tableView.frame.size.width, 0.5f);
       // [deleteCell.contentView.layer addSublayer: bottomBorderLayer];
-      
+      deleteCell.clipsToBounds = YES;
       return deleteCell;
     }
   }
-  
+
   // Spacing for when typing
   else if (indexPath.section == 3) {
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
                                            0.0f, 0.0f);
   }
-  
+  cell.clipsToBounds = YES;
   return cell;
 }
 
@@ -751,13 +757,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else {
     // Lease Details
     if (indexPath.section == 0) {
+      if (indexPath.row == 1) {
+        return 0.0f;
+      }
       // Move-in  Date date picker
       // Move-out Date date picker
       // Month Lease date picker
       // Lease Type picker view
-      if (indexPath.row == 3 || indexPath.row == 5 || indexPath.row == 7 || indexPath.row == 10)
+      if (indexPath.row == 3 || indexPath.row == 5 ||
+        indexPath.row == 7 || indexPath.row == 10)
         return 0.0f;
-      
+
       // Move-out Date
       // Hide the move-out date, we are not using it
       // else if (indexPath.row == 4) {
@@ -794,7 +804,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // OMBActivityView *activityView = [[OMBActivityView alloc] init];
   // [self.view addSubview: activityView];
   // [activityView startSpinning];
-  
+
   OMBResidenceDeleteConnection *conn =
   [[OMBResidenceDeleteConnection alloc] initWithResidence: residence];
   conn.completionBlock = ^(NSError *error) {
@@ -835,7 +845,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) donePicker
 {
   [self hidePickerView];
-  
+
   // Move-in Date
   if ([moveInPicker superview]) {
     OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
@@ -870,7 +880,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     residence.leaseMonths = [self numberOfMonthsBetweenMovingDates];
   }
-  
+
   // Month Lease
   if ([monthLeasePicker superview]) {
     NSString *string = @"";
@@ -905,7 +915,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [NSIndexPath indexPathForItem:9 inSection:0]];
     cell.textField.text = string;
   }
-  
+
   [self updatePicker];
 }
 
@@ -934,28 +944,28 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   NSCalendar *calendar = [NSCalendar currentCalendar];
   NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit |
                           NSWeekdayCalendarUnit | NSYearCalendarUnit);
-  
+
   NSDateComponents *moveInComps = [calendar components: unitFlags
     fromDate: [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]];
   [moveInComps setDay: 1];
   NSDateComponents *moveOutComps = [calendar components: unitFlags
     fromDate: [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]];
-  
+
   [moveOutComps setDay: 1];
-  
+
   NSInteger moveInMonth  = [moveInComps month];
   NSInteger moveOutMonth = [moveOutComps month];
-  
+
   NSInteger yearDifference = [moveOutComps year] - [moveInComps year];
   moveOutMonth += (12 * yearDifference);
-  
+
   NSInteger monthDifference = moveOutMonth - moveInMonth;
   NSLog(@"%d",monthDifference);
   if(monthDifference < 0)
     return 0;
   else if (monthDifference > 12)
     return 12;
-  
+
   return monthDifference;
 }
 
@@ -1000,7 +1010,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) scrollToRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  [self.table scrollToRowAtIndexPath: indexPath 
+  [self.table scrollToRowAtIndexPath: indexPath
                     atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
@@ -1056,12 +1066,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [moveInPicker setDate:
    [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]
                animated: NO];
-  
+
   // Move-out date picker
   [moveOutPicker setDate:
    [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]
                 animated: NO];
-  
+
   // Month lease picker
   NSInteger selectedMonthRow = residence.leaseMonths;
   [monthLeasePicker selectRow: selectedMonthRow inComponent: 0
@@ -1070,7 +1080,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [self.table cellForRowAtIndexPath:
      [NSIndexPath indexPathForItem:6 inSection:0]];
   cell2.textField.text = monthLeaseOptions[residence.leaseMonths];
-  
+
   // Lease type picker
   NSInteger selectedLeaseRow = 0;
   if (residence.leaseType) {

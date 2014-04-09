@@ -976,7 +976,8 @@ viewForHeaderInSection: (NSInteger) section
 		cell.rentRangeTextField.text = @"";
 		[rentPickerView selectRow: 0 inComponent: 0 animated: YES];
 		[rentPickerView selectRow: 0 inComponent: 1 animated: YES];
-    [_valuesDictionary setObject: [NSNull null] forKey: @"rentRange"];
+    [self.valuesDictionary setObject: [NSNull null] forKey: @"maxRent"];
+    [self.valuesDictionary setObject: [NSNull null] forKey: @"minRent"];
 	}
 	else if ([availabilityPickerView superview]) {
 		OMBMapFilterDateAvailableCell *cell = (OMBMapFilterDateAvailableCell *)

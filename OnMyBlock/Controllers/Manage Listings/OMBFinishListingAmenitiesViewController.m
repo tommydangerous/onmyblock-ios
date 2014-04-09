@@ -38,7 +38,7 @@
 
   saveBarButtonItem.enabled = YES;
   self.navigationItem.rightBarButtonItem = saveBarButtonItem;
-  
+
   [self setupForTable];
 }
 
@@ -46,8 +46,8 @@
 {
   [super viewWillDisappear: animated];
 
-  OMBResidenceUpdateConnection *conn = 
-    [[OMBResidenceUpdateConnection alloc] initWithResidence: 
+  OMBResidenceUpdateConnection *conn =
+    [[OMBResidenceUpdateConnection alloc] initWithResidence:
       residence attributes: @[@"amenities", @"cats", @"dogs"]];
   [conn start];
 }
@@ -64,32 +64,52 @@
 - (UITableViewCell *) tableView: (UITableView *) tableView
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  UIEdgeInsets maxInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+    0.0f, 0.0f);
   // Header
   if (indexPath.row == 0) {
-    static NSString *HeaderID = @"HeaderID";  
-    UITableViewCell *headerCell = 
+    static NSString *HeaderID = @"HeaderID";
+    UITableViewCell *headerCell =
       [tableView dequeueReusableCellWithIdentifier: HeaderID];
     if (!headerCell) {
-      headerCell = [[UITableViewCell alloc] initWithStyle: 
+      headerCell = [[UITableViewCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: HeaderID];
       headerCell.backgroundColor = tableView.backgroundColor;
       headerCell.selectionStyle  = UITableViewCellSelectionStyleNone;
-      headerCell.textLabel.font  = [UIFont mediumTextFontBold];
-      headerCell.textLabel.textAlignment = NSTextAlignmentCenter;
-      headerCell.textLabel.textColor     = [UIColor grayMedium];
+      headerCell.separatorInset  = maxInset;
     }
-    headerCell.textLabel.text = 
-      [[self categoryForSection: indexPath.section] capitalizedString];
+    int headerCellTag = 9999;
+    UILabel *label = (UILabel *) [headerCell viewWithTag: headerCellTag];
+    if (!label) {
+      label = [UILabel new];
+      label.font = [UIFont mediumTextFontBold];
+      label.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width,
+        [OMBFinishListingAmenityCell heightForCell]);
+      label.tag = headerCellTag;
+      label.textAlignment = NSTextAlignmentCenter;
+      label.textColor     = [UIColor grayMedium];
+      [headerCell.contentView addSubview: label];
+    }
+    label.text = [[self categoryForSection:
+      indexPath.section] capitalizedString];
     return headerCell;
   }
   static NSString *AmenityCellID = @"AmenityCellID";
-  OMBFinishListingAmenityCell *cell = 
+  OMBFinishListingAmenityCell *cell =
     [tableView dequeueReusableCellWithIdentifier: AmenityCellID];
   if (!cell)
-    cell = [[OMBFinishListingAmenityCell alloc] initWithStyle: 
+    cell = [[OMBFinishListingAmenityCell alloc] initWithStyle:
       UITableViewCellStyleDefault reuseIdentifier: AmenityCellID];
   NSString *amenity = [self amenityAtIndexPath: indexPath];
   [cell setAmenityName: amenity checked: [residence hasAmenity: amenity]];
+  // Last row
+  if (indexPath.row == [[self amenitiesForCategoryInSection:
+    indexPath.section] count]) {
+    cell.separatorInset = maxInset;
+  }
+  else {
+    cell.separatorInset = UIEdgeInsetsMake(0.0f, OMBPadding, 0.0f, 0.0f);
+  }
   return cell;
 }
 
@@ -182,7 +202,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSString *) amenityAtIndexPath: (NSIndexPath *) indexPath
 {
   // Need to minus 1 to account for the header of each section
-  return [[self amenitiesForCategoryInSection: 
+  return [[self amenitiesForCategoryInSection:
     indexPath.section] objectAtIndex: indexPath.row - 1];
 }
 

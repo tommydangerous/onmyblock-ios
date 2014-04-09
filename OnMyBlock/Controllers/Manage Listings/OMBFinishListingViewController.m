@@ -543,7 +543,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Pets & Amenities
   else if (indexPath.row == 6) {
-    string = @"Pets & Amenities";
+    string = @"Amenities & Pets";
     cell.textLabel.textColor = [UIColor textColor];
     imageView.alpha = 1.0f;
     imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];

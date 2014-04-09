@@ -361,7 +361,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           UITableViewCellStyleDefault reuseIdentifier: CellIdentifier0];
       cell1.textField.delegate  = self;
       cell1.textField.indexPath = indexPath;
-		cell1.textField.inputAccessoryView = textFieldToolbar;
+		  cell1.textField.inputAccessoryView = textFieldToolbar;
       // if (residence.isAuction && residence.minRent)
       //   cell1.textField.text = [NSString stringWithFormat: @"%.2f",
       //     residence.minRent];
@@ -391,6 +391,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell1.textField.text = [NSString stringWithFormat: @"%.2f",
           residence.deposit];
 		  cell1.textField.inputAccessoryView = textFieldToolbar;
+      cell1.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+        0.0f, 0.0f);
       [cell1.textField addTarget: self action: @selector(textFieldDidChange:)
         forControlEvents: UIControlEventEditingChanged];
       cell1.clipsToBounds = YES;

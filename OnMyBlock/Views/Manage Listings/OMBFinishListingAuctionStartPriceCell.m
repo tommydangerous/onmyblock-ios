@@ -12,10 +12,10 @@
 
 #pragma mark - Initializer
 
-- (id) initWithStyle: (UITableViewCellStyle) style 
+- (id) initWithStyle: (UITableViewCellStyle) style
 reuseIdentifier: (NSString *) reuseIdentifier
 {
-  if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
+  if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier]))
     return nil;
 
   self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -24,23 +24,23 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat screenWidth = screen.size.width;
   CGFloat padding     = 20.0f;
 
-  UIView *borderTop = [UIView new];
-  borderTop.backgroundColor = [UIColor grayLight];
-  borderTop.frame = CGRectMake(0.0f, 0.0f, screenWidth, 0.5f);
-  [self.contentView addSubview: borderTop];
-  
+  // UIView *borderTop = [UIView new];
+  // borderTop.backgroundColor = [UIColor grayLight];
+  // borderTop.frame = CGRectMake(0.0f, 0.0f, screenWidth, 0.5f);
+  // [self.contentView addSubview: borderTop];
+
   CGFloat labelHeight = 58.0f;
   UILabel *label = [UILabel new];
   label.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
   label.text = @"Rent Price";
   // label.text = @"Starting Price";
   label.textColor = [UIColor textColor];
-  CGRect labelRect = [label.text boundingRectWithSize: 
+  CGRect labelRect = [label.text boundingRectWithSize:
     CGSizeMake(screenWidth, labelHeight) font: label.font];
   label.frame = CGRectMake(padding, padding, labelRect.size.width, labelHeight);
   [self.contentView addSubview: label];
 
-  CGFloat textFieldWidth = screenWidth - 
+  CGFloat textFieldWidth = screenWidth -
     (padding + label.frame.size.width + padding + padding);
   _textField = [[TextFieldPadding alloc] init];
   // _textField.backgroundColor = [UIColor grayVeryLight];
@@ -57,11 +57,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
   leftView.text = @"$";
   leftView.textAlignment = NSTextAlignmentCenter;
   leftView.textColor = [UIColor grayMedium];
-  CGSize maxSize = CGSizeMake(_textField.frame.size.width, 
+  CGSize maxSize = CGSizeMake(_textField.frame.size.width,
     _textField.frame.size.height);
   CGRect leftViewRect = [leftView.text boundingRectWithSize: maxSize
     font: leftView.font];
-  leftView.frame = CGRectMake(0.0f, 0.0f, 
+  leftView.frame = CGRectMake(0.0f, 0.0f,
     (padding * 0.5) + leftViewRect.size.width + (padding * 0.5),
       leftViewRect.size.height);
   _textField.leftView = leftView;
@@ -74,7 +74,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   rightView.textColor = leftView.textColor;
   CGRect rightViewRect = [rightView.text boundingRectWithSize: maxSize
     font: rightView.font];
-  rightView.frame = CGRectMake(0.0f, 0.0f, 
+  rightView.frame = CGRectMake(0.0f, 0.0f,
     (padding * 0.5) + rightViewRect.size.width + (padding * 0.5),
       rightViewRect.size.height);
   _textField.leftPaddingX = leftView.frame.size.width;
@@ -96,9 +96,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
   UILabel *noteLabel = [UILabel new];
   noteLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
   noteLabel.numberOfLines = 0;
-  // noteLabel.text = 
+  // noteLabel.text =
   //   @"Start at a low price to attract more renters.";
-  noteLabel.text = @"This is the monthly rent price.";
+  noteLabel.text = @"This price will be for the monthly rent";
   noteLabel.textColor = [UIColor blue];
   CGRect noteLabelRect = [noteLabel.text boundingRectWithSize: CGSizeMake(
     noteLabelWidth, 9999) font: noteLabel.font];
@@ -106,12 +106,12 @@ reuseIdentifier: (NSString *) reuseIdentifier
     noteLabelRect.size.width, 19);
   [noteLabelView addSubview: noteLabel];
 
-  CGFloat newNoteLabelViewWidth = 
+  CGFloat newNoteLabelViewWidth =
     noteLabelPadding + noteLabel.frame.size.width + noteLabelPadding;
   noteLabelView.frame = CGRectMake(
-    screenWidth - (newNoteLabelViewWidth + padding), 
+    screenWidth - (newNoteLabelViewWidth + padding),
       label.frame.origin.y + label.frame.size.height + (padding * 0.5),
-        newNoteLabelViewWidth, 
+        newNoteLabelViewWidth,
           noteLabelPadding + noteLabel.frame.size.height + noteLabelPadding);
 
   return self;
@@ -126,7 +126,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat labelHeight = 58.0f;
   CGFloat padding = 20.0f;
   CGFloat noteLabelPadding = padding * 0.3f;
-  return padding + labelHeight + 
+  return padding + labelHeight +
     (padding * 0.5) + noteLabelPadding + 19 + noteLabelPadding + padding;
 }
 

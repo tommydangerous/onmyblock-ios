@@ -28,6 +28,20 @@
 
 #pragma mark - Instance Methods
 
+- (OMBUser *) otherUser: (OMBUser *) currentUser
+{
+  if (self.roommate) {
+    // If currentUser is the same as the roommate user
+    if ([currentUser compareUser: self.roommate]) {
+      return self.user;
+    }
+    else {
+      return self.roommate;
+    }
+  }
+  return nil;
+}
+
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
   // Email
@@ -59,6 +73,11 @@
   }
 
   // User
+  id user = [dictionary objectForKey: @"user"];
+  if (user != [NSNull null]) {
+    self.user = [[OMBUser alloc] init];
+    [self.user readFromDictionary: user];
+  }
 
   // UID
   id uid = [dictionary objectForKey: @"id"];

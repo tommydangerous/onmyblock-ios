@@ -970,7 +970,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if(!cell)
         cell = [[OMBRoommateCell alloc] initWithStyle:UITableViewCellStyleDefault
           reuseIdentifier: RoommateCellID];
-      [cell loadData: [[self roommates] objectAtIndex: indexPath.row - 1]];
+      [cell loadData: [[self roommates] objectAtIndex: indexPath.row - 1]
+        user: [OMBUser currentUser]];
 
         OMBRoommate *aux = [[self roommates] objectAtIndex: indexPath.row - 1];
         // if is a OMB user
@@ -1452,10 +1453,10 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     if(indexPath.row != 0 && indexPath.row != [[self roommates] count] + 1){
       OMBRoommate *aux = [[self roommates] objectAtIndex: indexPath.row - 1];
       // if is a OMB user
-      if(aux.roommate)
+      if (aux.roommate)
         [self.navigationController pushViewController:
-          [[OMBOtherUserProfileViewController alloc] initWithUser: aux.roommate]
-            animated: YES];
+          [[OMBOtherUserProfileViewController alloc] initWithUser:
+            [aux otherUser: [OMBUser currentUser]]] animated: YES];
     }
   }
   // Price breakdown (NOT BEING USED) !!!

@@ -835,7 +835,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       OMBRoommate *aux = [[self objects] objectAtIndex: indexPath.row - 1];
       if(!aux.roommate)
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      [cell loadData: [[self objects] objectAtIndex: row - 1]];
+      [cell loadData: [[self objects] objectAtIndex: row - 1] user: offer.user];
     }
     cell.clipsToBounds = YES;
     return cell;
@@ -1103,8 +1103,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       // if is a OMB user
       if(aux.roommate){
         [self.navigationController pushViewController:
-          [[OMBOtherUserProfileViewController alloc] initWithUser: aux.roommate]
-            animated: YES];
+          [[OMBOtherUserProfileViewController alloc] initWithUser:
+            [aux otherUser: offer.user]] animated: YES];
       }
     }
   }
