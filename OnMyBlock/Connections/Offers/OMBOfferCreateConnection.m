@@ -42,6 +42,10 @@
       @"residence_id": [NSNumber numberWithInt: residenceID]
     }];
 
+  // Authorization code
+  if (offer.authorizationCode) {
+    [objectParams setObject: offer.authorizationCode forKey: @"code"];
+  }
   // Move-in date
   if (offer.moveInDate) {
     [objectParams setObject: [dateFormatter stringFromDate:
@@ -74,6 +78,15 @@
     offer.uid = [self objectUID];
   }
   [super connectionDidFinishLoading: connection];
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) start
+{
+  [self startWithTimeoutInterval: 60 onMainRunLoop: NO];
 }
 
 @end

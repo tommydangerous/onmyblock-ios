@@ -49,6 +49,7 @@
 - (void) close;
 - (void) hideCloseButton;
 - (void) hideQuestionButton;
+- (BOOL) isClosed;
 - (void) resetQuestionDetails;
 - (void) setCancelButtonTitle: (NSString *) string;
 - (void) setConfirmButtonTitle: (NSString *) string;

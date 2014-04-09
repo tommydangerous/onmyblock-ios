@@ -38,7 +38,9 @@ extern CGFloat const OMBStandardHeight;
 
 - (OMBAppDelegate *) appDelegate;
 - (void) containerStartSpinning;
+- (void) containerStartSpinningFullScreen;
 - (void) containerStopSpinning;
+- (void) containerStopSpinningFullScreen;
 - (void) back;
 - (void) cancel;
 - (void) done;

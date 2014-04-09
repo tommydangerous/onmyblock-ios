@@ -22,13 +22,37 @@
   if (!(self = [super init])) return nil;
 
   _uid = -9999 + arc4random_uniform(9998);
-  
+
   return self;
 }
 
 #pragma mark - Methods
 
+#pragma mark - Class Methods
+
++ (NSString *) transactionTypeDownPayment
+{
+  return @"down_payment";
+}
+
++ (NSString *) transactionTypeOfferPayment
+{
+  return @"offer_payment";
+}
+
 #pragma mark - Instance Methods
+
+- (BOOL) isDownPayment
+{
+  return [self.transactionType isEqualToString:
+    [OMBPayoutTransaction transactionTypeDownPayment]];
+}
+
+- (BOOL) isOfferPayment
+{
+  return [self.transactionType isEqualToString:
+    [OMBPayoutTransaction transactionTypeOfferPayment]];
+}
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
@@ -92,6 +116,9 @@
     }
     _residence = obj;
   }
+
+  // Transaction type
+  self.transactionType = [dictionary objectForKey: @"transaction_type"];
 
   // Verified
   if ([[dictionary objectForKey: @"verified"] intValue])

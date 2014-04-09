@@ -133,9 +133,19 @@ CGFloat const OMBStandardHeight       = 44.0f;
   [[self appDelegate].container startSpinning];
 }
 
+- (void) containerStartSpinningFullScreen
+{
+  [[self appDelegate].container startSpinningFullScreen];
+}
+
 - (void) containerStopSpinning
 {
   [[self appDelegate].container stopSpinning];
+}
+
+- (void) containerStopSpinningFullScreen
+{
+  [[self appDelegate].container stopSpinningFullScreen];
 }
 
 - (void) done

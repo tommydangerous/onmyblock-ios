@@ -56,11 +56,12 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 @property (nonatomic) NSTimeInterval moveOutDate;
 @property (nonatomic) CGFloat amount;
 @property (nonatomic, strong) NSString *note;
-@property (nonatomic, strong) OMBPayoutTransaction *payoutTransaction;
 
 @property (nonatomic) NSTimeInterval updatedAt;
 
+@property (nonatomic, strong) NSString *authorizationCode;
 @property (nonatomic, strong) OMBUser *landlordUser;
+@property (nonatomic, copy) id paymentConfirmation;
 @property (nonatomic, strong) OMBResidence *residence;
 @property (nonatomic, strong) OMBUser *user;
 
@@ -73,11 +74,15 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 #pragma mark - Instance Methods
 
 - (CGFloat) downPaymentAmount;
+- (OMBPayoutTransaction *) downPaymentTransaction;
 - (void) fetchDetailsWithCompletion: (void (^) (NSError *error)) block;
+- (BOOL) isDownPaymentPaid;
+- (BOOL) isOfferPaymentPaid;
 - (BOOL) isExpiredForLandlord;
 - (BOOL) isExpiredForStudent;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (NSInteger) numberOfMonthsBetweenMovingDates;
+- (OMBPayoutTransaction *) offerPaymentTransaction;
 - (CGFloat) remainingBalanceAmount;
 - (OMBOfferStatusForLandlord) statusForLandlord;
 - (OMBOfferStatusForStudent) statusForStudent;

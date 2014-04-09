@@ -498,90 +498,19 @@
 
 #pragma mark - Protocol PayPalPaymentDelegate
 
-- (void) payPalPaymentDidComplete: (PayPalPayment *) completedPayment
-{
-  // Payment was processed successfully;
-  // send to server for verification and fulfillment.
-  OMBPayPalVerifyMobilePaymentConnection *conn =
-  [[OMBPayPalVerifyMobilePaymentConnection alloc] initWithOffer:
-   offer paymentConfirmation: completedPayment.confirmation];
-  conn.completionBlock = ^(NSError *error) {
-    // Start spinning until it is done or incomplete
-    if (offer.payoutTransaction &&
-        offer.payoutTransaction.charged &&
-        offer.payoutTransaction.verified && !error) {
-      // Congratulations
-
-      [alertBlur setTitle: @"Payment Confirmed!"];
-      [alertBlur setMessage: [NSString stringWithFormat:
-        @"You have successfully paid a total of %@ for the 1st month's "
-        @"rent and deposit. We will be emailing you a confirmation "
-        @"of your payment and move-in details.",
-        [NSString numberToCurrencyString: [offer totalAmount]]]];
-      [alertBlur resetQuestionDetails];
-      [alertBlur hideQuestionButton];
-      // Buttons
-      [alertBlur setConfirmButtonTitle: @"Okay"];
-      [alertBlur addTargetForConfirmButton: self
-        action: @selector(celebrateAfterPayment)];
-      [alertBlur showOnlyConfirmButton];
-      [alertBlur animateChangeOfContent];
-    }
-    else {
-      [self showAlertViewWithError: error];
-      // Try again
-      [self confirmOfferFinalAnswer];
-      [alertBlur showCloseButton];
-    }
-    // [[self appDelegate].container stopSpinning];
-    [alertBlur stopSpinning];
-  };
-  [alertBlur startSpinning];
-  // [[self appDelegate].container startSpinning];
-  [conn start];
-
-  // Dismiss the PayPalPaymentViewController.
-  [self dismissViewControllerAnimated: YES completion: nil];
-
-  [alertBlur setTitle: @"Confirming Payment"];
-  [alertBlur setMessage:
-   @"One moment as we charge and verify your PayPal account."];
-  [alertBlur resetQuestionDetails];
-  [alertBlur hideQuestionButton];
-  // Buttons
-  [alertBlur setConfirmButtonTitle: @"Charging and Verifying"];
-  [alertBlur addTargetForConfirmButton: self action: nil];
-  [alertBlur showOnlyConfirmButton];
-  [alertBlur hideCloseButton];
-  [alertBlur animateChangeOfContent];
-
-  // Send the entire confirmation dictionary
-  // NSData *confirmation = [NSJSONSerialization dataWithJSONObject:
-  //   completedPayment.confirmation options: 0 error: nil];
-
-  // Send confirmation to your server;
-  // your server should verify the proof of payment
-  // and give the user their goods or services.
-  // If the server is not reachable, save the confirmation and try again later.
-}
-
 - (void) payPalPaymentViewController: (PayPalPaymentViewController *)
 paymentViewController
 didCompletePayment: (PayPalPayment *) completedPayment
 {
-  // Payment was processed successfully;
-  // send to server for verification and fulfillment.
-  NSLog(@"%@", completedPayment);
-  // [self verifyCompletedPayment: completedPayment];
-
-  // Dismiss the PayPalPaymentViewController.
-  [paymentViewController dismissViewControllerAnimated: YES completion: nil];
+  offer.paymentConfirmation = completedPayment.confirmation;
+  [paymentViewController dismissViewControllerAnimated: YES completion: ^{
+    [self charge];
+  }];
 }
 
 - (void) payPalPaymentDidCancel: (PayPalPaymentViewController *)
 paymentViewController
 {
-  // The payment was canceled; dismiss the PayPalPaymentViewController.
   [paymentViewController dismissViewControllerAnimated: YES completion: nil];
 }
 
@@ -1663,32 +1592,6 @@ viewForHeaderInSection: (NSInteger) section
   [alertBlur close];
 }
 
-- (void) confirmOfferAndShowAlert
-{
-  [alert hideAlert];
-  [[OMBUser currentUser] confirmOffer: offer withCompletion:
-   ^(NSError *error) {
-     if (offer.confirmed &&
-         offer.payoutTransaction &&
-         offer.payoutTransaction.charged && !error) {
-
-       [self.navigationController popViewControllerAnimated: YES];
-       // Congratulations
-       UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
-                                 @"Check Your Venmo" message:
-                                 @"Please confirm the charge in Venmo to complete the transaction."
-                                                          delegate: nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
-       [alertView show];
-     }
-     else {
-       [self showAlertViewWithError: error];
-     }
-     [[self appDelegate].container stopSpinning];
-   }
-   ];
-  [[self appDelegate].container startSpinning];
-}
-
 - (void) confirmOffer
 {
   // Alert buttons
@@ -1707,38 +1610,6 @@ viewForHeaderInSection: (NSInteger) section
          forButton: alert.alertConfirm];
 
   [alert animateChangeOfContent];
-}
-
-- (void) confirmOfferConfirm
-{
-  OMBPayoutMethod *payoutMethod =
-  [[OMBUser currentUser] primaryPaymentPayoutMethod];
-  // If user has a primary payout method that is for payment
-  if (payoutMethod) {
-    // If primary payment method is PayPal
-    if ([payoutMethod type] == OMBPayoutMethodPayoutTypePayPal) {
-      // Show PayPal payment viewcontroller
-      [self showPayPalPayment];
-    }
-    // If primary payment method is Venmo
-    else {
-      [self confirmOfferAndShowAlert];
-    }
-  }
-  // If user does not have a primary payout method that is for payments
-  else {
-    // Alert buttons
-    [alert.alertCancel setTitle: @"Cancel" forState: UIControlStateNormal];
-    [alert.alertConfirm setTitle: @"Setup" forState: UIControlStateNormal];
-    [alert addTarget: self action: @selector(showPayoutMethods)
-           forButton: alert.alertConfirm];
-    // Alert message
-    alert.alertMessage.text = @"Please add at least one method of payment "
-    @"before confirming.";
-    // Alert title
-    alert.alertTitle.text = @"Set Up Payment";
-    [alert animateChangeOfContent];
-  }
 }
 
 - (void) confirmOfferCanceled
@@ -1799,19 +1670,14 @@ viewForHeaderInSection: (NSInteger) section
   }
 }
 
-- (void) chargeVenmoAccountWithoutApp
+- (void) charge
 {
   [[OMBUser currentUser] confirmOffer: offer withCompletion: ^(NSError *error) {
-    // Start spinning until it is done or incomplete
-    if (
-      offer.confirmed &&
-      offer.payoutTransaction &&
-      offer.payoutTransaction.charged && !error) {
-
+    if ([offer isOfferPaymentPaid]) {
       [alertBlur setTitle: @"Remaining Balance Paid"];
       [alertBlur setMessage: [NSString stringWithFormat:
         @"You have successfully paid the remaining balance of %@ "
-        @"from your Venmo account. The place is yours! Please sign the lease "
+        @"The place is yours! Please sign the lease "
         @"we have emailed you and enjoy your new place.",
         [NSString numberToCurrencyString: [offer remainingBalanceAmount]]
       ]];
@@ -1945,7 +1811,7 @@ viewForHeaderInSection: (NSInteger) section
 - (void) launchVenmoApp
 {
   if (didCancelVenmoAppFromWebView) {
-    [self chargeVenmoAccountWithoutApp];
+    [self charge];
     didCancelVenmoAppFromWebView = NO;
     return;
   }
@@ -2017,7 +1883,7 @@ viewForHeaderInSection: (NSInteger) section
   // [activityView stopSpinning];
   [alertBlur stopSpinning];
 
-  if (offer.payoutTransaction.verified) {
+  if ([offer isOfferPaymentPaid]) {
     [alertBlur setTitle: @"Payment Successful"];
     // [alertBlur setMessage: @"Your payment using Venmo is complete."];
     [alertBlur setMessage:
@@ -2401,10 +2267,12 @@ viewForHeaderInSection: (NSInteger) section
   // Present the PayPalPaymentViewController.
   NSString *shortDescription = [NSString stringWithFormat:
     @"Remaining Balance for %@", [offer.residence.address capitalizedString]];
-  [self presentViewController:
+  UINavigationController *nav = (UINavigationController *)
     [self payPalPaymentViewControllerWithAmount: [offer remainingBalanceAmount]
       intent: PayPalPaymentIntentSale shortDescription: shortDescription
-        delegate: self] animated: YES completion: nil];
+        delegate: self];
+  if (nav)
+    [self presentViewController: nav animated: YES completion: nil];
 }
 
 - (void) timerFireMethod: (NSTimer *) timer

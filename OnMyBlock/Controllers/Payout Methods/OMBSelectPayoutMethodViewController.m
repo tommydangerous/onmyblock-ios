@@ -38,7 +38,7 @@
 
   [self setupForTable];
 
-  self.table.tableHeaderView = [[UIView alloc] initWithFrame: 
+  self.table.tableHeaderView = [[UIView alloc] initWithFrame:
     CGRectMake(0.0f, 0.0f, self.table.frame.size.width, 44.0f)];
 }
 
@@ -61,7 +61,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.detailLabel.text = @"Arrives in 3-4 hours.\n"
         @"Venmo is completely free.";
         cell.iconImageView.image = [UIImage imageNamed: @"venmo_icon.png"];
-      cell.iconView.backgroundColor = 
+      cell.iconView.backgroundColor =
         cell.iconViewBackgroundColor = [UIColor venmoBlue];
       cell.nameLabel.text = @"Venmo";
     }
@@ -70,7 +70,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.detailLabel.text = @"Arrives in 3-4 hours.\n"
         @"Paypal is completely free.";
       cell.iconImageView.image = [UIImage imageNamed: @"paypal_icon.png"];
-      cell.iconView.backgroundColor = 
+      cell.iconView.backgroundColor =
         cell.iconViewBackgroundColor = [UIColor paypalBlue];
       cell.nameLabel.text = @"PayPal";
     }
@@ -89,12 +89,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         tableView.frame.size.width, 0.5f);
       [cell.layer addSublayer: topBorder];
     }
-    else if (indexPath.row == 
+    else if (indexPath.row ==
       [tableView numberOfRowsInSection: indexPath.section] - 1) {
       CALayer *bottomBorder = [CALayer layer];
       bottomBorder.backgroundColor = tableView.separatorColor.CGColor;
-      bottomBorder.frame = CGRectMake(0.0f, 
-        [self tableView: tableView heightForRowAtIndexPath: indexPath] - 0.5f, 
+      bottomBorder.frame = CGRectMake(0.0f,
+        [self tableView: tableView heightForRowAtIndexPath: indexPath] - 0.5f,
           tableView.frame.size.width, 0.5f);
       [cell.layer addSublayer: bottomBorder];
     }
@@ -108,7 +108,8 @@ numberOfRowsInSection: (NSInteger) section
   // Venmo
   // Paypal
   // Credit Card
-  return 3;
+  // return 3;
+  return 2;
 }
 
 #pragma mark - Protocol UITableViewDelegate

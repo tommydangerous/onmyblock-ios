@@ -37,6 +37,13 @@ NSString *const OMBOfferNotificationProcessingWithServer =
 NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   @"OMBOfferNotificationVenmoAppSwitchCancelled";
 
+@interface OMBOffer ()
+{
+  NSMutableDictionary *payoutTransactions;
+}
+
+@end
+
 @implementation OMBOffer
 
 #pragma mark - Initializer
@@ -51,6 +58,8 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   _declined  = NO;
   _onHold    = NO;
   _rejected  = NO;
+
+  payoutTransactions = [NSMutableDictionary dictionary];
 
   return self;
 }
@@ -81,6 +90,12 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   return [self totalAmount] * [OMBOffer downPaymentPercentage];
 }
 
+- (OMBPayoutTransaction *) downPaymentTransaction
+{
+  return [payoutTransactions objectForKey:
+    [OMBPayoutTransaction transactionTypeDownPayment]];
+}
+
 - (void) fetchDetailsWithCompletion: (void (^) (NSError *error)) block
 {
   OMBModelDetailConnection *conn =
@@ -88,6 +103,11 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   conn.completionBlock = block;
   conn.delegate = self;
   [conn start];
+}
+
+- (BOOL) isDownPaymentPaid
+{
+  return [self downPaymentTransaction] && [self downPaymentTransaction].paid;
 }
 
 - (BOOL) isExpiredForLandlord
@@ -120,6 +140,11 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   return NO;
 }
 
+- (BOOL) isOfferPaymentPaid
+{
+  return [self offerPaymentTransaction] && [self offerPaymentTransaction].paid;
+}
+
 - (NSInteger) numberOfMonthsBetweenMovingDates
 {
   NSCalendar *calendar = [NSCalendar currentCalendar];
@@ -142,6 +167,12 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   moveOutMonth += (12 * yearDifference);
 
   return moveOutMonth - moveInMonth;
+}
+
+- (OMBPayoutTransaction *) offerPaymentTransaction
+{
+  return [payoutTransactions objectForKey:
+    [OMBPayoutTransaction transactionTypeOfferPayment]];
 }
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
@@ -228,11 +259,12 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
     _onHold = NO;
 
   // Payout Transaction
-  if ([dictionary objectForKey: @"payout_transaction"] != [NSNull null]) {
+  for (NSDictionary *dict in
+    [dictionary objectForKey: @"payout_transactions"]) {
+
     OMBPayoutTransaction *object = [[OMBPayoutTransaction alloc] init];
-    [object readFromDictionary:
-      [dictionary objectForKey: @"payout_transaction"]];
-    _payoutTransaction = object;
+    [object readFromDictionary: dict];
+    [payoutTransactions setObject: object forKey: object.transactionType];
   }
 
   // Rejected
@@ -319,15 +351,15 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 
 - (OMBOfferStatusForLandlord) statusForLandlord
 {
-  if (_rejected) {
+  if (self.rejected) {
     return OMBOfferStatusForLandlordRejected;
   }
-  else if (_confirmed) {
-    if (_payoutTransaction) {
-      if (_payoutTransaction.paid) {
+  else if (self.confirmed) {
+    if ([self offerPaymentTransaction]) {
+      if ([self isOfferPaymentPaid]) {
         return OMBOfferStatusForLandlordOfferPaid;
       }
-      else if (_payoutTransaction.expired) {
+      else if ([self offerPaymentTransaction].expired) {
         return OMBOfferStatusForLandlordOfferPaidExpired;
       }
       else {
@@ -338,7 +370,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
       return OMBOfferStatusForLandlordConfirmed;
     }
   }
-  else if (_accepted) {
+  else if (self.accepted) {
     if ([self isExpiredForStudent]) {
       return OMBOfferStatusForLandlordExpired;
     }
@@ -346,10 +378,10 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
       return OMBOfferStatusForLandlordAccepted;
     }
   }
-  else if (_onHold) {
+  else if (self.onHold) {
     return OMBOfferStatusForLandlordOnHold;
   }
-  else if (_declined) {
+  else if (self.declined) {
     return OMBOfferStatusForLandlordDeclined;
   }
   else if ([self isExpiredForLandlord]) {
@@ -360,15 +392,15 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 
 - (OMBOfferStatusForStudent) statusForStudent
 {
-  if (_rejected) {
+  if (self.rejected) {
     return OMBOfferStatusForStudentRejected;
   }
-  else if (_confirmed) {
-    if (_payoutTransaction) {
-      if (_payoutTransaction.paid) {
+  else if (self.confirmed) {
+    if ([self offerPaymentTransaction]) {
+      if ([self isOfferPaymentPaid]) {
         return OMBOfferStatusForStudentOfferPaid;
       }
-      else if (_payoutTransaction.expired) {
+      else if ([self offerPaymentTransaction].expired) {
         return OMBOfferStatusForStudentOfferPaidExpired;
       }
       else {
@@ -379,7 +411,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
       return OMBOfferStatusForStudentConfirmed;
     }
   }
-  else if (_accepted) {
+  else if (self.accepted) {
     if ([self isExpiredForStudent]) {
       return OMBOfferStatusForStudentExpired;
     }
@@ -387,10 +419,10 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
       return OMBOfferStatusForStudentAccepted;
     }
   }
-  else if (_onHold) {
+  else if (self.onHold) {
     return OMBOfferStatusForStudentOnHold;
   }
-  else if (_declined) {
+  else if (self.declined) {
     return OMBOfferStatusForStudentDeclined;
   }
   else if ([self isExpiredForLandlord]) {

@@ -12,6 +12,7 @@
 #import "DRNRealTimeBlurView.h"
 #import "OMBAccountViewController.h"
 #import "OMBActivityView.h"
+#import "OMBActivityViewFullScreen.h"
 #import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBCreateListingViewController.h"
@@ -47,6 +48,13 @@
 // #import "OMBResidenceDetailViewController.h"
 
 CGFloat kBackgroundMaxScale = 5.0f;
+
+@interface OMBViewControllerContainer ()
+{
+  OMBActivityViewFullScreen *activityViewFullScreen;
+}
+
+@end
 
 @implementation OMBViewControllerContainer
 // #warning Remove this
@@ -631,6 +639,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   [self.view addSubview: _topDetailView];
   // Activity view
   activityView = [[OMBActivityView alloc] init];
+  activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
   // [_detailView addSubview: activityView];
 
   // [self presentDetailViewController: _mapNavigationController];
@@ -1665,10 +1674,23 @@ completion: (void (^) (void)) block
   [activityView startSpinning];
 }
 
+- (void) startSpinningFullScreen
+{
+  [[[UIApplication sharedApplication] keyWindow] addSubview:
+    activityViewFullScreen];
+  [activityViewFullScreen startSpinning];
+}
+
 - (void) stopSpinning
 {
   [activityView removeFromSuperview];
   [activityView stopSpinning];
+}
+
+- (void) stopSpinningFullScreen
+{
+  [activityViewFullScreen removeFromSuperview];
+  [activityViewFullScreen stopSpinning];
 }
 
 - (void) tappedDetailView: (UITapGestureRecognizer *) gesture

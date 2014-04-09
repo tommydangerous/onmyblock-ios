@@ -646,32 +646,33 @@ didAuthorizeFuturePayment: (NSDictionary *) futurePaymentAuthorization
 
   // Your code must now send the authorization response to your server.
   // [self sendAuthorizationToServer:futurePaymentAuthorization];
-  NSLog(@"Future:\n%@", futurePaymentAuthorization);
+  // NSLog(@"Future:\n%@", futurePaymentAuthorization);
+
+  NSDictionary *response = futurePaymentAuthorization[@"response"];
+  if (response && response[@"code"])
+    offer.authorizationCode = response[@"code"];
 
   // When your server makes its payment request to PayPal, it must include a
   // Paypal-Application-Correlation-Id HTTP header with this Application
   // Correlation ID value obtained from the SDK.
-  NSString *correlationId =
-    [PayPalMobile applicationCorrelationIDForEnvironment:
-      PayPalEnvironmentProduction];
-  NSLog(@"Correlation:\n%@", correlationId);
-
-  // {
-  //   client = {
-  //     environment = live;
-  //     "paypal_sdk_version" = "2.0.2";
-  //     platform = iOS;
-  //     "product_name" = "PayPal iOS SDK";
-  //   };
-  //   response = {
-  //     code = "EDKaJltkpsu3S_ZAnskVGfy9yOxPOTw750RHZJkS-9i20mSr8ARMbis4oWAqQQJB0lXHA_uev9lcU8214ggaKpzV93lHDj6tTwKn0pBffzRKPvL99_4B4dqZkY-901Z9gtHMFgshlPwURBYwWZRU44s";
-  //   };
-  //   "response_type" = "authorization_code";
-  // }
+  // NSString *correlationId =
+  //   [PayPalMobile applicationCorrelationIDForEnvironment:
+  //     PayPalEnvironmentProduction];
+  // NSLog(@"Correlation:\n%@", correlationId);
 
   // Dismiss
   [futurePaymentViewController dismissViewControllerAnimated: YES
-    completion: nil];
+    completion: ^{
+      if (offer.authorizationCode)
+        [self createOffer];
+      else {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+          @"PayPal Authorize Failed" message: @"Please authorize your "
+            @"PayPal for a future payment." delegate: nil
+              cancelButtonTitle: @"Okay" otherButtonTitles: nil];
+        [alertView show];
+      }
+    }];
 }
 
 - (void) payPalPaymentDidCancel: (PayPalPaymentViewController *)
@@ -1758,6 +1759,56 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
   [alertBlur close];
 }
 
+- (void) createOffer
+{
+  [[OMBUser currentUser] createOffer: offer completion: ^(NSError *error) {
+    if (offer.uid && !error) {
+      // save move in & move out preferences
+      [self saveDatePreferences];
+
+      NSString *userTypeString = @"landlord";
+      if ([residence.propertyType isEqualToString: @"sublet"])
+        userTypeString = @"subletter";
+
+      [alertBlur setTitle: @"Offer Placed!"];
+      [alertBlur setMessage: [NSString stringWithFormat:
+        @"If the landlord accepts your offer, we will immediately email you "
+        @"the lease, and you (and your roommates if applicable) will have %@ "
+        @"to secure the place by electronically signing the lease and paying "
+        @"the 1st month's rent and deposit through OnMyBlock. "
+        @"Some places may also require a signed co-signer agreement. "
+        @"If your offer is retracted, declined, or expires, "
+        @"any payment authorization is voided.",
+        [offer timelineStringForStudent]
+      ]];
+      [alertBlur resetQuestionDetails];
+      [alertBlur hideQuestionButton];
+      // Buttons
+      [alertBlur setConfirmButtonTitle: @"Okay"];
+      [alertBlur addTargetForConfirmButton: self
+        action: @selector(submitOfferConfirmedOkay)];
+
+      if ([alertBlur isClosed]) {
+        [alertBlur showInView: self.view withDetails: NO];
+      }
+
+      [alertBlur showOnlyConfirmButton];
+
+      [alertBlur animateChangeOfContent];
+
+      // Send push notification to landlord saying they received an offer
+      [offer sendPushNotificationSubmitted];
+    }
+    else {
+      [self showAlertViewWithError: error];
+      // Try again
+      [self submitOfferFinalAnswer];
+    }
+    [self containerStopSpinningFullScreen];
+  }];
+  [self containerStartSpinningFullScreen];
+}
+
 - (OMBResidenceConfirmDetailsDatesCell *) datesCell
 {
   return (OMBResidenceConfirmDetailsDatesCell *)
@@ -1969,6 +2020,19 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
   [[self appDelegate].container showPayoutMethods];
 }
 
+- (void) showPayPalPayment
+{
+  NSString *shortDescription = [NSString stringWithFormat:
+    @"Down Payment for %@", [residence.address capitalizedString]];
+  // Down payment; authorize for future payment
+  UINavigationController *nav = (UINavigationController *)
+    [self payPalPaymentViewControllerWithAmount: [offer downPaymentAmount]
+      intent: PayPalPaymentIntentAuthorize shortDescription: shortDescription
+        delegate: self];
+  if (nav)
+    [self presentViewController: nav animated: YES completion: nil];
+}
+
 - (void) showPlaceOfferHowItWorks
 {
   NSArray *array = @[
@@ -2032,7 +2096,7 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
   NSString *moveOutDateString = [dateFormatter1 stringFromDate:
     [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
 
-  [alertBlur setTitle: @"Place Offer"];
+  [alertBlur setTitle: @"Submit Offer"];
   [alertBlur setMessage: [NSString stringWithFormat: @"Are you sure you "
     @"want to submit an offer to rent this place (%@/mo + %@ deposit) "
     @"from %@ - %@?", [NSString numberToCurrencyString: offer.amount],
@@ -2057,59 +2121,12 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // PayPal
   if ([[OMBUser currentUser].primaryPaymentPayoutMethod isPayPal]) {
-    NSString *shortDescription = [NSString stringWithFormat:
-      @"Down Payment for %@", [residence.address capitalizedString]];
     [self closeAlertBlur];
-    // Down payment
-    UINavigationController *nav = (UINavigationController *)
-      [self payPalPaymentViewControllerWithAmount: [offer downPaymentAmount]
-        intent: PayPalPaymentIntentAuthorize shortDescription: shortDescription
-          delegate: self];
-    if (nav)
-      [self presentViewController: nav animated: YES completion: nil];
+    [self showPayPalPayment];
   }
   // Venmo
   else if ([[OMBUser currentUser].primaryPaymentPayoutMethod isVenmo]) {
-    [[OMBUser currentUser] createOffer: offer completion: ^(NSError *error) {
-      if (offer.uid && !error) {
-        // save move in & move out preferences
-        [self saveDatePreferences];
-
-        NSString *userTypeString = @"landlord";
-        if ([residence.propertyType isEqualToString: @"sublet"])
-          userTypeString = @"subletter";
-
-        [alertBlur setTitle: @"Offer Placed!"];
-        [alertBlur setMessage: [NSString stringWithFormat:
-          @"If the landlord accepts your offer, we will immediately email you "
-          @"the lease, and you (and your roommates if applicable) will have %@ "
-          @"to secure the place by electronically signing the lease and paying "
-          @"the 1st month's rent and deposit through OnMyBlock. "
-          @"Some places may also require a signed co-signer agreement. "
-          @"If your offer is retracted, declined, or expires, "
-          @"any payment authorization is voided.",
-          [offer timelineStringForStudent]
-        ]];
-        [alertBlur resetQuestionDetails];
-        [alertBlur hideQuestionButton];
-        // Buttons
-        [alertBlur setConfirmButtonTitle: @"Okay"];
-        [alertBlur addTargetForConfirmButton: self
-          action: @selector(submitOfferConfirmedOkay)];
-        [alertBlur showOnlyConfirmButton];
-        [alertBlur animateChangeOfContent];
-
-        // Send push notification to landlord saying they received an offer
-        [offer sendPushNotificationSubmitted];
-      }
-      else {
-        [self showAlertViewWithError: error];
-        // Try again
-        [self submitOfferFinalAnswer];
-      }
-      [self containerStopSpinning];
-    }];
-    [self containerStartSpinning];
+    [self createOffer];
   }
 }
 
@@ -2206,8 +2223,7 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
 
   NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
   [dateComponents setMonth:residence.leaseMonths];
-  NSDate *preferredMoveOut = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents
-                                                                           toDate:[NSDate dateWithTimeIntervalSince1970: residence.moveInDate ] options:0];
+  NSDate *preferredMoveOut = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:[NSDate dateWithTimeIntervalSince1970: residence.moveInDate ] options:0];
 
   if([[NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]
       compare:preferredMoveOut] == NSOrderedDescending)
