@@ -50,7 +50,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
 {
   if (!(self = [super init])) return nil;
 
-  self.title = @"Renter Homebase";
+  self.title = @"Offers";
 
   return self;
 }

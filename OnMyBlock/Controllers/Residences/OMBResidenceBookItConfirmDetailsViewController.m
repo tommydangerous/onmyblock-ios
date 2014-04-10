@@ -1220,7 +1220,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
     }
   }
-  // Buyer, My Renter Profile, Add a personal note
+  // Buyer, My Renter Profile, Add note to this offer
   else if (indexPath.section ==
            OMBResidenceBookItConfirmDetailsSectionRenterProfile) {
     // Buyer
@@ -1271,7 +1271,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.clipsToBounds = YES;
       return cell;
     }
-    // Add a personal note
+    // Add note to this offer
     else if (indexPath.row == 2) {
       static NSString *AddNoteIdentifier = @"AddNoteIdentifier";
       UITableViewCell *cell =
@@ -1301,7 +1301,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       cell.textLabel.font =
       [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-      cell.textLabel.text = @"Add a personal note";
+      cell.textLabel.text = @"Add note to this offer";
       cell.textLabel.textColor = [UIColor textColor];
         cell.clipsToBounds = YES;
       return cell;
@@ -1417,7 +1417,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (section == OMBResidenceBookItConfirmDetailsSectionRenterProfile) {
     // Buyer
     // My Renter Profile
-    // Add a personal note
+    // Add note to this offer
     // Note text view
     return 4;
     // return 1 + 3;
@@ -1491,7 +1491,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       [vc loadUser: [OMBUser currentUser]];
       [self.navigationController pushViewController: vc animated: YES];
     }
-    // Add a personal note
+    // Add note to this offer
     else if (indexPath.row == 2) {
       // [self.navigationController pushViewController:
       //   [[OMBResidenceAddPersonalNoteViewController alloc] init]
@@ -1684,7 +1684,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     else if (indexPath.row == 1) {
       return spacing;
     }
-    // Add a personal note
+    // Add note to this offer
     else if (indexPath.row == 2) {
       if (!isAddingAPersonalNote)
         return spacing;

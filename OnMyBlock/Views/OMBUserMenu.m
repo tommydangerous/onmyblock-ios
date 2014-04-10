@@ -135,7 +135,7 @@
   _renterHomebaseButton = [[UIButton alloc] init];
   [_renterHomebaseButton addTarget: self action: @selector(showHomebaseRenter)
     forControlEvents: UIControlEventTouchUpInside];
-  [_renterHomebaseButton setTitle: @"Homebase" forState: UIControlStateNormal];
+  [_renterHomebaseButton setTitle: @"Offers" forState: UIControlStateNormal];
   UIImageView *homebaseImageView = [[UIImageView alloc] init];
   homebaseImageView.frame = discoverImageView.frame;
   UIImage *homebaseImage = [UIImage imageNamed: @"homebase_icon.png"];
@@ -206,7 +206,7 @@
   _sellerHomebaseButton = [[UIButton alloc] init];
   [_sellerHomebaseButton addTarget: self action: @selector(showHomebaseLandlord)
     forControlEvents: UIControlEventTouchUpInside];
-  [_sellerHomebaseButton setTitle: @"Landlord Homebase"
+  [_sellerHomebaseButton setTitle: @"Landlord Received Bookings"
     forState: UIControlStateNormal];
   UIImageView *sellerHomebaseImageView = [[UIImageView alloc] init];
   sellerHomebaseImageView.frame = discoverImageView.frame;
@@ -226,7 +226,7 @@
   _manageListingsButton = [[UIButton alloc] init];
   [_manageListingsButton addTarget: self action: @selector(showManageListings)
     forControlEvents: UIControlEventTouchUpInside];
-  [_manageListingsButton setTitle: @"Manage Listings"
+  [_manageListingsButton setTitle: @"Listings"
     forState: UIControlStateNormal];
   UIImageView *manageListingImageView = [[UIImageView alloc] init];
   manageListingImageView.frame = discoverImageView.frame;
