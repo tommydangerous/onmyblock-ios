@@ -473,12 +473,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
                 PropertyTypeCellIdentifier];
       cell.detailNameLabel.text = @"Length of lease";
       [cell setFramesForSubviewsWithSize:CGSizeMake(tableView.frame.size.width,
-        tableView.frame.size.height * 0.3f)];
+        tableView.frame.size.height / 3.0f)];
 			return cell;
     }
 
     [c setFramesForSubviewsWithSize: CGSizeMake(tableView.frame.size.width,
-      tableView.frame.size.height * 0.3f)];
+      tableView.frame.size.height / 3.0f)];
     c.detailNameLabel.text = string;
     c.minusButton.tag = indexPath.row;
     c.plusButton.tag = indexPath.row;

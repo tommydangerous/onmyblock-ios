@@ -47,10 +47,11 @@
 - (void) setFramesForSubviewsWithSize: (CGSize) size{
   
   CGFloat padding = 20.0f;
-  _detailNameLabel.frame = CGRectMake(0.0f, 0.0f, size.width, 22.0f);
-  
+  _detailNameLabel.frame = CGRectMake(0.0f,
+    padding * 0.5f, size.width, 22.0f);
+
   CGFloat valueHeight = size.height -
-    ((padding * 0.5) + _detailNameLabel.frame.size.height + padding);
+    ((padding) + _detailNameLabel.frame.size.height + padding);
   
   if (valueHeight > 58.0f)
     valueHeight = 58.0f;

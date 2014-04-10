@@ -62,8 +62,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat padding      = 20.0f;
   CGFloat detailHeight = 22.0f;
   CGFloat valueHeight  = size.height - 
-    ((padding * 0.5) + detailHeight + padding);
-  _detailNameLabel.frame = CGRectMake(0.0f, 0.0f, size.width, detailHeight);
+    ((padding ) + detailHeight + padding);
+  _detailNameLabel.frame = CGRectMake(0.0f, padding * 0.5, size.width, detailHeight);
 
   if (valueHeight > 58.0f)
     valueHeight = 58.0f;
