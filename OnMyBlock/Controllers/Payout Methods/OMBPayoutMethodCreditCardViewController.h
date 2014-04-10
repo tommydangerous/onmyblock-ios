@@ -11,19 +11,20 @@
 // Sections
 typedef NS_ENUM(NSInteger, OMBOtherUserProfileSection) {
   OMBPayoutMethodCreditCardSectionPersonal,
-  OMBPayoutMethodCreditCardSectionEmpty,
   OMBPayoutMethodCreditCardSectionCreditCard,
   OMBPayoutMethodCreditCardSectionSpacingKeyboard
 };
 
 // OMBPayoutMethodCreditCardSectionPersonal
 typedef NS_ENUM(NSInteger, OMBPayoutMethodCreditCardSectionPersonalRow) {
-  OMBPayoutMethodCreditCardSectionPersonalRowBilling,
+    OMBPayoutMethodCreditCardSectionPersonalRowTitle,
+    OMBPayoutMethodCreditCardSectionPersonalRowCountry,
   OMBPayoutMethodCreditCardSectionPersonalRowZip
 };
 
 // OMBPayoutMethodCreditCardSectionCreditCard
 typedef NS_ENUM(NSInteger, OMBPayoutMethodCreditCardSectionCreditCardRow) {
+  OMBPayoutMethodCreditCardSectionCreditCardRowTitle,
   OMBPayoutMethodCreditCardSectionCreditCardRowNumber,
   OMBPayoutMethodCreditCardSectionCreditCardRowExpiration,
   OMBPayoutMethodCreditCardSectionCreditCardRowCCV

@@ -234,10 +234,8 @@ forButton: (UIButton *) button
 
 - (void) questionButtonSelected
 {
-  isShowingQuestionDetails = YES;
-
+  isShowingQuestionDetails = !isShowingQuestionDetails;
   [UIView animateWithDuration: OMBStandardDuration animations: ^{
-    questionDetailsLabel.alpha = 1.0f;
     [self updateFrames];
   }];
 }
@@ -432,10 +430,12 @@ forButton: (UIButton *) button
     questionRect.size.width, questionRect.size.height);
 
   if (!isShowingQuestionDetails) {
+    questionDetailsLabel.alpha = 0.0f;
     questionDetailsView.frame = CGRectMake(questionDetailsView.frame.origin.x,
       questionDetailsView.frame.origin.y,
         questionDetailsView.frame.size.width, 0.0f);
-  }
+  }else
+    questionDetailsLabel.alpha = 1.0f;
 
   // Buttons
   buttonView.frame = CGRectMake(0.0f,

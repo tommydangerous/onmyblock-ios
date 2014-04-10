@@ -21,6 +21,12 @@ reuseIdentifier: (NSString *)reuseIdentifier
   if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
     return nil;
 
+    _viewBackground = [UIView new];
+    _viewBackground.backgroundColor = [UIColor whiteColor];
+    _viewBackground.layer.borderColor = [[UIColor grayLight] CGColor];
+    [_viewBackground setHidden:YES];
+    [self.contentView addSubview: _viewBackground];
+
   _iconImageView = [UIImageView new];
   [self.contentView addSubview: _iconImageView];
 
@@ -53,7 +59,86 @@ reuseIdentifier: (NSString *)reuseIdentifier
   return OMBStandardButtonHeight;
 }
 
++ (CGFloat) heightForCellWithLeftLabel
+{
+    return 32.0f;
+}
+
++ (CGFloat) heightForCellWithSectionTitle
+{
+    return 55.0f;
+}
+
 #pragma mark - Instance Methods
+
+- (void) setFrameUsingLeftLabelAndIconWithFirstCell:(BOOL) isFirstCell
+{
+    CGRect screen       = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screen.size.width;
+    
+    CGFloat padding = OMBPadding;
+    CGFloat padding2 = 10.0f;
+    CGFloat height = [OMBLabelTextFieldCell heightForCellWithLeftLabel];
+    CGFloat labelWidth = 65.0f;
+    CGFloat textFieldWidth = 180.0f;
+    
+    if (isFirstCell) {
+        _viewBackground.frame = CGRectMake(padding, 0.0f,
+                                           screenWidth - 2*padding, height);
+    }
+    else
+        _viewBackground.frame = CGRectMake(padding, -1.0f,
+                                           screenWidth - 2*padding, height);
+    
+    _viewBackground.backgroundColor = [UIColor whiteColor];
+    _viewBackground.layer.borderWidth = 1.0f;
+    [_viewBackground setHidden:NO];
+    
+    CGFloat originX =  padding + padding2;
+    _textFieldLabel.frame = CGRectMake(originX, 0.0f,
+                                       labelWidth, height);
+    _textField.frame = CGRectMake(originX + labelWidth, 0.0f,
+                                  textFieldWidth, height);
+
+    [_iconImageView setHidden:NO];
+    CGFloat iconSize = height * 0.5f;
+    _iconImageView.alpha = 0.3f;
+    _iconImageView.frame = CGRectMake(_viewBackground.frame.origin.x + _viewBackground.frame.size.width - padding2 - iconSize, (height - iconSize) * 0.5f,
+                                      iconSize, iconSize);
+
+}
+
+- (void) setFrameUsingLeftLabelWithFirstCell:(BOOL) isFirstCell
+{
+    CGRect screen       = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screen.size.width;
+
+    CGFloat padding = OMBPadding;
+    CGFloat padding2 = 10.0f;
+    CGFloat height = [OMBLabelTextFieldCell heightForCellWithLeftLabel];
+    CGFloat labelWidth = 120.0f;
+    CGFloat textFieldWidth = 160.0f;
+
+    if (isFirstCell) {
+        _viewBackground.frame = CGRectMake(padding, 0.0f,
+                                           screenWidth - 2*padding, height);
+    }
+    else
+        _viewBackground.frame = CGRectMake(padding, -1.0f,
+                                           screenWidth - 2*padding, height);
+
+    _viewBackground.backgroundColor = [UIColor whiteColor];
+    _viewBackground.layer.borderWidth = 1.0f;
+    [_viewBackground setHidden:NO];
+    
+    [_iconImageView setHidden:YES];
+    
+    CGFloat originX =  padding + padding2;
+    _textFieldLabel.frame = CGRectMake(originX, 0.0f,
+                                  labelWidth, height);
+    _textField.frame = CGRectMake(originX + labelWidth, 0.0f,
+                                  textFieldWidth, height);
+}
 
 - (void) setFrameUsingIconImageView
 {
