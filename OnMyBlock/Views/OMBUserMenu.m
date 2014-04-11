@@ -206,7 +206,7 @@
   _sellerHomebaseButton = [[UIButton alloc] init];
   [_sellerHomebaseButton addTarget: self action: @selector(showHomebaseLandlord)
     forControlEvents: UIControlEventTouchUpInside];
-  [_sellerHomebaseButton setTitle: @"Landlord Received Bookings"
+  [_sellerHomebaseButton setTitle: @"Received Bookings"
     forState: UIControlStateNormal];
   UIImageView *sellerHomebaseImageView = [[UIImageView alloc] init];
   sellerHomebaseImageView.frame = discoverImageView.frame;
