@@ -139,7 +139,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 {
   // 17 = line height of font size 13
   CGFloat padding = OMBPadding;
-  return [OMBHomebaseLandlordOfferCell heightForCell] + padding + (17.0f * 3);
+  return [OMBHomebaseLandlordOfferCell heightForCell] + padding * 0.5f + (17.0f * 3);
 }
 
 #pragma mark - Instance Methods
