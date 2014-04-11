@@ -481,6 +481,7 @@
 		DE92170918D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170818D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m */; };
 		DE92170C18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170B18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m */; };
 		DE92915D18EF4929006CD5B6 /* OMBMapResidenceDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92915C18EF4929006CD5B6 /* OMBMapResidenceDetailCell.m */; };
+		DE92B90118F8451900D03AC7 /* OMBRadialGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92B90018F8451900D03AC7 /* OMBRadialGradient.m */; };
 		DE93158718916D1800111CF6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE93158618916D1800111CF6 /* FacebookSDK.framework */; };
 		DE93158D18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */; };
 		DE93158F1891E05800111CF6 /* OMBCreateListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */; };
@@ -1417,6 +1418,8 @@
 		DE92170B18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoAddRoommateViewController.m; sourceTree = "<group>"; };
 		DE92915B18EF4929006CD5B6 /* OMBMapResidenceDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapResidenceDetailCell.h; sourceTree = "<group>"; };
 		DE92915C18EF4929006CD5B6 /* OMBMapResidenceDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapResidenceDetailCell.m; sourceTree = "<group>"; };
+		DE92B8FF18F8451900D03AC7 /* OMBRadialGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRadialGradient.h; sourceTree = "<group>"; };
+		DE92B90018F8451900D03AC7 /* OMBRadialGradient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRadialGradient.m; sourceTree = "<group>"; };
 		DE93158618916D1800111CF6 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		DE93158B18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailLeaseCell.h; sourceTree = "<group>"; };
 		DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailLeaseCell.m; sourceTree = "<group>"; };
@@ -2043,6 +2046,8 @@
 				AB9FEEFA18D0171400E25FE2 /* OMBLabelSwitchCell.m */,
 				DE16026A18D7A13000D67614 /* OMBRoommateCell.h */,
 				DE16026B18D7A13000D67614 /* OMBRoommateCell.m */,
+				DE92B8FF18F8451900D03AC7 /* OMBRadialGradient.h */,
+				DE92B90018F8451900D03AC7 /* OMBRadialGradient.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3457,6 +3462,7 @@
 				DE92915D18EF4929006CD5B6 /* OMBMapResidenceDetailCell.m in Sources */,
 				ABB7005C187B58AA005F0730 /* OMBOfferInquiryResidenceCell.m in Sources */,
 				AB0C36B5184074A8006DC3AD /* OMBHouseGraphicView.m in Sources */,
+				DE92B90118F8451900D03AC7 /* OMBRadialGradient.m in Sources */,
 				AB8642C218AB5FF400995571 /* OMBInformationStepsFlowLayout.m in Sources */,
 				AB9545761848FB58000513BE /* OMBAccountProfileViewController.m in Sources */,
 				ABB911C118998FB30046611F /* AFNetworkReachabilityManager.m in Sources */,
