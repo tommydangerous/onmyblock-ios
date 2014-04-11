@@ -23,6 +23,8 @@
 #import "OMBHomebaseRenterRentDepositInfoViewController.h"
 #import "OMBHomebaseRenterRoommateImageView.h"
 #import "OMBHomebaseRenterTopPriorityCell.h"
+#import "OMBInformationHowItWorksViewController.h"
+#import "OMBNavigationController.h"
 #import "OMBOffer.h"
 #import "OMBOfferInquiryViewController.h"
 #import "OMBPayoutMethod.h"
@@ -48,7 +50,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
 {
   if (!(self = [super init])) return nil;
 
-  self.title = @"Renter Homebase";
+  self.title = @"Offers";
 
   return self;
 }
@@ -84,6 +86,19 @@ float kHomebaseRenterImagePercentage = 0.3f;
   CGFloat padding      = OMBPadding;
   CGFloat standardHeight = OMBStandardHeight;
 
+  UIButton *infoButton = [UIButton new];
+  infoButton.frame = CGRectMake(0.0f, 0.0f, 26.0f, 26.0f);
+  infoButton.layer.borderColor = [UIColor blue].CGColor;
+  infoButton.layer.borderWidth = 1.0f;
+  infoButton.layer.cornerRadius = 26.0f * 0.5f;
+  infoButton.titleLabel.font = [UIFont normalTextFontBold];
+  [infoButton addTarget: self action: @selector(showHomebaseHowItWorks)
+       forControlEvents: UIControlEventTouchUpInside];
+  [infoButton setTitle: @"i" forState: UIControlStateNormal];
+  [infoButton setTitleColor: [UIColor blue] forState: UIControlStateNormal];
+  self.navigationItem.rightBarButtonItem =
+    [[UIBarButtonItem alloc] initWithCustomView: infoButton];
+  
   backViewOffsetY = padding + standardHeight;
   // The image in the back
   CGRect backViewRect = CGRectMake(0.0f, 0.0f,
@@ -1176,6 +1191,71 @@ viewForHeaderInSection: (NSInteger) section
   [self.navigationController pushViewController:
     [[OMBHomebaseRenterAddRemoveRoommatesViewController alloc] init]
       animated: YES];
+}
+
+- (void) showHomebaseHowItWorks
+{
+  NSString *info2;
+  NSString *info3;
+  if (YES) {
+    info2 = [NSString stringWithFormat: @"Review your offer and add a payment "
+             @"method. You will NOT be charged upfront. A down payment of %@ will be "
+             @"charged upon offer acceptance to secure the place. "
+             @"If your offer is accepted, you will have %@ to sign the lease and pay "
+             @"the remainder of the 1st month’s rent and deposit through OnMyBlock.",
+             @"100", @"1 week"];
+    info3 = [NSString stringWithFormat: @"Once you submit your offer, the "
+             @"landlord or subletter will have %@ to review your offer, your renter "
+             @"profile, and your roommates' renter profiles if applicable.\n\n"
+             @"If your offer is accepted, a down payment of %@ will be charged and "
+             @"you will have %@ to sign the lease and pay the remainder of the 1st "
+             @"month’s rent and deposit through OnMyBlock. Some places may also "
+             @"require a signed co-signer agreement. If your offer is retracted, "
+             @"declined, or expired, any payment authorization is voided.",
+              @"1 week",
+             @"100",
+              @"1 week"];
+  }
+  else {
+    info2 = [NSString stringWithFormat: @"Review your offer and add a payment "
+             @"method. You will NOT be charged upfront. Only if your offer is "
+             @"accepted, then you will be charged a total amount of %@ for "
+             @"the 1st month's rent and deposit. You will then have  %@ "
+             @"to sign the lease.",
+             @"100",
+              @"1 week"];
+    info3 = [NSString stringWithFormat: @"Once you submit your offer, "
+             @"the landlord or subletter will have %@ to review your offer, "
+             @"your renter profile, and your roommates' renter profiles "
+             @"if applicable.\n\nIf your offer is accepted, you will be charged "
+             @"a total amount of %@. Then you will have %@ to sign the lease.",
+             @"1 week",
+             @"100",
+              @"1 week"];
+  }
+  NSArray *array = @[
+    @{
+      @"title": @"Renter Profile",
+      @"information": @"The more information you complete, the more likely "
+      @"landlords or subletters are to accept your booking request. "
+      @"If you have roommates, make sure they complete their profiles too!"
+    },
+    @{
+      @"title": @"Authorize Payment",
+      @"information": info2
+    },
+    @{
+      @"title": @"Wait For Response",
+      @"information": info3
+    }
+  ];
+  
+  OMBInformationHowItWorksViewController *vc =
+    [[OMBInformationHowItWorksViewController alloc] initWithInformationArray:
+      array];
+  vc.title = @"How Placing an Offer Works";
+  [(OMBNavigationController *) self.navigationController pushViewController:
+     vc animated: YES ];
 }
 
 - (void) showMyRenterProfile

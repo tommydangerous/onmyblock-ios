@@ -1291,7 +1291,7 @@ completion: (void (^) (void)) block
       [self.introViewController.loginViewController
         dismissViewControllerAnimated: YES completion: ^{
           // Then hide the intro view controller
-          [self.introViewController dismissViewControllerAnimated: YES
+          [self.introViewController dismissViewControllerAnimated: NO
             completion: completion];
         }
       ];

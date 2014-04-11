@@ -9,10 +9,19 @@
 #import "OMBRenterInfoSectionRoommateViewController.h"
 
 #import "OMBNavigationController.h"
+#import "OMBOtherUserProfileViewController.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoAddRoommateViewController.h"
 #import "OMBRoommate.h"
 #import "OMBRoommateCell.h"
+
+@interface OMBRenterInfoSectionRoommateViewController()
+{
+  UIActionSheet *profileDeleteActionSheet;
+  NSIndexPath *selectedIndexPath;
+}
+
+@end
 
 @implementation OMBRenterInfoSectionRoommateViewController
 
@@ -42,6 +51,12 @@
   [addButton setTitle: @"Add Co-applicant" forState: UIControlStateNormal];
   [addButtonMiddle setTitle: @"Add Co-applicant"
     forState: UIControlStateNormal];
+  
+  profileDeleteActionSheet = [[UIActionSheet alloc] initWithTitle: nil delegate: self
+    cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"Profile"
+      otherButtonTitles: @"Delete", nil];
+  profileDeleteActionSheet.destructiveButtonIndex = 1;
+  [self.view addSubview: profileDeleteActionSheet];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -62,6 +77,27 @@
   [[self renterApplication] readFromDictionary: dictionary
     forModelName: [OMBRoommate modelName]];
   [self reloadTable];
+}
+
+#pragma mark - Protocol UIActionSheetDelegate
+
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+  if(actionSheet == profileDeleteActionSheet){
+    if (buttonIndex == 0){
+      OMBRoommate *roommate =
+        (OMBRoommate *)[[self objects] objectAtIndex: selectedIndexPath.row];
+      [self.navigationController pushViewController:
+        [[OMBOtherUserProfileViewController alloc] initWithUser:
+          [roommate otherUser: user]] animated: YES];
+    }
+    else if (buttonIndex == 1) {
+      [self deleteModelObjectAtIndexPath: selectedIndexPath];
+      selectedIndexPath = nil;
+    }
+  }else{
+    [super actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
+  }
 }
 
 #pragma mark - Protocol UITableViewDataSource
@@ -96,6 +132,20 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   return [OMBRoommateCell heightForCell];
+}
+
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  OMBRoommate *testUser = (OMBRoommate *)
+    [[self objects] objectAtIndex: indexPath.row];
+  
+  if (!testUser.roommate) {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+  }else{
+    selectedIndexPath = indexPath;
+    [profileDeleteActionSheet showInView: self.view];
+    [tableView deselectRowAtIndexPath: indexPath animated: YES];
+  }
 }
 
 #pragma mark - Methods

@@ -38,7 +38,7 @@
 {
   if (!(self = [super init])) return nil;
 
-  self.screenName = self.title = @"Manage Listings";
+  self.screenName = self.title = @"Listings";
 
   return self;
 }
