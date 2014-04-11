@@ -18,20 +18,23 @@
 {
   if (!(self = [super initWithFrame: rect])) return nil;
 
+  CGFloat lineWidth = 3.0f;
   UIView *forwardSlash = [[UIView alloc] init];
   forwardSlash.backgroundColor = color;
-  forwardSlash.frame = CGRectMake((self.frame.size.width - 1) * 0.5f, 0.0f, 
-    1.0f, self.frame.size.height);
+  forwardSlash.frame = CGRectMake((self.frame.size.width - lineWidth) * 0.5f,
+    0.0f, lineWidth, self.frame.size.height);
+  forwardSlash.layer.cornerRadius = lineWidth * 0.5f;
   [self addSubview: forwardSlash];
 
   UIView *backSlash = [[UIView alloc] init];
   backSlash.backgroundColor = forwardSlash.backgroundColor;
   backSlash.frame = forwardSlash.frame;
+  backSlash.layer.cornerRadius = forwardSlash.layer.cornerRadius;
   [self addSubview: backSlash];
 
-  forwardSlash.transform = 
+  forwardSlash.transform =
     CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-45));
-  backSlash.transform = 
+  backSlash.transform =
     CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(45));
 
   _closeButton = [UIButton new];
