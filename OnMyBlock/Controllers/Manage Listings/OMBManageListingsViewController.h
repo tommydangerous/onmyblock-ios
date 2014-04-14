@@ -8,6 +8,11 @@
 
 #import "OMBTableViewController.h"
 
+typedef NS_ENUM(NSInteger, OMBManageListingsSection) {
+  OMBManageListingsSectionListings,
+  OMBManageListingsSectionSpacing
+};
+
 @interface OMBManageListingsViewController : OMBTableViewController
 
 @end

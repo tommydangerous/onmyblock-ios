@@ -18,6 +18,7 @@
 #import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
 #import "UIImage+Color.h"
 
 @interface OMBManageListingsViewController ()
@@ -62,37 +63,42 @@
 
   // Publish Now view
   createListingView = [[AMBlurView alloc] init];
-  createListingView.backgroundColor = [UIColor colorWithWhite: 1.0f 
+  createListingView.backgroundColor = [UIColor colorWithWhite: 1.0f
     alpha: 0.95f];
   CGFloat createListingViewHeight = 44.0f;
   CGFloat createListingViewWidth = screen.size.width * 0.5f;
   createListingView.frame = CGRectMake(
-    (screen.size.width - createListingViewWidth) * 0.5f, 
-      screen.size.height - (createListingViewHeight + padding), 
+    (screen.size.width - createListingViewWidth) * 0.5f,
+      screen.size.height - (createListingViewHeight + padding),
         createListingViewWidth, createListingViewHeight);
-  createListingView.layer.borderColor = [UIColor grayLight].CGColor;
-  createListingView.layer.borderWidth = 1.5f;
+  createListingView.layer.borderColor = [UIColor blue].CGColor;
+  createListingView.layer.borderWidth = 1.0f;
   createListingView.layer.cornerRadius =
     createListingView.frame.size.height * 0.5f;
+  // createListingButton.layer.shadowColor = [UIColor textColor].CGColor;
+  // createListingButton.layer.shadowOffset = CGSizeMake(10.0f, 15.0f);
+  // createListingButton.layer.shadowOpacity = 0.8f;
+  // createListingButton.layer.shadowRadius = 15.0f;
   [self.view addSubview: createListingView];
 
   // Publish Now button
   createListingButton = [UIButton new];
-  createListingButton.frame = CGRectMake(0.0f, 0.0f, 
+  createListingButton.frame = CGRectMake(0.0f, 0.0f,
     createListingView.frame.size.width, createListingView.frame.size.height);
-  createListingButton.titleLabel.font = 
-    [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  createListingButton.titleLabel.font = [UIFont normalTextFontBold];
   [createListingButton addTarget: self action: @selector(createListing)
     forControlEvents: UIControlEventTouchUpInside];
-  [createListingButton setBackgroundImage: 
-    [UIImage imageWithColor: [UIColor grayUltraLight]]
+  [createListingButton setBackgroundImage:
+    [UIImage imageWithColor: [UIColor blue]]
       forState: UIControlStateHighlighted];
-  [createListingButton setTitle: @"Create Listing" 
+  [createListingButton setTitle: @"Create Listing"
     forState: UIControlStateNormal];
-  [createListingButton setTitleColor: [UIColor blackColor]
+  [createListingButton setTitleColor: [UIColor blue]
     forState: UIControlStateNormal];
+  [createListingButton setTitleColor: [UIColor whiteColor]
+    forState: UIControlStateHighlighted];
   [createListingView addSubview: createListingButton];
-  
+
   activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
   [self.view addSubview: activityViewFullScreen];
 }
@@ -101,7 +107,7 @@
 {
   [super viewWillAppear: animated];
 
-  OMBManageListingsConnection *conn = 
+  OMBManageListingsConnection *conn =
     [[OMBManageListingsConnection alloc] init];
   conn.completionBlock = ^(NSError *error) {
     [self.table reloadData];
@@ -119,29 +125,58 @@
 
 #pragma mark - Protocol UITableViewDataSource
 
+- (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
+{
+  return 2;
+}
+
 - (UITableViewCell *) tableView: (UITableView *) tableView
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  static NSString *CellIdentifier = @"CellIdentifier";
-  OMBManageListingsCell *cell = [tableView dequeueReusableCellWithIdentifier:
-    CellIdentifier];
-  if (!cell)
-    cell = [[OMBManageListingsCell alloc] initWithStyle: 
-      UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
-  [cell loadResidenceData: [[self listings] objectAtIndex: indexPath.row]];
-  return cell;
+  NSUInteger row     = indexPath.row;
+  NSUInteger section = indexPath.section;
+  if (section == OMBManageListingsSectionListings) {
+    static NSString *CellIdentifier = @"CellIdentifier";
+    OMBManageListingsCell *cell = [tableView dequeueReusableCellWithIdentifier:
+      CellIdentifier];
+    if (!cell)
+      cell = [[OMBManageListingsCell alloc] initWithStyle:
+        UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+    [cell loadResidenceData: [[self listings] objectAtIndex: row]];
+    cell.clipsToBounds = YES;
+    return cell;
+  }
+  else if (section == OMBManageListingsSectionSpacing) {
+    static NSString *EmptyID = @"EmptyID";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+      EmptyID];
+    if (!cell)
+      cell = [[UITableViewCell alloc] initWithStyle:
+        UITableViewCellStyleDefault reuseIdentifier: EmptyID];
+    cell.backgroundColor = [UIColor clearColor];
+    cell.clipsToBounds = YES;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+      0.0f, 0.0f);
+    return cell;
+  }
+  return [[UITableViewCell alloc] init];
 }
 
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  return [[self listings] count];
+  if (section == OMBManageListingsSectionListings)
+    return [[self listings] count];
+  else if (section == OMBManageListingsSectionSpacing)
+    return 1;
+  return 0;
 }
 
 #pragma mark - Protocol UITableViewDelegate
 
-- (void) tableView: (UITableView *) tableView 
-didEndDisplayingCell: (UITableViewCell *) cell 
+- (void) tableView: (UITableView *) tableView
+didEndDisplayingCell: (UITableViewCell *) cell
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // [(OMBManageListingsCell *) cell clearImage];
@@ -150,25 +185,33 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  [self.navigationController pushViewController:
-    [[OMBFinishListingViewController alloc] initWithResidence:
-      [[self listings] objectAtIndex: indexPath.row]]
-        animated: YES];
+  NSUInteger section = indexPath.section;
+  if (section == OMBManageListingsSectionListings) {
+    [self.navigationController pushViewController:
+      [[OMBFinishListingViewController alloc] initWithResidence:
+        [[self listings] objectAtIndex: indexPath.row]]
+          animated: YES];
+  }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  return [OMBManageListingsCell heightForCell];
+  NSUInteger section = indexPath.section;
+  if (section == OMBManageListingsSectionListings)
+    return [OMBManageListingsCell heightForCell];
+  else if (section == OMBManageListingsSectionSpacing)
+    return OMBPadding + createListingView.frame.size.height + OMBPadding;
+  return 0.0f;
 }
 
-- (void) tableView: (UITableView *) tableView 
-willDisplayCell: (UITableViewCell *) cell 
+- (void) tableView: (UITableView *) tableView
+willDisplayCell: (UITableViewCell *) cell
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // if ([[self listings] count]) {
-  //   [(OMBManageListingsCell *) cell loadResidenceData: 
+  //   [(OMBManageListingsCell *) cell loadResidenceData:
   //     [[self listings] objectAtIndex: indexPath.row]];
   // }
 }
