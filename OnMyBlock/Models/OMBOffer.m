@@ -90,6 +90,31 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   return [NSString stringWithFormat: @"%@s", [OMBOffer modelName]];
 }
 
++ (NSString *) timelineStringForLandlord
+{
+  return [NSString stringWithFormat: @"%i hours", kMaxHoursForLandlordToAccept];
+}
+
++ (NSString *) timelineStringForStudent
+{
+  NSString *unit = @"hour";
+  NSUInteger i = kMaxHoursForStudentToConfirm;
+  NSUInteger week = 1 * 24 * 7;
+  NSUInteger day  = 1 * 24;
+  // NSUInteger hour = 1;
+  if (kMaxHoursForStudentToConfirm >= week) {
+    unit = @"week";
+    i = kMaxHoursForStudentToConfirm / week;
+  }
+  else if (kMaxHoursForStudentToConfirm >= day) {
+    unit = @"day";
+    i = kMaxHoursForStudentToConfirm / day;
+  }
+  if (i != 1)
+    unit = [unit stringByAppendingString: @"s"];
+  return [NSString stringWithFormat: @"%i %@", i, unit];
+}
+
 #pragma mark - Instance Methods
 
 - (CGFloat) downPaymentAmount
@@ -586,27 +611,12 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 
 - (NSString *) timelineStringForLandlord
 {
-  return [NSString stringWithFormat: @"%i hours", kMaxHoursForLandlordToAccept];
+  return [OMBOffer timelineStringForLandlord];
 }
 
 - (NSString *) timelineStringForStudent
 {
-  NSString *unit = @"hour";
-  NSUInteger i = kMaxHoursForStudentToConfirm;
-  NSUInteger week = 1 * 24 * 7;
-  NSUInteger day  = 1 * 24;
-  // NSUInteger hour = 1;
-  if (kMaxHoursForStudentToConfirm >= week) {
-    unit = @"week";
-    i = kMaxHoursForStudentToConfirm / week;
-  }
-  else if (kMaxHoursForStudentToConfirm >= day) {
-    unit = @"day";
-    i = kMaxHoursForStudentToConfirm / day;
-  }
-  if (i != 1)
-    unit = [unit stringByAppendingString: @"s"];
-  return [NSString stringWithFormat: @"%i %@", i, unit];
+  return [OMBOffer timelineStringForStudent];
 }
 
 - (CGFloat) totalAmount

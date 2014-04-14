@@ -35,14 +35,14 @@
 - (id) init
 {
   if (!(self = [super init])) return nil;
-  
+
   searchResultsDictionary = [NSMutableDictionary dictionary];
   self.title = @"Add Co-applicant";
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(facebookAuthenticationFinished:)
       name: OMBUserCreateAuthenticationForFacebookNotification object: nil];
-  
+
   return self;
 }
 
@@ -59,19 +59,19 @@
 
   facebookButton = [UIButton new];
   facebookButton.backgroundColor = [UIColor facebookBlue];
-  facebookButton.frame = CGRectMake(0.0f, 0.0f, 
+  facebookButton.frame = CGRectMake(0.0f, 0.0f,
     screen.size.width, OMBStandardButtonHeight);
   facebookButton.titleLabel.font = [UIFont normalTextFontBold];
   [facebookButton addTarget: self action: @selector(facebookButtonSelected)
     forControlEvents: UIControlEventTouchUpInside];
-  [facebookButton setTitle: @"Connect my Facebook" 
+  [facebookButton setTitle: @"Connect my Facebook"
     forState: UIControlStateNormal];
   [facebookButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   self.table.tableHeaderView = facebookButton;
 
-  CGFloat tableHeight = self.table.frame.size.height - 
-    (OMBPadding + OMBStandardHeight + 
+  CGFloat tableHeight = self.table.frame.size.height -
+    (OMBPadding + OMBStandardHeight +
       [OMBLabelTextFieldCell heightForCellWithIconImageView]);
   searchTableView = [[UITableView alloc] initWithFrame: CGRectMake(0.0f,
     self.table.frame.size.height - tableHeight, screen.size.width,
@@ -81,7 +81,7 @@
   searchTableView.delegate = self;
   searchTableView.hidden = YES;
   searchTableView.separatorColor = [UIColor grayLight];
-  searchTableView.separatorInset = UIEdgeInsetsMake(0.0f, OMBPadding, 
+  searchTableView.separatorInset = UIEdgeInsetsMake(0.0f, OMBPadding,
     0.0f, 0.0f);
   searchTableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
   [self.view addSubview: searchTableView];
@@ -90,7 +90,7 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-  
+
   modelObject = [[OMBRoommate alloc] init];
 
   [self updateFacebookButton];
@@ -107,7 +107,7 @@
     [[dictionary objectForKey: @"objects"] count]) {
     for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
       [searchResultsDictionary setObject: dict forKey:
-        [NSString stringWithFormat: @"%@ %@", 
+        [NSString stringWithFormat: @"%@ %@",
           [dict objectForKey: @"first_name"],
             [dict objectForKey: @"last_name"]]];
     }
@@ -133,7 +133,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
-  
+
   static NSString *EmptyID = @"EmptyID";
   UITableViewCell *empty = [tableView dequeueReusableCellWithIdentifier:
     EmptyID];
@@ -157,7 +157,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       NSString *imageName;
       NSString *placeholderString;
-      
+
       // First name
       if (row == OMBRenterInfoAddRoommateSectionFieldsRowFirstName) {
         imageName         = @"user_icon.png";
@@ -188,6 +188,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       [cell.textField addTarget: self
         action: @selector(textFieldDidChange:)
           forControlEvents: UIControlEventEditingChanged];
+      cell.clipsToBounds = YES;
       return cell;
     }
     // Spacing
@@ -219,6 +220,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           objectAtIndex: row] stringByAppendingString:@" (Facebook user)"];
         cell.textLabel.textColor = [UIColor textColor];
       }
+      cell.clipsToBounds = YES;
       return cell;
     }
     // Spacing
@@ -229,7 +231,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         tableView.frame.size.width, 0.0f, 0.0f);
     }
   }
-    
+  empty.clipsToBounds = YES;
   return empty;
 }
 
@@ -271,7 +273,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         NSString *key = [[self sortedSearchResultsDictionaryKeys] objectAtIndex:
           row];
         NSDictionary *dict = [searchResultsDictionary objectForKey: key];
-        [valueDictionary setObject: [NSString stringWithFormat: 
+        [valueDictionary setObject: [NSString stringWithFormat:
           @"%@@facebook.com", [dict objectForKey: @"username"]]
             forKey: @"email"];
         [valueDictionary setObject: [dict objectForKey: @"first_name"]
@@ -297,7 +299,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         return [OMBLabelTextFieldCell heightForCellWithIconImageView];
       }
       else if (!isSearching) {
-        return [OMBLabelTextFieldCell heightForCellWithIconImageView]; 
+        return [OMBLabelTextFieldCell heightForCellWithIconImageView];
       }
     }
     else if (section == OMBRenterInfoAddRoommateSectionSpacing && isEditing) {
@@ -308,7 +310,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if (section == OMBRenterInfoAddRoommateSearchSectionResults) {
       return OMBStandardHeight;
     }
-    else if (section == OMBRenterInfoAddRoommateSearchSectionSpacing && 
+    else if (section == OMBRenterInfoAddRoommateSearchSectionSpacing &&
       isEditing) {
       return OMBKeyboardHeight + textFieldToolbar.frame.size.height;
     }
@@ -321,7 +323,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) textFieldDidBeginEditing: (TextFieldPadding *) textField
 {
   isEditing = YES;
-  if (textField.indexPath.row == 
+  if (textField.indexPath.row ==
     OMBRenterInfoAddRoommateSectionFieldsRowFirstName) {
     if ([self user].renterApplication.facebookAuthenticated) {
       if (searchTableView.hidden)
@@ -333,7 +335,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       // [searchTableView setContentOffset: CGPointZero animated: NO];
     }
   }
-  
+
   [self.table beginUpdates];
   [self.table endUpdates];
 
@@ -410,7 +412,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (searchFacebookFriendsConnection)
     [searchFacebookFriendsConnection cancel];
-  searchFacebookFriendsConnection = 
+  searchFacebookFriendsConnection =
     [[OMBRoommatesSearchFacebookFriendsConnection alloc] initWithQuery: string];
   searchFacebookFriendsConnection.delegate = self;
   [searchFacebookFriendsConnection start];

@@ -71,7 +71,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   UITableViewCell *empty = [tableView dequeueReusableCellWithIdentifier:
     EmptyID];
   if (!empty) {
-    empty = [[UITableViewCell alloc] initWithStyle: 
+    empty = [[UITableViewCell alloc] initWithStyle:
       UITableViewCellStyleDefault reuseIdentifier: EmptyID];
   }
   // Fields
@@ -79,7 +79,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     // First name, last name
     if (row == OMBRenterInfoAddCosignerSectionFieldsRowFirstNameLastName) {
       static NSString *NameID = @"NameID";
-      OMBTwoLabelTextFieldCell *cell = 
+      OMBTwoLabelTextFieldCell *cell =
         [tableView dequeueReusableCellWithIdentifier: NameID];
       if (!cell) {
         cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
@@ -90,29 +90,30 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.firstTextField.delegate  = self;
       cell.firstTextField.indexPath = indexPath;
       cell.firstTextField.placeholder  = @"First name";
-      cell.firstIconImageView.image = [UIImage image: [UIImage imageNamed: 
+      cell.firstIconImageView.image = [UIImage image: [UIImage imageNamed:
         @"user_icon.png"] size: cell.firstIconImageView.bounds.size];
       cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
       cell.secondTextField.delegate  = self;
       cell.secondTextField.indexPath = indexPath;
       cell.secondTextField.placeholder = @"Last name";
-      cell.secondTextField.tag = 
+      cell.secondTextField.tag =
         OMBRenterInfoAddCosignerSectionFieldsRowLastName;
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      [cell.firstTextField addTarget: self 
+      [cell.firstTextField addTarget: self
         action: @selector(textFieldDidChange:)
           forControlEvents: UIControlEventEditingChanged];
-      [cell.secondTextField addTarget: self 
+      [cell.secondTextField addTarget: self
         action: @selector(textFieldDidChange:)
           forControlEvents: UIControlEventEditingChanged];
+      cell.clipsToBounds = YES;
       return cell;
     }
     else {
       static NSString *LabelTextID = @"LabelTextID";
-      OMBLabelTextFieldCell *cell = 
+      OMBLabelTextFieldCell *cell =
         [tableView dequeueReusableCellWithIdentifier: LabelTextID];
       if (!cell) {
-        cell = [[OMBLabelTextFieldCell alloc] initWithStyle: 
+        cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: LabelTextID];
         [cell setFrameUsingIconImageView];
       }
@@ -132,12 +133,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell.textField.keyboardType = UIKeyboardTypePhonePad;
       }
       // Relationship type
-      else if (row == 
+      else if (row ==
         OMBRenterInfoAddCosignerSectionFieldsRowRelationshipType) {
         imageName         = @"group_icon.png";
         placeholderString = @"Relationship type";
         // Last row, hide the separator
-        cell.separatorInset = UIEdgeInsetsMake(0.0f, 
+        cell.separatorInset = UIEdgeInsetsMake(0.0f,
           tableView.frame.size.width, 0.0f, 0.0f);
       }
       cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
@@ -146,18 +147,20 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.textField.delegate  = self;
       cell.textField.indexPath = indexPath;
       cell.textField.placeholder = placeholderString;
-      [cell.textField addTarget: self 
+      [cell.textField addTarget: self
         action: @selector(textFieldDidChange:)
           forControlEvents: UIControlEventEditingChanged];
+      cell.clipsToBounds = YES;
       return cell;
     }
   }
   // Spacing
   else if (section == OMBRenterInfoAddCosignerSectionSpacing) {
     empty.backgroundColor = [UIColor clearColor];
-    empty.separatorInset = UIEdgeInsetsMake(0.0f, 
+    empty.separatorInset = UIEdgeInsetsMake(0.0f,
       tableView.frame.size.width, 0.0f, 0.0f);
   }
+  empty.clipsToBounds = YES;
   return empty;
 }
 

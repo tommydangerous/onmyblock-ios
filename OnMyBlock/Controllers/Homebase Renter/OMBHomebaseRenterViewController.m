@@ -98,7 +98,7 @@ float kHomebaseRenterImagePercentage = 0.3f;
   [infoButton setTitleColor: [UIColor blue] forState: UIControlStateNormal];
   self.navigationItem.rightBarButtonItem =
     [[UIBarButtonItem alloc] initWithCustomView: infoButton];
-  
+
   backViewOffsetY = padding + standardHeight;
   // The image in the back
   CGRect backViewRect = CGRectMake(0.0f, 0.0f,
@@ -1195,65 +1195,42 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) showHomebaseHowItWorks
 {
-  NSString *info2;
-  NSString *info3;
-  if (YES) {
-    info2 = [NSString stringWithFormat: @"Review your offer and add a payment "
-             @"method. You will NOT be charged upfront. A down payment of %@ will be "
-             @"charged upon offer acceptance to secure the place. "
-             @"If your offer is accepted, you will have %@ to sign the lease and pay "
-             @"the remainder of the 1st month’s rent and deposit through OnMyBlock.",
-             @"100", @"1 week"];
-    info3 = [NSString stringWithFormat: @"Once you submit your offer, the "
-             @"landlord or subletter will have %@ to review your offer, your renter "
-             @"profile, and your roommates' renter profiles if applicable.\n\n"
-             @"If your offer is accepted, a down payment of %@ will be charged and "
-             @"you will have %@ to sign the lease and pay the remainder of the 1st "
-             @"month’s rent and deposit through OnMyBlock. Some places may also "
-             @"require a signed co-signer agreement. If your offer is retracted, "
-             @"declined, or expired, any payment authorization is voided.",
-              @"1 week",
-             @"100",
-              @"1 week"];
-  }
-  else {
-    info2 = [NSString stringWithFormat: @"Review your offer and add a payment "
-             @"method. You will NOT be charged upfront. Only if your offer is "
-             @"accepted, then you will be charged a total amount of %@ for "
-             @"the 1st month's rent and deposit. You will then have  %@ "
-             @"to sign the lease.",
-             @"100",
-              @"1 week"];
-    info3 = [NSString stringWithFormat: @"Once you submit your offer, "
-             @"the landlord or subletter will have %@ to review your offer, "
-             @"your renter profile, and your roommates' renter profiles "
-             @"if applicable.\n\nIf your offer is accepted, you will be charged "
-             @"a total amount of %@. Then you will have %@ to sign the lease.",
-             @"1 week",
-             @"100",
-              @"1 week"];
-  }
+  NSString *info1 = [NSString stringWithFormat:
+    @"The landlord will have %@ to accept or decline your offer. "
+    @"You will not be charged anything until the landlord accepts your offer. "
+    @"If the landlord declines your offer, any payment authorization "
+    @"will be voided.",
+    [OMBOffer timelineStringForLandlord]
+  ];
+  NSString *info2 = [NSString stringWithFormat:
+    @"If the landlord accepts your offer, you will have %@ to confirm or "
+    @"reject. If you reject, you will not be charged any further.",
+    [OMBOffer timelineStringForStudent]
+  ];
+  NSString *info3 = [NSString stringWithFormat:
+    @"If you confirmed the offer, you will be asked to pay the remaining "
+    @"balance. After that, you will have %@ to sign the lease we email you.",
+    [OMBOffer timelineStringForStudent]
+  ];
   NSArray *array = @[
     @{
-      @"title": @"Renter Profile",
-      @"information": @"The more information you complete, the more likely "
-      @"landlords or subletters are to accept your booking request. "
-      @"If you have roommates, make sure they complete their profiles too!"
+      @"title": @"Accepted or Declined",
+      @"information": info1
     },
     @{
-      @"title": @"Authorize Payment",
+      @"title": @"Confirm or Reject",
       @"information": info2
     },
     @{
-      @"title": @"Wait For Response",
+      @"title": @"Pay & Sign the Lease",
       @"information": info3
     }
   ];
-  
+
   OMBInformationHowItWorksViewController *vc =
     [[OMBInformationHowItWorksViewController alloc] initWithInformationArray:
       array];
-  vc.title = @"How Placing an Offer Works";
+  vc.title = @"Your Offers";
   [(OMBNavigationController *) self.navigationController pushViewController:
      vc animated: YES ];
 }

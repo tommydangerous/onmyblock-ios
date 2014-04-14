@@ -5,7 +5,7 @@
 //  Created by Tommy DANGerous on 10/17/13.
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
-
+#import "OMBRadialGradient.h"
 #import <NewRelicAgent/NewRelicAgent.h>
 #import <Parse/Parse.h>
 #import "GAI.h"
@@ -109,12 +109,20 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   [defaults synchronize];
 
   if (shouldShowIntro)
-    [_container showIntroAnimatedDissolve: NO];
+    [self.container showIntroAnimatedDissolve: NO];
   else
-    [_container showDiscover];
+    [self.container showDiscover];
 
   // #warning Remove container showing controller
   // [self.container showMyRenterProfile];
+
+  UIView *view = [UIView new];
+  view.backgroundColor = [UIColor whiteColor];
+  view.frame = screen;
+  OMBRadialGradient *rg = [[OMBRadialGradient alloc] initWithFrame:
+    CGRectMake(0, 0, 320, 200) withColors: @[[UIColor colorWithWhite: 0 alpha: 0.5], [UIColor colorWithWhite: 0 alpha: 0.8]] onLeft: YES];
+  [view addSubview: rg];
+  // [self.container.currentDetailViewController.view addSubview: view];
 
   // Parse setup
   [Parse setApplicationId: ParseApplicationId clientKey: ParseClientKey];

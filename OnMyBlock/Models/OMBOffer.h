@@ -71,6 +71,8 @@ typedef NS_ENUM(NSInteger, OMBOfferStatusForStudent) {
 
 + (CGFloat) downPaymentPercentage;
 + (CGFloat) priceThreshold;
++ (NSString *) timelineStringForLandlord;
++ (NSString *) timelineStringForStudent;
 
 #pragma mark - Instance Methods
 

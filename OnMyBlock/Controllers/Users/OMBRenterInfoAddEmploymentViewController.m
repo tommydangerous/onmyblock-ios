@@ -23,9 +23,9 @@
 - (id) init
 {
   if (!(self = [super init])) return nil;
-  
-  self.title = @"Add Employment";
-  
+
+  self.title = @"Add Work History";
+
   return self;
 }
 
@@ -37,12 +37,12 @@
 {
   CGRect screen = [UIScreen mainScreen].bounds;
   CGFloat padding = 20.0f;
-  
+
   [super loadView];
   [self setupForTable];
   // Default no
   isCurrentEmployer = NO;
-  
+
   // Fade background
   fadedBackground = [[UIView alloc] init];
   fadedBackground.alpha = 0.0f;
@@ -53,18 +53,18 @@
   [[UITapGestureRecognizer alloc] initWithTarget: self
     action: @selector(hidePickerView)];
   [fadedBackground addGestureRecognizer: tapGesture];
-  
+
   // Picker view container
   pickerViewContainer = [UIView new];
   [self.view addSubview: pickerViewContainer];
-  
+
   // Header for picker view with cancel and done button
   UIView *pickerViewHeader = [[UIView alloc] init];
   pickerViewHeader.backgroundColor = [UIColor grayUltraLight];
   pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
     screen.size.width, 44.0f);
   [pickerViewContainer addSubview: pickerViewHeader];
-  
+
   pickerViewHeaderLabel = [[UILabel alloc] init];
   pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
   pickerViewHeaderLabel.frame = pickerViewHeader.frame;
@@ -104,8 +104,8 @@
   [doneButton setTitleColor: [UIColor blueDark]
      forState: UIControlStateNormal];
   [pickerViewHeader addSubview: doneButton];
-  
-  
+
+
   // Move-in picker
   moveInPicker = [UIDatePicker new];
 	moveInPicker.backgroundColor = [UIColor whiteColor];
@@ -122,7 +122,7 @@
   dateFromString1 = [df dateFromString:@"31-12-2015"];
   // moveInPicker.maximumDate = dateFromString1;
   moveInPicker.date = moveInPicker.maximumDate = [NSDate date];
-  
+
   // Move-out picker
   moveOutPicker = [UIDatePicker new];
 	moveOutPicker.backgroundColor = [UIColor whiteColor];
@@ -134,13 +134,13 @@
   dateFromString2 = [df dateFromString:@"31-12-2015"];
   // moveOutPicker.maximumDate = dateFromString2;
   moveOutPicker.date = moveOutPicker.maximumDate = moveInPicker.maximumDate;
-  
+
   // Picker View Container
   pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
     moveInPicker.frame.size.width,
       pickerViewHeader.frame.size.height +
         moveInPicker.frame.size.height);
-  
+
   // Date formatter
   dateFormatter = [NSDateFormatter new];
   dateFormatter.dateFormat = @"yyyy-MM-d HH:mm:ss ZZZ";
@@ -149,7 +149,7 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-  
+
   modelObject = [[OMBEmployment alloc] init];
 }
 
@@ -169,7 +169,7 @@
 {
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
-  
+
   static NSString *EmptyID = @"EmptyID";
   UITableViewCell *empty = [tableView dequeueReusableCellWithIdentifier:
                             EmptyID];
@@ -179,7 +179,7 @@
   }
   // Fields
   if (section == OMBRenterInfoAddEmploymentSectionFields) {
-    
+
     static NSString *LabelTextID = @"LabelTextID";
     OMBLabelTextFieldCell *cell =
     [tableView dequeueReusableCellWithIdentifier: LabelTextID];
@@ -203,7 +203,7 @@
         [cell setFrameUsingIconImageView];
       }
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      
+
       // Company name
       cell.firstIconImageView.image =
         [UIImage image: [UIImage imageNamed: imageName]
@@ -215,7 +215,7 @@
       cell.firstTextField.placeholder = @"Company";
       [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
          forControlEvents: UIControlEventEditingChanged];
-      
+
       // Title
       cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
       cell.secondTextField.delegate  = self;
@@ -226,8 +226,9 @@
       cell.secondTextField.placeholder = @"Title";
       [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
          forControlEvents: UIControlEventEditingChanged];
+      cell.clipsToBounds = YES;
       return cell;
-      
+
     }
     // Income
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowIncome) {
@@ -271,7 +272,7 @@
           UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
         [cell setFrameUsingSize: CGSizeMake(self.table.frame.size.width, OMBStandardButtonHeight)];
       }
-      
+
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.textField.hidden = YES;
       cell.textFieldLabel.font = [UIFont normalTextFont];
@@ -288,6 +289,7 @@
     [cell.textField addTarget: self
       action: @selector(textFieldDidChange:)
         forControlEvents: UIControlEventEditingChanged];
+    cell.clipsToBounds = YES;
     return cell;
   }
   // Spacing
@@ -296,6 +298,7 @@
     empty.separatorInset = UIEdgeInsetsMake(0.0f,
       tableView.frame.size.width, 0.0f, 0.0f);
   }
+  empty.clipsToBounds = YES;
   return empty;
 }
 
@@ -325,7 +328,7 @@
       atScrollPosition: UITableViewScrollPositionTop animated: YES];
     [self showPickerView: (UIPickerView *)moveOutPicker];
   }
-  
+
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
@@ -333,14 +336,14 @@
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger section = indexPath.section;
-  
+
   if (section == OMBRenterInfoAddEmploymentSectionFields) {
     if (indexPath.row == OMBRenterInfoAddEmploymentSectionFieldsRowTitle)
       return 0.0f;
     // Current employer
     else if(indexPath.row == OMBRenterInfoAddEmploymentSectionFieldsRowEndDate && isCurrentEmployer)
       return 0.0f;
-      
+
     return [OMBLabelTextFieldCell heightForCellWithIconImageView];
   }
   else if (section == OMBRenterInfoAddEmploymentSectionSpacing) {
@@ -358,9 +361,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   isEditing = YES;
   [self.table beginUpdates];
   [self.table endUpdates];
-  
+
   textField.inputAccessoryView = textFieldToolbar;
-  
+
   // [self scrollToRectAtIndexPath: textField.indexPath];
 
   if (textField.indexPath.row == OMBRenterInfoAddEmploymentSectionFieldsRowTitle)
@@ -387,7 +390,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) donePicker
 {
   [self hidePickerView];
-  
+
   // Move-in Date
   if ([moveInPicker superview]) {
     moveInDate = [moveInPicker.date timeIntervalSince1970];
@@ -410,7 +413,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     //leaseMonths = [self numberOfMonthsBetweenMovingDates];
   }
-  
+
   [self updatePicker];
 }
 
@@ -458,7 +461,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) showPickerView:(UIPickerView *)pickerView
 {
   [self.view endEditing:YES];
-  
+
   NSString *titlePicker = @"";
   [self removePickers];
   if ((UIPickerView *)moveInPicker == pickerView) {
@@ -495,7 +498,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger row = textField.indexPath.row;
   NSString *string = textField.text;
-  
+
   if ([string length]) {
     if (row == OMBRenterInfoAddEmploymentSectionFieldsRowCompanyName) {
       [valueDictionary setObject: string forKey: @"companyName"];
@@ -515,20 +518,20 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [moveInPicker setDate:
     [NSDate dateWithTimeIntervalSince1970: moveInDate]
       animated: NO];
-  
+
   // Move-out date picker
   [moveOutPicker setDate:
     [NSDate dateWithTimeIntervalSince1970: moveOutDate]
       animated: NO];
-  
-  [valueDictionary setObject: [NSNumber numberWithDouble: moveInDate] 
+
+  [valueDictionary setObject: [NSNumber numberWithDouble: moveInDate]
     forKey: @"startDate"];
   if (isCurrentEmployer)
     [valueDictionary setObject: [NSNull null] forKey: @"endDate"];
   else
-    [valueDictionary setObject: [NSNumber numberWithDouble: moveOutDate] 
+    [valueDictionary setObject: [NSNumber numberWithDouble: moveOutDate]
       forKey: @"endDate"];
-  
+
   [self.table reloadRowsAtIndexPaths:
    @[[NSIndexPath indexPathForRow: OMBRenterInfoAddEmploymentSectionFieldsRowStartDate inSection: OMBRenterInfoAddEmploymentSectionFields],
      [NSIndexPath indexPathForRow: OMBRenterInfoAddEmploymentSectionFieldsRowEndDate inSection: OMBRenterInfoAddEmploymentSectionFields]]
