@@ -569,20 +569,21 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     // Adjust the image collection view
     CGRect backRect = imageCollectionView.frame;
     backRect.origin.y = backViewOffsetY - adjustment;
-    imageCollectionView.frame = backRect;
+      NSLog(@"backRect.origin.y %f", backRect.origin.y);
+    //imageCollectionView.frame = backRect;
 
     // Adjust the gradient
-    gradientView.frame = backRect;
-    placeholderImageView.frame = backRect;
+    //gradientView.frame = backRect;
+    //placeholderImageView.frame = backRect;
 
     // Header view
     backRect.size.height = imageCollectionView.frame.size.height - y + adjustment;
-    headerView.frame = backRect;
+    //headerView.frame = backRect;
 
     // Adjust the current offer label
     CGRect currentOfferRect = _currentOfferLabel.frame;
     currentOfferRect.origin.y = currentOfferOriginY - adjustment;
-    _currentOfferLabel.frame = currentOfferRect;
+    //_currentOfferLabel.frame = currentOfferRect;
 
     if(y > backViewOffsetY + imageCollectionView.frame.size.height)
       _table.backgroundColor = [UIColor grayUltraLight];
