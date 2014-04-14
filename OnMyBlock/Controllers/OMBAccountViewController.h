@@ -9,5 +9,8 @@
 #import "OMBTableViewController.h"
 
 @interface OMBAccountViewController : OMBTableViewController
-
+  <UIActionSheetDelegate>
+{
+  UIActionSheet *logout;
+}
 @end

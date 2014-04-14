@@ -47,6 +47,12 @@
   self.table.separatorInset  = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
   self.table.separatorStyle  = UITableViewCellSeparatorStyleSingleLine;
   self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
+  
+  logout = [[UIActionSheet alloc] initWithTitle:nil
+    delegate:self cancelButtonTitle:@"Cancel"
+      destructiveButtonTitle:@"Logout" otherButtonTitles:nil];
+  
+  [self.view addSubview: logout];
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -55,6 +61,16 @@
 }
 
 #pragma mark - Protocol
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+  OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+  
+  if(buttonIndex == 0)
+    [appDelegate.container logout];
+}
 
 #pragma mark - Protocol UITableViewDataSource
 
@@ -225,7 +241,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.section == 2) {
     // Logout
     if (indexPath.row == 1) {
-      [appDelegate.container showLogout];
+      [logout showInView:self.view];
     }
   }
   [self.table deselectRowAtIndexPath: indexPath animated: YES];

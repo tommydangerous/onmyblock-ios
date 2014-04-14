@@ -166,6 +166,7 @@
 
 - (void) hideMenuWithFactor: (float) factor;
 - (void) hideOfferAcceptedView;
+- (void) logout;
 - (void) setTitleColorWhite;
 - (void) showAccount;
 - (void) showCreateListing;

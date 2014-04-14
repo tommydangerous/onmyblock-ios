@@ -53,7 +53,7 @@
     forState: UIControlStateNormal];
   
   profileDeleteActionSheet = [[UIActionSheet alloc] initWithTitle: nil delegate: self
-    cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"Profile"
+    cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"View Profile"
       otherButtonTitles: @"Delete", nil];
   profileDeleteActionSheet.destructiveButtonIndex = 1;
   [self.view addSubview: profileDeleteActionSheet];
