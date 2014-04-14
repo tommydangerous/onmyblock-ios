@@ -122,7 +122,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [super loadView];
 
   self.navigationItem.rightBarButtonItem = shareBarButtonItem;
- 
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view     = [[OMBBlurView alloc] initWithFrame: screen];
 
@@ -147,26 +147,25 @@ float kResidenceDetailImagePercentage   = 0.5f;
     UICollectionViewScrollDirectionHorizontal;
   imageCollectionViewLayout.sectionInset = UIEdgeInsetsMake(0.0f, 0.0f,
     0.0f, 0.0f);
-    
   // Collection view
-  //imageCollectionView = [[OMBCollectionView alloc] initWithFrame:CGRectMake(0.0f, backViewOffsetY,imageCollectionSize.width, imageCollectionSize.height) collectionViewLayout: imageCollectionViewLayout];
-    
-    imageCollectionView = [[OMBCollectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f,imageCollectionSize.width, imageCollectionSize.height) collectionViewLayout: imageCollectionViewLayout];
-
-    imageCollectionView.alwaysBounceHorizontal = YES;
+  imageCollectionView = [[OMBCollectionView alloc] initWithFrame:
+    CGRectMake(0.0f, backViewOffsetY,
+      imageCollectionSize.width, imageCollectionSize.height)
+        collectionViewLayout: imageCollectionViewLayout];
+  imageCollectionView.alwaysBounceHorizontal = YES;
   imageCollectionView.bounces       = YES;
   imageCollectionView.dataSource    = self;
   imageCollectionView.delegate      = self;
   imageCollectionView.pagingEnabled = YES;
   imageCollectionView.showsHorizontalScrollIndicator = NO;
-  //[self.view addSubview: imageCollectionView];
+  [self.view addSubview: imageCollectionView];
 
   // Show when there aren't images
   placeholderImageView = [[UIImageView alloc] initWithFrame:
     imageCollectionView.frame];
   placeholderImageView.hidden = NO;
   placeholderImageView.image = [OMBResidence placeholderImage];
-  //[self.view addSubview: placeholderImageView];
+  [self.view addSubview: placeholderImageView];
 
   // Tap gesture when user clicks the images
   UITapGestureRecognizer *tapGesture =
@@ -175,8 +174,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [imageCollectionView addGestureRecognizer: tapGesture];
 
   // The table to hold most of the data
-    //backViewOffsetY
-  _table = [[UITableView alloc] initWithFrame: CGRectMake(0.0f, backViewOffsetY, screen.size.width, screen.size.height - backViewOffsetY)
+  _table = [[UITableView alloc] initWithFrame: screen
     style: UITableViewStylePlain];
   _table.alwaysBounceVertical    = YES;
   _table.backgroundColor         = [UIColor clearColor];
@@ -188,11 +186,11 @@ float kResidenceDetailImagePercentage   = 0.5f;
   _table.separatorStyle               = UITableViewCellSeparatorStyleNone;
   _table.showsVerticalScrollIndicator = NO;
   // Table header view
-//  _table.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, screenWidth,imageCollectionView.frame.origin.y + imageCollectionView.frame.size.height)];
-  
-    _table.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, screenWidth,0.0f)];
-
-    [self.view addSubview: _table];
+  _table.tableHeaderView = [[UIView alloc] initWithFrame:
+    CGRectMake(0.0f, 0.0f, screenWidth,
+      imageCollectionView.frame.origin.y +
+      imageCollectionView.frame.size.height)];
+  [self.view addSubview: _table];
 
   // Gradient; this goes behind the table, but in front of the image
   // collection view
@@ -202,14 +200,13 @@ float kResidenceDetailImagePercentage   = 0.5f;
     [UIColor colorWithRed: 0.0f green: 0.0f blue: 0.0f alpha: 0.3f]
   ];
   gradientView.frame = imageCollectionView.frame;
-  //[self.view insertSubview: gradientView belowSubview: _table];
+  [self.view insertSubview: gradientView belowSubview: _table];
 
-    
   // This goes in front of the table
   headerView = [[OMBExtendedHitAreaViewContainer alloc] init];
   headerView.frame = gradientView.frame;
   headerView.scrollView = imageCollectionView;
-  //[self.view addSubview: headerView];
+  [self.view addSubview: headerView];
 
   // Activity indicator view
   activityIndicatorView =
@@ -238,9 +235,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   _pageOfImagesLabel.textColor = [UIColor whiteColor];
   [headerView addSubview: _pageOfImagesLabel];
 
-
-    
-     // Favorites Button
+  // Favorites Button
   _favoritesButton = [[UIButton alloc] init];
   _favoritesButton.frame = CGRectMake(5.0f, 5.0f, 40.0f, 40.0f);
   [_favoritesButton addTarget: self action: @selector(favoritesButtonSelected)
@@ -273,7 +268,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
       screenWidth - (headerViewPadding * 2), 36.0f);
   _currentOfferLabel.textAlignment = NSTextAlignmentRight;
   _currentOfferLabel.textColor = [UIColor whiteColor];;
-  //[self.view insertSubview: _currentOfferLabel belowSubview: _table];
+  [self.view insertSubview: _currentOfferLabel belowSubview: _table];
 
   // Bottom view
   _bottomButtonView = [[UIView alloc] init];
@@ -563,27 +558,25 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   CGFloat padding = 20.0f;
   // If the table is scrolling
   if (scrollView == _table) {
-      NSLog(@"Scrolling on table");
     CGFloat adjustment = y / 3.0f;
 
     // Adjust the image collection view
     CGRect backRect = imageCollectionView.frame;
     backRect.origin.y = backViewOffsetY - adjustment;
-      NSLog(@"backRect.origin.y %f", backRect.origin.y);
-    //imageCollectionView.frame = backRect;
+    imageCollectionView.frame = backRect;
 
     // Adjust the gradient
-    //gradientView.frame = backRect;
-    //placeholderImageView.frame = backRect;
+    gradientView.frame = backRect;
+    placeholderImageView.frame = backRect;
 
     // Header view
     backRect.size.height = imageCollectionView.frame.size.height - y + adjustment;
-    //headerView.frame = backRect;
+    headerView.frame = backRect;
 
     // Adjust the current offer label
     CGRect currentOfferRect = _currentOfferLabel.frame;
     currentOfferRect.origin.y = currentOfferOriginY - adjustment;
-    //_currentOfferLabel.frame = currentOfferRect;
+    _currentOfferLabel.frame = currentOfferRect;
 
     if(y > backViewOffsetY + imageCollectionView.frame.size.height)
       _table.backgroundColor = [UIColor grayUltraLight];
@@ -655,7 +648,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
-  return 7;
+  return 6;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -674,43 +667,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   topBorder.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 0.5f);
   [emptyCell.contentView.layer addSublayer: topBorder];
 
-    // Image Collection
-  if (indexPath.section == 0) {
-      // Image Collection, not being used, for now
-      if (indexPath.row == 0) {
-          static NSString *ImageCollectionCellIdentifier = @"ImageCollectionCellIdentifier";
-          UITableViewCell *cell =
-          [tableView dequeueReusableCellWithIdentifier: ImageCollectionCellIdentifier];
-          if (!cell)
-              cell = [[UITableViewCell alloc] initWithStyle:
-                      UITableViewCellStyleValue1 reuseIdentifier: ImageCollectionCellIdentifier];
-          
-
-          [imageCollectionView removeFromSuperview];
-          [cell.contentView addSubview: imageCollectionView];
-
-          [gradientView removeFromSuperview];
-          [cell.contentView addSubview: gradientView];
-
-          [placeholderImageView removeFromSuperview];
-          [cell.contentView addSubview: placeholderImageView];
-
-          [headerView removeFromSuperview];
-          [cell.contentView addSubview: headerView];
-
-          [_currentOfferLabel removeFromSuperview];
-          [cell.contentView addSubview: _currentOfferLabel];
-
-          cell.accessoryType  = UITableViewCellAccessoryNone;
-          cell.selectionStyle = UITableViewCellSelectionStyleNone;
-          cell.clipsToBounds = YES;
-          
-          return cell;
-      }
-  }
-    
   // Address, bed, bath, lease month, property type, date available
-  if (indexPath.section == 1) {
+  if (indexPath.section == 0) {
     if (indexPath.row == 0) {
       static NSString *AddressCellIdentifier = @"AddressCellIdentifier";
       OMBResidenceDetailAddressCell *cell =
@@ -719,7 +677,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBResidenceDetailAddressCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: AddressCellIdentifier];
       }
-        
       // Main Label
       if([[residence.title stripWhiteSpace] length])
         cell.mainLabel.text = residence.title;
@@ -762,7 +719,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // Activity
-  else if (indexPath.section == 2) {
+  else if (indexPath.section == 1) {
     // Offer Activity, not being used
     if (indexPath.row == 999) {
       static NSString *ActivityCellIdentifier = @"ActivityCellIdentifier";
@@ -787,7 +744,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // Amenities
-  else if (indexPath.section == 3) {
+  else if (indexPath.section == 2) {
     if (indexPath.row == 1) {
       static NSString *AmentiesCellIdentifier = @"AmentiesCellIdentifier";
       OMBResidenceDetailAmenitiesCell *cell =
@@ -802,7 +759,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // Description
-  else if (indexPath.section == 4) {
+  else if (indexPath.section == 3) {
     if (indexPath.row == 1) {
       static NSString *DescriptionCellIdentifier = @"DescriptionCellIdentifier";
       OMBResidenceDetailDescriptionCell *cell =
@@ -819,7 +776,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // Seller
-  else if (indexPath.section == 5) {
+  else if (indexPath.section == 4) {
     if (indexPath.row == 1) {
       if (residence.user && residence.user.uid) {
         static NSString *SellerCellIdentifier = @"SellerCellIdentifier";
@@ -836,7 +793,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // Map
-  else if (indexPath.section == 6) {
+  else if (indexPath.section == 5) {
     if (indexPath.row == 1) {
       static NSString *MapCellIdentifier = @"MapCellIdentifier";
       OMBResidenceDetailMapCell *cell =
@@ -899,41 +856,35 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-
-    // Image Collection
-    if (section == 0) {
-        return 1;
-    }
-
-    // Address
-  if (section == 1) {
+  // Address
+  if (section == 0) {
     return 1;
   }
 
   // Activity
-  else if (section == 2) {
+  else if (section == 1) {
     return 1;
   }
 
   // Amenities
-  else if (section == 3) {
+  else if (section == 2) {
     if ([[residence availableAmenities] count])
       return 2; // 2 is for the spacing above
   }
 
   // Description
-  else if (section == 4) {
+  else if (section == 3) {
     if ([[residence.description stripWhiteSpace] length])
       return 2;
   }
 
   // Seller
-  else if (section == 5) {
+  else if (section == 4) {
     return 2;
   }
 
   // Map
-  else if (section == 6) {
+  else if (section == 5) {
     return 2;
   }
 
@@ -964,16 +915,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGFloat padding = 20.0f;
 
-    // Image Collection
-    if (indexPath.section == 0) {
-        if (indexPath.row == 0) {
-            return headerView.frame.size.height;
-        }
-    }
-
-    
   // Address
-  if (indexPath.section == 1) {
+  if (indexPath.section == 0) {
     // Address
     if (indexPath.row == 0) {
       if([[residence.title stripWhiteSpace] length])
@@ -984,7 +927,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // Offer activity
-  else if (indexPath.section == 2) {
+  else if (indexPath.section == 1) {
     if (indexPath.row == 0) {
       return 0.0f;
       // return kResidenceDetailCellSpacingHeight;
@@ -992,7 +935,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // Amenities
-  else if (indexPath.section == 3) {
+  else if (indexPath.section == 2) {
     if (indexPath.row == 0) {
       return kResidenceDetailCellSpacingHeight;
     }
@@ -1010,7 +953,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // Description
-  else if (indexPath.section == 4) {
+  else if (indexPath.section == 3) {
     if (indexPath.row == 0) {
       return kResidenceDetailCellSpacingHeight;
     }
@@ -1030,7 +973,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // Seller
-  else if (indexPath.section == 5) {
+  else if (indexPath.section == 4) {
     if (indexPath.row == 0) {
       if (residence.user && residence.user.uid) {
         return kResidenceDetailCellSpacingHeight;
@@ -1045,7 +988,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 
   // Map
-  else if (indexPath.section == 6) {
+  else if (indexPath.section == 5) {
     if (indexPath.row == 0) {
       return kResidenceDetailCellSpacingHeight;
     }

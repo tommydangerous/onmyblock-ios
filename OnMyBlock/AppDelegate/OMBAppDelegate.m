@@ -120,7 +120,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   view.backgroundColor = [UIColor whiteColor];
   view.frame = screen;
   OMBRadialGradient *rg = [[OMBRadialGradient alloc] initWithFrame:
-    CGRectMake(0, 0, 320, 200) withColors: @[[UIColor colorWithWhite: 0 alpha: 0.5], [UIColor colorWithWhite: 0 alpha: 0.8]] onLeft: YES];
+    CGRectMake(0, 0, 320, 200) withColors: @[[UIColor grayColor], [UIColor whiteColor]] onLeft: YES];
   [view addSubview: rg];
   // [self.container.currentDetailViewController.view addSubview: view];
 

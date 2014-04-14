@@ -25,10 +25,10 @@
 - (id) init
 {
   if (!(self = [super init])) return nil;
-  
+
   self.screenName = @"Payout Method Credit Card";
   self.title      = @"Add payment";
-  
+
   return self;
 }
 
@@ -39,11 +39,11 @@
 - (void) loadView
 {
   [super loadView];
-  
+
   [self setupForTable];
-  
+
     [self.table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    
+
   cancelBarButton =
     [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
       style: UIBarButtonItemStylePlain target: self action: @selector(cancel)];
@@ -52,7 +52,7 @@
     NSFontAttributeName: notBoldFont
       } forState: UIControlStateNormal];
   cancelBarButton.tintColor = [UIColor grayMedium];
-  
+
   doneBarButton =
     [[UIBarButtonItem alloc] initWithTitle: @"Done"
       style: UIBarButtonItemStylePlain target: self action: @selector(done)];
@@ -60,7 +60,7 @@
   [doneBarButton setTitleTextAttributes: @{
     NSFontAttributeName: boldFont
       } forState: UIControlStateNormal];
-  
+
   self.navigationItem.leftBarButtonItem  = cancelBarButton;
   self.navigationItem.rightBarButtonItem = doneBarButton;
 
@@ -69,38 +69,38 @@
   CGFloat screenWidth    = screen.size.width;
   CGFloat padding        = OMBPadding;
   CGFloat standardHeight = OMBStandardHeight;*/
-  
+
   // Spacing
   UIBarButtonItem *flexibleSpace =
   [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
    UIBarButtonSystemItemFlexibleSpace target: nil action: nil];
-  
+
   // Left padding
   UIBarButtonItem *leftPadding =
   [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
    UIBarButtonSystemItemFixedSpace target: nil action: nil];
   // iOS 7 toolbar spacing is 16px; 20px on iPad
   leftPadding.width = 4.0f;
-  
+
   // Cancel
   UIBarButtonItem *cancelBarButtonItemForTextFieldToolbar =
   [[UIBarButtonItem alloc] initWithTitle: @"Cancel"
     style: UIBarButtonItemStylePlain target: self
       action: @selector(cancelFromInputAccessoryView)];
-  
+
   // Done
   UIBarButtonItem *doneBarButtonItemForTextFieldToolbar =
   [[UIBarButtonItem alloc] initWithTitle: @"Done"
     style: UIBarButtonItemStylePlain target: self
       action: @selector(doneFromInputAccessoryView)];
-  
+
   // Right padding
   UIBarButtonItem *rightPadding =
   [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
    UIBarButtonSystemItemFixedSpace target: nil action: nil];
   // iOS 7 toolbar spacing is 16px; 20px on iPad
   rightPadding.width = 4.0f;
-  
+
   textFieldToolbar = [UIToolbar new];
   textFieldToolbar.barTintColor = [UIColor whiteColor];
   textFieldToolbar.clipsToBounds = YES;
@@ -143,8 +143,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
-  CGFloat borderHeight = 0.5f;
-  
+  // CGFloat borderHeight = 0.5f;
+
   static NSString *EmptyID = @"EmptyID";
   UITableViewCell *empty = [tableView dequeueReusableCellWithIdentifier:
     EmptyID];
@@ -152,13 +152,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     empty = [[UITableViewCell alloc] initWithStyle:
       UITableViewCellStyleDefault reuseIdentifier: EmptyID];
   }
-  
+
   // Fields
   if (section == OMBPayoutMethodCreditCardSectionPersonal) {
       if (indexPath.row == OMBPayoutMethodCreditCardSectionPersonalRowTitle) {
           [empty setBackgroundColor:[UIColor clearColor]];
           [empty setSelectionStyle:UITableViewCellSelectionStyleNone];
-          
+
           UILabel *lbTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 55.0f)];
           [lbTitle setBackgroundColor:[UIColor clearColor]];
           [lbTitle setTextColor:[UIColor grayMedium]];
@@ -210,14 +210,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
               cell.textField.keyboardType = UIKeyboardTypeNumberPad;
               cell.textField.textColor = [UIColor textColor];
               cell.textField.font = [UIFont normalTextFontBold];
-              
+
               cell.textFieldLabel.text = @"Zip Code";
               cell.textFieldLabel.textAlignment = NSTextAlignmentLeft;
               cell.textFieldLabel.font = [UIFont normalTextFont];
               cell.textFieldLabel.textColor = [UIColor grayMedium];
           }
-          
-          
+
+
           cell.iconImageView.image = [UIImage image: [UIImage imageNamed: @""]
                                                size: cell.iconImageView.bounds.size];
           cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -228,9 +228,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
                              action: @selector(textFieldDidChange:)
                    forControlEvents: UIControlEventEditingChanged];
           return cell;
-          
+
       }
-   
+
   }
 
   // Credit Card
@@ -238,7 +238,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (indexPath.row == OMBPayoutMethodCreditCardSectionCreditCardRowTitle) {
           [empty setBackgroundColor:[UIColor clearColor]];
           [empty setSelectionStyle:UITableViewCellSelectionStyleNone];
-          
+
           UILabel *lbTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 55.0f)];
           [lbTitle setBackgroundColor:[UIColor clearColor]];
           [lbTitle setTextColor:[UIColor grayMedium]];
@@ -265,7 +265,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           NSString *key;
           // Card Number
           if (row == OMBPayoutMethodCreditCardSectionCreditCardRowNumber) {
-              
+
               [cell setFrameUsingLeftLabelAndIconWithFirstCell:YES];
               cell.backgroundColor = [UIColor clearColor];
 
@@ -276,44 +276,44 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
               cell.textField.keyboardType = UIKeyboardTypeNumberPad;
               cell.textField.textColor = [UIColor textColor];
               cell.textField.font = [UIFont normalTextFontBold];
-              
+
               cell.textFieldLabel.text = @"Number";
               cell.textFieldLabel.textAlignment = NSTextAlignmentLeft;
               cell.textFieldLabel.font = [UIFont normalTextFont];
               cell.textFieldLabel.textColor = [UIColor grayMedium];
-          
+
               cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
                                                    size: cell.iconImageView.bounds.size];
 
           }
           // Expiry CCV
           else if (row == OMBPayoutMethodCreditCardSectionCreditCardRowExpiration) {
-              
+
               //imageName = @"globe_icon_black.png";
               imageName         = @"credit_card_icon.png";
               static NSString *LabelTextCellID = @"TwoLabelTextCellID";
-              
+
               OMBTwoLabelTextFieldCell *cell =
               [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
-              
+
               if (!cell) {
                   cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
                           UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
                   [cell setFrameUsingLeftLabelIconImageView];
               }
-              
+
               cell.selectionStyle = UITableViewCellSelectionStyleNone;
               cell.backgroundColor = [UIColor clearColor];
 
               NSString *firstlabelString = @"mm";
               NSString *thirdlabelString = @"yy";
               NSString *secondlabelString = @"CCV";
-              
+
               // Expiry
               cell.firstIconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
                                                         size: cell.firstIconImageView.bounds.size];
-              
-              
+
+
               cell.firstTextFieldLabel.text = @"Expiry";
               cell.firstTextFieldLabel.textAlignment = NSTextAlignmentLeft;
               cell.firstTextFieldLabel.font = [UIFont normalTextFont];
@@ -369,7 +369,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
                              forControlEvents: UIControlEventEditingChanged];
               return cell;
           }
-          
+
           cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
           cell.textField.delegate  = self;
           cell.textField.indexPath = indexPath;
@@ -413,10 +413,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
-  
+
   // Personal
   if (section == OMBPayoutMethodCreditCardSectionPersonal) {
-      
+
       if (row == OMBPayoutMethodCreditCardSectionPersonalRowTitle) {
           return [OMBLabelTextFieldCell heightForCellWithSectionTitle];
       }
@@ -424,7 +424,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Credit Card
   else if (section == OMBPayoutMethodCreditCardSectionCreditCard) {
-      
+
       if (row == OMBPayoutMethodCreditCardSectionCreditCardRowTitle) {
           return [OMBLabelTextFieldCell heightForCellWithSectionTitle];
       }
@@ -446,9 +446,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   isEditing = YES;
   [self.table beginUpdates];
   [self.table endUpdates];
-  
+
   textField.inputAccessoryView = textFieldToolbar;
-  
+
   if (textField.indexPath.row == OMBPayoutMethodCreditCardSectionCreditCardRowCCV)
     [self scrollToRowAtIndexPath:
       [NSIndexPath indexPathForRow:
@@ -456,7 +456,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
           inSection:textField.indexPath.section]];
   else
     [self scrollToRowAtIndexPath: textField.indexPath];
-  
+
 }
 
 - (BOOL) textFieldShouldReturn: (UITextField *) textField
@@ -516,7 +516,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger row = textField.indexPath.row;
   NSString *string = textField.text;
-  
+
   if ([string length]) {
     if (row == OMBPayoutMethodCreditCardSectionPersonalRowCountry ) {
     }
