@@ -175,7 +175,7 @@
   CGRect screen       = [[UIScreen mainScreen] bounds];
   CGFloat screenWidth = screen.size.width;
   CGFloat padding = OMBPadding;
-  CGFloat height = [OMBTwoLabelTextFieldCell heightForCellWithLeftLabelIconImageView];
+  CGFloat height = [OMBTwoLabelTextFieldCell heightForCellWithIconImageView];
   CGFloat iconSize = height * 0.5f;
   _firstIconImageView.alpha = 0.3f;
   _firstIconImageView.frame = CGRectMake(padding, (height - iconSize) * 0.5f,
