@@ -38,6 +38,9 @@
 #import "OMBSpringFlowLayout.h"
 #import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
+#import "QVClusterAnnotation.h"
+#import "QVClusterAnnotationView.h"
+#import "QVCoordinateQuadTree.h"
 #import "SVPullToRefresh.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -65,6 +68,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   NSDictionary *previousMapFilterParameters;
   OMBAnnotationCity *sanDiegoAnnotationCity;
 }
+
+@property (strong, nonatomic) QVCoordinateQuadTree *coordinateQuadTree;
 
 @end
 
@@ -307,21 +312,27 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [_listViewContainer insertSubview: _listView atIndex: 0];
 
   // Map view
-  self.mapView          = [[OCMapView alloc] init];
+  // self.mapView          = [[OCMapView alloc] init];
+  self.mapView = [[MKMapView alloc] init];
   self.mapView.alpha    = 0.0f;
-  // _mapView.clusteringEnabled = NO;
+  // self.mapView.clusteringEnabled = NO;
   self.mapView.delegate = self;
   self.mapView.frame    = screen;
   self.mapView.mapType  = MKMapTypeStandard;
-  // _mapView.minimumAnnotationCountPerCluster = 5;
+  // self.mapView.minimumAnnotationCountPerCluster = 5;
   self.mapView.showsPointsOfInterest = NO;
   self.mapView.showsUserLocation = NO;
+  [self.view addSubview: self.mapView];
   UITapGestureRecognizer *mapViewTap =
     [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(mapViewTapped)];
   mapViewTap.delegate = self;
-  [_mapView addGestureRecognizer: mapViewTap];
-  [self.view addSubview: _mapView];
+  [self.mapView addGestureRecognizer: mapViewTap];
+
+  self.coordinateQuadTree = [[QVCoordinateQuadTree alloc] init];
+  self.coordinateQuadTree.mapView = self.mapView;
+  [self.coordinateQuadTree buildTreeWithResidences:
+    [[OMBResidenceMapStore sharedStore] residences]];
 
   // Filter
   // View
@@ -545,6 +556,13 @@ didUpdateLocations: (NSArray *) locations
 
 #pragma mark - Protocol MKMapViewDelegate
 
+- (void) mapView: (MKMapView *) mapView didAddAnnotationViews: (NSArray *) views
+{
+  for (UIView *view in views) {
+    [self addBounceAnimationToView: view];
+  }
+}
+
 - (void) mapView: (MKMapView *) map regionDidChangeAnimated: (BOOL) animated
 {
   // Tells the delegate that the region displayed by the map view just changed
@@ -569,29 +587,29 @@ didUpdateLocations: (NSArray *) locations
   }
   NSLog(@"ZOOM LEVEL: %i", currentZoomLevel);
 
-  if (currentZoomLevel >= MINIMUM_ZOOM_LEVEL) {
-    // if ([self.mapView viewForAnnotation: sanDiegoAnnotationCity])
-      // [self.mapView removeAnnotation: sanDiegoAnnotationCity];
+  // if (currentZoomLevel >= MINIMUM_ZOOM_LEVEL) {
+  //   // if ([self.mapView viewForAnnotation: sanDiegoAnnotationCity])
+  //     // [self.mapView removeAnnotation: sanDiegoAnnotationCity];
 
-    [self.mapView.annotationsToIgnore removeAllObjects];
-    for (OMBAnnotationCity *annotationCity in neighborhoodAnnotationArray) {
-      // [[self.mapView viewForAnnotation: annotationCity] setHidden: YES];
-      [self.mapView removeAnnotation: annotationCity];
-    }
-    // [[self.mapView viewForAnnotation:
-    //   sanDiegoAnnotationCity] setHidden: YES];
-  }
-  else {
-    [self.mapView removeAnnotations: self.mapView.annotations];
-    // [self.mapView addAnnotation: sanDiegoAnnotationCity];
-    for (OMBAnnotationCity *annotationCity in neighborhoodAnnotationArray) {
-      // [[self.mapView viewForAnnotation: annotationCity] setHidden: NO];
-      // [self.mapView addAnnotation: annotationCity];
-      [self.mapView.annotationsToIgnore addObject: annotationCity];
-      [self.mapView addAnnotation: annotationCity];
-    }
-    // [[self.mapView viewForAnnotation: sanDiegoAnnotationCity] setHidden: NO];
-  }
+  //   [self.mapView.annotationsToIgnore removeAllObjects];
+  //   for (OMBAnnotationCity *annotationCity in neighborhoodAnnotationArray) {
+  //     // [[self.mapView viewForAnnotation: annotationCity] setHidden: YES];
+  //     [self.mapView removeAnnotation: annotationCity];
+  //   }
+  //   // [[self.mapView viewForAnnotation:
+  //   //   sanDiegoAnnotationCity] setHidden: YES];
+  // }
+  // else {
+  //   [self.mapView removeAnnotations: self.mapView.annotations];
+  //   // [self.mapView addAnnotation: sanDiegoAnnotationCity];
+  //   for (OMBAnnotationCity *annotationCity in neighborhoodAnnotationArray) {
+  //     // [[self.mapView viewForAnnotation: annotationCity] setHidden: NO];
+  //     // [self.mapView addAnnotation: annotationCity];
+  //     [self.mapView.annotationsToIgnore addObject: annotationCity];
+  //     [self.mapView addAnnotation: annotationCity];
+  //   }
+  //   // [[self.mapView viewForAnnotation: sanDiegoAnnotationCity] setHidden: NO];
+  // }
 
   MKCoordinateRegion region = map.region;
   float maxLatitude, maxLongitude, minLatitude, minLongitude;
@@ -625,6 +643,15 @@ didUpdateLocations: (NSArray *) locations
     [[OMBResidenceMapStore sharedStore] fetchResidencesWithParameters: params
       delegate: self completion: ^(NSError *error) {
         isFetchingResidencesForMap = NO;
+        [[NSOperationQueue new] addOperationWithBlock: ^{
+          double zoomScale = self.mapView.bounds.size.width /
+            self.mapView.visibleMapRect.size.width;
+          NSArray *annotations =
+            [self.coordinateQuadTree clusteredAnnotationsWithinMapRect:
+              map.visibleMapRect withZoomScale: zoomScale];
+
+          [self updateMapViewAnnotationsWithAnnotations: annotations];
+        }];
       }];
   }
 
@@ -665,11 +692,69 @@ didDeselectAnnotationView: (MKAnnotationView *) annotationView
   if (![[NSString stringWithFormat: @"%@",
     [annotationView class]] isEqualToString: @"MKModernUserLocationView"]) {
 
+    if ([annotationView isKindOfClass: [QVClusterAnnotationView class]]) {
+      QVClusterAnnotationView *aView = (QVClusterAnnotationView *)
+        annotationView;
+      [aView deselect];
+    }
+  }
+}
+
+- (void) OLDmapView: (MKMapView *) map
+didDeselectAnnotationView: (MKAnnotationView *) annotationView
+{
+  if (![[NSString stringWithFormat: @"%@",
+    [annotationView class]] isEqualToString: @"MKModernUserLocationView"]) {
+
     [(OMBAnnotationView *) annotationView deselect];
   }
 }
 
 - (void) mapView: (MKMapView *) map
+didSelectAnnotationView: (MKAnnotationView *) annotationView
+{
+
+  // If user clicked on the current location
+
+  if ([annotationView isKindOfClass: [QVClusterAnnotationView class]]) {
+    QVClusterAnnotationView *aView = (QVClusterAnnotationView *)
+      annotationView;
+    // If user clicked on a cluster
+    if (aView.count > 1) {
+      if (aView.count > 5) {
+        [self zoomAtAnnotation: annotationView.annotation];
+      }
+      else {
+        [residentAnnotations removeAllObjects];
+        QVClusterAnnotation *annotation = (QVClusterAnnotation *)
+          aView.annotation;
+        for (NSDictionary *dict in annotation.coordinates) {
+          CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(
+            [dict[@"latitude"] doubleValue], [dict[@"longitude"] doubleValue]);
+          OMBResidence *residence =
+            [[OMBResidenceMapStore sharedStore] residenceForCoordinate: coord];
+          if (residence)
+            [residentAnnotations addObject: residence];
+        }
+        [self.residentListMap reloadData];
+        [self showResidentListAnnotation];
+      }
+    }
+    // If user clicked on a single residence
+    else {
+      if ([aView.annotation isKindOfClass: [QVClusterAnnotation class]]) {
+        [aView select];
+        QVClusterAnnotation *annotation = (QVClusterAnnotation *)
+          aView.annotation;
+        [self showPropertyInfoViewWithResidence:
+          [[OMBResidenceMapStore sharedStore] residenceForCoordinate:
+            annotation.coordinate]];
+      }
+    }
+  }
+}
+
+- (void) OLDmapView: (MKMapView *) map
 didSelectAnnotationView: (MKAnnotationView *) annotationView
 {
   // [residentAnnotations removeAllObjects];
@@ -725,7 +810,26 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
   }
 }
 
-- (MKAnnotationView *) mapView: (MKMapView *) map
+- (MKAnnotationView *) mapView: (MKMapView *) mapView
+viewForAnnotation: (id <MKAnnotation>) annotation
+{
+  static NSString *const QVAnnotationViewReuseID = @"QVAnnotationViewReuseID";
+
+  QVClusterAnnotationView *annotationView = (QVClusterAnnotationView *)
+    [mapView dequeueReusableAnnotationViewWithIdentifier:
+      QVAnnotationViewReuseID];
+
+  if (!annotationView) {
+    annotationView = [[QVClusterAnnotationView alloc] initWithAnnotation:
+      annotation reuseIdentifier: QVAnnotationViewReuseID];
+  }
+
+  annotationView.count = [(QVClusterAnnotation *) annotation count];
+
+  return annotationView;
+}
+
+- (MKAnnotationView *) OLDmapView: (MKMapView *) map
 viewForAnnotation: (id <MKAnnotation>) annotation
 {
   // If the annotation is the user's location, show the default pulsing circle
@@ -757,6 +861,9 @@ viewForAnnotation: (id <MKAnnotation>) annotation
   else {
     if (previousZoomLevel >= MINIMUM_ZOOM_LEVEL) {
       [[OMBResidenceMapStore sharedStore] readFromDictionary: dictionary];
+      [self.coordinateQuadTree buildTreeWithResidences:
+        [[OMBResidenceMapStore sharedStore] residences]];
+
       // Add annotations that don't exist
       // NSMutableSet *masterSet = [NSMutableSet setWithSet:
       //   [[OMBResidenceMapStore sharedStore] annotations]];
@@ -764,8 +871,11 @@ viewForAnnotation: (id <MKAnnotation>) annotation
 
       // NSLog(@"ADDING: %i", [[masterSet allObjects] count]);
       // [self.mapView addAnnotations: [masterSet allObjects]];
-      [self.mapView addAnnotations:
-        [[OMBResidenceMapStore sharedStore] annotations]];
+
+      // dispatch_async(dispatch_get_main_queue(), ^{
+      //   [self.mapView addAnnotations:
+      //     [[OMBResidenceMapStore sharedStore] annotations]];
+      // });
 
       // NSMutableArray *arrayOfDictonaries = [NSMutableArray array];
       // NSArray *array = [dictionary objectForKey: @"objects"];
@@ -819,13 +929,13 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
 #pragma mark - Protocol UIGestureRecognizerDelegate
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+- (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer
+shouldReceiveTouch: (UITouch *) touch
 {
-  if(gestureRecognizer.view == _mapView){
-    CGPoint touchPoint = [touch locationInView:_mapView];
+  if (gestureRecognizer.view == _mapView) {
+    CGPoint touchPoint = [touch locationInView: _mapView];
     return !CGRectContainsPoint(_residentListMap.frame, touchPoint);
   }
-
   return YES;
 }
 
@@ -1146,7 +1256,43 @@ withTitle: (NSString *) title;
   // }
 }
 
+- (void) addBounceAnimationToView: (UIView *) view
+{
+  CAKeyframeAnimation *bounceAnimation =
+    [CAKeyframeAnimation animationWithKeyPath: @"transform.scale"];
+
+  bounceAnimation.values = @[@(0.05), @(1.1), @(0.9), @(1)];
+
+  bounceAnimation.duration = 0.6;
+  NSMutableArray *timingFunctions = [[NSMutableArray alloc] init];
+  for (NSInteger i = 0; i < 4; i++) {
+    [timingFunctions addObject: [CAMediaTimingFunction functionWithName:
+      kCAMediaTimingFunctionEaseInEaseOut]];
+  }
+  [bounceAnimation setTimingFunctions: timingFunctions.copy];
+  bounceAnimation.removedOnCompletion = NO;
+
+  [view.layer addAnimation: bounceAnimation forKey: @"bounce"];
+}
+
 - (void) deselectAnnotations
+{
+  for (id annotation in self.mapView.selectedAnnotations) {
+    [self.mapView deselectAnnotation: annotation animated: YES];
+    // if ([annotation class] != [MKUserLocation class] &&
+    //   [annotation isKindOfClass: [QVClusterAnnotation class]]) {
+
+    //   [self.mapView deselectAnnotation: annotation animated: YES];
+
+    //   QVClusterAnnotation *ann = (QVClusterAnnotation *) annotation;
+    //   QVClusterAnnotationView *aView = ann.annotationView;
+    //   aView.isSelected = NO;
+    //   [aView setNeedsDisplay];
+    // }
+  }
+}
+
+- (void) OLDdeselectAnnotations
 {
   for (OMBAnnotation *annotation in _mapView.selectedAnnotations) {
     if ([annotation class] != [MKUserLocation class] &&
@@ -1897,6 +2043,26 @@ withMiles: (int) miles animated: (BOOL) animated
     [self switchViews:segmentedControl];
 }
 
+- (void) zoomAtAnnotation: (id <MKAnnotation>) annotation
+{
+  MKMapRect zoomRect = MKMapRectNull;
+  if ([annotation isKindOfClass: [QVClusterAnnotation class]]) {
+    QVClusterAnnotation *ann = (QVClusterAnnotation *) annotation;
+    for (NSDictionary *dict in ann.coordinates) {
+      CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(
+        [dict[@"latitude"] doubleValue], [dict[@"longitude"] doubleValue]);
+      MKMapPoint annotationPoint = MKMapPointForCoordinate(coord);
+      MKMapRect pointRect = MKMapRectMake(annotationPoint.x,
+        annotationPoint.y, 0, 0);
+      if (MKMapRectIsNull(zoomRect))
+        zoomRect = pointRect;
+      else
+        zoomRect = MKMapRectUnion(zoomRect, pointRect);
+    }
+    [self.mapView setVisibleMapRect: zoomRect animated: YES];
+  }
+}
+
 - (void) zoomClusterAtAnnotation: (OCAnnotation *) cluster
 {
   MKMapRect zoomRect = MKMapRectNull;
@@ -1922,6 +2088,39 @@ withMapViewSizeInPixels: (CGSize) viewSizeInPixels
   double zoomExponent = log2(zoomScale);
   zoomLevel = (NSUInteger)(MAXIMUM_ZOOM - ceil(zoomExponent));
   return zoomLevel;
+}
+
+- (void) updateMapViewAnnotationsWithAnnotations: (NSArray *) annotations
+{
+  // The annotations in the snapshot are exactly the mapView's
+  // current annotations. We call this the before set
+  // The snapshot of the map immediately after the region changes
+  // is exactly what we get back from this method; the after set.
+
+  // We want to keep all the annotations which both sets have in common
+  // (set intersection). Get rid of the ones which are not in the
+  // after set and add the ones which are left.
+
+  NSMutableSet *before = [NSMutableSet setWithArray: self.mapView.annotations];
+  NSSet *after = [NSSet setWithArray: annotations];
+
+  // Annotations circled in blue shared by both sets
+  NSMutableSet *toKeep = [NSMutableSet setWithSet: before];
+  [toKeep intersectSet: after];
+
+  // Annotations circled in green
+  NSMutableSet *toAdd = [NSMutableSet setWithSet: after];
+  [toAdd minusSet: toKeep];
+
+  // Annotations circled in red; to be removed
+  NSMutableSet *toRemove = [NSMutableSet setWithSet: before];
+  [toRemove minusSet: after];
+
+  // These two methods must be called on the main thread
+  [[NSOperationQueue mainQueue] addOperationWithBlock: ^{
+    [self.mapView addAnnotations: [toAdd allObjects]];
+    [self.mapView removeAnnotations: [toRemove allObjects]];
+  }];
 }
 
 @end

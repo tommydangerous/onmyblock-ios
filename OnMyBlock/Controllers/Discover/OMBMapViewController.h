@@ -73,7 +73,8 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
 
 @property (nonatomic, strong) UITableView *listView;
 @property (nonatomic, strong) UIView *listViewContainer;
-@property (nonatomic, strong) OCMapView *mapView;
+// @property (nonatomic, strong) OCMapView *mapView;
+@property (nonatomic, strong) MKMapView *mapView;
 @property (nonatomic) CGFloat radiusInMiles;
 @property (nonatomic, strong) UITableView *residentListMap;
 

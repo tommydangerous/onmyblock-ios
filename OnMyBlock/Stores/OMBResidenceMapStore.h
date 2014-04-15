@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MapKit/MapKit.h>
+
+@class OMBResidence;
 
 @interface OMBResidenceMapStore : NSObject
 
@@ -22,5 +25,7 @@
 - (void) fetchResidencesWithParameters: (NSDictionary *) parameters
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
+- (NSArray *) residences;
+- (OMBResidence *) residenceForCoordinate: (CLLocationCoordinate2D) coordinate;
 
 @end

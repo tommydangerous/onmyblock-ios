@@ -18,6 +18,7 @@ const NSUInteger MAX_ANNOTATIONS = 500;
 @interface OMBResidenceMapStore ()
 {
   NSMutableArray *annotations;
+  NSMutableDictionary *residences;
 }
 
 @end
@@ -31,6 +32,7 @@ const NSUInteger MAX_ANNOTATIONS = 500;
   if (!(self = [super init])) return nil;
 
   annotations = [NSMutableArray array];
+  residences  = [NSMutableDictionary dictionary];
 
   return self;
 }
@@ -49,6 +51,12 @@ const NSUInteger MAX_ANNOTATIONS = 500;
 
 #pragma mark - Instance Methods
 
+- (void) addResidence: (OMBResidence *) residence
+{
+  [residences setObject: residence forKey: [NSString stringWithFormat:
+    @"%f,%f", residence.latitude, residence.longitude]];
+}
+
 - (NSArray *) annotations
 {
   return [NSArray arrayWithArray: annotations];
@@ -57,7 +65,7 @@ const NSUInteger MAX_ANNOTATIONS = 500;
 - (void) fetchResidencesWithParameters: (NSDictionary *) parameters
 delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
-  OMBResidenceListConnection *conn = 
+  OMBResidenceListConnection *conn =
     [[OMBResidenceListConnection alloc] initWithParameters: parameters];
   conn.completionBlock = block;
   conn.delegate        = delegate;
@@ -65,6 +73,22 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 }
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
+{
+  NSArray *array = [dictionary objectForKey: @"objects"];
+  for (NSDictionary *dict in array) {
+    // Create residence
+    NSUInteger residenceUID = [[dict objectForKey: @"id"] intValue];
+    OMBResidence *residence =
+      [[OMBAllResidenceStore sharedStore] residenceForUID: residenceUID];
+    if (!residence)
+      residence = [[OMBResidence alloc] init];
+    [residence readFromResidenceDictionary: dict];
+    [self addResidence: residence];
+  }
+
+}
+
+- (void) OLDreadFromDictionary: (NSDictionary *) dictionary
 {
   [annotations removeAllObjects];
   NSArray *array = [dictionary objectForKey: @"objects"];
@@ -74,7 +98,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   for (NSDictionary *dict in array) {
     // Create residence
     NSUInteger residenceUID = [[dict objectForKey: @"id"] intValue];
-    OMBResidence *residence = 
+    OMBResidence *residence =
       [[OMBAllResidenceStore sharedStore] residenceForUID: residenceUID];
     if (!residence)
       residence = [[OMBResidence alloc] init];
@@ -88,6 +112,17 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     [annotations addObject: annotation];
   }
   NSLog(@"ANNOTATIONS: %i", [annotations count]);
+}
+
+- (NSArray *) residences
+{
+  return [residences allValues];
+}
+
+- (OMBResidence *) residenceForCoordinate: (CLLocationCoordinate2D) coordinate
+{
+  return [residences objectForKey: [NSString stringWithFormat: @"%f,%f",
+    coordinate.latitude, coordinate.longitude]];
 }
 
 @end
