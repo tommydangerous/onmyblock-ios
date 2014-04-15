@@ -238,7 +238,7 @@
   pickerViewContainer = [UIView new];
   // Header for length picker view with cancel and done button
   AMBlurView *pickerViewHeader = [[AMBlurView alloc] init];
-  pickerViewHeader.blurTintColor = [UIColor blueLight];
+  pickerViewHeader.blurTintColor = [UIColor grayVeryLight];
   pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
                                       self.view.frame.size.width, 44.0f);
 	[pickerViewContainer addSubview:pickerViewHeader];
