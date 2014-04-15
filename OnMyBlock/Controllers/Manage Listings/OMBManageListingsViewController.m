@@ -12,9 +12,11 @@
 #import "OMBActivityViewFullScreen.h"
 #import "OMBCreateListingViewController.h"
 #import "OMBFinishListingViewController.h"
+#import "OMBManageListingDetailViewController.h"
 #import "OMBManageListingsCell.h"
 #import "OMBManageListingsConnection.h"
 #import "OMBResidence.h"
+#import "OMBTemporaryResidence.h"
 #import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
@@ -187,10 +189,16 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSUInteger section = indexPath.section;
   if (section == OMBManageListingsSectionListings) {
-    [self.navigationController pushViewController:
-      [[OMBFinishListingViewController alloc] initWithResidence:
-        [[self listings] objectAtIndex: indexPath.row]]
-          animated: YES];
+    id residence = [[self listings] objectAtIndex: indexPath.row];
+    if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
+      [self.navigationController pushViewController:
+        [[OMBFinishListingViewController alloc] initWithResidence:
+          residence] animated: YES];
+    }
+    else {
+      [self.navigationController pushViewController:
+        [[OMBManageListingDetailViewController alloc] init] animated: YES];
+    }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
