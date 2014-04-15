@@ -574,6 +574,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           reuseIdentifier: RoommateID];
       [cell loadData: [[self objectsFromRoommates] objectAtIndex: row - 1] user: user];
       cell.clipsToBounds = YES;
+      
+      if(indexPath.row == [[self objectsFromRoommates] count])
+        cell.separatorInset = maxInsets;
       return cell;
     }
   }
@@ -614,6 +617,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           forControlEvents:UIControlEventTouchUpInside];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.clipsToBounds = YES;
+      
+      if(indexPath.row == [[[self renterApplication] cosignersSortedByFirstName] count])
+        cell.separatorInset = maxInsets;
       return cell;
     }
   }
@@ -698,6 +704,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       [cell loadData2: [[self objectsFromPreviousRental] objectAtIndex: row - 1]];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.clipsToBounds = YES;
+      
+      if(indexPath.row == [self objectsFromPreviousRental].count)
+        cell.separatorInset = maxInsets;
       return cell;
     }
   }
@@ -732,6 +741,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           objectAtIndex: row - 1]];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.clipsToBounds = YES;
+      
+      if(indexPath.row == [self objectsFromEmployments].count)
+        cell.separatorInset = maxInsets;
       return cell;
     }
   }
@@ -773,6 +785,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [NSNumber numberWithInt: legalQuestion.uid]];
       [cell loadLegalAnswerForOtherUser: legalAnswer];
       cell.clipsToBounds = YES;
+      if(indexPath.row == [[[OMBLegalQuestionStore sharedStore]
+          questionsSortedByQuestion] count])
+        cell.separatorInset = maxInsets;
       return cell;
     }
   }
