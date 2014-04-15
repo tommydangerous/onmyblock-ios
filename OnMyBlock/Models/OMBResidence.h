@@ -55,6 +55,7 @@ extern NSString *const OMBResidencePropertyTypeSublet;
 @property (nonatomic, strong) NSString *phone;
 @property (nonatomic, strong) NSString *propertyType;
 // @property (nonatomic) float rent;
+@property (nonatomic) BOOL rented;
 @property (nonatomic) CGFloat rentItNowPrice;
 @property (nonatomic) int squareFeet;
 @property (nonatomic, strong) NSString *state;

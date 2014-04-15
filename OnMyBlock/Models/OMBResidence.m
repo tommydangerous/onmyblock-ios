@@ -820,6 +820,13 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   if ([dictionary objectForKey: @"property_type"] != [NSNull null]) {
     _propertyType = [dictionary objectForKey: @"property_type"];
   }
+  // Rented
+  if ([dictionary objectForKey: @"rented"] != [NSNull null]) {
+    if ([[dictionary objectForKey: @"rented"] intValue])
+      _rented = YES;
+    else
+      _rented = NO;
+  }
   // Rent it Now Price
   if ([dictionary objectForKey: @"rent_it_now_price"] != [NSNull null])
     _rentItNowPrice = [[dictionary objectForKey:
