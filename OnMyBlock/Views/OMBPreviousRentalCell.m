@@ -255,7 +255,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   landlordEmailLabel.text = @"";
   landlordPhoneLabel.text = @"";
   
-  if([self.previousRental.landlordName length] > 0){
+  if([[self.previousRental.landlordName stripWhiteSpace] length] > 0){
     landlordNameLabel.frame = CGRectMake(landlordNameLabel.frame.origin.x,
       previousY, landlordNameLabel.frame.size.width,
         landlordNameLabel.frame.size.height);
@@ -266,7 +266,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
       landlordNameLabel.frame.size.height;
   }
   
-  if ([self.previousRental.landlordEmail length] > 0) {
+  if ([[self.previousRental.landlordEmail stripWhiteSpace] length] > 0) {
     landlordEmailLabel.frame = CGRectMake(landlordEmailLabel.frame.origin.x,
       previousY, landlordEmailLabel.frame.size.width,
         landlordEmailLabel.frame.size.height);
@@ -277,7 +277,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
       landlordEmailLabel.frame.size.height;
   }
   
-  if ([[self.previousRental.landlordPhone phoneNumberString] length] > 0) {
+  if ([[[self.previousRental.landlordPhone stripWhiteSpace] phoneNumberString] length] > 0) {
     landlordPhoneLabel.frame = CGRectMake(landlordPhoneLabel.frame.origin.x,
       previousY, landlordPhoneLabel.frame.size.width,
         landlordPhoneLabel.frame.size.height);

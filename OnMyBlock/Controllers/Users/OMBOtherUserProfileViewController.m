@@ -938,11 +938,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         CGFloat adjusment = 0.0;
         OMBPreviousRental *previousRental =
           [[self objectsFromPreviousRental] objectAtIndex: row - 1];
-        if([previousRental.landlordName length] > 0)
+        if([[previousRental.landlordName stripWhiteSpace] length] > 0)
           adjusment += 22.0f;
-        if([previousRental.landlordEmail length] > 0)
+        if([[previousRental.landlordEmail stripWhiteSpace]length] > 0)
           adjusment += 22.0f;
-        if([[previousRental.landlordPhone phoneNumberString] length] > 0)
+        if([[[previousRental.landlordPhone stripWhiteSpace] phoneNumberString] length] > 0)
           adjusment += 22.0f;
 
         if(adjusment > 0.0)
