@@ -447,6 +447,7 @@
 		ABE706A018889713007A4E29 /* OMBResidenceListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE7069F18889713007A4E29 /* OMBResidenceListConnection.m */; };
 		ABE706A3188899DA007A4E29 /* OMBResidenceListStore.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE706A2188899DA007A4E29 /* OMBResidenceListStore.m */; };
 		ABE706A61889984D007A4E29 /* OMBMessagesUnviewedCountConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE706A51889984D007A4E29 /* OMBMessagesUnviewedCountConnection.m */; };
+		ABE7B90318FC880900642777 /* MDCParallaxView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE7B90218FC880900642777 /* MDCParallaxView.m */; };
 		ABED5FCB1895975400AD630C /* OMBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABED5FCA1895975400AD630C /* OMBCollectionViewCell.m */; };
 		ABED5FCE1895977200AD630C /* OMBResidenceDetailImageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABED5FCD1895977200AD630C /* OMBResidenceDetailImageCollectionViewCell.m */; };
 		ABED5FDF1896E8CE00AD630C /* DRNRealTimeBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABED5FD71896E8CE00AD630C /* DRNRealTimeBlurView.m */; };
@@ -1354,6 +1355,8 @@
 		ABE706A2188899DA007A4E29 /* OMBResidenceListStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceListStore.m; sourceTree = "<group>"; };
 		ABE706A41889984D007A4E29 /* OMBMessagesUnviewedCountConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMessagesUnviewedCountConnection.h; sourceTree = "<group>"; };
 		ABE706A51889984D007A4E29 /* OMBMessagesUnviewedCountConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMessagesUnviewedCountConnection.m; sourceTree = "<group>"; };
+		ABE7B90118FC880900642777 /* MDCParallaxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDCParallaxView.h; sourceTree = "<group>"; };
+		ABE7B90218FC880900642777 /* MDCParallaxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDCParallaxView.m; sourceTree = "<group>"; };
 		ABED5FC91895975400AD630C /* OMBCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCollectionViewCell.h; sourceTree = "<group>"; };
 		ABED5FCA1895975400AD630C /* OMBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCollectionViewCell.m; sourceTree = "<group>"; };
 		ABED5FCC1895977200AD630C /* OMBResidenceDetailImageCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceDetailImageCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1886,6 +1889,8 @@
 		AB9B26031811A49200E6DAC4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				ABE7B90118FC880900642777 /* MDCParallaxView.h */,
+				ABE7B90218FC880900642777 /* MDCParallaxView.m */,
 				AB70CB81186CEC840083DF4C /* Create Listing */,
 				AB95456B1848DAC0000513BE /* DDPageControl.h */,
 				AB95456C1848DAC0000513BE /* DDPageControl.m */,
@@ -3244,6 +3249,7 @@
 				AB6CCE4618933BF6000ED5CE /* OMBConfirmedTenantsConnection.m in Sources */,
 				ABA4F217187DDF8D00D725D4 /* OMBResidenceUploadImageConnection.m in Sources */,
 				AB9B264D1811CE6D00E6DAC4 /* OMBConnection.m in Sources */,
+				ABE7B90318FC880900642777 /* MDCParallaxView.m in Sources */,
 				AB9FEEFB18D0171400E25FE2 /* OMBLabelSwitchCell.m in Sources */,
 				ABBA58BB1875A49200E9BF4E /* OMBStandardLeaseViewController.m in Sources */,
 				ABB911C218998FB30046611F /* AFSecurityPolicy.m in Sources */,

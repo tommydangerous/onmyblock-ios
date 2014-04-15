@@ -21,8 +21,8 @@
 
 @interface OMBResidenceDetailViewController : OMBViewController
 <MKMapViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate,
-  UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate, 
-    UITextViewDelegate>
+  UIGestureRecognizerDelegate, UIScrollViewDelegate, UITableViewDataSource,
+  UITableViewDelegate, UITextViewDelegate>
 {
   UIActivityIndicatorView *activityIndicatorView;
   CGFloat backViewOffsetY;

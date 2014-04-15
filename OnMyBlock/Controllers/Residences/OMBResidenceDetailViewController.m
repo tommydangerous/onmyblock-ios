@@ -51,6 +51,18 @@
 float kResidenceDetailCellSpacingHeight = 40.0f;
 float kResidenceDetailImagePercentage   = 0.5f;
 
+@interface OMBResidenceDetailViewController ()
+{
+  CGFloat favoritesButtonOriginY;
+  UIScrollView *hiddenScrollView;
+  UIPanGestureRecognizer *imagePanGestureRecognizer;
+  UITapGestureRecognizer *imageTapGestureRecognizer;
+  CGFloat previousOriginX;
+  CGFloat previousOriginY;
+}
+
+@end
+
 @implementation OMBResidenceDetailViewController
 
 #pragma mark - Initializer
@@ -98,6 +110,8 @@ float kResidenceDetailImagePercentage   = 0.5f;
     self.title = residence.title;
   }
 
+  previousOriginX = previousOriginY = 0.0f;
+
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(currentUserLogout) name: OMBUserLoggedOutNotification
       object: nil];
@@ -125,6 +139,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view     = [[OMBBlurView alloc] initWithFrame: screen];
+  self.view.backgroundColor = [UIColor whiteColor];
 
   CGFloat padding      = 20.0f;
   CGFloat headerViewPadding = padding * 0.5f;
@@ -159,6 +174,17 @@ float kResidenceDetailImagePercentage   = 0.5f;
   imageCollectionView.pagingEnabled = YES;
   imageCollectionView.showsHorizontalScrollIndicator = NO;
   [self.view addSubview: imageCollectionView];
+  // Tap gesture when user clicks the images
+  imageTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:
+    self action: @selector(showImageSlides)];
+  [imageCollectionView addGestureRecognizer: imageTapGestureRecognizer];
+  // When a user pans left and right to scroll the image collection view
+  // imagePanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:
+  //   self action: @selector(drag:)];
+  // imagePanGestureRecognizer.cancelsTouchesInView = YES;
+  // imagePanGestureRecognizer.delegate = self;
+  // imagePanGestureRecognizer.maximumNumberOfTouches = 1;
+  // [imageCollectionView addGestureRecognizer: imagePanGestureRecognizer];
 
   // Show when there aren't images
   placeholderImageView = [[UIImageView alloc] initWithFrame:
@@ -167,30 +193,35 @@ float kResidenceDetailImagePercentage   = 0.5f;
   placeholderImageView.image = [OMBResidence placeholderImage];
   [self.view addSubview: placeholderImageView];
 
-  // Tap gesture when user clicks the images
-  UITapGestureRecognizer *tapGesture =
-    [[UITapGestureRecognizer alloc] initWithTarget: self
-      action: @selector(showImageSlides)];
-  [imageCollectionView addGestureRecognizer: tapGesture];
-
   // The table to hold most of the data
-  _table = [[UITableView alloc] initWithFrame: screen
+  self.table = [[UITableView alloc] initWithFrame: screen
     style: UITableViewStylePlain];
-  _table.alwaysBounceVertical    = YES;
-  _table.backgroundColor         = [UIColor clearColor];
-  _table.canCancelContentTouches = YES;
-  _table.dataSource              = self;
-  _table.delegate                = self;
-  _table.separatorColor          = [UIColor clearColor];
-  _table.separatorInset = UIEdgeInsetsMake(0.0f, padding, 0.0f, 0.0f);
-  _table.separatorStyle               = UITableViewCellSeparatorStyleNone;
-  _table.showsVerticalScrollIndicator = NO;
+  self.table.alwaysBounceVertical    = YES;
+  self.table.backgroundColor         = [UIColor clearColor];
+  self.table.canCancelContentTouches = YES;
+  self.table.dataSource              = self;
+  self.table.delegate                = self;
+  self.table.separatorColor          = [UIColor clearColor];
+  self.table.separatorInset = UIEdgeInsetsMake(0.0f, padding, 0.0f, 0.0f);
+  self.table.separatorStyle               = UITableViewCellSeparatorStyleNone;
+  self.table.showsVerticalScrollIndicator = NO;
+  [self.view addSubview: self.table];
   // Table header view
-  _table.tableHeaderView = [[UIView alloc] initWithFrame:
-    CGRectMake(0.0f, 0.0f, screenWidth,
-      imageCollectionView.frame.origin.y +
-      imageCollectionView.frame.size.height)];
-  [self.view addSubview: _table];
+  UIView *tableHeaderView = [UIView new];
+  tableHeaderView.frame = CGRectMake(0.0f, 0.0f, screenWidth,
+    imageCollectionView.frame.origin.y + imageCollectionView.frame.size.height);
+  self.table.tableHeaderView = tableHeaderView;
+
+  hiddenScrollView = [[UIScrollView alloc] init];
+  hiddenScrollView.frame = CGRectMake(0.0f, 0.0f,
+    self.table.frame.size.width, self.table.frame.size.height);
+  hiddenScrollView.delegate = self;
+  hiddenScrollView.hidden = YES;
+  // hiddenScrollView.pagingEnabled = YES;
+  [self.view addSubview: hiddenScrollView];
+  [imageCollectionView addGestureRecognizer:
+    hiddenScrollView.panGestureRecognizer];
+  // imageCollectionView.panGestureRecognizer.enabled = NO;
 
   // Gradient; this goes behind the table, but in front of the image
   // collection view
@@ -204,8 +235,10 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   // This goes in front of the table
   headerView = [[OMBExtendedHitAreaViewContainer alloc] init];
+  // headerView = [UIView new];
   headerView.frame = gradientView.frame;
   headerView.scrollView = imageCollectionView;
+  // [self.view insertSubview: headerView belowSubview: self.table];
   [self.view addSubview: headerView];
 
   // Activity indicator view
@@ -226,29 +259,33 @@ float kResidenceDetailImagePercentage   = 0.5f;
   _pageOfImagesLabel = [[UILabel alloc] init];
   _pageOfImagesLabel.backgroundColor = [UIColor colorWithWhite: 0.0f
     alpha: 0.5f];
+  _pageOfImagesLabel.clipsToBounds = YES;
   _pageOfImagesLabel.font = [UIFont smallTextFont];
   _pageOfImagesLabel.frame = CGRectMake(
     imageCollectionView.frame.size.width - (50 + headerViewPadding),
       headerViewPadding, 50.0f, 30.0f);
-  _pageOfImagesLabel.layer.cornerRadius = 2.0f;
+  _pageOfImagesLabel.layer.cornerRadius = OMBCornerRadius;
   _pageOfImagesLabel.textAlignment = NSTextAlignmentCenter;
   _pageOfImagesLabel.textColor = [UIColor whiteColor];
   [headerView addSubview: _pageOfImagesLabel];
 
   // Favorites Button
-  _favoritesButton = [[UIButton alloc] init];
-  _favoritesButton.frame = CGRectMake(5.0f, 5.0f, 40.0f, 40.0f);
-  [_favoritesButton addTarget: self action: @selector(favoritesButtonSelected)
-    forControlEvents: UIControlEventTouchUpInside];
-  [headerView addSubview: _favoritesButton];
+  favoritesButtonOriginY = 5.0f + OMBPadding + OMBStandardHeight;
+  self.favoritesButton = [[UIButton alloc] init];
+  self.favoritesButton.frame = CGRectMake(5.0f,
+    favoritesButtonOriginY, 40.0f, 40.0f);
+  [self.favoritesButton addTarget: self
+    action: @selector(favoritesButtonSelected)
+      forControlEvents: UIControlEventTouchUpInside];
+  [self.view addSubview: self.favoritesButton];
   // When favorited
   favoritedImage = [UIImage image:
     [UIImage imageNamed: @"favorite_filled_white.png"]
-      size: _favoritesButton.frame.size];
+      size: self.favoritesButton.bounds.size];
   // When not favorited
   notFavoritedImage = [UIImage image:
     [UIImage imageNamed: @"favorite_outline_white.png"]
-      size: _favoritesButton.frame.size];
+      size: self.favoritesButton.bounds.size];
 
   // Number of offers
   // _numberOfOffersLabel = [[UILabel alloc] init];
@@ -517,6 +554,17 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
         forIndexPath: indexPath];
   [cell loadResidenceImage:
     [[residence imagesArray] objectAtIndex: indexPath.row]];
+  // Next cell
+  if (indexPath.row < [[residence imagesArray] count] - 1) {
+    NSIndexPath *nextIndexPath = [NSIndexPath indexPathForRow: indexPath.row + 1
+      inSection: indexPath.section];
+    OMBResidenceDetailImageCollectionViewCell *nextCell =
+      [collectionView dequeueReusableCellWithReuseIdentifier:
+        [OMBResidenceDetailImageCollectionViewCell reuseIdentifierString]
+          forIndexPath: nextIndexPath];
+    [nextCell loadResidenceImage:
+      [[residence imagesArray] objectAtIndex: nextIndexPath.row]];
+  }
   return cell;
 }
 
@@ -540,7 +588,32 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   NSLog(@"COLLECTION VIEW DID SELECT ITEM");
 }
 
+#pragma mark - Protocol UIGestureRecognizerDelegate
+
+- (BOOL) gestureRecognizerShouldBegin: (UIGestureRecognizer *) recognizer
+{
+  if ([recognizer isKindOfClass: [UIPanGestureRecognizer class]]) {
+    if (recognizer == imagePanGestureRecognizer) {
+      UIPanGestureRecognizer *panRecognizer =
+        (UIPanGestureRecognizer *) recognizer;
+      CGPoint velocity = [panRecognizer velocityInView: self.view];
+      // Horizontal panning
+      // return ABS(velocity.x) > ABS(velocity.y);
+      // Vertical panning
+      return ABS(velocity.x) < ABS(velocity.y);
+    }
+  }
+  return YES;
+}
+
 #pragma mark - Protocol UIScrollViewDelegate
+
+- (void) scrollViewWillBeginDragging: (UIScrollView *) scrollView
+{
+  if (scrollView == self.table) {
+    [self killScrollView: hiddenScrollView];
+  }
+}
 
 - (void) scrollViewDidEndDecelerating: (UIScrollView *) scrollView
 {
@@ -564,13 +637,14 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     CGRect backRect = imageCollectionView.frame;
     backRect.origin.y = backViewOffsetY - adjustment;
     imageCollectionView.frame = backRect;
-
     // Adjust the gradient
     gradientView.frame = backRect;
+    // Adjust the placeholder image
     placeholderImageView.frame = backRect;
 
     // Header view
-    backRect.size.height = imageCollectionView.frame.size.height - y + adjustment;
+    backRect.size.height = imageCollectionView.frame.size.height -
+      (y + adjustment);
     headerView.frame = backRect;
 
     // Adjust the current offer label
@@ -578,10 +652,18 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     currentOfferRect.origin.y = currentOfferOriginY - adjustment;
     _currentOfferLabel.frame = currentOfferRect;
 
-    if(y > backViewOffsetY + imageCollectionView.frame.size.height)
-      _table.backgroundColor = [UIColor grayUltraLight];
+    // Adjust the favorites button
+    CGRect favoritesRect       = self.favoritesButton.frame;
+    favoritesRect.origin.y     = favoritesButtonOriginY - adjustment;
+    self.favoritesButton.frame = favoritesRect;
+
+    // If the user is all the way at the bottom, have a background color
+    if (y > backViewOffsetY + imageCollectionView.frame.size.height)
+      self.table.backgroundColor = [UIColor grayUltraLight];
     else
-      _table.backgroundColor = [UIColor clearColor];
+      self.table.backgroundColor = [UIColor clearColor];
+
+    hiddenScrollView.contentOffset = scrollView.contentOffset;
   }
   // When changing the image in the image collection view
   else if (scrollView == imageCollectionView) {
@@ -596,6 +678,10 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     rect.origin.x =
       (scrollView.frame.size.width - (rect.size.width + (padding * 0.5f))) + x;
     imageScrollViewCloseButton.frame = rect;
+  }
+  // Scrolling up and down on the image collection view
+  else if (scrollView == hiddenScrollView) {
+    self.table.contentOffset = scrollView.contentOffset;
   }
 }
 
@@ -1035,7 +1121,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void)changeStateSegmented:(UISegmentedControl *) control{
 
   OMBResidenceDetailMapCell *cell = (OMBResidenceDetailMapCell *)
-  [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForRow:1 inSection:5]];
+  [self.table cellForRowAtIndexPath:
+    [NSIndexPath indexPathForRow:1 inSection:5]];
 
   switch (control.selectedSegmentIndex) {
       // Show map
@@ -1132,6 +1219,102 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   NSLog(@"Residence Detail Current User Logout");
 }
 
+- (void) drag: (UIPanGestureRecognizer *) gesture
+{
+  CGPoint translation = [gesture translationInView: self.view];
+  CGPoint offset      = self.table.contentOffset;
+  // Began
+  if (gesture.state == UIGestureRecognizerStateBegan) {
+    previousOriginY = offset.y;
+  }
+  // Changed
+  else if (gesture.state == UIGestureRecognizerStateChanged) {
+    CGFloat finalOffsetY = previousOriginY - translation.y;
+    if (finalOffsetY < 0)
+      finalOffsetY = 0;
+    offset.y = finalOffsetY;
+    self.table.contentOffset = offset;
+  }
+  // Ended
+  else if (gesture.state == UIGestureRecognizerStateEnded) {
+
+  }
+  NSLog(@"Translation: %f, %f", translation.x, translation.y);
+}
+
+- (void) drag2: (UIPanGestureRecognizer *) gesture
+{
+  CGPoint translation = [gesture translationInView: self.view];
+  CGPoint velocity    = [gesture velocityInView: self.view];
+  CGPoint offset      = imageCollectionView.contentOffset;
+  CGSize contentSize  = imageCollectionView.contentSize;
+  CGFloat width       = imageCollectionView.frame.size.width;
+  // Began
+  if (gesture.state == UIGestureRecognizerStateBegan) {
+    previousOriginX = offset.x;
+  }
+  // Changed
+  else if (gesture.state == UIGestureRecognizerStateChanged) {
+    CGFloat finalOffsetX = previousOriginX - translation.x;
+    CGFloat resistance;
+    if (finalOffsetX < 0) {
+      previousOriginX = 0;
+      resistance   = ((width - translation.x) / width) * translation.x;
+      finalOffsetX = previousOriginX - resistance;
+      NSLog(@"%f", resistance);
+    }
+    else if (finalOffsetX > contentSize.width - width) {
+      previousOriginX = contentSize.width - width;
+      resistance   = ((width + translation.x) / width) * translation.x;
+      finalOffsetX = previousOriginX - resistance;
+      NSLog(@"%f, %f", translation.x, resistance);
+    }
+    offset.x = finalOffsetX;
+    imageCollectionView.contentOffset = offset;
+  }
+  // Ended
+  else if (gesture.state == UIGestureRecognizerStateEnded) {
+    CGPoint finalOffset = imageCollectionView.contentOffset;
+    // Paging
+    NSInteger maxPage = (contentSize.width / width) - 1;
+    NSInteger minPage = 0;
+    CGFloat page      = finalOffset.x / width;
+
+    BOOL velocityThreshold = abs(velocity.x) > 500;
+    // Swiping left, increasing page
+    if (velocity.x < 0) {
+      if (velocityThreshold) {
+        page = ceil(page);
+      }
+      else {
+        page = roundf(page);
+      }
+    }
+    else {
+      if (velocityThreshold) {
+        page = floor(page);
+      }
+      else {
+        page = roundf(page);
+      }
+    }
+
+    if (page < minPage)
+      page = minPage;
+    else if (page > maxPage)
+      page = maxPage;
+    finalOffset.x = width * page;
+    // CGFloat duration = OMBStandardDuration;
+    // if (velocityThreshold)
+    //   duration *= 1 - (abs(velocity.x) / 5000);
+    // [UIView animateWithDuration: duration delay: 0.0f
+    //   options: UIViewAnimationOptionBeginFromCurrentState animations: ^{
+    //     [imageCollectionView setContentOffset: finalOffset animated: NO];
+    //   } completion: nil];
+    [imageCollectionView setContentOffset: finalOffset animated: YES];
+  }
+}
+
 - (void) favoritesButtonSelected
 {
   if ([[OMBUser currentUser] loggedIn]) {
@@ -1172,6 +1355,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+- (void) killScrollView: (UIScrollView *) scrollView
+{
+  CGPoint offset = scrollView.contentOffset;
+  offset.x -= 1.0f;
+  offset.y -= 1.0f;
+  [scrollView setContentOffset: offset animated: NO];
+  offset.x += 1.0f;
+  offset.y += 1.0f;
+  [scrollView setContentOffset: offset animated: NO];
+}
+
 - (void) reloadImageData
 {
   [imageCollectionView reloadData];
@@ -1210,6 +1404,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   //   forMode: NSRunLoopCommonModes];
 
   [self.table reloadData];
+  hiddenScrollView.contentSize = self.table.contentSize;
 }
 
 - (void) shareButtonSelected
