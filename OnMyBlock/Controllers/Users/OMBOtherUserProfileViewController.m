@@ -333,7 +333,8 @@ didFinishWithResult: (MFMailComposeResult) result error: (NSError*) error
 
 #pragma mark - Protocol OMBConnectionProtocol
 
-- (void) JSONDictionary: (NSDictionary *) dictionary forResourceName:(NSString *)resourceName
+- (void) JSONDictionary: (NSDictionary *) dictionary
+forResourceName: (NSString *) resourceName
 {
   if([resourceName isEqualToString:[OMBRoommate resourceName]]){
     [[self renterApplication] readFromDictionary: dictionary

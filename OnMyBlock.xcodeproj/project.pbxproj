@@ -63,6 +63,8 @@
 		AB17AE4218FD180600B6952C /* QVClusterAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB17AE4018FD180600B6952C /* QVClusterAnnotationView.m */; };
 		AB17AE4818FD183500B6952C /* QVCoordinateQuadTree.m in Sources */ = {isa = PBXBuildFile; fileRef = AB17AE4518FD183500B6952C /* QVCoordinateQuadTree.m */; };
 		AB17AE4918FD183500B6952C /* QVQuadTree.m in Sources */ = {isa = PBXBuildFile; fileRef = AB17AE4718FD183500B6952C /* QVQuadTree.m */; };
+		AB17AE4C18FD9C7800B6952C /* OMBTableParallaxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB17AE4B18FD9C7800B6952C /* OMBTableParallaxViewController.m */; };
+		AB17AE4F18FD9CB600B6952C /* OMBManageListingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB17AE4E18FD9CB600B6952C /* OMBManageListingDetailViewController.m */; };
 		AB18CF2218DE12680022ABF1 /* NSDictionary+DictionaryWithObject.m in Sources */ = {isa = PBXBuildFile; fileRef = AB18CF2118DE12680022ABF1 /* NSDictionary+DictionaryWithObject.m */; };
 		AB18CF2518DE12E60022ABF1 /* OMBModelCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB18CF2418DE12E60022ABF1 /* OMBModelCreateConnection.m */; };
 		AB18CF2818DE5F790022ABF1 /* OMBModelListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB18CF2718DE5F790022ABF1 /* OMBModelListConnection.m */; };
@@ -618,6 +620,10 @@
 		AB17AE4518FD183500B6952C /* QVCoordinateQuadTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QVCoordinateQuadTree.m; sourceTree = "<group>"; };
 		AB17AE4618FD183500B6952C /* QVQuadTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QVQuadTree.h; sourceTree = "<group>"; };
 		AB17AE4718FD183500B6952C /* QVQuadTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QVQuadTree.m; sourceTree = "<group>"; };
+		AB17AE4A18FD9C7800B6952C /* OMBTableParallaxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTableParallaxViewController.h; sourceTree = "<group>"; };
+		AB17AE4B18FD9C7800B6952C /* OMBTableParallaxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTableParallaxViewController.m; sourceTree = "<group>"; };
+		AB17AE4D18FD9CB600B6952C /* OMBManageListingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBManageListingDetailViewController.h; sourceTree = "<group>"; };
+		AB17AE4E18FD9CB600B6952C /* OMBManageListingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBManageListingDetailViewController.m; sourceTree = "<group>"; };
 		AB18CF2018DE12680022ABF1 /* NSDictionary+DictionaryWithObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+DictionaryWithObject.h"; sourceTree = "<group>"; };
 		AB18CF2118DE12680022ABF1 /* NSDictionary+DictionaryWithObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+DictionaryWithObject.m"; sourceTree = "<group>"; };
 		AB18CF2318DE12E60022ABF1 /* OMBModelCreateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBModelCreateConnection.h; sourceTree = "<group>"; };
@@ -1746,6 +1752,8 @@
 				AB4ED2DC18845ED4009AFB01 /* OMBFinishListingOpenHouseDatesViewController.m */,
 				AB4ED2DE188462D8009AFB01 /* OMBFinishListingOpenHouseDateAddViewController.h */,
 				AB4ED2DF188462D8009AFB01 /* OMBFinishListingOpenHouseDateAddViewController.m */,
+				AB17AE4D18FD9CB600B6952C /* OMBManageListingDetailViewController.h */,
+				AB17AE4E18FD9CB600B6952C /* OMBManageListingDetailViewController.m */,
 			);
 			path = "Manage Listings";
 			sourceTree = "<group>";
@@ -1837,7 +1845,6 @@
 		AB802EA318109E5200E04D11 /* OnMyBlock */ = {
 			isa = PBXGroup;
 			children = (
-				AB17AE4318FD183500B6952C /* Map */,
 				ABB3C56C1811719B00DD91C9 /* AppDelegate */,
 				AB9B263D1811CB1300E6DAC4 /* Categories */,
 				AB9B264A1811CE5E00E6DAC4 /* Connections */,
@@ -1847,6 +1854,7 @@
 				ABB3C56F1811719B00DD91C9 /* Images */,
 				AB802EAF18109E5200E04D11 /* Images.xcassets */,
 				AB26131B18198E260053A8AA /* Layouts */,
+				AB17AE4318FD183500B6952C /* Map */,
 				AB9B260C1811AA6600E6DAC4 /* Models */,
 				AB00B9C718BD48340050D6F4 /* Protocol */,
 				AB9B26241811AF6C00E6DAC4 /* Stores */,
@@ -2619,6 +2627,8 @@
 				ABE4FBEB189045E40009D643 /* Payout Methods */,
 				ABDF17471866392E004E2755 /* Residences */,
 				ABB9117118982ACF0046611F /* Users */,
+				AB17AE4A18FD9C7800B6952C /* OMBTableParallaxViewController.h */,
+				AB17AE4B18FD9C7800B6952C /* OMBTableParallaxViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -3365,6 +3375,7 @@
 				AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */,
 				AB9FEF0218D02D3800E25FE2 /* OMBCosignerListConnection.m in Sources */,
 				ABBA58971870C59700E9BF4E /* ELCAssetTablePicker.m in Sources */,
+				AB17AE4F18FD9CB600B6952C /* OMBManageListingDetailViewController.m in Sources */,
 				ABBB18DD182453BF00211499 /* OMBAnnotationCity.m in Sources */,
 				ABABEC4C1864D56A008B6768 /* OMBMapViewController.m in Sources */,
 				ABA3D69B18A9423D006CE8C1 /* OMBTestFlowLayout.m in Sources */,
@@ -3406,6 +3417,7 @@
 				DE92170918D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m in Sources */,
 				AB17AE4218FD180600B6952C /* QVClusterAnnotationView.m in Sources */,
 				ABA5B4291857B20900F825E1 /* OMBEmploymentCreateConnection.m in Sources */,
+				AB17AE4C18FD9C7800B6952C /* OMBTableParallaxViewController.m in Sources */,
 				ABB70070187B76EB005F0730 /* OMBImageTwoLabelCell.m in Sources */,
 				ABB9118B18994F980046611F /* OMBBecomeVerifiedViewController.m in Sources */,
 				AB95457D18491A87000513BE /* OMBUserImageDownloader.m in Sources */,
