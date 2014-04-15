@@ -14,6 +14,8 @@
 
 #pragma mark - Instance Methods
 
+- (void) setFont: (UIFont *) font;
 - (void) setImage: (UIImage *) image text: (NSString *) text;
+- (void) setTextColor: (UIColor *) color;
 
 @end

@@ -18,4 +18,11 @@
   UILabel *topLabel;
 }
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) setImageViewAlpha: (CGFloat) value;
+- (void) setImageViewCircular: (BOOL) isCircular;
+
 @end

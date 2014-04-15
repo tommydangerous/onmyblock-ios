@@ -8,14 +8,16 @@
 
 #import "OMBImageOneLabelCell.h"
 
+#import "OMBViewController.h"
+
 @implementation OMBImageOneLabelCell
 
 #pragma mark - Initializer
 
-- (id) initWithStyle: (UITableViewCellStyle) style 
+- (id) initWithStyle: (UITableViewCellStyle) style
 reuseIdentifier: (NSString *) reuseIdentifier
 {
-  if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
+  if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier]))
     return nil;
 
   CGRect screen       = [[UIScreen mainScreen] bounds];
@@ -29,11 +31,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
   objectImageView.layer.cornerRadius = imageSize * 0.5f;
 
   // Top
-  CGFloat topLabelOriginX = objectImageView.frame.origin.x + 
+  CGFloat topLabelOriginX = objectImageView.frame.origin.x +
     objectImageView.frame.size.width + paddingX;
   topLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  topLabel.frame = CGRectMake(topLabelOriginX, paddingY, 
-    screenWidth - (topLabelOriginX + paddingX), 
+  topLabel.frame = CGRectMake(topLabelOriginX, paddingY,
+    screenWidth - (topLabelOriginX + paddingX),
       objectImageView.frame.size.height);
 
   middleLabel.hidden = YES;
@@ -52,12 +54,28 @@ reuseIdentifier: (NSString *) reuseIdentifier
   return paddingY + 38.0f + paddingY;
 }
 
++ (CGSize) sizeForImage
+{
+  return CGSizeMake([OMBImageOneLabelCell heightForCell] - OMBPadding,
+    [OMBImageOneLabelCell heightForCell] - OMBPadding);
+}
+
 #pragma mark - Instance Methods
+
+- (void) setFont: (UIFont *) font
+{
+  topLabel.font = font;
+}
 
 - (void) setImage: (UIImage *) image text: (NSString *) text
 {
   objectImageView.image = image;
   topLabel.text = text;
+}
+
+- (void) setTextColor: (UIColor *) color
+{
+  topLabel.textColor = color;
 }
 
 @end

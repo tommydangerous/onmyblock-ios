@@ -108,11 +108,11 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 - (BOOL) hasAmenity: (NSString *) amenity;
 - (NSArray *) imagesArray;
 - (UIImage *) imageAtPosition: (int) position;
-- (UIImage *) imageForSize: (CGSize) size 
+- (UIImage *) imageForSize: (CGSize) size
   forResidenceImage: (OMBResidenceImage *) residenceImage;
-- (UIImage *) imageForSizeKey: (NSString *) string 
+- (UIImage *) imageForSizeKey: (NSString *) string
   forResidenceImage: (OMBResidenceImage *) residenceImage;
-- (BOOL) isFromExternalSource;  
+- (BOOL) isFromExternalSource;
 - (NSString *) leaseMonthsStringShort;
 - (NSString *) legalDetailsShareString;
 - (NSDate *) moveOutDateDate;
@@ -130,7 +130,9 @@ withURL: (NSURL *) url completion: (void (^)(void)) block;
 - (NSString *) shareString;
 - (NSArray *) sortedOffers;
 - (NSArray *) sortedOpenHouseDates;
+- (NSString *) stateFormattedString;
 - (NSString *) statusString;
+- (NSString *) titleOrAddress;
 - (void) updateCoverPhotoURL;
 - (void) updateResidenceWithResidence: (OMBResidence *) residence;
 - (BOOL) validTitle;

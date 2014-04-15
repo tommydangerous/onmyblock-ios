@@ -9,6 +9,9 @@
 #import "OMBLabelTextFieldCell.h"
 
 @interface OMBLabelSwitchCell : OMBLabelTextFieldCell
+{
+  UISwitch *switchButton;
+}
 
 #pragma mark - Methods
 
@@ -16,4 +19,5 @@
 
 - (void) addTarget: (id) target action: (SEL) selector;
 - (void) setFrameUsingSize: (CGSize) size;
+
 @end

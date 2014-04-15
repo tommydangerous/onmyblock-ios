@@ -9,11 +9,10 @@
 #import "OMBLabelSwitchCell.h"
 
 #import "OMBViewController.h"
+#import "UIFont+OnMyBlock.h"
+#import "UILabel+Image.h"
 
 @interface OMBLabelSwitchCell ()
-{
-  UISwitch *switchButton;
-}
 
 @end
 
@@ -21,10 +20,10 @@
 
 #pragma mark - Initializer
 
-- (id) initWithStyle: (UITableViewCellStyle) style 
+- (id) initWithStyle: (UITableViewCellStyle) style
 reuseIdentifier: (NSString *)reuseIdentifier
 {
-  if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
+  if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier]))
     return nil;
 
   switchButton = [UISwitch new];
@@ -47,19 +46,20 @@ reuseIdentifier: (NSString *)reuseIdentifier
   CGFloat padding     = OMBPadding;
 
   switchButton.frame = CGRectMake(
-    screenWidth - (switchButton.frame.size.width + padding), 
+    screenWidth - (switchButton.frame.size.width + padding),
       (size.height - switchButton.frame.size.height) * 0.5f,
         switchButton.frame.size.width, switchButton.frame.size.height);
 
-  self.textFieldLabel.frame = CGRectMake(padding, (OMBStandardButtonHeight - OMBStandardHeight) * 0.5f,
-    size.width, OMBStandardHeight);
+  self.textFieldLabel.frame = CGRectMake(padding,
+    (OMBStandardButtonHeight - OMBStandardHeight) * 0.5f,
+      size.width, OMBStandardHeight);
 }
 
 - (void) addTarget: (id) target action: (SEL) selector
 {
   [switchButton removeTarget: target action: nil
     forControlEvents: UIControlEventTouchUpInside];
-  [switchButton addTarget: target action: selector 
+  [switchButton addTarget: target action: selector
     forControlEvents: UIControlEventTouchUpInside];
 }
 

@@ -12,10 +12,10 @@
 
 #pragma mark - Initializer
 
-- (id) initWithStyle: (UITableViewCellStyle) style 
+- (id) initWithStyle: (UITableViewCellStyle) style
 reuseIdentifier: (NSString *) reuseIdentifier
 {
-  if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier])) 
+  if (!(self = [super initWithStyle: style reuseIdentifier: reuseIdentifier]))
     return nil;
 
   CGRect screen       = [[UIScreen mainScreen] bounds];
@@ -32,9 +32,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
   // Top
   topLabel = [UILabel new];
   topLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
-  CGFloat topLabelOriginX = objectImageView.frame.origin.x + 
+  CGFloat topLabelOriginX = objectImageView.frame.origin.x +
     objectImageView.frame.size.width + padding;
-  topLabel.frame = CGRectMake(topLabelOriginX, padding, 
+  topLabel.frame = CGRectMake(topLabelOriginX, padding,
     screenWidth - (topLabelOriginX + padding), 22.0f);
   topLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: topLabel];
@@ -68,6 +68,24 @@ reuseIdentifier: (NSString *) reuseIdentifier
 {
   CGFloat padding = 20.0f;
   return padding + 22.0f + 22.0f + 22.0f + padding;
+}
+
+#pragma mark - Instance Methods
+
+- (void) setImageViewAlpha: (CGFloat) value
+{
+  objectImageView.alpha = value;
+}
+
+- (void) setImageViewCircular: (BOOL) isCircular
+{
+  if (isCircular) {
+    objectImageView.layer.cornerRadius =
+      objectImageView.frame.size.height * 0.5f;
+  }
+  else {
+    objectImageView.layer.cornerRadius = 0.0f;
+  }
 }
 
 @end

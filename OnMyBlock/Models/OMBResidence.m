@@ -38,10 +38,10 @@ NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
 
   self.amenities = [NSMutableDictionary dictionary];
   for (NSString *amenity in [[OMBAmenityStore sharedStore] allAmenities]) {
-    [self.amenities setObject: [NSNumber numberWithInt: 0] 
+    [self.amenities setObject: [NSNumber numberWithInt: 0]
       forKey: [amenity lowercaseString]];
   }
-  
+
   _coverPhotoSizeDictionary = [NSMutableDictionary dictionary];
   _images              = [NSMutableArray array];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
@@ -114,7 +114,7 @@ NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
   [self.amenities setObject: @1 forKey: amenity];
 }
 
-- (void) addImage: (UIImage *) image atPosition: (int) position 
+- (void) addImage: (UIImage *) image atPosition: (int) position
 withString: (NSString *) string
 {
   // Check to see if an image with string already exists
@@ -139,7 +139,7 @@ toImageSizeDictionaryWithSize: (CGSize) size
     dict = [NSMutableDictionary dictionary];
     [_imageSizeDictionary setObject: dict forKey: key];
   }
-  [dict setObject: residenceImage.image forKey: 
+  [dict setObject: residenceImage.image forKey:
     [NSString stringWithFormat: @"%f,%f", size.width, size.height]];
 }
 
@@ -161,7 +161,7 @@ toImageSizeDictionaryWithSize: (CGSize) size
 
 - (void) addResidenceImage: (OMBResidenceImage *) residenceImage
 {
-  
+
   NSPredicate *predicate = [NSPredicate predicateWithFormat:
     @"%K == %i", @"uid", residenceImage.uid];
   if ([[_images filteredArrayUsingPredicate: predicate] count] == 0) {
@@ -207,7 +207,7 @@ toImageSizeDictionaryWithSize: (CGSize) size
     if (_availableOn > [[NSDate date] timeIntervalSince1970]) {
       NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
       dateFormatter.dateFormat       = @"MMMM d, yyyy";
-      return [dateFormatter stringFromDate: 
+      return [dateFormatter stringFromDate:
         [NSDate dateWithTimeIntervalSince1970: _availableOn]];
     }
     else
@@ -248,10 +248,10 @@ toImageSizeDictionaryWithSize: (CGSize) size
       NSInteger height = [[words objectAtIndex: 1] floatValue];
       if ([self coverPhoto]) {
         // Leave it up to the object that uses this to set the image
-        // into the dictionary; e.g. the OMBMangeListingsCell 
-        // resizes this image in it's OMBCenteredImageView then sets 
+        // into the dictionary; e.g. the OMBMangeListingsCell
+        // resizes this image in it's OMBCenteredImageView then sets
         // the object for key in the imagesSizedictionary
-        image = [UIImage image: [self coverPhoto] 
+        image = [UIImage image: [self coverPhoto]
           size: CGSizeMake(width, height)];
       }
     }
@@ -278,7 +278,7 @@ toImageSizeDictionaryWithSize: (CGSize) size
   // Center it vertically
   if (newHeight > size.height)
     point.y = (newHeight - size.height) / -2.0;
-  return [UIImage image: img size: CGSizeMake(newWidth, newHeight) 
+  return [UIImage image: img size: CGSizeMake(newWidth, newHeight)
     point: point];
 }
 
@@ -309,7 +309,7 @@ toImageSizeDictionaryWithSize: (CGSize) size
 
 - (void) downloadCoverPhotoWithCompletion: (void (^) (NSError *error)) block
 {
-  coverPhotoURLConnection = 
+  coverPhotoURLConnection =
     [[OMBResidenceCoverPhotoURLConnection alloc] initWithResidence: self];
   coverPhotoURLConnection.completionBlock = block;
   [coverPhotoURLConnection start];
@@ -317,7 +317,7 @@ toImageSizeDictionaryWithSize: (CGSize) size
 
 - (void) downloadImagesWithCompletion: (void (^) (NSError *error)) block
 {
-  OMBResidenceImagesConnection *conn = 
+  OMBResidenceImagesConnection *conn =
     [[OMBResidenceImagesConnection alloc] initWithResidence: self];
   conn.completionBlock = block;
   [conn start];
@@ -326,7 +326,7 @@ toImageSizeDictionaryWithSize: (CGSize) size
 - (NSURL *) googleStaticMapImageURL
 {
   NSString *base = @"https://maps.googleapis.com/maps/api/staticmap?";
-  NSString *center = [NSString stringWithFormat: 
+  NSString *center = [NSString stringWithFormat:
     @"%f,%f", _latitude, _longitude];
   NSString *markers = [NSString stringWithFormat:
     @"size:mid%%7Ccolor:0x1174d2%%7C%@", center];
@@ -344,17 +344,17 @@ toImageSizeDictionaryWithSize: (CGSize) size
   };
   NSString *paramsString = @"";
   for (NSString *key in [params allKeys]) {
-    paramsString = [paramsString stringByAppendingString: 
+    paramsString = [paramsString stringByAppendingString:
       [NSString stringWithFormat: @"%@=%@&", key, [params objectForKey: key]]];
   }
-  return [NSURL URLWithString: 
+  return [NSURL URLWithString:
     [NSString stringWithFormat: @"%@%@", base, paramsString]];
 }
 
 - (NSURL *) googleStaticStreetViewImageURL
 {
   NSString *base = @"http://maps.googleapis.com/maps/api/streetview?";
-  NSString *location = [NSString stringWithFormat: 
+  NSString *location = [NSString stringWithFormat:
     @"%f,%f", _latitude, _longitude];
   NSString *size = @"640x320";
   NSString *sensor = @"false";
@@ -365,10 +365,10 @@ toImageSizeDictionaryWithSize: (CGSize) size
   };
   NSString *paramsString = @"";
   for (NSString *key in [params allKeys]) {
-    paramsString = [paramsString stringByAppendingString: 
+    paramsString = [paramsString stringByAppendingString:
       [NSString stringWithFormat: @"%@=%@&", key, [params objectForKey: key]]];
   }
-  return [NSURL URLWithString: 
+  return [NSURL URLWithString:
     [NSString stringWithFormat: @"%@%@", base, paramsString]];
 }
 
@@ -400,7 +400,7 @@ toImageSizeDictionaryWithSize: (CGSize) size
   // }
   // return array;
 
-  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"position" 
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"position"
     ascending: YES];
   return [_images sortedArrayUsingDescriptors: @[sort]];
 }
@@ -417,13 +417,13 @@ toImageSizeDictionaryWithSize: (CGSize) size
   return nil;
 }
 
-- (UIImage *) imageForSize: (CGSize) size 
+- (UIImage *) imageForSize: (CGSize) size
 forResidenceImage: (OMBResidenceImage *) residenceImage
 {
   return [self imageForSizeKey: [NSString stringWithFormat: @"%f,%f",
     size.width, size.height] forResidenceImage: residenceImage];
 }
-- (UIImage *) imageForSizeKey: (NSString *) string 
+- (UIImage *) imageForSizeKey: (NSString *) string
 forResidenceImage: (OMBResidenceImage *) residenceImage
 {
   NSNumber *key = [NSNumber numberWithInt: residenceImage.uid];
@@ -439,10 +439,10 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
       NSInteger width  = [[words objectAtIndex: 0] floatValue];
       NSInteger height = [[words objectAtIndex: 1] floatValue];
       // Leave it up to the object that uses this to set the image
-      // into the dictionary; e.g. the OMBMangeListingsCell 
-      // resizes this image in it's OMBCenteredImageView then sets 
+      // into the dictionary; e.g. the OMBMangeListingsCell
+      // resizes this image in it's OMBCenteredImageView then sets
       // the object for key in the imagesSizedictionary
-      image = [UIImage image: residenceImage.image 
+      image = [UIImage image: residenceImage.image
         proportionatelySized: CGSizeMake(width, height)];
     }
   }
@@ -487,7 +487,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
 - (NSDate *) moveOutDateDate
 {
   NSCalendar *calendar = [NSCalendar currentCalendar];
-  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit | 
+  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit |
     NSWeekdayCalendarUnit | NSYearCalendarUnit);
 
   NSDateComponents *moveInComps = [calendar components: unitFlags
@@ -538,7 +538,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   if (_bedrooms >= 0)
     stepsRemaining -= 1;
 
-  return stepsRemaining;  
+  return stepsRemaining;
 }
 
 - (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size
@@ -547,7 +547,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   {
     OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex:index];
     UIImage *img = residenceImage.image;
-    
+
     CGFloat newHeight = size.height;
     CGFloat newWidth  = img.size.width * (size.height / img.size.height);
     if (newWidth < size.width) {
@@ -566,7 +566,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
     return [UIImage image: img size: CGSizeMake(newWidth, newHeight)
     point: point];
   }
-  
+
   return nil;
 }
 
@@ -612,12 +612,12 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   NSString *dateString        = [dictionary objectForKey: @"available_on"];
   NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
   [dateFormat setDateFormat: @"MMMM d, yyyy"];
-  if ([dateString isEqualToString: @"Immediately"] || 
+  if ([dateString isEqualToString: @"Immediately"] ||
     [dateString isEqualToString: @"Soon"]) {
     _availableOn = [[NSDate date] timeIntervalSince1970];
   }
   else {
-    _availableOn = [[dateFormat dateFromString: 
+    _availableOn = [[dateFormat dateFromString:
       dateString] timeIntervalSince1970];
   }
   _bathrooms = [[dictionary objectForKey: @"ba"] floatValue];
@@ -676,7 +676,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
     _address = [[dictionary objectForKey: @"address"] stripWhiteSpace];
   // Amenities
   if ([dictionary objectForKey: @"amenities"] != [NSNull null]) {
-    NSArray *amenitiesArray = [[dictionary objectForKey: 
+    NSArray *amenitiesArray = [[dictionary objectForKey:
       @"amenities"] componentsSeparatedByString: @","];
     for (NSString *amenitiesString in amenitiesArray) {
       if ([amenitiesString length])
@@ -686,7 +686,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   }
   // Auction Duration
   if ([dictionary objectForKey: @"auction_duration"] != [NSNull null])
-    _auctionDuration = [[dictionary objectForKey: 
+    _auctionDuration = [[dictionary objectForKey:
       @"auction_duration"] intValue];
   // Auction Start Date
   if ([dictionary objectForKey: @"auction_start_date"] != [NSNull null])
@@ -794,18 +794,18 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   // Move-in Date
   if ([dictionary objectForKey: @"move_in_date"] != [NSNull null] &&
     [[dictionary objectForKey: @"move_in_date"] length]) {
-    NSDate *date = [dateFormatter dateFromString: 
+    NSDate *date = [dateFormatter dateFromString:
       [dictionary objectForKey: @"move_in_date"]];
     _moveInDate = [date timeIntervalSince1970];
   }
   else {
     _moveInDate = [[NSDate date] timeIntervalSince1970];
   }
-  
+
   // Move-out Date
   if ([dictionary objectForKey: @"move_out_date"] != [NSNull null] &&
     [[dictionary objectForKey: @"move_out_date"] length]) {
-    NSDate *date = [dateFormatter dateFromString: 
+    NSDate *date = [dateFormatter dateFromString:
       [dictionary objectForKey: @"move_out_date"]];
     _moveOutDate = [date timeIntervalSince1970];
   }
@@ -822,7 +822,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   }
   // Rent it Now Price
   if ([dictionary objectForKey: @"rent_it_now_price"] != [NSNull null])
-    _rentItNowPrice = [[dictionary objectForKey: 
+    _rentItNowPrice = [[dictionary objectForKey:
       @"rent_it_now_price"] floatValue];
   // Square feet
   if ([dictionary objectForKey: @"sqft"] != [NSNull null])
@@ -923,9 +923,9 @@ withURL: (NSURL *) url completion: (void (^)(void)) block
   return [NSString stringWithFormat:
             @"Check out this listing I found using OnMyBlock!  %@",
               string];
-  
+
   /*return [NSString stringWithFormat: @"%.0f %@, %.0f %@ for only %@\n%@",
-    _bedrooms, bedsString, _bathrooms, bathsString, 
+    _bedrooms, bedsString, _bathrooms, bathsString,
       [self rentToCurrencyString], string];*/
 }
 
@@ -943,6 +943,19 @@ withURL: (NSURL *) url completion: (void (^)(void)) block
   return [_openHouseDates sortedArrayUsingDescriptors: @[sort]];
 }
 
+- (NSString *) stateFormattedString
+{
+  if (self.state && [self.state length]) {
+    if ([self.state length] > 2) {
+      return [self.state capitalizedString];
+    }
+    else {
+      return [self.state uppercaseString];
+    }
+  }
+  return @"";
+}
+
 - (NSString *) statusString
 {
   NSInteger stepsRemaining = [self numberOfStepsLeft];
@@ -954,6 +967,15 @@ withURL: (NSURL *) url completion: (void (^)(void)) block
       stepsRemaining, stepsString];
   }
   return @"Ready to Publish";
+}
+
+- (NSString *) titleOrAddress
+{
+  if (self.title && [self.title length])
+    return self.title;
+  else if (self.address && [self.address length])
+    return [self.address capitalizedString];
+  return @"";
 }
 
 - (void) updateCoverPhotoURL
@@ -1001,10 +1023,10 @@ withURL: (NSURL *) url completion: (void (^)(void)) block
 - (BOOL) validTitle
 {
   if ([[_title stripWhiteSpace] length]) {
-    NSRegularExpression *regex = 
-      [NSRegularExpression regularExpressionWithPattern: @"(detached|other)" 
+    NSRegularExpression *regex =
+      [NSRegularExpression regularExpressionWithPattern: @"(detached|other)"
         options: 0 error: nil];
-    NSArray *matches = [regex matchesInString: [_title lowercaseString] 
+    NSArray *matches = [regex matchesInString: [_title lowercaseString]
       options: 0 range: NSMakeRange(0, [_title length])];
     for (NSTextCheckingResult *result in matches) {
       if (result.range.location == 0) {

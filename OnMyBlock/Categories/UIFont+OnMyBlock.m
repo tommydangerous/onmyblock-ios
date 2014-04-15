@@ -63,6 +63,16 @@ NSString *const OMBFontNameBold = @"HelveticaNeue-Medium";
   return [UIFont fontWithSize: 18 bold: YES];
 }
 
++ (UIFont *) normalSmallTextFont
+{
+  return [UIFont fontWithSize: 14 bold: NO];
+}
+
++ (UIFont *) normalSmallTextFontBold
+{
+  return [UIFont fontWithSize: 14 bold: YES];
+}
+
 + (UIFont *) normalTextFont
 {
   return [UIFont fontWithSize: 15 bold: NO];

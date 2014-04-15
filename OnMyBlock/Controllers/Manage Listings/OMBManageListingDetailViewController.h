@@ -8,6 +8,22 @@
 
 #import "OMBTableParallaxViewController.h"
 
+@class OMBResidence;
+
+typedef NS_ENUM(NSInteger, OMBManageListingDetailSection) {
+  OMBManageListingDetailSectionTop
+};
+
+typedef NS_ENUM(NSInteger, OMBManageListingDetailSectionTopRow) {
+  OMBManageListingDetailSectionTopRowEdit,
+  OMBManageListingDetailSectionTopRowPreview,
+  OMBManageListingDetailSectionTopRowStatus
+};
+
 @interface OMBManageListingDetailViewController : OMBTableParallaxViewController
+
+#pragma mark - Initializer
+
+- (id) initWithResidence: (OMBResidence *) object;
 
 @end

@@ -197,7 +197,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     }
     else {
       [self.navigationController pushViewController:
-        [[OMBManageListingDetailViewController alloc] init] animated: YES];
+        [[OMBManageListingDetailViewController alloc] initWithResidence:
+          residence] animated: YES];
     }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];

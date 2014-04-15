@@ -65,6 +65,13 @@
 		AB17AE4918FD183500B6952C /* QVQuadTree.m in Sources */ = {isa = PBXBuildFile; fileRef = AB17AE4718FD183500B6952C /* QVQuadTree.m */; };
 		AB17AE4C18FD9C7800B6952C /* OMBTableParallaxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB17AE4B18FD9C7800B6952C /* OMBTableParallaxViewController.m */; };
 		AB17AE4F18FD9CB600B6952C /* OMBManageListingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB17AE4E18FD9CB600B6952C /* OMBManageListingDetailViewController.m */; };
+		AB17AE5418FDAC6200B6952C /* eye_icon_black.png in Resources */ = {isa = PBXBuildFile; fileRef = AB17AE5018FDAC6200B6952C /* eye_icon_black.png */; };
+		AB17AE5518FDAC6200B6952C /* eye_icon_black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB17AE5118FDAC6200B6952C /* eye_icon_black@2x.png */; };
+		AB17AE5618FDAC6200B6952C /* light_bulb_icon_black.png in Resources */ = {isa = PBXBuildFile; fileRef = AB17AE5218FDAC6200B6952C /* light_bulb_icon_black.png */; };
+		AB17AE5718FDAC6200B6952C /* light_bulb_icon_black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB17AE5318FDAC6200B6952C /* light_bulb_icon_black@2x.png */; };
+		AB17AE5A18FDB8C100B6952C /* OMBManageListingDetailEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB17AE5918FDB8C100B6952C /* OMBManageListingDetailEditCell.m */; };
+		AB17AE6518FDDD6F00B6952C /* UILabel+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = AB17AE6418FDDD6F00B6952C /* UILabel+Image.m */; };
+		AB17AE6818FDDEF100B6952C /* OMBManageListingDetailStatusCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB17AE6718FDDEF100B6952C /* OMBManageListingDetailStatusCell.m */; };
 		AB18CF2218DE12680022ABF1 /* NSDictionary+DictionaryWithObject.m in Sources */ = {isa = PBXBuildFile; fileRef = AB18CF2118DE12680022ABF1 /* NSDictionary+DictionaryWithObject.m */; };
 		AB18CF2518DE12E60022ABF1 /* OMBModelCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB18CF2418DE12E60022ABF1 /* OMBModelCreateConnection.m */; };
 		AB18CF2818DE5F790022ABF1 /* OMBModelListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB18CF2718DE5F790022ABF1 /* OMBModelListConnection.m */; };
@@ -624,6 +631,16 @@
 		AB17AE4B18FD9C7800B6952C /* OMBTableParallaxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTableParallaxViewController.m; sourceTree = "<group>"; };
 		AB17AE4D18FD9CB600B6952C /* OMBManageListingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBManageListingDetailViewController.h; sourceTree = "<group>"; };
 		AB17AE4E18FD9CB600B6952C /* OMBManageListingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBManageListingDetailViewController.m; sourceTree = "<group>"; };
+		AB17AE5018FDAC6200B6952C /* eye_icon_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = eye_icon_black.png; sourceTree = "<group>"; };
+		AB17AE5118FDAC6200B6952C /* eye_icon_black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eye_icon_black@2x.png"; sourceTree = "<group>"; };
+		AB17AE5218FDAC6200B6952C /* light_bulb_icon_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = light_bulb_icon_black.png; sourceTree = "<group>"; };
+		AB17AE5318FDAC6200B6952C /* light_bulb_icon_black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "light_bulb_icon_black@2x.png"; sourceTree = "<group>"; };
+		AB17AE5818FDB8C100B6952C /* OMBManageListingDetailEditCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBManageListingDetailEditCell.h; sourceTree = "<group>"; };
+		AB17AE5918FDB8C100B6952C /* OMBManageListingDetailEditCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBManageListingDetailEditCell.m; sourceTree = "<group>"; };
+		AB17AE6318FDDD6F00B6952C /* UILabel+Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Image.h"; sourceTree = "<group>"; };
+		AB17AE6418FDDD6F00B6952C /* UILabel+Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Image.m"; sourceTree = "<group>"; };
+		AB17AE6618FDDEF100B6952C /* OMBManageListingDetailStatusCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBManageListingDetailStatusCell.h; sourceTree = "<group>"; };
+		AB17AE6718FDDEF100B6952C /* OMBManageListingDetailStatusCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBManageListingDetailStatusCell.m; sourceTree = "<group>"; };
 		AB18CF2018DE12680022ABF1 /* NSDictionary+DictionaryWithObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+DictionaryWithObject.h"; sourceTree = "<group>"; };
 		AB18CF2118DE12680022ABF1 /* NSDictionary+DictionaryWithObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+DictionaryWithObject.m"; sourceTree = "<group>"; };
 		AB18CF2318DE12E60022ABF1 /* OMBModelCreateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBModelCreateConnection.h; sourceTree = "<group>"; };
@@ -1910,6 +1927,10 @@
 				ABBA58A81871551400E9BF4E /* OMBFinishListingRentItNowPriceCell.m */,
 				ABBA58B318723CF800E9BF4E /* OMBManageListingsCell.h */,
 				ABBA58B418723CF800E9BF4E /* OMBManageListingsCell.m */,
+				AB17AE5818FDB8C100B6952C /* OMBManageListingDetailEditCell.h */,
+				AB17AE5918FDB8C100B6952C /* OMBManageListingDetailEditCell.m */,
+				AB17AE6618FDDEF100B6952C /* OMBManageListingDetailStatusCell.h */,
+				AB17AE6718FDDEF100B6952C /* OMBManageListingDetailStatusCell.m */,
 			);
 			path = "Manage Listings";
 			sourceTree = "<group>";
@@ -2241,6 +2262,8 @@
 				ABA5CB5418EE907B00D80A90 /* OMBViewController+PayPalPayment.m */,
 				AB62C8C718F2283F00285BE8 /* NSUserDefaults+OnMyBlock.h */,
 				AB62C8C818F2283F00285BE8 /* NSUserDefaults+OnMyBlock.m */,
+				AB17AE6318FDDD6F00B6952C /* UILabel+Image.h */,
+				AB17AE6418FDDD6F00B6952C /* UILabel+Image.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -2523,6 +2546,10 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				AB17AE5018FDAC6200B6952C /* eye_icon_black.png */,
+				AB17AE5118FDAC6200B6952C /* eye_icon_black@2x.png */,
+				AB17AE5218FDAC6200B6952C /* light_bulb_icon_black.png */,
+				AB17AE5318FDAC6200B6952C /* light_bulb_icon_black@2x.png */,
 				AB5DD32D18CE019700237AFC /* neighborhood_downtown.jpg */,
 				AB5DD32E18CE019700237AFC /* neighborhood_hillcrest.jpg */,
 				AB5DD32F18CE019700237AFC /* neighborhood_la_jolla.jpg */,
@@ -3191,7 +3218,9 @@
 				ABE28189186A486E00A5D14E /* edward_d@2x.jpg in Resources */,
 				ABB911701898215B0046611F /* intro_still_image_slide_9_background@2x.jpg in Resources */,
 				AB5DD33B18CE019700237AFC /* neighborhood_pacific_beach.jpg in Resources */,
+				AB17AE5418FDAC6200B6952C /* eye_icon_black.png in Resources */,
 				AB5DD33618CE019700237AFC /* neighborhood_hillcrest.jpg in Resources */,
+				AB17AE5718FDAC6200B6952C /* light_bulb_icon_black@2x.png in Resources */,
 				ABF8ECA9182D6C6B0080B1E2 /* intro_contact_view_background.jpg in Resources */,
 				ABBA589B1870C59700E9BF4E /* ELCAssetTablePicker.xib in Resources */,
 				ABE2817D186A187E00A5D14E /* README.md in Resources */,
@@ -3206,11 +3235,13 @@
 				AB5DD33518CE019700237AFC /* neighborhood_downtown.jpg in Resources */,
 				AB5DD33A18CE019700237AFC /* neighborhood_ocean_beach.jpg in Resources */,
 				AB9B2602181196F400E6DAC4 /* location.gpx in Resources */,
+				AB17AE5518FDAC6200B6952C /* eye_icon_black@2x.png in Resources */,
 				B484A9C018B55A2F005DEBBE /* menuBackground@2x.jpg in Resources */,
 				AB5DD33718CE019700237AFC /* neighborhood_la_jolla.jpg in Resources */,
 				ABBA589A1870C59700E9BF4E /* ELCAssetPicker.xib in Resources */,
 				ABBA58991870C59700E9BF4E /* ELCAlbumPickerController.xib in Resources */,
 				AB802EB018109E5200E04D11 /* Images.xcassets in Resources */,
+				AB17AE5618FDAC6200B6952C /* light_bulb_icon_black.png in Resources */,
 				AB5DD33818CE019700237AFC /* neighborhood_mission_beach.jpg in Resources */,
 				ABB9115A1897F7DE0046611F /* intro_still_image_slide_6_background@2x.jpg in Resources */,
 				ABB9115B1897F7DE0046611F /* intro_still_image_slide_7_background@2x.jpg in Resources */,
@@ -3435,6 +3466,7 @@
 				ABB911CB189998810046611F /* OMBAuthenticationLinkedInConnection.m in Sources */,
 				ABAF229118526DF30041BF60 /* OMBPreviousRental.m in Sources */,
 				ABCB36B5187CA3D5008A0EEF /* OMBImageOneLabelCell.m in Sources */,
+				AB17AE6518FDDD6F00B6952C /* UILabel+Image.m in Sources */,
 				AB131F311885CE450057D769 /* OMBResidenceOffersConnection.m in Sources */,
 				ABA0808C1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m in Sources */,
 				ABE7067D1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.m in Sources */,
@@ -3604,6 +3636,7 @@
 				ABB173BF189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m in Sources */,
 				ABDF174A1866396C004E2755 /* OMBResidenceBookItViewController.m in Sources */,
 				ABA5B42C1857B9E300F825E1 /* OMBEmploymentListConnection.m in Sources */,
+				AB17AE6818FDDEF100B6952C /* OMBManageListingDetailStatusCell.m in Sources */,
 				AB8642BC18AB50A500995571 /* OMBInformationStepsCell.m in Sources */,
 				ABB91197189976060046611F /* OMBLinkedInButton.m in Sources */,
 				ABB911C018998FB30046611F /* AFHTTPSessionManager.m in Sources */,
@@ -3660,6 +3693,7 @@
 				ABDF17561868AABB004E2755 /* OMBResidenceConfirmDetailsDatesCell.m in Sources */,
 				AB70CB7A186CD1E00083DF4C /* OMBManageListingsViewController.m in Sources */,
 				ABF18BBA1816D3F0002DD723 /* TextFieldPadding.m in Sources */,
+				AB17AE5A18FDB8C100B6952C /* OMBManageListingDetailEditCell.m in Sources */,
 				AB9FEF0118D02D3800E25FE2 /* OMBCosignerCreateConnection.m in Sources */,
 				ABED5FCE1895977200AD630C /* OMBResidenceDetailImageCollectionViewCell.m in Sources */,
 				ABE4FC031890A3180009D643 /* OMBPayoutMethodUpdateConnection.m in Sources */,

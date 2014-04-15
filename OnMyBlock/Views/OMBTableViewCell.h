@@ -22,5 +22,6 @@
 #pragma mark - Class Methods
 
 + (CGFloat) heightForCell;
++ (CGSize) sizeForImage;
 
 @end

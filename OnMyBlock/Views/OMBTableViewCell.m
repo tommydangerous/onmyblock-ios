@@ -12,12 +12,12 @@
 
 #pragma mark - Initializer
 
-- (id) initWithStyle: (UITableViewCellStyle) style 
+- (id) initWithStyle: (UITableViewCellStyle) style
 reuseIdentifier: (NSString *) reuseIdentifier leftPadding: (float) padding
 {
-  if (!(self = [super initWithStyle: style 
+  if (!(self = [super initWithStyle: style
     reuseIdentifier: reuseIdentifier])) return nil;
-  
+
   leftPadding = padding;
 
   return self;
@@ -27,7 +27,7 @@ reuseIdentifier: (NSString *) reuseIdentifier leftPadding: (float) padding
 
 #pragma mark - Override UITableViewCell
 
-- (void) layoutSubviews 
+- (void) layoutSubviews
 {
   [super layoutSubviews];
 
@@ -52,6 +52,12 @@ reuseIdentifier: (NSString *) reuseIdentifier leftPadding: (float) padding
 {
   // Subclasses implement this
   return 0.0f;
+}
+
++ (CGSize) sizeForImage
+{
+  // Subclasses implement this
+  return CGSizeZero;
 }
 
 @end
