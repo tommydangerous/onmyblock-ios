@@ -21,6 +21,7 @@
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 #import "OMBSwitch.h"
+
 @interface OMBManageListingDetailViewController ()
 {
   OMBCenteredImageView *backgroundImageView;
@@ -132,11 +133,28 @@
   rentedButton.layer.borderWidth = 1.f;
   rentedButton.titleLabel.font = [UIFont normalTextFontBold];
   rentedButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+  [rentedButton addTarget:self action:@selector(rented)
+    forControlEvents:UIControlEventTouchUpInside];
   [rentedButton setTitle:@"I rented this pad" forState:UIControlStateNormal];
   [rentedButton setTitleColor:[UIColor grayDark] forState:UIControlStateNormal];
   [bottomStatus addSubview:rentedButton];
   
-  UIButton *reasonTwoButton = [UIButton new];
+  rentedTextField = [UIButton new];
+  rentedTextField.backgroundColor = [UIColor whiteColor];
+  rentedTextField.frame = CGRectMake(padding,
+    rentedButton.frame.origin.y + rentedButton.frame.size.height,
+      sizeButton.width, sizeButton.height);
+  rentedTextField.titleLabel.font = [UIFont normalTextFont];
+  rentedTextField.titleLabel.textAlignment = NSTextAlignmentCenter;
+  [rentedTextField addTarget:self action:@selector(showDatePicker)
+    forControlEvents:UIControlEventTouchUpInside];
+  [rentedTextField setTitle:@"When will this place be available?"
+    forState:UIControlStateNormal];
+  [rentedTextField setTitleColor:[UIColor grayLight]
+    forState:UIControlStateNormal];
+  [bottomStatus addSubview:rentedTextField];
+  
+  reasonTwoButton = [UIButton new];
   reasonTwoButton.backgroundColor = rentedButton.backgroundColor;
   reasonTwoButton.frame = CGRectMake(padding,
     rentedButton.frame.origin.y +
@@ -145,6 +163,8 @@
   reasonTwoButton.layer.borderColor = rentedButton.layer.borderColor;
   reasonTwoButton.layer.borderWidth = rentedButton.layer.borderWidth;
   reasonTwoButton.titleLabel.font = rentedButton.titleLabel.font;
+  [reasonTwoButton addTarget:self action:@selector(noLonger)
+    forControlEvents:UIControlEventTouchUpInside];
   reasonTwoButton.titleLabel.textAlignment = rentedButton.titleLabel.textAlignment;
   [reasonTwoButton setTitle:@"I no longer want to list it !!!" forState:UIControlStateNormal];
   [reasonTwoButton setTitleColor:[UIColor grayDark] forState:UIControlStateNormal];
@@ -167,10 +187,19 @@
   [cancelButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
   [bottomStatus addSubview:cancelButton];
   
+  datePicker = [[UIDatePicker alloc] init];
+  datePicker.frame = CGRectMake(0.0f, cancelButton.frame.origin.y +
+    cancelButton.frame.size.height + padding, widthBottomStatus, 100.f);
+  datePicker.datePickerMode = UIDatePickerModeDate;
+  datePicker.maximumDate = [NSDate date];
+  [datePicker addTarget: self action: @selector(dateChanged)
+     forControlEvents: UIControlEventValueChanged];
+  [bottomStatus addSubview: datePicker];
+  
   bottomStatus.frame =
     CGRectMake(0.0f, self.view.frame.size.height,
-      widthBottomStatus, cancelButton.frame.origin.y +
-        cancelButton.frame.size.height + padding);
+      widthBottomStatus, datePicker.frame.origin.y +
+        padding + datePicker.frame.size.height + padding);
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -301,15 +330,9 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
-- (void) showBottomStatus
+- (void) dateChanged
 {
-  CGRect rect = bottomStatus.frame;
-  rect.origin.y = self.view.frame.size.height -
-    rect.size.height;
-  [UIView animateWithDuration: 0.25 animations: ^{
-    fadedBackground.alpha = 1.0f;
-    bottomStatus.frame = rect;
-  }];
+  NSLog(@"dateChanged");
 }
 
 - (void) hideBottomStatus
@@ -320,6 +343,54 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     fadedBackground.alpha = 0.0f;
     bottomStatus.frame = rect;
   }];
+}
+
+- (void) hideDatePicker
+{
+  isShowingPicker = NO;
+  CGRect rect = bottomStatus.frame;
+  rect.origin.y += datePicker.frame.size.height + 20.f;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    bottomStatus.frame = rect;
+  }];
+}
+
+- (void) noLonger
+{
+  
+}
+
+- (void) rented
+{
+  reasonTwoButton.hidden = YES;
+  rentedTextField.hidden = NO;
+}
+
+- (void) showBottomStatus
+{
+  reasonTwoButton.hidden = NO;
+  rentedTextField.hidden = YES;
+  isShowingPicker = NO;
+  
+  CGRect rect = bottomStatus.frame;
+  rect.origin.y = self.view.frame.size.height -
+    rect.size.height + datePicker.frame.size.height + 20.f;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 1.0f;
+    bottomStatus.frame = rect;
+  }];
+}
+
+- (void) showDatePicker
+{
+  if(!isShowingPicker){
+    isShowingPicker = YES;
+    CGRect rect1 = bottomStatus.frame;
+    rect1.origin.y -= (datePicker.frame.size.height + 20.f);
+    [UIView animateWithDuration:0.25 animations:^{
+      bottomStatus.frame = rect1;
+    }];
+  }
 }
 
 - (void) switchStatus
