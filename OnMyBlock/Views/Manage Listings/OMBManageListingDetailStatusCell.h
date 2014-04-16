@@ -8,12 +8,19 @@
 
 #import "OMBLabelSwitchCell.h"
 
+@class OMBSwitch;
+
 @interface OMBManageListingDetailStatusCell : OMBLabelSwitchCell
+{
+  OMBSwitch *customSwitch;
+}
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
 - (void) setImage: (UIImage *) image;
-
+- (void) setSwitchTintColor:(UIColor *)onTintColor
+           withOffColor:(UIColor *)offTintColor
+             withOnText:(NSString *)onText andOffText:(NSString *)offText;
 @end
