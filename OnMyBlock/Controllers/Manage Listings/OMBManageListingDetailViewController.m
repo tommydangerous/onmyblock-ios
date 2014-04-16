@@ -8,6 +8,7 @@
 
 #import "OMBManageListingDetailViewController.h"
 
+#import "NSString+Extensions.h"
 #import "OMBCenteredImageView.h"
 #import "OMBFinishListingViewController.h"
 #import "OMBImageOneLabelCell.h"
@@ -16,9 +17,10 @@
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
 #import "OMBResidenceImagesConnection.h"
+#import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
-
+#import "OMBSwitch.h"
 @interface OMBManageListingDetailViewController ()
 {
   OMBCenteredImageView *backgroundImageView;
@@ -47,6 +49,7 @@
       size: [OMBImageOneLabelCell sizeForImage]];
   residence = object;
 
+  
   self.title = [residence titleOrAddress];
 
   return self;
@@ -69,6 +72,105 @@
     screen.size.width, screen.size.height * 0.4f);
   [self setupBackgroundWithView: backgroundImageView
     startingOffsetY: OMBPadding + OMBStandardHeight];
+  
+  fadedBackground = [[UIView alloc] init];
+  fadedBackground.alpha = 0.0f;
+  fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
+  fadedBackground.frame = screen;
+  [self.view addSubview: fadedBackground];
+  UITapGestureRecognizer *tapGesture =
+    [[UITapGestureRecognizer alloc] initWithTarget: self
+      action: @selector(hideBottomStatus)];
+  [fadedBackground addGestureRecognizer: tapGesture];
+  
+  CGFloat padding = 20.f;
+  
+  // Bottom status view
+  CGFloat widthBottomStatus = self.view.frame.size.width;
+  
+  bottomStatus = [UIView new];
+  bottomStatus.backgroundColor = [UIColor grayVeryLight];
+  [self.view addSubview: bottomStatus];
+  
+  UILabel *titlelabel = [UILabel new];
+  titlelabel.font = [UIFont normalSmallTextFontBold];
+  titlelabel.frame = CGRectMake(padding, padding,
+    widthBottomStatus - 2 * padding, 23.f);
+  titlelabel.text = @"Stop listing because...";
+  titlelabel.textAlignment = NSTextAlignmentCenter;
+  titlelabel.textColor = [UIColor textColor];
+  [bottomStatus addSubview:titlelabel];
+  
+  NSString *description =
+    @"When you stop a listing, it is moved into your "
+    @"inactive listings area. It will not be deleted.";
+  CGRect rectLabel = [description boundingRectWithSize:
+    CGSizeMake(widthBottomStatus - 2 * padding, 9999)
+      font: [UIFont normalSmallTextFont]];
+  UILabel *descriptionLabel = [UILabel new];
+  descriptionLabel.font = [UIFont normalSmallTextFont];
+  descriptionLabel.frame = CGRectMake(padding,
+    titlelabel.frame.origin.y + titlelabel.frame.size.height + padding * 0.5f,
+      widthBottomStatus - 2 * padding, rectLabel.size.height);
+  descriptionLabel.numberOfLines = 0;
+  descriptionLabel.text = description;
+  descriptionLabel.textAlignment = NSTextAlignmentCenter;
+  descriptionLabel.textColor = [UIColor grayMedium];
+  [bottomStatus addSubview:descriptionLabel];
+
+  CGSize sizeButton =
+    CGSizeMake(widthBottomStatus - 2 * padding,
+      OMBStandardButtonHeight);
+  
+  UIButton *rentedButton = [UIButton new];
+  rentedButton.backgroundColor = [UIColor grayUltraLight];
+  rentedButton.frame = CGRectMake(padding,
+    descriptionLabel.frame.origin.y +
+      descriptionLabel.frame.size.height + padding,
+        sizeButton.width, sizeButton.height);
+  rentedButton.layer.borderColor = [UIColor grayLight].CGColor;
+  rentedButton.layer.borderWidth = 1.f;
+  rentedButton.titleLabel.font = [UIFont normalTextFontBold];
+  rentedButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+  [rentedButton setTitle:@"I rented this pad" forState:UIControlStateNormal];
+  [rentedButton setTitleColor:[UIColor grayDark] forState:UIControlStateNormal];
+  [bottomStatus addSubview:rentedButton];
+  
+  UIButton *reasonTwoButton = [UIButton new];
+  reasonTwoButton.backgroundColor = rentedButton.backgroundColor;
+  reasonTwoButton.frame = CGRectMake(padding,
+    rentedButton.frame.origin.y +
+      rentedButton.frame.size.height - 0.5f,
+        sizeButton.width, sizeButton.height);
+  reasonTwoButton.layer.borderColor = rentedButton.layer.borderColor;
+  reasonTwoButton.layer.borderWidth = rentedButton.layer.borderWidth;
+  reasonTwoButton.titleLabel.font = rentedButton.titleLabel.font;
+  reasonTwoButton.titleLabel.textAlignment = rentedButton.titleLabel.textAlignment;
+  [reasonTwoButton setTitle:@"I no longer want to list it !!!" forState:UIControlStateNormal];
+  [reasonTwoButton setTitleColor:[UIColor grayDark] forState:UIControlStateNormal];
+  [bottomStatus addSubview:reasonTwoButton];
+  
+  UIButton *cancelButton = [UIButton new];
+  cancelButton.backgroundColor = reasonTwoButton.backgroundColor;
+  cancelButton.frame = CGRectMake(padding,
+    reasonTwoButton.frame.origin.y +
+      reasonTwoButton.frame.size.height + padding * 0.5f,
+        sizeButton.width, sizeButton.height);
+  cancelButton.layer.borderColor = reasonTwoButton.layer.borderColor;
+  cancelButton.layer.borderWidth = reasonTwoButton.layer.borderWidth;
+  cancelButton.titleLabel.font = reasonTwoButton.titleLabel.font;
+  cancelButton.titleLabel.textAlignment = reasonTwoButton.titleLabel.textAlignment;
+  [cancelButton addTarget:self
+    action:@selector(hideBottomStatus)
+      forControlEvents:UIControlEventTouchUpInside];
+  [cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
+  [cancelButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
+  [bottomStatus addSubview:cancelButton];
+  
+  bottomStatus.frame =
+    CGRectMake(0.0f, self.view.frame.size.height,
+      widthBottomStatus, cancelButton.frame.origin.y +
+        cancelButton.frame.size.height + padding);
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -130,6 +232,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         tableView.frame.size.width, 0.0f, 0.0f);
       cell.textFieldLabel.text = @"Listing Status";
       [cell setImage: statusCellImage];
+      // custom behavior...
+      [cell setSwitchTintColor: [UIColor green]
+        withOffColor: [UIColor grayColor] withOnText:@"Listed"
+          andOffText:@"Unlisted"];
+      [cell addTarget: self action:@selector(switchStatus)];
       return cell;
     }
   }
@@ -181,6 +288,9 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       vc = [[OMBResidenceDetailViewController alloc] initWithResidence:
         residence];
     }
+    else if (row == OMBManageListingDetailSectionTopRowStatus)
+      [self showBottomStatus];
+    
     if (vc)
       [self.navigationController pushViewController: vc animated: YES];
   }
@@ -190,6 +300,32 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+- (void) showBottomStatus
+{
+  CGRect rect = bottomStatus.frame;
+  rect.origin.y = self.view.frame.size.height -
+    rect.size.height;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 1.0f;
+    bottomStatus.frame = rect;
+  }];
+}
+
+- (void) hideBottomStatus
+{
+  CGRect rect = bottomStatus.frame;
+  rect.origin.y = self.view.frame.size.height;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 0.0f;
+    bottomStatus.frame = rect;
+  }];
+}
+
+- (void) switchStatus
+{
+  NSLog(@"switch");
+}
 
 - (void) updateBackgroundImage
 {

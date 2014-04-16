@@ -8,6 +8,7 @@
 
 #import "OMBManageListingDetailStatusCell.h"
 
+#import "OMBSwitch.h"
 #import "OMBViewController.h"
 
 @interface OMBManageListingDetailStatusCell ()
@@ -45,13 +46,14 @@ reuseIdentifier: (NSString *)reuseIdentifier
     screen.size.width - (originX + padding), 22.0f);
   self.textFieldLabel.textColor = [UIColor textColor];
 
-  switchButton.frame = CGRectMake(originX +
+  /*switchButton.frame = CGRectMake(originX +
     self.textFieldLabel.frame.size.width - switchButton.frame.size.width,
       ([OMBManageListingDetailStatusCell heightForCell] -
         switchButton.frame.size.height) * 0.5f,
           switchButton.frame.size.width, switchButton.frame.size.height);
-  switchButton.onTintColor = [UIColor blue];
-
+  switchButton.onTintColor = [UIColor orange];*/
+  [switchButton removeFromSuperview];
+  
   return self;
 }
 
@@ -72,9 +74,39 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 #pragma mark - Instance Methods
 
+- (void) addTarget: (id) target action: (SEL) selector
+{
+  [customSwitch removeTarget: target action: nil
+    forControlEvents: UIControlEventTouchUpInside];
+  [customSwitch addTarget: target action: selector
+    forControlEvents: UIControlEventTouchUpInside];
+}
+
 - (void) setImage: (UIImage *) image
 {
   imageView.image = image;
+}
+
+- (void) setSwitchTintColor:(UIColor *)onTintColor
+           withOffColor:(UIColor *)offTintColor
+             withOnText:(NSString *)onText andOffText:(NSString *)offText
+{
+  [customSwitch removeFromSuperview];
+  CGRect screen = [UIScreen mainScreen].bounds;
+  CGFloat padding = OMBPadding;
+  
+  CGFloat switchWidth = 100.f;
+  CGRect rectSwitch = CGRectMake(0.f, 0.f, switchWidth,
+    [OMBManageListingDetailStatusCell heightForCell] * 0.7f);
+  
+  customSwitch = [[OMBSwitch alloc] initWithFrame:rectSwitch
+    withOnLabel: onText andOfflabel: offText
+      withOnTintColor: onTintColor andOffTintColor: offTintColor];
+  customSwitch.center =
+    CGPointMake(screen.size.width - switchWidth * 0.5f - padding,
+      [OMBManageListingDetailStatusCell heightForCell] * 0.5f);
+  
+  [self.contentView addSubview:customSwitch];
 }
 
 @end

@@ -492,6 +492,7 @@
 		DE5089AA18D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5089A218D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m */; };
 		DE8D2D5518BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8D2D5218BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m */; };
 		DE8D2D5618BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8D2D5418BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m */; };
+		DE8E716118FEE3EE00F9AE5A /* OMBSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8E716018FEE3EE00F9AE5A /* OMBSwitch.m */; };
 		DE92170918D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170818D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m */; };
 		DE92170C18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170B18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m */; };
 		DE92915D18EF4929006CD5B6 /* OMBMapResidenceDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92915C18EF4929006CD5B6 /* OMBMapResidenceDetailCell.m */; };
@@ -1450,6 +1451,8 @@
 		DE8D2D5218BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVInfiniteScrolling.m"; sourceTree = "<group>"; };
 		DE8D2D5318BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+SVPullToRefresh.h"; sourceTree = "<group>"; };
 		DE8D2D5418BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVPullToRefresh.m"; sourceTree = "<group>"; };
+		DE8E715F18FEE3EE00F9AE5A /* OMBSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSwitch.h; sourceTree = "<group>"; };
+		DE8E716018FEE3EE00F9AE5A /* OMBSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSwitch.m; sourceTree = "<group>"; };
 		DE92170718D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoSectionRoommateViewController.h; sourceTree = "<group>"; };
 		DE92170818D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionRoommateViewController.m; sourceTree = "<group>"; };
 		DE92170A18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddRoommateViewController.h; sourceTree = "<group>"; };
@@ -1791,6 +1794,8 @@
 		AB802E9118109E5200E04D11 = {
 			isa = PBXGroup;
 			children = (
+				DE8E715F18FEE3EE00F9AE5A /* OMBSwitch.h */,
+				DE8E716018FEE3EE00F9AE5A /* OMBSwitch.m */,
 				ABB911AA18998FB20046611F /* AFNetworking */,
 				AB6155D6184FF9D400A193C7 /* Base64 */,
 				ABED5FE91896FAED00AD630C /* DKLiveBlur */,
@@ -3648,6 +3653,7 @@
 				AB01ED461858C84900333390 /* OMBLegalAnswerCreateOrUpdateConnection.m in Sources */,
 				ABA4F20A187CF02600D725D4 /* OMBGooglePlacesConnection.m in Sources */,
 				AB0269BD182293DC00E72F53 /* UIImage+NegativeImage.m in Sources */,
+				DE8E716118FEE3EE00F9AE5A /* OMBSwitch.m in Sources */,
 				ABB06AE418453640009CBBEA /* OMBViewControllerContainer.m in Sources */,
 				ABE4FBF8189045E40009D643 /* OMBPayoutMethodVenmoViewController.m in Sources */,
 				ABA5B419185699CB00F825E1 /* OMBEmployment.m in Sources */,
