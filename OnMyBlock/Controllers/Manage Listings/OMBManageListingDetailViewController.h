@@ -23,11 +23,19 @@ typedef NS_ENUM(NSInteger, OMBManageListingDetailSectionTopRow) {
 @interface OMBManageListingDetailViewController : OMBTableParallaxViewController
 {
   UIView *bottomStatus;
+  UIButton *cancelStatusButton;
+  UILabel *descriptionLabel;
   UIView *fadedBackground;
   UIButton *reasonTwoButton;
-  UIButton *rentedTextField;
-  UIDatePicker *datePicker;
+  UIButton *rentedButton;
+  UITextField *rentedTextField;
   BOOL isShowingPicker;
+  UILabel *titlelabel;
+  // Date Picker
+  NSTimeInterval availableDate;
+  UIDatePicker *datePicker;
+  UIView *pickerViewContainer;
+  UILabel *pickerViewHeaderLabel;
 }
 
 #pragma mark - Initializer

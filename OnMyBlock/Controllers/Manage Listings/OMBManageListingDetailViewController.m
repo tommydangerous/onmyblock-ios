@@ -93,11 +93,10 @@
   bottomStatus.backgroundColor = [UIColor grayVeryLight];
   [self.view addSubview: bottomStatus];
   
-  UILabel *titlelabel = [UILabel new];
+  titlelabel = [UILabel new];
   titlelabel.font = [UIFont normalSmallTextFontBold];
   titlelabel.frame = CGRectMake(padding, padding,
     widthBottomStatus - 2 * padding, 23.f);
-  titlelabel.text = @"Stop listing because...";
   titlelabel.textAlignment = NSTextAlignmentCenter;
   titlelabel.textColor = [UIColor textColor];
   [bottomStatus addSubview:titlelabel];
@@ -105,14 +104,14 @@
   NSString *description =
     @"When you stop a listing, it is moved into your "
     @"inactive listings area. It will not be deleted.";
-  CGRect rectLabel = [description boundingRectWithSize:
+  CGRect descriptionRect = [description boundingRectWithSize:
     CGSizeMake(widthBottomStatus - 2 * padding, 9999)
       font: [UIFont normalSmallTextFont]];
-  UILabel *descriptionLabel = [UILabel new];
+  descriptionLabel = [UILabel new];
   descriptionLabel.font = [UIFont normalSmallTextFont];
   descriptionLabel.frame = CGRectMake(padding,
     titlelabel.frame.origin.y + titlelabel.frame.size.height + padding * 0.5f,
-      widthBottomStatus - 2 * padding, rectLabel.size.height);
+      widthBottomStatus - 2 * padding, descriptionRect.size.height);
   descriptionLabel.numberOfLines = 0;
   descriptionLabel.text = description;
   descriptionLabel.textAlignment = NSTextAlignmentCenter;
@@ -123,7 +122,7 @@
     CGSizeMake(widthBottomStatus - 2 * padding,
       OMBStandardButtonHeight);
   
-  UIButton *rentedButton = [UIButton new];
+  rentedButton = [UIButton new];
   rentedButton.backgroundColor = [UIColor grayUltraLight];
   rentedButton.frame = CGRectMake(padding,
     descriptionLabel.frame.origin.y +
@@ -133,25 +132,22 @@
   rentedButton.layer.borderWidth = 1.f;
   rentedButton.titleLabel.font = [UIFont normalTextFontBold];
   rentedButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-  [rentedButton addTarget:self action:@selector(rented)
+  [rentedButton addTarget:self action:@selector(showDatePicker)
     forControlEvents:UIControlEventTouchUpInside];
   [rentedButton setTitle:@"I rented this pad" forState:UIControlStateNormal];
   [rentedButton setTitleColor:[UIColor grayDark] forState:UIControlStateNormal];
   [bottomStatus addSubview:rentedButton];
   
-  rentedTextField = [UIButton new];
+  rentedTextField = [UITextField new];
   rentedTextField.backgroundColor = [UIColor whiteColor];
+  rentedTextField.enabled = NO;
   rentedTextField.frame = CGRectMake(padding,
     rentedButton.frame.origin.y + rentedButton.frame.size.height,
       sizeButton.width, sizeButton.height);
-  rentedTextField.titleLabel.font = [UIFont normalTextFont];
-  rentedTextField.titleLabel.textAlignment = NSTextAlignmentCenter;
-  [rentedTextField addTarget:self action:@selector(showDatePicker)
-    forControlEvents:UIControlEventTouchUpInside];
-  [rentedTextField setTitle:@"When will this place be available?"
-    forState:UIControlStateNormal];
-  [rentedTextField setTitleColor:[UIColor grayLight]
-    forState:UIControlStateNormal];
+  rentedTextField.font = [UIFont normalTextFont];
+  rentedTextField.textAlignment = NSTextAlignmentCenter;
+  rentedTextField.placeholder = @"When will this place be available?";
+  rentedTextField.textColor = [UIColor textColor];
   [bottomStatus addSubview:rentedTextField];
   
   reasonTwoButton = [UIButton new];
@@ -170,36 +166,96 @@
   [reasonTwoButton setTitleColor:[UIColor grayDark] forState:UIControlStateNormal];
   [bottomStatus addSubview:reasonTwoButton];
   
-  UIButton *cancelButton = [UIButton new];
-  cancelButton.backgroundColor = reasonTwoButton.backgroundColor;
-  cancelButton.frame = CGRectMake(padding,
+  cancelStatusButton = [UIButton new];
+  cancelStatusButton.backgroundColor = reasonTwoButton.backgroundColor;
+  cancelStatusButton.frame = CGRectMake(padding,
     reasonTwoButton.frame.origin.y +
       reasonTwoButton.frame.size.height + padding * 0.5f,
         sizeButton.width, sizeButton.height);
-  cancelButton.layer.borderColor = reasonTwoButton.layer.borderColor;
-  cancelButton.layer.borderWidth = reasonTwoButton.layer.borderWidth;
-  cancelButton.titleLabel.font = reasonTwoButton.titleLabel.font;
-  cancelButton.titleLabel.textAlignment = reasonTwoButton.titleLabel.textAlignment;
-  [cancelButton addTarget:self
+  cancelStatusButton.layer.borderColor = reasonTwoButton.layer.borderColor;
+  cancelStatusButton.layer.borderWidth = reasonTwoButton.layer.borderWidth;
+  cancelStatusButton.titleLabel.font = reasonTwoButton.titleLabel.font;
+  cancelStatusButton.titleLabel.textAlignment = reasonTwoButton.titleLabel.textAlignment;
+  [cancelStatusButton addTarget:self
     action:@selector(hideBottomStatus)
       forControlEvents:UIControlEventTouchUpInside];
-  [cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
-  [cancelButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
-  [bottomStatus addSubview:cancelButton];
-  
-  datePicker = [[UIDatePicker alloc] init];
-  datePicker.frame = CGRectMake(0.0f, cancelButton.frame.origin.y +
-    cancelButton.frame.size.height + padding, widthBottomStatus, 100.f);
-  datePicker.datePickerMode = UIDatePickerModeDate;
-  datePicker.maximumDate = [NSDate date];
-  [datePicker addTarget: self action: @selector(dateChanged)
-     forControlEvents: UIControlEventValueChanged];
-  [bottomStatus addSubview: datePicker];
+  [cancelStatusButton setTitle:@"Cancel" forState:UIControlStateNormal];
+  [cancelStatusButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
+  [bottomStatus addSubview:cancelStatusButton];
   
   bottomStatus.frame =
     CGRectMake(0.0f, self.view.frame.size.height,
-      widthBottomStatus, datePicker.frame.origin.y +
-        padding + datePicker.frame.size.height + padding);
+      widthBottomStatus, cancelStatusButton.frame.origin.y +
+        cancelStatusButton.frame.size.height + padding);
+  
+  // Date picker
+  // Picker view container
+  pickerViewContainer = [UIView new];
+  [self.view addSubview: pickerViewContainer];
+  
+  // Header for picker view with cancel and done button
+  UIView *pickerViewHeader = [[UIView alloc] init];
+  pickerViewHeader.backgroundColor = [UIColor grayUltraLight];
+  pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
+    screen.size.width, 44.0f);
+  [pickerViewContainer addSubview: pickerViewHeader];
+  
+  pickerViewHeaderLabel = [[UILabel alloc] init];
+  pickerViewHeaderLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+  pickerViewHeaderLabel.frame = pickerViewHeader.frame;
+  pickerViewHeaderLabel.textAlignment = NSTextAlignmentCenter;
+  pickerViewHeaderLabel.textColor = [UIColor textColor];
+  [pickerViewHeader addSubview: pickerViewHeaderLabel];
+  // Cancel button
+  UIButton *cancelButton = [UIButton new];
+  cancelButton.titleLabel.font = [UIFont fontWithName:
+    @"HelveticaNeue-Medium" size: 15];
+  CGRect cancelButtonRect = [@"Cancel" boundingRectWithSize:
+    CGSizeMake(pickerViewHeader.frame.size.width, pickerViewHeader.frame.size.height)
+      font: cancelButton.titleLabel.font];
+  cancelButton.frame = CGRectMake(padding, 0.0f,
+    cancelButtonRect.size.width, pickerViewHeader.frame.size.height);
+  [cancelButton addTarget: self
+    action: @selector(cancelPicker)
+      forControlEvents: UIControlEventTouchUpInside];
+  [cancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
+  [cancelButton setTitleColor: [UIColor blueDark]
+    forState: UIControlStateNormal];
+  [pickerViewHeader addSubview: cancelButton];
+  // Done button
+  UIButton *doneButton = [UIButton new];
+  doneButton.titleLabel.font = cancelButton.titleLabel.font;
+  CGRect doneButtonRect = [@"Save" boundingRectWithSize:
+    CGSizeMake(pickerViewHeader.frame.size.width,
+      pickerViewHeader.frame.size.height)
+        font: doneButton.titleLabel.font];
+  doneButton.frame = CGRectMake(pickerViewHeader.frame.size.width -
+    (padding + doneButtonRect.size.width), 0.0f,
+      doneButtonRect.size.width, pickerViewHeader.frame.size.height);
+  [doneButton addTarget: self
+    action: @selector(donePicker)
+      forControlEvents: UIControlEventTouchUpInside];
+  [doneButton setTitle: @"Save" forState: UIControlStateNormal];
+  [doneButton setTitleColor: [UIColor blueDark]
+     forState: UIControlStateNormal];
+  [pickerViewHeader addSubview: doneButton];
+  
+  datePicker = [[UIDatePicker alloc] init];
+  datePicker.backgroundColor = UIColor.whiteColor;
+  datePicker.frame = CGRectMake(0.0f, pickerViewHeader.frame.origin.y +
+    pickerViewHeader.frame.size.height,
+      datePicker.frame.size.width, datePicker.frame.size.height);
+  datePicker.datePickerMode = UIDatePickerModeDate;
+  datePicker.maximumDate = [NSDate date];
+  /*[datePicker addTarget: self action: @selector(dateChanged)
+       forControlEvents: UIControlEventValueChanged];*/
+  [pickerViewContainer addSubview: datePicker];
+  
+  pickerViewContainer.frame =
+    CGRectMake(0.0f, self.view.frame.size.height,
+      self.view.frame.size.width,
+        pickerViewHeader.frame.size.height +
+          datePicker.frame.size.height);
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -330,28 +386,46 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
-- (void) dateChanged
+- (void) cancelPicker
 {
-  NSLog(@"dateChanged");
+  [self updatePicker];
+  [self hideDatePicker];
+}
+
+
+- (void) donePicker
+{
+  [self hideDatePicker];
+  availableDate = [datePicker.date timeIntervalSince1970];
+  [self updatePicker];
+  [self hideBottomStatus];
 }
 
 - (void) hideBottomStatus
 {
   CGRect rect = bottomStatus.frame;
+  CGRect rect2 = pickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height;
+  rect2.origin.y = self.view.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 0.0f;
     bottomStatus.frame = rect;
+    pickerViewContainer.frame = rect2;
   }];
 }
 
 - (void) hideDatePicker
 {
   isShowingPicker = NO;
-  CGRect rect = bottomStatus.frame;
-  rect.origin.y += datePicker.frame.size.height + 20.f;
+  [self resize];
+  CGRect rect = pickerViewContainer.frame;
+  CGRect rect2 = bottomStatus.frame;
+  rect.origin.y = self.view.frame.size.height;
+  rect2.origin.y = self.view.frame.size.height -
+    bottomStatus.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
-    bottomStatus.frame = rect;
+    bottomStatus.frame = rect2;
+    pickerViewContainer.frame = rect;
   }];
 }
 
@@ -360,21 +434,46 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   
 }
 
-- (void) rented
+- (void) resize
 {
-  reasonTwoButton.hidden = YES;
-  rentedTextField.hidden = NO;
+  CGFloat padding = 20.f;
+  CGRect rect1 = rentedTextField.frame;
+  CGRect rect2 = bottomStatus.frame;
+  if(isShowingPicker){
+    titlelabel.text = @"When will this place become available?";
+    rentedTextField.hidden = NO;
+    reasonTwoButton.hidden = YES;
+    cancelStatusButton.hidden = YES;
+    descriptionLabel.hidden = YES;
+    rentedButton.hidden = YES;
+    rect1.origin.y = titlelabel.frame.origin.y +
+      titlelabel.frame.size.height + padding;
+    rect2.size.height = rect1.origin.y +
+      rect1.size.height + padding;
+  }else{
+    rentedTextField.hidden = YES;
+    reasonTwoButton.hidden = NO;
+    cancelStatusButton.hidden = NO;
+    descriptionLabel.hidden = NO;
+    rentedButton.hidden = NO;
+    isShowingPicker = NO;
+    titlelabel.text = @"Stop listing because...";
+    rect1.origin.y = rentedButton.frame.origin.y +
+      rentedButton.frame.size.height;
+    rect2.size.height = cancelStatusButton.frame.origin.y +
+    cancelStatusButton.frame.size.height + padding;
+  }
+  
+  rentedTextField.frame = rect1;
+  bottomStatus.frame = rect2;
 }
 
 - (void) showBottomStatus
 {
-  reasonTwoButton.hidden = NO;
-  rentedTextField.hidden = YES;
-  isShowingPicker = NO;
-  
+  [self resize];
   CGRect rect = bottomStatus.frame;
   rect.origin.y = self.view.frame.size.height -
-    rect.size.height + datePicker.frame.size.height + 20.f;
+    rect.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 1.0f;
     bottomStatus.frame = rect;
@@ -385,10 +484,15 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if(!isShowingPicker){
     isShowingPicker = YES;
-    CGRect rect1 = bottomStatus.frame;
-    rect1.origin.y -= (datePicker.frame.size.height + 20.f);
+    [self resize];
+    CGRect rect = pickerViewContainer.frame;
+    CGRect rect2 = bottomStatus.frame;
+    rect2.origin.y = self.view.frame.size.height -
+      (bottomStatus.frame.size.height + rect.size.height);
+    rect.origin.y = self.view.frame.size.height - pickerViewContainer.frame.size.height;
     [UIView animateWithDuration:0.25 animations:^{
-      bottomStatus.frame = rect1;
+      bottomStatus.frame = rect2;
+      pickerViewContainer.frame = rect;
     }];
   }
 }
@@ -410,6 +514,19 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         withURL: residence.coverPhotoURL completion: nil];
   };
   [conn start];
+}
+
+- (void) updatePicker
+{
+  if(availableDate){
+    [datePicker setDate:[NSDate dateWithTimeIntervalSince1970: availableDate]
+               animated: NO];
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    dateFormat.dateFormat = @"MMMM yyyy";
+    rentedTextField.text = [dateFormat stringFromDate:
+      [NSDate dateWithTimeIntervalSince1970: availableDate]];
+  }
 }
 
 @end
