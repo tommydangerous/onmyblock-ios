@@ -74,14 +74,6 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 #pragma mark - Instance Methods
 
-- (void) addTarget: (id) target action: (SEL) selector
-{
-  [_customSwitch removeTarget: target action: nil
-    forControlEvents: UIControlEventTouchUpInside];
-  [_customSwitch addTarget: target action: selector
-    forControlEvents: UIControlEventTouchUpInside];
-}
-
 - (void) setImage: (UIImage *) image
 {
   imageView.image = image;
@@ -97,7 +89,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   
   CGFloat switchWidth = 100.f;
   CGRect rectSwitch = CGRectMake(0.f, 0.f, switchWidth,
-    [OMBManageListingDetailStatusCell heightForCell] * 0.65f);
+    38.f);
   
   _customSwitch = [[OMBSwitch alloc] initWithFrame:rectSwitch
     withOnLabel: onText andOfflabel: offText

@@ -8,7 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-@interface OMBSwitch : UIControl{
+@interface OMBSwitch : UIView{
   UIView *container;
   UIView *gradient;
   UILabel *onLabel, *offLabel;
