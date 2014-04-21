@@ -76,9 +76,9 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 - (void) addTarget: (id) target action: (SEL) selector
 {
-  [customSwitch removeTarget: target action: nil
+  [_customSwitch removeTarget: target action: nil
     forControlEvents: UIControlEventTouchUpInside];
-  [customSwitch addTarget: target action: selector
+  [_customSwitch addTarget: target action: selector
     forControlEvents: UIControlEventTouchUpInside];
 }
 
@@ -91,22 +91,22 @@ reuseIdentifier: (NSString *)reuseIdentifier
            withOffColor:(UIColor *)offTintColor
              withOnText:(NSString *)onText andOffText:(NSString *)offText
 {
-  [customSwitch removeFromSuperview];
+  [_customSwitch removeFromSuperview];
   CGRect screen = [UIScreen mainScreen].bounds;
   CGFloat padding = OMBPadding;
   
   CGFloat switchWidth = 100.f;
   CGRect rectSwitch = CGRectMake(0.f, 0.f, switchWidth,
-    [OMBManageListingDetailStatusCell heightForCell] * 0.7f);
+    [OMBManageListingDetailStatusCell heightForCell] * 0.65f);
   
-  customSwitch = [[OMBSwitch alloc] initWithFrame:rectSwitch
+  _customSwitch = [[OMBSwitch alloc] initWithFrame:rectSwitch
     withOnLabel: onText andOfflabel: offText
       withOnTintColor: onTintColor andOffTintColor: offTintColor];
-  customSwitch.center =
+  _customSwitch.center =
     CGPointMake(screen.size.width - switchWidth * 0.5f - padding,
       [OMBManageListingDetailStatusCell heightForCell] * 0.5f);
   
-  [self.contentView addSubview:customSwitch];
+  [self.contentView addSubview:_customSwitch];
 }
 
 @end

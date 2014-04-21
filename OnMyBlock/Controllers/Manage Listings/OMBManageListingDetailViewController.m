@@ -246,7 +246,14 @@
     pickerViewHeader.frame.size.height,
       datePicker.frame.size.width, datePicker.frame.size.height);
   datePicker.datePickerMode = UIDatePickerModeDate;
-  datePicker.maximumDate = [NSDate date];
+  datePicker.minimumDate = [NSDate date];
+  NSDateComponents *maximunDateComponents =
+    [[NSCalendar currentCalendar] components:
+      NSCalendarUnitYear | NSCalendarUnitMonth
+        fromDate: datePicker.minimumDate];
+  [maximunDateComponents setYear:maximunDateComponents.year + 2];
+  [maximunDateComponents setDay: 1];
+  datePicker.maximumDate = [[NSCalendar currentCalendar] dateFromComponents: maximunDateComponents];
   /*[datePicker addTarget: self action: @selector(dateChanged)
        forControlEvents: UIControlEventValueChanged];*/
   [pickerViewContainer addSubview: datePicker];
@@ -318,9 +325,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.textFieldLabel.text = @"Listing Status";
       [cell setImage: statusCellImage];
       // custom behavior...
+      NSString *offText = @"Unlisted";
+      BOOL state = YES;
+      if(residence.inactive || residence.rented){
+        offText = residence.inactive ?
+          @"Unlisted" : @"Rented";
+        state = NO;
+      }
       [cell setSwitchTintColor: [UIColor green]
         withOffColor: [UIColor grayColor] withOnText:@"Listed"
-          andOffText:@"Unlisted"];
+          andOffText: offText];
+      [cell.customSwitch setState: state];
       [cell addTarget: self action:@selector(switchStatus)];
       return cell;
     }
@@ -396,7 +411,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) donePicker
 {
   [self hideDatePicker];
+  
   availableDate = [datePicker.date timeIntervalSince1970];
+  residence.inactive = NO;
+  residence.moveInDate = availableDate;
+  residence.rented = YES;
+  
   [self updatePicker];
   [self hideBottomStatus];
 }
@@ -412,6 +432,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     bottomStatus.frame = rect;
     pickerViewContainer.frame = rect2;
   }];
+  [self.table reloadData];
 }
 
 - (void) hideDatePicker
@@ -431,7 +452,16 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) noLonger
 {
-  
+  residence.inactive = YES;
+  residence.rented = NO;
+  [self hideBottomStatus];
+}
+
+- (void) relist
+{
+  residence.inactive = NO;
+  residence.rented = NO;
+  [self hideBottomStatus];
 }
 
 - (void) resize
@@ -520,10 +550,10 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if(availableDate){
     [datePicker setDate:[NSDate dateWithTimeIntervalSince1970: availableDate]
-               animated: NO];
+      animated: NO];
     
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    dateFormat.dateFormat = @"MMMM yyyy";
+    dateFormat.dateFormat = @"MMM d, yyyy";
     rentedTextField.text = [dateFormat stringFromDate:
       [NSDate dateWithTimeIntervalSince1970: availableDate]];
   }

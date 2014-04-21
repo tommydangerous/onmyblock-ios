@@ -11,9 +11,8 @@
 @class OMBSwitch;
 
 @interface OMBManageListingDetailStatusCell : OMBLabelSwitchCell
-{
-  OMBSwitch *customSwitch;
-}
+
+@property OMBSwitch *customSwitch;
 
 #pragma mark - Methods
 
