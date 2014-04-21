@@ -255,8 +255,8 @@
   [maximunDateComponents setYear:maximunDateComponents.year + 2];
   [maximunDateComponents setDay: 1];
   datePicker.maximumDate = [[NSCalendar currentCalendar] dateFromComponents: maximunDateComponents];
-  /*[datePicker addTarget: self action: @selector(dateChanged)
-       forControlEvents: UIControlEventValueChanged];*/
+  [datePicker addTarget: self action: @selector(dateChanged)
+       forControlEvents: UIControlEventValueChanged];
   [pickerViewContainer addSubview: datePicker];
   
   pickerViewContainer.frame =
@@ -264,6 +264,7 @@
       self.view.frame.size.width,
         pickerViewHeader.frame.size.height +
           datePicker.frame.size.height);
+  
   
   // Relist View
   relistView = [UIView new];
@@ -389,19 +390,18 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       // custom behavior...
       NSString *offText = @"Unlisted";
       BOOL state = YES;
+      UIColor *offColor = residence.rented ?
+        [UIColor orange] : [UIColor grayColor];
       if(residence.inactive || residence.rented){
         offText = residence.inactive ?
           @"Unlisted" : @"Rented";
         state = NO;
       }
+      
       [cell setSwitchTintColor: [UIColor green]
-        withOffColor: [UIColor grayColor] withOnText:@"Listed"
+        withOffColor: offColor withOnText:@"Listed"
           andOffText: offText];
       [cell.customSwitch setState: state withAnimation: NO];
-      [cell.customSwitch addTarget:self
-        action:@selector(switchStatus:)
-          forControlEvents: UIControlEventTouchUpInside];
-      //[cell addTarget: self action:@selector(switchStatus)];
       return cell;
     }
   }
@@ -476,6 +476,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   [self hideDatePicker];
 }
 
+- (void) dateChanged
+{
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    dateFormat.dateFormat = @"MMM d, yyyy";
+    rentedTextField.text = [dateFormat stringFromDate:
+      datePicker.date];
+}
 
 - (void) donePicker
 {
@@ -612,6 +619,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if(!isShowingPicker){
     isShowingPicker = YES;
+    [self updatePicker];
     [self resize];
     CGRect rect = pickerViewContainer.frame;
     CGRect rect2 = bottomStatusView.frame;
@@ -634,17 +642,6 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     fadedBackground.alpha = 1.0f;
     relistView.frame = rect;
   }];
-}
-
-- (void) switchStatus:(OMBSwitch *)customSwitch
-{
-  if(customSwitch.on){
-    [self relist];
-  }
-  else{
-    residence.inactive = YES;
-    residence.rented = NO;
-  }
 }
 
 - (void) updateBackgroundImage
@@ -671,6 +668,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     dateFormat.dateFormat = @"MMM d, yyyy";
     rentedTextField.text = [dateFormat stringFromDate:
       [NSDate dateWithTimeIntervalSince1970: availableDate]];
+  }else{
+    rentedTextField.text = @"";
   }
 }
 

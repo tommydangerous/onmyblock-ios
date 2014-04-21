@@ -21,8 +21,7 @@ float knobSize = 0.9;
   self = [super initWithFrame:frame];
   if (self) {
     // Initialization code
-    self.layer.masksToBounds = YES;
-    self.layer.opaque = NO;
+    //self.layer.masksToBounds = YES;
     self.clipsToBounds = YES;
     self.layer.cornerRadius = frame.size.height/2.0;
     
@@ -67,7 +66,7 @@ float knobSize = 0.9;
         self.frame.size.width * 0.45f , self.frame.size.height * knobSize)];
     switcher.layer.cornerRadius = frame.size.height * knobSize / 2.0;
     switcher.layer.masksToBounds = NO;
-    switcher.layer.opaque = YES;
+    //switcher.layer.opaque = YES;
     switcher.clipsToBounds = YES;
     switcher.backgroundColor = [UIColor whiteColor];
     [container addSubview:switcher];
@@ -77,7 +76,7 @@ float knobSize = 0.9;
   }
   return self;
 }
-
+/*
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
   [self sendActionsForControlEvents:UIControlEventTouchUpInside];
 }
@@ -111,7 +110,7 @@ float knobSize = 0.9;
   [UIView commitAnimations];
   
 }
-
+*/
 -(void)setState:(BOOL)onOff withAnimation:(BOOL)animation{
   // setState
   _on = onOff;
