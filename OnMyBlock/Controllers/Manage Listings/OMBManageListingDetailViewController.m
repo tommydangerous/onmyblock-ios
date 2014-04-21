@@ -17,6 +17,7 @@
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
 #import "OMBResidenceImagesConnection.h"
+#import "OMBSwitch.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
@@ -81,7 +82,7 @@
   [self.view addSubview: fadedBackground];
   UITapGestureRecognizer *tapGesture =
     [[UITapGestureRecognizer alloc] initWithTarget: self
-      action: @selector(hideBottomStatus)];
+      action: @selector(hideViews)];
   [fadedBackground addGestureRecognizer: tapGesture];
   
   CGFloat padding = 20.f;
@@ -89,9 +90,9 @@
   // Bottom status view
   CGFloat widthBottomStatus = self.view.frame.size.width;
   
-  bottomStatus = [UIView new];
-  bottomStatus.backgroundColor = [UIColor grayVeryLight];
-  [self.view addSubview: bottomStatus];
+  bottomStatusView = [UIView new];
+  bottomStatusView.backgroundColor = [UIColor grayVeryLight];
+  [self.view addSubview: bottomStatusView];
   
   titlelabel = [UILabel new];
   titlelabel.font = [UIFont normalSmallTextFontBold];
@@ -99,7 +100,7 @@
     widthBottomStatus - 2 * padding, 23.f);
   titlelabel.textAlignment = NSTextAlignmentCenter;
   titlelabel.textColor = [UIColor textColor];
-  [bottomStatus addSubview:titlelabel];
+  [bottomStatusView addSubview:titlelabel];
   
   NSString *description =
     @"When you stop a listing, it is moved into your "
@@ -107,16 +108,16 @@
   CGRect descriptionRect = [description boundingRectWithSize:
     CGSizeMake(widthBottomStatus - 2 * padding, 9999)
       font: [UIFont normalSmallTextFont]];
-  descriptionLabel = [UILabel new];
-  descriptionLabel.font = [UIFont normalSmallTextFont];
-  descriptionLabel.frame = CGRectMake(padding,
+  descriptionStatusLabel = [UILabel new];
+  descriptionStatusLabel.font = [UIFont normalSmallTextFont];
+  descriptionStatusLabel.frame = CGRectMake(padding,
     titlelabel.frame.origin.y + titlelabel.frame.size.height + padding * 0.5f,
       widthBottomStatus - 2 * padding, descriptionRect.size.height);
-  descriptionLabel.numberOfLines = 0;
-  descriptionLabel.text = description;
-  descriptionLabel.textAlignment = NSTextAlignmentCenter;
-  descriptionLabel.textColor = [UIColor grayMedium];
-  [bottomStatus addSubview:descriptionLabel];
+  descriptionStatusLabel.numberOfLines = 0;
+  descriptionStatusLabel.text = description;
+  descriptionStatusLabel.textAlignment = NSTextAlignmentCenter;
+  descriptionStatusLabel.textColor = [UIColor grayMedium];
+  [bottomStatusView addSubview:descriptionStatusLabel];
 
   CGSize sizeButton =
     CGSizeMake(widthBottomStatus - 2 * padding,
@@ -125,8 +126,8 @@
   rentedButton = [UIButton new];
   rentedButton.backgroundColor = [UIColor grayUltraLight];
   rentedButton.frame = CGRectMake(padding,
-    descriptionLabel.frame.origin.y +
-      descriptionLabel.frame.size.height + padding,
+    descriptionStatusLabel.frame.origin.y +
+      descriptionStatusLabel.frame.size.height + padding,
         sizeButton.width, sizeButton.height);
   rentedButton.layer.borderColor = [UIColor grayLight].CGColor;
   rentedButton.layer.borderWidth = 1.f;
@@ -136,7 +137,7 @@
     forControlEvents:UIControlEventTouchUpInside];
   [rentedButton setTitle:@"I rented this pad" forState:UIControlStateNormal];
   [rentedButton setTitleColor:[UIColor grayDark] forState:UIControlStateNormal];
-  [bottomStatus addSubview:rentedButton];
+  [bottomStatusView addSubview:rentedButton];
   
   rentedTextField = [UITextField new];
   rentedTextField.backgroundColor = [UIColor whiteColor];
@@ -148,7 +149,7 @@
   rentedTextField.textAlignment = NSTextAlignmentCenter;
   rentedTextField.placeholder = @"When will this place be available?";
   rentedTextField.textColor = [UIColor textColor];
-  [bottomStatus addSubview:rentedTextField];
+  [bottomStatusView addSubview:rentedTextField];
   
   reasonTwoButton = [UIButton new];
   reasonTwoButton.backgroundColor = rentedButton.backgroundColor;
@@ -164,7 +165,7 @@
   reasonTwoButton.titleLabel.textAlignment = rentedButton.titleLabel.textAlignment;
   [reasonTwoButton setTitle:@"I no longer want to list it !!!" forState:UIControlStateNormal];
   [reasonTwoButton setTitleColor:[UIColor grayDark] forState:UIControlStateNormal];
-  [bottomStatus addSubview:reasonTwoButton];
+  [bottomStatusView addSubview:reasonTwoButton];
   
   cancelStatusButton = [UIButton new];
   cancelStatusButton.backgroundColor = reasonTwoButton.backgroundColor;
@@ -181,9 +182,9 @@
       forControlEvents:UIControlEventTouchUpInside];
   [cancelStatusButton setTitle:@"Cancel" forState:UIControlStateNormal];
   [cancelStatusButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
-  [bottomStatus addSubview:cancelStatusButton];
+  [bottomStatusView addSubview:cancelStatusButton];
   
-  bottomStatus.frame =
+  bottomStatusView.frame =
     CGRectMake(0.0f, self.view.frame.size.height,
       widthBottomStatus, cancelStatusButton.frame.origin.y +
         cancelStatusButton.frame.size.height + padding);
@@ -263,6 +264,67 @@
       self.view.frame.size.width,
         pickerViewHeader.frame.size.height +
           datePicker.frame.size.height);
+  
+  // Relist View
+  relistView = [UIView new];
+  
+  NSString *descriptionRelist =
+    @"Please confirm that you want to relist your pad on Radpad "
+    @"for two weeks. Once you confirm your pad will be back on the "
+    @"market for renters to find.";
+  CGRect descriptionRelistRect = [descriptionRelist boundingRectWithSize:
+    CGSizeMake(widthBottomStatus - 2 * padding, 9999)
+      font: [UIFont normalSmallTextFont]];
+  descriptionRelistLabel = [UILabel new];
+  descriptionRelistLabel.font = [UIFont normalSmallTextFont];
+  descriptionRelistLabel.frame = CGRectMake(padding,
+    padding, widthBottomStatus - 2 * padding,
+      descriptionRelistRect.size.height);
+  descriptionRelistLabel.numberOfLines = 0;
+  descriptionRelistLabel.text = descriptionRelist;
+  descriptionRelistLabel.textAlignment = NSTextAlignmentCenter;
+  descriptionRelistLabel.textColor = [UIColor grayMedium];
+  [relistView addSubview:descriptionRelistLabel];
+  
+  relistButton = [UIButton new];
+  relistButton.backgroundColor = [UIColor grayUltraLight];
+  relistButton.frame = CGRectMake(padding,
+    descriptionRelistLabel.frame.origin.y +
+      descriptionRelistLabel.frame.size.height + padding,
+        sizeButton.width, sizeButton.height);
+  relistButton.layer.borderColor = [UIColor grayLight].CGColor;
+  relistButton.layer.borderWidth = 1.f;
+  relistButton.titleLabel.font = [UIFont normalTextFontBold];
+  relistButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+  [relistButton addTarget:self action:@selector(relistAction)
+    forControlEvents:UIControlEventTouchUpInside];
+  [relistButton setTitle:@"Yes, Relist my pad" forState:UIControlStateNormal];
+  [relistButton setTitleColor:[UIColor grayDark] forState:UIControlStateNormal];
+  [relistView addSubview:relistButton];
+  
+  cancelRelistButton = [UIButton new];
+  cancelRelistButton.backgroundColor = relistButton.backgroundColor;
+  cancelRelistButton.frame = CGRectMake(padding,
+    relistButton.frame.origin.y +
+      relistButton.frame.size.height + padding * 0.5f,
+        sizeButton.width, sizeButton.height);
+  cancelRelistButton.layer.borderColor = relistButton.layer.borderColor;
+  cancelRelistButton.layer.borderWidth = relistButton.layer.borderWidth;
+  cancelRelistButton.titleLabel.font = relistButton.titleLabel.font;
+  cancelRelistButton.titleLabel.textAlignment = relistButton.titleLabel.textAlignment;
+  [cancelRelistButton addTarget:self
+    action:@selector(hideRelistView)
+      forControlEvents:UIControlEventTouchUpInside];
+  [cancelRelistButton setTitle:@"Cancel" forState:UIControlStateNormal];
+  [cancelRelistButton setTitleColor:[UIColor blue] forState:UIControlStateNormal];
+  [relistView addSubview:cancelRelistButton];
+  
+  relistView.backgroundColor = [UIColor grayVeryLight];
+  relistView.frame = CGRectMake(0.0, self.view.frame.size.height,
+    widthBottomStatus,  cancelRelistButton.frame.origin.y +
+      cancelRelistButton.frame.size.height + padding);
+  [self.view addSubview: relistView];
+  
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -335,8 +397,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       [cell setSwitchTintColor: [UIColor green]
         withOffColor: [UIColor grayColor] withOnText:@"Listed"
           andOffText: offText];
-      [cell.customSwitch setState: state];
-      [cell addTarget: self action:@selector(switchStatus)];
+      [cell.customSwitch setState: state withAnimation: NO];
+      [cell.customSwitch addTarget:self
+        action:@selector(switchStatus:)
+          forControlEvents: UIControlEventTouchUpInside];
+      //[cell addTarget: self action:@selector(switchStatus)];
       return cell;
     }
   }
@@ -388,8 +453,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       vc = [[OMBResidenceDetailViewController alloc] initWithResidence:
         residence];
     }
-    else if (row == OMBManageListingDetailSectionTopRowStatus)
-      [self showBottomStatus];
+    else if (row == OMBManageListingDetailSectionTopRowStatus){
+      if(residence.rented || residence.inactive)
+        [self showRelistView];
+      else
+        [self showBottomStatus];
+    }
     
     if (vc)
       [self.navigationController pushViewController: vc animated: YES];
@@ -423,15 +492,19 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) hideBottomStatus
 {
-  CGRect rect = bottomStatus.frame;
+  if(isShowingPicker)
+     [self hideDatePicker];
+  
+  CGRect rect = bottomStatusView.frame;
   CGRect rect2 = pickerViewContainer.frame;
   rect.origin.y = self.view.frame.size.height;
   rect2.origin.y = self.view.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 0.0f;
-    bottomStatus.frame = rect;
+    bottomStatusView.frame = rect;
     pickerViewContainer.frame = rect2;
   }];
+  isShowingStatusView = NO;
   [self.table reloadData];
 }
 
@@ -440,14 +513,33 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   isShowingPicker = NO;
   [self resize];
   CGRect rect = pickerViewContainer.frame;
-  CGRect rect2 = bottomStatus.frame;
+  CGRect rect2 = bottomStatusView.frame;
   rect.origin.y = self.view.frame.size.height;
   rect2.origin.y = self.view.frame.size.height -
-    bottomStatus.frame.size.height;
+    bottomStatusView.frame.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
-    bottomStatus.frame = rect2;
+    bottomStatusView.frame = rect2;
     pickerViewContainer.frame = rect;
   }];
+}
+
+- (void) hideRelistView
+{
+  CGRect rect = relistView.frame;
+  rect.origin.y = self.view.frame.size.height;
+  [UIView animateWithDuration: 0.25 animations: ^{
+    fadedBackground.alpha = 0.0f;
+    relistView.frame = rect;
+  }];
+  [self.table reloadData];
+}
+
+- (void) hideViews
+{
+  if(isShowingStatusView)
+    [self hideBottomStatus];
+  else
+    [self hideRelistView];
 }
 
 - (void) noLonger
@@ -461,20 +553,25 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   residence.inactive = NO;
   residence.rented = NO;
-  [self hideBottomStatus];
+}
+
+- (void) relistAction
+{
+  [self relist];
+  [self hideRelistView];
 }
 
 - (void) resize
 {
   CGFloat padding = 20.f;
   CGRect rect1 = rentedTextField.frame;
-  CGRect rect2 = bottomStatus.frame;
+  CGRect rect2 = bottomStatusView.frame;
   if(isShowingPicker){
     titlelabel.text = @"When will this place become available?";
     rentedTextField.hidden = NO;
     reasonTwoButton.hidden = YES;
     cancelStatusButton.hidden = YES;
-    descriptionLabel.hidden = YES;
+    descriptionStatusLabel.hidden = YES;
     rentedButton.hidden = YES;
     rect1.origin.y = titlelabel.frame.origin.y +
       titlelabel.frame.size.height + padding;
@@ -484,7 +581,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     rentedTextField.hidden = YES;
     reasonTwoButton.hidden = NO;
     cancelStatusButton.hidden = NO;
-    descriptionLabel.hidden = NO;
+    descriptionStatusLabel.hidden = NO;
     rentedButton.hidden = NO;
     isShowingPicker = NO;
     titlelabel.text = @"Stop listing because...";
@@ -495,18 +592,19 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
   
   rentedTextField.frame = rect1;
-  bottomStatus.frame = rect2;
+  bottomStatusView.frame = rect2;
 }
 
 - (void) showBottomStatus
 {
   [self resize];
-  CGRect rect = bottomStatus.frame;
+  isShowingStatusView = YES;
+  CGRect rect = bottomStatusView.frame;
   rect.origin.y = self.view.frame.size.height -
     rect.size.height;
   [UIView animateWithDuration: 0.25 animations: ^{
     fadedBackground.alpha = 1.0f;
-    bottomStatus.frame = rect;
+    bottomStatusView.frame = rect;
   }];
 }
 
@@ -516,20 +614,37 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     isShowingPicker = YES;
     [self resize];
     CGRect rect = pickerViewContainer.frame;
-    CGRect rect2 = bottomStatus.frame;
+    CGRect rect2 = bottomStatusView.frame;
     rect2.origin.y = self.view.frame.size.height -
-      (bottomStatus.frame.size.height + rect.size.height);
+      (bottomStatusView.frame.size.height + rect.size.height);
     rect.origin.y = self.view.frame.size.height - pickerViewContainer.frame.size.height;
     [UIView animateWithDuration:0.25 animations:^{
-      bottomStatus.frame = rect2;
+      bottomStatusView.frame = rect2;
       pickerViewContainer.frame = rect;
     }];
   }
 }
 
-- (void) switchStatus
+- (void) showRelistView
 {
-  NSLog(@"switch");
+  CGRect rect = relistView.frame;
+  rect.origin.y = self.view.frame.size.height -
+    rect.size.height;
+  [UIView animateWithDuration: 0.25 animations:^{
+    fadedBackground.alpha = 1.0f;
+    relistView.frame = rect;
+  }];
+}
+
+- (void) switchStatus:(OMBSwitch *)customSwitch
+{
+  if(customSwitch.on){
+    [self relist];
+  }
+  else{
+    residence.inactive = YES;
+    residence.rented = NO;
+  }
 }
 
 - (void) updateBackgroundImage

@@ -112,14 +112,16 @@ float knobSize = 0.9;
   
 }
 
--(void)setState:(BOOL)onOff {
+-(void)setState:(BOOL)onOff withAnimation:(BOOL)animation{
   // setState
   _on = onOff;
   // set visuals
-  [UIView beginAnimations: @"" context: nil];
-  [UIView setAnimationDelegate: self];
-  [UIView setAnimationDuration: 0.3];
-  [UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
+  if(animation){
+    [UIView beginAnimations: @"" context: nil];
+    [UIView setAnimationDelegate: self];
+    [UIView setAnimationDuration: 0.3];
+    [UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
+  }
   
   if (!_on) {
     switcher.frame =  CGRectMake(self.frame.size.height / 16.0,
@@ -140,7 +142,8 @@ float knobSize = 0.9;
     gradient.hidden = NO;
   }
   
-  [UIView commitAnimations];
+  if(animation)
+    [UIView commitAnimations];
   
 }
 

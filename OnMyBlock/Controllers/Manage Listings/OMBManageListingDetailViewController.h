@@ -22,15 +22,22 @@ typedef NS_ENUM(NSInteger, OMBManageListingDetailSectionTopRow) {
 
 @interface OMBManageListingDetailViewController : OMBTableParallaxViewController
 {
-  UIView *bottomStatus;
-  UIButton *cancelStatusButton;
-  UILabel *descriptionLabel;
   UIView *fadedBackground;
+  // Status
+  UIView *bottomStatusView;
+  UIButton *cancelStatusButton;
+  UILabel *descriptionStatusLabel;
   UIButton *reasonTwoButton;
   UIButton *rentedButton;
   UITextField *rentedTextField;
   BOOL isShowingPicker;
+  BOOL isShowingStatusView;
   UILabel *titlelabel;
+  // Relist
+  UIButton *cancelRelistButton;
+  UILabel *descriptionRelistLabel;
+  UIButton *relistButton;
+  UIView *relistView;
   // Date Picker
   NSTimeInterval availableDate;
   UIDatePicker *datePicker;
