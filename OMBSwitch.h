@@ -29,7 +29,7 @@
 
 #pragma mark - Instance Methods
 
-- (void) setState:(BOOL)onOff;
+- (void) setState:(BOOL)onOff withAnimation:(BOOL)animation;
 
 @end
 
