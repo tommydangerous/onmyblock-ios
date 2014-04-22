@@ -813,6 +813,9 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
 - (MKAnnotationView *) mapView: (MKMapView *) mapView
 viewForAnnotation: (id <MKAnnotation>) annotation
 {
+  if (annotation == _mapView.userLocation)
+    return nil;
+  
   static NSString *const QVAnnotationViewReuseID = @"QVAnnotationViewReuseID";
 
   QVClusterAnnotationView *annotationView = (QVClusterAnnotationView *)
@@ -1436,6 +1439,10 @@ withTitle: (NSString *) title;
     if (!self.mapView.showsUserLocation)
       self.mapView.showsUserLocation = YES;
     [locationManager startUpdatingLocation];
+    //self.mapView.showsUserLocation = YES;
+    /*if(_mapView.userLocation)
+      [_mapView setCenterCoordinate: [_mapView userLocation].coordinate
+        animated: animated];*/
   }
   else {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
