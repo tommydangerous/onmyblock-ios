@@ -245,13 +245,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     selector: @selector(keyboardWillHide:)
       name: UIKeyboardWillHideNotification object: nil];
 
-  // If no phone number
-  if ([self otherUser] && [[[self otherUser] phoneString] length]) {
-    phoneBarButtonItem.enabled = YES;
-  }
-  else {
-    phoneBarButtonItem.enabled = NO;
-  }
+  [self verifyPhone];
 
   if (conversation) {
     [self assignMessages];
@@ -266,6 +260,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     conversation = [[OMBConversation alloc] init];
     [conversation fetchConversationWithResidenceUID: residence.uid completion:
       ^(NSError *error) {
+        [self verifyPhone];
         [self fetchMessages];
       }
     ];
@@ -275,6 +270,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     conversation = [[OMBConversation alloc] init];
     [conversation fetchConversationWithUserUID: user.uid completion:
       ^(NSError *error) {
+        [self verifyPhone];
         [self fetchMessages];
       }
     ];
@@ -739,7 +735,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   if ([self otherUser]) {
     NSString *string = [@"telprompt:" stringByAppendingString:
-      [[self otherUser] phone]];
+      [residence phone]];
     [[UIApplication sharedApplication] openURL: [NSURL URLWithString: string]];
   }
 }
@@ -849,6 +845,18 @@ additionalOffsetY: (CGFloat) offsetY
         lastFetched = [[NSDate date] timeIntervalSince1970];
       }
     ];
+  }
+}
+
+- (void) verifyPhone
+{
+  // If no phone number
+  //if ([self otherUser] && [[[self otherUser] phoneString] length]) {
+  if(conversation && residence && [residence.phone length] && !user){
+    phoneBarButtonItem.enabled = YES;
+  }
+  else {
+    phoneBarButtonItem.enabled = NO;
   }
 }
 
