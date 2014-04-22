@@ -500,7 +500,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       @"neighborhood"];
 
     // If the current center coordinate is not equal to the neighborhood's
-    if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate)) {
+    // and it should search
+    if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate) &&
+        [self appDelegate].container.mapFilterViewController.shouldSearch) {
       centerCoordinate = neighborhood.coordinate;
       [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
         animated: NO];
