@@ -495,6 +495,7 @@
 		DE5089AA18D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5089A218D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m */; };
 		DE8D2D5518BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8D2D5218BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m */; };
 		DE8D2D5618BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8D2D5418BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m */; };
+		DE8E8ECB19085C68005DCB6A /* OMBFacebookUserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8E8ECA19085C68005DCB6A /* OMBFacebookUserCell.m */; };
 		DE92170918D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170818D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m */; };
 		DE92170C18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170B18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m */; };
 		DE92915D18EF4929006CD5B6 /* OMBMapResidenceDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92915C18EF4929006CD5B6 /* OMBMapResidenceDetailCell.m */; };
@@ -1459,6 +1460,8 @@
 		DE8D2D5218BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVInfiniteScrolling.m"; sourceTree = "<group>"; };
 		DE8D2D5318BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+SVPullToRefresh.h"; sourceTree = "<group>"; };
 		DE8D2D5418BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVPullToRefresh.m"; sourceTree = "<group>"; };
+		DE8E8EC919085C68005DCB6A /* OMBFacebookUserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFacebookUserCell.h; sourceTree = "<group>"; };
+		DE8E8ECA19085C68005DCB6A /* OMBFacebookUserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFacebookUserCell.m; sourceTree = "<group>"; };
 		DE92170718D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoSectionRoommateViewController.h; sourceTree = "<group>"; };
 		DE92170818D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionRoommateViewController.m; sourceTree = "<group>"; };
 		DE92170A18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddRoommateViewController.h; sourceTree = "<group>"; };
@@ -2134,6 +2137,8 @@
 				DE16026B18D7A13000D67614 /* OMBRoommateCell.m */,
 				DE92B8FF18F8451900D03AC7 /* OMBRadialGradient.h */,
 				DE92B90018F8451900D03AC7 /* OMBRadialGradient.m */,
+				DE8E8EC919085C68005DCB6A /* OMBFacebookUserCell.h */,
+				DE8E8ECA19085C68005DCB6A /* OMBFacebookUserCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3432,6 +3437,7 @@
 				AB9D611B188CEFDE00C9AC64 /* UIImageView+WebCache.m in Sources */,
 				AB5DD32C18CE011500237AFC /* OMBAmenityStore.m in Sources */,
 				AB9D611A188CEFDE00C9AC64 /* UIImage+WebP.m in Sources */,
+				DE8E8ECB19085C68005DCB6A /* OMBFacebookUserCell.m in Sources */,
 				ABBA58981870C59700E9BF4E /* ELCImagePickerController.m in Sources */,
 				ABB70079187BA9B9005F0730 /* OMBHomebaseRenterPaymentNotificationCell.m in Sources */,
 				ABB9117418982B330046611F /* OMBRenterProfileViewController.m in Sources */,
@@ -3885,7 +3891,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3912,7 +3918,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B07E60EC-98F3-4317-AD77-5F33172F8639";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -3925,7 +3931,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3950,7 +3956,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B07E60EC-98F3-4317-AD77-5F33172F8639";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
