@@ -400,6 +400,8 @@
 		ABBB18DA1824432D00211499 /* OMBImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBB18D91824432D00211499 /* OMBImageScrollView.m */; };
 		ABBB18DD182453BF00211499 /* OMBAnnotationCity.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBB18DC182453BF00211499 /* OMBAnnotationCity.m */; };
 		ABBB18E9182458E200211499 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ABBB18E8182458E200211499 /* libz.dylib */; };
+		ABBC494F19070F2B00BF9F7D /* libFlurry_4.4.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABBC494E19070F2B00BF9F7D /* libFlurry_4.4.0.a */; };
+		ABBC495219070F4300BF9F7D /* OMBSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBC495119070F4300BF9F7D /* OMBSwitch.m */; };
 		ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABC48E791812397300F01D8D /* QuartzCore.framework */; };
 		ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */; };
 		ABCB36AC187C7524008A0EEF /* OMBAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABCB36AB187C7524008A0EEF /* OMBAlertView.m */; };
@@ -484,6 +486,7 @@
 		B484A9BF18B55A2F005DEBBE /* menuBackground.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B484A9BD18B55A2F005DEBBE /* menuBackground.jpg */; };
 		B484A9C018B55A2F005DEBBE /* menuBackground@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B484A9BE18B55A2F005DEBBE /* menuBackground@2x.jpg */; };
 		B484A9C218B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = B484A9C118B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D373FBF942A741AC8A72F0DF /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13DE5B8C062A4BEBBE2A2D69 /* libPods.a */; };
 		DE16026C18D7A13000D67614 /* OMBRoommateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE16026B18D7A13000D67614 /* OMBRoommateCell.m */; };
 		DE4E685918E0D84F002369B8 /* OMBOtherUserProfileHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE4E685818E0D84F002369B8 /* OMBOtherUserProfileHeaderCell.m */; };
 		DE5089A418D517BF00C998BF /* OMBRenterInfoAddEmploymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE50899C18D517BF00C998BF /* OMBRenterInfoAddEmploymentViewController.m */; };
@@ -492,7 +495,6 @@
 		DE5089AA18D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5089A218D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m */; };
 		DE8D2D5518BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8D2D5218BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m */; };
 		DE8D2D5618BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8D2D5418BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m */; };
-		DE8E716118FEE3EE00F9AE5A /* OMBSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8E716018FEE3EE00F9AE5A /* OMBSwitch.m */; };
 		DE92170918D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170818D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m */; };
 		DE92170C18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170B18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m */; };
 		DE92915D18EF4929006CD5B6 /* OMBMapResidenceDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92915C18EF4929006CD5B6 /* OMBMapResidenceDetailCell.m */; };
@@ -527,6 +529,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		13DE5B8C062A4BEBBE2A2D69 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DED75158C9B4E69A0B6B2C7 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		67E94812188DB97D007703FC /* OMBFilmstripImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFilmstripImageCell.h; sourceTree = "<group>"; };
 		67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFilmstripImageCell.m; sourceTree = "<group>"; };
 		67E9481C188DF726007703FC /* OMBMapFilterDateAvailableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterDateAvailableCell.h; sourceTree = "<group>"; };
@@ -1273,6 +1277,10 @@
 		ABBB18DB182453BF00211499 /* OMBAnnotationCity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAnnotationCity.h; sourceTree = "<group>"; };
 		ABBB18DC182453BF00211499 /* OMBAnnotationCity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAnnotationCity.m; sourceTree = "<group>"; };
 		ABBB18E8182458E200211499 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		ABBC494D19070F2B00BF9F7D /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		ABBC494E19070F2B00BF9F7D /* libFlurry_4.4.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.4.0.a; sourceTree = "<group>"; };
+		ABBC495019070F4300BF9F7D /* OMBSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSwitch.h; sourceTree = "<group>"; };
+		ABBC495119070F4300BF9F7D /* OMBSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSwitch.m; sourceTree = "<group>"; };
 		ABC48E791812397300F01D8D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		ABC48E7B18125AF000F01D8D /* OMBPropertyInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPropertyInfoView.h; sourceTree = "<group>"; };
 		ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPropertyInfoView.m; sourceTree = "<group>"; };
@@ -1451,8 +1459,6 @@
 		DE8D2D5218BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVInfiniteScrolling.m"; sourceTree = "<group>"; };
 		DE8D2D5318BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+SVPullToRefresh.h"; sourceTree = "<group>"; };
 		DE8D2D5418BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVPullToRefresh.m"; sourceTree = "<group>"; };
-		DE8E715F18FEE3EE00F9AE5A /* OMBSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSwitch.h; sourceTree = "<group>"; };
-		DE8E716018FEE3EE00F9AE5A /* OMBSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSwitch.m; sourceTree = "<group>"; };
 		DE92170718D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoSectionRoommateViewController.h; sourceTree = "<group>"; };
 		DE92170818D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionRoommateViewController.m; sourceTree = "<group>"; };
 		DE92170A18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoAddRoommateViewController.h; sourceTree = "<group>"; };
@@ -1509,6 +1515,7 @@
 				6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */,
 				AB01ED6D185966B500333390 /* AVFoundation.framework in Frameworks */,
 				ABB022D3182490D700F98544 /* CoreData.framework in Frameworks */,
+				ABBC494F19070F2B00BF9F7D /* libFlurry_4.4.0.a in Frameworks */,
 				AB802EA018109E5200E04D11 /* CoreGraphics.framework in Frameworks */,
 				AB0269B9182292F500E72F53 /* CoreImage.framework in Frameworks */,
 				AB0E984518ED32630086AF3D /* Parse.framework in Frameworks */,
@@ -1527,6 +1534,7 @@
 				ABB022C718248D9800F98544 /* SystemConfiguration.framework in Frameworks */,
 				AB802EA218109E5200E04D11 /* UIKit.framework in Frameworks */,
 				DE93158718916D1800111CF6 /* FacebookSDK.framework in Frameworks */,
+				D373FBF942A741AC8A72F0DF /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1794,8 +1802,7 @@
 		AB802E9118109E5200E04D11 = {
 			isa = PBXGroup;
 			children = (
-				DE8E715F18FEE3EE00F9AE5A /* OMBSwitch.h */,
-				DE8E716018FEE3EE00F9AE5A /* OMBSwitch.m */,
+				ABBC494C19070F2B00BF9F7D /* Flurry */,
 				ABB911AA18998FB20046611F /* AFNetworking */,
 				AB6155D6184FF9D400A193C7 /* Base64 */,
 				ABED5FE91896FAED00AD630C /* DKLiveBlur */,
@@ -1820,6 +1827,7 @@
 				DE8D2D4F18BD05F4000E6BF4 /* SVPullToRefresh */,
 				ABE28175186A187E00A5D14E /* TestFlightSDK2.1.3 */,
 				ABED5FDA1896E8CE00AD630C /* UIERealTimeBlurView */,
+				1DED75158C9B4E69A0B6B2C7 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1860,6 +1868,7 @@
 				AB802EA118109E5200E04D11 /* UIKit.framework */,
 				ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */,
 				AB802EB618109E5200E04D11 /* XCTest.framework */,
+				13DE5B8C062A4BEBBE2A2D69 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1958,6 +1967,8 @@
 		AB9B26031811A49200E6DAC4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				ABBC495019070F4300BF9F7D /* OMBSwitch.h */,
+				ABBC495119070F4300BF9F7D /* OMBSwitch.m */,
 				AB17AE3C18FD180600B6952C /* Map */,
 				ABE7B90118FC880900642777 /* MDCParallaxView.h */,
 				ABE7B90218FC880900642777 /* MDCParallaxView.m */,
@@ -2904,6 +2915,15 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		ABBC494C19070F2B00BF9F7D /* Flurry */ = {
+			isa = PBXGroup;
+			children = (
+				ABBC494D19070F2B00BF9F7D /* Flurry.h */,
+				ABBC494E19070F2B00BF9F7D /* libFlurry_4.4.0.a */,
+			);
+			path = Flurry;
+			sourceTree = "<group>";
+		};
 		ABD8EF4D182006EE00C28686 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -3141,9 +3161,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AB802EC618109E5200E04D11 /* Build configuration list for PBXNativeTarget "OnMyBlock" */;
 			buildPhases = (
+				C1FB152133784A0B812335E9 /* Check Pods Manifest.lock */,
 				AB802E9818109E5200E04D11 /* Resources */,
 				AB802E9618109E5200E04D11 /* Sources */,
 				AB802E9718109E5200E04D11 /* Frameworks */,
+				CA538827C0154B7F9F50E6CD /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3264,6 +3286,39 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C1FB152133784A0B812335E9 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		CA538827C0154B7F9F50E6CD /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AB802E9618109E5200E04D11 /* Sources */ = {
@@ -3653,7 +3708,7 @@
 				AB01ED461858C84900333390 /* OMBLegalAnswerCreateOrUpdateConnection.m in Sources */,
 				ABA4F20A187CF02600D725D4 /* OMBGooglePlacesConnection.m in Sources */,
 				AB0269BD182293DC00E72F53 /* UIImage+NegativeImage.m in Sources */,
-				DE8E716118FEE3EE00F9AE5A /* OMBSwitch.m in Sources */,
+				ABBC495219070F4300BF9F7D /* OMBSwitch.m in Sources */,
 				ABB06AE418453640009CBBEA /* OMBViewControllerContainer.m in Sources */,
 				ABE4FBF8189045E40009D643 /* OMBPayoutMethodVenmoViewController.m in Sources */,
 				ABA5B419185699CB00F825E1 /* OMBEmployment.m in Sources */,
@@ -3826,6 +3881,7 @@
 		};
 		AB802EC718109E5200E04D11 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1DED75158C9B4E69A0B6B2C7 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -3848,11 +3904,12 @@
 					"$(SRCROOT)/PayPalMobile",
 					"$(SRCROOT)/TestFlightSDK2.1.3",
 					"$(PROJECT_DIR)/PayPalMobile",
+					"$(PROJECT_DIR)/Flurry",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
-					"-lc++",
 					"-ObjC",
+					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "B07E60EC-98F3-4317-AD77-5F33172F8639";
@@ -3864,6 +3921,7 @@
 		};
 		AB802EC818109E5200E04D11 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1DED75158C9B4E69A0B6B2C7 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -3885,10 +3943,11 @@
 					"$(SRCROOT)/PayPalMobile",
 					"$(SRCROOT)/TestFlightSDK2.1.3",
 					"$(PROJECT_DIR)/PayPalMobile",
+					"$(PROJECT_DIR)/Flurry",
 				);
 				OTHER_LDFLAGS = (
-					"-lc++",
 					"-ObjC",
+					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "B07E60EC-98F3-4317-AD77-5F33172F8639";

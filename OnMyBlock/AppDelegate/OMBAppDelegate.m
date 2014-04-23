@@ -6,8 +6,10 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 #import "OMBRadialGradient.h"
+#import <Mixpanel/Mixpanel.h>
 #import <NewRelicAgent/NewRelicAgent.h>
 #import <Parse/Parse.h>
+#import "Flurry.h"
 #import "GAI.h"
 #import "TestFlight.h"
 
@@ -496,11 +498,34 @@ state: (FBSessionState) state error: (NSError *) error
   // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
   [GAI sharedInstance].dispatchInterval = 20;
   // Optional: set Logger to VERBOSE for debug information.
-  [[[GAI sharedInstance] logger] setLogLevel: kGAILogLevelVerbose];
+  // [[[GAI sharedInstance] logger] setLogLevel: kGAILogLevelVerbose];
   // Initialize tracker.
   id <GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:
     @"UA-45382533-1"];
   NSLog(@"GAITracker: %@", tracker);
+
+  // Flurry
+  // note: iOS only allows one crash reporting tool per app;
+  // if using another, set to: NO
+  // [Flurry setCrashReportingEnabled: NO];
+  // Replace YOUR_API_KEY with the api key in the downloaded package
+  // [Flurry startSession: @"77S527P975565GYD4XVB"];
+
+  // Initialize the library with your
+  // Mixpanel project token, MIXPANEL_TOKEN
+  [Mixpanel sharedInstanceWithToken: @"6db62604783bd53a107ae8c69832dfda"];
+
+  // Later, you can get your instance with
+  // Mixpanel *mixpanel = [Mixpanel sharedInstance];
+  // [mixpanel track:@"Plan Selected" properties:@{
+  //   @"Gender": @"Female",
+  //   @"Plan": @"Premium"
+  // }];
+
+  // Send a "User Type: Paid" property will be sent
+  // with all future track calls.
+  // [mixpanel registerSuperProperties:@{@"User Type": @"Paid"}];
+  // [mixpanel registerSuperPropertiesOnce:@{@"source": @"ad-01"}];
 }
 
 - (void) showLogin

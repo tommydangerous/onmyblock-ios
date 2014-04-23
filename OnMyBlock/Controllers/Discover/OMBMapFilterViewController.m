@@ -1140,7 +1140,7 @@ viewForHeaderInSection: (NSInteger) section
       @"minRent":      [NSNull null],
       @"neighborhood": [NSNull null],
       @"propertyType": [NSMutableArray array],
-      @"moveInDate": [NSNull null]
+      @"moveInDate":   [NSNull null]
 	  // @"dateAvailable":[NSNull null]
     }
   ];
@@ -1149,6 +1149,41 @@ viewForHeaderInSection: (NSInteger) section
 - (void) search
 {
   _shouldSearch = YES;
+  // [Flurry logEvent:@"Article_Read"];
+  // [Flurry logEvent: @"Map_Filter" withParameters:
+  //   [NSDictionary dictionaryWithDictionary: self.valuesDictionary]];
+  id <GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+
+  for (NSString *key in [_valuesDictionary allKeys]) {
+    id value = [_valuesDictionary objectForKey: key];
+    if (value != [NSNull null]) {
+      BOOL isTrackable = YES;
+      if ([value isKindOfClass: [OMBNeighborhood class]]) {
+        OMBNeighborhood *n = (OMBNeighborhood *) value;
+        value = [NSString stringWithFormat: @"%f,%f",
+          n.coordinate.latitude, n.coordinate.longitude];
+      }
+      else if ([value isKindOfClass: [NSString class]]) {
+        isTrackable = [value length] ? YES : NO;
+      }
+      else if ([value isKindOfClass: [NSArray class]]) {
+        isTrackable = [value count] ? YES : NO;
+      }
+      if (isTrackable) {
+        // Mix Panel
+        [[Mixpanel sharedInstance] track: @"Map Filter" properties: @{
+          key: value
+        }];
+        // Google Analytics
+        NSString *category = @"Map";
+        NSString *action   = [NSString stringWithFormat: @"Filter - %@", key];
+        [tracker send: [[GAIDictionaryBuilder createEventWithCategory: category
+          action: action label: value value: @1] build]];
+        // NSLog(@"%@: %@", key, value);
+      }
+    }
+  }
+
   [self dismissViewControllerWithCompletion: nil];
 }
 
