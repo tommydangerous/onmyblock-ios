@@ -8,6 +8,7 @@
 
 #import "OMBRenterInfoAddRoommateViewController.h"
 
+#import "OMBFacebookUserCell.h"
 #import "OMBRoommate.h"
 #import "OMBRoommatesSearchFacebookFriendsConnection.h"
 #import "OMBLabelSwitchCell.h"
@@ -200,28 +201,58 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   else if (tableView == searchTableView) {
     if (section == OMBRenterInfoAddRoommateSearchSectionResults) {
-      static NSString *ResultID = @"ResultID";
-      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
-        ResultID];
-      if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:
-         UITableViewCellStyleDefault reuseIdentifier: ResultID];
-      }
-      cell.backgroundColor = [UIColor whiteColor];
       // Add co-applicant manually
       if (row == [searchResultsDictionary count]) {
+        static NSString *ResultID = @"ResultID";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+          ResultID];
+        if (!cell) {
+          cell = [[UITableViewCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier: ResultID];
+        }
+        cell.backgroundColor = [UIColor whiteColor];
         cell.textLabel.font = [UIFont normalTextFontBold];
         cell.textLabel.text = @"Add co-applicant manually";
         cell.textLabel.textColor = [UIColor blue];
+        cell.clipsToBounds = YES;
+        return cell;
+      }else{
+        static NSString *FbuserID = @"FbuserID";
+        OMBFacebookUserCell *cell = [tableView dequeueReusableCellWithIdentifier:
+          FbuserID];
+        if(!cell)
+          cell = [[OMBFacebookUserCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier:FbuserID];
+        
+        [cell loadFacebooUserData:
+          [searchResultsDictionary objectForKey:
+            [[self sortedSearchResultsDictionaryKeys] objectAtIndex: row]]];
+        cell.clipsToBounds = YES;
+        return cell;
       }
-      else {
-        cell.textLabel.font = [UIFont normalTextFont];
-        cell.textLabel.text = [[[self sortedSearchResultsDictionaryKeys]
-          objectAtIndex: row] stringByAppendingString:@" (Facebook user)"];
-        cell.textLabel.textColor = [UIColor textColor];
-      }
-      cell.clipsToBounds = YES;
-      return cell;
+      /*static NSString *ResultID = @"ResultID";
+       UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+       ResultID];
+       if (!cell) {
+       cell = [[UITableViewCell alloc] initWithStyle:
+       UITableViewCellStyleDefault reuseIdentifier: ResultID];
+       }
+       cell.backgroundColor = [UIColor whiteColor];
+       // Add co-applicant manually
+       if (row == [searchResultsDictionary count]) {
+       cell.textLabel.font = [UIFont normalTextFontBold];
+       cell.textLabel.text = @"Add co-applicant manually";
+       cell.textLabel.textColor = [UIColor blue];
+       }
+       else {
+       cell.textLabel.font = [UIFont normalTextFont];
+       cell.textLabel.text = [[[self sortedSearchResultsDictionaryKeys]
+       objectAtIndex: row] stringByAppendingString:@" (Facebook user)"];
+       cell.textLabel.textColor = [UIColor textColor];
+       }
+       cell.clipsToBounds = YES;
+       return cell;
+       }*/
     }
     // Spacing
     else if (section == OMBRenterInfoAddRoommateSearchSectionSpacing) {
@@ -308,7 +339,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   else if (tableView == searchTableView) {
     if (section == OMBRenterInfoAddRoommateSearchSectionResults) {
-      return OMBStandardHeight;
+      if(row == [searchResultsDictionary count])
+        return OMBStandardHeight;
+      else
+        return [OMBFacebookUserCell heightForCell];
     }
     else if (section == OMBRenterInfoAddRoommateSearchSectionSpacing &&
       isEditing) {
