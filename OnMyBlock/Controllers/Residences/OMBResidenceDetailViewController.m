@@ -102,7 +102,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
     label2.textAlignment = label.textAlignment;
     label2.textColor = [UIColor grayMedium];
     label2.text = [NSString stringWithFormat:@"%@, %@",
-      residence.city,residence.state];
+      [residence.city capitalizedString],residence.stateFormattedString];
     [labelView addSubview:label2];
     self.navigationItem.titleView = labelView;
   }

@@ -500,7 +500,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       @"neighborhood"];
 
     // If the current center coordinate is not equal to the neighborhood's
-    if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate)) {
+    // and it should search
+    if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate) &&
+        [self appDelegate].container.mapFilterViewController.shouldSearch) {
       centerCoordinate = neighborhood.coordinate;
       [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
         animated: NO];
@@ -813,6 +815,9 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
 - (MKAnnotationView *) mapView: (MKMapView *) mapView
 viewForAnnotation: (id <MKAnnotation>) annotation
 {
+  if (annotation == _mapView.userLocation)
+    return nil;
+  
   static NSString *const QVAnnotationViewReuseID = @"QVAnnotationViewReuseID";
 
   QVClusterAnnotationView *annotationView = (QVClusterAnnotationView *)
@@ -1436,6 +1441,10 @@ withTitle: (NSString *) title;
     if (!self.mapView.showsUserLocation)
       self.mapView.showsUserLocation = YES;
     [locationManager startUpdatingLocation];
+    //self.mapView.showsUserLocation = YES;
+    /*if(_mapView.userLocation)
+      [_mapView setCenterCoordinate: [_mapView userLocation].coordinate
+        animated: animated];*/
   }
   else {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
