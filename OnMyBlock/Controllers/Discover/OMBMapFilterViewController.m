@@ -1168,6 +1168,10 @@ viewForHeaderInSection: (NSInteger) section
       }
       else if ([value isKindOfClass: [NSArray class]]) {
         isTrackable = [value count] ? YES : NO;
+        value = [value componentsJoinedByString: @","];
+      }
+      else if ([value isKindOfClass: [NSNumber class]]) {
+        value = [NSString stringWithFormat: @"%i", [value intValue]];
       }
       if (isTrackable) {
         // Mix Panel
