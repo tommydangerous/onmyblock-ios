@@ -190,16 +190,19 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   NSUInteger section = indexPath.section;
   if (section == OMBManageListingsSectionListings) {
     id residence = [[self listings] objectAtIndex: indexPath.row];
-    if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
-      [self.navigationController pushViewController:
-        [[OMBFinishListingViewController alloc] initWithResidence:
-          residence] animated: YES];
-    }
-    else {
-      [self.navigationController pushViewController:
-        [[OMBManageListingDetailViewController alloc] initWithResidence:
-          residence] animated: YES];
-    }
+    [self.navigationController pushViewController:
+      [[OMBFinishListingViewController alloc] initWithResidence:
+        residence] animated: YES];
+    // if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
+    //   [self.navigationController pushViewController:
+    //     [[OMBFinishListingViewController alloc] initWithResidence:
+    //       residence] animated: YES];
+    // }
+    // else {
+    //   [self.navigationController pushViewController:
+    //     [[OMBManageListingDetailViewController alloc] initWithResidence:
+    //       residence] animated: YES];
+    // }
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
