@@ -21,16 +21,15 @@
 
   legalAnswer = object;
 
-  NSString *string = [NSString stringWithFormat: 
+  NSString *string = [NSString stringWithFormat:
     @"%@/legal_answers/create_or_update", OnMyBlockAPIURL];
-  NSURL *url = [NSURL URLWithString: string];
-  NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
   NSString *explanation = @"";
-  if (legalAnswer.explanation && 
+  if (legalAnswer.explanation &&
     [[legalAnswer.explanation stripWhiteSpace] length] > 0)
     explanation = legalAnswer.explanation;
   NSDictionary *objectParams = @{
     @"answer":            legalAnswer.answer ? @"1" : @"0",
+    @"created_source":    OnMyBlockCreatedSource,
     @"explanation":       explanation,
     @"legal_question_id": [NSNumber numberWithInt: legalAnswer.legalQuestionID]
   };
@@ -38,12 +37,7 @@
     @"access_token": [OMBUser currentUser].accessToken,
     @"legal_answer": objectParams
   };
-  NSData *json = [NSJSONSerialization dataWithJSONObject: params
-    options: 0 error: nil];
-  [req addValue: @"application/json" forHTTPHeaderField: @"Content-Type"];
-  [req setHTTPBody: json];
-  [req setHTTPMethod: @"POST"];
-  self.request = req;
+  [self setRequestWithString: string method: @"POST" parameters: params];
 
   return self;
 }

@@ -25,11 +25,11 @@
     object];
   for (NSString *key in [dictionary allKeys]) {
     id value = [dictionary objectForKey: key];
-    NSString *newKey = [[[key stringSeparatedByUppercaseStrings] 
+    NSString *newKey = [[[key stringSeparatedByUppercaseStrings]
       componentsJoinedByString: @"_"] lowercaseString];
     if ([newKey rangeOfString: @"date"].location != NSNotFound) {
       if ([[dictionary objectForKey: key] doubleValue] > 0) {
-        value = [[NSDateFormatter JSONDateParser] stringFromDate: 
+        value = [[NSDateFormatter JSONDateParser] stringFromDate:
           [NSDate dateWithTimeIntervalSince1970: [value doubleValue]]];
         [objectParams setObject: value forKey: newKey];
       }
@@ -38,10 +38,13 @@
       [objectParams setObject: value forKey: newKey];
     }
   }
+  // This is used to track where the models were created from
+  // Web or iOS
+  [objectParams setObject: OnMyBlockCreatedSource forKey: @"created_source"];
 
   NSString *string = [NSString stringWithFormat: @"%@/%@",
     OnMyBlockAPIURL, [object resourceName]];
-  NSDictionary *params = [NSDictionary dictionaryWithObjects: 
+  NSDictionary *params = [NSDictionary dictionaryWithObjects:
     @[[OMBUser currentUser].accessToken, objectParams] forKeys:
       @[@"access_token", [object modelName]]];
   [self setRequestWithString: string method: @"POST" parameters: params];

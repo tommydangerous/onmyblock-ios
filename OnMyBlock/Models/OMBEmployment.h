@@ -23,7 +23,6 @@
 
 - (NSString *) companyWebsiteString;
 - (NSString *) numberOfMonthsEmployedString;
-- (void) readFromDictionary: (NSDictionary *) dictionary;
 - (NSString *) shortCompanyWebsiteString;
 
 @end

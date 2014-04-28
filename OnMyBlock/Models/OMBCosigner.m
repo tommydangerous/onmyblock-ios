@@ -26,19 +26,19 @@
   return self.uid == [(OMBCosigner *) anObject uid];
 }
 
-#pragma mark - Protocol
+#pragma mark - Methods
 
-#pragma mark - Protocol OMBConnectionProtocol
+#pragma mark - Class Methods
 
-- (void) JSONDictionary: (NSDictionary *) dictionary
++ (NSString *) modelName
 {
-  if ([dictionary objectForKey: @"object"] == [NSNull null])
-    [self readFromDictionary: dictionary];
-  else
-    [self readFromDictionary: [dictionary objectForKey: @"object"]];
+  return @"cosigner";
 }
 
-#pragma mark - Methods
++ (NSString *) resourceName
+{
+  return [NSString stringWithFormat: @"%@s", [OMBCosigner modelName]];
+}
 
 #pragma mark - Instance Methods
 

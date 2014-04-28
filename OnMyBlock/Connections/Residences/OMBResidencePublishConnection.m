@@ -25,10 +25,11 @@
   if ([object isKindOfClass: [OMBTemporaryResidence class]])
     resource = @"temporary_residences";
 
-  NSString *string = [NSString stringWithFormat: @"%@/%@/%i/publish", 
+  NSString *string = [NSString stringWithFormat: @"%@/%@/%i/publish",
     OnMyBlockAPIURL, resource, residence.uid];
   NSDictionary *params = @{
-    @"access_token": [OMBUser currentUser].accessToken
+    @"access_token":   [OMBUser currentUser].accessToken,
+    @"created_source": @"ios"
   };
   [self setRequestWithString: string method: @"POST" parameters: params];
 

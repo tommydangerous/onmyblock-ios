@@ -15,9 +15,9 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
 // Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
 #if __ENVIRONMENT__ == 1
   // Development server
-  // NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
+  NSString *const OnMyBlockAPIURL = @"http://localhost:3000/api-v1";
   // Josselyn
-  NSString *const OnMyBlockAPIURL = @"http://10.0.1.8:3000/api-v1";
+  // NSString *const OnMyBlockAPIURL = @"http://10.0.1.8:3000/api-v1";
   // Santa Clara
   // NSString *const OnMyBlockAPIURL = @"http://192.168.1.107:3000/api-v1";
 #elif __ENVIRONMENT__ == 2
@@ -27,6 +27,8 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
   // Production server
   NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";
 #endif
+
+NSString *const OnMyBlockCreatedSource = @"ios";
 
 @implementation OMBConnection
 

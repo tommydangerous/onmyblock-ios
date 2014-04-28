@@ -45,14 +45,14 @@
   CGRect screen = [[UIScreen mainScreen] bounds];
 
   self.view = [[UIView alloc] initWithFrame: screen];
-  
+
   [[NSNotificationCenter defaultCenter]addObserver:self
                                           selector:@selector(becomeActive)
                                               name:UIApplicationDidBecomeActiveNotification
                                             object:nil];
-  
+
   animate = NO;
-  
+
   // Login and sign up view
   _loginSignUpView = [[OMBLoginSignUpView alloc] init];
   // Close button
@@ -60,11 +60,11 @@
     action: @selector(close) forControlEvents: UIControlEventTouchUpInside];
   // Facebook
   [_loginSignUpView.facebookButton addTarget: self
-    action: @selector(showFacebook) 
+    action: @selector(showFacebook)
       forControlEvents: UIControlEventTouchUpInside];
   // Login or Sign Up
-  [_loginSignUpView.actionButton addTarget: self 
-    action: @selector(loginOrSignUp) 
+  [_loginSignUpView.actionButton addTarget: self
+    action: @selector(loginOrSignUp)
       forControlEvents: UIControlEventTouchUpInside];
   [self.view addSubview: _loginSignUpView];
 
@@ -115,7 +115,7 @@
     else if(buttonIndex == 2) {
       _loginSignUpView.passwordTextField.text = @"";
       #warning SEND AN EMAIL TO RESET PASSWORD
-      NSString *message = [NSString stringWithFormat: 
+      NSString *message = [NSString stringWithFormat:
         @"An email with password reset instructions has "
         @"been sent to \"%@\"", _loginSignUpView.emailTextField.text];
       UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: nil
@@ -196,7 +196,7 @@
 - (void) showAlertViewLogin
 {
   NSString *message = @"Incorrect email or password, please try again.";
-  
+
   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: nil
     message: message delegate: self cancelButtonTitle: @"Ok"
       otherButtonTitles: @"Sign Up", @"Reset Password", nil];
@@ -207,7 +207,7 @@
 - (void) showAlertViewSignUp
 {
   NSString *message = @"Email has already been taken.";
-  
+
   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: nil
     message: message delegate: self cancelButtonTitle: @"Ok"
       otherButtonTitles: @"Login", nil];
@@ -248,10 +248,10 @@
 
 - (void) signUp
 {
-  NSString *emailString = _loginSignUpView.emailTextField.text;
+  NSString *emailString     = _loginSignUpView.emailTextField.text;
   NSString *firstNameString = _loginSignUpView.firstNameTextField.text;
-  NSString *lastNameString = _loginSignUpView.lastNameTextField.text;
-  NSString *passwordString = _loginSignUpView.passwordTextField.text;
+  NSString *lastNameString  = _loginSignUpView.lastNameTextField.text;
+  NSString *passwordString  = _loginSignUpView.passwordTextField.text;
 
   NSString *message;
   if ([firstNameString length] == 0) {
@@ -267,15 +267,16 @@
     message = @"Please enter a password.";
   }
   if ([message length]) {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: 
-      @"Sign up failed" message: message delegate: nil 
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
+      @"Sign up failed" message: message delegate: nil
         cancelButtonTitle: @"Okay" otherButtonTitles: nil];
     [alertView show];
     return;
   }
 
-  NSMutableDictionary *params = 
+  NSMutableDictionary *params =
     [NSMutableDictionary dictionaryWithDictionary: @{
+      @"created_source": @"ios",
       @"email":      emailString,
       @"first_name": firstNameString,
       @"last_name":  lastNameString,
@@ -288,7 +289,7 @@
   else {
     [params removeObjectForKey: userTypeKey];
   }
-  OMBSignUpConnection *conn = 
+  OMBSignUpConnection *conn =
     [[OMBSignUpConnection alloc] initWithParameters: params];
   conn.completionBlock = ^(NSError *error) {
     if ([[OMBUser currentUser] loggedIn]) {
@@ -296,7 +297,7 @@
     }
     else {
       NSString *alertMessage = error.localizedFailureReason != (id)[NSNull null] ? error.localizedFailureReason : @"Unsuccessful";
-      
+
       if([alertMessage isEqualToString:@"Email has already been taken"])
         [self showAlertViewSignUp];
       else

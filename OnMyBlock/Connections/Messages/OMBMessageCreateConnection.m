@@ -23,7 +23,7 @@
 
 #pragma mark - Initializer
 
-- (id) initWithMessage: (OMBMessage *) object 
+- (id) initWithMessage: (OMBMessage *) object
 conversation: (OMBConversation *) conversationObject
 {
   if (!(self = [super init])) return nil;
@@ -31,12 +31,13 @@ conversation: (OMBConversation *) conversationObject
   conversation = conversationObject;
   message      = object;
 
-  NSString *string = [NSString stringWithFormat: @"%@/messages", 
+  NSString *string = [NSString stringWithFormat: @"%@/messages",
     OnMyBlockAPIURL];
-  NSMutableDictionary *objectParams = 
+  NSMutableDictionary *objectParams =
     [NSMutableDictionary dictionaryWithDictionary: @{
-      @"content": message.content,
-      @"conversation_id": [NSNumber numberWithInt: conversation.uid]
+      @"content":         message.content,
+      @"conversation_id": @(conversation.uid),
+      @"created_source":  OnMyBlockCreatedSource
     }];
   // if (message.residenceUID)
   //   [objectParams setObject: [NSNumber numberWithInt: message.residenceUID]
@@ -56,9 +57,9 @@ conversation: (OMBConversation *) conversationObject
 
   // message = object;
 
-  // NSString *string = [NSString stringWithFormat: @"%@/messages", 
+  // NSString *string = [NSString stringWithFormat: @"%@/messages",
   //   OnMyBlockAPIURL];
-  // NSMutableDictionary *objectParams = 
+  // NSMutableDictionary *objectParams =
   //   [NSMutableDictionary dictionaryWithDictionary: @{
   //     @"content": message.content,
   //     @"recipient_id": [NSNumber numberWithInt: message.recipient.uid]

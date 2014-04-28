@@ -37,9 +37,10 @@
     residenceID = 0;
   NSMutableDictionary *objectParams =
     [NSMutableDictionary dictionaryWithDictionary: @{
-      @"amount":       [NSNumber numberWithFloat: amount],
-      @"note":         note,
-      @"residence_id": [NSNumber numberWithInt: residenceID]
+      @"amount":         [NSNumber numberWithFloat: amount],
+      @"created_source": OnMyBlockCreatedSource,
+      @"note":           note,
+      @"residence_id":   @(residenceID)
     }];
 
   // Authorization code

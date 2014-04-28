@@ -26,10 +26,10 @@ NSString *const LegalAnswerTextViewPlaceholder = @"Please explain...";
 
 #pragma mark - Initializer
 
-- (id) initWithStyle: (UITableViewCellStyle) style 
+- (id) initWithStyle: (UITableViewCellStyle) style
 reuseIdentifier: (NSString *) reuseIdentifier
-{ 
-  if (!(self = [super initWithStyle: style 
+{
+  if (!(self = [super initWithStyle: style
     reuseIdentifier: reuseIdentifier])) return nil;
 
   _legalAnswer = [[OMBLegalAnswer alloc] init];
@@ -41,7 +41,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   questionLabel = [[UILabel alloc] init];
   questionLabel.font = [OMBLegalQuestionCell fontForQuestionLabel];
-  questionLabel.frame = CGRectMake(padding, padding, 
+  questionLabel.frame = CGRectMake(padding, padding,
     [OMBLegalQuestionCell widthForQuestionLabel], 22.0f);
   questionLabel.numberOfLines = 0;
   questionLabel.textColor = [UIColor textColor];
@@ -50,13 +50,13 @@ reuseIdentifier: (NSString *) reuseIdentifier
   float buttonSize = [OMBLegalQuestionCell buttonSize];
   // No
   noButton = [[UIButton alloc] init];
-  noButton.frame = CGRectMake((screenWidth - (buttonSize * 2)) / 3.0, 
+  noButton.frame = CGRectMake((screenWidth - (buttonSize * 2)) / 3.0,
     questionLabel.frame.origin.y + questionLabel.frame.size.height,
       buttonSize, buttonSize);
   // Yes
   yesButton = [[UIButton alloc] init];
-  yesButton.frame = CGRectMake(noButton.frame.origin.x + 
-    noButton.frame.size.width + noButton.frame.origin.x, 
+  yesButton.frame = CGRectMake(noButton.frame.origin.x +
+    noButton.frame.size.width + noButton.frame.origin.x,
       noButton.frame.origin.y, noButton.frame.size.width,
         noButton.frame.size.height);
 
@@ -69,7 +69,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   [yesButton addTarget: self action: @selector(toggleButton:)
     forControlEvents: UIControlEventTouchDown];
   [yesButton setTitle: @"Yes" forState: UIControlStateNormal];
-  [yesButton setTitleColor: [UIColor grayMedium] 
+  [yesButton setTitleColor: [UIColor grayMedium]
     forState: UIControlStateNormal];
   [self.contentView addSubview: yesButton];
 
@@ -86,7 +86,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   lineView = [[UIView alloc] init];
   lineView.backgroundColor = [UIColor grayLight];
-  lineView.frame = CGRectMake(padding, 
+  lineView.frame = CGRectMake(padding,
     yesButton.frame.origin.y + yesButton.frame.size.height + padding,
       screenWidth - padding, 0.5f);
   [self.contentView addSubview: lineView];
@@ -95,7 +95,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   _explanationTextView = [[UITextView alloc] init];
   _explanationTextView.autocorrectionType = UITextAutocorrectionTypeYes;
   _explanationTextView.contentInset = UIEdgeInsetsMake(0, -2, 0, 0);
-  _explanationTextView.font = [UIFont fontWithName: @"HelveticaNeue-Light" 
+  _explanationTextView.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
   _explanationTextView.frame = CGRectMake(padding,
     lineView.frame.origin.y + padding,
@@ -150,11 +150,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
 - (void) enableButton:(BOOL) enabled
 {
-  noButton.userInteractionEnabled = enabled;
+  noButton.userInteractionEnabled  = enabled;
   yesButton.userInteractionEnabled = enabled;
 }
 
-- (void) loadData: (OMBLegalQuestion *) object 
+- (void) loadData: (OMBLegalQuestion *) object
 atIndexPath: (NSIndexPath *) indexPath
 {
   _legalQuestion = object;
@@ -173,11 +173,11 @@ atIndexPath: (NSIndexPath *) indexPath
     questionLabel.frame.origin.y, questionLabel.frame.size.width,
       rect1.size.height);
 
-  yesButton.frame = CGRectMake(yesButton.frame.origin.x, 
-    questionLabel.frame.origin.y + questionLabel.frame.size.height + padding, 
+  yesButton.frame = CGRectMake(yesButton.frame.origin.x,
+    questionLabel.frame.origin.y + questionLabel.frame.size.height + padding,
       yesButton.frame.size.width, yesButton.frame.size.height);
   noButton.frame = CGRectMake(noButton.frame.origin.x,
-    yesButton.frame.origin.y, noButton.frame.size.width, 
+    yesButton.frame.origin.y, noButton.frame.size.width,
       noButton.frame.size.height);
 
   lineView.frame = CGRectMake(lineView.frame.origin.x,
@@ -294,7 +294,7 @@ atIndexPathForOtherUser: (NSIndexPath *) indexPath
   CGRect frameText = _explanationTextView.frame;
   frameText.origin.y -= OMBPadding;
   _explanationTextView.frame = frameText;
-  
+
   if (object) {
     _legalAnswer.answer      = object.answer;
     _legalAnswer.explanation = object.explanation;
@@ -358,10 +358,10 @@ atIndexPathForOtherUser: (NSIndexPath *) indexPath
 }
 
 - (void) yesButtonHighlighted
-{ 
-  [self noButtonNotHighlighted]; 
+{
+  [self noButtonNotHighlighted];
   yesButton.layer.borderColor = [UIColor green].CGColor;
-  [yesButton setTitleColor: [UIColor green] 
+  [yesButton setTitleColor: [UIColor green]
     forState: UIControlStateNormal];
 }
 

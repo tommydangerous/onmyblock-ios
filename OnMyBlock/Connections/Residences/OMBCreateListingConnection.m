@@ -15,16 +15,16 @@
 
 #pragma mark - Initializer
 
-- (id) initWithTemporaryResidence: (OMBTemporaryResidence *) object 
+- (id) initWithTemporaryResidence: (OMBTemporaryResidence *) object
 dictionary: (NSDictionary *) dictionary
 {
   if (!(self = [super init])) return nil;
 
   temporaryResidence = object;
 
-  NSString *string = [NSString stringWithFormat: 
+  NSString *string = [NSString stringWithFormat:
     @"%@/temporary_residences/create_listing", OnMyBlockAPIURL];
-  NSArray *words = [[dictionary objectForKey: 
+  NSArray *words = [[dictionary objectForKey:
     @"city"] componentsSeparatedByString: @","];
   NSString *city = @"";
   NSString *state = @"";
@@ -35,12 +35,13 @@ dictionary: (NSDictionary *) dictionary
     state = [words objectAtIndex: 1];
   }
   NSDictionary *objectParams = @{
-    @"city":          [city stripWhiteSpace],
-    @"lease_months":  [dictionary objectForKey: @"leaseMonths"],
-    @"min_bathrooms": [dictionary objectForKey: @"bathrooms"],
-    @"min_bedrooms":  [dictionary objectForKey: @"bedrooms"],
-    @"property_type": [dictionary objectForKey: @"propertyType"],
-    @"state":         [state stripWhiteSpace],
+    @"city":           [city stripWhiteSpace],
+    @"created_source": @"ios",
+    @"lease_months":   [dictionary objectForKey: @"leaseMonths"],
+    @"min_bathrooms":  [dictionary objectForKey: @"bathrooms"],
+    @"min_bedrooms":   [dictionary objectForKey: @"bedrooms"],
+    @"property_type":  [dictionary objectForKey: @"propertyType"],
+    @"state":          [state stripWhiteSpace],
   };
   NSDictionary *params = @{
     @"access_token":        [OMBUser currentUser].accessToken,
@@ -63,7 +64,7 @@ dictionary: (NSDictionary *) dictionary
   NSLog(@"OMBCreateListingConnection\n%@", json);
 
   if ([[json objectForKey: @"success"] intValue] == 1) {
-    [temporaryResidence readFromResidenceDictionary: 
+    [temporaryResidence readFromResidenceDictionary:
       [json objectForKey: @"object"]];
     [[OMBUser currentUser] addResidence: temporaryResidence];
   }

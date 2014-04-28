@@ -22,7 +22,6 @@
     [self readFromDictionary: dictionary];
   else
     [self readFromDictionary: [dictionary objectForKey: @"object"]];
-  NSLog(@"%@", dictionary);
 }
 
 #pragma mark - Methods

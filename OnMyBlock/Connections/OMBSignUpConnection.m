@@ -42,11 +42,10 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBSignUpConnection\n%@", [self json]);
-  
+  // NSLog(@"OMBSignUpConnection\n%@", [self json]);
   if ([self successful]) {
     [[OMBUser currentUser] readFromDictionary: [self objectDictionary]];
-    [[NSNotificationCenter defaultCenter] postNotificationName: 
+    [[NSNotificationCenter defaultCenter] postNotificationName:
       OMBUserLoggedInNotification object: nil];
   }
   else {

@@ -20,15 +20,10 @@
 
   NSString *string = [NSString stringWithFormat:
     @"%@/places/%i/favorite/", OnMyBlockAPIURL, residence.uid];
-  NSURL *url = [NSURL URLWithString: string];
-  NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL: url];
-  NSString *params = [NSString stringWithFormat:
-    @"access_token=%@", 
-    [OMBUser currentUser].accessToken
-  ];
-  [req setHTTPBody: [params dataUsingEncoding: NSUTF8StringEncoding]];
-  [req setHTTPMethod: @"POST"];
-  self.request = req;
+  [self setRequestWithString: string method: @"POST" parameters: @{
+    @"access_token":   [OMBUser currentUser].accessToken,
+    @"created_source": @"ios"
+  }];
 
   return self;
 }

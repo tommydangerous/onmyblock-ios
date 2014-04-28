@@ -27,8 +27,7 @@
 
   legalAnswers = [NSMutableDictionary dictionary];
 
-  self.screenName = @"Legal";
-  self.title      = @"Legal Questions";
+  self.title = @"Legal Questions";
 
   return self;
 }

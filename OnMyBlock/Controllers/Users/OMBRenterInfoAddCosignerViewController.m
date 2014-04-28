@@ -199,7 +199,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) save
 {
   [super save];
-  [[self renterApplication] createCosignerConnection: modelObject
+  [[self renterApplication] createModelConnection: modelObject
     delegate: modelObject completion: ^(NSError *error) {
       if (error) {
         [self showAlertViewWithError: error];
