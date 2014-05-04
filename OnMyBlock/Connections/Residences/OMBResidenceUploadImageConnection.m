@@ -19,7 +19,7 @@
 
 #pragma mark - Initializer
 
-- (id) initWithResidence: (OMBResidence *) object 
+- (id) initWithResidence: (OMBResidence *) object
 residenceImage: (OMBResidenceImage *) image;
 {
   if (!(self = [super init])) return nil;
@@ -35,7 +35,7 @@ residenceImage: (OMBResidenceImage *) image;
   [Base64 initialize];
   // NSData *imageData = UIImagePNGRepresentation(
   //   [residenceImage.image fixOrientation]);
-  NSData *imageData = [UIImage compressImage: 
+  NSData *imageData = [UIImage compressImage:
     [residenceImage.image fixOrientation] withMinimumResolution: 0];
 
   NSDictionary *params = @{
@@ -44,7 +44,7 @@ residenceImage: (OMBResidenceImage *) image;
     @"position":     [NSNumber numberWithInt: residenceImage.position]
   };
 
-  [self setPostRequestWithString: string withParameters: params];
+  [self setPostRequestWithString: string parameters: params];
 
   return self;
 }
@@ -58,14 +58,14 @@ residenceImage: (OMBResidenceImage *) image;
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
 
-  residenceImage.absoluteString = 
+  residenceImage.absoluteString =
     [[json objectForKey: @"object"] objectForKey: @"image"];
   residenceImage.imageURL =
     [[json objectForKey: @"object"] objectForKey: @"image"];
-  
+
   NSString *originalString = [[json objectForKey: @"object"] objectForKey: @"image"];
   NSString *string         = [[json objectForKey: @"object"] objectForKey: @"image"];
-  
+
   // If URL is something like this //ombrb-prod.s3.amazonaws.com
   if ([string hasPrefix: @"//"]) {
     string = [@"http:" stringByAppendingString: string];
@@ -78,7 +78,7 @@ residenceImage: (OMBResidenceImage *) image;
   }
   residenceImage.absoluteString = originalString;
   residenceImage.imageURL = [NSURL URLWithString:string];
-  
+
   residenceImage.uid =
     [[[json objectForKey: @"object"] objectForKey: @"id"] intValue];
 

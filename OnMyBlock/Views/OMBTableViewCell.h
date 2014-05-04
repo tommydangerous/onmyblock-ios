@@ -17,6 +17,8 @@
   float leftPadding;
 }
 
+@property (nonatomic, strong) UILabel *basicTextLabel;
+
 #pragma mark - Methods
 
 #pragma mark - Class Methods

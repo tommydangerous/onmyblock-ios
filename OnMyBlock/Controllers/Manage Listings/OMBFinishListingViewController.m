@@ -31,6 +31,7 @@
 #import "OMBResidencePublishConnection.h"
 #import "OMBResidenceUploadImageConnection.h"
 #import "OMBResidenceUpdateConnection.h"
+#import "OMBTableViewCell.h"
 #import "OMBTemporaryResidence.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
@@ -66,8 +67,8 @@
 {
   [super loadView];
 
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  CGFloat padding = 20.0f;
+  CGRect screen   = [self screen];
+  CGFloat padding = OMBPadding;
 
   previewBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @"Preview"
@@ -86,6 +87,7 @@
   self.view.backgroundColor = [UIColor clearColor];
   [self setupForTable];
   self.table.backgroundColor = [UIColor clearColor];
+  self.table.separatorInset  = UIEdgeInsetsMake(0.0f, padding, 0.0f, padding);
 
   // Publish Now view
   CGFloat publishHeight = OMBStandardButtonHeight;
@@ -307,37 +309,12 @@
   }
   // If a residence
   else {
-    // If unlisted
-    if (residence.inactive) {
-      // self.navigationItem.rightBarButtonItem = previewBarButtonItem;
-      publishNowView.hidden = NO;
-      unlistView.hidden     = YES;
-    }
-    // If listed
-    else {
-      // self.navigationItem.rightBarButtonItem = unlistBarButtonItem;
-      publishNowView.hidden = YES;
-      unlistView.hidden     = NO;
-      // // Table footer view
-      // UIView *footerView = [UIView new];
-      // footerView.frame = CGRectMake(0.0f, 0.0f,
-      //   self.table.frame.size.width, 0.0f);
-      // self.table.tableFooterView = footerView;
-    }
+    publishNowView.hidden = unlistView.hidden = YES;
+    UIView *footerView = [UIView new];
+    footerView.frame = CGRectMake(0.0f, 0.0f,
+      self.table.frame.size.width, 0.0f);
+    self.table.tableFooterView = footerView;
   }
-
-  // for (int i = 0; i < numberOfSteps; i++) {
-  //   AMBlurView *stepView = [stepViews objectAtIndex: i];
-  //   if (i < numberOfStepsCompleted) {
-  //     stepView.blurTintColor = [UIColor blue];
-  //   }
-  //   else {
-  //     stepView.blurTintColor = [UIColor clearColor];
-  //   }
-  // }
-
-  // [self tableView: self.table didSelectRowAtIndexPath:
-  //   [NSIndexPath indexPathForRow: 5 inSection: 0]];
 }
 
 #pragma mark - Protocol
@@ -455,18 +432,21 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   static NSString *CellIdentifier = @"CellIdentifier";
-  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+  OMBTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
     CellIdentifier];
-  if (!cell)
-    cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleValue1
+  if (!cell) {
+    cell = [[OMBTableViewCell alloc] initWithStyle: UITableViewCellStyleValue1
       reuseIdentifier: CellIdentifier];
+    cell.basicTextLabel.frame = CGRectMake(OMBPadding, 0.0f,
+      tableView.frame.size.width - (OMBPadding * 2), OMBStandardButtonHeight);
+  }
   cell.accessoryType = UITableViewCellAccessoryNone;
   cell.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
     size: 15];
-  cell.detailTextLabel.text = @"";
+  cell.detailTextLabel.text      = @"";
   cell.detailTextLabel.textColor = [UIColor grayMedium];
-  cell.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
-  cell.textLabel.textColor = cell.detailTextLabel.textColor;
+  cell.basicTextLabel.font       = [UIFont normalTextFontBold];
+  cell.basicTextLabel.textColor  = cell.detailTextLabel.textColor;
   // Checkmark image view
   CGFloat padding   = 20.0f;
   CGFloat imageSize = 20.0f;
@@ -489,7 +469,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     string = @"Title";
     if ([residence.title length]) {
       string = residence.title;
-      cell.textLabel.textColor = [UIColor textColor];
+      cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
@@ -498,7 +478,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.row == 1) {
     string = @"Description";
     if ([residence.description length]) {
-      cell.textLabel.textColor = [UIColor textColor];
+      cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
@@ -508,7 +488,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     // string = @"Rent / Auction Details";
     string = @"Rent Details";
     if (residence.minRent) {
-      cell.textLabel.textColor = [UIColor textColor];
+      cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
@@ -518,7 +498,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     string = @"Select Address";
     if ([residence.address length]) {
       string = [residence.address capitalizedString];
-      cell.textLabel.textColor = [UIColor textColor];
+      cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
@@ -527,7 +507,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.row == 4) {
     string = @"Lease Details";
     if (residence.moveInDate) {
-      cell.textLabel.textColor = [UIColor textColor];
+      cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
@@ -536,7 +516,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.row == 5) {
     string = @"Listing Details";
     if (residence.bedrooms) {
-      cell.textLabel.textColor = [UIColor textColor];
+      cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
@@ -544,11 +524,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Pets & Amenities
   else if (indexPath.row == 6) {
     string = @"Amenities & Pets";
-    cell.textLabel.textColor = [UIColor textColor];
+    cell.basicTextLabel.textColor = [UIColor textColor];
+    cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
+      0.0f, 0.0f);
     imageView.alpha = 1.0f;
     imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
   }
-  cell.textLabel.text = string;
+  cell.clipsToBounds  = YES;
+  cell.basicTextLabel.text = string;
   return cell;
 }
 
@@ -619,7 +602,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  return 58.0f;
+  return OMBStandardButtonHeight;
 }
 
 #pragma mark - Methods

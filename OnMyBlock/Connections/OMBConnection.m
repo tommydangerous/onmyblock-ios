@@ -183,7 +183,7 @@ code: (NSInteger) code
 }
 
 - (void) setPostRequestWithString: (NSString *) string
-withParameters: (NSDictionary *) dictionary
+parameters: (NSDictionary *) dictionary
 {
   [self setRequestWithString: string method: @"POST" parameters: dictionary];
 }

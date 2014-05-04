@@ -16,14 +16,26 @@
 
 - (id) initWithRootViewController: (UIViewController *) viewController
 {
-    self = [super initWithRootViewController:viewController];
-    if (!self) return nil;
-  
+  if (!(self = [super initWithRootViewController: viewController])) return nil;
+
   self.delegate = self;
   // self.navigationBar.barTintColor = [UIColor backgroundColor];
   self.navigationBar.tintColor    = [UIColor blue];
   self.navigationBar.translucent  = YES;
-  
+
+  return self;
+}
+
+- (id) initWithRootViewControllerTransparentNavigationBar:
+(UIViewController *) viewController
+{
+  if (!(self = [self initWithRootViewController: viewController])) return nil;
+
+  [self.navigationBar setBackgroundImage: [UIImage new]
+    forBarMetrics: UIBarMetricsDefault];
+  self.navigationBar.shadowImage = [UIImage new];
+  self.navigationBar.translucent = YES;
+
   return self;
 }
 

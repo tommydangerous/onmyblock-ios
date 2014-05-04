@@ -18,9 +18,9 @@
 - (id) init
 {
   if (!(self = [super init])) return nil;
-  
+
   self.screenName = self.title = @"Rate Us";
-  
+
   return self;
 }
 
@@ -31,7 +31,7 @@
 - (void) loadView
 {
   [super loadView];
-  
+
   self.table.backgroundColor = [UIColor grayUltraLight];
   self.table.separatorColor  = [UIColor grayLight];
   self.table.separatorInset  = UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f);
@@ -63,7 +63,7 @@
     default:
       break;
   }
-  
+
   // Close the Mail Interface
   [self dismissViewControllerAnimated:YES completion:NULL];
 }
@@ -92,7 +92,7 @@
           cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   float borderHeight = 0.5f;
-  
+
   static NSString *CellIdentifier = @"CellIdentifier";
   UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:
                            UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
@@ -145,7 +145,7 @@
 {
   // The 1 is for the spacing
   if (section == 0) {
-    return 1 + 2;
+    return 1 + 1;
   }
   return 0;
 }
@@ -189,7 +189,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [controller setToRecipients:@[@"feedback@onmyblock.com"]];
   if(controller)
     [self presentViewController:controller animated:YES completion:nil];
-  
+
 }
 
 - (void) showRate
@@ -198,7 +198,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     @"Love the OnMyBlock App?" message: nil delegate: self
       cancelButtonTitle: @"Cancel" otherButtonTitles:
         @"Yes! It’s awesome!", @"No, It has problems.", nil];
-  
+
   [alertView show];
 }
 

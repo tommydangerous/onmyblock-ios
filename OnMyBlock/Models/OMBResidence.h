@@ -134,6 +134,8 @@ withURL: (NSURL *) url completion: (void (^)(void)) block;
 - (NSString *) stateFormattedString;
 - (NSString *) statusString;
 - (NSString *) titleOrAddress;
+- (void) updateAttributes: (NSArray *) attributes
+completion: (void (^) (NSError *error)) block;
 - (void) updateCoverPhotoURL;
 - (void) updateResidenceWithResidence: (OMBResidence *) residence;
 - (BOOL) validTitle;

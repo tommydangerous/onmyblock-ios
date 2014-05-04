@@ -13,6 +13,11 @@
 
 @property (nonatomic, strong) dispatch_block_t completionBlock;
 
+#pragma mark - Initializer
+
+- (id) initWithRootViewControllerTransparentNavigationBar:
+(UIViewController *) viewController;
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods

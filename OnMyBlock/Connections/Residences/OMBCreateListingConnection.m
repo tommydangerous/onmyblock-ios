@@ -47,7 +47,7 @@ dictionary: (NSDictionary *) dictionary
     @"access_token":        [OMBUser currentUser].accessToken,
     @"temporary_residence": objectParams
   };
-  [self setPostRequestWithString: string withParameters: params];
+  [self setPostRequestWithString: string parameters: params];
 
   return self;
 }

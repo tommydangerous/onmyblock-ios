@@ -13,9 +13,21 @@
 #pragma mark - Initializer
 
 - (id) initWithStyle: (UITableViewCellStyle) style
-reuseIdentifier: (NSString *) reuseIdentifier leftPadding: (float) padding
+reuseIdentifier: (NSString *) reuseIdentifier
 {
   if (!(self = [super initWithStyle: style
+    reuseIdentifier: reuseIdentifier])) return nil;
+
+  _basicTextLabel = [UILabel new];
+  [self.contentView addSubview: _basicTextLabel];
+
+  return self;
+}
+
+- (id) initWithStyle: (UITableViewCellStyle) style
+reuseIdentifier: (NSString *) reuseIdentifier leftPadding: (float) padding
+{
+  if (!(self = [self initWithStyle: style
     reuseIdentifier: reuseIdentifier])) return nil;
 
   leftPadding = padding;

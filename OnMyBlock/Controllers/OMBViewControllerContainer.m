@@ -10,6 +10,7 @@
 
 #import "DDPageControl.h"
 #import "DRNRealTimeBlurView.h"
+#import "NSString+Extensions.h"
 #import "OMBAccountViewController.h"
 #import "OMBActivityView.h"
 #import "OMBActivityViewFullScreen.h"
@@ -18,6 +19,7 @@
 #import "OMBCreateListingViewController.h"
 #import "OMBExtendedHitAreaViewContainer.h"
 #import "OMBFavoritesListViewController.h"
+#import "OMBFeedbackView.h"
 #import "OMBFinishListingViewController.h"
 #import "OMBGetStartedView.h"
 #import "OMBHomebaseLandlordViewController.h"
@@ -52,6 +54,8 @@ CGFloat kBackgroundMaxScale = 5.0f;
 @interface OMBViewControllerContainer ()
 {
   OMBActivityViewFullScreen *activityViewFullScreen;
+  UIButton *feedbackButton;
+  OMBFeedbackView *feedbackView;
 }
 
 @end
@@ -271,7 +275,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
     selector: @selector(updateAccountView)
       name: OMBCurrentUserUploadedImage object: nil];
 
-  _slideEnabled=YES;
+  _slideEnabled = YES;
 
   return self;
 }
@@ -283,9 +287,10 @@ CGFloat kBackgroundMaxScale = 5.0f;
   buttonsLoggedIn  = [NSMutableArray array];
   buttonsLoggedOut = [NSMutableArray array];
 
-  CGRect screen      = [[UIScreen mainScreen] bounds];
+  CGRect screen      = [self screen];
   float screenHeight = screen.size.height;
   float screenWidth  = screen.size.width;
+  CGFloat padding = OMBPadding;
 
   // How small does the detail view get when menu is visible
   zoomScale = 0.5;
@@ -399,23 +404,70 @@ CGFloat kBackgroundMaxScale = 5.0f;
   _infiniteScroll.scrollEnabled = NO;
   // hitArea.scrollView = _infiniteScroll;
 
+  // Top detail view
+  CGRect topDetailViewRect = CGRectMake(0.0f, 0.0f,
+    screenWidth, OMBPadding + OMBStandardHeight);
+  _topDetailView = [[OMBTopDetailView alloc] initWithFrame: topDetailViewRect];
+  _topDetailView.hidden = YES;
+  [_topDetailView.account addTarget: self action: @selector(showAccount)
+    forControlEvents: UIControlEventTouchUpInside];
+  [self.view addSubview: _topDetailView];
+
+  // Feedback
+  NSString *feedbackString = @"Send us Feedback";
+  CGFloat feedbackButtonHeight = OMBStandardButtonHeight;
+  CGRect feedbackButtonRect = [feedbackString boundingRectWithSize:
+    CGSizeMake(screenWidth, feedbackButtonHeight)
+      font: [UIFont normalTextFont]];
+  // Vertical placement of the feedback button
+  CGFloat feedbackButtonY = ((screenHeight * (1 - zoomScale)) * 0.5f) -
+    (_topDetailView.frame.origin.y + _topDetailView.frame.size.height);
+  feedbackButtonY = (feedbackButtonY - feedbackButtonHeight) * 0.5f;
+  feedbackButtonY = _topDetailView.frame.origin.y +
+    _topDetailView.frame.size.height + feedbackButtonY;
+  feedbackButton = [UIButton new];
+  feedbackButton.contentHorizontalAlignment =
+    UIControlContentHorizontalAlignmentRight;
+  feedbackButton.frame = CGRectMake(screenWidth -
+    (feedbackButtonRect.size.width + padding), feedbackButtonY,
+      feedbackButtonRect.size.width, feedbackButtonHeight);
+  feedbackButton.titleLabel.font = [UIFont normalTextFont];
+  [feedbackButton addTarget: self action: @selector(showFeedback)
+    forControlEvents: UIControlEventTouchUpInside];
+  [feedbackButton setTitle: feedbackString forState: UIControlStateNormal];
+  [feedbackButton setTitleColor: [UIColor whiteColor]
+    forState: UIControlStateNormal];
+  [feedbackButton setTitleColor: [UIColor blue]
+    forState: UIControlStateHighlighted];
+  [self.view addSubview: feedbackButton];
+  // Image view
+  // UIImageView *feedbackImageView = [UIImageView new];
+  // feedbackImageView.frame = loggedOutButtonImageViewFrame;
+  // feedbackImageView.image = [UIImage image:
+  //   [UIImage imageNamed: @"megaphone_icon_white.png"]
+  //     size: loggedOutButtonImageViewFrame.size];
+  // [feedbackButton addSubview: feedbackImageView];
+
   // Buttons
   CGFloat imageSize = 22.0f;
   CGFloat leftPad   = 25.0f;
   // Logged out
+  CGRect loggedOutButtonFrame = CGRectMake(-1 * menuWidth, 0.0f,
+    menuWidth, OMBStandardButtonHeight);
+  CGRect loggedOutButtonImageViewFrame = CGRectMake(leftPad,
+    (loggedOutButtonFrame.size.height - imageSize) * 0.5,
+      imageSize, imageSize);
+
   // Search
   searchButton = [UIButton new];
-  searchButton.frame = CGRectMake(-1 * menuWidth, 0.0f,
-    menuWidth, 10.0f + 40.0f + 10.0f);
+  searchButton.frame = loggedOutButtonFrame;
   [searchButton addTarget: self action: @selector(showSearch)
     forControlEvents: UIControlEventTouchUpInside];
   [searchButton setTitle: @"Search" forState: UIControlStateNormal];
   [buttonsLoggedOut addObject: searchButton];
   // Image view
   UIImageView *searchImageView = [[UIImageView alloc] init];
-  searchImageView.frame = CGRectMake(leftPad,
-    ((searchButton.frame.size.height - imageSize) * 0.5),
-      imageSize, imageSize);
+  searchImageView.frame = loggedOutButtonImageViewFrame;
   searchImageView.image = [UIImage image:
     [UIImage imageNamed: @"search_icon.png"]
       size: searchImageView.frame.size];
@@ -627,16 +679,6 @@ CGFloat kBackgroundMaxScale = 5.0f;
   [_accountView addSubview: accountButton];*/
   _accountView.transform = CGAffineTransformMakeScale(0, 0);
 
-
-  // Top detail view
-  CGRect topDetailViewRect = CGRectMake(0.0f, 0.0f,
-    screenWidth, 64.f);
-  _topDetailView = [[OMBTopDetailView alloc]
-    initWithFrame: topDetailViewRect];
-  _topDetailView.hidden = YES;
-  [_topDetailView.account addTarget: self action: @selector(showAccount)
-    forControlEvents: UIControlEventTouchUpInside];
-  [self.view addSubview: _topDetailView];
   // Activity view
   activityView = [[OMBActivityView alloc] init];
   activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
@@ -689,6 +731,12 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 }
 
 #pragma mark - UIGestureRecognizerProtocol
+
+- (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer
+shouldReceiveTouch: (UITouch *) touch
+{
+  return _slideEnabled;
+}
 
 - (BOOL) gestureRecognizer: (UIGestureRecognizer *) gestureRecognizer
 shouldRecognizeSimultaneouslyWithGestureRecognizer:
@@ -1244,11 +1292,10 @@ completion: (void (^) (void)) block
       leftPad + imageSize + leftPad, 0.0f, 20.0f);
     button.contentHorizontalAlignment =
       UIControlContentHorizontalAlignmentLeft;
-    button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-      size: 15];
+    button.titleLabel.font = [UIFont normalTextFont];
     [button setTitleColor: [UIColor whiteColor]
       forState: UIControlStateNormal];
-    [button setTitleColor: [UIColor grayMedium]
+    [button setTitleColor: [UIColor blue]
       forState: UIControlStateHighlighted];
   }
 }
@@ -1349,7 +1396,7 @@ completion: (void (^) (void)) block
   NSString *idButton = ((OMBUserMenu *)
     [userMenuArray objectAtIndex: 0]).createListingButton.titleLabel.text;
   [self changeTitleLabelColorUserMenu: idButton];
-  
+
   if ([[OMBUser currentUser] loggedIn]) {
     [self hideMenuWithFactor: 1.0f];
     [self presentDetailViewController:
@@ -1401,6 +1448,14 @@ completion: (void (^) (void)) block
   [self changeTitleLabelColorUserMenu: idButton];
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: self.favoritesNavigationController];
+}
+
+- (void) showFeedback
+{
+  if (!feedbackView) {
+    feedbackView = [[OMBFeedbackView alloc] initWithFrame: [self screen]];
+  }
+  [feedbackView showInView: self.view];
 }
 
 - (void) showFinishListing
@@ -1764,12 +1819,6 @@ completion: (void (^) (void)) block
 {
   if ([self respondsToSelector: @selector(setNeedsStatusBarAppearanceUpdate)])
     [self setNeedsStatusBarAppearanceUpdate];
-}
-
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    return _slideEnabled;
 }
 
 @end

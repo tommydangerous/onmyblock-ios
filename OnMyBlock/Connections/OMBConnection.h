@@ -64,7 +64,7 @@ code: (NSInteger) code;
 - (NSDictionary *) objectsDictionary;
 - (NSInteger) objectUID;
 - (void) setPostRequestWithString: (NSString *) string
-withParameters: (NSDictionary *) dictionary;
+parameters: (NSDictionary *) dictionary;
 - (void) setRequestWithString: (NSString *) requestString;
 - (void) setRequestWithString: (NSString *) requestString
   parameters: (NSDictionary *) dictionary;

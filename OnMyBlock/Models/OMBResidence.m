@@ -20,6 +20,7 @@
 #import "OMBResidenceGoogleStaticImageDownloader.h"
 #import "OMBResidenceImagesConnection.h"
 #import "OMBResidenceImage.h"
+#import "OMBResidenceUpdateConnection.h"
 #import "OMBUser.h"
 #import "OMBUserStore.h"
 #import "UIImage+Resize.h"
@@ -983,6 +984,16 @@ withURL: (NSURL *) url completion: (void (^)(void)) block
   else if (self.address && [self.address length])
     return [self.address capitalizedString];
   return @"";
+}
+
+- (void) updateAttributes: (NSArray *) attributes
+completion: (void (^) (NSError *error)) block
+{
+  OMBResidenceUpdateConnection *conn =
+    [[OMBResidenceUpdateConnection alloc] initWithResidence: self
+      attributes: attributes];
+  conn.completionBlock = block;
+  [conn start];
 }
 
 - (void) updateCoverPhotoURL

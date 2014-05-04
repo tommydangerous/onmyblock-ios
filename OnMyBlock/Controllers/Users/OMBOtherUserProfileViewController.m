@@ -39,6 +39,13 @@
 #import "UIImage+NegativeImage.h"
 #import "UIImage+Resize.h"
 
+@interface OMBOtherUserProfileViewController ()
+{
+  OMBCenteredImageView *userImageView;
+}
+
+@end
+
 @implementation OMBOtherUserProfileViewController
 
 #pragma mark - Initializer
@@ -239,6 +246,17 @@
   bottomBorder.frame = CGRectMake(0.0f, contactToolbar.frame.size.height - 0.5f,
     contactToolbar.frame.size.width, 0.5f);
   [contactToolbar.layer addSublayer: bottomBorder];
+
+  // [self.navigationController.navigationBar setBackgroundImage: [UIImage new]
+  //   forBarMetrics: UIBarMetricsDefault];
+  // self.navigationController.navigationBar.shadowImage = [UIImage new];
+  // self.navigationController.navigationBar.translucent = YES;
+
+//   [self.toolbar setBackgroundImage:[UIImage new]
+//               forToolbarPosition:UIBarPositionAny
+//                       barMetrics:UIBarMetricsDefault];
+// [self.toolbar setShadowImage:[UIImage new]
+//           forToolbarPosition:UIToolbarPositionAny];
 }
 
 - (void) viewDidLoad
@@ -574,7 +592,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           reuseIdentifier: RoommateID];
       [cell loadData: [[self objectsFromRoommates] objectAtIndex: row - 1] user: user];
       cell.clipsToBounds = YES;
-      
+
       if(indexPath.row == [[self objectsFromRoommates] count])
         cell.separatorInset = maxInsets;
       return cell;
@@ -617,7 +635,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           forControlEvents:UIControlEventTouchUpInside];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.clipsToBounds = YES;
-      
+
       if(indexPath.row == [[[self renterApplication] cosignersSortedByFirstName] count])
         cell.separatorInset = maxInsets;
       return cell;
@@ -704,7 +722,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       [cell loadData2: [[self objectsFromPreviousRental] objectAtIndex: row - 1]];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.clipsToBounds = YES;
-      
+
       if(indexPath.row == [self objectsFromPreviousRental].count)
         cell.separatorInset = maxInsets;
       return cell;
@@ -741,7 +759,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           objectAtIndex: row - 1]];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.clipsToBounds = YES;
-      
+
       if(indexPath.row == [self objectsFromEmployments].count)
         cell.separatorInset = maxInsets;
       return cell;

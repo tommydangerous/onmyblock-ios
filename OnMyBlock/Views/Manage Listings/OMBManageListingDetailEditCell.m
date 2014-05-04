@@ -33,8 +33,9 @@ reuseIdentifier: (NSString *) reuseIdentifier
   CGFloat padding = OMBPadding;
 
   CGFloat imageWidth = [OMBManageListingDetailEditCell sizeForImage].width;
+  imageWidth = 0.0f;
   imageView = [UIImageView new];
-  imageView.alpha = 0.3f;
+  imageView.alpha = 0.8f;
   imageView.frame = CGRectMake(padding,
     ([OMBManageListingDetailEditCell heightForCell] - imageWidth) * 0.5f,
       imageWidth, imageWidth);
@@ -42,6 +43,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   CGFloat originX = imageView.frame.origin.x + imageView.frame.size.width +
     padding;
+  originX = padding;
   _topLabel = [UILabel new];
   _topLabel.font = [UIFont normalTextFontBold];
   _topLabel.frame = CGRectMake(originX, padding,

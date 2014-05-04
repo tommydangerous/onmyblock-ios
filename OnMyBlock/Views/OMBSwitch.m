@@ -24,11 +24,11 @@ float knobSize = 0.9;
     //self.layer.masksToBounds = YES;
     self.clipsToBounds = YES;
     self.layer.cornerRadius = frame.size.height/2.0;
-    
+
     container = [[UIView alloc] initWithFrame:CGRectMake(frame.origin.x, frame.origin.x, frame.size.width, frame.size.height)];
     container.layer.cornerRadius = frame.size.height/2.0;
     container.backgroundColor = offColor;
-    
+
     gradient = [UIView new];
     gradient.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
     gradient.backgroundColor = onColor;
@@ -36,11 +36,11 @@ float knobSize = 0.9;
     gradient.clipsToBounds = YES;
     gradient.hidden = YES;
     _on = NO; // default is like UISwitch, ie off state
-    
+
     // create and set Labels
-    
+
     float labelWidth = frame.size.width * 0.55f;
-    
+
     onLabel = [[UILabel alloc] initWithFrame:
       CGRectMake(0, 0, labelWidth, frame.size.height)];
     onLabel.backgroundColor = [UIColor clearColor];
@@ -49,18 +49,18 @@ float knobSize = 0.9;
     onLabel.textAlignment = NSTextAlignmentCenter;
     onLabel.text = ontxt;
     onLabel.alpha = 0;
-    
+
     offLabel = [[UILabel alloc] initWithFrame:
       CGRectMake(frame.size.width - labelWidth, 0, labelWidth, frame.size.height)];
-    offLabel.backgroundColor = [UIColor clearColor];
-    offLabel.textColor = [UIColor whiteColor];
-    offLabel.font = [UIFont smallTextFontBold];
-    offLabel.textAlignment = NSTextAlignmentCenter;
+    offLabel.backgroundColor = onLabel.backgroundColor;
+    offLabel.textColor = onLabel.textColor;
+    offLabel.font = onLabel.font;
+    offLabel.textAlignment = onLabel.textAlignment;
     offLabel.text = offtxt;
-    
+
     [container addSubview:onLabel];
     [container addSubview:offLabel];
-    
+
     switcher = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.height / 16.0,
       self.frame.size.height / 2 - self.frame.size.height * knobSize / 2,
         self.frame.size.width * 0.45f , self.frame.size.height * knobSize)];
@@ -70,9 +70,9 @@ float knobSize = 0.9;
     switcher.clipsToBounds = YES;
     switcher.backgroundColor = [UIColor whiteColor];
     [container addSubview:switcher];
-    
+
     [self addSubview:container];
-    
+
   }
   return self;
 }
@@ -82,15 +82,15 @@ float knobSize = 0.9;
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-  
+
   // toggles state and visuals
-  
+
   [UIView beginAnimations: @"" context: nil];
   [UIView setAnimationDelegate: self];
   [UIView setAnimationDuration: 0.3];
   [UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
   _on = !_on;
-  
+
   if (_on) {
     switcher.frame =  CGRectMake(self.frame.size.width - switcher.frame.size.width -
       self.frame.size.height/16.0, self.frame.size.height/2 - self.frame.size.height * knobSize / 2,
@@ -108,7 +108,7 @@ float knobSize = 0.9;
     gradient.hidden = YES;
   }
   [UIView commitAnimations];
-  
+
 }
 */
 -(void)setState:(BOOL)onOff withAnimation:(BOOL)animation{
@@ -121,7 +121,7 @@ float knobSize = 0.9;
     [UIView setAnimationDuration: 0.3];
     [UIView setAnimationCurve: UIViewAnimationCurveEaseInOut];
   }
-  
+
   if (!_on) {
     switcher.frame =  CGRectMake(self.frame.size.height / 16.0,
       self.frame.size.height / 2 - self.frame.size.height * knobSize / 2,
@@ -135,15 +135,15 @@ float knobSize = 0.9;
       self.frame.size.height / 2 - self.frame.size.height * knobSize / 2,
         switcher.frame.size.width,
           self.frame.size.height * knobSize);
-    
+
     onLabel.alpha = 1;
     offLabel.alpha = 0;
     gradient.hidden = NO;
   }
-  
+
   if(animation)
     [UIView commitAnimations];
-  
+
 }
 
 - (void) setTintColor:(UIColor *)thumbColor

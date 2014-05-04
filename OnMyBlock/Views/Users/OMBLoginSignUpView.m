@@ -80,8 +80,8 @@
 
   // Or view
   orView = [[OMBOrView alloc] initWithFrame: CGRectMake(0.0f,
-    _facebookButton.frame.origin.y + _facebookButton.frame.size.height + padding,
-      screenWidth, padding) color: [UIColor whiteColor]];
+    _facebookButton.frame.origin.y + _facebookButton.frame.size.height +
+      padding, screenWidth, padding) color: [UIColor whiteColor]];
   [orView setCapitalizedLabel: NO];
   [orView setLabelBold: NO];
   [scroll addSubview: orView];
@@ -89,24 +89,27 @@
   // Hold all the text fields
   textFieldView = [[UIView alloc] init];
   textFieldView.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
-  textFieldView.frame = CGRectMake(padding, 
-    orView.frame.origin.y + orView.frame.size.height + padding, 
+  textFieldView.frame = CGRectMake(padding,
+    orView.frame.origin.y + orView.frame.size.height + padding,
       width, buttonHeight * 4);
   textFieldView.layer.cornerRadius = OMBCornerRadius;
   [scroll addSubview: textFieldView];
   // First name
   _firstNameTextField = [[TextFieldPadding alloc] init];
-  _firstNameTextField.autocapitalizationType = 
+  _firstNameTextField.autocapitalizationType =
     UITextAutocapitalizationTypeWords;
+  _firstNameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
   _firstNameTextField.placeholder = @"First name";
   // Last name
   _lastNameTextField = [[TextFieldPadding alloc] init];
-  _lastNameTextField.autocapitalizationType = 
+  _lastNameTextField.autocapitalizationType =
     UITextAutocapitalizationTypeWords;
+  _lastNameTextField.clearButtonMode = _firstNameTextField.clearButtonMode;
   _lastNameTextField.placeholder = @"Last name";
   // Email
   _emailTextField = [[TextFieldPadding alloc] init];
   _emailTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+  _emailTextField.clearButtonMode = _firstNameTextField.clearButtonMode;
   _emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
   _emailTextField.placeholder = @"School email";
   // Password
@@ -150,7 +153,7 @@
     // Image view
     UIImageView *iv = [UIImageView new];
     iv.alpha = 0.3f;
-    iv.frame = CGRectMake(15.0f, 15.0f, 
+    iv.frame = CGRectMake(15.0f, 15.0f,
       textField.frame.size.height - (15.0f * 2),
         textField.frame.size.height - (15.0f * 2));
     iv.image = [UIImage imageNamed: [textFieldImageArray objectAtIndex: index]];
@@ -166,7 +169,7 @@
   }
 
   bottomView = [UIView new];
-  bottomView.frame = CGRectMake(padding, 
+  bottomView.frame = CGRectMake(padding,
     textFieldView.frame.origin.y + textFieldView.frame.size.height + padding,
       width, buttonHeight + standardHeight);
   [scroll addSubview: bottomView];
@@ -178,10 +181,10 @@
   _actionButton.frame = CGRectMake(0.0f, 0.0f, width, buttonHeight);
   _actionButton.layer.cornerRadius = OMBCornerRadius;
   _actionButton.titleLabel.font = [UIFont mediumTextFont];
-  [_actionButton setBackgroundImage: [UIImage imageWithColor: 
+  [_actionButton setBackgroundImage: [UIImage imageWithColor:
     [UIColor blueHighlightedAlpha: 0.8f]] forState: UIControlStateHighlighted];
   [_actionButton setTitle: @"Student Sign Up" forState: UIControlStateNormal];
-  [_actionButton setTitleColor: [UIColor whiteColor] 
+  [_actionButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [bottomView addSubview: _actionButton];
 
@@ -189,7 +192,7 @@
   userSwitchButton = [UIButton new];
   userSwitchButton.contentHorizontalAlignment =
     UIControlContentHorizontalAlignmentLeft;
-  userSwitchButton.frame = CGRectMake(0.0f, 
+  userSwitchButton.frame = CGRectMake(0.0f,
     _actionButton.frame.origin.y + _actionButton.frame.size.height,
       bottomView.frame.size.width * 0.5f, standardHeight);
   userSwitchButton.titleLabel.font = [UIFont normalTextFont];
@@ -205,14 +208,14 @@
   actionSwitchButton.contentHorizontalAlignment =
     UIControlContentHorizontalAlignmentRight;
   actionSwitchButton.frame = CGRectMake(
-    userSwitchButton.frame.origin.x + userSwitchButton.frame.size.width, 
+    userSwitchButton.frame.origin.x + userSwitchButton.frame.size.width,
       userSwitchButton.frame.origin.y,
         userSwitchButton.frame.size.width, userSwitchButton.frame.size.height);
   actionSwitchButton.titleLabel.font = userSwitchButton.titleLabel.font;
   [actionSwitchButton addTarget: self action: @selector(switchViews)
     forControlEvents: UIControlEventTouchUpInside];
   [actionSwitchButton setTitle: @"Login" forState: UIControlStateNormal];
-  [actionSwitchButton setTitleColor: [UIColor whiteColor] 
+  [actionSwitchButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [bottomView addSubview: actionSwitchButton];
 
@@ -280,7 +283,7 @@
 
 - (void) clearTextFields
 {
-  _emailTextField.text = _firstNameTextField.text = 
+  _emailTextField.text = _firstNameTextField.text =
     _lastNameTextField.text = _passwordTextField.text = @"";
 }
 
@@ -288,7 +291,7 @@
 {
   CGFloat height  = 0.0f;
   CGFloat padding = OMBPadding;
-  height = actionSwitchButton.frame.origin.y + 
+  height = actionSwitchButton.frame.origin.y +
     actionSwitchButton.frame.size.height + padding;
   return height;
 }
@@ -315,7 +318,7 @@
 
 - (void) refreshContentSize
 {
-  CGFloat height = bottomView.frame.origin.y + 
+  CGFloat height = bottomView.frame.origin.y +
     bottomView.frame.size.height + OMBPadding;
   if (isEditing)
     height += OMBKeyboardHeight;
@@ -387,7 +390,7 @@
       _lastNameTextField.alpha  = 0.0f;
       userSwitchButton.hidden = YES;
       // Email
-      CGRect rect1 = [[textFieldFrameArray objectAtIndex: 
+      CGRect rect1 = [[textFieldFrameArray objectAtIndex:
         OMBLoginSignUpViewTextFieldFirstName] CGRectValue];
       _emailTextField.frame = rect1;
       _emailTextField.placeholder = @"Email";
@@ -396,8 +399,8 @@
         OMBLoginSignUpViewTextFieldLastName] CGRectValue];
       _passwordTextField.frame = rect2;
       // Resize the text field view
-      textFieldView.frame = CGRectMake(textFieldView.frame.origin.x, 
-        textFieldView.frame.origin.y, textFieldView.bounds.size.width, 
+      textFieldView.frame = CGRectMake(textFieldView.frame.origin.x,
+        textFieldView.frame.origin.y, textFieldView.bounds.size.width,
           _emailTextField.frame.size.height * 2);
       // Hide the top borders
       for (NSInteger i = OMBLoginSignUpViewTextFieldLastName;
@@ -407,8 +410,8 @@
       }
       // Bottom view
       bottomView.frame = CGRectMake(bottomView.frame.origin.x,
-        textFieldView.frame.origin.y + textFieldView.frame.size.height + 
-        OMBPadding, bottomView.frame.size.width, 
+        textFieldView.frame.origin.y + textFieldView.frame.size.height +
+        OMBPadding, bottomView.frame.size.width,
           bottomView.frame.size.height);
     } completion: ^(BOOL finished) {
       if (finished) {
@@ -422,7 +425,7 @@
     // Action button
     [_actionButton setTitle: @"Login" forState: UIControlStateNormal];
     // Action switch button
-    [actionSwitchButton setTitle: @"Sign Up" 
+    [actionSwitchButton setTitle: @"Sign Up"
       forState: UIControlStateNormal];
     // Change the header label text
     NSString *actionButtonString = isLogin ? @"Login" : @"Sign Up";
@@ -437,7 +440,7 @@
       _firstNameTextField.alpha = 1.0f;
       _lastNameTextField.alpha  = 1.0f;
       // Email
-      CGRect rect1 = [[textFieldFrameArray objectAtIndex: 
+      CGRect rect1 = [[textFieldFrameArray objectAtIndex:
         OMBLoginSignUpViewTextFieldEmail] CGRectValue];
       _emailTextField.frame = rect1;
       _emailTextField.placeholder = [NSString stringWithFormat: @"%@ email",
@@ -447,8 +450,8 @@
         OMBLoginSignUpViewTextFieldPassword] CGRectValue];
       _passwordTextField.frame = rect2;
       // Resize the text field view
-      textFieldView.frame = CGRectMake(textFieldView.frame.origin.x, 
-        textFieldView.frame.origin.y, textFieldView.bounds.size.width, 
+      textFieldView.frame = CGRectMake(textFieldView.frame.origin.x,
+        textFieldView.frame.origin.y, textFieldView.bounds.size.width,
           _emailTextField.frame.size.height * 4);
       // Hide the top borders
       for (NSInteger i = OMBLoginSignUpViewTextFieldLastName;
@@ -458,8 +461,8 @@
       }
       // Bottom view
       bottomView.frame = CGRectMake(bottomView.frame.origin.x,
-        textFieldView.frame.origin.y + textFieldView.frame.size.height + 
-        OMBPadding, bottomView.frame.size.width, 
+        textFieldView.frame.origin.y + textFieldView.frame.size.height +
+        OMBPadding, bottomView.frame.size.width,
           bottomView.frame.size.height);
     }];
     // Facebook
@@ -468,14 +471,14 @@
     // Action button
     [_actionButton setTitle: @"Sign Up" forState: UIControlStateNormal];
     // Action switch button
-    [actionSwitchButton setTitle: @"Login" 
+    [actionSwitchButton setTitle: @"Login"
       forState: UIControlStateNormal];
-    
+
     NSString *actionButtonString = isLogin ? @"Login" : @"Sign Up";
     headerLabel.text = [NSString stringWithFormat: @"%@ %@",
       isLandlord ? @"Landlords" : @"Students", actionButtonString];
   }
-  
+
   [self refreshContentSize];
 }
 

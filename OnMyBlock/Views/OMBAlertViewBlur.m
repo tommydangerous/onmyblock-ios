@@ -300,7 +300,7 @@ forButton: (UIButton *) button
   }];
 }
 
-- (void) showInView: (UIView *) view withDetails:(BOOL) show
+- (void) showInView: (UIView *) view withDetails: (BOOL) show
 {
   [_backgroundBlurView refreshWithView: view];
 

@@ -33,7 +33,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
   CGFloat imageWidth = [OMBManageListingDetailStatusCell sizeForImage].width;
   imageView = [UIImageView new];
-  imageView.alpha = 0.3f;
+  imageView.alpha = 0.8f;
   imageView.frame = CGRectMake(padding,
     ([OMBManageListingDetailStatusCell heightForCell] - imageWidth) * 0.5f,
       imageWidth, imageWidth);
@@ -53,7 +53,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
           switchButton.frame.size.width, switchButton.frame.size.height);
   switchButton.onTintColor = [UIColor orange];*/
   [switchButton removeFromSuperview];
-  
+
   return self;
 }
 
@@ -86,18 +86,18 @@ reuseIdentifier: (NSString *)reuseIdentifier
   [_customSwitch removeFromSuperview];
   CGRect screen = [UIScreen mainScreen].bounds;
   CGFloat padding = OMBPadding;
-  
+
   CGFloat switchWidth = 100.f;
   CGRect rectSwitch = CGRectMake(0.f, 0.f, switchWidth,
-    38.f);
-  
+    OMBStandardButtonHeight * 0.6f);
+
   _customSwitch = [[OMBSwitch alloc] initWithFrame:rectSwitch
     withOnLabel: onText andOfflabel: offText
       withOnTintColor: onTintColor andOffTintColor: offTintColor];
   _customSwitch.center =
     CGPointMake(screen.size.width - switchWidth * 0.5f - padding,
       [OMBManageListingDetailStatusCell heightForCell] * 0.5f);
-  
+
   [self.contentView addSubview:_customSwitch];
 }
 
