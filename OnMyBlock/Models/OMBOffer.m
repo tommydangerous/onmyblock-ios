@@ -354,7 +354,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
   if (!self.user)
     return;
   NSString *alert = [NSString stringWithFormat:
-    @"Your offer for %@ has been accepted!",
+    @"Your booking request for %@ has been accepted!",
       [self.residence.address capitalizedString]];
   PFPush *push = [[PFPush alloc] init];
   [push expireAfterTimeInterval: 60 * 60 * 24 * 7];
@@ -374,7 +374,7 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
     if (!self.residence.user)
       return;
   NSString *alert = [NSString stringWithFormat:
-    @"%@ has placed an offer on your place at %@.",
+    @"%@ has submitted a booking request for your place at %@.",
       [self.user.firstName capitalizedString],
         [self.residence.address capitalizedString]];
   PFPush *push = [[PFPush alloc] init];

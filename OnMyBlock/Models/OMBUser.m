@@ -1699,7 +1699,7 @@ ascending: (BOOL) ascending
       NSString *aString = @"a";
       NSString *firstLetter = [position substringToIndex: 1];
       if ([[[firstLetter lowercaseString] matchingResultsWithRegularExpression:
-        @"[aiouy]"] count]) {
+        @"[aeiouy]"] count]) {
 
         aString = @"an";
       }
