@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Quantum Ventures. All rights reserved.
 //
 
-#import <MapKit/MapKit.h>
-
 @interface QVClusterAnnotationView : MKAnnotationView
 
 @property (assign, nonatomic) NSUInteger count;

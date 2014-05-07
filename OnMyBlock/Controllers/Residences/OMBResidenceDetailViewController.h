@@ -6,8 +6,6 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import <MapKit/MapKit.h>
-
 #import "OMBViewController.h"
 
 @class OMBBlurView;

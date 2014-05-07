@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <MapKit/MapKit.h>
 
 @class OMBResidence;
 
@@ -29,7 +28,7 @@
 - (void) fetchResidencesWithParameters: (NSDictionary *) parameters
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
-- (NSArray *) sortedResidencesByDistanceFromCoordinate: 
+- (NSArray *) sortedResidencesByDistanceFromCoordinate:
   (CLLocationCoordinate2D) coordinate;
 - (NSArray *) sortedResidencesWithKey: (NSString *) string
   ascending: (BOOL) ascending;

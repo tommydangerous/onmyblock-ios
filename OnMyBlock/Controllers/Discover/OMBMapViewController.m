@@ -315,13 +315,10 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // self.mapView          = [[OCMapView alloc] init];
   self.mapView = [[MKMapView alloc] init];
   self.mapView.alpha    = 0.0f;
-  // self.mapView.clusteringEnabled = NO;
-  self.mapView.delegate = self;
   self.mapView.frame    = screen;
   self.mapView.mapType  = MKMapTypeStandard;
-  // self.mapView.minimumAnnotationCountPerCluster = 5;
   self.mapView.showsPointsOfInterest = NO;
-  self.mapView.showsUserLocation = NO;
+  self.mapView.showsUserLocation     = NO;
   [self.view addSubview: self.mapView];
   UITapGestureRecognizer *mapViewTap =
     [[UITapGestureRecognizer alloc] initWithTarget: self
@@ -338,7 +335,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // View
   filterView = [[UIView alloc] init];
   filterView.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
-  filterView.frame = CGRectMake(0.0f, /*screenHeight - 20.0f*/64.0f, screenWidth, 20.0f);
+  filterView.frame = CGRectMake(0.0f, 64.0f, screenWidth, 20.0f);
   filterView.hidden = YES;
   [self.view addSubview: filterView];
   // Label
@@ -450,6 +447,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 - (void) viewDidLoad
 {
   [super viewDidLoad];
+
+  self.mapView.delegate = self;
 
   __weak OMBMapViewController *weakSelf = self;
 
@@ -702,22 +701,11 @@ didDeselectAnnotationView: (MKAnnotationView *) annotationView
   }
 }
 
-- (void) OLDmapView: (MKMapView *) map
-didDeselectAnnotationView: (MKAnnotationView *) annotationView
-{
-  if (![[NSString stringWithFormat: @"%@",
-    [annotationView class]] isEqualToString: @"MKModernUserLocationView"]) {
-
-    [(OMBAnnotationView *) annotationView deselect];
-  }
-}
-
 - (void) mapView: (MKMapView *) map
 didSelectAnnotationView: (MKAnnotationView *) annotationView
 {
-
+  NSLog(@"DID SELECT ANNOTATION VIEW");
   // If user clicked on the current location
-
   if ([annotationView isKindOfClass: [QVClusterAnnotationView class]]) {
     QVClusterAnnotationView *aView = (QVClusterAnnotationView *)
       annotationView;
@@ -756,68 +744,12 @@ didSelectAnnotationView: (MKAnnotationView *) annotationView
   }
 }
 
-- (void) OLDmapView: (MKMapView *) map
-didSelectAnnotationView: (MKAnnotationView *) annotationView
-{
-  // [residentAnnotations removeAllObjects];
-
-  // If user clicked on a cluster
-  if ([annotationView.annotation isKindOfClass: [OCAnnotation class]]) {
-    int numberAnnotations =
-      [(OCAnnotation *) annotationView.annotation annotationsInCluster].count;
-    if (numberAnnotations <= 5) {
-      [residentAnnotations removeAllObjects];
-      for(id object in [(OCAnnotation *)annotationView.annotation annotationsInCluster]){
-        if([object isKindOfClass: [OMBAnnotation class]]){
-          OMBResidence *residence =
-            [[OMBAllResidenceStore sharedStore]
-              residenceForUID: ((OMBAnnotation *)object).residenceUID];
-          [residentAnnotations addObject: residence];
-        }
-      }
-      [_residentListMap reloadData];
-      [self showResidentListAnnotation];
-    }else
-      [self zoomClusterAtAnnotation: (OCAnnotation *) annotationView.annotation];
-  }
-  // City
-  else if ([annotationView.annotation isKindOfClass: [OMBAnnotationCity class]]){
-    [self setMapViewRegion: annotationView.annotation.coordinate
-      withMiles: DEFAULT_MILE_RADIUS * 0.8f animated: YES];
-  // If user clicked on a single residence
-  }else if ([[NSString stringWithFormat: @"%@",
-    [annotationView class]] isEqualToString: @"MKModernUserLocationView"]) {
-    [self hidePropertyInfoView];
-    [self hideResidentListAnnotation];
-  }
-  else {
-    id annotation = annotationView.annotation;
-    if ([annotation isKindOfClass: [OMBAnnotation class]]) {
-      OMBAnnotationView *annView = (OMBAnnotationView *) annotationView;
-      [annView select];
-      OMBAnnotation *ann = (OMBAnnotation *) annView.annotation;
-      OMBResidence *residence =
-        [[OMBAllResidenceStore sharedStore] residenceForUID: ann.residenceUID];
-      [self showPropertyInfoViewWithResidence: residence];
-    }
-
-
-    // CLLocationCoordinate2D coordinate = annotationView.annotation.coordinate;
-    // NSString *key = [NSString stringWithFormat: @"%f,%f-%@",
-    //   coordinate.latitude, coordinate.longitude,
-    //     annotationView.annotation.title];
-    // OMBResidence *residence =
-    //   [[OMBResidenceStore sharedStore].residences objectForKey: key];
-    // [self showPropertyInfoViewWithResidence: residence];
-  }
-}
-
 - (MKAnnotationView *) mapView: (MKMapView *) mapView
 viewForAnnotation: (id <MKAnnotation>) annotation
 {
   if (annotation == _mapView.userLocation)
     return nil;
-  
+
   static NSString *const QVAnnotationViewReuseID = @"QVAnnotationViewReuseID";
 
   QVClusterAnnotationView *annotationView = (QVClusterAnnotationView *)
@@ -831,26 +763,6 @@ viewForAnnotation: (id <MKAnnotation>) annotation
 
   annotationView.count = [(QVClusterAnnotation *) annotation count];
 
-  return annotationView;
-}
-
-- (MKAnnotationView *) OLDmapView: (MKMapView *) map
-viewForAnnotation: (id <MKAnnotation>) annotation
-{
-  // If the annotation is the user's location, show the default pulsing circle
-  if (annotation == map.userLocation)
-    return nil;
-
-  static NSString *ReuseIdentifier = @"AnnotationViewIdentifier";
-  OMBAnnotationView *annotationView = (OMBAnnotationView *)
-    [map dequeueReusableAnnotationViewWithIdentifier: ReuseIdentifier];
-  if (!annotationView) {
-    annotationView =
-      [[OMBAnnotationView alloc] initWithAnnotation: annotation
-        reuseIdentifier: ReuseIdentifier];
-  }
-  else
-    [annotationView loadAnnotation: annotation];
   return annotationView;
 }
 
@@ -1599,18 +1511,11 @@ withTitle: (NSString *) title;
 
 - (void) mapViewTapped
 {
+  NSLog(@"MAP TAPPED");
   [self deselectAnnotations];
   [self hidePropertyInfoView];
   [self hideResidentListAnnotation];
 }
-
-// - (NSArray *) propertiesSortedBy: (NSString *) key ascending: (BOOL) ascending
-// {
-//   NSSet *visibleAnnotations = [_mapView annotationsInMapRect:
-//     _mapView.visibleMapRect];
-//   return [[OMBResidenceStore sharedStore] propertiesFromAnnotations:
-//       visibleAnnotations sortedBy: key ascending: ascending];
-// }
 
 - (void) refreshProperties
 {

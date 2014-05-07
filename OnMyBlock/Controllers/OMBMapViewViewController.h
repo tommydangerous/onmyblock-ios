@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 
 #import "OMBViewController.h"
@@ -20,7 +19,7 @@
 
 #pragma mark - Initializer
 
-- (id) initWithCoordinate: (CLLocationCoordinate2D) coord 
+- (id) initWithCoordinate: (CLLocationCoordinate2D) coord
 title: (NSString *) string;
 
 @end

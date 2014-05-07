@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import <MapKit/MapKit.h>
-
 #import "OMBTableViewController.h"
 
 @class OMBNeighborhood;

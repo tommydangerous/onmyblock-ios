@@ -6,14 +6,12 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import <MapKit/MapKit.h>
-
 #import "OMBFinishListingSectionViewController.h"
 
 @class AMBlurView;
 @class TextFieldPadding;
 
-@interface OMBFinishListingAddressViewController : 
+@interface OMBFinishListingAddressViewController :
   OMBFinishListingSectionViewController
 <CLLocationManagerDelegate, MKMapViewDelegate, UITextFieldDelegate>
 {
@@ -40,7 +38,7 @@
 
 #pragma mark - Instance Methods
 
-- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate 
+- (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate
 withMiles: (CGFloat) miles animated: (BOOL) animated;
 
 @end

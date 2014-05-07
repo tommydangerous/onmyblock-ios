@@ -6,8 +6,6 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import <MapKit/MapKit.h>
-
 @interface OMBAnnotationView : MKAnnotationView
 {
   UIView *insideView;
