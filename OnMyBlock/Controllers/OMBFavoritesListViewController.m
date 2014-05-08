@@ -8,6 +8,7 @@
 
 #import "OMBFavoritesListViewController.h"
 
+#import "OMBActivityViewFullScreen.h"
 #import "OMBEmptyBackgroundWithImageAndLabel.h"
 #import "OMBFavoriteResidence.h"
 #import "OMBFavoriteResidenceCell.h"
@@ -21,6 +22,13 @@
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+NegativeImage.h"
+
+@interface OMBFavoritesListViewController ()
+{
+  OMBActivityViewFullScreen *activityViewFullScreen;
+}
+
+@end
 
 @implementation OMBFavoritesListViewController
 
@@ -61,26 +69,29 @@
 
   self.table.backgroundColor = [UIColor grayUltraLight];
 
-  emptyBackgroundView = 
-    [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame: 
+  emptyBackgroundView =
+    [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame:
       self.view.frame];
   emptyBackgroundView.alpha = 1.0f;
   emptyBackgroundView.backgroundColor = [UIColor backgroundColor];
   // emptyBackgroundView.imageView.alpha = 0.5f;
-  emptyBackgroundView.imageView.image = [[UIImage imageNamed: 
+  emptyBackgroundView.imageView.image = [[UIImage imageNamed:
     @"favorites_icon.png"] negativeImage];
   NSString *text = @"Places that you favorite appear here. "
     @"Add your favorite places by tapping the heart.";
-  // emptyBackgroundView.label.textColor = [UIColor colorWithWhite: 1.0f 
+  // emptyBackgroundView.label.textColor = [UIColor colorWithWhite: 1.0f
   //   alpha: 0.8f];
   [emptyBackgroundView setLabelText: text];
-  
+
   [emptyBackgroundView setButtonText: @"Start Browsing"];
   [emptyBackgroundView.startButton addTarget: self
     action:@selector(discover)
       forControlEvents:UIControlEventTouchUpInside];
 
   [self.view addSubview: emptyBackgroundView];
+
+  activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
+  [self.view addSubview: activityViewFullScreen];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -102,14 +113,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   OMBFavoriteResidenceCell *cell = [tableView dequeueReusableCellWithIdentifier:
     CellIdentifier];
   if (!cell) {
-    cell = [[OMBFavoriteResidenceCell alloc] initWithStyle: 
+    cell = [[OMBFavoriteResidenceCell alloc] initWithStyle:
       UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
   }
   __weak OMBFavoritesListViewController *weakSelf = self;
-  cell.residencePartialView.selected = 
+  cell.residencePartialView.selected =
     ^(OMBResidence *residence, NSInteger __unused imageIndex) {
       [weakSelf.navigationController pushViewController:
-        [[OMBResidenceDetailViewController alloc] initWithResidence: 
+        [[OMBResidenceDetailViewController alloc] initWithResidence:
           residence] animated: YES];
   };
   return cell;
@@ -123,8 +134,8 @@ numberOfRowsInSection: (NSInteger) section
 
 #pragma mark - Protocol UITableViewDelegate
 
-- (void) tableView: (UITableView *) tableView 
-didEndDisplayingCell: (UITableViewCell *) cell 
+- (void) tableView: (UITableView *) tableView
+didEndDisplayingCell: (UITableViewCell *) cell
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // OMBFavoriteResidenceCell *c = (OMBFavoriteResidenceCell *) cell;
@@ -134,10 +145,10 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 // - (void) tableView: (UITableView *) tableView
 // didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 // {
-//   OMBFavoriteResidence *favorite = 
+//   OMBFavoriteResidence *favorite =
 //     [[[OMBUser currentUser] favoritesArray] objectAtIndex: indexPath.row];
 //   [self.navigationController pushViewController:
-//     [[OMBResidenceDetailViewController alloc] initWithResidence: 
+//     [[OMBResidenceDetailViewController alloc] initWithResidence:
 //       favorite.residence] animated: YES];
 // }
 
@@ -148,11 +159,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   return screen.size.height * PropertyInfoViewImageHeightPercentage;
 }
 
-- (void) tableView: (UITableView *) tableView 
-willDisplayCell: (UITableViewCell *) cell 
+- (void) tableView: (UITableView *) tableView
+willDisplayCell: (UITableViewCell *) cell
 forRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  OMBFavoriteResidence *favorite = 
+  OMBFavoriteResidence *favorite =
     [[[OMBUser currentUser] favoritesArray] objectAtIndex: indexPath.row];
   [(OMBFavoriteResidenceCell *) cell loadFavoriteResidenceData: favorite];
 }
@@ -167,8 +178,8 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
   if ([notification userInfo]) {
     int index = [[[notification userInfo] objectForKey: @"index"] intValue];
     [self.table beginUpdates];
-    [self.table deleteRowsAtIndexPaths: 
-      @[[NSIndexPath indexPathForRow: index inSection: 0]] withRowAnimation: 
+    [self.table deleteRowsAtIndexPaths:
+      @[[NSIndexPath indexPathForRow: index inSection: 0]] withRowAnimation:
         UITableViewRowAnimationFade];
     [self.table endUpdates];
   }
@@ -191,13 +202,16 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) fetchFavorites
 {
-  OMBFavoritesListConnection *connection = 
+  OMBFavoritesListConnection *connection =
     [[OMBFavoritesListConnection alloc] init];
   connection.completionBlock = ^(NSError *error) {
+    [activityViewFullScreen stopSpinning];
     [self reloadTable];
   };
   connection.delegate = self;
   [connection start];
+  if ([[self favorites] count] == 0)
+    [activityViewFullScreen startSpinning];
 }
 
 - (void) reloadTable

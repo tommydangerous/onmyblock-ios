@@ -10,6 +10,7 @@
 
 #import "NSString+Extensions.h"
 #import "NSUserDefaults+OnMyBlock.h"
+#import "OMBActivityViewFullScreen.h"
 #import "OMBConversation.h"
 #import "OMBMessage.h"
 #import "OMBMessageCollectionViewCell.h"
@@ -28,6 +29,7 @@
 <UICollectionViewDataSource, UICollectionViewDelegate,
   UICollectionViewDelegateFlowLayout, UIScrollViewDelegate, UITextViewDelegate>
 {
+  OMBActivityViewFullScreen *activityViewFullScreen;
   OMBMessageInputToolbar *bottomToolbar;
   UIBarButtonItem *contactBarButtonItem;
   OMBConversation *conversation;
@@ -195,6 +197,9 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   bottomToolbar.sendBarButtonItem.action  = @selector(send);
   bottomToolbar.sendBarButtonItem.enabled = NO;
   bottomToolbar.sendBarButtonItem.target  = self;
+
+  activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
+  [self.view addSubview: activityViewFullScreen];
 }
 
 - (void) viewDidLoad
@@ -261,7 +266,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     void (^completion) (NSError * error) = ^void (NSError *error) {
       [self verifyPhone];
       [self fetchMessagesWithCompletion: nil];
-      [self containerStopSpinningFullScreen];
+      [activityViewFullScreen stopSpinning];
       [bottomToolbar.messageContentTextView becomeFirstResponder];
     };
     if (residence) {
@@ -275,7 +280,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
         completion
       ];
     }
-    [self containerStartSpinningFullScreen];
+    [activityViewFullScreen startSpinning];
   }
 }
 
