@@ -70,6 +70,10 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     }
   }
 
+  // The app launche with a white status bar
+  [[UIApplication sharedApplication] setStatusBarStyle:
+    UIStatusBarStyleDefault];
+
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.window   = [[UIWindow alloc] initWithFrame: screen];
 

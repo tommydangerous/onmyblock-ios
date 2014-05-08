@@ -373,8 +373,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [_bookItButton setBackgroundImage:
     [UIImage imageWithColor: [UIColor blueHighlighted]]
       forState: UIControlStateHighlighted];
-  [_bookItButton setTitle: @"Place Offer" // @"Book It!"
-    forState: UIControlStateNormal];
+  [_bookItButton setTitle: @"Book It" forState: UIControlStateNormal];
   [_bookItButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [_bottomButtonView addSubview: _bookItButton];
