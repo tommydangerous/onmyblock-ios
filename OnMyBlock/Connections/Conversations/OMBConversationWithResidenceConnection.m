@@ -14,7 +14,7 @@
 
 - (id) initWithUID: (NSUInteger) uid
 {
-  NSString *string = [NSString stringWithFormat: 
+  NSString *string = [NSString stringWithFormat:
     @"%@/conversations/conversation_with_residence", OnMyBlockAPIURL];
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,

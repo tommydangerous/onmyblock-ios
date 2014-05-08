@@ -9,6 +9,10 @@
 #import "OMBTableViewController.h"
 
 @interface OMBTableParallaxViewController : OMBTableViewController
+{
+  CGFloat scaleFactor;
+  CGFloat scrollFactor;
+}
 
 @property (nonatomic) BOOL parallaxEnabled;
 @property (nonatomic) BOOL scalingEnabled;

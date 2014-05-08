@@ -396,7 +396,8 @@
   if (scrollView == self.table) {
     CGFloat y = scrollView.contentOffset.y;
     CGRect rect = backgroundImageView.frame;
-    rect.size.height = backgroundImageViewHeight - y;
+    CGFloat adjustment = y / scrollFactor;
+    rect.size.height = backgroundImageViewHeight - (y - adjustment);
     if (rect.size.height > backgroundImageViewHeight)
       rect.size.height = backgroundImageViewHeight;
     [backgroundImageView setFrame: rect redrawImage: NO];

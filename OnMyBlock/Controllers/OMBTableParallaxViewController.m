@@ -12,8 +12,6 @@
 {
   UIView *backgroundView;
   CGFloat backgroundViewOriginY;
-  CGFloat scaleFactor;
-  CGFloat scrollFactor;
   UIView *scaleBackgroundView;
   UIView *tableHeaderView;
 }

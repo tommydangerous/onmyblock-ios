@@ -669,7 +669,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     // - Picker view
     // Lease Type Description
     // View OMB Standard Lease
-    return 13;
+    return 12;
+    // return 13;
   }
   // Delete Listing
   else if (section == 2) {

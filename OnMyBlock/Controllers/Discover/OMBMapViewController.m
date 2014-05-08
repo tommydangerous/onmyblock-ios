@@ -704,7 +704,6 @@ didDeselectAnnotationView: (MKAnnotationView *) annotationView
 - (void) mapView: (MKMapView *) map
 didSelectAnnotationView: (MKAnnotationView *) annotationView
 {
-  NSLog(@"DID SELECT ANNOTATION VIEW");
   // If user clicked on the current location
   if ([annotationView isKindOfClass: [QVClusterAnnotationView class]]) {
     QVClusterAnnotationView *aView = (QVClusterAnnotationView *)
@@ -1511,7 +1510,6 @@ withTitle: (NSString *) title;
 
 - (void) mapViewTapped
 {
-  NSLog(@"MAP TAPPED");
   [self deselectAnnotations];
   [self hidePropertyInfoView];
   [self hideResidentListAnnotation];

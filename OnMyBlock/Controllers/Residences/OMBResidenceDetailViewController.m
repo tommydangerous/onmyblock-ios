@@ -38,6 +38,7 @@
 #import "OMBResidenceDetailMapCell.h"
 #import "OMBResidenceDetailSellerCell.h"
 #import "OMBResidenceImage.h"
+#import "OMBResidenceImagesConnection.h"
 #import "OMBResidenceBookItConfirmDetailsViewController.h"
 #import "OMBResidenceImageSlideViewController.h"
 #import "OMBTemporaryResidence.h"
@@ -53,6 +54,8 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
 @interface OMBResidenceDetailViewController ()
 {
+  OMBBlurView *backgroundBlurView;
+  CGFloat backgroundImageViewHeight;
   CGFloat favoritesButtonOriginY;
   UIScrollView *hiddenScrollView;
   UIPanGestureRecognizer *imagePanGestureRecognizer;
@@ -149,9 +152,10 @@ float kResidenceDetailImagePercentage   = 0.5f;
   backViewOffsetY = padding + standardHeight;
 
   // Images collection view
+  backgroundImageViewHeight = screenHeight * kResidenceDetailImagePercentage;
   // Layout
   CGSize imageCollectionSize = CGSizeMake(screenWidth,
-    screenHeight * kResidenceDetailImagePercentage);
+    backgroundImageViewHeight);
   UICollectionViewFlowLayout *imageCollectionViewLayout =
     [UICollectionViewFlowLayout new];
   imageCollectionViewLayout.itemSize = imageCollectionSize;
@@ -415,6 +419,12 @@ float kResidenceDetailImagePercentage   = 0.5f;
     [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(showMap)];
   [map addGestureRecognizer: tap];
+
+  backgroundBlurView = [[OMBBlurView alloc] initWithFrame: screen];
+  backgroundBlurView.blurRadius = 20.0f;
+  backgroundBlurView.clipsToBounds = YES;
+  backgroundBlurView.tintColor = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
+  [self.view insertSubview: backgroundBlurView atIndex: 0];
 }
 
 - (void) viewDidDisappear: (BOOL) animated
@@ -510,6 +520,8 @@ float kResidenceDetailImagePercentage   = 0.5f;
     annotation.coordinate     = coordinate;
     [map addAnnotation: annotation];
   }
+
+  [self updateBackgroundImage];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -626,21 +638,28 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) scrollViewDidScroll: (UIScrollView *) scrollView
 {
-  CGFloat x = scrollView.contentOffset.x;
-  CGFloat y = scrollView.contentOffset.y;
-  CGFloat padding = 20.0f;
+  CGFloat padding      = OMBPadding;
+  CGFloat scrollFactor = 3.5f;
+  CGFloat x            = scrollView.contentOffset.x;
+  CGFloat y            = scrollView.contentOffset.y;
   // If the table is scrolling
   if (scrollView == _table) {
-    CGFloat adjustment = y / 3.0f;
+    CGFloat adjustment = y / scrollFactor;
 
     // Adjust the image collection view
     CGRect backRect = imageCollectionView.frame;
     backRect.origin.y = backViewOffsetY - adjustment;
-    imageCollectionView.frame = backRect;
+    // Adjust height for scrolling because of transparent cell background
+    CGRect backRectWithHeight  = backRect;
+    backRectWithHeight.size.height = backgroundImageViewHeight -
+      (y - adjustment);
+    if (backRectWithHeight.size.height > backgroundImageViewHeight)
+      backRectWithHeight.size.height = backgroundImageViewHeight;
+    imageCollectionView.frame  = backRectWithHeight;
     // Adjust the gradient
-    gradientView.frame = backRect;
+    gradientView.frame         = backRectWithHeight;
     // Adjust the placeholder image
-    placeholderImageView.frame = backRect;
+    placeholderImageView.frame = backRectWithHeight;
 
     // Header view
     backRect.size.height = imageCollectionView.frame.size.height -
@@ -648,9 +667,11 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     headerView.frame = backRect;
 
     // Adjust the current offer label
-    CGRect currentOfferRect = _currentOfferLabel.frame;
+    CGRect currentOfferRect   = _currentOfferLabel.frame;
     currentOfferRect.origin.y = currentOfferOriginY - adjustment;
-    _currentOfferLabel.frame = currentOfferRect;
+    _currentOfferLabel.frame  = currentOfferRect;
+    _currentOfferLabel.alpha  = 1 -
+      ((y * scrollFactor) / self.view.frame.size.height);
 
     // Adjust the favorites button
     CGRect favoritesRect       = self.favoritesButton.frame;
@@ -658,10 +679,10 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     self.favoritesButton.frame = favoritesRect;
 
     // If the user is all the way at the bottom, have a background color
-    if (y > backViewOffsetY + imageCollectionView.frame.size.height)
-      self.table.backgroundColor = [UIColor grayUltraLight];
-    else
-      self.table.backgroundColor = [UIColor clearColor];
+    // if (y > backViewOffsetY + imageCollectionView.frame.size.height)
+    //   self.table.backgroundColor = [UIColor grayUltraLight];
+    // else
+    //   self.table.backgroundColor = [UIColor clearColor];
 
     hiddenScrollView.contentOffset = scrollView.contentOffset;
   }
@@ -746,12 +767,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!emptyCell)
     emptyCell = [[UITableViewCell alloc] initWithStyle:
       UITableViewCellStyleValue1 reuseIdentifier: CellIdentifier];
-  emptyCell.backgroundColor = [UIColor grayUltraLight];
-  emptyCell.selectionStyle = UITableViewCellSelectionStyleNone;
+  emptyCell.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.3f];
+  emptyCell.selectionStyle  = UITableViewCellSelectionStyleNone;
+  // Top border
   CALayer *topBorder = [CALayer layer];
   topBorder.backgroundColor = [UIColor grayLight].CGColor;
   topBorder.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 0.5f);
   [emptyCell.contentView.layer addSublayer: topBorder];
+
+  // Colors for the cell and selected cell
+  UIColor *cellBackgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.5f];
 
   // Address, bed, bath, lease month, property type, date available
   if (indexPath.section == 0) {
@@ -762,9 +787,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell) {
         cell = [[OMBResidenceDetailAddressCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: AddressCellIdentifier];
+        cell.backgroundColor = cellBackgroundColor;
       }
       // Main Label
-      if([[residence.title stripWhiteSpace] length])
+      if ([[residence.title stripWhiteSpace] length])
         cell.mainLabel.text = residence.title;
       else{
         [cell.mainLabel removeFromSuperview];
@@ -838,6 +864,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell) {
         cell = [[OMBResidenceDetailAmenitiesCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: AmentiesCellIdentifier];
+        cell.backgroundColor = cellBackgroundColor;
         [cell loadAmenitiesData: [residence availableAmenities]];
       }
       return cell;
@@ -855,6 +882,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBResidenceDetailDescriptionCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier:
             DescriptionCellIdentifier];
+        cell.backgroundColor = cellBackgroundColor;
         [cell loadData: residence.description];
       }
       return cell;
@@ -872,6 +900,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell = [[OMBResidenceDetailSellerCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier: SellerCellIdentifier];
         }
+        cell.backgroundColor = cellBackgroundColor;
         [cell loadResidenceData: residence];
         return cell;
       }
@@ -887,30 +916,18 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell) {
         cell = [[OMBResidenceDetailMapCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: MapCellIdentifier];
-
-        // cell.mapView.delegate = self;
-        // // Set the region of the mini map
-        // CGFloat distanceInMiles = 1609 * 0.5; // 1609 meters = 1 mile
-        // CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
-        //   residence.latitude, residence.longitude);
-        // MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(
-        //   coordinate, distanceInMiles, distanceInMiles);
-        // [cell.mapView setRegion: region animated: NO];
-        // // Add annotation
-        // OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
-        // annotation.coordinate     = coordinate;
-        // [cell.mapView addAnnotation: annotation];
+        cell.backgroundColor = cellBackgroundColor;
         [map removeFromSuperview];
         [cell.contentView addSubview: map];
 
         // Add street view
-        if(!cell.streetView.image){
-          NSLog(@"download street view");
-
+        if (!cell.streetView.image) {
           cell.imageView.image = nil;
-          dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+          dispatch_queue_t queue = dispatch_get_global_queue(
+            DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
           dispatch_async(queue, ^{
-            NSData *data = [NSData dataWithContentsOfURL:[residence googleStaticStreetViewImageURL]];
+            NSData *data = [NSData dataWithContentsOfURL:
+              [residence googleStaticStreetViewImageURL]];
             if([data length] > 6000){
               UIImage *image = [UIImage imageWithData:data];
               dispatch_async(dispatch_get_main_queue(), ^{
@@ -920,13 +937,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
             }
           });
         }
-        // Tap
-        // UITapGestureRecognizer *tap =
-        //   [[UITapGestureRecognizer alloc] initWithTarget: self
-        //     action: @selector(showMap)];
-        // [cell.mapView addGestureRecognizer: tap];
-
-        [cell.segmentedControl addTarget:self action:@selector(changeStateSegmented:) forControlEvents:UIControlEventValueChanged];
+        [cell.segmentedControl addTarget: self
+          action: @selector(changeStateSegmented:)
+            forControlEvents: UIControlEventValueChanged];
       }
       if ([residence.city length] && [residence.state length])
         cell.titleLabel.text = [NSString stringWithFormat: @"%@, %@",
@@ -1173,33 +1186,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) contactMeButtonSelected
 {
   if ([[OMBUser currentUser] loggedIn]) {
-    // messageDetailViewController =
-    //   [[OMBMessageDetailViewController alloc] initWithUser: residence.user];
-    // [self.navigationController pushViewController:
-    //   messageDetailViewController
-    //     animated: YES];
-    // OMBUser *user = residence.user;
-    // if (!user || [user.firstName length] == 0)
-    //   user = [OMBUser landlordUser];
     if (residence.user) {
-      /*[[self appDelegate].container presentViewController:
-        [[OMBNavigationController alloc] initWithRootViewController:
-          [[OMBMessageNewViewController alloc] initWithUser: residence.user
-            residence: residence]] animated: YES completion: nil];*/
-
-      // [self.navigationController pushViewController:
-      //   [[OMBMessageNewViewController alloc] initWithUser: residence.user
-      //     residence: residence] animated: YES];
-
       OMBMessageDetailViewController *vc =
         [[OMBMessageDetailViewController alloc] initWithUser: residence.user];
-      [vc loadDefaultMessage];
       [self.navigationController pushViewController: vc animated: YES];
     }
     else {
       OMBMessageDetailViewController *vc =
         [[OMBMessageDetailViewController alloc] initWithResidence: residence];
-      [vc loadDefaultMessage];
       [self.navigationController pushViewController: vc animated: YES];
     }
   }
@@ -1575,6 +1569,25 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else
     _countDownTimerLabel.text = [NSString stringWithFormat:
       @"Time left in auction: %@", timeString];
+}
+
+- (void) updateBackgroundImage
+{
+  // Download the residence's images
+  OMBResidenceImagesConnection *conn =
+    [[OMBResidenceImagesConnection alloc] initWithResidence: residence];
+  conn.completionBlock = ^(NSError *error) {
+    // Add the cover photo
+    __weak typeof(backgroundBlurView) weakBlurView   = backgroundBlurView;
+    OMBCenteredImageView *iv = [[OMBCenteredImageView alloc] initWithFrame:
+      self.view.frame];
+    __weak typeof(iv) weakImageView = iv;
+    [residence setImageForCenteredImageView: iv
+      withURL: residence.coverPhotoURL completion: ^{
+        [weakBlurView refreshWithImage: weakImageView.image];
+      }];
+  };
+  [conn start];
 }
 
 @end

@@ -16,11 +16,11 @@
 {
   if (!(self = [super init])) return nil;
 
-  NSString *string = [NSString stringWithFormat: 
+  NSString *string = [NSString stringWithFormat:
     @"%@/conversations/conversation_with_user", OnMyBlockAPIURL];
   NSDictionary *params = @{
     @"access_token": [OMBUser currentUser].accessToken,
-    @"user_id": [NSNumber numberWithInt: uid]
+    @"user_id":      [NSNumber numberWithInt: uid]
   };
   [self setRequestWithString: string parameters: params];
 

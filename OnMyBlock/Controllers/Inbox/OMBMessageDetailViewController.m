@@ -253,27 +253,29 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
       [self scrollToBottomAnimated: NO
         additionalOffsetY: OMBPadding + OMBStandardHeight];
     }
-    [self fetchMessages];
+    [self fetchMessagesWithCompletion: nil];
   }
   // If there is no conversation, fetch one
-  else if (residence) {
+  else {
     conversation = [[OMBConversation alloc] init];
-    [conversation fetchConversationWithResidenceUID: residence.uid completion:
-      ^(NSError *error) {
-        [self verifyPhone];
-        [self fetchMessages];
-      }
-    ];
-    renterApplicationBarButtonItem.enabled = NO;
-  }
-  else if (user) {
-    conversation = [[OMBConversation alloc] init];
-    [conversation fetchConversationWithUserUID: user.uid completion:
-      ^(NSError *error) {
-        [self verifyPhone];
-        [self fetchMessages];
-      }
-    ];
+    void (^completion) (NSError * error) = ^void (NSError *error) {
+      [self verifyPhone];
+      [self fetchMessagesWithCompletion: nil];
+      [self containerStopSpinningFullScreen];
+      [bottomToolbar.messageContentTextView becomeFirstResponder];
+    };
+    if (residence) {
+      [conversation fetchConversationWithResidenceUID: residence.uid completion:
+        completion
+      ];
+      renterApplicationBarButtonItem.enabled = NO;
+    }
+    else if (user) {
+      [conversation fetchConversationWithUserUID: user.uid completion:
+        completion
+      ];
+    }
+    [self containerStartSpinningFullScreen];
   }
 }
 
@@ -633,7 +635,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   }];
 }
 
-- (void) fetchMessages
+- (void) fetchMessagesWithCompletion: (void (^) (NSError *err)) block
 {
   [conversation fetchMessagesAtPage: self.currentPage delegate: self
     completion: ^(NSError *error) {
@@ -643,6 +645,8 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
         [self scrollToBottomAnimated: NO];
         [self startTimer];
       }
+      if (block)
+        block(error);
     }
   ];
 }
@@ -708,7 +712,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   // THAT DOESN'T DISAPPEAR, SO WE CAN LOAD EARLIER MESSAGES
   if (_currentPage < _maxPages) {
     _currentPage += 1;
-    [self fetchMessages];
+    [self fetchMessagesWithCompletion: nil];
   }
 }
 
