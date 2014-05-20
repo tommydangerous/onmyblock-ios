@@ -27,6 +27,7 @@
 #import "OMBMessageNewViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOtherUserProfileViewController.h"
+#import "OMBOffer.h"
 #import "OMBResidence.h"
 #import "OMBResidenceBookItViewController.h"
 #import "OMBResidenceCell.h"
@@ -377,7 +378,26 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [_bookItButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [_bottomButtonView addSubview: _bookItButton];
-
+  
+  // Apply Now button
+  _applyNowButton = [[UIButton alloc] init];
+  _applyNowButton.backgroundColor = _contactMeButton.backgroundColor;
+  _applyNowButton.frame = CGRectMake(
+    _bottomButtonView.frame.size.width - _contactMeButton.frame.size.width,
+      _contactMeButton.frame.origin.y, _contactMeButton.frame.size.width,
+        _contactMeButton.frame.size.height);
+  _applyNowButton.titleLabel.font = _contactMeButton.titleLabel.font;
+  [_applyNowButton addTarget: self action: @selector(showApplyNow)
+    forControlEvents: UIControlEventTouchUpInside];
+  [_applyNowButton setBackgroundImage:
+    [UIImage imageWithColor: [UIColor blueHighlighted]]
+      forState: UIControlStateHighlighted];
+  [_applyNowButton setTitle: @"Apply Now" forState: UIControlStateNormal];
+  [_applyNowButton setTitleColor: [UIColor whiteColor]
+    forState: UIControlStateNormal];
+  [_bottomButtonView addSubview: _applyNowButton];
+  _applyNowButton.hidden = YES;
+    
   // The scroll view when users view images full screen
   imageScrollView = [UIScrollView new];
   imageScrollView.bounces = YES;
@@ -461,7 +481,10 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [residence fetchDetailsWithCompletion: ^(NSError *error) {
     [self refreshResidenceData];
   }];
-
+  
+  // Critea to show "Book It" or "Apply Now"
+  [self criteriaApplyNow];
+  
   // Download images
   [residence downloadImagesWithCompletion: ^(NSError *error) {
     [self reloadImageData];
@@ -472,7 +495,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   // Set the rent
   _currentOfferLabel.text = [residence rentToCurrencyString];
-
+  
   // Adjust the favorites button if user already favorited
   [self adjustFavoriteButton];
 
@@ -1201,6 +1224,22 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
+
+- (void) criteriaApplyNow
+{
+  if([[OMBUser currentUser] loggedIn]){
+    BOOL showApplyNow;
+    
+    showApplyNow = [residence.propertyType isEqualToString:OMBResidencePropertyTypeSublet] &&
+      residence.rentItNowPrice < [OMBOffer priceThreshold] &&
+      residence.rentItNow &&
+      [[OMBUser currentUser] hasSentApplicationsInResidence:residence];
+    
+    _applyNowButton.hidden = !showApplyNow;
+    _bookItButton.hidden = showApplyNow;
+  }
+}
+
 - (int) currentPageOfImages
 {
   return (1 +
@@ -1381,7 +1420,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if (!residence.user.image)
       [residence.user downloadImageFromImageURLWithCompletion: nil];
   }
-
+  
+  [self criteriaApplyNow];
+  
   // Inactive
   if (residence.inactive) {
     // Hide the table footer view and buttons at the bottom
@@ -1411,6 +1452,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [[self appDelegate].container.currentDetailViewController
     presentViewController: activityViewController
       animated: YES completion: nil];
+}
+
+- (void) showApplyNow
+{
+  
 }
 
 - (void) showBookItNow

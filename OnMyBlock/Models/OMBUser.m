@@ -44,6 +44,7 @@
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
 #import "OMBPreviousRental.h"
+#import "OMBSentApplication.h";
 #import "OMBTemporaryResidence.h"
 #import "OMBUserCurrentUserInfoConnection.h"
 #import "OMBUserFacebookAuthenticationConnection.h"
@@ -711,6 +712,19 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
   if (_landlordType && [_landlordType length])
     return YES;
+  return NO;
+}
+
+- (BOOL) hasSentApplicationsInResidence:(OMBResidence *)residence
+{
+  
+  for(OMBSentApplication *sentAppl in
+      [_renterApplication sentApplicationsSortedByKey:@"residenceID" ascending:YES]){
+    
+    if(sentAppl.uid == residence.uid && sentAppl.sent)
+      return YES;
+  }
+  
   return NO;
 }
 
