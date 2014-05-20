@@ -379,7 +379,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [_bookItButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [_bottomButtonView addSubview: _bookItButton];
-  
+
   // Apply Now button
   _applyNowButton = [[UIButton alloc] init];
   _applyNowButton.backgroundColor = _contactMeButton.backgroundColor;
@@ -398,7 +398,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
     forState: UIControlStateNormal];
   [_bottomButtonView addSubview: _applyNowButton];
   _applyNowButton.hidden = YES;
-    
+
   // The scroll view when users view images full screen
   imageScrollView = [UIScrollView new];
   imageScrollView.bounces = YES;
@@ -482,7 +482,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [residence fetchDetailsWithCompletion: ^(NSError *error) {
     [self refreshResidenceData];
   }];
-  
+
   // Download images
   [residence downloadImagesWithCompletion: ^(NSError *error) {
     [self reloadImageData];
@@ -493,7 +493,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
 
   // Set the rent
   _currentOfferLabel.text = [residence rentToCurrencyString];
-  
+
   // Adjust the favorites button if user already favorited
   [self adjustFavoriteButton];
 
@@ -1224,20 +1224,26 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) criteriaApplyNow
 {
-  if([[OMBUser currentUser] loggedIn] && [[OMBUser currentUser]
-      hasSentApplicationsInResidence:residence]){
-    
-    BOOL showApplyNow;
-    
-    showApplyNow =
-      [residence.propertyType isEqualToString:OMBResidencePropertyTypeSublet] ||
-      residence.rentItNowPrice < [OMBOffer priceThreshold] ||
-      residence.rentItNow;
-    
-    _applyNowButton.hidden = !showApplyNow;
-    _bookItButton.hidden = showApplyNow;
-      
-  };
+  BOOL showApplyNow = YES;
+  // Is a sublet
+  if ([residence isSublet]) {
+    showApplyNow = NO;
+  }
+  // If rent it now is true
+  else if (residence.rentItNow) {
+    showApplyNow = NO;
+  }
+  // If minRent is less than or equal to Offer price threshold
+  else if (residence.minRent <= [OMBOffer priceThreshold]) {
+    showApplyNow = NO;
+  }
+  // If user has sent an application
+  else if ([[OMBUser currentUser] loggedIn] &&
+    [[OMBUser currentUser] hasSentApplicationsInResidence: residence]) {
+    showApplyNow = NO;
+  }
+  _applyNowButton.hidden = !showApplyNow;
+  _bookItButton.hidden   = showApplyNow;
 }
 
 - (int) currentPageOfImages
@@ -1420,10 +1426,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if (!residence.user.image)
       [residence.user downloadImageFromImageURLWithCompletion: nil];
   }
-  
+
   // Critea to show "Book It" or "Apply Now"
   [self criteriaApplyNow];
-  
+
   // Inactive
   if (residence.inactive) {
     // Hide the table footer view and buttons at the bottom
@@ -1457,7 +1463,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showApplyNow
 {
-  
+
 }
 
 - (void) showBookItNow

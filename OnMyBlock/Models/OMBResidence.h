@@ -115,6 +115,7 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 - (UIImage *) imageForSizeKey: (NSString *) string
   forResidenceImage: (OMBResidenceImage *) residenceImage;
 - (BOOL) isFromExternalSource;
+- (BOOL) isSublet;
 - (NSString *) leaseMonthsStringShort;
 - (NSString *) legalDetailsShareString;
 - (NSDate *) moveOutDateDate;

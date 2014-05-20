@@ -457,6 +457,11 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   return NO;
 }
 
+- (BOOL) isSublet
+{
+  return [self.propertyType isEqualToString: OMBResidencePropertyTypeSublet];
+}
+
 - (void) fetchDetailsWithCompletion: (void (^) (NSError *error)) block
 {
   OMBResidenceDetailConnection *conn =
