@@ -33,6 +33,8 @@
 #import "PayPalMobile.h"
 #import "UIColor+Extensions.h"
 
+#import "OMBRenterApplication.h"
+
 NSString *const FBSessionStateChangedNotification =
   @"com.onmyblock.Login:FBSessionStateChangedNotification";
 
@@ -70,7 +72,9 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     }
   }
 
-  // The app launche with a white status bar
+  [self setupThirdPartyApplications];
+
+  // The app launches with a white status bar, so set it back to black
   [[UIApplication sharedApplication] setStatusBarStyle:
     UIStatusBarStyleDefault];
 
@@ -89,8 +93,9 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     // If current session has a valid Facebook token
     [self openSession];
 
-  // #warning Remove fake login
-  // [OMBUser fakeLogin]; // Fake login
+  // Fake login
+  #warning Remove fake login
+  [OMBUser fakeLogin];
 
   // Check to see if the user has a saved api key in the user defaults
   [[OMBUser currentUser] checkForUserDefaultsAPIKey];
@@ -122,30 +127,26 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   // #warning Remove container showing controller
   // [self.container showMyRenterProfile];
 
-  UIView *view = [UIView new];
-  view.backgroundColor = [UIColor whiteColor];
-  view.frame = screen;
-  OMBRadialGradient *rg = [[OMBRadialGradient alloc] initWithFrame:
-    CGRectMake(0, 0, 320, 200) withColors: @[[UIColor grayColor], [UIColor whiteColor]] onLeft: YES];
-  [view addSubview: rg];
+  // This is used to test the radial gradient
+  // UIView *view = [UIView new];
+  // view.backgroundColor = [UIColor whiteColor];
+  // view.frame = screen;
+  // OMBRadialGradient *rg = [[OMBRadialGradient alloc] initWithFrame:
+  //   CGRectMake(0, 0, 320, 200) withColors: @[[UIColor grayColor],
+  //     [UIColor whiteColor]] onLeft: YES];
+  // [view addSubview: rg];
   // [self.container.currentDetailViewController.view addSubview: view];
-
-  // Parse setup
-  [Parse setApplicationId: ParseApplicationId clientKey: ParseClientKey];
-  // PayPal
-  [PayPalMobile initializeWithClientIdsForEnvironments: @{
-    PayPalEnvironmentProduction: PayPalClientID,
-    PayPalEnvironmentSandbox:    PayPalClientIDSandbox
-  }];
-  // Venmo
-  self.venmoClient = [VenmoClient clientWithAppId: VenmoClientID
-    secret: VenmoClientSecret];
 
   // Handle push notification
   // Extract the notification data
   NSDictionary *notificationPayload =
     launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
   [self handlePushNotification: notificationPayload];
+
+  [[OMBUser currentUser].renterApplication fetchSentApplicationsWithDelegate:
+    [OMBUser currentUser].renterApplication completion: ^(NSError *error) {
+      NSLog(@"DONE");
+    }];
 
   return YES;
 }
@@ -490,6 +491,20 @@ state: (FBSessionState) state error: (NSError *) error
         cancelButtonTitle: @"Try again" otherButtonTitles: nil];
     [alertView show];
   }
+}
+
+- (void) setupThirdPartyApplications
+{
+  // Parse setup
+  [Parse setApplicationId: ParseApplicationId clientKey: ParseClientKey];
+  // PayPal
+  [PayPalMobile initializeWithClientIdsForEnvironments: @{
+    PayPalEnvironmentProduction: PayPalClientID,
+    PayPalEnvironmentSandbox:    PayPalClientIDSandbox
+  }];
+  // Venmo
+  self.venmoClient = [VenmoClient clientWithAppId: VenmoClientID
+    secret: VenmoClientSecret];
 }
 
 - (void) setupTracking

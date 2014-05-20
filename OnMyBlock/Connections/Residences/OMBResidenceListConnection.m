@@ -21,13 +21,11 @@
 
   NSString *string = [NSString stringWithFormat: @"%@/places/?",
     OnMyBlockAPIURL];
-
   for (NSString *key in [dictionary allKeys]) {
     NSString *param = [NSString stringWithFormat:
       @"%@=%@&", key, [dictionary objectForKey: key]];
     string = [string stringByAppendingString: param];
   }
-  NSLog(@"%@", string);
   [self setRequestWithString: string];
 
   return self;

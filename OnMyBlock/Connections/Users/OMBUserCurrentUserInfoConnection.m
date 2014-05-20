@@ -16,7 +16,7 @@
 {
   if (!(self = [super init])) return nil;
 
-  NSString *string = [NSString stringWithFormat: 
+  NSString *string = [NSString stringWithFormat:
     @"%@/users/current_user_info/?access_token=%@",
       OnMyBlockAPIURL, [OMBUser currentUser].accessToken];
   [self setRequestWithString: string];
@@ -30,10 +30,10 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBUserCurrentUserInfoConnection\n%@", [self json]);
+  // NSLog(@"OMBUserCurrentUserInfoConnection\n%@", [self json]);
 
   [[OMBUser currentUser] readFromDictionary: [self objectDictionary]];
-  
+
   [super connectionDidFinishLoading: connection];
 }
 

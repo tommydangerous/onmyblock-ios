@@ -8,6 +8,7 @@
 
 #import "OMBRenterApplication.h"
 
+#import "OMBConnectionProtocol.h"
 #import "OMBCosigner.h"
 #import "OMBCosignerCreateConnection.h"
 #import "OMBCosignerListConnection.h"
@@ -21,13 +22,16 @@
 #import "OMBPreviousRental.h"
 #import "OMBRoommate.h"
 #import "OMBRenterApplicationUpdateConnection.h"
+#import "OMBSentApplication.h"
+#import "OMBSentApplicationListConnection.h"
 
-@interface OMBRenterApplication ()
+@interface OMBRenterApplication () <OMBConnectionProtocol>
 {
   NSMutableDictionary *cosigners;
   NSMutableDictionary *employments;
   NSMutableDictionary *previousRentals;
   NSMutableDictionary *roommates;
+  NSMutableDictionary *sentApplications;
 }
 
 @end
@@ -40,18 +44,31 @@
 {
   if (!(self = [super init])) return nil;
 
-  _cats      = NO;
+  _cats             = NO;
   _coapplicantCount = 0;
-  _dogs      = NO;
-  _hasCosigner = NO;
-  _legalAnswers    = [NSMutableDictionary dictionary];
-
-  cosigners       = [NSMutableDictionary dictionary];
-  employments     = [NSMutableDictionary dictionary];
-  previousRentals = [NSMutableDictionary dictionary];
-  roommates       = [NSMutableDictionary dictionary];
+  _dogs             = NO;
+  _hasCosigner      = NO;
+  _legalAnswers     = [NSMutableDictionary dictionary];
+  cosigners         = [NSMutableDictionary dictionary];
+  employments       = [NSMutableDictionary dictionary];
+  previousRentals   = [NSMutableDictionary dictionary];
+  roommates         = [NSMutableDictionary dictionary];
+  sentApplications  = [NSMutableDictionary dictionary];
 
   return self;
+}
+
+#pragma mark - Protocol
+
+#pragma mark - Protocol OMBConnectionProtocol
+
+- (void) JSONDictionary: (NSDictionary *) dictionary
+forResourceName: (NSString *) resourceName
+{
+  // Sent Applications
+  if ([resourceName isEqualToString: [OMBSentApplication resourceName]]) {
+    [self readFromSentApplicationDictionary: dictionary];
+  }
 }
 
 #pragma mark - Methods
@@ -101,6 +118,11 @@
   [roommates setObject: object forKey: [NSNumber numberWithInt: object.uid]];
 }
 
+- (void) addSentApplication: (OMBSentApplication *) object
+{
+  // Add to the sentApplications dictionary
+}
+
 - (NSArray *) cosignersSortedByFirstName
 {
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: @"firstName"
@@ -115,13 +137,13 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     [[OMBCosignerCreateConnection alloc] initWithCosigner: cosigner];
   conn.completionBlock = block;
   conn.delegate        = delegate;
-  [conn start]; 
+  [conn start];
 }
 
 - (void) createModelConnection: (OMBObject *) object
 delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
-  OMBModelCreateConnection *conn = 
+  OMBModelCreateConnection *conn =
     [[OMBModelCreateConnection alloc] initWithModel: object];
   conn.completionBlock = block;
   conn.delegate = delegate;
@@ -141,7 +163,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 - (void) deleteModelConnection: (OMBObject *) object
 delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
-  OMBModelDeleteConnection *conn = [[OMBModelDeleteConnection alloc] 
+  OMBModelDeleteConnection *conn = [[OMBModelDeleteConnection alloc]
     initWithModel: object];
   conn.completionBlock = block;
   conn.delegate        = delegate;
@@ -158,22 +180,33 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 - (void) fetchCosignersForUserUID: (NSUInteger) userUID delegate: (id) delegate
 completion: (void (^) (NSError *error)) block
 {
-  OMBCosignerListConnection *conn = 
+  OMBCosignerListConnection *conn =
     [[OMBCosignerListConnection alloc] initWithUserUID: userUID];
   conn.completionBlock = block;
   conn.delegate        = delegate;
   [conn start];
 }
 
-- (void) fetchListForResourceName: (NSString *) resourceName 
-userUID: (NSUInteger) userUID delegate: (id) delegate 
+- (void) fetchListForResourceName: (NSString *) resourceName
+userUID: (NSUInteger) userUID delegate: (id) delegate
 completion: (void (^) (NSError *error)) block
 {
   OMBModelListConnection *conn =
-    [[OMBModelListConnection alloc] initWithResourceName: resourceName 
+    [[OMBModelListConnection alloc] initWithResourceName: resourceName
       userUID: userUID];
   conn.completionBlock = block;
   conn.delegate = delegate;
+  [conn start];
+}
+
+- (void) fetchSentApplicationsWithDelegate: (id) delegate
+completion: (void (^) (NSError *error)) block
+{
+  OMBSentApplicationListConnection *conn =
+    [[OMBSentApplicationListConnection alloc] init];
+  conn.completionBlock = block;
+  conn.delegate        = delegate;
+  conn.resourceName    = [OMBSentApplication resourceName];
   [conn start];
 }
 
@@ -184,18 +217,18 @@ completion: (void (^) (NSError *error)) block
     if(index <= roommate.uid)
       index = roommate.uid + 1;
   }
-  
+
   return index;
 }
 
-- (OMBLegalAnswer *) legalAnswerForLegalQuestion: 
+- (OMBLegalAnswer *) legalAnswerForLegalQuestion:
 (OMBLegalQuestion *) legalQuestion
 {
-  return [_legalAnswers objectForKey: 
+  return [_legalAnswers objectForKey:
     [NSNumber numberWithInt: legalQuestion.uid]];
 }
 
-- (NSArray *) objectsWithModelName: (NSString *) modelName 
+- (NSArray *) objectsWithModelName: (NSString *) modelName
 sortedWithKey: (NSString *) key ascending: (BOOL)  ascending
 {
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
@@ -224,7 +257,7 @@ sortedWithKey: (NSString *) key ascending: (BOOL)  ascending
     [newSet addObject: [NSNumber numberWithInt: cosigner.uid]];
   }
   // Remove objects no longer suppose to be there
-  NSMutableSet *oldSet = [NSMutableSet setWithArray: 
+  NSMutableSet *oldSet = [NSMutableSet setWithArray:
     [[cosigners allValues] valueForKey: @"uid"]];
   [oldSet minusSet: newSet];
   for (NSNumber *number in [oldSet allObjects]) {
@@ -239,7 +272,7 @@ sortedWithKey: (NSString *) key ascending: (BOOL)  ascending
     _cats = YES;
   // Coapplicant count
   if ([dictionary objectForKey: @"coapplicant_count"] != [NSNull null])
-    _coapplicantCount = [[dictionary objectForKey: 
+    _coapplicantCount = [[dictionary objectForKey:
       @"coapplicant_count"] intValue];
   // Dogs
   if ([[dictionary objectForKey: @"dogs"] intValue] == 1)
@@ -302,7 +335,7 @@ forModelName: (NSString *) modelName
   else if ([modelName isEqualToString: [OMBRoommate modelName]]) {
     values = [roommates allValues];
   }
-  NSMutableSet *oldSet = [NSMutableSet setWithArray: 
+  NSMutableSet *oldSet = [NSMutableSet setWithArray:
     [values valueForKey: @"uid"]];
   [oldSet minusSet: newSet];
   for (NSNumber *number in [oldSet allObjects]) {
@@ -321,6 +354,15 @@ forModelName: (NSString *) modelName
   }
 }
 
+- (void) readFromSentApplicationDictionary: (NSDictionary *) dictionary
+{
+  for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
+    OMBSentApplication *sa = [[OMBSentApplication alloc] init];
+    [sa readFromDictionary: dict];
+    [self addSentApplication: sa];
+  }
+}
+
 - (void) removeAllObjects
 {
   _cats = NO;
@@ -331,6 +373,7 @@ forModelName: (NSString *) modelName
   [employments removeAllObjects];
   [previousRentals removeAllObjects];
   [roommates removeAllObjects];
+  [sentApplications removeAllObjects];
 }
 
 - (void) removeCosigner: (OMBCosigner *) object
@@ -370,7 +413,7 @@ forModelName: (NSString *) modelName
 - (void) updateWithDictionary: (NSDictionary *) dictionary
 completion: (void (^) (NSError *error)) block
 {
-  OMBRenterApplicationUpdateConnection *conn = 
+  OMBRenterApplicationUpdateConnection *conn =
     [[OMBRenterApplicationUpdateConnection alloc] initWithRenterApplication:
       self dictionary: dictionary];
   conn.completionBlock = block;

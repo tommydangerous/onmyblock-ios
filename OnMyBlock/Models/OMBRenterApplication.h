@@ -46,12 +46,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (NSArray *) employmentsSortedByStartDate;
 - (void) fetchCosignersForUserUID: (NSUInteger) userUID delegate: (id) delegate
 completion: (void (^) (NSError *error)) block;
-- (void) fetchListForResourceName: (NSString *) resourceName 
-userUID: (NSUInteger) userUID delegate: (id) delegate 
+- (void) fetchListForResourceName: (NSString *) resourceName
+userUID: (NSUInteger) userUID delegate: (id) delegate
 completion: (void (^) (NSError *error)) block;
-- (OMBLegalAnswer *) legalAnswerForLegalQuestion: 
+- (void) fetchSentApplicationsWithDelegate: (id) delegate
+completion: (void (^) (NSError *error)) block;
+- (OMBLegalAnswer *) legalAnswerForLegalQuestion:
 (OMBLegalQuestion *) legalQuestion;
-- (NSArray *) objectsWithModelName: (NSString *) modelName 
+- (NSArray *) objectsWithModelName: (NSString *) modelName
 sortedWithKey: (NSString *) key ascending: (BOOL)  ascending;
 - (void) readFromCosignerDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary;

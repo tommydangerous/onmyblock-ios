@@ -579,14 +579,14 @@ didUpdateLocations: (NSArray *) locations
       withMapViewSizeInPixels: self.mapView.bounds.size];
   if (previousZoomLevel == currentZoomLevel) {
     // self.mapView.clusteringEnabled = NO;
-    NSLog(@"CENTER CHANGED");
+    // NSLog(@"CENTER CHANGED");
   }
   else {
     // [self.mapView removeAnnotations: self.mapView.annotations];
     // self.mapView.clusteringEnabled = YES;
-    NSLog(@"ZOOM CHANGED");
+    // NSLog(@"ZOOM CHANGED");
   }
-  NSLog(@"ZOOM LEVEL: %i", currentZoomLevel);
+  // NSLog(@"ZOOM LEVEL: %i", currentZoomLevel);
 
   // if (currentZoomLevel >= MINIMUM_ZOOM_LEVEL) {
   //   // if ([self.mapView viewForAnnotation: sanDiegoAnnotationCity])
@@ -1149,7 +1149,7 @@ withTitle: (NSString *) title;
 {
   if (previousZoomLevel >= 10) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      NSLog(@"ADDING: %i", [annotations count]);
+      // NSLog(@"ADDING: %i", [annotations count]);
       [self.mapView addAnnotations: annotations];
     });
   }
@@ -1248,7 +1248,7 @@ withTitle: (NSString *) title;
 
   _radiusInMiles += 4;
 
-  NSLog(@"RADIUS: %f", _radiusInMiles);
+  // NSLog(@"RADIUS: %f", _radiusInMiles);
 
   CGFloat maxLatitude, maxLongitude, minLatitude, minLongitude;
 
@@ -1272,7 +1272,7 @@ withTitle: (NSString *) title;
 
   NSInteger currentCount =
     [[OMBResidenceListStore sharedStore].residences count];
-  NSLog(@"CURRENT COUNT: %i", currentCount);
+  // NSLog(@"CURRENT COUNT: %i", currentCount);
 
   [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters: params
     delegate: self completion: ^(NSError *error) {
@@ -1294,7 +1294,7 @@ withTitle: (NSString *) title;
       if (_radiusInMiles < kMaxRadiusInMiles) {
         NSInteger newCount =
           [[OMBResidenceListStore sharedStore].residences count];
-        NSLog(@"NEW COUNT:     %i", newCount);
+        // NSLog(@"NEW COUNT:     %i", newCount);
 
         // If the count never changed
         if (newCount == currentCount ||

@@ -18,6 +18,8 @@
 {
   if (!(self = [super init])) return nil;
 
+  self.resourceName = [object resourceName];
+
   return self;
 }
 
@@ -28,6 +30,7 @@
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
   if ([self successful]) {
+    // Delegate the parsing of JSON to the model
     if ([self.delegate respondsToSelector:
       @selector(JSONDictionary:forResourceName:)]){
       [self.delegate JSONDictionary: [self json]

@@ -164,6 +164,7 @@
 		AB6CCE4618933BF6000ED5CE /* OMBConfirmedTenantsConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6CCE4518933BF6000ED5CE /* OMBConfirmedTenantsConnection.m */; };
 		AB6CCE4918941269000ED5CE /* OMBEmptyImageTwoLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6CCE4818941269000ED5CE /* OMBEmptyImageTwoLabelCell.m */; };
 		AB6E940A192AA8A4005A357A /* OMBSentApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6E9409192AA8A4005A357A /* OMBSentApplication.m */; };
+		AB6E940F192BAAA2005A357A /* OMBSentApplicationListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6E940E192BAAA2005A357A /* OMBSentApplicationListConnection.m */; };
 		AB70CB68186CB9070083DF4C /* OMBTermsPrivacyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB67186CB9070083DF4C /* OMBTermsPrivacyViewController.m */; };
 		AB70CB6D186CB9400083DF4C /* OMBPrivacyPolicyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB6A186CB9400083DF4C /* OMBPrivacyPolicyViewController.m */; };
 		AB70CB6E186CB9400083DF4C /* OMBTermsOfServiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB6C186CB9400083DF4C /* OMBTermsOfServiceViewController.m */; };
@@ -824,6 +825,8 @@
 		AB6CCE4818941269000ED5CE /* OMBEmptyImageTwoLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBEmptyImageTwoLabelCell.m; sourceTree = "<group>"; };
 		AB6E9408192AA8A4005A357A /* OMBSentApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSentApplication.h; sourceTree = "<group>"; };
 		AB6E9409192AA8A4005A357A /* OMBSentApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSentApplication.m; sourceTree = "<group>"; };
+		AB6E940D192BAAA2005A357A /* OMBSentApplicationListConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSentApplicationListConnection.h; sourceTree = "<group>"; };
+		AB6E940E192BAAA2005A357A /* OMBSentApplicationListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSentApplicationListConnection.m; sourceTree = "<group>"; };
 		AB70CB66186CB9070083DF4C /* OMBTermsPrivacyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTermsPrivacyViewController.h; sourceTree = "<group>"; };
 		AB70CB67186CB9070083DF4C /* OMBTermsPrivacyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTermsPrivacyViewController.m; sourceTree = "<group>"; };
 		AB70CB69186CB9400083DF4C /* OMBPrivacyPolicyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPrivacyPolicyViewController.h; sourceTree = "<group>"; };
@@ -1728,6 +1731,15 @@
 			path = Base64;
 			sourceTree = "<group>";
 		};
+		AB6E940C192BAA26005A357A /* Sent Applications */ = {
+			isa = PBXGroup;
+			children = (
+				AB6E940D192BAAA2005A357A /* OMBSentApplicationListConnection.h */,
+				AB6E940E192BAAA2005A357A /* OMBSentApplicationListConnection.m */,
+			);
+			path = "Sent Applications";
+			sourceTree = "<group>";
+		};
 		AB70CB65186CB8C90083DF4C /* Account */ = {
 			isa = PBXGroup;
 			children = (
@@ -2302,6 +2314,7 @@
 		AB9B264A1811CE5E00E6DAC4 /* Connections */ = {
 			isa = PBXGroup;
 			children = (
+				AB6E940C192BAA26005A357A /* Sent Applications */,
 				ABB911C8189998630046611F /* Authentications */,
 				AB00B9C918BD64C60050D6F4 /* Conversations */,
 				AB9FEEFC18D02D3800E25FE2 /* Cosigners */,
@@ -3345,6 +3358,7 @@
 				DE95E8D818A03B5500A2A341 /* MNCalendarViewWeekdayCell.m in Sources */,
 				AB4ED2FF1884AD9F009AFB01 /* OMBResidenceSimilarConnection.m in Sources */,
 				AB9545841849B217000513BE /* OMBCenteredImageView.m in Sources */,
+				AB6E940F192BAAA2005A357A /* OMBSentApplicationListConnection.m in Sources */,
 				ABB911A618998CA80046611F /* LIALinkedInHttpClient.m in Sources */,
 				ABF18BBD1816F913002DD723 /* OMBListButton.m in Sources */,
 				ABB173C2189ECA9B0010D28F /* NSError+OnMyBlock.m in Sources */,

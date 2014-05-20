@@ -24,7 +24,7 @@
 #import "OMBResidenceImage.h"
 #import "UIImageView+WebCache.h"
 
-NSString *const OMBEmptyResidencePartialViewCell = 
+NSString *const OMBEmptyResidencePartialViewCell =
   @"OMBEmptyResidencePartialViewCell";
 
 @implementation OMBResidencePartialView
@@ -40,7 +40,7 @@ NSString *const OMBEmptyResidencePartialViewCell =
   CGRect screen = [[UIScreen mainScreen] bounds];
   CGFloat screenWidth = screen.size.width;
 
-  float imageHeight = 
+  float imageHeight =
     screen.size.height * PropertyInfoViewImageHeightPercentage;
   self.backgroundColor = [UIColor colorWithRed: (0/255.0) green: (0/255.0)
     blue: (0/255.0) alpha: 1.0];
@@ -55,7 +55,7 @@ NSString *const OMBEmptyResidencePartialViewCell =
   addToFavoritesButtonView.colors = @[
     [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.5],
       [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.0]];
-  addToFavoritesButtonView.frame = CGRectMake(0, 0, 
+  addToFavoritesButtonView.frame = CGRectMake(0, 0,
     screen.size.width, (buttonDimension + (buttonMargin * 2)));
   [self addSubview: addToFavoritesButtonView];
 
@@ -63,14 +63,14 @@ NSString *const OMBEmptyResidencePartialViewCell =
   addToFavoritesButton.backgroundColor = [UIColor clearColor];
   addToFavoritesButton.frame = CGRectMake(buttonMargin, buttonMargin,
     buttonDimension, buttonDimension);
-  minusFavoriteImage = [UIImage image: 
-    [UIImage imageNamed: @"favorite_filled_white.png"] 
+  minusFavoriteImage = [UIImage image:
+    [UIImage imageNamed: @"favorite_filled_white.png"]
       size: addToFavoritesButton.frame.size];
-  plusFavoriteImage = [UIImage image: 
-    [UIImage imageNamed: @"favorite_outline_white.png"] 
+  plusFavoriteImage = [UIImage image:
+    [UIImage imageNamed: @"favorite_outline_white.png"]
       size: addToFavoritesButton.frame.size];
-  [addToFavoritesButton addTarget: self 
-    action: @selector(addToFavoritesButtonSelected) 
+  [addToFavoritesButton addTarget: self
+    action: @selector(addToFavoritesButtonSelected)
       forControlEvents: UIControlEventTouchUpInside];
   [addToFavoritesButtonView addSubview: addToFavoritesButton];
 
@@ -85,8 +85,8 @@ NSString *const OMBEmptyResidencePartialViewCell =
   infoView.colors = @[
     [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.0],
       [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.8]];
-  infoView.frame = CGRectMake(0.0f,  
-    (self.frame.size.height - infoViewHeight), screen.size.width, 
+  infoView.frame = CGRectMake(0.0f,
+    (self.frame.size.height - infoViewHeight), screen.size.width,
       infoViewHeight);
   [self addSubview: infoView];
 
@@ -100,7 +100,7 @@ NSString *const OMBEmptyResidencePartialViewCell =
   // Bedrooms / Bathrooms
   bedBathLabel = [[UILabel alloc] init];
   bedBathLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
-  bedBathLabel.frame = CGRectMake(10.0f, marginTop * 2, 
+  bedBathLabel.frame = CGRectMake(10.0f, marginTop * 2,
     screenWidth - (10 * 2), bedBathLabelHeight);
   bedBathLabel.textColor = rentLabel.textColor;
   [infoView addSubview: bedBathLabel];
@@ -108,12 +108,12 @@ NSString *const OMBEmptyResidencePartialViewCell =
   // Address
   addressLabel = [[UILabel alloc] init];
   addressLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-  // addressLabel.frame = CGRectMake(bedBathLabel.frame.origin.x, 
-  //   bedBathLabel.frame.origin.y + bedBathLabel.frame.size.height, 
-  //     (screen.size.width - (bedBathLabel.frame.origin.x * 3)) * 0.5, 
+  // addressLabel.frame = CGRectMake(bedBathLabel.frame.origin.x,
+  //   bedBathLabel.frame.origin.y + bedBathLabel.frame.size.height,
+  //     (screen.size.width - (bedBathLabel.frame.origin.x * 3)) * 0.5,
   //       bedBathLabelHeight);
-  addressLabel.frame = CGRectMake(bedBathLabel.frame.origin.x, 
-    bedBathLabel.frame.origin.y + bedBathLabel.frame.size.height, 
+  addressLabel.frame = CGRectMake(bedBathLabel.frame.origin.x,
+    bedBathLabel.frame.origin.y + bedBathLabel.frame.size.height,
       bedBathLabel.frame.size.width, bedBathLabelHeight);
   addressLabel.textColor = rentLabel.textColor;
   [infoView addSubview: addressLabel];
@@ -122,7 +122,7 @@ NSString *const OMBEmptyResidencePartialViewCell =
   offersAndTimeLabel = [[UILabel alloc] init];
   offersAndTimeLabel.font = addressLabel.font;
   offersAndTimeLabel.frame = CGRectMake(
-    infoView.frame.size.width - 
+    infoView.frame.size.width -
     (addressLabel.frame.origin.x + addressLabel.frame.size.width),
       addressLabel.frame.origin.y,
         addressLabel.frame.size.width, addressLabel.frame.size.height);
@@ -133,17 +133,17 @@ NSString *const OMBEmptyResidencePartialViewCell =
 
   // Rent frame
   CGFloat rentLabelWidth = screenWidth - (bedBathLabel.frame.origin.x * 2);
-  rentLabel.frame = CGRectMake(bedBathLabel.frame.origin.x, 
-    offersAndTimeLabel.frame.origin.y - rentLabelHeight, 
+  rentLabel.frame = CGRectMake(bedBathLabel.frame.origin.x,
+    offersAndTimeLabel.frame.origin.y - rentLabelHeight,
       rentLabelWidth, rentLabelHeight);
 
   // Activity indicator
-  activityIndicatorView = 
-    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: 
+  activityIndicatorView =
+    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
       UIActivityIndicatorViewStyleWhite];
   activityIndicatorView.color = [UIColor whiteColor];
   CGRect activityFrame = activityIndicatorView.frame;
-  activityFrame.origin.x = (screen.size.width - 
+  activityFrame.origin.x = (screen.size.width -
     activityFrame.size.width) / 2.0;
   activityFrame.origin.y = (imageHeight -
     activityFrame.size.height) / 2.0;
@@ -170,7 +170,7 @@ NSString *const OMBEmptyResidencePartialViewCell =
 
 #pragma mark - Protocol UICollectionViewDataDelegate
 
-- (NSInteger) collectionView: (UICollectionView *) collectionView 
+- (NSInteger) collectionView: (UICollectionView *) collectionView
 numberOfItemsInSection: (NSInteger) section
 {
   if ([_residence imagesArray].count)
@@ -178,28 +178,28 @@ numberOfItemsInSection: (NSInteger) section
   return 1;
 }
 
-- (UICollectionViewCell *) collectionView:(UICollectionView *) collectionView 
+- (UICollectionViewCell *) collectionView:(UICollectionView *) collectionView
 cellForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   if ([_residence imagesArray].count) {
-    OMBFilmstripImageCell *cell = 
+    OMBFilmstripImageCell *cell =
       [collectionView dequeueReusableCellWithReuseIdentifier:
         [OMBFilmstripImageCell reuseID] forIndexPath: indexPath];
     // Don't resize images or else it hurts performance
-    OMBResidenceImage *residenceImage = 
+    OMBResidenceImage *residenceImage =
       [[_residence imagesArray] objectAtIndex: indexPath.row];
-    
+
     cell.imageView.image = [OMBResidence placeholderImage];
     __weak typeof(cell) weakCell = cell;
-    
+
     [cell.imageView setImageWithURL: residenceImage.imageURL
-      placeholderImage: nil 
-        options: (SDWebImageRetryFailed | 
+      placeholderImage: nil
+        options: (SDWebImageRetryFailed |
           SDWebImageDownloaderProgressiveDownload)
         completed:
           ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             if (error) {
-              NSLog(@"Error: %@, for: %@", error, residenceImage.imageURL);
+              // NSLog(@"Error: %@, for: %@", error, residenceImage.imageURL);
             }
             if(cacheType == SDImageCacheTypeNone || cacheType == SDImageCacheTypeDisk){
               weakCell.alpha = 0.0f;
@@ -228,7 +228,7 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Protocol UICollectionViewDelegate
 
-- (void) collectionView: (UICollectionView *) collectionView 
+- (void) collectionView: (UICollectionView *) collectionView
 didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 {
   if (self.selected)
@@ -250,7 +250,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
       }];
     }
     else {
-      OMBFavoriteResidence *favoriteResidence = 
+      OMBFavoriteResidence *favoriteResidence =
         [[OMBFavoriteResidence alloc] init];
       favoriteResidence.createdAt = [[NSDate date] timeIntervalSince1970];
       favoriteResidence.residence = _residence;
@@ -269,7 +269,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
           }
         ];
     }
-    OMBFavoriteResidenceConnection *connection = 
+    OMBFavoriteResidenceConnection *connection =
       [[OMBFavoriteResidenceConnection alloc] initWithResidence: _residence];
     [connection start];
   }
@@ -306,11 +306,11 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   // return;
   if (isDownloadingResidenceImages)
     return;
-  NSLog(@"DOWNLOAD RESIDENCE IMAGES");
+  // NSLog(@"DOWNLOAD RESIDENCE IMAGES");
   [_residence downloadImagesWithCompletion: ^(NSError *error) {
     [_imagesFilmstrip reloadData];
     isDownloadingResidenceImages = NO;
-    NSLog(@"DOWNLOAD RESIDENCE IMAGES COMPLETION");
+    // NSLog(@"DOWNLOAD RESIDENCE IMAGES COMPLETION");
   }];
   isDownloadingResidenceImages = YES;
   // NSLog(@"DOWNLOAD IMAGES: %i", _residence.uid);
@@ -339,7 +339,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 - (void) loadResidenceData: (OMBResidence *) object
 {
   [_imagesFilmstrip reloadData];
-  
+
   _residence = object;
 
   // Bedrooms
@@ -348,12 +348,12 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   //   bedsString = @"bed";
   NSString *bedsNumberString;
   if (_residence.bedrooms == (int) _residence.bedrooms)
-    bedsNumberString = [NSString stringWithFormat: @"%i", 
+    bedsNumberString = [NSString stringWithFormat: @"%i",
       (int) _residence.bedrooms];
   else
     bedsNumberString = [NSString stringWithFormat: @"%.01f",
       _residence.bedrooms];
-  NSString *beds = [NSString stringWithFormat: @"%@ %@", 
+  NSString *beds = [NSString stringWithFormat: @"%@ %@",
     bedsNumberString, bedsString];
   // Bathrooms
   NSString *bathsString = @"ba";
@@ -393,14 +393,14 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   }
 
 	// Rent
-  rentLabel.text = [NSString stringWithFormat: @"%@", 
+  rentLabel.text = [NSString stringWithFormat: @"%@",
     [_residence rentToCurrencyString]];
 
   // CGRect rentLabelFrame = rentLabel.frame;
   // CGRect rentRect = [rentLabel.text boundingRectWithSize:
   //   CGSizeMake(((screen.size.width / 2.0) - 30), rentLabel.frame.size.height)
-  //     options: NSStringDrawingUsesLineFragmentOrigin 
-  //       attributes: @{NSFontAttributeName: rentLabel.font} 
+  //     options: NSStringDrawingUsesLineFragmentOrigin
+  //       attributes: @{NSFontAttributeName: rentLabel.font}
   //         context: nil];
   // rentLabelFrame.origin.x = screen.size.width - (rentRect.size.width + 10);
   // rentLabelFrame.size.width = rentRect.size.width;
@@ -409,12 +409,12 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   // Bed bath
   // CGRect bedBathLabelFrame = bedBathLabel.frame;
   // CGRect bedBathRect = [bedBathLabel.text boundingRectWithSize:
-  //     CGSizeMake((screen.size.width - 
-  //       (20 + rentLabel.frame.size.width + 20 + 10 + 
-  //         arrowImageView.frame.size.width + 10)), 
+  //     CGSizeMake((screen.size.width -
+  //       (20 + rentLabel.frame.size.width + 20 + 10 +
+  //         arrowImageView.frame.size.width + 10)),
   //       bedBathLabel.frame.size.height)
-  //         options: NSStringDrawingUsesLineFragmentOrigin 
-  //           attributes: @{NSFontAttributeName: bedBathLabel.font} 
+  //         options: NSStringDrawingUsesLineFragmentOrigin
+  //           attributes: @{NSFontAttributeName: bedBathLabel.font}
   //             context: nil];
   // bedBathLabelFrame.size.width = bedBathRect.size.width;
   // bedBathLabel.frame = bedBathLabelFrame;
@@ -448,9 +448,9 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   layout.minimumLineSpacing = 0.0f;
   layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
-  _imagesFilmstrip = [[UICollectionView alloc] initWithFrame: self.bounds 
+  _imagesFilmstrip = [[UICollectionView alloc] initWithFrame: self.bounds
     collectionViewLayout: layout];
-  [_imagesFilmstrip registerClass: 
+  [_imagesFilmstrip registerClass:
     [OMBFilmstripImageCell class] forCellWithReuseIdentifier:
       [OMBFilmstripImageCell reuseID]];
   [_imagesFilmstrip registerClass:

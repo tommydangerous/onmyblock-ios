@@ -83,10 +83,13 @@ NSString *const OMBUserLoggedInNotification  = @"OMBUserLoggedInNotification";
 // User posts this after sending current user logout message to itself
 NSString *const OMBUserLoggedOutNotification = @"OMBUserLoggedOutNotification";
 
-NSString *const OMBMessagesUnviewedCountNotification = @"OMBMessagesUnviewedCountNotification";
+NSString *const OMBMessagesUnviewedCountNotification =
+  @"OMBMessagesUnviewedCountNotification";
 
-NSString *const OMBOffersLandordPendingCountNotification = @"OMBOffersLandordPendingCountNotification";
-NSString *const OMBOffersRenterAcceptedCountNotification = @"OMBOffersRenterAcceptedCountNotification";
+NSString *const OMBOffersLandordPendingCountNotification =
+  @"OMBOffersLandordPendingCountNotification";
+NSString *const OMBOffersRenterAcceptedCountNotification =
+  @"OMBOffersRenterAcceptedCountNotification";
 
 NSString *const OMBUserTypeLandlord = @"landlord";
 
@@ -972,14 +975,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (void) postLandlordTypeChangeNotification
 {
-  NSLog(@"POST!!!!");
+  // NSLog(@"POST!!!!");
   [[NSNotificationCenter defaultCenter] postNotificationName:
     OMBCurrentUserLandlordTypeChangeNotification object: nil
       userInfo: @{
         @"landlordType": _landlordType ? _landlordType : [NSNull null]
       }
     ];
-  NSLog(@"POST: %@", _landlordType);
+  // NSLog(@"POST: %@", _landlordType);
 }
 
 - (OMBPayoutMethod *) primaryDepositPayoutMethod

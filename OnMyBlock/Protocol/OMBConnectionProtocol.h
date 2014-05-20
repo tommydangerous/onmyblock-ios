@@ -12,7 +12,8 @@
 
 @optional
 - (void) JSONDictionary: (NSDictionary *) dictionary;
-- (void) JSONDictionary: (NSDictionary *) dictionary forResourceName:(NSString *)resource;
+- (void) JSONDictionary: (NSDictionary *) dictionary
+forResourceName: (NSString *) resource;
 - (void) numberOfPages: (NSUInteger) pages;
 
 @end

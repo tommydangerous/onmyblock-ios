@@ -24,6 +24,13 @@
     [self readFromDictionary: [dictionary objectForKey: @"object"]];
 }
 
+- (void) JSONDictionary: (NSDictionary *) dictionary
+forResourceName: (NSString *) resourceName
+{
+  if ([resourceName isEqualToString: [self resourceName]])
+    [self readFromDictionary: dictionary];
+}
+
 #pragma mark - Methods
 
 #pragma mark - Class Methods
