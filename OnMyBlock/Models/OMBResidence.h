@@ -54,8 +54,9 @@ extern NSString *const OMBResidencePropertyTypeSublet;
 @property (nonatomic) NSTimeInterval moveOutDate;
 @property (nonatomic, strong) NSString *phone;
 @property (nonatomic, strong) NSString *propertyType;
-// @property (nonatomic) float rent;
 @property (nonatomic) BOOL rented;
+// If rentItNow is YES, the "Apply Now" button should appear instead of Book It
+@property (nonatomic) BOOL rentItNow;
 @property (nonatomic) CGFloat rentItNowPrice;
 @property (nonatomic) int squareFeet;
 @property (nonatomic, strong) NSString *state;
