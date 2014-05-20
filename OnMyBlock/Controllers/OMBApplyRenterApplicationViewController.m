@@ -114,17 +114,24 @@
   
   [alertBlur setTitle: @"Application Submitted!"];
   [alertBlur setMessage: @"The landlord will review your application and make a decision. "
-     @"If you have applied with co-applicants make sure they have "
-     @"completed applications as well. Feel free to message the "
-     @"landlord for more information about the property "
-     @"or to schedule a viewing."];
+    @"If you have applied with co-applicants make sure they have "
+    @"completed applications as well. Feel free to message the "
+    @"landlord for more information about the property "
+    @"or to schedule a viewing."];
   [alertBlur setConfirmButtonTitle: @"Okay"];
   [alertBlur addTargetForConfirmButton: self
-     action: @selector(showRenterHomebase)];
+    action: @selector(showRenterHomebase)];
+  [alertBlur addTargetForCancelButton: self
+    action: @selector(submitCanceled)];
   [alertBlur showInView: self.view withDetails: NO];
-  [alertBlur showOnlyConfirmButton];
+  [alertBlur showBothButtons];
   [alertBlur hideQuestionButton];
   
+}
+
+- (void)submitCanceled
+{
+  [alertBlur close];
 }
 
 @end

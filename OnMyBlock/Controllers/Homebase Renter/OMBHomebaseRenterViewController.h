@@ -8,6 +8,7 @@
 
 #import "OMBViewController.h"
 
+#import "OMBConnectionProtocol.h"
 #import "PayPalMobile.h"
 
 @class DRNRealTimeBlurView;
@@ -20,7 +21,7 @@
 @class OMBScrollView;
 
 @interface OMBHomebaseRenterViewController : OMBViewController
-<UIScrollViewDelegate, UITableViewDataSource,
+<OMBConnectionProtocol, UIScrollViewDelegate, UITableViewDataSource,
   UITableViewDelegate>
 {
   UIButton *activityButton;

@@ -135,7 +135,7 @@
   _renterHomebaseButton = [[UIButton alloc] init];
   [_renterHomebaseButton addTarget: self action: @selector(showHomebaseRenter)
     forControlEvents: UIControlEventTouchUpInside];
-  [_renterHomebaseButton setTitle: @"Offers" forState: UIControlStateNormal];
+  [_renterHomebaseButton setTitle: @"Homebase" forState: UIControlStateNormal];
   UIImageView *homebaseImageView = [[UIImageView alloc] init];
   homebaseImageView.frame = discoverImageView.frame;
   UIImage *homebaseImage = [UIImage imageNamed: @"homebase_icon.png"];

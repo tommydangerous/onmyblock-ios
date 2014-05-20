@@ -44,7 +44,7 @@
 #import "OMBResidence.h"
 #import "OMBResidenceStore.h"
 #import "OMBPreviousRental.h"
-#import "OMBSentApplication.h";
+#import "OMBSentApplication.h"
 #import "OMBTemporaryResidence.h"
 #import "OMBUserCurrentUserInfoConnection.h"
 #import "OMBUserFacebookAuthenticationConnection.h"

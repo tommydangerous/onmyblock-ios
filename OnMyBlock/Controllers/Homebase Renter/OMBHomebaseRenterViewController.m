@@ -30,6 +30,7 @@
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutTransaction.h"
 #import "OMBPayPalVerifyMobilePaymentConnection.h"
+#import "OMBRenterApplication.h"
 #import "OMBRenterProfileViewController.h"
 #import "OMBResidence.h"
 #import "OMBScrollView.h"
@@ -292,8 +293,8 @@ float kHomebaseRenterImagePercentage = 0.3f;
   [activityTableViewHeader addSubview: welcomeLabel];
 
   UILabel *descriptionLabel = [UILabel new];
-  NSString *descriptionString = @"Review all your offers and\n"
-    @"payments here.";
+  NSString *descriptionString = @"Review all your applications \n"
+    @"and bookings here.";
   descriptionLabel.attributedText = [descriptionString attributedStringWithFont:
                            [UIFont fontWithName: @"HelveticaNeue-Light" size: 15] lineHeight: 22.0f];
   descriptionLabel.frame = CGRectMake(0.0f,
@@ -438,6 +439,14 @@ float kHomebaseRenterImagePercentage = 0.3f;
       [_activityTableView reloadData];
     }
   ];
+  
+  // Fetch sent applications
+  [[OMBUser currentUser].renterApplication
+   fetchSentApplicationsWithDelegate: self
+      completion:^(NSError *error) {
+        [_activityTableView reloadData];
+    }
+   ];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -446,6 +455,14 @@ float kHomebaseRenterImagePercentage = 0.3f;
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol
+
+- (void) JSONDictionary: (NSDictionary *) dictionary
+        forResourceName: (NSString *) resource
+{
+  [[OMBUser currentUser].renterApplication readFromSentApplicationDictionary:dictionary];
+}
 
 #pragma mark - Protocol UIScrollViewDelegate
 
@@ -578,7 +595,8 @@ float kHomebaseRenterImagePercentage = 0.3f;
   if (tableView == _activityTableView) {
     // Top Priority
     // Move In
-    return 2;
+    // Sent Applications
+    return 3;
     // return 2;
   }
   // Payments
@@ -698,6 +716,27 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         return cell1;
       }
     }
+    // Top Priority
+    if (indexPath.section == 2) {
+      static NSString *PaymentNotificationCellIdentifier =
+      @"PaymentNotificationCellIdentifier";
+      OMBHomebaseRenterPaymentNotificationCell *cell1 =
+      [tableView dequeueReusableCellWithIdentifier:
+       PaymentNotificationCellIdentifier];
+      if (!cell1)
+        cell1 = [[OMBHomebaseRenterPaymentNotificationCell alloc] initWithStyle:
+                 UITableViewCellStyleDefault reuseIdentifier:
+                 PaymentNotificationCellIdentifier];
+      [cell1 loadData];
+      if (arc4random_uniform(100) % 2) {
+        [cell1 setupForRoommate];
+      }
+      else {
+        [cell1 setupForSelf];
+      }
+      cell1.clipsToBounds = YES;
+      return cell1;
+    }
     // Recent Activity
     else if (indexPath.section == 99) {
       static NSString *NotificationCellIdentifier =
@@ -760,6 +799,10 @@ numberOfRowsInSection: (NSInteger) section
     else if (section == 1) {
       // First row is for when there are no moved in
       return 1 + [[OMBUser currentUser].movedIn count];
+    }
+    // Sent Applications
+    else if (section == 2){
+      return 1;
     }
     // Recent Activity
     else if (section == 99) {
@@ -859,6 +902,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         return [OMBHomebaseLandlordOfferCell heightForCell];
       }
     }
+    // Sent Applications
+    else if (indexPath.section == 2){
+      return [OMBHomebaseRenterPaymentNotificationCell heightForCell];
+    }
     // Recent Activity
     else if (indexPath.section == 99) {
       return [OMBHomebaseRenterNotificationCell heightForCell];
@@ -900,6 +947,10 @@ viewForHeaderInSection: (NSInteger) section
     else if (section == 1) {
       // titleString = @"Confirmed Places";
       titleString = @"Ready to Move In";
+    }
+    // Sent Applications
+    else if (section == 2){
+      titleString = @"Sent Applications";
     }
   }
   // Payments

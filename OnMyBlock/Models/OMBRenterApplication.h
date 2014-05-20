@@ -59,6 +59,7 @@ sortedWithKey: (NSString *) key ascending: (BOOL)  ascending;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) readFromDictionary: (NSDictionary *) dictionary
 forModelName: (NSString *) modelName;
+- (void) readFromSentApplicationDictionary: (NSDictionary *) dictionary;
 - (void) removeAllObjects;
 - (void) removeCosigner: (OMBCosigner *) object;
 - (void) removeEmployment: (OMBEmployment *) object;
