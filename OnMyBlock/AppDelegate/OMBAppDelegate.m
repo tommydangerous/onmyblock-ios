@@ -94,8 +94,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [self openSession];
 
   // Fake login
-  #warning Remove fake login
-  [OMBUser fakeLogin];
+  // #warning Remove fake login
+  // [OMBUser fakeLogin];
 
   // Check to see if the user has a saved api key in the user defaults
   [[OMBUser currentUser] checkForUserDefaultsAPIKey];
@@ -142,11 +142,6 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   NSDictionary *notificationPayload =
     launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
   [self handlePushNotification: notificationPayload];
-
-  [[OMBUser currentUser].renterApplication fetchSentApplicationsWithDelegate:
-    [OMBUser currentUser].renterApplication completion: ^(NSError *error) {
-      NSLog(@"DONE");
-    }];
 
   return YES;
 }

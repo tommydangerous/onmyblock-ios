@@ -65,6 +65,8 @@ forModelName: (NSString *) modelName;
 - (void) removeModel: (OMBObject *) object;
 - (void) removeRoommate: (OMBRoommate *) roommate;
 - (NSArray *) roommatesSort;
+- (NSArray *) sentApplicationsSortedByKey: (NSString *) key
+ascending: (BOOL) ascending;
 - (void) updateWithDictionary: (NSDictionary *) dictionary
 completion: (void (^) (NSError *error)) block;
 

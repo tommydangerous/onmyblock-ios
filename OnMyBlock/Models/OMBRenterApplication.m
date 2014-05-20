@@ -120,7 +120,7 @@ forResourceName: (NSString *) resourceName
 
 - (void) addSentApplication: (OMBSentApplication *) object
 {
-  // Add to the sentApplications dictionary
+  [sentApplications setObject: object forKey: @(object.uid)];
 }
 
 - (NSArray *) cosignersSortedByFirstName
@@ -408,6 +408,14 @@ forModelName: (NSString *) modelName
 - (NSArray *) roommatesSort
 {
   return [roommates allValues];
+}
+
+- (NSArray *) sentApplicationsSortedByKey: (NSString *) key
+ascending: (BOOL) ascending
+{
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey: key
+    ascending: ascending];
+  return [[sentApplications allValues] sortedArrayUsingDescriptors: @[sort]];
 }
 
 - (void) updateWithDictionary: (NSDictionary *) dictionary

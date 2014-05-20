@@ -39,6 +39,37 @@
   //   residence_id: 666,
   //   sent: 1
   // }
+  NSDateFormatter *dateFormatter = [NSDateFormatter new];
+  dateFormatter.dateFormat = @"yyyy-MM-d HH:mm:ss ZZZ";
+
+  // Created at
+  id createdAt = [dictionary objectForKey: @"created_at"];
+  if (createdAt != [NSNull null])
+    self.createdAt = [[dateFormatter dateFromString:
+      createdAt] timeIntervalSince1970];
+
+  // Move in date
+  id moveInDate = [dictionary objectForKey: @"move_in_date"];
+  if (moveInDate != [NSNull null])
+    self.moveInDate = [[dateFormatter dateFromString:
+      moveInDate] timeIntervalSince1970];
+
+  // Move out date
+  id moveOutDate = [dictionary objectForKey: @"move_out_date"];
+  if (moveOutDate != [NSNull null])
+    self.moveOutDate = [[dateFormatter dateFromString:
+      moveOutDate] timeIntervalSince1970];
+
+  // Landlord User ID
+
+  // Renter Application ID
+
+  // Residence ID
+
+  // UID
+  id uid = [dictionary objectForKey: @"id"];
+  if (uid != [NSNull null])
+    self.uid = [uid intValue];
 }
 
 - (NSString *) modelName

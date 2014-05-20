@@ -84,7 +84,7 @@
   if (uid != [NSNull null])
     self.uid = [uid intValue];
 
-  NSLog(@"OMBRoommate:\n%@", dictionary);
+  // NSLog(@"OMBRoommate:\n%@", dictionary);
 }
 
 @end
