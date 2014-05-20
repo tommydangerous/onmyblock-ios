@@ -28,6 +28,7 @@
 #import "OMBNavigationController.h"
 #import "OMBOtherUserProfileViewController.h"
 #import "OMBOffer.h"
+#import "OMBRenterApplication.h"
 #import "OMBResidence.h"
 #import "OMBResidenceBookItViewController.h"
 #import "OMBResidenceCell.h"
@@ -481,9 +482,6 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [residence fetchDetailsWithCompletion: ^(NSError *error) {
     [self refreshResidenceData];
   }];
-  
-  // Critea to show "Book It" or "Apply Now"
-  [self criteriaApplyNow];
   
   // Download images
   [residence downloadImagesWithCompletion: ^(NSError *error) {
@@ -1224,20 +1222,24 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
-
 - (void) criteriaApplyNow
 {
   if([[OMBUser currentUser] loggedIn]){
-    BOOL showApplyNow;
-    
-    showApplyNow = [residence.propertyType isEqualToString:OMBResidencePropertyTypeSublet] &&
-      residence.rentItNowPrice < [OMBOffer priceThreshold] &&
-      residence.rentItNow &&
-      [[OMBUser currentUser] hasSentApplicationsInResidence:residence];
-    
-    _applyNowButton.hidden = !showApplyNow;
-    _bookItButton.hidden = showApplyNow;
-  }
+    [[OMBUser currentUser].renterApplication fetchSentApplicationsWithDelegate: self
+      completion: ^(NSError *error) {
+        
+        BOOL showApplyNow;
+        
+        showApplyNow = [residence.propertyType isEqualToString:OMBResidencePropertyTypeSublet] &&
+        residence.rentItNowPrice < [OMBOffer priceThreshold] &&
+        residence.rentItNow &&
+        [[OMBUser currentUser] hasSentApplicationsInResidence:residence];
+        
+        _applyNowButton.hidden = !showApplyNow;
+        _bookItButton.hidden = showApplyNow;
+
+      }];
+    }
 }
 
 - (int) currentPageOfImages
@@ -1421,6 +1423,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [residence.user downloadImageFromImageURLWithCompletion: nil];
   }
   
+  // Critea to show "Book It" or "Apply Now"
   [self criteriaApplyNow];
   
   // Inactive

@@ -719,7 +719,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
   
   for(OMBSentApplication *sentAppl in
-      [_renterApplication sentApplicationsSortedByKey:@"residenceID" ascending:YES]){
+      [_renterApplication sentApplicationsSortedByKey:@"createdAt" ascending:NO]){
     
     if(sentAppl.uid == residence.uid && sentAppl.sent)
       return YES;
