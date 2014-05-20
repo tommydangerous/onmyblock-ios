@@ -12,6 +12,7 @@
 
 #import "OMBAnnotation.h"
 #import "OMBAnnotationView.h"
+#import "OMBApplyRenterApplicationViewController.h"
 #import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBCloseButtonView.h"
@@ -1463,7 +1464,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showApplyNow
 {
-
+  [self.navigationController pushViewController:
+    [[OMBApplyRenterApplicationViewController alloc] init] animated:YES];
 }
 
 - (void) showBookItNow
