@@ -1224,22 +1224,20 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) criteriaApplyNow
 {
-  if([[OMBUser currentUser] loggedIn]){
-    [[OMBUser currentUser].renterApplication fetchSentApplicationsWithDelegate: self
-      completion: ^(NSError *error) {
-        
-        BOOL showApplyNow;
-        
-        showApplyNow = [residence.propertyType isEqualToString:OMBResidencePropertyTypeSublet] &&
-        residence.rentItNowPrice < [OMBOffer priceThreshold] &&
-        residence.rentItNow &&
-        [[OMBUser currentUser] hasSentApplicationsInResidence:residence];
-        
-        _applyNowButton.hidden = !showApplyNow;
-        _bookItButton.hidden = showApplyNow;
-
-      }];
-    }
+  if([[OMBUser currentUser] loggedIn] && [[OMBUser currentUser]
+      hasSentApplicationsInResidence:residence]){
+    
+    BOOL showApplyNow;
+    
+    showApplyNow =
+      [residence.propertyType isEqualToString:OMBResidencePropertyTypeSublet] ||
+      residence.rentItNowPrice < [OMBOffer priceThreshold] ||
+      residence.rentItNow;
+    
+    _applyNowButton.hidden = !showApplyNow;
+    _bookItButton.hidden = showApplyNow;
+      
+  };
 }
 
 - (int) currentPageOfImages
