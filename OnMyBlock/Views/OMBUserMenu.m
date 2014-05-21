@@ -498,6 +498,15 @@ withNumber: (NSNumber *) number
       if ([(NSString *) landlordType length]) {
         title = (NSString *) landlordType;
       }
+      
+      if([(NSString *)landlordType isEqualToString:@"subletter"])
+        _sellerButtons = [NSMutableArray arrayWithArray:
+          @[_createListingButton,_manageListingsButton]];
+      else
+        _sellerButtons = [NSMutableArray arrayWithArray:
+          @[_createListingButton,_sellerHomebaseButton,_manageListingsButton]];
+      
+      [self setupForSeller];
     }
     [_headerButton setTitle: [title capitalizedString]
       forState: UIControlStateNormal];
