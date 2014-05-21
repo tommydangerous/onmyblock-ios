@@ -34,6 +34,7 @@
 #import "OMBRenterProfileViewController.h"
 #import "OMBResidence.h"
 #import "OMBScrollView.h"
+#import "OMBSentApplicationCell.h"
 #import "OMBViewController+PayPalPayment.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
@@ -461,7 +462,8 @@ float kHomebaseRenterImagePercentage = 0.3f;
 - (void) JSONDictionary: (NSDictionary *) dictionary
         forResourceName: (NSString *) resource
 {
-  [[OMBUser currentUser].renterApplication readFromSentApplicationDictionary:dictionary];
+  [[OMBUser currentUser].renterApplication
+     readFromSentApplicationDictionary:dictionary];
 }
 
 #pragma mark - Protocol UIScrollViewDelegate
@@ -716,26 +718,42 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         return cell1;
       }
     }
-    // Top Priority
+    // Sent Applications
     if (indexPath.section == 2) {
-      static NSString *PaymentNotificationCellIdentifier =
-      @"PaymentNotificationCellIdentifier";
-      OMBHomebaseRenterPaymentNotificationCell *cell1 =
-      [tableView dequeueReusableCellWithIdentifier:
-       PaymentNotificationCellIdentifier];
-      if (!cell1)
-        cell1 = [[OMBHomebaseRenterPaymentNotificationCell alloc] initWithStyle:
-                 UITableViewCellStyleDefault reuseIdentifier:
-                 PaymentNotificationCellIdentifier];
-      [cell1 loadData];
-      if (arc4random_uniform(100) % 2) {
-        [cell1 setupForRoommate];
+      // Blank space
+      if (indexPath.row == 0) {
+        static NSString *EmptySentAppsCellIdentifier =
+          @"EmptySentAppsCellIdentifier";
+        OMBEmptyImageTwoLabelCell *cell =
+          [tableView dequeueReusableCellWithIdentifier:
+            EmptySentAppsCellIdentifier];
+        if (!cell)
+          cell = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier:
+              EmptySentAppsCellIdentifier];
+        [cell setTopLabelText: @"Sent Applications will"];
+        [cell setMiddleLabelText: @"appear here after you have"];
+        [cell setBottomLabelText: @"paid and signed the lease."];
+        [cell setObjectImageViewImage: [UIImage imageNamed:
+          @"moneybag_icon.png"]];
+        cell.clipsToBounds = YES;
+        return cell;
       }
-      else {
-        [cell1 setupForSelf];
+      else{
+        static NSString *SentApplicationCellIdentifier =
+        @"SentApplicationCellIdentifier";
+        OMBSentApplicationCell *cell =
+          [tableView dequeueReusableCellWithIdentifier:
+            SentApplicationCellIdentifier];
+        if (!cell)
+          cell = [[OMBSentApplicationCell alloc] initWithStyle:
+              UITableViewCellStyleDefault reuseIdentifier: SentApplicationCellIdentifier];
+        
+        //[cell loadInfo:[[self sentApplications] objectAtIndex:[indexPath.row - 1]];
+        [cell loadFakeInfo]; //remove this
+        cell.clipsToBounds = YES;
+        return cell;
       }
-      cell1.clipsToBounds = YES;
-      return cell1;
     }
     // Recent Activity
     else if (indexPath.section == 99) {
@@ -802,7 +820,8 @@ numberOfRowsInSection: (NSInteger) section
     }
     // Sent Applications
     else if (section == 2){
-      return 1;
+      //return 1 + [[self sentApplications].count];
+      return 2; // remove this
     }
     // Recent Activity
     else if (section == 99) {
@@ -844,6 +863,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
           [[OMBOfferInquiryViewController alloc]
             initWithOffer: [[self movedIn] objectAtIndex:
               indexPath.row - 1]] animated: YES];
+      }
+    }
+    // Sent Applications
+    else if (indexPath.section == 2) {
+      if (indexPath.row > 0) {
+        //
       }
     }
   }
@@ -904,7 +929,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Sent Applications
     else if (indexPath.section == 2){
-      return [OMBHomebaseRenterPaymentNotificationCell heightForCell];
+      // Blank space
+      if (indexPath.row == 0) {
+        if ([self sentApplications].count == 0) {
+          return [OMBEmptyImageTwoLabelCell heightForCell];
+        }
+      }
+      else {
+        return [OMBSentApplicationCell heightForCellWithNotes];
+      }
     }
     // Recent Activity
     else if (indexPath.section == 99) {
@@ -1235,6 +1268,12 @@ viewForHeaderInSection: (NSInteger) section
     selectedSegmentIndex = button.tag;
     [self changeTableView];
   }
+}
+
+- (NSArray *)sentApplications
+{
+   return [[OMBUser currentUser].renterApplication
+     sentApplicationsSortedByKey:@"createdAt" ascending:NO];
 }
 
 - (void) showAddRemoveRoommates
