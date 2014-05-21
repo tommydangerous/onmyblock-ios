@@ -698,9 +698,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell.textLabel.text = @"Price Breakdown";
         }
         else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
+          cell.detailTextLabel.font = [UIFont mediumTextFontBold];
           cell.detailTextLabel.text = [NSString numberToCurrencyString:
             offer.amount];
-          cell.textLabel.text = @"Offer";
+          cell.textLabel.font = [UIFont mediumTextFontBold];
+          cell.textLabel.text = @"Rent";
         }
         else if (indexPath.row ==
           OMBOfferInquirySectionOfferRowSecurityDeposit) {
