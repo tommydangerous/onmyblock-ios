@@ -53,7 +53,7 @@ UITableViewDelegate>
   BOOL cameFromSettingUpPayoutMethods;
   BOOL charging;
   UIButton *contactButton;
-  NSTimer *countdownTimer;
+  //NSTimer *countdownTimer;
   UILabel *countDownTimerLabel;
   NSDateFormatter *dateFormatter1;
   BOOL didCancelVenmoAppFromWebView;
