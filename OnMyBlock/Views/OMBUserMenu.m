@@ -499,7 +499,7 @@ withNumber: (NSNumber *) number
         title = (NSString *) landlordType;
       }
       
-      if([(NSString *)landlordType isEqualToString:@"subletter"])
+      if([(NSString *)landlordType isEqualToString:@"landlord"])
         _sellerButtons = [NSMutableArray arrayWithArray:
           @[_createListingButton,_manageListingsButton]];
       else
