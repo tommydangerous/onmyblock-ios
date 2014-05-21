@@ -556,45 +556,60 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // Title
   if (indexPath.row == 0) {
-    [self.navigationController pushViewController:
-      [[OMBFinishListingTitleViewController alloc] initWithResidence:
-        residence] animated: YES];
+    OMBFinishListingTitleViewController *vc =
+      [[OMBFinishListingTitleViewController alloc]
+        initWithResidence: residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
   }
   // Description
   else if (indexPath.row == 1) {
-    [self.navigationController pushViewController:
-      [[OMBFinishListingDescriptionViewController alloc] initWithResidence:
-        residence] animated: YES];
+    OMBFinishListingDescriptionViewController *vc =
+      [[OMBFinishListingDescriptionViewController alloc]
+        initWithResidence:residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
   }
   // Rent / Auction Details
   else if (indexPath.row == 2) {
-    [self.navigationController pushViewController:
+    OMBFinishListingRentAuctionDetailsViewController *vc =
       [[OMBFinishListingRentAuctionDetailsViewController alloc]
-        initWithResidence: residence] animated: YES];
+        initWithResidence:residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
   }
   // Address
   else if (indexPath.row == 3) {
-    [self.navigationController pushViewController:
-      [[OMBFinishListingAddressViewController alloc] initWithResidence:
-        residence] animated: YES];
+    OMBFinishListingAddressViewController *vc =
+      [[OMBFinishListingAddressViewController alloc]
+        initWithResidence: residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
+    
   }
   // Lease Details
   else if (indexPath.row == 4) {
-    [self.navigationController pushViewController:
-     [[OMBFinishListingLeaseDetailsViewController alloc] initWithResidence:
-      residence] animated: YES];
+    OMBFinishListingLeaseDetailsViewController *vc =
+      [[OMBFinishListingLeaseDetailsViewController alloc]
+        initWithResidence:residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
   }
   // Listing Details
   else if (indexPath.row == 5) {
-    [self.navigationController pushViewController:
-     [[OMBFinishListingOtherDetailsViewController alloc] initWithResidence:
-      residence] animated: YES];
+    OMBFinishListingOtherDetailsViewController *vc =
+      [[OMBFinishListingOtherDetailsViewController alloc]
+        initWithResidence:residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
   }
   // Pets & Amenities
   else if (indexPath.row == 6) {
-    [self.navigationController pushViewController:
-     [[OMBFinishListingAmenitiesViewController alloc] initWithResidence:
-      residence] animated: YES];
+    OMBFinishListingAmenitiesViewController *vc =
+      [[OMBFinishListingAmenitiesViewController alloc]
+        initWithResidence:residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
   }
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
@@ -695,6 +710,67 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (!residence.bedrooms >= 0)
     string = @"Please set the number of bedrooms.";
   return string;
+}
+
+- (void) nextIncompleteSection
+{
+  NSLog(@"next");
+  
+  // Title
+  if (![residence.title length]){
+    OMBFinishListingTitleViewController *vc =
+      [[OMBFinishListingTitleViewController alloc]
+        initWithResidence: residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
+    return;
+  }
+  // Description
+  if (![residence.description length]){
+    OMBFinishListingDescriptionViewController *vc =
+      [[OMBFinishListingDescriptionViewController alloc]
+        initWithResidence:residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
+    return;
+  }
+  // Rent / Auction Details
+  if (!residence.minRent){
+    OMBFinishListingRentAuctionDetailsViewController *vc =
+      [[OMBFinishListingRentAuctionDetailsViewController alloc]
+        initWithResidence:residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
+    return;
+  }
+  // Address
+  if (![residence.address length]){
+    OMBFinishListingAddressViewController *vc =
+      [[OMBFinishListingAddressViewController alloc]
+        initWithResidence: residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
+    return;
+  }
+  // Lease Details
+  if (!residence.moveInDate){
+    OMBFinishListingLeaseDetailsViewController *vc =
+      [[OMBFinishListingLeaseDetailsViewController alloc]
+        initWithResidence:residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
+    return;
+  }
+  // Listing Details
+  if (!residence.bedrooms){
+    OMBFinishListingOtherDetailsViewController *vc =
+      [[OMBFinishListingOtherDetailsViewController alloc]
+        initWithResidence:residence];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated: YES];
+    return;
+  }
+  
 }
 
 - (void) preview

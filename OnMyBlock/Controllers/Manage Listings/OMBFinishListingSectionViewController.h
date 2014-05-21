@@ -9,12 +9,16 @@
 #import "OMBTableViewController.h"
 
 @class OMBResidence;
+@class OMBFinishListingViewController;
 
 @interface OMBFinishListingSectionViewController : OMBTableViewController
 {
   BOOL isEditing;
+  BOOL nextSection;
   OMBResidence *residence;
 }
+
+@property (nonatomic, weak) OMBFinishListingViewController *delegate;
 
 #pragma mark - Initializer
 

@@ -45,5 +45,5 @@
 #pragma mark - Initializer
 
 - (id) initWithResidence: (OMBResidence *) object;
-
+- (void) nextIncompleteSection;
 @end

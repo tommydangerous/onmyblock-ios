@@ -55,6 +55,8 @@
       attributes: @[@"title"]];
   [conn start];
 
+  nextSection = YES;
+  
   [self.navigationController popViewControllerAnimated: YES];
 }
 
