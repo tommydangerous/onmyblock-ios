@@ -41,7 +41,7 @@
 #import "UIImage+NegativeImage.h"
 
 // Make this 0.4f when having roommates
-float kHomebaseRenterImagePercentage = 0.3f;
+float kHomebaseRenterImagePercentage = 0.15f;
 // float kHomebaseRenterImagePercentage = 0.2f;
 
 @implementation OMBHomebaseRenterViewController
