@@ -159,11 +159,11 @@
   slide3.imageView.image =
     [UIImage imageNamed: @"book_it_icon.png"];
   // slide3.secondDetailLabel.text = @"When your offer is accepted...";
-  slide3.titleLabel.text = @"Book";
+  slide3.titleLabel.text = @"Apply";
   // [slide3 setDetailLabelText: @"Bid on your favorite rentals\n"
   //   @"through a live auction."];
-  [slide3 setDetailLabelText: @"Submit offers on your favorite places.\n"
-    @"Once you’re approved..."];
+  [slide3 setDetailLabelText: @"Apply to your favorite places \n"
+    @"and get approval from landlords."];
   [_scroll addSubview: slide3];
 
   OMBIntroStillImageSlide *slide4 =

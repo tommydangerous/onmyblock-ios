@@ -20,7 +20,7 @@
 #import "OMBUser.h"
 #import "OMBUserStore.h"
 
-NSInteger kMaxHoursForLandlordToAccept = 24 * 4;
+NSInteger kMaxHoursForLandlordToAccept = 24 * 2;
 NSInteger kMaxHoursForStudentToConfirm = 24 * 7;
 CGFloat kOfferDownPaymentPercentage    = 0.1;
 
