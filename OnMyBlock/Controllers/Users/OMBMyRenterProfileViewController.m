@@ -18,6 +18,8 @@
 #import "OMBGradientView.h"
 #import "OMBLabelTextFieldCell.h"
 #import "OMBLegalViewController.h"
+#import "OMBManageListingsCell.h"
+#import "OMBManageListingsConnection.h"
 #import "OMBOtherUserProfileViewController.h"
 #import "OMBPickerViewCell.h"
 #import "OMBRenterApplication.h"
@@ -269,7 +271,17 @@
     @"phone":     user.phone ? user.phone : @"",
     @"school":    user.school ? user.school : @""
   }];
-
+  
+  // If user is a subletter
+  if ([user.landlordType isEqualToString: @"subletter"]) {
+    OMBManageListingsConnection *conn =
+    [[OMBManageListingsConnection alloc] init];
+    conn.completionBlock = ^(NSError *error) {
+      [self.table reloadData];
+    };
+    [conn start];
+  }
+  
   [self updateData];
 }
 
@@ -384,8 +396,9 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
 {
   // User info
   // Renter info
+  // Listings
   // Spacing
-  return 3;
+  return 4;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -634,6 +647,58 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       return cell;
     }
   }
+  // Listings
+  else if (indexPath.section == OMBMyRenterProfileSectionListings) {
+    // Listings header
+    if (indexPath.row ==
+        OMBMyRenterProfileSectionListingsRowInfoHeader) {
+      static NSString *ListingsHeaderCellID = @"ListingsHeaderCellID";
+      UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        ListingsHeaderCellID];
+      if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier: ListingsHeaderCellID];
+        cell.backgroundColor = [UIColor grayUltraLight];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.separatorInset = UIEdgeInsetsMake(0.0f,
+          tableView.frame.size.width, 0.0f, 0.0f);
+        // Priority Rental Info
+        UILabel *headLabel = [UILabel new];
+        headLabel.font = [UIFont mediumTextFont];
+        headLabel.frame = CGRectMake(0.0f, padding,
+          tableView.frame.size.width, OMBStandardHeight);
+        headLabel.text = @"My Listings";
+        headLabel.textAlignment = NSTextAlignmentCenter;
+        headLabel.textColor = [UIColor grayMedium];
+        [cell.contentView addSubview: headLabel];
+        // Border top
+        UIView *bor = [cell.contentView viewWithTag: 9999];
+        if (!bor) {
+          bor = [UIView new];
+          bor.backgroundColor = tableView.separatorColor;
+          bor.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 0.5f);
+          bor.tag = 9999;
+        }
+        [cell.contentView addSubview: bor];
+      }
+      return cell;
+    }
+    // Listings
+    else{
+      static NSString *ListingsID = @"ListingsID";
+      OMBManageListingsCell *cell =
+        [tableView dequeueReusableCellWithIdentifier: ListingsID];
+      if (!cell)
+        cell = [[OMBManageListingsCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier: ListingsID];
+      [cell loadResidenceData: [[self listings] objectAtIndex: 
+        indexPath.row - 1]];
+      cell.statusLabel.hidden = YES;
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      return cell;
+    }
+  }
+  
   emptyCell.clipsToBounds = YES;
   return emptyCell;
 }
@@ -654,6 +719,14 @@ numberOfRowsInSection: (NSInteger) section
     // Work history
     // Legal questions
     return 6;
+  }
+  // Listings
+  else if (section == OMBMyRenterProfileSectionListings) {
+    // If the user has listings and is a subletter
+    if ([[self listings] count] && [user.landlordType isEqualToString: @"subletter"]) {
+      // Listings header, create listing, listings
+      return 1 + [[self listings] count];
+    }
   }
   // Spacing
   else if (section == OMBMyRenterProfileSectionSpacing) {
@@ -736,6 +809,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return 0.0f;
     // School
     else if (row == OMBMyRenterProfileSectionUserInfoRowSchool) {
+      if([user.landlordType isEqualToString:@"subletter"])
+        return [OMBLabelTextFieldCell heightForCellWithIconImageView];
+      
       if ([user isLandlord]) {
         return 0.0f;
       }
@@ -749,7 +825,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Renter info
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
-    if([user isLandlord])
+    if([user isLandlord] || [user.landlordType isEqualToString:@"subletter"])
       return 0.0;
 
     // Top spacing
@@ -757,6 +833,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return OMBStandardHeight;
     }
     return OMBStandardButtonHeight;
+  }
+  // Listing
+  else if (indexPath.section == OMBMyRenterProfileSectionListings) {
+    // My Listings
+    if (indexPath.row == OMBMyRenterProfileSectionListingsRowInfoHeader) {
+      return OMBPadding + OMBStandardHeight + OMBPadding;
+    }
+    // Listings
+    else {
+      return [OMBManageListingsCell heightForCell];
+    }
   }
   // Spacing
   else if (section == OMBMyRenterProfileSectionSpacing) {
@@ -894,6 +981,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   } failure: ^(NSError *error) {
     [self showAlertViewWithError: error];
   }];
+}
+
+- (NSArray *) listings
+{
+  return [user residencesSortedWithKey:@"createdAt" ascending:NO];
 }
 
 - (void) loadUser: (OMBUser *) object

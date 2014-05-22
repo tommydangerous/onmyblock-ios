@@ -17,6 +17,7 @@
 typedef NS_ENUM(NSInteger, OMBMyRenterProfileSection) {
   OMBMyRenterProfileSectionUserInfo,
   OMBMyRenterProfileSectionRenterInfo,
+  OMBMyRenterProfileSectionListings,
   OMBMyRenterProfileSectionSpacing
 };
 
@@ -39,6 +40,10 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRenterInfoRow) {
   OMBMyRenterProfileSectionRenterInfoRowRentalHistory,
   OMBMyRenterProfileSectionRenterInfoRowWorkHistory,
   OMBMyRenterProfileSectionRenterInfoRowLegalQuestions
+};
+// Listing
+typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionListingsRow) {
+  OMBMyRenterProfileSectionListingsRowInfoHeader
 };
 
 @interface OMBMyRenterProfileViewController : OMBTableViewController
