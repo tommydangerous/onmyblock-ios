@@ -8,6 +8,7 @@
 
 #import "OMBRenterInfoSectionCosignersViewController.h"
 
+#import "NSString+OnMyBlock.h"
 #import "OMBCosignerCell.h"
 #import "OMBNavigationController.h"
 #import "OMBRenterApplication.h"
@@ -48,10 +49,12 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-
+  
+  key = OMBUserDefaultsRenterApplicationCheckedCosigners;
+  
   [[self renterApplication] fetchCosignersForUserUID: [OMBUser currentUser].uid 
     delegate: self completion: ^(NSError *error) {
-      [self hideEmptyLabel: [[self cosigners] count]];
+      [self hideEmptyLabel: [[self objects] count]];
     }];
 
   [self reloadTable];
@@ -81,7 +84,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!cell)
     cell = [[OMBCosignerCell alloc] initWithStyle: UITableViewCellStyleDefault
       reuseIdentifier: CosignerID];
-  [cell loadData: [[self cosigners] objectAtIndex: row]];
+  [cell loadData: [[self objects] objectAtIndex: row]];
   // Last row
   if (row == [self tableView: tableView numberOfRowsInSection: section] - 1) {
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
@@ -96,7 +99,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  return [[self cosigners] count];
+  return [[self objects] count];
 }
 
 #pragma mark - Protocol UITableViewDelegate
@@ -119,14 +122,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         completion: nil];
 }
 
-- (NSArray *) cosigners
+- (NSArray *) objects
 {
   return [[self renterApplication] cosignersSortedByFirstName];
 }
 
 - (void) deleteModelObjectAtIndexPath: (NSIndexPath *) indexPath
 {
-  OMBCosigner *cosigner = [[self cosigners] objectAtIndex: indexPath.row];
+  OMBCosigner *cosigner = [[self objects] objectAtIndex: indexPath.row];
   [[self renterApplication] deleteCosignerConnection: cosigner delegate: nil
     completion: nil];
 
@@ -136,7 +139,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     withRowAnimation: UITableViewRowAnimationFade];
   [self.table endUpdates];
   
-  [self hideEmptyLabel: [[self cosigners] count]];
+  [self hideEmptyLabel: [[self objects] count]];
 }
 
 - (void) reloadTable

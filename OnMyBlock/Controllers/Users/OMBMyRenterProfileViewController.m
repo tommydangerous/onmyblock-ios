@@ -628,7 +628,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [UIImage imageNamed: iconImageName]
           size: cell.iconImageView.bounds.size];
       cell.label.text = string;
-      if ([[self renterapplicationUserDefaults] objectForKey: key])
+      if ([[[self renterapplicationUserDefaults] objectForKey: key] boolValue])
         [cell fillCheckmark];
       cell.clipsToBounds = YES;
       return cell;
@@ -711,13 +711,6 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       vc  = [[OMBLegalViewController alloc] initWithUser: user];
     }
     if (vc) {
-      NSMutableDictionary *dictionary =
-        [NSMutableDictionary dictionaryWithDictionary:
-          [self renterapplicationUserDefaults]];
-      [dictionary setObject: [NSNumber numberWithBool: YES] forKey: key];
-      [[NSUserDefaults standardUserDefaults] setObject: dictionary
-        forKey: OMBUserDefaultsRenterApplication];
-      [[NSUserDefaults standardUserDefaults] synchronize];
       [self.navigationController pushViewController: vc animated: YES];
     }
   }

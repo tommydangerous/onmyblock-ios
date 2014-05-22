@@ -10,6 +10,7 @@
 
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
+#import "NSString+OnMyBlock.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoAddViewController.h"
 #import "OMBObject.h"
@@ -110,6 +111,14 @@
   [self.view addSubview: deleteActionSheet];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+  [super viewWillDisappear:animated];
+  
+  BOOL haveObjects = [self objects].count > 0 ? YES : NO;
+  [self saveKeyUserDefaults: haveObjects];
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol UIActionSheetDelegate
@@ -201,6 +210,27 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 - (OMBRenterApplication *) renterApplication
 {
   return [OMBUser currentUser].renterApplication;
+}
+
+- (NSMutableDictionary *) renterapplicationUserDefaults
+{
+  NSMutableDictionary *dictionary =
+    [[NSUserDefaults standardUserDefaults] objectForKey:
+      OMBUserDefaultsRenterApplication];
+  if (!dictionary)
+    dictionary = [NSMutableDictionary dictionary];
+  return dictionary;
+}
+
+- (void) saveKeyUserDefaults: (BOOL)save
+{
+  NSMutableDictionary *dictionary =
+    [NSMutableDictionary dictionaryWithDictionary:
+      [self renterapplicationUserDefaults]];
+  [dictionary setObject: [NSNumber numberWithBool: save] forKey: key];
+  [[NSUserDefaults standardUserDefaults] setObject: dictionary
+    forKey: OMBUserDefaultsRenterApplication];
+  [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void) setEmptyLabelText: (NSString *) string

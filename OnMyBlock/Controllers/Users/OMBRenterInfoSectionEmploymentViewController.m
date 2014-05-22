@@ -8,6 +8,7 @@
 
 #import "OMBRenterInfoSectionEmploymentViewController.h"
 
+#import "NSString+OnMyBlock.h"
 #import "LIALinkedInApplication.h"
 #import "LIALinkedInHttpClient.h"
 #import "OMBEmployment.h"
@@ -72,6 +73,8 @@
 {
   [super viewWillAppear: animated];
 
+  key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
+  
   [self fetchObjects];
   
   [self reloadTable];

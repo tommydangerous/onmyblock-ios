@@ -20,6 +20,7 @@
   AMBlurView *bottomBlurView;
   UILabel *emptyLabel;
   OMBUser *user;
+  NSString *key;
 }
 
 #pragma mark - Initializer

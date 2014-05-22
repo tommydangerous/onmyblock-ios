@@ -8,6 +8,7 @@
 
 #import "OMBRenterInfoSectionRoommateViewController.h"
 
+#import "NSString+OnMyBlock.h"
 #import "OMBNavigationController.h"
 #import "OMBOtherUserProfileViewController.h"
 #import "OMBRenterApplication.h"
@@ -62,6 +63,7 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
+  key = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
 
   [self fetchObjects];
 

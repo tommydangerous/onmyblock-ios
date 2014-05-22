@@ -8,6 +8,7 @@
 
 #import "OMBRenterInfoSectionPreviousRentalViewController.h"
 
+#import "NSString+OnMyBlock.h"
 #import "OMBPreviousRental.h"
 #import "OMBPreviousRentalCell.h"
 #import "OMBNavigationController.h"
@@ -47,6 +48,8 @@
 {
   [super viewWillAppear: animated];
 
+  key = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
+  
   [self fetchObjects];
   
   [self reloadTable];
