@@ -1381,6 +1381,9 @@ completion: (void (^) (void)) block
   [createListingButton setTitle: @"" forState: UIControlStateNormal];
   // Hide the sign up button at the bottom
   signUpButtonBottom.hidden = YES;
+  
+  if([[OMBUser currentUser].landlordType isEqualToString: OMBUserTypeLandlord])
+    [self showMenuLandlordSide];
 }
 
 - (void) showAccount
@@ -1639,6 +1642,27 @@ completion: (void (^) (void)) block
   }
 
   menuIsVisible = YES;
+}
+
+- (void) showMenuLandlordSide
+{
+  CGFloat y       = _infiniteScroll.contentOffset.y;
+  NSInteger index = y / _infiniteScroll.frame.size.height;
+  NSInteger n     = index % 2;
+  
+  // If user landed on a renter menu
+  if (n == 0) {
+    CGPoint offset = _infiniteScroll.contentOffset;
+    offset.y += _infiniteScroll.frame.size.height;
+    [UIView animateWithDuration: OMBStandardDuration
+      animations: ^{
+        [self.infiniteScroll setContentOffset: offset];
+      }
+      completion: ^(BOOL finished) {
+        [self resetInfiniteScroll];
+      }
+    ];
+  }
 }
 
 - (void) showMyRenterApp
