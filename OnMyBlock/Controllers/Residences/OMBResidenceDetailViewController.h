@@ -43,7 +43,6 @@
 @property (nonatomic, strong) OMBResidenceImageSlideViewController
   *imageSlideViewController;
 
-@property (nonatomic, strong) UIButton *applyNowButton;
 @property (nonatomic, strong) UIButton *bookItButton;
 @property (nonatomic, strong) UIView *bottomButtonView;
 @property (nonatomic, strong) UIButton *contactMeButton;
