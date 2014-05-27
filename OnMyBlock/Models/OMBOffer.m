@@ -200,8 +200,6 @@ NSString *const OMBOfferNotificationVenmoAppSwitchCancelled =
 
   NSInteger moveInMonth  = [moveInComps month];
   NSInteger moveOutMonth = [moveOutComps month];
-  NSLog(@"%i", moveInMonth);
-  NSLog(@"%i", moveOutMonth);
 
   NSInteger yearDifference = [moveOutComps year] - [moveInComps year];
   moveOutMonth += (12 * yearDifference);
