@@ -715,6 +715,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) nextIncompleteSection
 {
   NSLog(@"next");
+  BOOL animated = NO;
   
   // Title
   if (![residence.title length]){
@@ -722,7 +723,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [[OMBFinishListingTitleViewController alloc]
         initWithResidence: residence];
     vc.delegate = self;
-    [self.navigationController pushViewController:vc animated: YES];
+    [self.navigationController pushViewController:vc animated: animated];
     return;
   }
   // Description
@@ -731,7 +732,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [[OMBFinishListingDescriptionViewController alloc]
         initWithResidence:residence];
     vc.delegate = self;
-    [self.navigationController pushViewController:vc animated: YES];
+    [self.navigationController pushViewController:vc animated: animated];
     return;
   }
   // Rent / Auction Details
@@ -740,7 +741,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [[OMBFinishListingRentAuctionDetailsViewController alloc]
         initWithResidence:residence];
     vc.delegate = self;
-    [self.navigationController pushViewController:vc animated: YES];
+    [self.navigationController pushViewController:vc animated: animated];
     return;
   }
   // Address
@@ -749,7 +750,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [[OMBFinishListingAddressViewController alloc]
         initWithResidence: residence];
     vc.delegate = self;
-    [self.navigationController pushViewController:vc animated: YES];
+    [self.navigationController pushViewController:vc animated: animated];
     return;
   }
   // Lease Details
@@ -758,7 +759,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [[OMBFinishListingLeaseDetailsViewController alloc]
         initWithResidence:residence];
     vc.delegate = self;
-    [self.navigationController pushViewController:vc animated: YES];
+    [self.navigationController pushViewController:vc animated: animated];
     return;
   }
   // Listing Details
@@ -767,7 +768,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [[OMBFinishListingOtherDetailsViewController alloc]
         initWithResidence:residence];
     vc.delegate = self;
-    [self.navigationController pushViewController:vc animated: YES];
+    [self.navigationController pushViewController:vc animated: animated];
     return;
   }
   
