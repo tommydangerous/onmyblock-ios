@@ -55,7 +55,14 @@
   [super viewWillAppear:animated];
   
   NSString *barButtonTitle =
-    [self hasIncompleteSections] ? @"Next": @"Save";
+    [self incompleteSections] > 0 ? @"Next": @"Save";
+  
+  if([self incompleteSections] == 1 &&
+     [self lastIncompleteSection] == tagSection){
+    barButtonTitle = @"Save";
+    NSLog(@"last and unique");
+  }
+  
   saveBarButtonItem.title = barButtonTitle;
 }
 
@@ -78,28 +85,53 @@
   [self.navigationController popViewControllerAnimated: YES];
 }
 
-- (BOOL)hasIncompleteSections
+- (int)incompleteSections
 {
-  BOOL has = NO;
+  int incompletes = 0;
   // Title
   if (![residence.title length])
-    has = YES;
+    incompletes += 1;
   // Description
   if (![residence.description length])
-    has = YES;
+    incompletes += 1;
   // Rent / Auction Details
   if (!residence.minRent)
-    has = YES;
+    incompletes += 1;
   // Address
   if (![residence.address length])
-    has = YES;
+    incompletes += 1;
   // Lease Details
   if (!residence.moveInDate)
-    has = YES;
+    incompletes += 1;
   // Listing Details
   if (!residence.bedrooms)
-    has = YES;
-  return has;
+    incompletes += 1;
+  
+  return incompletes;
+}
+
+- (OMBFinishListingSection)lastIncompleteSection
+{
+  if (![residence.title length])
+    return OMBFinishListingSectionTitle;
+  // Description
+  if (![residence.description length])
+    return OMBFinishListingSectionDescription;
+  // Rent / Auction Details
+  if (!residence.minRent)
+    return OMBFinishListingSectionRentDetails;
+  // Address
+  if (![residence.address length])
+    return OMBFinishListingSectionAddress;
+  // Lease Details
+  if (!residence.moveInDate)
+    return OMBFinishListingSectionLeaseDetails;
+  // Listing Details
+  if (!residence.bedrooms)
+    return OMBFinishListingSectionListingDetails;
+  
+  return OMBFinishListingSectionNone;
+  
 }
 
 @end

@@ -11,11 +11,23 @@
 @class OMBResidence;
 @class OMBFinishListingViewController;
 
+typedef NS_ENUM(NSInteger, OMBFinishListingSection){
+  OMBFinishListingSectionTitle,
+  OMBFinishListingSectionDescription,
+  OMBFinishListingSectionRentDetails,
+  OMBFinishListingSectionAddress,
+  OMBFinishListingSectionLeaseDetails,
+  OMBFinishListingSectionListingDetails,
+  //OMBFinishListingSectionAmenities,
+  OMBFinishListingSectionNone
+};
+
 @interface OMBFinishListingSectionViewController : OMBTableViewController
 {
   BOOL isEditing;
   BOOL nextSection;
   OMBResidence *residence;
+  OMBFinishListingSection tagSection;
 }
 
 @property (nonatomic, weak) OMBFinishListingViewController *delegate;
