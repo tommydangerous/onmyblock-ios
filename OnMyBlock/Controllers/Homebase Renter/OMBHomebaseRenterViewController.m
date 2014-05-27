@@ -735,7 +735,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         [cell setMiddleLabelText: @"appear here after you have"];
         [cell setBottomLabelText: @"paid and signed the lease."];
         [cell setObjectImageViewImage: [UIImage imageNamed:
-          @"moneybag_icon.png"]];
+          @"papers_icon_black.png"]];
         cell.clipsToBounds = YES;
         return cell;
       }
@@ -749,8 +749,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell = [[OMBSentApplicationCell alloc] initWithStyle:
               UITableViewCellStyleDefault reuseIdentifier: SentApplicationCellIdentifier];
         
-        //[cell loadInfo:[[self sentApplications] objectAtIndex:[indexPath.row - 1]];
-        [cell loadFakeInfo]; //remove this
+        [cell loadInfo:[[self sentApplications] objectAtIndex:indexPath.row - 1]];
+        //[cell loadFakeInfo]; //remove this
         cell.clipsToBounds = YES;
         return cell;
       }
@@ -820,8 +820,8 @@ numberOfRowsInSection: (NSInteger) section
     }
     // Sent Applications
     else if (section == 2){
-      //return 1 + [[self sentApplications].count];
-      return 2; // remove this
+      return 1 + [self sentApplications].count;
+      //return 2; // remove this
     }
     // Recent Activity
     else if (section == 99) {
@@ -868,7 +868,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // Sent Applications
     else if (indexPath.section == 2) {
       if (indexPath.row > 0) {
-        //
+        // new view controller
       }
     }
   }
