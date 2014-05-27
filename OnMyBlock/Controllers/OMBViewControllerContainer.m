@@ -1654,14 +1654,14 @@ completion: (void (^) (void)) block
   if (n == 0) {
     CGPoint offset = _infiniteScroll.contentOffset;
     offset.y += _infiniteScroll.frame.size.height;
-    [UIView animateWithDuration: OMBStandardDuration
-      animations: ^{
-        [self.infiniteScroll setContentOffset: offset];
-      }
-      completion: ^(BOOL finished) {
-        [self resetInfiniteScroll];
-      }
-    ];
+    //[UIView animateWithDuration: OMBStandardDuration
+    //animations: ^{
+    [self.infiniteScroll setContentOffset: offset];
+    //}
+    //completion: ^(BOOL finished) {
+    [self resetInfiniteScroll];
+    //}
+    //];
   }
 }
 
