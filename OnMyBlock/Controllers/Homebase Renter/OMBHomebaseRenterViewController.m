@@ -52,7 +52,7 @@ float kHomebaseRenterImagePercentage = 0.15f;
 {
   if (!(self = [super init])) return nil;
 
-  self.title = @"Offers";
+  self.title = @"Homebase";
 
   return self;
 }
@@ -595,9 +595,9 @@ float kHomebaseRenterImagePercentage = 0.15f;
 {
   // Activity
   if (tableView == _activityTableView) {
-    // Top Priority
-    // Move In
+    // Booking Requests
     // Sent Applications
+    // Move In
     return 3;
     // return 2;
   }
@@ -620,7 +620,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       reuseIdentifier: CellIdentifier];
   // Activity
   if (tableView == _activityTableView) {
-    // Top Priority
+    // Booking Requests
     if (indexPath.section == 0) {
       // Blank space
       if (indexPath.row == 0) {
@@ -672,8 +672,45 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         return cell1;
       }
     }
+    // Sent Applications
+    if (indexPath.section == 1) {
+      // Blank space
+      if (indexPath.row == 0) {
+        static NSString *EmptySentAppsCellIdentifier =
+          @"EmptySentAppsCellIdentifier";
+        OMBEmptyImageTwoLabelCell *cell =
+          [tableView dequeueReusableCellWithIdentifier:
+            EmptySentAppsCellIdentifier];
+        if (!cell)
+          cell = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier:
+              EmptySentAppsCellIdentifier];
+        [cell setTopLabelText: @"Sent Applications will"];
+        [cell setMiddleLabelText: @"appear here after you have"];
+        [cell setBottomLabelText: @"paid and signed the lease."];
+        [cell setObjectImageViewImage: [UIImage imageNamed:
+          @"papers_icon_black.png"]];
+        cell.clipsToBounds = YES;
+        return cell;
+      }
+      else{
+        static NSString *SentApplicationCellIdentifier =
+          @"SentApplicationCellIdentifier";
+        OMBSentApplicationCell *cell =
+          [tableView dequeueReusableCellWithIdentifier:
+            SentApplicationCellIdentifier];
+        if (!cell)
+          cell = [[OMBSentApplicationCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier: SentApplicationCellIdentifier];
+        
+        [cell loadInfo:[[self sentApplications] objectAtIndex:indexPath.row - 1]];
+        //[cell loadFakeInfo]; //remove this
+        cell.clipsToBounds = YES;
+        return cell;
+      }
+    }
     // Moved In
-    else if (indexPath.section == 1) {
+    else if (indexPath.section == 2) {
       // Blank space
       if (indexPath.row == 0) {
         static NSString *EmptyTenantsCellIdentifier =
@@ -716,43 +753,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         }
         cell1.clipsToBounds = YES;
         return cell1;
-      }
-    }
-    // Sent Applications
-    if (indexPath.section == 2) {
-      // Blank space
-      if (indexPath.row == 0) {
-        static NSString *EmptySentAppsCellIdentifier =
-          @"EmptySentAppsCellIdentifier";
-        OMBEmptyImageTwoLabelCell *cell =
-          [tableView dequeueReusableCellWithIdentifier:
-            EmptySentAppsCellIdentifier];
-        if (!cell)
-          cell = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle:
-            UITableViewCellStyleDefault reuseIdentifier:
-              EmptySentAppsCellIdentifier];
-        [cell setTopLabelText: @"Sent Applications will"];
-        [cell setMiddleLabelText: @"appear here after you have"];
-        [cell setBottomLabelText: @"paid and signed the lease."];
-        [cell setObjectImageViewImage: [UIImage imageNamed:
-          @"moneybag_icon.png"]];
-        cell.clipsToBounds = YES;
-        return cell;
-      }
-      else{
-        static NSString *SentApplicationCellIdentifier =
-        @"SentApplicationCellIdentifier";
-        OMBSentApplicationCell *cell =
-          [tableView dequeueReusableCellWithIdentifier:
-            SentApplicationCellIdentifier];
-        if (!cell)
-          cell = [[OMBSentApplicationCell alloc] initWithStyle:
-              UITableViewCellStyleDefault reuseIdentifier: SentApplicationCellIdentifier];
-        
-        //[cell loadInfo:[[self sentApplications] objectAtIndex:[indexPath.row - 1]];
-        [cell loadFakeInfo]; //remove this
-        cell.clipsToBounds = YES;
-        return cell;
       }
     }
     // Recent Activity
@@ -807,21 +807,21 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Activity
   if (tableView == _activityTableView) {
-    // Top Priority
+    // Booking Requests
     if (section == 0) {
       // Blank space
       return 1 + [[[OMBUser currentUser].acceptedOffers allValues] count];
       // return 2;
     }
+    // Sent Applications
+    else if (section == 1){
+      return 1 + [self sentApplications].count;
+      //return 2; // remove this
+    }
     // Moved In
-    else if (section == 1) {
+    else if (section == 2) {
       // First row is for when there are no moved in
       return 1 + [[OMBUser currentUser].movedIn count];
-    }
-    // Sent Applications
-    else if (section == 2){
-      //return 1 + [[self sentApplications].count];
-      return 2; // remove this
     }
     // Recent Activity
     else if (section == 99) {
@@ -856,19 +856,19 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
             animated: YES];
       }
     }
-    // Moved In
+    // Sent Applications
     else if (indexPath.section == 1) {
+      if (indexPath.row > 0) {
+        // new view controller
+      }
+    }
+    // Moved In
+    else if (indexPath.section == 2) {
       if (indexPath.row > 0) {
         [self.navigationController pushViewController:
           [[OMBOfferInquiryViewController alloc]
             initWithOffer: [[self movedIn] objectAtIndex:
               indexPath.row - 1]] animated: YES];
-      }
-    }
-    // Sent Applications
-    else if (indexPath.section == 2) {
-      if (indexPath.row > 0) {
-        //
       }
     }
   }
@@ -886,7 +886,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // Activity
   if (tableView == _activityTableView) {
-    // Top Priority
+    // Booking Requests
     if (indexPath.section == 0) {
       // Blank space
       if (indexPath.row == 0) {
@@ -913,8 +913,20 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         return [OMBHomebaseLandlordOfferCell heightForCell];
       }
     }
+    // Sent Applications
+    else if (indexPath.section == 1){
+      // Blank space
+      if (indexPath.row == 0) {
+        if ([self sentApplications].count == 0) {
+          return [OMBEmptyImageTwoLabelCell heightForCell];
+        }
+      }
+      else {
+        return [OMBSentApplicationCell heightForCellWithNotes];
+      }
+    }
     // Moved In
-    else if (indexPath.section == 1) {
+    else if (indexPath.section == 2) {
       // Blank space
       if (indexPath.row == 0) {
         if ([[[OMBUser currentUser].movedIn allValues] count] == 0) {
@@ -925,18 +937,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       else {
         return [OMBHomebaseLandlordOfferCell heightForCell];
-      }
-    }
-    // Sent Applications
-    else if (indexPath.section == 2){
-      // Blank space
-      if (indexPath.row == 0) {
-        if ([self sentApplications].count == 0) {
-          return [OMBEmptyImageTwoLabelCell heightForCell];
-        }
-      }
-      else {
-        return [OMBSentApplicationCell heightForCellWithNotes];
       }
     }
     // Recent Activity
@@ -973,17 +973,17 @@ viewForHeaderInSection: (NSInteger) section
   NSString *titleString = @"";
   // Activity
   if (tableView == _activityTableView) {
-    // Top Priority
+    // Booking Requests
     if (section == 0) {
-      titleString = @"Top Priority";
-    }
-    else if (section == 1) {
-      // titleString = @"Confirmed Places";
-      titleString = @"Ready to Move In";
+      titleString = @"Booking Requests";
     }
     // Sent Applications
-    else if (section == 2){
+    else if (section == 1){
       titleString = @"Sent Applications";
+    }
+    else if (section == 2) {
+      // titleString = @"Confirmed Places";
+      titleString = @"Ready to Move In";
     }
   }
   // Payments

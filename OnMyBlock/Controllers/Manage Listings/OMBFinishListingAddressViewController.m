@@ -40,7 +40,8 @@
   sizeForLabelTextFieldCell = rect.size;
 
   self.screenName = self.title = @"Location";
-
+  tagSection = OMBFinishListingSectionAddress;
+  
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(makeTableViewSmaller:)
       name: UIKeyboardWillShowNotification object: nil];

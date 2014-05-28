@@ -24,6 +24,7 @@
   placeholderString = @"e.g. A 3 bedroom apartment near campus";
 
   self.screenName = self.title = @"Title";
+  tagSection = OMBFinishListingSectionTitle;
 
   return self;
 }

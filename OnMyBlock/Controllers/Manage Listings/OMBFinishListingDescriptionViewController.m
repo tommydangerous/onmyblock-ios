@@ -26,6 +26,7 @@
   placeholderString = @"A brief description of your awesome place.";
 
   self.screenName = self.title = @"Description";
+  tagSection = OMBFinishListingSectionDescription;
 
   return self;
 }

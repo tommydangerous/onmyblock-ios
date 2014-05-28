@@ -41,6 +41,7 @@ float kKeyboardHeight = 196.0;
   sizeForLabelTextFieldCell = rect.size;
 
   self.screenName = self.title = @"Listing Details";
+  tagSection = OMBFinishListingSectionListingDetails;
 
   return self;
 }

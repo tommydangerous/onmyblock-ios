@@ -58,6 +58,7 @@ float k2KeyboardHeight = 216.0;
   dateFormatter.dateFormat = @"MMMM d, yyyy";
 
   self.screenName = self.title = @"Lease Details";
+  tagSection = OMBFinishListingSectionLeaseDetails;
 
   return self;
 }

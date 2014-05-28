@@ -371,34 +371,12 @@ float kResidenceDetailImagePercentage   = 0.5f;
       _contactMeButton.frame.origin.y, _contactMeButton.frame.size.width,
         _contactMeButton.frame.size.height);
   _bookItButton.titleLabel.font = _contactMeButton.titleLabel.font;
-  [_bookItButton addTarget: self action: @selector(showPlaceOffer)
-    forControlEvents: UIControlEventTouchUpInside];
   [_bookItButton setBackgroundImage:
     [UIImage imageWithColor: [UIColor blueHighlighted]]
       forState: UIControlStateHighlighted];
-  [_bookItButton setTitle: @"Book It" forState: UIControlStateNormal];
   [_bookItButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [_bottomButtonView addSubview: _bookItButton];
-
-  // Apply Now button
-  _applyNowButton = [[UIButton alloc] init];
-  _applyNowButton.backgroundColor = _contactMeButton.backgroundColor;
-  _applyNowButton.frame = CGRectMake(
-    _bottomButtonView.frame.size.width - _contactMeButton.frame.size.width,
-      _contactMeButton.frame.origin.y, _contactMeButton.frame.size.width,
-        _contactMeButton.frame.size.height);
-  _applyNowButton.titleLabel.font = _contactMeButton.titleLabel.font;
-  [_applyNowButton addTarget: self action: @selector(showApplyNow)
-    forControlEvents: UIControlEventTouchUpInside];
-  [_applyNowButton setBackgroundImage:
-    [UIImage imageWithColor: [UIColor blueHighlighted]]
-      forState: UIControlStateHighlighted];
-  [_applyNowButton setTitle: @"Apply Now" forState: UIControlStateNormal];
-  [_applyNowButton setTitleColor: [UIColor whiteColor]
-    forState: UIControlStateNormal];
-  [_bottomButtonView addSubview: _applyNowButton];
-  _applyNowButton.hidden = YES;
 
   // The scroll view when users view images full screen
   imageScrollView = [UIScrollView new];
@@ -1243,8 +1221,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [[OMBUser currentUser] hasSentApplicationsInResidence: residence]) {
     showApplyNow = NO;
   }
-  _applyNowButton.hidden = !showApplyNow;
-  _bookItButton.hidden   = showApplyNow;
+  
+  NSString *title = showApplyNow ? @"Apply Now" : @"Book It";
+  [_bookItButton setTitle:title forState:UIControlStateNormal];
+  
+  // Method to perform
+  SEL selector = showApplyNow ? @selector(showApplyNow) : @selector(showPlaceOffer);
+  [_bookItButton addTarget:self action: selector
+    forControlEvents:UIControlEventTouchUpInside];
+  
 }
 
 - (int) currentPageOfImages
