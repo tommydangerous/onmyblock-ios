@@ -10,14 +10,14 @@
 
 @class OMBCenteredImageView;
 @class OMBSentApplication;
+@class OMBResidence;
 
 @interface OMBSentApplicationCell : OMBTableViewCell
 {
   UILabel *addressLabel;
-  UILabel *nameLabel;
-  UILabel *notesLabel;
+  UILabel *bedbadlabel;
   UILabel *rentLabel;
-  UILabel *typeLabel;
+  OMBResidence *residence;
   OMBCenteredImageView *userImageView;
 }
 
@@ -25,13 +25,12 @@
 
 #pragma mark - Class Methods
 
-+ (CGFloat) heightForCellWithNotes;
++ (CGFloat) heightForCell;
 
 #pragma mark - Instance Methods
 
 - (void) adjustFrames;
 - (void) adjustFramesWithoutImage;
 - (void) loadInfo:(OMBSentApplication *)sentapp;
-- (void) loadFakeInfo;
 
 @end
