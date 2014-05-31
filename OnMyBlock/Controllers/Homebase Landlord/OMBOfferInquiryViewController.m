@@ -310,12 +310,12 @@
     respondView.frame.origin.y - padding, screenWidth, padding);
   countDownTimerLabel.textColor = [UIColor whiteColor];
   countDownTimerLabel.textAlignment = NSTextAlignmentCenter;
-  //[self.view addSubview: countDownTimerLabel];
+  [self.view addSubview: countDownTimerLabel];
 
   // Offer table footer view
   _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
    CGRectMake(0.0f, 0.0f, screenWidth,
-    respondView.frame.size.height)];// countDownTimerLabel.frame.size.height +
+    countDownTimerLabel.frame.size.height + respondView.frame.size.height)];
   _offerTableView.tableFooterView.backgroundColor =
     [UIColor grayUltraLight];
   // Profile table footer view
@@ -362,8 +362,7 @@
     CGSizeMake(_offerTableView.frame.size.width - (OMBPadding * 2), 9999)
       font: [UIFont smallTextFont]].size;
 
-  sizeForRememberDetails = CGSizeZero;
-  //[self setupSizeForRememberDetails];
+  [self setupSizeForRememberDetails];
 
   BOOL performEffect = YES;
   // Student
@@ -386,7 +385,7 @@
       case OMBOfferStatusForStudentWaitingForLandlordResponse: {
         // [respondButton setTitle: @"Waiting for landlord response" forState:
         //   UIControlStateNormal];
-        effectLabel.text = @"Response to Approval";
+        effectLabel.text = @"Waiting for landlord response";
         performEffect = NO;
         respondView.backgroundColor = [UIColor blueLight];
         respondButton.userInteractionEnabled = NO;
@@ -478,12 +477,12 @@
   // Fetch offer's user's renter application info
 
   // Timer
-  /*[self timerFireMethod: nil];
+  [self timerFireMethod: nil];
   countdownTimer = [NSTimer timerWithTimeInterval: 1 target: self
                                          selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
   // NSRunLoopCommonModes, mode used for tracking events
   [[NSRunLoop currentRunLoop] addTimer: countdownTimer
-                               forMode: NSRunLoopCommonModes];*/
+                               forMode: NSRunLoopCommonModes];
 }
 
 #pragma mark - Protocol
@@ -700,8 +699,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
           cell.detailTextLabel.text = [NSString numberToCurrencyString:
             offer.amount];
-          cell.textLabel.font = [UIFont normalTextFontBold];
-          cell.textLabel.text = @"Rent";
+          cell.textLabel.text = @"Offer";
         }
         else if (indexPath.row ==
           OMBOfferInquirySectionOfferRowSecurityDeposit) {
@@ -1148,7 +1146,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // Price breakdown
       else if (indexPath.row == OMBOfferInquirySectionOfferRowPriceBreakdown) {
-        // return standardHeight;
+        return standardHeight;
       }
       // Offer
       else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
@@ -1171,11 +1169,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       // Remember detail
       else if (indexPath.row == OMBOfferInquirySectionOfferRowRememberDetail) {
-        //return padding + sizeForRememberDetails.height + padding;;
+        return padding + sizeForRememberDetails.height + padding;;
       }
       // Total
       else if (indexPath.row == OMBOfferInquirySectionOfferRowTotal) {
-        //return padding + 36.0f + padding;
+        return padding + 36.0f + padding;
       }
       // Spacing below total
       /*else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowTotal) {
