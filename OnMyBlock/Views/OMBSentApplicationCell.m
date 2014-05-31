@@ -11,6 +11,7 @@
 #import "NSString+Extensions.h"
 #import "OMBCenteredImageView.h"
 #import "OMBResidence.h"
+#import "OMBSentApplication.h"
 #import "OMBUser.h"
 #import "OMBViewController.h"
 #import "UIFont+OnMyBlock.h"
@@ -42,52 +43,32 @@
     userImageView.frame.size.width + padding + padding);
   
   // Name; James J.
-  nameLabel = [UILabel new];
-  nameLabel.font = [UIFont normalTextFontBold];
-  nameLabel.frame = CGRectMake(userImageView.frame.origin.x +
+  rentLabel = [UILabel new];
+  rentLabel.font = [UIFont normalTextFontBold];
+  rentLabel.frame = CGRectMake(userImageView.frame.origin.x +
     userImageView.frame.size.width + padding,
       padding, width, 22.0f);
-  nameLabel.textColor = [UIColor textColor];
-  [self.contentView addSubview: nameLabel];
+  rentLabel.textColor = [UIColor textColor];
+  [self.contentView addSubview: rentLabel];
   
   // Address; $400 - 8230 Costa Verde Blvd
   addressLabel = [UILabel new];
   addressLabel.font = [UIFont normalTextFont];
   // Minus another padding to not run into the disclosure indicator
-  addressLabel.frame = CGRectMake(nameLabel.frame.origin.x,
-    nameLabel.frame.origin.y + nameLabel.frame.size.height,
-      nameLabel.frame.size.width, nameLabel.frame.size.height);
+  addressLabel.frame = CGRectMake(rentLabel.frame.origin.x,
+    rentLabel.frame.origin.y + rentLabel.frame.size.height,
+      rentLabel.frame.size.width, rentLabel.frame.size.height);
   addressLabel.textColor = [UIColor grayMedium];
   [self.contentView addSubview: addressLabel];
   
   // Rent
-  rentLabel = [UILabel new];
-  rentLabel.font = [UIFont normalTextFont];
-  rentLabel.frame = CGRectMake(addressLabel.frame.origin.x,
+  bedbadlabel = [UILabel new];
+  bedbadlabel.font = [UIFont normalTextFont];
+  bedbadlabel.frame = CGRectMake(addressLabel.frame.origin.x,
     addressLabel.frame.origin.y + addressLabel.frame.size.height,
       addressLabel.frame.size.width, addressLabel.frame.size.height);
-  rentLabel.textColor = [UIColor blueDark];
-  // [self.contentView addSubview: rentLabel];
-  
-  // Type; status: e.g. response required
-  typeLabel = [UILabel new];
-  typeLabel.font = [UIFont normalTextFont];
-  typeLabel.frame = rentLabel.frame;
-  typeLabel.textAlignment = NSTextAlignmentLeft;
-  [self.contentView addSubview: typeLabel];
-  
-  // Notes; long descriptions
-  notesLabel = [UILabel new];
-  notesLabel.font = [UIFont smallTextFont];
-  notesLabel.hidden = YES;
-  notesLabel.numberOfLines = 0;
-  notesLabel.textColor = [UIColor grayMedium];
-  // 17 = line height of font size 13
-  notesLabel.frame = CGRectMake(padding,
-    typeLabel.frame.origin.y + typeLabel.frame.size.height,
-      screenWidth - (padding * 2), padding + (17.0f * 3));
-  // notesLabel.textAlignment = NSTextAlignmentRight;
-  [self.contentView addSubview: notesLabel];
+  bedbadlabel.textColor = [UIColor grayMedium];
+  [self.contentView addSubview: bedbadlabel];
   
   return self;
 }
@@ -120,25 +101,25 @@
   // Name
   CGFloat nameLabelOriginX = userImageView.frame.origin.x +
     userImageView.frame.size.width + padding;
-  nameLabel.frame = CGRectMake(nameLabelOriginX, padding,
-    screenWidth - (nameLabelOriginX + padding + nameLabel.frame.size.width + padding),
+  rentLabel.frame = CGRectMake(nameLabelOriginX, padding,
+    screenWidth - (nameLabelOriginX + padding + rentLabel.frame.size.width + padding),
       22.0f);
   
   // Rent
-  CGRect rentLabelRect = [rentLabel.text boundingRectWithSize:
-    CGSizeMake(screenWidth, typeLabel.frame.size.height)
-                                                         font: rentLabel.font];
-  rentLabel.frame = CGRectMake(nameLabel.frame.origin.x,
-    typeLabel.frame.origin.y + typeLabel.frame.size.height,
-      rentLabelRect.size.width, nameLabel.frame.size.height);
+  CGRect bedbadlabelRect = [bedbadlabel.text boundingRectWithSize:
+    CGSizeMake(screenWidth, bedbadlabel.frame.size.height)
+      font: bedbadlabel.font];
+  bedbadlabel.frame = CGRectMake(rentLabel.frame.origin.x,
+    bedbadlabel.frame.origin.y + bedbadlabel.frame.size.height,
+      bedbadlabelRect.size.width, rentLabel.frame.size.height);
   
   // Address
   CGFloat addressMaxWidth = screenWidth -
-    (rentLabel.frame.origin.x + rentLabel.frame.size.width +
+    (bedbadlabel.frame.origin.x + bedbadlabel.frame.size.width +
       (padding * 0.5) + padding);
   addressLabel.frame = CGRectMake(
-    rentLabel.frame.origin.x + rentLabel.frame.size.width + (padding * 0.5f),
-      rentLabel.frame.origin.y, addressMaxWidth, rentLabel.frame.size.height);
+    bedbadlabel.frame.origin.x + bedbadlabel.frame.size.width + (padding * 0.5f),
+      bedbadlabel.frame.origin.y, addressMaxWidth, bedbadlabel.frame.size.height);
 }
 
 - (void) adjustFramesWithoutImage
@@ -153,50 +134,74 @@
     screenWidth - padding, 22.0f);
   
   // Address
-  CGRect nameLabelRect = addressLabel.frame;
-  nameLabel.frame = CGRectMake(nameLabelRect.origin.x,
-    nameLabelRect.origin.y + nameLabelRect.size.height,
-      nameLabelRect.size.width, nameLabelRect.size.height);
+  CGRect rentLabelRect = addressLabel.frame;
+  rentLabel.frame = CGRectMake(rentLabelRect.origin.x,
+    rentLabelRect.origin.y + rentLabelRect.size.height,
+      rentLabelRect.size.width, rentLabelRect.size.height);
   
   // Type Label
-  CGRect typeLabelRect = nameLabel.frame;
-  typeLabel.frame = CGRectMake(typeLabelRect.origin.x,
-    typeLabelRect.origin.y + typeLabelRect.size.height,
-      typeLabelRect.size.width, typeLabelRect.size.height);
+  CGRect bedbadlabelRect = rentLabel.frame;
+  bedbadlabel.frame = CGRectMake(bedbadlabelRect.origin.x,
+    bedbadlabelRect.origin.y + bedbadlabelRect.size.height,
+      bedbadlabelRect.size.width, bedbadlabelRect.size.height);
 }
 
 - (void) loadInfo:(OMBSentApplication *)sentapp
 {
-  //
+ 
+  // Fetching data
+  if(!residence){
+    residence = [[OMBResidence alloc] init];
+    residence.uid = sentapp.residenceID;
+    [residence fetchDetailsWithCompletion: ^(NSError *error) {
+      [self reloadData];
+    }];
+  }
+  
+  [self reloadData];
 }
 
-- (void) loadFakeInfo
+- (void)reloadData
 {
   
-  // Image
-  userImageView.image = [[OMBUser currentUser] imageForSize: userImageView.frame.size];
-  
-  // Note
-  notesLabel.hidden = YES;
-  notesLabel.text = @"Once you have reviewed the applicant party’s "
-  @"offer and renter profile(s), please accept or decline.";
-  
   // Name
-  nameLabel.text = [[OMBUser currentUser] shortName];
-  
-  // Status
-  notesLabel.hidden = NO;
-  notesLabel.text = [NSString stringWithFormat:
-    @"This offer will become live if the previously accepted offer for "
-    @"Lima - Peru is rejected by the student who made the offer."];
-      
-  typeLabel.text = @"Waiting for Landlord";
-  typeLabel.textColor = [UIColor grayMedium];
+  rentLabel.text = [NSString numberToCurrencyString:residence.minRent];
   
   // Address
-  addressLabel.text = [NSString stringWithFormat: @"%@ - %@",
-    [NSString numberToCurrencyString: 12345],
-      @"Lima-Peru"];
+  addressLabel.text = [residence.address capitalizedString];
+  
+  // Bedrooms / Bathrooms
+  bedbadlabel.text =  [NSString stringWithFormat:
+    @"%.0f bd / %.0f ba", residence.bedrooms, residence.bathrooms];
+  
+  // Image
+  if (!residence.coverPhotoURL)
+    [userImageView clearImage];
+  
+  NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
+                       userImageView.bounds.size.width, userImageView.bounds.size.height];
+  UIImage *image = [residence coverPhotoForSizeKey: sizeKey];
+  if (image) {
+    userImageView.image = image;
+  }
+  else {
+    __weak typeof(userImageView) weakUserImageView = userImageView;
+    [residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
+      [weakUserImageView.imageView setImageWithURL:
+       residence.coverPhotoURL placeholderImage: nil
+                                           options: SDWebImageRetryFailed completed:
+       ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+         if (!error && img) {
+           weakUserImageView.image = img;
+           [residence.coverPhotoSizeDictionary setObject:
+            weakUserImageView.image forKey: sizeKey];
+         }
+       }
+       ];
+    }];
+    userImageView.image = [OMBResidence placeholderImage];
+  }
+
 }
 
 @end

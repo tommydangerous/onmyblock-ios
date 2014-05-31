@@ -922,7 +922,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         }
       }
       else {
-        return [OMBSentApplicationCell heightForCellWithNotes];
+        return [OMBSentApplicationCell heightForCell];
       }
     }
     // Moved In

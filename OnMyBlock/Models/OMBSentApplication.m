@@ -65,7 +65,10 @@
   // Renter Application ID
 
   // Residence ID
-
+  id residenceID = [dictionary objectForKey: @"residence_id"];
+  if (residenceID != [NSNull null])
+    self.residenceID = [residenceID intValue];
+  
   // UID
   id uid = [dictionary objectForKey: @"id"];
   if (uid != [NSNull null])
