@@ -29,8 +29,6 @@ typedef NS_ENUM(NSInteger, OMBSentApplicationSectionRow) {
   OMBSentApplicationSectionRowSpacingBelowDates,
   OMBSentApplicationSectionRowOffer,
   OMBSentApplicationSectionRowSecurityDeposit,
-  OMBSentApplicationSectionRowDownPayment,
-  OMBSentApplicationSectionRowRemainingPayment,
   //OMBOfferInquirySectionOfferSpacingBelowTotal,
   OMBSentApplicationSectionRowNotes
 };

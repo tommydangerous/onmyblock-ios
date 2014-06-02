@@ -687,9 +687,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier:
               EmptySentAppsCellIdentifier];
-        [cell setTopLabelText: @"Sent Applications will"];
+        [cell setTopLabelText: @"Your sent applications will"];
         [cell setMiddleLabelText: @"appear here after you have"];
-        [cell setBottomLabelText: @"submitted an application."];
+        [cell setBottomLabelText: @"applied to a property."];
         [cell setObjectImageViewImage:
           [UIImage  imageNamed:@"papers_icon_white.png"]];
         cell.clipsToBounds = YES;

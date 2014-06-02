@@ -193,7 +193,7 @@
                                                 size: 15];
   [offerButton addTarget: self action: @selector(segmentButtonSelected:)
         forControlEvents: UIControlEventTouchUpInside];
-  [offerButton setTitle: @"Offer" forState: UIControlStateNormal];
+  [offerButton setTitle: @"Application" forState: UIControlStateNormal];
   [offerButton setTitleColor: [UIColor whiteColor]
                     forState: UIControlStateNormal];
   [buttonsView addSubview: offerButton];
@@ -635,9 +635,7 @@ paymentViewController
       // Price breakdown, security deposit, down payment, remaining payment, offer
       else if (
                indexPath.row == OMBSentApplicationSectionRowSecurityDeposit ||
-               indexPath.row == OMBSentApplicationSectionRowOffer ||
-               indexPath.row == OMBSentApplicationSectionRowDownPayment ||
-               indexPath.row == OMBSentApplicationSectionRowRemainingPayment) {
+               indexPath.row == OMBSentApplicationSectionRowOffer) {
         
         static NSString *PriceCellIdentifier = @"PriceCellIdentifier";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
@@ -673,20 +671,6 @@ paymentViewController
           cell.detailTextLabel.text = [NSString numberToCurrencyString:
                                        [offer.residence deposit]];
           cell.textLabel.text = @"Security Deposit";
-        }
-        else if (indexPath.row ==
-                 OMBSentApplicationSectionRowDownPayment) {
-          
-          cell.detailTextLabel.text = [NSString numberToCurrencyString:
-                                       [offer downPaymentAmount]];
-          cell.textLabel.text = @"Down Payment";
-        }
-        else if (indexPath.row ==
-                 OMBSentApplicationSectionRowRemainingPayment) {
-          
-          cell.detailTextLabel.text = [NSString numberToCurrencyString:
-                                       [offer remainingBalanceAmount]];
-          cell.textLabel.text = @"Remaining Payment";
         }
         cell.clipsToBounds = YES;
         return cell;
@@ -1062,17 +1046,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       // Security deposit
       else if (indexPath.row == OMBSentApplicationSectionRowSecurityDeposit) {
         return standardHeight;
-      }
-      // Down Payment
-      else if (indexPath.row == OMBSentApplicationSectionRowDownPayment) {
-        if ([offer isAboveThreshold])
-          return standardHeight;
-      }
-      // Remaining Payment
-      else if (indexPath.row ==
-               OMBSentApplicationSectionRowRemainingPayment) {
-        if ([offer isAboveThreshold])
-          return standardHeight;
       }
       // Spacing below total
       /*else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowTotal) {

@@ -1204,6 +1204,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) criteriaApplyNow
 {
   BOOL showApplyNow = YES;
+  BOOL hasSentApp = NO;
+  
   // Is a sublet
   if ([residence isSublet]) {
     showApplyNow = NO;
@@ -1219,16 +1221,29 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // If user has sent an application
   else if ([[OMBUser currentUser] loggedIn] &&
     [[OMBUser currentUser] hasSentApplicationsInResidence: residence]) {
+    hasSentApp = YES;
     showApplyNow = NO;
   }
   
-  NSString *title = showApplyNow ? @"Apply Now" : @"Book It";
-  [_bookItButton setTitle:title forState:UIControlStateNormal];
-  
-  // Method to perform
-  SEL selector = showApplyNow ? @selector(showApplyNow) : @selector(showPlaceOffer);
-  [_bookItButton addTarget:self action: selector
-    forControlEvents:UIControlEventTouchUpInside];
+  if(hasSentApp){
+    [_bookItButton setTitle:@"Application Sent" forState:UIControlStateNormal];
+    _bookItButton.enabled = NO;
+  }else{
+    SEL selector;
+    NSString *title;
+    
+    if(showApplyNow){
+      title = @"Apply Now";
+      selector = @selector(showApplyNow);
+    }else{
+      title = @"Book It";
+      selector = @selector(showPlaceOffer);
+    }
+    
+    [_bookItButton setTitle:title forState:UIControlStateNormal];
+    [_bookItButton addTarget:self action: selector
+      forControlEvents:UIControlEventTouchUpInside];
+  }
   
 }
 
