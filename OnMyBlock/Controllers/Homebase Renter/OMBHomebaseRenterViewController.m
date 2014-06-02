@@ -22,6 +22,7 @@
 #import "OMBHomebaseRenterPaymentNotificationCell.h"
 #import "OMBHomebaseRenterRentDepositInfoViewController.h"
 #import "OMBHomebaseRenterRoommateImageView.h"
+#import "OMBHomebaseRenterSentApplicationViewController.h"
 #import "OMBHomebaseRenterTopPriorityCell.h"
 #import "OMBInformationHowItWorksViewController.h"
 #import "OMBNavigationController.h"
@@ -38,6 +39,7 @@
 #import "OMBViewController+PayPalPayment.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIImage+Color.h"
 #import "UIImage+NegativeImage.h"
 
 // Make this 0.4f when having roommates
@@ -687,9 +689,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
               EmptySentAppsCellIdentifier];
         [cell setTopLabelText: @"Sent Applications will"];
         [cell setMiddleLabelText: @"appear here after you have"];
-        [cell setBottomLabelText: @"paid and signed the lease."];
-        [cell setObjectImageViewImage: [UIImage imageNamed:
-          @"papers_icon_black.png"]];
+        [cell setBottomLabelText: @"submitted an application."];
+        [cell setObjectImageViewImage:
+          [UIImage  imageNamed:@"papers_icon_white.png"]];
         cell.clipsToBounds = YES;
         return cell;
       }
@@ -851,6 +853,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       if (indexPath.row > 0) {
         OMBOffer *offer = [[self offers] objectAtIndex:
           indexPath.row - 1];
+        
         [self.navigationController pushViewController:
           [[OMBOfferInquiryViewController alloc] initWithOffer: offer]
             animated: YES];
@@ -860,6 +863,9 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     else if (indexPath.section == 1) {
       if (indexPath.row > 0) {
         // new view controller
+        [self.navigationController pushViewController:
+          [[OMBHomebaseRenterSentApplicationViewController alloc] initWithOffer:nil]
+            animated:YES];
       }
     }
     // Moved In
