@@ -100,8 +100,8 @@ float kHomebaseRenterImagePercentage = 0.15f;
        forControlEvents: UIControlEventTouchUpInside];
   [infoButton setTitle: @"i" forState: UIControlStateNormal];
   [infoButton setTitleColor: [UIColor blue] forState: UIControlStateNormal];
-  self.navigationItem.rightBarButtonItem =
-    [[UIBarButtonItem alloc] initWithCustomView: infoButton];
+  //self.navigationItem.rightBarButtonItem =
+  //  [[UIBarButtonItem alloc] initWithCustomView: infoButton];
 
   backViewOffsetY = padding + standardHeight;
   // The image in the back
@@ -979,12 +979,27 @@ viewForHeaderInSection: (NSInteger) section
   NSString *titleString = @"";
   // Activity
   if (tableView == _activityTableView) {
+    UIButton *infoButton = [UIButton new];
+    infoButton.frame = CGRectMake(blur.frame.size.width - 20.f - 5.f,
+      2.0f, 20.f, 20.f);
+    infoButton.layer.borderColor = [UIColor blueDark].CGColor;
+    infoButton.layer.borderWidth = 1.0f;
+    infoButton.layer.cornerRadius = 20.f * 0.5f;
+    infoButton.titleLabel.font = [UIFont normalTextFontBold];
+    [infoButton setTitle: @"i" forState: UIControlStateNormal];
+    [infoButton setTitleColor: [UIColor blueDark] forState: UIControlStateNormal];
     // Sent Applications
     if (section == 0){
+      [infoButton addTarget: self action: @selector(showSentAppHowItWorks)
+        forControlEvents: UIControlEventTouchUpInside];
+      [blur addSubview:infoButton];
       titleString = @"Sent Applications";
     }
     // Booking Requests
     else if (section == 1) {
+      [infoButton addTarget: self action: @selector(showHomebaseHowItWorks)
+        forControlEvents: UIControlEventTouchUpInside];
+      [blur addSubview:infoButton];
       titleString = @"Booking Requests";
     }
     else if (section == 2) {
@@ -1379,6 +1394,43 @@ viewForHeaderInSection: (NSInteger) section
   }];
   cameFromSettingUpPayoutMethods = YES;
   [[self appDelegate].container showPayoutMethods];
+}
+
+- (void) showSentAppHowItWorks
+{
+  NSString *info1 = [NSString stringWithFormat:
+                     @"Find a property that’s right for you and apply! "
+                     @"Once you submit an application it will "
+                     @"be sent to the landlord to review."];
+  NSString *info2 = [NSString stringWithFormat:
+                     @"If the landlord approves your application and chooses "
+                     @"you as a tenant you will be given %@ "
+                     @"to pay the first month’s rent & deposit and sign the lease.",
+                     [OMBOffer timelineStringForLandlord]];
+  NSString *info3 = [NSString stringWithFormat:
+                     @"Once you’ve paid the place is yours, get ready to move-in!"];
+  
+  NSArray *array = @[
+   @{
+     @"title": @"Sent an Application",
+     @"information": info1
+     },
+   @{
+     @"title": @"Landlord Approved",
+     @"information": info2
+     },
+   @{
+     @"title": @" ",
+     @"information": info3
+     }
+   ];
+  
+  OMBInformationHowItWorksViewController *vc =
+    [[OMBInformationHowItWorksViewController alloc] initWithInformationArray:
+      array];
+  vc.title = @"Your sent applications";
+  [(OMBNavigationController *) self.navigationController pushViewController:
+    vc animated: YES ];
 }
 
 - (void) switchToPaymentsTableView
