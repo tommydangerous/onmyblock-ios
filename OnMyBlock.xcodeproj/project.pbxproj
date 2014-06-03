@@ -505,9 +505,9 @@
 		DE93158718916D1800111CF6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE93158618916D1800111CF6 /* FacebookSDK.framework */; };
 		DE93158D18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */; };
 		DE93158F1891E05800111CF6 /* OMBCreateListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */; };
-		DE936FAE192BEF40001B2120 /* OMBApplyRenterApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE936FAD192BEF3F001B2120 /* OMBApplyRenterApplicationViewController.m */; };
 		DE939CF918933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE939CF818933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m */; };
 		DE93BE2B18B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE93BE2A18B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.m */; };
+		DE95D652193E6C7300B6BE98 /* OMBApplyResidenceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95D651193E6C7300B6BE98 /* OMBApplyResidenceViewController.m */; };
 		DE95E8C318A03AF700A2A341 /* OMBResidenceBookItCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8C218A03AF700A2A341 /* OMBResidenceBookItCalendarCell.m */; };
 		DE95E8D418A03B5500A2A341 /* MNCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8C718A03B5500A2A341 /* MNCalendarView.m */; };
 		DE95E8D518A03B5500A2A341 /* MNCalendarViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8C918A03B5500A2A341 /* MNCalendarViewCell.m */; };
@@ -1486,12 +1486,12 @@
 		DE93158B18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailLeaseCell.h; sourceTree = "<group>"; };
 		DE93158C18918C7D00111CF6 /* OMBCreateListingDetailLeaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailLeaseCell.m; sourceTree = "<group>"; };
 		DE93158E1891E05800111CF6 /* OMBCreateListingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingViewController.m; sourceTree = "<group>"; };
-		DE936FAC192BEF3F001B2120 /* OMBApplyRenterApplicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBApplyRenterApplicationViewController.h; sourceTree = "<group>"; };
-		DE936FAD192BEF3F001B2120 /* OMBApplyRenterApplicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBApplyRenterApplicationViewController.m; sourceTree = "<group>"; };
 		DE939CF718933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingLeaseDetailsViewController.h; sourceTree = "<group>"; };
 		DE939CF818933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFinishListingLeaseDetailsViewController.m; sourceTree = "<group>"; };
 		DE93BE2918B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTwoLabelTextFieldCell.h; sourceTree = "<group>"; };
 		DE93BE2A18B3F8BE001F3D45 /* OMBTwoLabelTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTwoLabelTextFieldCell.m; sourceTree = "<group>"; };
+		DE95D650193E6C7300B6BE98 /* OMBApplyResidenceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OMBApplyResidenceViewController.h; path = "Manage Listings/OMBApplyResidenceViewController.h"; sourceTree = "<group>"; };
+		DE95D651193E6C7300B6BE98 /* OMBApplyResidenceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OMBApplyResidenceViewController.m; path = "Manage Listings/OMBApplyResidenceViewController.m"; sourceTree = "<group>"; };
 		DE95E8C118A03AF700A2A341 /* OMBResidenceBookItCalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceBookItCalendarCell.h; sourceTree = "<group>"; };
 		DE95E8C218A03AF700A2A341 /* OMBResidenceBookItCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceBookItCalendarCell.m; sourceTree = "<group>"; };
 		DE95E8C518A03B5500A2A341 /* MNCalendarView-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MNCalendarView-Prefix.pch"; sourceTree = "<group>"; };
@@ -2646,8 +2646,8 @@
 				AB9545751848FB58000513BE /* OMBAccountProfileViewController.m */,
 				AB95456E1848E5EB000513BE /* OMBAccountViewController.h */,
 				AB95456F1848E5EB000513BE /* OMBAccountViewController.m */,
-				DE936FAC192BEF3F001B2120 /* OMBApplyRenterApplicationViewController.h */,
-				DE936FAD192BEF3F001B2120 /* OMBApplyRenterApplicationViewController.m */,
+				DE95D650193E6C7300B6BE98 /* OMBApplyResidenceViewController.h */,
+				DE95D651193E6C7300B6BE98 /* OMBApplyResidenceViewController.m */,
 				AB6155A4184D99DF00A193C7 /* OMBCoApplicantsViewController.h */,
 				AB6155A5184D99DF00A193C7 /* OMBCoApplicantsViewController.m */,
 				AB26131518197D030053A8AA /* OMBCollectionViewController.h */,
@@ -3376,6 +3376,7 @@
 				AB6E940F192BAAA2005A357A /* OMBSentApplicationListConnection.m in Sources */,
 				ABB911A618998CA80046611F /* LIALinkedInHttpClient.m in Sources */,
 				ABF18BBD1816F913002DD723 /* OMBListButton.m in Sources */,
+				DE95D652193E6C7300B6BE98 /* OMBApplyResidenceViewController.m in Sources */,
 				ABB173C2189ECA9B0010D28F /* NSError+OnMyBlock.m in Sources */,
 				AB756AB0185A1A68001AF572 /* OMBIntroStillImageSlide.m in Sources */,
 				AB90129A18527753003153A2 /* OMBPreviousRentalAddViewController.m in Sources */,
@@ -3465,7 +3466,6 @@
 				AB9D6119188CEFDE00C9AC64 /* UIImage+MultiFormat.m in Sources */,
 				67E9481E188DF726007703FC /* OMBMapFilterDateAvailableCell.m in Sources */,
 				ABED5FEF189705ED00AD630C /* OMBMapViewViewController.m in Sources */,
-				DE936FAE192BEF40001B2120 /* OMBApplyRenterApplicationViewController.m in Sources */,
 				ABCB36C1187CC229008A0EEF /* OMBHomebaseRenterAddRoommateFromEmailViewController.m in Sources */,
 				AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */,
 				AB9D611B188CEFDE00C9AC64 /* UIImageView+WebCache.m in Sources */,
