@@ -11,6 +11,7 @@
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
 #import "NSString+OnMyBlock.h"
+#import "OMBActivityViewFullScreen.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoAddViewController.h"
 #import "OMBObject.h"
@@ -109,6 +110,7 @@
     cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"Delete"
       otherButtonTitles: nil];
   [self.view addSubview: deleteActionSheet];
+  
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -198,7 +200,9 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   [[self renterApplication] fetchListForResourceName: resourceName
     userUID: user.uid delegate: self completion: ^(NSError *error) {
       [self hideEmptyLabel: [[self objects] count]];
+      [self stopSpinning];
     }];
+  [self startSpinning];
 }
 
 - (NSArray *) objects
@@ -254,5 +258,22 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     emptyLabel.frame.size.height + (OMBPadding * 2);
   addButtonMiddle.frame = buttonRect;
 }
+
+- (void) startSpinning
+{
+  if(!activityViewFullScreen){
+    activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
+    [self.view addSubview:activityViewFullScreen];
+  }
+  
+  [activityViewFullScreen startSpinning];
+}
+
+- (void) stopSpinning
+{
+  if(activityViewFullScreen)
+    [activityViewFullScreen stopSpinning];
+}
+
 
 @end

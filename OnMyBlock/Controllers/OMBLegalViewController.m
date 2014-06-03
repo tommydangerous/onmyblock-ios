@@ -9,6 +9,7 @@
 #import "OMBLegalViewController.h"
 
 #import "NSString+Extensions.h"
+#import "OMBActivityViewFullScreen.h"
 #import "OMBLegalAnswer.h"
 #import "OMBLegalAnswerCreateOrUpdateConnection.h"
 #import "OMBLegalAnswerListConnection.h"
@@ -49,6 +50,9 @@
   } forState: UIControlStateNormal];
   self.navigationItem.rightBarButtonItem = saveBarButtonItem;
 
+  activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
+  [self.view addSubview:activityViewFullScreen];
+  
   [self setupForTable];
 }
 
@@ -64,11 +68,13 @@
         legalAnswers = [NSMutableDictionary dictionaryWithDictionary:
           user.renterApplication.legalAnswers];
         [self.table reloadData];
+        [activityViewFullScreen stopSpinning];
       };
       [connection start];
       [self.table reloadData];
     }
   ];
+  [activityViewFullScreen startSpinning];
   [self.table reloadData];
 }
 

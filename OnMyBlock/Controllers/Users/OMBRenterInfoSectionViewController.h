@@ -9,12 +9,14 @@
 #import "OMBTableViewController.h"
 
 @class AMBlurView;
+@class OMBActivityViewFullScreen;
 @class OMBRenterInfoAddViewController;
 @class OMBUser;
 
 @interface OMBRenterInfoSectionViewController : OMBTableViewController
 <UIActionSheetDelegate>
 {
+  OMBActivityViewFullScreen *activityViewFullScreen;
   UIButton *addButton;
   UIButton *addButtonMiddle;
   AMBlurView *bottomBlurView;
@@ -37,5 +39,7 @@
 - (NSArray *) objects;
 - (OMBRenterApplication *) renterApplication;
 - (void) setEmptyLabelText: (NSString *) string;
+- (void) startSpinning;
+- (void) stopSpinning;
 
 @end

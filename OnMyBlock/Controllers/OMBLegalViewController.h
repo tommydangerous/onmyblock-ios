@@ -8,11 +8,14 @@
 
 #import "OMBRenterApplicationSectionViewController.h"
 
+@class OMBActivityViewFullScreen;
+
 @interface OMBLegalViewController : 
   OMBRenterApplicationSectionViewController
 <UITextViewDelegate>
 {
   NSMutableDictionary *legalAnswers;
+  OMBActivityViewFullScreen *activityViewFullScreen;
 }
 
 #pragma mark - Methods

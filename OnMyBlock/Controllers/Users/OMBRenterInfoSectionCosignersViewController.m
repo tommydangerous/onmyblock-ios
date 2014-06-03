@@ -54,8 +54,10 @@
   
   [[self renterApplication] fetchCosignersForUserUID: [OMBUser currentUser].uid 
     delegate: self completion: ^(NSError *error) {
+      [self stopSpinning];
       [self hideEmptyLabel: [[self objects] count]];
     }];
+  [self startSpinning];
 
   [self reloadTable];
 }
