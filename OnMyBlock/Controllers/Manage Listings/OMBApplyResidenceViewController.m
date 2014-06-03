@@ -248,14 +248,14 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   AMBlurView *submitView = [[AMBlurView alloc] init];
   submitView.blurTintColor = [UIColor blue];
   submitView.frame = CGRectMake(0.0f, screenHeight - submitHeight,
-                                screenWidth, submitHeight);
+    screenWidth, submitHeight);
   [self.view addSubview: submitView];
   
   submitOfferButton = [UIButton new];
   submitOfferButton.frame = submitView.bounds;
   [submitOfferButton addTarget: self
-                        action: @selector(shouldSubmitApplication)
-              forControlEvents: UIControlEventTouchUpInside];
+    action: @selector(shouldSubmitApplication)
+      forControlEvents: UIControlEventTouchUpInside];
   [submitOfferButton setBackgroundImage:
    [UIImage imageWithColor: [UIColor blueHighlightedAlpha: 0.3f]]
                                forState: UIControlStateHighlighted];
@@ -662,8 +662,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         string = @"Legal Questions";
       }
       cell.iconImageView.image = [UIImage image:
-                                  [UIImage imageNamed: iconImageName]
-                                           size: cell.iconImageView.bounds.size];
+        [UIImage imageNamed: iconImageName]
+          size: cell.iconImageView.bounds.size];
       cell.label.text = string;
       if ([[[self renterapplicationUserDefaults] objectForKey: key] boolValue])
         [cell fillCheckmark];
@@ -821,9 +821,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   
   if (textField.indexPath.row == OMBMyRenterProfileSectionUserInfoRowLastName)
     [self scrollToRectAtIndexPath:
-     [NSIndexPath indexPathForRow:
-      OMBMyRenterProfileSectionUserInfoRowFirstName
-                        inSection:textField.indexPath.section]];
+      [NSIndexPath indexPathForRow:
+        OMBMyRenterProfileSectionUserInfoRowFirstName
+          inSection:textField.indexPath.section]];
   else
     [self scrollToRectAtIndexPath: textField.indexPath];
 }
@@ -846,8 +846,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table endUpdates];
   
   NSIndexPath *indexPath = [NSIndexPath indexPathForRow:
-                            OMBMyRenterProfileSectionUserInfoRowAbout
-                                              inSection: OMBMyRenterProfileSectionUserInfo];
+    OMBMyRenterProfileSectionUserInfoRowAbout
+      inSection: OMBMyRenterProfileSectionUserInfo];
   [self scrollToRectAtIndexPath: indexPath];
 }
 
@@ -901,10 +901,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   LIALinkedInApplication *app =
   [LIALinkedInApplication applicationWithRedirectURL: @"https://onmyblock.com"
-                                            clientId: @"75zr1yumwx0wld" clientSecret: @"XNY3VsMzvdhyR1ej"
-                                               state: @"DCEEFWF45453sdffef424" grantedAccess: @[@"r_fullprofile"]];
+    clientId: @"75zr1yumwx0wld" clientSecret: @"XNY3VsMzvdhyR1ej"
+       state: @"DCEEFWF45453sdffef424" grantedAccess: @[@"r_fullprofile"]];
   linkedInClient = [LIALinkedInHttpClient clientForApplication: app
-                                      presentingViewController: self];
+    presentingViewController: self];
   [linkedInClient getAuthorizationCode: ^(NSString *code) {
     [linkedInClient getAccessToken: code success:
      ^(NSDictionary *accessTokenData) {
@@ -927,9 +927,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         ];
        [[self appDelegate].container startSpinning];
      }
-                           failure: ^(NSError *error) {
-                             [self showAlertViewWithError: error];
-                           }];
+     failure: ^(NSError *error) {
+       [self showAlertViewWithError: error];
+     }];
   } cancel: ^{
     NSLog(@"LINKEDIN CANCELED");
   } failure: ^(NSError *error) {
@@ -955,8 +955,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) preview
 {
   [self.navigationController pushViewController:
-   [[OMBOtherUserProfileViewController alloc] initWithUser: user]
-                                       animated: YES];
+    [[OMBOtherUserProfileViewController alloc] initWithUser: user]
+      animated: YES];
 }
 
 - (void) progressConnection: (NSNotification *) notification
@@ -977,19 +977,19 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) save
 {
   [[OMBUser currentUser] updateWithDictionary: valueDictionary
-                                   completion: ^(NSError *error) {
-                                     if (!error) {
-                                       // Clear this because they updated their about
-                                       // so the sizes need to change
-                                       [[OMBUser currentUser].heightForAboutTextDictionary removeAllObjects];
-                                       [self updateData];
-                                       [[NSNotificationCenter defaultCenter] postNotificationName:
-                                        OMBCurrentUserUploadedImage object: nil];
-                                     }
-                                     else {
-                                       [self showAlertViewWithError: error];
-                                     }
-                                   }
+     completion: ^(NSError *error) {
+       if (!error) {
+         // Clear this because they updated their about
+         // so the sizes need to change
+         [[OMBUser currentUser].heightForAboutTextDictionary removeAllObjects];
+         [self updateData];
+         [[NSNotificationCenter defaultCenter] postNotificationName:
+          OMBCurrentUserUploadedImage object: nil];
+       }
+       else {
+         [self showAlertViewWithError: error];
+       }
+     }
    ];
 }
 
@@ -1009,7 +1009,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) scrollToRowAtIndexPath: (NSIndexPath *) indexPath
 {
   [self.table scrollToRowAtIndexPath: indexPath
-                    atScrollPosition: UITableViewScrollPositionTop animated: YES];
+    atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
 - (void) showUploadActionSheet
@@ -1081,16 +1081,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   BOOL shouldSubmit = YES;
   
-  if(![valueDictionary objectForKey:@"firstName"])
-    shouldSubmit= NO;
-  if(![valueDictionary objectForKey:@"lastName"])
-    shouldSubmit= NO;
-  if(![valueDictionary objectForKey:@"school"])
-    shouldSubmit= NO;
-  if(![valueDictionary objectForKey:@"email"])
-    shouldSubmit= NO;
-  if(![valueDictionary objectForKey:@"phone"])
-    shouldSubmit= NO;
+  NSArray *keyArray = @[@"firstName", @"lastName", @"school", @"email", @"phone"];
+  
+  for(NSString *key in keyArray)
+  {
+    if([valueDictionary objectForKey:key]){
+      if([[valueDictionary objectForKey:key] length] == 0)
+          shouldSubmit = NO;
+    }
+    else
+      shouldSubmit = NO;
+  }
+  
   
   // Renter Section
   if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedCosigners])
