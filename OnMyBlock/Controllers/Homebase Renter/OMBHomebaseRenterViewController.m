@@ -597,8 +597,8 @@ float kHomebaseRenterImagePercentage = 0.15f;
 {
   // Activity
   if (tableView == _activityTableView) {
-    // Booking Requests
     // Sent Applications
+    // Booking Requests
     // Move In
     return 3;
     // return 2;
@@ -622,60 +622,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       reuseIdentifier: CellIdentifier];
   // Activity
   if (tableView == _activityTableView) {
-    // Booking Requests
-    if (indexPath.section == 0) {
-      // Blank space
-      if (indexPath.row == 0) {
-        static NSString *EmptyOffersCellIdentifier =
-          @"EmptyOffersCellIdentifier";
-        OMBEmptyImageTwoLabelCell *cell1 =
-          [tableView dequeueReusableCellWithIdentifier:
-            EmptyOffersCellIdentifier];
-        if (!cell1)
-          cell1 = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle:
-            UITableViewCellStyleDefault reuseIdentifier:
-              EmptyOffersCellIdentifier];
-        [cell1 setTopLabelText: @"Your offers will appear here."];
-        [cell1 setMiddleLabelText: @"You will be able to confirm"];
-        [cell1 setBottomLabelText: @"or reject them."];
-        [cell1 setObjectImageViewImage: [UIImage imageNamed:
-          @"moneybag_icon.png"]];
-        cell1.clipsToBounds = YES;
-        return cell1;
-      }
-      else {
-        // static NSString *TopPriorityCellIdentifier =
-        //   @"TopPriorityCellIdentifier";
-        // OMBHomebaseRenterTopPriorityCell *cell1 =
-        //   [tableView dequeueReusableCellWithIdentifier:
-        //     TopPriorityCellIdentifier];
-        // if (!cell1)
-        //   cell1 = [[OMBHomebaseRenterTopPriorityCell alloc] initWithStyle:
-        //     UITableViewCellStyleDefault reuseIdentifier:
-        //       TopPriorityCellIdentifier];
-        // OMBOffer *offer = [[self offers] objectAtIndex: indexPath.row - 1];
-        // cell1.noButton.tag = cell1.yesButton.tag = offer.uid;
-        // [cell1.noButton addTarget: self action: @selector(rejectOffer:)
-        //   forControlEvents: UIControlEventTouchUpInside];
-        // [cell1.yesButton addTarget: self action: @selector(confirmOffer:)
-        //   forControlEvents: UIControlEventTouchUpInside];
-        // [cell1 loadOffer: offer];
-        // return cell1;
-        static NSString *OfferCellIdentifier = @"OfferCellIdentifier";
-        OMBHomebaseLandlordOfferCell *cell1 =
-          [tableView dequeueReusableCellWithIdentifier:
-            OfferCellIdentifier];
-        if (!cell1)
-          cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle:
-            UITableViewCellStyleDefault reuseIdentifier: OfferCellIdentifier];
-        [cell1 loadOfferForRenter:
-          [[self offers] objectAtIndex: indexPath.row - 1]];
-        cell1.clipsToBounds = YES;
-        return cell1;
-      }
-    }
     // Sent Applications
-    if (indexPath.section == 1) {
+    if (indexPath.section == 0) {
       // Blank space
       if (indexPath.row == 0) {
         static NSString *EmptySentAppsCellIdentifier =
@@ -709,6 +657,58 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         //[cell loadFakeInfo]; //remove this
         cell.clipsToBounds = YES;
         return cell;
+      }
+    }
+    // Booking Requests
+    if (indexPath.section == 1) {
+      // Blank space
+      if (indexPath.row == 0) {
+        static NSString *EmptyOffersCellIdentifier =
+        @"EmptyOffersCellIdentifier";
+        OMBEmptyImageTwoLabelCell *cell1 =
+        [tableView dequeueReusableCellWithIdentifier:
+         EmptyOffersCellIdentifier];
+        if (!cell1)
+          cell1 = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier:
+              EmptyOffersCellIdentifier];
+        [cell1 setTopLabelText: @"Your offers will appear here."];
+        [cell1 setMiddleLabelText: @"You will be able to confirm"];
+        [cell1 setBottomLabelText: @"or reject them."];
+        [cell1 setObjectImageViewImage: [UIImage imageNamed:
+          @"moneybag_icon.png"]];
+        cell1.clipsToBounds = YES;
+        return cell1;
+      }
+      else {
+        // static NSString *TopPriorityCellIdentifier =
+        //   @"TopPriorityCellIdentifier";
+        // OMBHomebaseRenterTopPriorityCell *cell1 =
+        //   [tableView dequeueReusableCellWithIdentifier:
+        //     TopPriorityCellIdentifier];
+        // if (!cell1)
+        //   cell1 = [[OMBHomebaseRenterTopPriorityCell alloc] initWithStyle:
+        //     UITableViewCellStyleDefault reuseIdentifier:
+        //       TopPriorityCellIdentifier];
+        // OMBOffer *offer = [[self offers] objectAtIndex: indexPath.row - 1];
+        // cell1.noButton.tag = cell1.yesButton.tag = offer.uid;
+        // [cell1.noButton addTarget: self action: @selector(rejectOffer:)
+        //   forControlEvents: UIControlEventTouchUpInside];
+        // [cell1.yesButton addTarget: self action: @selector(confirmOffer:)
+        //   forControlEvents: UIControlEventTouchUpInside];
+        // [cell1 loadOffer: offer];
+        // return cell1;
+        static NSString *OfferCellIdentifier = @"OfferCellIdentifier";
+        OMBHomebaseLandlordOfferCell *cell1 =
+        [tableView dequeueReusableCellWithIdentifier:
+         OfferCellIdentifier];
+        if (!cell1)
+          cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier: OfferCellIdentifier];
+        [cell1 loadOfferForRenter:
+         [[self offers] objectAtIndex: indexPath.row - 1]];
+        cell1.clipsToBounds = YES;
+        return cell1;
       }
     }
     // Moved In
@@ -809,16 +809,16 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Activity
   if (tableView == _activityTableView) {
+    // Sent Applications
+    if (section == 0){
+      return 1 + [self sentApplications].count;
+      //return 2; // remove this
+    }
     // Booking Requests
-    if (section == 0) {
+    else if (section == 1) {
       // Blank space
       return 1 + [[[OMBUser currentUser].acceptedOffers allValues] count];
       // return 2;
-    }
-    // Sent Applications
-    else if (section == 1){
-      return 1 + [self sentApplications].count;
-      //return 2; // remove this
     }
     // Moved In
     else if (section == 2) {
@@ -848,8 +848,17 @@ numberOfRowsInSection: (NSInteger) section
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (tableView == _activityTableView) {
-    // Offers
+    // Sent Applications
     if (indexPath.section == 0) {
+      if (indexPath.row > 0) {
+        // new view controller
+        [self.navigationController pushViewController:
+         [[OMBHomebaseRenterSentApplicationViewController alloc] initWithOffer:nil]
+           animated:YES];
+      }
+    }
+    // Offers
+    else if (indexPath.section == 1) {
       if (indexPath.row > 0) {
         OMBOffer *offer = [[self offers] objectAtIndex:
           indexPath.row - 1];
@@ -857,15 +866,6 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         [self.navigationController pushViewController:
           [[OMBOfferInquiryViewController alloc] initWithOffer: offer]
             animated: YES];
-      }
-    }
-    // Sent Applications
-    else if (indexPath.section == 1) {
-      if (indexPath.row > 0) {
-        // new view controller
-        [self.navigationController pushViewController:
-          [[OMBHomebaseRenterSentApplicationViewController alloc] initWithOffer:nil]
-            animated:YES];
       }
     }
     // Moved In
@@ -892,8 +892,20 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // Activity
   if (tableView == _activityTableView) {
+    // Sent Applications
+    if (indexPath.section == 0){
+      // Blank space
+      if (indexPath.row == 0) {
+        if ([self sentApplications].count == 0) {
+          return [OMBEmptyImageTwoLabelCell heightForCell];
+        }
+      }
+      else {
+        return [OMBSentApplicationCell heightForCell];
+      }
+    }
     // Booking Requests
-    if (indexPath.section == 0) {
+    else if (indexPath.section == 1) {
       // Blank space
       if (indexPath.row == 0) {
         if ([[[OMBUser currentUser].acceptedOffers allValues] count] == 0) {
@@ -917,18 +929,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         }
         // return [OMBHomebaseRenterTopPriorityCell heightForCell];
         return [OMBHomebaseLandlordOfferCell heightForCell];
-      }
-    }
-    // Sent Applications
-    else if (indexPath.section == 1){
-      // Blank space
-      if (indexPath.row == 0) {
-        if ([self sentApplications].count == 0) {
-          return [OMBEmptyImageTwoLabelCell heightForCell];
-        }
-      }
-      else {
-        return [OMBSentApplicationCell heightForCell];
       }
     }
     // Moved In
@@ -979,13 +979,13 @@ viewForHeaderInSection: (NSInteger) section
   NSString *titleString = @"";
   // Activity
   if (tableView == _activityTableView) {
-    // Booking Requests
-    if (section == 0) {
-      titleString = @"Booking Requests";
-    }
     // Sent Applications
-    else if (section == 1){
+    if (section == 0){
       titleString = @"Sent Applications";
+    }
+    // Booking Requests
+    else if (section == 1) {
+      titleString = @"Booking Requests";
     }
     else if (section == 2) {
       // titleString = @"Confirmed Places";

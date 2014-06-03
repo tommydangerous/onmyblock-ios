@@ -13,6 +13,7 @@
 #import "LEffectLabel.h"
 #import "LIALinkedInApplication.h"
 #import "LIALinkedInHttpClient.h"
+#import "NSString+OnMyBlock.h"
 #import "OMBAlertViewBlur.h"
 #import "OMBBecomeVerifiedViewController.h"
 #import "OMBCenteredImageView.h"
@@ -271,7 +272,7 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   effectLabel.textColor = [UIColor whiteColor];
   effectLabel.textAlignment = NSTextAlignmentCenter;
   [submitView insertSubview: effectLabel
-               belowSubview: submitOfferButton];
+    belowSubview: submitOfferButton];
   
   alertBlur = [[OMBAlertViewBlur alloc] init];
   
