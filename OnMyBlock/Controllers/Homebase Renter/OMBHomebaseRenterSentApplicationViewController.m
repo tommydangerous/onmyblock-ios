@@ -379,7 +379,7 @@
       }
       // Waiting for landlord
       case OMBOfferStatusForStudentWaitingForLandlordResponse: {
-        effectLabel.text = @"Response to approval";
+        effectLabel.text = @"Waiting for landlord approval";
         performEffect = NO;
         respondView.backgroundColor = [UIColor blueLight];
         respondButton.userInteractionEnabled = NO;
@@ -630,7 +630,7 @@ paymentViewController
       else if (indexPath.row == OMBSentApplicationSectionRowSpacingBelowDates) {
         cell.backgroundColor = [UIColor grayUltraLight];
         cell.separatorInset  = UIEdgeInsetsMake(0.0f,
-                                                tableView.frame.size.width, 0.0f, 0.0f);
+          tableView.frame.size.width, 0.0f, 0.0f);
       }
       // Price breakdown, security deposit, down payment, remaining payment, offer
       else if (

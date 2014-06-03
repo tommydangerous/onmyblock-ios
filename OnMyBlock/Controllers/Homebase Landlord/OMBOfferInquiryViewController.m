@@ -385,7 +385,7 @@
       case OMBOfferStatusForStudentWaitingForLandlordResponse: {
         // [respondButton setTitle: @"Waiting for landlord response" forState:
         //   UIControlStateNormal];
-        effectLabel.text = @"Waiting for landlord response";
+        effectLabel.text = @"Waiting for landlord approval";
         performEffect = NO;
         respondView.backgroundColor = [UIColor blueLight];
         respondButton.userInteractionEnabled = NO;
