@@ -346,6 +346,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       string = @"State";
     }
     else if (indexPath.row == 4) {
+      c.textField.keyboardType = UIKeyboardTypeNumberPad;
       c.textField.text = zip;
       string = @"Zip";
       [c.contentView addSubview: bottomBorder];
