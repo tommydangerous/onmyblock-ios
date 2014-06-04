@@ -980,11 +980,12 @@ viewForHeaderInSection: (NSInteger) section
   // Activity
   if (tableView == _activityTableView) {
     UIButton *infoButton = [UIButton new];
-    infoButton.frame = CGRectMake(blur.frame.size.width - 20.f - 5.f,
-      2.0f, 20.f, 20.f);
+    CGFloat widthIcon = 18.f;
+    infoButton.frame = CGRectMake(blur.frame.size.width - widthIcon - 5.f,
+      4.0f, widthIcon, widthIcon);
     infoButton.layer.borderColor = [UIColor blueDark].CGColor;
     infoButton.layer.borderWidth = 1.0f;
-    infoButton.layer.cornerRadius = 20.f * 0.5f;
+    infoButton.layer.cornerRadius = widthIcon * 0.5f;
     infoButton.titleLabel.font = [UIFont normalTextFontBold];
     [infoButton setTitle: @"i" forState: UIControlStateNormal];
     [infoButton setTitleColor: [UIColor blueDark] forState: UIControlStateNormal];
@@ -1404,9 +1405,9 @@ viewForHeaderInSection: (NSInteger) section
                      @"be sent to the landlord to review."];
   NSString *info2 = [NSString stringWithFormat:
                      @"If the landlord approves your application and chooses "
-                     @"you as a tenant you will be given %@ "
-                     @"to pay the first month’s rent & deposit and sign the lease.",
-                     [OMBOffer timelineStringForLandlord]];
+                     @"you as a tenant you will be given 4 days "
+                     @"to pay the first month’s rent & deposit and sign the lease."];
+                     //[OMBOffer timelineStringForLandlord]
   NSString *info3 = [NSString stringWithFormat:
                      @"Once you’ve paid the place is yours, get ready to move-in!"];
   
@@ -1420,7 +1421,7 @@ viewForHeaderInSection: (NSInteger) section
      @"information": info2
      },
    @{
-     @"title": @" ",
+     @"title": @"Move In!",
      @"information": info3
      }
    ];
