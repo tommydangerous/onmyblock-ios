@@ -246,6 +246,8 @@
   if (residence.minRent)
     fixedRentalPriceTextField.text = [NSString stringWithFormat: @"%.2f",
       residence.minRent];
+  else
+    saveBarButtonItem.enabled = NO;
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -922,6 +924,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // Min Rent
     if (textField.indexPath.row == 0) {
       residence.minRent = [textField.text floatValue];
+      
+      if([textField.text length])
+        saveBarButtonItem.enabled = YES;
+      else
+        saveBarButtonItem.enabled = NO;
     }
     // Rent it Now Price
     else if (textField.indexPath.row == 1) {
