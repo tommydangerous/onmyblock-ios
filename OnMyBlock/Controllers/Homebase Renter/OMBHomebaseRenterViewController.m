@@ -1342,7 +1342,7 @@ viewForHeaderInSection: (NSInteger) section
   OMBInformationHowItWorksViewController *vc =
     [[OMBInformationHowItWorksViewController alloc] initWithInformationArray:
       array];
-  vc.title = @"Your Offers";
+  vc.title = @"Bookings";
   [(OMBNavigationController *) self.navigationController pushViewController:
      vc animated: YES ];
 }
@@ -1413,7 +1413,7 @@ viewForHeaderInSection: (NSInteger) section
   
   NSArray *array = @[
    @{
-     @"title": @"Sent an Application",
+     @"title": @"Send an Application",
      @"information": info1
      },
    @{
@@ -1429,7 +1429,7 @@ viewForHeaderInSection: (NSInteger) section
   OMBInformationHowItWorksViewController *vc =
     [[OMBInformationHowItWorksViewController alloc] initWithInformationArray:
       array];
-  vc.title = @"Your sent applications";
+  vc.title = @"Applications";
   [(OMBNavigationController *) self.navigationController pushViewController:
     vc animated: YES ];
 }
