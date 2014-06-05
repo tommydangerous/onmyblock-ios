@@ -512,6 +512,31 @@ withNumber: (NSNumber *) number
     [_headerButton setTitle: [title capitalizedString]
       forState: UIControlStateNormal];
   }
+  // Is for renter
+  else{
+    if (landlordType != [NSNull null]) {
+      if ([(NSString *) landlordType length]) {
+        _renterButtons = [NSMutableArray arrayWithArray:
+          @[ _searchButton, _discoverButton,
+             _renterHomebaseButton, _favoritesButton]];
+        
+        
+      }else{
+        _renterButtons = [NSMutableArray arrayWithArray:
+          @[ _searchButton, _discoverButton,
+             _renterHomebaseButton, _favoritesButton,
+             _inboxButton]];
+      }
+    }
+    else{
+      _renterButtons = [NSMutableArray arrayWithArray:
+          @[ _searchButton, _discoverButton,
+             _renterHomebaseButton, _favoritesButton,
+             _inboxButton]];
+    }
+    
+    [self setupForRenter];
+  }
 }
 
 - (void) updateMessagesUnviewedCount: (NSNotification *) notification
