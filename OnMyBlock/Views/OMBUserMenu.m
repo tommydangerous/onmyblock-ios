@@ -240,7 +240,7 @@
   [_sellerButtons addObject: _manageListingsButton];
 
   // Inbox
-  /*_sellerInboxButton = [UIButton new];
+  _sellerInboxButton = [UIButton new];
   [_sellerInboxButton addTarget: self action: @selector(showInboxSeller)
     forControlEvents: UIControlEventTouchUpInside];
   [_sellerInboxButton setTitle: @"Messages" forState: UIControlStateNormal];
@@ -255,7 +255,7 @@
   [_sellerButtons addObject: _sellerInboxButton];
   // Notification badge
   _inboxNotificationBadge = [UILabel new];
-  [_sellerInboxButton addSubview: _inboxNotificationBadge];*/
+  [_sellerInboxButton addSubview: _inboxNotificationBadge];
 
   // Set attributes for buttons
   NSArray *buttonsArray = @[
@@ -269,8 +269,8 @@
     // Seller
     _createListingButton,
     _sellerHomebaseButton,
-    _manageListingsButton
-    //_sellerInboxButton
+    _manageListingsButton,
+    _sellerInboxButton
   ];
   for (UIButton *button in buttonsArray) {
     button.contentEdgeInsets = UIEdgeInsetsMake(0.0f,
@@ -501,10 +501,11 @@ withNumber: (NSNumber *) number
       
       if([(NSString *)landlordType isEqualToString:@"landlord"])
         _sellerButtons = [NSMutableArray arrayWithArray:
-          @[_createListingButton,_manageListingsButton]];
+          @[_createListingButton,_manageListingsButton,_sellerInboxButton]];
       else
         _sellerButtons = [NSMutableArray arrayWithArray:
-          @[_createListingButton,_sellerHomebaseButton,_manageListingsButton]];
+          @[_createListingButton,_sellerHomebaseButton,
+            _manageListingsButton,_sellerInboxButton]];
       
       [self setupForSeller];
     }
