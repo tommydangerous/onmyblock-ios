@@ -803,7 +803,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Renter info
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
-    if([user isLandlord])// || [user.landlordType isEqualToString:@"subletter"]
+    
+    if([user isLandlord] && ![user.landlordType isEqualToString:@"subletter"])
       return 0.0;
     
     // Top spacing
