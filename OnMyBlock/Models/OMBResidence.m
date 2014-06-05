@@ -805,7 +805,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
     _moveInDate = [date timeIntervalSince1970];
   }
   else {
-    _moveInDate = [[NSDate date] timeIntervalSince1970];
+    //_moveInDate = [[NSDate date] timeIntervalSince1970];
   }
 
   // Move-out Date
