@@ -251,6 +251,7 @@
 
   // Alert view blur
   alertBlur = [[OMBAlertViewBlur alloc] init];
+  _nextSection = NO;
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -315,6 +316,8 @@
       self.table.frame.size.width, 0.0f);
     self.table.tableFooterView = footerView;
   }
+  if(_nextSection)
+   [self nextIncompleteSection];
 }
 
 #pragma mark - Protocol
@@ -496,7 +499,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Address
   else if (indexPath.row == 3) {
     string = @"Select Address";
-    if ([residence.address length]) {
+    if ([residence.address length] && [residence.city length] &&
+        [residence.state length] && [residence.zip length]) {
       string = [residence.address capitalizedString];
       cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
@@ -707,7 +711,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (!residence.moveInDate)
     string = @"Please set the move-in date.";
   // Listing Details
-  else if (!residence.bedrooms >= 0)
+  else if (!residence.bedrooms)
     string = @"Please set the number of bedrooms.";
   return string;
 }
@@ -745,7 +749,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     return;
   }
   // Address
-  if (![residence.address length]){
+  if (![residence.address length] || ![residence.city length] ||
+      ![residence.state length] || ![residence.zip length]){
     OMBFinishListingAddressViewController *vc =
       [[OMBFinishListingAddressViewController alloc]
         initWithResidence: residence];

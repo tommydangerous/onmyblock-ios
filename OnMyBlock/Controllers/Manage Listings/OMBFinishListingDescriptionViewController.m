@@ -134,9 +134,7 @@
       attributes: @[@"description"]];
   [conn start];
 
-  nextSection = YES;
-  
-  [self.navigationController popViewControllerAnimated: YES];
+  [self nextSection];
 }
 
 - (void) setTextForDescriptionView

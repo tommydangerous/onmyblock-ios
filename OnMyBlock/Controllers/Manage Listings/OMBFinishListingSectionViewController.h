@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, OMBFinishListingSection){
 @interface OMBFinishListingSectionViewController : OMBTableViewController
 {
   BOOL isEditing;
-  BOOL nextSection;
+  //BOOL nextSection;
   OMBResidence *residence;
   OMBFinishListingSection tagSection;
 }
@@ -40,6 +40,7 @@ typedef NS_ENUM(NSInteger, OMBFinishListingSection){
 
 #pragma mark - Instance Methods
 
+- (void) nextSection;
 - (void) save;
 
 @end

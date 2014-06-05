@@ -42,7 +42,6 @@
     NSFontAttributeName: boldFont
   } forState: UIControlStateNormal];
   
-  nextSection = NO;
 }
 
 -(void) dealloc
@@ -53,6 +52,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
+  
+  self.delegate.nextSection = NO;
   
   NSString *barButtonTitle =
     [self incompleteSections] > 0 ? @"Next": @"Save";
@@ -70,20 +71,13 @@
 {
   [super viewDidDisappear:animated];
   
-  if(nextSection)
-    [self.delegate nextIncompleteSection];
+  //if(nextSection)
+    //[self.delegate nextIncompleteSection];
 }
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
-
-- (void) save
-{
-  // Subclasses implement this
-  nextSection = YES;
-  [self.navigationController popViewControllerAnimated: YES];
-}
 
 - (int)incompleteSections
 {
@@ -98,7 +92,8 @@
   if (!residence.minRent)
     incompletes += 1;
   // Address
-  if (![residence.address length])
+  if (![residence.address length] || ![residence.city length] ||
+      ![residence.state length] || ![residence.zip length])
     incompletes += 1;
   // Lease Details
   if (!residence.moveInDate)
@@ -112,6 +107,7 @@
 
 - (OMBFinishListingSection)lastIncompleteSection
 {
+  
   if (![residence.title length])
     return OMBFinishListingSectionTitle;
   // Description
@@ -121,7 +117,8 @@
   if (!residence.minRent)
     return OMBFinishListingSectionRentDetails;
   // Address
-  if (![residence.address length])
+  if (![residence.address length] || ![residence.city length] ||
+      ![residence.state length] || ![residence.zip length])
     return OMBFinishListingSectionAddress;
   // Lease Details
   if (!residence.moveInDate)
@@ -132,6 +129,23 @@
   
   return OMBFinishListingSectionNone;
   
+}
+
+- (void) nextSection
+{
+  BOOL animated = YES;
+  if([self incompleteSections] > 0){
+    animated = NO;
+    self.delegate.nextSection = YES;
+  }
+  
+  [self.navigationController popViewControllerAnimated: animated];
+}
+
+- (void) save
+{
+  // Subclasses implement this
+  [self nextSection];
 }
 
 @end

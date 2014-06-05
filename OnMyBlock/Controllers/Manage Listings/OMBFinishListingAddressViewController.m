@@ -640,8 +640,8 @@ withMiles: (CGFloat) miles animated: (BOOL) animated
         ]
       ];
     [conn start];
-    nextSection = YES;
-    [self.navigationController popViewControllerAnimated: YES];
+    
+    [self nextSection];
   }
 }
 

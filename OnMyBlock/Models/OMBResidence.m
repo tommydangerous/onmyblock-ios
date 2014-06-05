@@ -541,7 +541,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   if (_moveInDate)
     stepsRemaining -= 1;
   // Listing Details
-  if (_bedrooms >= 0)
+  if (_bedrooms)
     stepsRemaining -= 1;
 
   return stepsRemaining;

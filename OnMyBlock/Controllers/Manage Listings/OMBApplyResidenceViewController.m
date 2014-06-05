@@ -621,6 +621,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
     if (row == OMBMyRenterProfileSectionRenterInfoTopSpacing) {
       emptyCell.backgroundColor = [UIColor backgroundColor];
+      emptyCell.selectionStyle = UITableViewCellSelectionStyleNone;
       emptyCell.separatorInset = maxInsets;
     }
     else {
