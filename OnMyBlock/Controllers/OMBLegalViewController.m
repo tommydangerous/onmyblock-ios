@@ -9,6 +9,7 @@
 #import "OMBLegalViewController.h"
 
 #import "NSString+Extensions.h"
+#import "NSString+OnMyBlock.h"
 #import "OMBActivityViewFullScreen.h"
 #import "OMBLegalAnswer.h"
 #import "OMBLegalAnswerCreateOrUpdateConnection.h"
@@ -76,6 +77,14 @@
   ];
   [activityViewFullScreen startSpinning];
   [self.table reloadData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+  [super viewWillDisappear:animated];
+  
+  [self checkComplete];
+  
 }
 
 #pragma mark - Protocol
@@ -203,6 +212,25 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
+- (void) checkComplete
+{
+  BOOL allAnswered = YES;
+  
+  for(OMBLegalQuestion *legalQuestion in
+      [[OMBLegalQuestionStore sharedStore] questionsSortedByQuestion]){
+    
+    if(![legalAnswers objectForKey:
+        [NSNumber numberWithInt: legalQuestion.uid]]){
+      allAnswered = NO;
+      NSLog(@"not exits");
+    }
+  }
+  
+  // Set YES if all questions have been answered
+  [self saveKeyUserDefaults: allAnswered];
+  
+}
+
 - (void) done
 {
   [self.view endEditing: YES];
@@ -214,6 +242,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (isEditing)
     [self done];
+}
+
+- (NSMutableDictionary *) renterapplicationUserDefaults
+{
+  NSMutableDictionary *dictionary =
+    [[NSUserDefaults standardUserDefaults] objectForKey:
+      OMBUserDefaultsRenterApplication];
+  if (!dictionary)
+    dictionary = [NSMutableDictionary dictionary];
+  return dictionary;
 }
 
 - (void) setLegalAnswer: (OMBLegalAnswer *) object
@@ -237,7 +275,20 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [[[OMBLegalAnswerCreateOrUpdateConnection alloc] initWithLegalAnswer:
       legalAnswer] start];
   }
+  
   [self.navigationController popViewControllerAnimated: YES];
+}
+
+- (void) saveKeyUserDefaults: (BOOL)save
+{
+  NSMutableDictionary *dictionary =
+    [NSMutableDictionary dictionaryWithDictionary:
+      [self renterapplicationUserDefaults]];
+  [dictionary setObject: [NSNumber numberWithBool: save]
+    forKey: OMBUserDefaultsRenterApplicationCheckedLegalQuestions];
+  [[NSUserDefaults standardUserDefaults] setObject: dictionary
+    forKey: OMBUserDefaultsRenterApplication];
+  [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end

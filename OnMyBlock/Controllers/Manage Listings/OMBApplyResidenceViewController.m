@@ -1073,6 +1073,48 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   return ([[[self renterapplicationUserDefaults] objectForKey: key] boolValue]);
 }
 
+- (NSString *) incompleteFieldString
+{
+  NSString *string = @"";
+  
+  NSArray *keyArray = @[@"firstName", @"lastName", @"school", @"email", @"phone"];
+  
+  for(NSString *key in keyArray)
+  {
+    if(![[valueDictionary objectForKey:key] length]){
+      if([key isEqualToString:@"firstName"])
+        string = @"\"First Name";
+      else if([key isEqualToString:@"lastName"])
+          string = @"\"Last Name";
+      else if([key isEqualToString:@"school"])
+          string = @"\"School";
+      else if([key isEqualToString:@"email"])
+          string = @"\"Email";
+      else if([key isEqualToString:@"phone"])
+          string = @"\"Phone";
+      break;
+    }
+  }
+  
+  return string;
+}
+
+- (NSString *) incompleteSectionString
+{
+  NSString *string = @"";
+  
+  if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedCosigners])
+    string = @"\"Co-signer";
+  else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedRentalHistory])
+    string = @"\"Rental History";
+  else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedWorkHistory])
+    string = @"\"Work & School History";
+  else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedLegalQuestions])
+    string = @"\"Legal Questions";
+  
+  return string;
+}
+
 - (void)showRenterHomebase
 {
   [self closeAlertBlur];
@@ -1081,32 +1123,57 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void)shouldSubmitApplication
 {
   BOOL shouldSubmit = YES;
+  NSString *message = @"";
+  NSString *title = @"Almost Finished";
   
-  NSArray *keyArray = @[@"firstName", @"lastName", @"school", @"email", @"phone"];
+  NSArray *keyArray = @[@"firstName", @"lastName",
+    @"school", @"email", @"phone"];
   
-  for(NSString *key in keyArray)
-  {
-    if([valueDictionary objectForKey:key]){
-      if([[valueDictionary objectForKey:key] length] == 0)
-          shouldSubmit = NO;
-    }
-    else
+  // Search missing field
+  for(NSString *key in keyArray){
+    
+    if(![[valueDictionary objectForKey:key] length]){
       shouldSubmit = NO;
+      // Set correct message
+      message = [[self incompleteFieldString] stringByAppendingString:
+        @"\" is required to submit an application"];
+      break;
+    }
+  }
+  
+  // If all fields are completed then search for possible sections missing
+  // This is just for set the correct message
+  
+  if(shouldSubmit){
+    // Search missing section
+    if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedCosigners])
+      shouldSubmit = NO;
+    else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedRentalHistory])
+      shouldSubmit = NO;
+    else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedWorkHistory])
+      shouldSubmit = NO;
+    else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedLegalQuestions])
+      shouldSubmit = NO;
+    
+    if(!shouldSubmit){
+      
+      // Set correct message
+      message = [[self incompleteSectionString] stringByAppendingString:
+        @"\" section is required to submit an application"];
+    }
   }
   
   
-  // Renter Section
-  if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedCosigners])
-    shouldSubmit = NO;
-  if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedRentalHistory])
-    shouldSubmit = NO;
-  if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedWorkHistory])
-    shouldSubmit = NO;
-  if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedLegalQuestions])
-    shouldSubmit = NO;
-  
-  if(shouldSubmit)
+  // Submit Application ?
+  if(!shouldSubmit){
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title
+       message: message delegate: nil
+        cancelButtonTitle: @"Continue" otherButtonTitles: nil];
+    [alertView show];
+  }
+  else{
     [self submitApplication];
+  }
 }
 
 - (void)submitApplication
@@ -1114,15 +1181,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   
   [alertBlur setTitle: @"Application Submitted!"];
   [alertBlur setMessage: @"The landlord will review your application and make a decision. "
-   @"If you have applied with co-applicants make sure they have "
-   @"completed applications as well. Feel free to message the "
-   @"landlord for more information about the property "
-   @"or to schedule a viewing."];
+    @"If you have applied with co-applicants make sure they have "
+    @"completed applications as well. Feel free to message the "
+    @"landlord for more information about the property "
+    @"or to schedule a viewing."];
   [alertBlur setConfirmButtonTitle: @"Okay"];
   [alertBlur addTargetForConfirmButton: self
-                                action: @selector(showRenterHomebase)];
+    action: @selector(showRenterHomebase)];
   [alertBlur addTargetForCancelButton: self
-                               action: @selector(submitCanceled)];
+    action: @selector(submitCanceled)];
   [alertBlur showInView: self.view withDetails: NO];
   [alertBlur showBothButtons];
   [alertBlur hideQuestionButton];

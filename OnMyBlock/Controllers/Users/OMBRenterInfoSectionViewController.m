@@ -117,6 +117,7 @@
 {
   [super viewWillDisappear:animated];
   
+  // Set YES if there is any object a the section
   BOOL haveObjects = [self objects].count > 0 ? YES : NO;
   [self saveKeyUserDefaults: haveObjects];
 }
