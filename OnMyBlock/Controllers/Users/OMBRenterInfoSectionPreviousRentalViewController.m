@@ -24,6 +24,7 @@
   if (!(self = [super initWithUser: object])) return nil;
   
   self.title = @"Rental History";
+  tagSection = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
   
   return self;
 }

@@ -12,6 +12,7 @@
 #import "NSString+Extensions.h"
 #import "NSString+OnMyBlock.h"
 #import "OMBActivityViewFullScreen.h"
+#import "OMBApplyResidenceViewController.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoAddViewController.h"
 #import "OMBObject.h"
@@ -47,8 +48,6 @@
 - (void) loadView
 {
   [super loadView];
-
-  self.navigationItem.rightBarButtonItem = doneBarButtonItem;
 
   CGRect screen        = [self screen];
   CGFloat screenHeight = screen.size.height;
@@ -111,6 +110,35 @@
       otherButtonTitles: nil];
   [self.view addSubview: deleteActionSheet];
   
+  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
+  doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
+    style: UIBarButtonItemStylePlain target: self action: @selector(done)];
+  [doneBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+  } forState: UIControlStateNormal];
+  
+  self.navigationItem.rightBarButtonItem = doneBarButtonItem;
+  
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+  [super viewWillAppear:animated];
+  
+  self.delegate.nextSection = NO;
+  
+  if(self.delegate){
+    NSString *barButtonTitle =
+      [self incompleteSections] > 0 ? @"Next": @"Done";
+    
+    if([self incompleteSections] == 1 &&
+       [self lastIncompleteSection] == tagSection){
+      barButtonTitle = @"Done";
+    }
+  
+    self.navigationItem.rightBarButtonItem.title = barButtonTitle;
+  }
+  
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -120,6 +148,7 @@
   // Set YES if there is any object a the section
   BOOL haveObjects = [self objects].count > 0 ? YES : NO;
   [self saveKeyUserDefaults: haveObjects];
+  
 }
 
 #pragma mark - Protocol
@@ -179,7 +208,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) done
 {
-  [self.navigationController popViewControllerAnimated: YES];
+  [self nextSection];
 }
 
 - (void) hideEmptyLabel: (BOOL) hide
@@ -204,6 +233,71 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       [self stopSpinning];
     }];
   [self startSpinning];
+}
+
+- (int)incompleteSections
+{
+  int incompletes = 0;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedCoapplicants] boolValue])
+    incompletes += 1;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue])
+    incompletes += 1;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue])
+    incompletes += 1;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue])
+    incompletes += 1;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue])
+    incompletes += 1;
+  
+  return incompletes;
+}
+
+- (NSString *)lastIncompleteSection
+{
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedCoapplicants] boolValue])
+    return OMBUserDefaultsRenterApplicationCheckedCoapplicants;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue])
+    return OMBUserDefaultsRenterApplicationCheckedCosigners;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue])
+    return OMBUserDefaultsRenterApplicationCheckedRentalHistory;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue])
+    return OMBUserDefaultsRenterApplicationCheckedWorkHistory;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue])
+    return OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
+  
+  return @"";
+  
+}
+
+- (void) nextSection
+{
+  BOOL animated = YES;
+  if([self incompleteSections] > 0 && self.delegate){
+    animated = NO;
+    self.delegate.nextSection = YES;
+  }
+  
+  [self.navigationController popViewControllerAnimated: animated];
 }
 
 - (NSArray *) objects

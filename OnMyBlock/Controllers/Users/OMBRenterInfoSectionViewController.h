@@ -9,6 +9,7 @@
 #import "OMBTableViewController.h"
 
 @class AMBlurView;
+@class OMBApplyResidenceViewController;
 @class OMBActivityViewFullScreen;
 @class OMBRenterInfoAddViewController;
 @class OMBUser;
@@ -23,7 +24,10 @@
   UILabel *emptyLabel;
   OMBUser *user;
   NSString *key;
+  NSString *tagSection;
 }
+
+@property (nonatomic, weak) OMBApplyResidenceViewController *delegate;
 
 #pragma mark - Initializer
 

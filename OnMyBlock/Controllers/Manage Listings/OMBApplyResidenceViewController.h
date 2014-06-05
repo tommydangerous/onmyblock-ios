@@ -73,10 +73,13 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRenterInfoRow) {
   LEffectLabel *effectLabel;
 }
 
+@property BOOL nextSection;
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
 - (void) loadUser: (OMBUser *) object;
+- (void) nextIncompleteSection;
 
 @end

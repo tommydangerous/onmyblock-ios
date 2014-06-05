@@ -33,6 +33,7 @@
   if (!(self = [super initWithUser: object])) return nil;
 
   self.title = @"Co-applicants";
+  tagSection = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
 
   return self;
 }

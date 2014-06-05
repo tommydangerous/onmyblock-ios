@@ -276,6 +276,7 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   
   alertBlur = [[OMBAlertViewBlur alloc] init];
   
+  _nextSection = NO;
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -295,18 +296,21 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   }];
   
   // If user is a subletter
-  if ([user.landlordType isEqualToString: @"subletter"]) {
+  /*if ([user.landlordType isEqualToString: @"subletter"]) {
     OMBManageListingsConnection *conn =
     [[OMBManageListingsConnection alloc] init];
     conn.completionBlock = ^(NSError *error) {
       [self.table reloadData];
     };
     [conn start];
-  }
+  }*/
   
   [effectLabel performEffectAnimation];
   
   [self updateData];
+  
+  if(_nextSection)
+    [self nextIncompleteSection];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -718,38 +722,46 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Renter info
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
-    id vc;
     NSString *key = @"";
     // Co-applicants
     if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
       key = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
-      vc  = [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser:
-             user];
+      OMBRenterInfoSectionRoommateViewController *vc  =
+      [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser:
+       user];
+      vc.delegate = self;
+      [self.navigationController pushViewController: vc animated: YES];
     }
     // Co-signers
     else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
       key = OMBUserDefaultsRenterApplicationCheckedCosigners;
-      vc  = [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser:
-             user];
+      OMBRenterInfoSectionCosignersViewController *vc  =
+      [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser:
+       user];
+      vc.delegate = self;
+      [self.navigationController pushViewController: vc animated: YES];
     }
     // Rental History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
       key = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
-      vc  = [[OMBRenterInfoSectionPreviousRentalViewController alloc]
-             initWithUser: user];
+      OMBRenterInfoSectionPreviousRentalViewController *vc  =
+      [[OMBRenterInfoSectionPreviousRentalViewController alloc] initWithUser: user];
+      vc.delegate = self;
+      [self.navigationController pushViewController: vc animated: YES];
     }
     // Work History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
       key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
-      vc  = [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser:
-             user];
+      OMBRenterInfoSectionEmploymentViewController *vc  =
+      [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser:  user];
+      vc.delegate = self;
+      [self.navigationController pushViewController: vc animated: YES];
     }
     // Legal Questions
     else if (row == OMBMyRenterProfileSectionRenterInfoRowLegalQuestions) {
       key = OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
-      vc  = [[OMBLegalViewController alloc] initWithUser: user];
-    }
-    if (vc) {
+      OMBLegalViewController *vc  = [[OMBLegalViewController alloc] initWithUser: user];
+      //vc.delegate = self;
       [self.navigationController pushViewController: vc animated: YES];
     }
   }
@@ -791,7 +803,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Renter info
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
-    if([user isLandlord] || [user.landlordType isEqualToString:@"subletter"])
+    if([user isLandlord])// || [user.landlordType isEqualToString:@"subletter"]
       return 0.0;
     
     // Top spacing
@@ -1097,6 +1109,48 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   
   return string;
+}
+
+- (void) nextIncompleteSection
+{
+  NSLog(@"next");
+  BOOL animated = NO;
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+              OMBUserDefaultsRenterApplicationCheckedCoapplicants] boolValue]){
+    OMBRenterInfoSectionRoommateViewController *vc  =
+    [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser: user];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:animated];
+  }
+  else if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue]){
+    OMBRenterInfoSectionCosignersViewController *vc  =
+    [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser: user];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:animated];
+  }
+  else if (![[[self renterapplicationUserDefaults] objectForKey:
+              OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue]){
+    OMBRenterInfoSectionPreviousRentalViewController *vc  =
+      [[OMBRenterInfoSectionPreviousRentalViewController alloc] initWithUser:
+           user];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:animated];
+  }
+  else if (![[[self renterapplicationUserDefaults] objectForKey:
+              OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue]){
+    OMBRenterInfoSectionEmploymentViewController *vc  =
+    [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser: user];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:animated];
+  }
+  else if (![[[self renterapplicationUserDefaults] objectForKey:
+              OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue]){
+    OMBLegalViewController *vc  = [[OMBLegalViewController alloc] initWithUser: user];
+    //vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:animated];
+  }
+  
 }
 
 - (NSString *) incompleteSectionString

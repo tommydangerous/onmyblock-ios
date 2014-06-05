@@ -35,6 +35,7 @@
   if (!(self = [super initWithUser: object])) return nil;
   
   self.title = @"Work & School History";
+  tagSection = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
   
   return self;
 }

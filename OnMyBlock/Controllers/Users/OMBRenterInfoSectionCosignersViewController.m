@@ -27,6 +27,7 @@
   if (!(self = [super initWithUser: object])) return nil;
 
   self.title = @"Co-signers";
+  tagSection = OMBUserDefaultsRenterApplicationCheckedCosigners;
 
   return self;
 }
