@@ -11,12 +11,14 @@
 #import "NSString+Extensions.h"
 #import "NSString+OnMyBlock.h"
 #import "OMBActivityViewFullScreen.h"
+#import "OMBApplyResidenceViewController.h"
 #import "OMBLegalAnswer.h"
 #import "OMBLegalAnswerCreateOrUpdateConnection.h"
 #import "OMBLegalAnswerListConnection.h"
 #import "OMBLegalQuestion.h"
 #import "OMBLegalQuestionCell.h"
 #import "OMBLegalQuestionStore.h"
+#import "OMBRenterInfoSectionViewController.h"
 #import "UIColor+Extensions.h"
 
 @implementation OMBLegalViewController
@@ -30,7 +32,8 @@
   legalAnswers = [NSMutableDictionary dictionary];
 
   self.title = @"Legal Questions";
-
+  tagSection = 5;
+  
   return self;
 }
 
@@ -61,6 +64,19 @@
 {
   [super viewWillAppear: animated];
 
+  self.delegate.nextSection = 0;
+  if(self.delegate){
+    NSString *barButtonTitle =
+     [OMBRenterInfoSectionViewController incompleteSections] > 0 ? @"Next": @"Save";
+    
+    if([OMBRenterInfoSectionViewController incompleteSections] == 1 &&
+       [OMBRenterInfoSectionViewController lastIncompleteSection] == tagSection){
+      barButtonTitle = @"Save ";
+    }
+    
+    self.navigationItem.rightBarButtonItem.title = barButtonTitle;
+  }
+  
   [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
     ^(NSError *error) {
       OMBLegalAnswerListConnection *connection =
@@ -244,6 +260,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [self done];
 }
 
+- (void) nextSection
+{
+  BOOL animated = YES;
+  if([OMBRenterInfoSectionViewController incompleteSections] > 0 && self.delegate){
+    animated = NO;
+    self.delegate.nextSection = tagSection;
+  }
+  
+  [self.navigationController popViewControllerAnimated: animated];
+}
+
 - (NSMutableDictionary *) renterapplicationUserDefaults
 {
   NSMutableDictionary *dictionary =
@@ -276,7 +303,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       legalAnswer] start];
   }
   
-  [self.navigationController popViewControllerAnimated: YES];
+  [self nextSection];
+  
 }
 
 - (void) saveKeyUserDefaults: (BOOL)save

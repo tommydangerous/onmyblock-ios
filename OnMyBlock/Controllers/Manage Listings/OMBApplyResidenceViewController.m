@@ -276,7 +276,9 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   
   alertBlur = [[OMBAlertViewBlur alloc] init];
   
-  _nextSection = NO;
+  _nextSection = 0;
+  
+  sections = @[@1,@2,@3,@4,@5];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -761,7 +763,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     else if (row == OMBMyRenterProfileSectionRenterInfoRowLegalQuestions) {
       key = OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
       OMBLegalViewController *vc  = [[OMBLegalViewController alloc] initWithUser: user];
-      //vc.delegate = self;
+      vc.delegate = self;
       [self.navigationController pushViewController: vc animated: YES];
     }
   }
@@ -1066,7 +1068,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table reloadData];
 }
 
-#pragma mark - Instance Methods
+// Above methods are from MyRenterProfile
+// Real Methods
 
 - (void) closeAlertBlur
 {
@@ -1116,40 +1119,68 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSLog(@"next");
   BOOL animated = NO;
-  if (![[[self renterapplicationUserDefaults] objectForKey:
-              OMBUserDefaultsRenterApplicationCheckedCoapplicants] boolValue]){
-    OMBRenterInfoSectionRoommateViewController *vc  =
-    [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser: user];
-    vc.delegate = self;
-    [self.navigationController pushViewController:vc animated:animated];
-  }
-  else if (![[[self renterapplicationUserDefaults] objectForKey:
-         OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue]){
-    OMBRenterInfoSectionCosignersViewController *vc  =
-    [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser: user];
-    vc.delegate = self;
-    [self.navigationController pushViewController:vc animated:animated];
-  }
-  else if (![[[self renterapplicationUserDefaults] objectForKey:
-              OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue]){
-    OMBRenterInfoSectionPreviousRentalViewController *vc  =
-      [[OMBRenterInfoSectionPreviousRentalViewController alloc] initWithUser:
-           user];
-    vc.delegate = self;
-    [self.navigationController pushViewController:vc animated:animated];
-  }
-  else if (![[[self renterapplicationUserDefaults] objectForKey:
-              OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue]){
-    OMBRenterInfoSectionEmploymentViewController *vc  =
-    [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser: user];
-    vc.delegate = self;
-    [self.navigationController pushViewController:vc animated:animated];
-  }
-  else if (![[[self renterapplicationUserDefaults] objectForKey:
-              OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue]){
-    OMBLegalViewController *vc  = [[OMBLegalViewController alloc] initWithUser: user];
-    //vc.delegate = self;
-    [self.navigationController pushViewController:vc animated:animated];
+  
+  int i;
+  // If is the last, set the first section to search
+  if(_nextSection == sections.count)
+    i = 1;
+  else
+    i = _nextSection + 1;
+  
+  // It iterates 1 cicle searching for any section incomplete
+  while(i != _nextSection){
+    // 'Casue is the next incomplete section
+    switch (i) {
+      case 1:// First section(Co-applicants) is not required
+        break;
+      case 2:
+        if (![[[self renterapplicationUserDefaults] objectForKey:
+               OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue]){
+          OMBRenterInfoSectionCosignersViewController *vc  =
+          [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser: user];
+          vc.delegate = self;
+          [self.navigationController pushViewController:vc animated:animated];
+          return;
+        }
+        break;
+      case 3:
+        if (![[[self renterapplicationUserDefaults] objectForKey:
+               OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue]){
+          OMBRenterInfoSectionPreviousRentalViewController *vc  =
+          [[OMBRenterInfoSectionPreviousRentalViewController alloc] initWithUser: user];
+          vc.delegate = self;
+          [self.navigationController pushViewController:vc animated:animated];
+          return;
+        }
+        break;
+      case 4:
+        if (![[[self renterapplicationUserDefaults] objectForKey:
+               OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue]){
+          OMBRenterInfoSectionEmploymentViewController *vc  =
+          [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser: user];
+          vc.delegate = self;
+          [self.navigationController pushViewController:vc animated:animated];
+          return;
+        }
+        break;
+      case 5:
+        if (![[[self renterapplicationUserDefaults] objectForKey:
+               OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue]){
+          OMBLegalViewController *vc  = [[OMBLegalViewController alloc] initWithUser: user];
+          vc.delegate = self;
+          [self.navigationController pushViewController:vc animated:animated];
+          return;
+        }
+    }
+    
+    // Jump from the last section to the first or
+    // go to the next section
+    // For check is there is an incomplete section
+    if(i == sections.count)
+      i = 1;
+    else
+      i++;
+    
   }
   
 }

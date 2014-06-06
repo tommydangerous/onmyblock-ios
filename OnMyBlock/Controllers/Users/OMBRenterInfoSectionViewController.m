@@ -125,14 +125,14 @@
 {
   [super viewWillAppear:animated];
   
-  self.delegate.nextSection = NO;
+  self.delegate.nextSection = 0;
   
   if(self.delegate){
     NSString *barButtonTitle =
-      [self incompleteSections] > 0 ? @"Next": @"Done";
+      [OMBRenterInfoSectionViewController incompleteSections] > 0 ? @"Next": @"Done";
     
-    if([self incompleteSections] == 1 &&
-       [self lastIncompleteSection] == tagSection){
+    if([OMBRenterInfoSectionViewController incompleteSections] == 1 &&
+       [OMBRenterInfoSectionViewController lastIncompleteSection] == tagSection){
       barButtonTitle = @"Done";
     }
   
@@ -183,6 +183,64 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 }
 
 #pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (int)incompleteSections
+{
+  int incompletes = 0;
+  
+  if (![[[OMBRenterInfoSectionViewController renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue])
+    incompletes += 1;
+  
+  if (![[[OMBRenterInfoSectionViewController renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue])
+    incompletes += 1;
+  
+  if (![[[OMBRenterInfoSectionViewController renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue])
+    incompletes += 1;
+  
+  if (![[[OMBRenterInfoSectionViewController renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue])
+    incompletes += 1;
+  
+  return incompletes;
+}
+
++ (int)lastIncompleteSection
+{
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue])
+    return 2;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue])
+    return 3;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue])
+    return 4;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue])
+    return 5;
+  
+  return 0;
+  
+}
+
++ (NSMutableDictionary *) renterapplicationUserDefaults
+{
+  NSMutableDictionary *dictionary =
+  [[NSUserDefaults standardUserDefaults] objectForKey:
+   OMBUserDefaultsRenterApplication];
+  if (!dictionary)
+    dictionary = [NSMutableDictionary dictionary];
+  return dictionary;
+}
 
 #pragma mark - Instance Methods
 
@@ -235,66 +293,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   [self startSpinning];
 }
 
-- (int)incompleteSections
-{
-  int incompletes = 0;
-  
-  if (![[[self renterapplicationUserDefaults] objectForKey:
-         OMBUserDefaultsRenterApplicationCheckedCoapplicants] boolValue])
-    incompletes += 1;
-  
-  if (![[[self renterapplicationUserDefaults] objectForKey:
-         OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue])
-    incompletes += 1;
-  
-  if (![[[self renterapplicationUserDefaults] objectForKey:
-         OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue])
-    incompletes += 1;
-  
-  if (![[[self renterapplicationUserDefaults] objectForKey:
-         OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue])
-    incompletes += 1;
-  
-  if (![[[self renterapplicationUserDefaults] objectForKey:
-         OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue])
-    incompletes += 1;
-  
-  return incompletes;
-}
-
-- (NSString *)lastIncompleteSection
-{
-  
-  if (![[[self renterapplicationUserDefaults] objectForKey:
-         OMBUserDefaultsRenterApplicationCheckedCoapplicants] boolValue])
-    return OMBUserDefaultsRenterApplicationCheckedCoapplicants;
-  
-  if (![[[self renterapplicationUserDefaults] objectForKey:
-         OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue])
-    return OMBUserDefaultsRenterApplicationCheckedCosigners;
-  
-  if (![[[self renterapplicationUserDefaults] objectForKey:
-         OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue])
-    return OMBUserDefaultsRenterApplicationCheckedRentalHistory;
-  
-  if (![[[self renterapplicationUserDefaults] objectForKey:
-         OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue])
-    return OMBUserDefaultsRenterApplicationCheckedWorkHistory;
-  
-  if (![[[self renterapplicationUserDefaults] objectForKey:
-         OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue])
-    return OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
-  
-  return @"";
-  
-}
-
 - (void) nextSection
 {
   BOOL animated = YES;
-  if([self incompleteSections] > 0 && self.delegate){
+  if([OMBRenterInfoSectionViewController incompleteSections] > 0 && self.delegate){
     animated = NO;
-    self.delegate.nextSection = YES;
+    self.delegate.nextSection = tagSection;
   }
   
   [self.navigationController popViewControllerAnimated: animated];
@@ -311,21 +315,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   return [OMBUser currentUser].renterApplication;
 }
 
-- (NSMutableDictionary *) renterapplicationUserDefaults
-{
-  NSMutableDictionary *dictionary =
-    [[NSUserDefaults standardUserDefaults] objectForKey:
-      OMBUserDefaultsRenterApplication];
-  if (!dictionary)
-    dictionary = [NSMutableDictionary dictionary];
-  return dictionary;
-}
-
 - (void) saveKeyUserDefaults: (BOOL)save
 {
   NSMutableDictionary *dictionary =
     [NSMutableDictionary dictionaryWithDictionary:
-      [self renterapplicationUserDefaults]];
+      [OMBRenterInfoSectionViewController renterapplicationUserDefaults]];
   [dictionary setObject: [NSNumber numberWithBool: save] forKey: key];
   [[NSUserDefaults standardUserDefaults] setObject: dictionary
     forKey: OMBUserDefaultsRenterApplication];

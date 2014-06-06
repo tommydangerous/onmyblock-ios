@@ -24,7 +24,7 @@
   UILabel *emptyLabel;
   OMBUser *user;
   NSString *key;
-  NSString *tagSection;
+  int tagSection;
 }
 
 @property (nonatomic, weak) OMBApplyResidenceViewController *delegate;
@@ -34,6 +34,12 @@
 - (id) initWithUser: (OMBUser *) object;
 
 #pragma mark - Methods
+
+#pragma mark - Class Methods
+
++ (int) incompleteSections;
++ (int) lastIncompleteSection;
++ (NSMutableDictionary *) renterapplicationUserDefaults;
 
 #pragma mark - Instance Methods
 

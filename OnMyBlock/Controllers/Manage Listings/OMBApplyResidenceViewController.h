@@ -71,9 +71,11 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRenterInfoRow) {
   OMBAlertViewBlur *alertBlur;
   UIButton *submitOfferButton;
   LEffectLabel *effectLabel;
+  
+  NSArray *sections;
 }
 
-@property BOOL nextSection;
+@property int nextSection;
 
 #pragma mark - Methods
 
