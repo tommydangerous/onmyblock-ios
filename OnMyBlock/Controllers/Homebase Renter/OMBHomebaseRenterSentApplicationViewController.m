@@ -2037,13 +2037,13 @@ viewForHeaderInSection: (NSInteger) section
   if ([self offerBelongsToCurrentUser]) {
     rememberDetails = [NSString stringWithFormat:
       @"The landlord is reviewing your application. If "
-      @"you are approved, you will have 4 days pay and "
+      @"you are approved, you will have 4 days to pay and "
       @"sign the lease to secure this property."];
   }
   else {
     rememberDetails = [NSString stringWithFormat:
       @"The landlord is reviewing your application. If "
-      @"you are approved, you will have 4 days pay and "
+      @"you are approved, you will have 4 days to pay and "
       @"sign the lease to secure this property."];
   }
   sizeForRememberDetails = [rememberDetails boundingRectWithSize:
