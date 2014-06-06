@@ -222,6 +222,8 @@ float k2KeyboardHeight = 216.0;
     [moveInPicker setDate:
       [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]
         animated: NO];
+  else
+    saveBarButtonItem.enabled = NO;
 
   // Move-out Date picker
   if (residence.moveOutDate)
@@ -434,7 +436,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
         if (residence.moveInDate) {
           cell1.textField.text = [dateFormatter stringFromDate:
-                                  [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]];
+            [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]];
         }
       }
       // Move-in Date picker
@@ -918,6 +920,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     cell.textField.text = string;
   }
 
+  if(residence.moveInDate)
+    saveBarButtonItem.enabled = YES;
+  else
+    saveBarButtonItem.enabled = NO;
+  
   [self updatePicker];
 }
 
