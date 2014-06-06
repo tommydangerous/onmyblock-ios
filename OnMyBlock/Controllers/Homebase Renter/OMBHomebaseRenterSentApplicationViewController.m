@@ -14,6 +14,7 @@
 #import "OMBActivityView.h"
 #import "OMBAlertView.h"
 #import "OMBAlertViewBlur.h"
+#import "OMBApplicationResidenceCell.h"
 #import "OMBCenteredImageView.h"
 #import "OMBCoapplicantCell.h"
 #import "OMBResidenceConfirmDetailsDatesCell.h"
@@ -28,7 +29,6 @@
 #import "OMBMessageDetailViewController.h"
 #import "OMBMessageStore.h"
 #import "OMBOffer.h"
-#import "OMBOfferInquiryResidenceCell.h"
 #import "OMBOtherUserProfileViewController.h"
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutMethodsViewController.h"
@@ -143,7 +143,7 @@
   buttonsView.frame = CGRectMake(padding,
     (backView.frame.origin.y + backView.frame.size.height) -
     (standardHeight + padding),
-    screenWidth - (padding * 2), standardHeight);
+     screenWidth - (padding * 2), standardHeight);
   buttonsView.layer.borderColor = [UIColor whiteColor].CGColor;
   buttonsView.layer.borderWidth = 1.0f;
   buttonsView.layer.cornerRadius = buttonsView.frame.size.height * 0.5f;
@@ -565,11 +565,11 @@ paymentViewController
       // Residence
       if (indexPath.row == OMBSentApplicationSectionRowResidence) {
         static NSString *ResidenceCellIdentifier = @"ResidenceCellIdentifier";
-        OMBOfferInquiryResidenceCell *cell1 =
+        OMBApplicationResidenceCell *cell1 =
         [tableView dequeueReusableCellWithIdentifier:
          ResidenceCellIdentifier];
         if (!cell1)
-          cell1 = [[OMBOfferInquiryResidenceCell alloc] initWithStyle:
+          cell1 = [[OMBApplicationResidenceCell alloc] initWithStyle:
                    UITableViewCellStyleDefault reuseIdentifier:
                    ResidenceCellIdentifier];
         [cell1 loadResidence: offer.residence];
@@ -1033,7 +1033,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if (indexPath.section == OMBSentApplicationSectionOffer) {
       // Residence
       if (indexPath.row == OMBSentApplicationSectionRowResidence) {
-        return [OMBOfferInquiryResidenceCell heightForCell];
+        return [OMBApplicationResidenceCell heightForCell];
       }
       // Move-in date, move-out date, lease months
       else if (indexPath.row == OMBSentApplicationSectionRowDates) {
