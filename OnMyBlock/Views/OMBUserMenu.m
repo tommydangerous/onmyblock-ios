@@ -507,13 +507,13 @@ withNumber: (NSNumber *) number
       else
         title = userType;
       
-      if([landlordType isEqualToString:@"landlord"])
-        _sellerButtons = [NSMutableArray arrayWithArray:
-          @[_createListingButton,_manageListingsButton,_sellerInboxButton]];
-      else
+      if([landlordType isEqualToString:@"subletter"])
         _sellerButtons = [NSMutableArray arrayWithArray:
           @[_createListingButton,_sellerHomebaseButton,
             _manageListingsButton,_sellerInboxButton]];
+      else
+        _sellerButtons = [NSMutableArray arrayWithArray:
+          @[_createListingButton,_manageListingsButton,_sellerInboxButton]];
       
       [self setupForSeller];
     }
