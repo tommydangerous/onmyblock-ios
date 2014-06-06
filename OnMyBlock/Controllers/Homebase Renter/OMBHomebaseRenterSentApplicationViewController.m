@@ -39,6 +39,7 @@
 #import "OMBResidence.h"
 #import "OMBResidenceDetailViewController.h"
 #import "OMBResidenceStore.h"
+#import "OMBResidenceTitleView.h"
 #import "OMBRoommate.h"
 #import "OMBRoommateCell.h"
 #import "OMBViewController+PayPalPayment.h"
@@ -65,27 +66,33 @@
   
   offer = object;
   
-  self.title = [offer.residence address];
+  if ([offer.residence.address length]){
+    self.navigationItem.titleView =
+      [[OMBResidenceTitleView alloc] initWithResidence: offer.residence];
+  }
+  else {
+    self.title = offer.residence.title;
+  }
   
   // When the Venmo payment info is sent to our web servers and verified
   [[NSNotificationCenter defaultCenter] addObserver: self
-                                           selector: @selector(offerPaidWithVenmo:)
-                                               name: OMBOfferNotificationPaidWithVenmo object: nil];
+    selector: @selector(offerPaidWithVenmo:)
+      name: OMBOfferNotificationPaidWithVenmo object: nil];
   
   // When a user comes back from the Venmo iOS App and they made a payment
   [[NSNotificationCenter defaultCenter] addObserver: self
-                                           selector: @selector(offerProcessingWithServer:)
-                                               name: OMBOfferNotificationProcessingWithServer object: nil];
+    selector: @selector(offerProcessingWithServer:)
+      name: OMBOfferNotificationProcessingWithServer object: nil];
   
   // When the user cancels the Venmo app from the Venmo iOS app
   [[NSNotificationCenter defaultCenter] addObserver: self
-                                           selector: @selector(venmoAppSwitchCancelled:)
-                                               name: OMBOfferNotificationVenmoAppSwitchCancelled object: nil];
+    selector: @selector(venmoAppSwitchCancelled:)
+      name: OMBOfferNotificationVenmoAppSwitchCancelled object: nil];
   
   // When a landlor adds their first payout method
   [[NSNotificationCenter defaultCenter] addObserver: self
-                                           selector: @selector(userAddedFirstPayoutMethod)
-                                               name: OMBPayoutMethodNotificationFirst object: nil];
+    selector: @selector(userAddedFirstPayoutMethod)
+      name: OMBPayoutMethodNotificationFirst object: nil];
   
   return self;
 }
@@ -113,30 +120,30 @@
   // The image in the back
   backView = [UIView new];
   backView.frame = CGRectMake(0.0f, backViewOffsetY,
-                              screenWidth, screenHeight * 0.4f);
+    screenWidth, screenHeight * 0.4f);
   [self.view addSubview: backView];
   // Image of user
   userImageView =
   [[OMBCenteredImageView alloc] init];
   userImageView.frame = CGRectMake(0.0f, 0.0f, backView.frame.size.width,
-                                   backView.frame.size.height);
+    backView.frame.size.height);
   [backView addSubview: userImageView];
   
   gradient = [[OMBGradientView alloc] init];
   gradient.frame = userImageView.frame;
   gradient.colors = @[
-                      [UIColor colorWithWhite: 0.0f alpha: 0.0f],
-                      [UIColor colorWithWhite: 0.0f alpha: 0.5f]
-                      ];
+    [UIColor colorWithWhite: 0.0f alpha: 0.0f],
+    [UIColor colorWithWhite: 0.0f alpha: 0.5f]
+  ];
   [backView addSubview: gradient];
   
   // Buttons
   buttonsView = [UIView new];
   buttonsView.clipsToBounds = YES;
   buttonsView.frame = CGRectMake(padding,
-                                 (backView.frame.origin.y + backView.frame.size.height) -
-                                 (standardHeight + padding),
-                                 screenWidth - (padding * 2), standardHeight);
+    (backView.frame.origin.y + backView.frame.size.height) -
+    (standardHeight + padding),
+    screenWidth - (padding * 2), standardHeight);
   buttonsView.layer.borderColor = [UIColor whiteColor].CGColor;
   buttonsView.layer.borderWidth = 1.0f;
   buttonsView.layer.cornerRadius = buttonsView.frame.size.height * 0.5f;
