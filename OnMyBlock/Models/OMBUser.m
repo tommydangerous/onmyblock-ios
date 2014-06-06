@@ -993,7 +993,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   [[NSNotificationCenter defaultCenter] postNotificationName:
     OMBCurrentUserLandlordTypeChangeNotification object: nil
       userInfo: @{
-        @"landlordType": _landlordType ? _landlordType : [NSNull null]
+        @"landlordType" : _landlordType ? _landlordType : [NSNull null],
+        @"userType"     : _userType     ? _userType     : [NSNull null]
       }
     ];
   // NSLog(@"POST: %@", _landlordType);

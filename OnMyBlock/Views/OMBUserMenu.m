@@ -491,15 +491,23 @@ withNumber: (NSNumber *) number
 - (void) updateLandlordType: (NSNotification *) notification
 {
   NSString *title = @"Create Listing";
-  id landlordType = [[notification userInfo] objectForKey: @"landlordType"];
+  id landlordTypeID = [[notification userInfo] objectForKey: @"landlordType"];
+  id userTypeID     = [[notification userInfo] objectForKey: @"userType"];
+  
+  NSString *landlordType = (landlordTypeID != [NSNull null] ? (NSString *) landlordTypeID : @"" );
+  NSString *userType     = (userTypeID     != [NSNull null] ? (NSString *) userTypeID     : @"" );
+  
+  NSLog(@"%@ , %@", userType, landlordType);
+  
   // If this user menu is a user menu with the landlord options
   if (_isForLandlord) {
-    if (landlordType != [NSNull null]) {
-      if ([(NSString *) landlordType length]) {
-        title = (NSString *) landlordType;
-      }
+    if ([landlordType length] || [userType length]) {
+      if ([landlordType length])
+        title = landlordType;
+      else
+        title = userType;
       
-      if([(NSString *)landlordType isEqualToString:@"landlord"])
+      if([landlordType isEqualToString:@"landlord"])
         _sellerButtons = [NSMutableArray arrayWithArray:
           @[_createListingButton,_manageListingsButton,_sellerInboxButton]];
       else
@@ -514,19 +522,11 @@ withNumber: (NSNumber *) number
   }
   // Is for renter
   else{
-    if (landlordType != [NSNull null]) {
-      if ([(NSString *) landlordType length]) {
-        _renterButtons = [NSMutableArray arrayWithArray:
-          @[ _searchButton, _discoverButton,
-             _renterHomebaseButton, _favoritesButton]];
-        
-        
-      }else{
-        _renterButtons = [NSMutableArray arrayWithArray:
-          @[ _searchButton, _discoverButton,
-             _renterHomebaseButton, _favoritesButton,
-             _inboxButton]];
-      }
+    if ([landlordType length] || [userType length]) {
+      _renterButtons = [NSMutableArray arrayWithArray:
+        @[ _searchButton, _discoverButton,
+           _renterHomebaseButton, _favoritesButton]];
+      
     }
     else{
       _renterButtons = [NSMutableArray arrayWithArray:
