@@ -1226,7 +1226,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   
   if(hasSentApp){
-    [_bookItButton setTitle:@"Application Sent" forState:UIControlStateNormal];
+    [_bookItButton setTitle:@"Applied" forState:UIControlStateNormal];
     _bookItButton.enabled = NO;
   }else{
     SEL selector;

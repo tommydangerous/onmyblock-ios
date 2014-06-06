@@ -65,36 +65,7 @@
   
   offer = object;
   
-  // Student
-  if ([self offerBelongsToCurrentUser]) {
-    // Expired
-    if ([offer isExpiredForStudent]) {
-      self.title = @"Offer Expired";
-    }
-    else {
-      if ([offer statusForStudent] == OMBOfferStatusForStudentOfferPaid) {
-        self.title = @"Moved In";
-      }
-      else {
-        self.title = [[offer statusStringForStudent] capitalizedString];
-      }
-    }
-  }
-  // Landlord
-  else {
-    // Expired
-    if ([offer isExpiredForLandlord]) {
-      self.title = @"Offer Expired";
-    }
-    else {
-      if ([offer statusForLandlord] == OMBOfferStatusForLandlordOfferPaid) {
-        self.title = @"Confirmed Tenant";
-      }
-      else {
-        self.title = [[offer statusStringForLandlord] capitalizedString];
-      }
-    }
-  }
+  self.title = [offer.residence address];
   
   // When the Venmo payment info is sent to our web servers and verified
   [[NSNotificationCenter defaultCenter] addObserver: self
@@ -358,7 +329,7 @@
     CGSizeMake(_offerTableView.frame.size.width - (OMBPadding * 2), 9999)
       font: [UIFont smallTextFont]].size;
   
-  sizeForRememberDetails = CGSizeZero;
+  [self setupSizeForRememberDetails];
   
   BOOL performEffect = YES;
   // Student
@@ -674,6 +645,32 @@ paymentViewController
         }
         cell.clipsToBounds = YES;
         return cell;
+      }
+      // Remember Detail
+      else if (indexPath.row == OMBSentApplicationSectionRowRememberDetail) {
+        static NSString *RememberDetailIdentifier = @"RememberDetailIdentifier";
+        UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
+                                  RememberDetailIdentifier];
+        if (!cell1) {
+          cell1 = [[UITableViewCell alloc] initWithStyle:
+                   UITableViewCellStyleDefault reuseIdentifier: RememberDetailIdentifier];
+          UILabel *label = [UILabel new];
+          label.font = [UIFont smallTextFont];
+          label.numberOfLines = 0;
+          label.text = rememberDetails;
+          label.textAlignment = NSTextAlignmentCenter;
+          label.textColor = [UIColor grayMedium];
+          label.frame = CGRectMake(padding, padding,
+            tableView.frame.size.width - (padding * 2),
+              sizeForRememberDetails.height);
+          [cell1.contentView addSubview: label];
+        }
+        cell1.backgroundColor = [UIColor grayUltraLight];
+        cell1.separatorInset = UIEdgeInsetsMake(0.0f,
+          tableView.frame.size.width, 0.0f, 0.0f);
+        cell1.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell1.clipsToBounds = YES;
+        return cell1;
       }
       // Spacing below total
       /*else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowTotal) {
@@ -1046,6 +1043,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       // Security deposit
       else if (indexPath.row == OMBSentApplicationSectionRowSecurityDeposit) {
         return standardHeight;
+      }
+      // Remember detail
+      else if (indexPath.row == OMBSentApplicationSectionRowRememberDetail) {
+        return padding + sizeForRememberDetails.height + padding;;
       }
       // Spacing below total
       /*else if (indexPath.row == OMBOfferInquirySectionOfferSpacingBelowTotal) {
@@ -2027,172 +2028,20 @@ viewForHeaderInSection: (NSInteger) section
 - (void) setupSizeForRememberDetails
 {
   if ([self offerBelongsToCurrentUser]) {
-    if ([offer isAboveThreshold])
-      rememberDetails = [NSString stringWithFormat:
-                         @"The landlord will have %@ to review your application and either "
-                         @"accept or decline your offer. "
-                         @"A non-refundable down payment of %@ will be charged from your "
-                         @"primary payment method if the landlord accepts your offer.",
-                         [offer timelineStringForLandlord],
-                         [NSString numberToCurrencyString: [offer downPaymentAmount]]
-                         ];
-    else {
-      rememberDetails = [NSString stringWithFormat:
-                         @"The landlord will have %@ to review your application and either "
-                         @"accept or decline your offer. "
-                         @"A total payment of %@ will be charged from your "
-                         @"primary payment method if the landlord accepts your offer.",
-                         [offer timelineStringForLandlord],
-                         [NSString numberToCurrencyString: [offer downPaymentAmount]]
-                         ];
-    }
-    if (offer.accepted) {
-      if ([offer isAboveThreshold]) {
-        rememberDetails = [NSString stringWithFormat:
-                           @"Your offer has been accepted! A down payment of %@ has been "
-                           @"sent to the landlord. You have %@ to sign the lease "
-                           @"and pay the remaining balance of %@.",
-                           [NSString numberToCurrencyString: [offer downPaymentAmount]],
-                           [offer timelineStringForStudent],
-                           [NSString numberToCurrencyString: [offer remainingBalanceAmount]]
-                           ];
-      }
-      else {
-        rememberDetails = [NSString stringWithFormat:
-                           @"Your offer has been accepted! A total payment of %@ has been "
-                           @"sent to the landlord. You have %@ to sign the lease.",
-                           [NSString numberToCurrencyString: [offer downPaymentAmount]],
-                           [offer timelineStringForStudent]
-                           ];
-      }
-    }
-    else if (offer.declined) {
-      rememberDetails = @"Sorry, but your offer has been declined. "
-      @"You will not be charged anything.";
-    }
-    else if (offer.confirmed) {
-      rememberDetails = [NSString stringWithFormat:
-                         @"Congratulations! You have confirmed this offer and paid a total of "
-                         @"%@. You are ready to move into your new place.",
-                         [NSString numberToCurrencyString: [offer totalAmount]]
-                         ];
-    }
-    else if (offer.rejected) {
-      if ([offer isAboveThreshold]) {
-        rememberDetails = [NSString stringWithFormat:
-                           @"You have rejected this offer. Unfortunately your down payment of "
-                           @"%@ is non-refundable. If you have any questions or concerns please "
-                           @"contact us and we will be happy to assist you.",
-                           [NSString numberToCurrencyString: [offer downPaymentAmount]]
-                           ];
-      }
-      else {
-        rememberDetails = @"You have rejected this offer.";
-      }
-    }
+    rememberDetails = [NSString stringWithFormat:
+      @"The landlord is reviewing your application. If "
+      @"you are approved, you will have 4 days pay and "
+      @"sign the lease to secure this property."];
   }
   else {
-    NSString *downPaymentAmount = [NSString numberToCurrencyString:
-                                   [offer downPaymentAmount]];
-    NSString *remainingBalanceAmount = [NSString numberToCurrencyString:
-                                        [offer remainingBalanceAmount]];
-    NSString *userFirstName = [offer.user.firstName capitalizedString];
-    if ([offer isAboveThreshold]) {
-      rememberDetails = [NSString stringWithFormat:
-                         @"A non-refundable down payment of %@ will be "
-                         @"charged to %@ upon offer acceptance. If the offer is accepted, "
-                         @"the applicant party will have  %@ to sign the lease and pay "
-                         @"the remainder of the 1st month’s rent and deposit through OnMyBlock.",
-                         [NSString numberToCurrencyString: [offer downPaymentAmount]],
-                         userFirstName,
-                         [offer timelineStringForStudent]];
-    }
-    else {
-      rememberDetails = [NSString stringWithFormat:
-                         @"A total payment of %@ will be "
-                         @"charged to %@ upon offer acceptance. If the offer is accepted, "
-                         @"the applicant party will have %@ to sign the lease through "
-                         @"OnMyBlock.",
-                         [NSString numberToCurrencyString: [offer downPaymentAmount]],
-                         userFirstName,
-                         [offer timelineStringForStudent]];
-    }
-    if (offer.accepted) {
-      if ([offer isAboveThreshold]) {
-        rememberDetails = [NSString stringWithFormat:
-                           @"You have accepted %@'s' offer. A non-refundable down payment of %@ "
-                           @"has been sent to your primary payout method's account. %@ "
-                           @"will have %@ to sign the lease and pay the remaining balance "
-                           @"of %@.",
-                           userFirstName,
-                           downPaymentAmount,
-                           userFirstName,
-                           [offer timelineStringForStudent],
-                           remainingBalanceAmount
-                           ];
-      }
-      else {
-        rememberDetails = [NSString stringWithFormat:
-                           @"You have accepted %@'s' offer. A total payment of %@ "
-                           @"has been sent to your primary payout method's account. %@ "
-                           @"will have %@ to sign the lease.",
-                           userFirstName,
-                           downPaymentAmount,
-                           userFirstName,
-                           [offer timelineStringForStudent]
-                           ];
-      }
-    }
-    else if (offer.declined) {
-      rememberDetails = [NSString stringWithFormat:
-                         @"You have declined %@'s offer. All other offers for %@ that were "
-                         @"placed on hold have been reverted back to pending. Please review "
-                         @"those offers and respond to them.",
-                         userFirstName,
-                         [offer.residence.address capitalizedString]
-                         ];
-    }
-    else if (offer.confirmed) {
-      if ([offer isAboveThreshold]) {
-        rememberDetails = [NSString stringWithFormat:
-                           @"%@ has confirmed the offer! %@ will have %@ to sign the lease and "
-                           @"pay the remaining balance of %@, which you will receive in your "
-                           @"primary payout method's account.",
-                           userFirstName,
-                           userFirstName,
-                           [offer timelineStringForStudent],
-                           remainingBalanceAmount
-                           ];
-      }
-      else {
-        rememberDetails = [NSString stringWithFormat:
-                           @"%@ has confirmed the offer! %@ will have %@ to sign the lease.",
-                           userFirstName,
-                           userFirstName,
-                           [offer timelineStringForStudent]
-                           ];
-      }
-    }
-    else if (offer.rejected) {
-      if ([offer isAboveThreshold]) {
-        rememberDetails = [NSString stringWithFormat:
-                           @"%@ has rejected the offer. You have received a non-refundable "
-                           @"down payment of %@. However, you will not receive the "
-                           @"remaining balance of %@.",
-                           userFirstName,
-                           downPaymentAmount,
-                           remainingBalanceAmount
-                           ];
-      }
-      else {
-        rememberDetails = [NSString stringWithFormat:
-                           @"%@ has rejected the offer.", userFirstName];
-      }
-    }
+    rememberDetails = [NSString stringWithFormat:
+      @"The landlord is reviewing your application. If "
+      @"you are approved, you will have 4 days pay and "
+      @"sign the lease to secure this property."];
   }
   sizeForRememberDetails = [rememberDetails boundingRectWithSize:
-                            CGSizeMake(_offerTableView.frame.size.width - (OMBPadding * 2), 9999)
-                                                            font: [UIFont smallTextFont]].size;
+    CGSizeMake(_offerTableView.frame.size.width - (OMBPadding * 2), 9999)
+      font: [UIFont smallTextFont]].size;
 }
 
 - (void) showPayoutMethods
