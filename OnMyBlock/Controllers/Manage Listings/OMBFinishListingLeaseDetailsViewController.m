@@ -80,8 +80,8 @@ float k2KeyboardHeight = 216.0;
   self.navigationItem.rightBarButtonItem = saveBarButtonItem;
 
   deleteActionSheet = [[UIActionSheet alloc] initWithTitle: nil delegate: self
-                                         cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"Delete Listing"
-                                         otherButtonTitles: nil];
+    cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"Delete Listing"
+      otherButtonTitles: nil];
   [self.view addSubview: deleteActionSheet];
 
 	isShowPicker = NO;
@@ -141,11 +141,11 @@ float k2KeyboardHeight = 216.0;
     (padding + doneButtonRect.size.width), 0.0f,
       doneButtonRect.size.width, pickerViewHeader.frame.size.height);
   [doneButton addTarget: self
-                     action: @selector(donePicker)
-           forControlEvents: UIControlEventTouchUpInside];
+    action: @selector(donePicker)
+      forControlEvents: UIControlEventTouchUpInside];
   [doneButton setTitle: @"Done" forState: UIControlStateNormal];
   [doneButton setTitleColor: [UIColor blueDark]
-                       forState: UIControlStateNormal];
+    forState: UIControlStateNormal];
   [pickerViewHeader addSubview: doneButton];
 
   // Move-in picker
@@ -181,9 +181,9 @@ float k2KeyboardHeight = 216.0;
   monthLeasePicker.dataSource = self;
   monthLeasePicker.delegate   = self;
   monthLeasePicker.frame = CGRectMake(0.0f,
-                                     pickerViewHeader.frame.origin.y +
-                                     pickerViewHeader.frame.size.height,
-                                     monthLeasePicker.frame.size.width, monthLeasePicker.frame.size.height);
+    pickerViewHeader.frame.origin.y +
+      pickerViewHeader.frame.size.height,
+        monthLeasePicker.frame.size.width, monthLeasePicker.frame.size.height);
 
   // Lease type picker
   leaseTypePicker = [[UIPickerView alloc] init];
@@ -213,7 +213,7 @@ float k2KeyboardHeight = 216.0;
   conn.completionBlock = ^(NSError *error) {
     [self.table reloadRowsAtIndexPaths:
      @[[NSIndexPath indexPathForRow: 8 inSection: 0]]
-                      withRowAnimation: UITableViewRowAnimationNone];
+       withRowAnimation: UITableViewRowAnimationNone];
   };
   // [conn start];
 
@@ -856,33 +856,40 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:2 inSection:0]];
     residence.moveInDate = [moveInPicker.date timeIntervalSince1970];
     cell.textField.text = [dateFormatter stringFromDate: moveInPicker.date];
+    
     // compare if move out is earlier than move in
-    if([[NSDate dateWithTimeIntervalSince1970:residence.moveOutDate]
-        compare:moveInPicker.date] == NSOrderedAscending){
-      //change move out
-      residence.moveOutDate = [moveInPicker.date timeIntervalSince1970];
-      OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-        [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:4 inSection:0]];
-      cell.textField.text = [dateFormatter stringFromDate: moveInPicker.date];
+    if(residence.moveOutDate || residence.leaseMonths){
+      if([[NSDate dateWithTimeIntervalSince1970:residence.moveOutDate]
+          compare: moveInPicker.date] == NSOrderedAscending){
+        //change move out
+        residence.moveOutDate = [moveInPicker.date timeIntervalSince1970];
+        OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
+          [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:4 inSection:0]];
+        cell.textField.text = [dateFormatter stringFromDate: moveInPicker.date];
+      }
+      residence.leaseMonths = [self numberOfMonthsBetweenMovingDates];
     }
-    residence.leaseMonths = [self numberOfMonthsBetweenMovingDates];
   }
+  
   // Move-out Date
   else if ([moveOutPicker superview]) {
     OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-    [self.table cellForRowAtIndexPath:[NSIndexPath indexPathForItem:4 inSection:0]];
+      [self.table cellForRowAtIndexPath:[NSIndexPath indexPathForItem:4 inSection:0]];
     cell.textField.text = [dateFormatter stringFromDate: moveOutPicker.date];
     residence.moveOutDate = [moveOutPicker.date timeIntervalSince1970];
+    
     // compare if move in is later than move out
-    if([[NSDate dateWithTimeIntervalSince1970:residence.moveInDate]
-        compare:moveOutPicker.date] == NSOrderedDescending){
-      //change move in
-      residence.moveInDate = [moveOutPicker.date timeIntervalSince1970];
-      OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-      [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:2 inSection:0]];
-      cell.textField.text = [dateFormatter stringFromDate: moveOutPicker.date];
+    if(residence.moveInDate){
+      if([[NSDate dateWithTimeIntervalSince1970:residence.moveInDate]
+          compare: moveOutPicker.date] == NSOrderedDescending){
+        //change move in
+        residence.moveInDate = [moveOutPicker.date timeIntervalSince1970];
+        OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
+          [self.table cellForRowAtIndexPath: [NSIndexPath indexPathForItem:2 inSection:0]];
+        cell.textField.text = [dateFormatter stringFromDate: moveOutPicker.date];
+      }
+      residence.leaseMonths = [self numberOfMonthsBetweenMovingDates];
     }
-    residence.leaseMonths = [self numberOfMonthsBetweenMovingDates];
   }
 
   // Month Lease
@@ -890,23 +897,31 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     NSString *string = @"";
     string = [monthLeaseOptions objectAtIndex: auxRow];
     residence.leaseMonths = auxRow;
+    
     if(residence.moveInDate){
       NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
       [dateComponents setMonth:auxRow];
+      
       // add months to move in and set to move out
-      NSDate *auxDate = [[NSCalendar currentCalendar]
-                         dateByAddingComponents:dateComponents
-                         toDate:[NSDate dateWithTimeIntervalSince1970: residence.moveInDate] options:0];
-      if([[[NSCalendar currentCalendar] components:NSYearCalendarUnit fromDate:auxDate] year] >= 2016){
-        NSDateFormatter *df = [[NSDateFormatter alloc] init];
-        [df setDateFormat:@"dd-MM-yyyy"];
-        auxDate = [df dateFromString:@"31-12-2015"] ;
+      if(residence.moveOutDate || residence.leaseMonths){
+        
+        NSDate *auxDate = [[NSCalendar currentCalendar]
+          dateByAddingComponents:dateComponents
+            toDate:[NSDate dateWithTimeIntervalSince1970: residence.moveInDate] options:0];
+        
+        if([[[NSCalendar currentCalendar] components:NSYearCalendarUnit fromDate:auxDate] year] >= 2016){
+          NSDateFormatter *df = [[NSDateFormatter alloc] init];
+          [df setDateFormat:@"dd-MM-yyyy"];
+          auxDate = [df dateFromString:@"31-12-2015"] ;
+        }
+        
+        residence.moveOutDate = [auxDate timeIntervalSince1970];
+        OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
+          [self.table cellForRowAtIndexPath:
+            [NSIndexPath indexPathForItem:4 inSection:0]];
+        cell.textField.text = [dateFormatter stringFromDate:
+          [NSDate dateWithTimeIntervalSince1970:residence.moveOutDate]];
       }
-      residence.moveOutDate = [auxDate timeIntervalSince1970];
-      OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
-      [self.table cellForRowAtIndexPath:
-       [NSIndexPath indexPathForItem:4 inSection:0]];
-      cell.textField.text = [dateFormatter stringFromDate: [NSDate dateWithTimeIntervalSince1970:residence.moveOutDate]];
     }
   }
 
@@ -1063,23 +1078,27 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
                           @"clause of your current lease or have\n"
     @"consulted with your landlord.";
   }
+  
   CGRect rect = [leaseTypeDescription boundingRectWithSize:
     CGSizeMake(self.table.frame.size.width - (20.0f * 2), 9999)
       font: [UIFont smallTextFont]];
+  
   leaseTypeDescriptionSize = rect.size;
 }
 
 - (void) updatePicker
 {
   // Move-in date picker
-  [moveInPicker setDate:
-   [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]
-               animated: NO];
+  if(residence.moveInDate)
+    [moveInPicker setDate:
+      [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]
+        animated: NO];
 
   // Move-out date picker
-  [moveOutPicker setDate:
-   [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]
-                animated: NO];
+  if(residence.moveOutDate)
+    [moveOutPicker setDate:
+      [NSDate dateWithTimeIntervalSince1970: residence.moveOutDate]
+        animated: NO];
 
   // Month lease picker
   NSInteger selectedMonthRow = residence.leaseMonths;
@@ -1087,7 +1106,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
      animated: NO];
   OMBLabelTextFieldCell *cell2 = (OMBLabelTextFieldCell *)
     [self.table cellForRowAtIndexPath:
-     [NSIndexPath indexPathForItem:6 inSection:0]];
+      [NSIndexPath indexPathForItem:6 inSection:0]];
   cell2.textField.text = monthLeaseOptions[residence.leaseMonths];
 
   // Lease type picker
@@ -1102,11 +1121,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if (selectedLeaseRow == NSNotFound)
       selectedLeaseRow = 0;
   }
+  
   [self updateLeaseTypeDescription: selectedLeaseRow];
   [self.table reloadRowsAtIndexPaths:
-   @[[NSIndexPath indexPathForRow: 11 inSection: 0]]
-                    withRowAnimation: UITableViewRowAnimationNone];
+    @[[NSIndexPath indexPathForRow: 11 inSection: 0]]
+      withRowAnimation: UITableViewRowAnimationNone];
   [leaseTypePicker selectRow: selectedLeaseRow inComponent: 0
-                    animated: NO];
+    animated: NO];
 }
 @end
