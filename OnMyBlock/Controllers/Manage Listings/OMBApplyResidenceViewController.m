@@ -278,7 +278,7 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   
   _nextSection = 0;
   
-  sections = @[@1,@2,@3,@4,@5];
+  //sections = @[@1,@2,@3,@4,@5];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -312,7 +312,7 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   [self updateData];
   
   if(_nextSection)
-    [self nextIncompleteSection];
+    [self showNextSection];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -763,7 +763,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     else if (row == OMBMyRenterProfileSectionRenterInfoRowLegalQuestions) {
       key = OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
       OMBLegalViewController *vc  = [[OMBLegalViewController alloc] initWithUser: user];
-      vc.delegate = self;
+      //vc.delegate = self;
       [self.navigationController pushViewController: vc animated: YES];
     }
   }
@@ -1115,20 +1115,52 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   return string;
 }
 
-- (void) nextIncompleteSection
+- (void) showNextSection
 {
   NSLog(@"next");
   BOOL animated = NO;
   
   int i;
   // If is the last, set the first section to search
-  if(_nextSection == sections.count)
-    i = 1;
-  else
-    i = _nextSection + 1;
+  //if(_nextSection == sections.count)
+  //  i = 1;
+  //else
+  i = _nextSection + 1;
+  
+  switch (i) {
+    case 2:
+      {OMBRenterInfoSectionCosignersViewController *vc  =
+      [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser: user];
+      vc.delegate = self;
+      [self.navigationController pushViewController:vc animated:animated];}
+      return;
+      break;
+    case 3:
+      {OMBRenterInfoSectionPreviousRentalViewController *vc  =
+      [[OMBRenterInfoSectionPreviousRentalViewController alloc] initWithUser: user];
+      vc.delegate = self;
+      [self.navigationController pushViewController:vc animated:animated];}
+      return;
+      break;
+    case 4:
+      {OMBRenterInfoSectionEmploymentViewController *vc  =
+      [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser: user];
+      vc.delegate = self;
+      [self.navigationController pushViewController:vc animated:animated];}
+      return;
+      break;
+    case 5:
+      _nextSection = 0;
+      {OMBLegalViewController *vc  = [[OMBLegalViewController alloc] initWithUser: user];
+      //vc.delegate = self;
+      [self.navigationController pushViewController:vc animated:animated];}
+      return;
+  }
+  
+  
   
   // It iterates 1 cicle searching for any section incomplete
-  while(i != _nextSection){
+  /*while(i != _nextSection){
     // 'Casue is the next incomplete section
     switch (i) {
       case 1:// First section(Co-applicants) is not required
@@ -1181,7 +1213,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     else
       i++;
     
-  }
+  }*/
   
 }
 

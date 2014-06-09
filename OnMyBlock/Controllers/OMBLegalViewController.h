@@ -9,7 +9,6 @@
 #import "OMBRenterApplicationSectionViewController.h"
 
 @class OMBActivityViewFullScreen;
-@class OMBApplyResidenceViewController;
 
 @interface OMBLegalViewController : 
   OMBRenterApplicationSectionViewController
@@ -17,10 +16,7 @@
 {
   NSMutableDictionary *legalAnswers;
   OMBActivityViewFullScreen *activityViewFullScreen;
-  int tagSection;
 }
-
-@property (nonatomic, weak) OMBApplyResidenceViewController *delegate;
 
 #pragma mark - Methods
 

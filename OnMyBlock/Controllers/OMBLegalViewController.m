@@ -11,7 +11,6 @@
 #import "NSString+Extensions.h"
 #import "NSString+OnMyBlock.h"
 #import "OMBActivityViewFullScreen.h"
-#import "OMBApplyResidenceViewController.h"
 #import "OMBLegalAnswer.h"
 #import "OMBLegalAnswerCreateOrUpdateConnection.h"
 #import "OMBLegalAnswerListConnection.h"
@@ -32,7 +31,6 @@
   legalAnswers = [NSMutableDictionary dictionary];
 
   self.title = @"Legal Questions";
-  tagSection = 5;
   
   return self;
 }
@@ -63,19 +61,6 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-
-  self.delegate.nextSection = 0;
-//  if(self.delegate){
-//    NSString *barButtonTitle =
-//     [OMBRenterInfoSectionViewController incompleteSections] > 0 ? @"Next": @"Save";
-//    
-//    if([OMBRenterInfoSectionViewController incompleteSections] == 1 &&
-//       [OMBRenterInfoSectionViewController lastIncompleteSection] == tagSection){
-//      barButtonTitle = @"Save ";
-//    }
-//    
-//    self.navigationItem.rightBarButtonItem.title = barButtonTitle;
-//  }
   
   [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
     ^(NSError *error) {
@@ -262,9 +247,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) nextSection
 {
-  BOOL animated = YES;
   
-  [self.navigationController popViewControllerAnimated: animated];
+  [self.navigationController popViewControllerAnimated: YES];
 }
 
 - (NSMutableDictionary *) renterapplicationUserDefaults

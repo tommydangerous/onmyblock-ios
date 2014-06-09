@@ -37,8 +37,8 @@
 
 #pragma mark - Class Methods
 
-+ (int) incompleteSections;
-+ (int) lastIncompleteSection;
+//+ (int) incompleteSections;
+//+ (int) lastIncompleteSection;
 + (NSMutableDictionary *) renterapplicationUserDefaults;
 
 #pragma mark - Instance Methods

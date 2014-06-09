@@ -37,7 +37,8 @@
   if (!(self = [super init])) return nil;
 
   user = object;
-
+  tagSection = 0;
+  
   return self;
 }
 
@@ -128,14 +129,15 @@
   self.delegate.nextSection = 0;
   
   if(self.delegate){
-    NSString *barButtonTitle =
+    /*NSString *barButtonTitle =
       [OMBRenterInfoSectionViewController incompleteSections] > 0 ? @"Next": @"Done";
     
     if([OMBRenterInfoSectionViewController incompleteSections] == 1 &&
        [OMBRenterInfoSectionViewController lastIncompleteSection] == tagSection){
       barButtonTitle = @"Done";
-    }
+    }*/
   
+    NSString *barButtonTitle = @"Next";
     self.navigationItem.rightBarButtonItem.title = barButtonTitle;
   }
   
@@ -186,7 +188,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Class Methods
 
-+ (int)incompleteSections
+/*+ (int)incompleteSections
 {
   int incompletes = 0;
   
@@ -230,13 +232,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   
   return 0;
   
-}
+}*/
 
 + (NSMutableDictionary *) renterapplicationUserDefaults
 {
   NSMutableDictionary *dictionary =
-  [[NSUserDefaults standardUserDefaults] objectForKey:
-   OMBUserDefaultsRenterApplication];
+   [[NSUserDefaults standardUserDefaults] objectForKey:
+     OMBUserDefaultsRenterApplication];
   if (!dictionary)
     dictionary = [NSMutableDictionary dictionary];
   return dictionary;
@@ -296,7 +298,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) nextSection
 {
   BOOL animated = YES;
-  if([OMBRenterInfoSectionViewController incompleteSections] > 0 && self.delegate){
+  if(self.delegate){ // && [OMBRenterInfoSectionViewController incompleteSections] > 0
     animated = NO;
     self.delegate.nextSection = tagSection;
   }

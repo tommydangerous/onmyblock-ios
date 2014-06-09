@@ -72,7 +72,7 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRenterInfoRow) {
   UIButton *submitOfferButton;
   LEffectLabel *effectLabel;
   
-  NSArray *sections;
+  //NSArray *sections;
 }
 
 @property int nextSection;
@@ -82,6 +82,6 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRenterInfoRow) {
 #pragma mark - Instance Methods
 
 - (void) loadUser: (OMBUser *) object;
-- (void) nextIncompleteSection;
+//- (void) nextIncompleteSection;
 
 @end
