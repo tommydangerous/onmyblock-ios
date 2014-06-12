@@ -1069,6 +1069,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 }
 
 // Above methods are from MyRenterProfile
+
 // Real Methods
 
 - (void) closeAlertBlur
@@ -1221,9 +1222,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSString *string = @"";
   
-  if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedCosigners])
-    string = @"\"Co-signer";
-  else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedRentalHistory])
+  //if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedCosigners])
+  //  string = @"\"Co-signer";
+  //else
+  if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedRentalHistory])
     string = @"\"Rental History";
   else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedWorkHistory])
     string = @"\"Work & School History";
@@ -1264,9 +1266,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   
   if(shouldSubmit){
     // Search missing section
-    if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedCosigners])
-      shouldSubmit = NO;
-    else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedRentalHistory])
+    //if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedCosigners])
+    //  shouldSubmit = NO;
+    //else
+    if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedRentalHistory])
       shouldSubmit = NO;
     else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedWorkHistory])
       shouldSubmit = NO;
@@ -1280,7 +1283,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         @"\" section is required to submit an application"];
     }
   }
-  
   
   // Submit Application ?
   if(!shouldSubmit){
