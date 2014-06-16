@@ -8,7 +8,7 @@
 
 #import "OMBConnection.h"
 
-NSTimeInterval RequestTimeoutInterval = 10;
+NSTimeInterval RequestTimeoutInterval = 20;
 NSMutableArray *sharedConnectionList  = nil;
 NSString *const OnMyBlockAPI          = @"/api-v1";
 
