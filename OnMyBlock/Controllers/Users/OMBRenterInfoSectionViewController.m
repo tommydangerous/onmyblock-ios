@@ -11,6 +11,8 @@
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
 #import "NSString+OnMyBlock.h"
+#import "OMBActivityViewFullScreen.h"
+#import "OMBApplyResidenceViewController.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoAddViewController.h"
 #import "OMBObject.h"
@@ -35,7 +37,8 @@
   if (!(self = [super init])) return nil;
 
   user = object;
-
+  tagSection = 0;
+  
   return self;
 }
 
@@ -46,8 +49,6 @@
 - (void) loadView
 {
   [super loadView];
-
-  self.navigationItem.rightBarButtonItem = doneBarButtonItem;
 
   CGRect screen        = [self screen];
   CGFloat screenHeight = screen.size.height;
@@ -109,14 +110,47 @@
     cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"Delete"
       otherButtonTitles: nil];
   [self.view addSubview: deleteActionSheet];
+  
+  UIFont *boldFont = [UIFont boldSystemFontOfSize: 17];
+  doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"Done"
+    style: UIBarButtonItemStylePlain target: self action: @selector(done)];
+  [doneBarButtonItem setTitleTextAttributes: @{
+    NSFontAttributeName: boldFont
+  } forState: UIControlStateNormal];
+  
+  self.navigationItem.rightBarButtonItem = doneBarButtonItem;
+  
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+  [super viewWillAppear:animated];
+  
+  self.delegate.nextSection = 0;
+  
+  if(self.delegate){
+    /*NSString *barButtonTitle =
+      [OMBRenterInfoSectionViewController incompleteSections] > 0 ? @"Next": @"Done";
+    
+    if([OMBRenterInfoSectionViewController incompleteSections] == 1 &&
+       [OMBRenterInfoSectionViewController lastIncompleteSection] == tagSection){
+      barButtonTitle = @"Done";
+    }*/
+  
+    NSString *barButtonTitle = @"Next";
+    self.navigationItem.rightBarButtonItem.title = barButtonTitle;
+  }
+  
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
   [super viewWillDisappear:animated];
   
+  // Set YES if there is any object a the section
   BOOL haveObjects = [self objects].count > 0 ? YES : NO;
   [self saveKeyUserDefaults: haveObjects];
+  
 }
 
 #pragma mark - Protocol
@@ -152,6 +186,64 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Methods
 
+#pragma mark - Class Methods
+
+/*+ (int)incompleteSections
+{
+  int incompletes = 0;
+  
+  if (![[[OMBRenterInfoSectionViewController renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue])
+    incompletes += 1;
+  
+  if (![[[OMBRenterInfoSectionViewController renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue])
+    incompletes += 1;
+  
+  if (![[[OMBRenterInfoSectionViewController renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue])
+    incompletes += 1;
+  
+  if (![[[OMBRenterInfoSectionViewController renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue])
+    incompletes += 1;
+  
+  return incompletes;
+}
+
++ (int)lastIncompleteSection
+{
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue])
+    return 2;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue])
+    return 3;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue])
+    return 4;
+  
+  if (![[[self renterapplicationUserDefaults] objectForKey:
+         OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue])
+    return 5;
+  
+  return 0;
+  
+}*/
+
++ (NSMutableDictionary *) renterapplicationUserDefaults
+{
+  NSMutableDictionary *dictionary =
+   [[NSUserDefaults standardUserDefaults] objectForKey:
+     OMBUserDefaultsRenterApplication];
+  if (!dictionary)
+    dictionary = [NSMutableDictionary dictionary];
+  return dictionary;
+}
+
 #pragma mark - Instance Methods
 
 - (void) addButtonSelected
@@ -176,7 +268,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) done
 {
-  [self.navigationController popViewControllerAnimated: YES];
+  [self nextSection];
 }
 
 - (void) hideEmptyLabel: (BOOL) hide
@@ -198,7 +290,20 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   [[self renterApplication] fetchListForResourceName: resourceName
     userUID: user.uid delegate: self completion: ^(NSError *error) {
       [self hideEmptyLabel: [[self objects] count]];
+      [self stopSpinning];
     }];
+  [self startSpinning];
+}
+
+- (void) nextSection
+{
+  BOOL animated = YES;
+  if(self.delegate){ // && [OMBRenterInfoSectionViewController incompleteSections] > 0
+    animated = NO;
+    self.delegate.nextSection = tagSection;
+  }
+  
+  [self.navigationController popViewControllerAnimated: animated];
 }
 
 - (NSArray *) objects
@@ -212,21 +317,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   return [OMBUser currentUser].renterApplication;
 }
 
-- (NSMutableDictionary *) renterapplicationUserDefaults
-{
-  NSMutableDictionary *dictionary =
-    [[NSUserDefaults standardUserDefaults] objectForKey:
-      OMBUserDefaultsRenterApplication];
-  if (!dictionary)
-    dictionary = [NSMutableDictionary dictionary];
-  return dictionary;
-}
-
 - (void) saveKeyUserDefaults: (BOOL)save
 {
   NSMutableDictionary *dictionary =
     [NSMutableDictionary dictionaryWithDictionary:
-      [self renterapplicationUserDefaults]];
+      [OMBRenterInfoSectionViewController renterapplicationUserDefaults]];
   [dictionary setObject: [NSNumber numberWithBool: save] forKey: key];
   [[NSUserDefaults standardUserDefaults] setObject: dictionary
     forKey: OMBUserDefaultsRenterApplication];
@@ -254,5 +349,22 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     emptyLabel.frame.size.height + (OMBPadding * 2);
   addButtonMiddle.frame = buttonRect;
 }
+
+- (void) startSpinning
+{
+  if(!activityViewFullScreen){
+    activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
+    [self.view addSubview:activityViewFullScreen];
+  }
+  
+  [activityViewFullScreen startSpinning];
+}
+
+- (void) stopSpinning
+{
+  if(activityViewFullScreen)
+    [activityViewFullScreen stopSpinning];
+}
+
 
 @end

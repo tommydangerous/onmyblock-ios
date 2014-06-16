@@ -27,6 +27,7 @@
   if (!(self = [super initWithUser: object])) return nil;
 
   self.title = @"Co-signers";
+  tagSection = 2;
 
   return self;
 }
@@ -54,8 +55,10 @@
   
   [[self renterApplication] fetchCosignersForUserUID: [OMBUser currentUser].uid 
     delegate: self completion: ^(NSError *error) {
+      [self stopSpinning];
       [self hideEmptyLabel: [[self objects] count]];
     }];
+  [self startSpinning];
 
   [self reloadTable];
 }

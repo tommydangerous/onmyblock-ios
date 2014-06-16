@@ -240,7 +240,7 @@
   [_sellerButtons addObject: _manageListingsButton];
 
   // Inbox
-  /*_sellerInboxButton = [UIButton new];
+  _sellerInboxButton = [UIButton new];
   [_sellerInboxButton addTarget: self action: @selector(showInboxSeller)
     forControlEvents: UIControlEventTouchUpInside];
   [_sellerInboxButton setTitle: @"Messages" forState: UIControlStateNormal];
@@ -255,7 +255,7 @@
   [_sellerButtons addObject: _sellerInboxButton];
   // Notification badge
   _inboxNotificationBadge = [UILabel new];
-  [_sellerInboxButton addSubview: _inboxNotificationBadge];*/
+  [_sellerInboxButton addSubview: _inboxNotificationBadge];
 
   // Set attributes for buttons
   NSArray *buttonsArray = @[
@@ -269,8 +269,8 @@
     // Seller
     _createListingButton,
     _sellerHomebaseButton,
-    _manageListingsButton
-    //_sellerInboxButton
+    _manageListingsButton,
+    _sellerInboxButton
   ];
   for (UIButton *button in buttonsArray) {
     button.contentEdgeInsets = UIEdgeInsetsMake(0.0f,
@@ -491,25 +491,51 @@ withNumber: (NSNumber *) number
 - (void) updateLandlordType: (NSNotification *) notification
 {
   NSString *title = @"Create Listing";
-  id landlordType = [[notification userInfo] objectForKey: @"landlordType"];
+  id landlordTypeID = [[notification userInfo] objectForKey: @"landlordType"];
+  id userTypeID     = [[notification userInfo] objectForKey: @"userType"];
+  
+  NSString *landlordType = (landlordTypeID != [NSNull null] ? (NSString *) landlordTypeID : @"" );
+  NSString *userType     = (userTypeID     != [NSNull null] ? (NSString *) userTypeID     : @"" );
+  
+  NSLog(@"%@ , %@", userType, landlordType);
+  
   // If this user menu is a user menu with the landlord options
   if (_isForLandlord) {
-    if (landlordType != [NSNull null]) {
-      if ([(NSString *) landlordType length]) {
-        title = (NSString *) landlordType;
-      }
+    if ([landlordType length] || [userType length]) {
+      if ([landlordType length])
+        title = landlordType;
+      else
+        title = userType;
       
-      if([(NSString *)landlordType isEqualToString:@"landlord"])
+      if([landlordType isEqualToString:@"subletter"])
         _sellerButtons = [NSMutableArray arrayWithArray:
-          @[_createListingButton,_manageListingsButton]];
+          @[_createListingButton,_sellerHomebaseButton,
+            _manageListingsButton,_sellerInboxButton]];
       else
         _sellerButtons = [NSMutableArray arrayWithArray:
-          @[_createListingButton,_sellerHomebaseButton,_manageListingsButton]];
+          @[_createListingButton,_manageListingsButton,_sellerInboxButton]];
       
       [self setupForSeller];
     }
     [_headerButton setTitle: [title capitalizedString]
       forState: UIControlStateNormal];
+  }
+  // Is for renter
+  else{
+    if ([landlordType length] || [userType length]) {
+      _renterButtons = [NSMutableArray arrayWithArray:
+        @[ _searchButton, _discoverButton,
+           _renterHomebaseButton, _favoritesButton]];
+      
+    }
+    else{
+      _renterButtons = [NSMutableArray arrayWithArray:
+          @[ _searchButton, _discoverButton,
+             _renterHomebaseButton, _favoritesButton,
+             _inboxButton]];
+    }
+    
+    [self setupForRenter];
   }
 }
 

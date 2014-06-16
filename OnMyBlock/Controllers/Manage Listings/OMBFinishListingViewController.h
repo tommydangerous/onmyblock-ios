@@ -42,6 +42,8 @@
   AMBlurView *unlistView;
 }
 
+@property (nonatomic) BOOL nextSection;
+
 #pragma mark - Initializer
 
 - (id) initWithResidence: (OMBResidence *) object;

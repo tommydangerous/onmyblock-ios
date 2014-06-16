@@ -22,6 +22,7 @@
 #import "OMBHomebaseRenterPaymentNotificationCell.h"
 #import "OMBHomebaseRenterRentDepositInfoViewController.h"
 #import "OMBHomebaseRenterRoommateImageView.h"
+#import "OMBHomebaseRenterSentApplicationViewController.h"
 #import "OMBHomebaseRenterTopPriorityCell.h"
 #import "OMBInformationHowItWorksViewController.h"
 #import "OMBNavigationController.h"
@@ -38,6 +39,7 @@
 #import "OMBViewController+PayPalPayment.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
+#import "UIImage+Color.h"
 #import "UIImage+NegativeImage.h"
 
 // Make this 0.4f when having roommates
@@ -98,8 +100,8 @@ float kHomebaseRenterImagePercentage = 0.15f;
        forControlEvents: UIControlEventTouchUpInside];
   [infoButton setTitle: @"i" forState: UIControlStateNormal];
   [infoButton setTitleColor: [UIColor blue] forState: UIControlStateNormal];
-  self.navigationItem.rightBarButtonItem =
-    [[UIBarButtonItem alloc] initWithCustomView: infoButton];
+  //self.navigationItem.rightBarButtonItem =
+  //  [[UIBarButtonItem alloc] initWithCustomView: infoButton];
 
   backViewOffsetY = padding + standardHeight;
   // The image in the back
@@ -595,8 +597,8 @@ float kHomebaseRenterImagePercentage = 0.15f;
 {
   // Activity
   if (tableView == _activityTableView) {
-    // Booking Requests
     // Sent Applications
+    // Booking Requests
     // Move In
     return 3;
     // return 2;
@@ -620,15 +622,52 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       reuseIdentifier: CellIdentifier];
   // Activity
   if (tableView == _activityTableView) {
-    // Booking Requests
+    // Sent Applications
     if (indexPath.section == 0) {
       // Blank space
       if (indexPath.row == 0) {
-        static NSString *EmptyOffersCellIdentifier =
-          @"EmptyOffersCellIdentifier";
-        OMBEmptyImageTwoLabelCell *cell1 =
+        static NSString *EmptySentAppsCellIdentifier =
+          @"EmptySentAppsCellIdentifier";
+        OMBEmptyImageTwoLabelCell *cell =
           [tableView dequeueReusableCellWithIdentifier:
-            EmptyOffersCellIdentifier];
+            EmptySentAppsCellIdentifier];
+        if (!cell)
+          cell = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier:
+              EmptySentAppsCellIdentifier];
+        [cell setTopLabelText: @"Your sent applications will"];
+        [cell setMiddleLabelText: @"appear here after you have"];
+        [cell setBottomLabelText: @"applied to a property."];
+        [cell setObjectImageViewImage:
+          [UIImage  imageNamed:@"papers_icon_white.png"]];
+        cell.clipsToBounds = YES;
+        return cell;
+      }
+      else{
+        static NSString *SentApplicationCellIdentifier =
+          @"SentApplicationCellIdentifier";
+        OMBSentApplicationCell *cell =
+          [tableView dequeueReusableCellWithIdentifier:
+            SentApplicationCellIdentifier];
+        if (!cell)
+          cell = [[OMBSentApplicationCell alloc] initWithStyle:
+            UITableViewCellStyleDefault reuseIdentifier: SentApplicationCellIdentifier];
+        
+        [cell loadInfo:[[self sentApplications] objectAtIndex:indexPath.row - 1]];
+        //[cell loadFakeInfo]; //remove this
+        cell.clipsToBounds = YES;
+        return cell;
+      }
+    }
+    // Booking Requests
+    if (indexPath.section == 1) {
+      // Blank space
+      if (indexPath.row == 0) {
+        static NSString *EmptyOffersCellIdentifier =
+        @"EmptyOffersCellIdentifier";
+        OMBEmptyImageTwoLabelCell *cell1 =
+        [tableView dequeueReusableCellWithIdentifier:
+         EmptyOffersCellIdentifier];
         if (!cell1)
           cell1 = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier:
@@ -661,52 +700,15 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         // return cell1;
         static NSString *OfferCellIdentifier = @"OfferCellIdentifier";
         OMBHomebaseLandlordOfferCell *cell1 =
-          [tableView dequeueReusableCellWithIdentifier:
-            OfferCellIdentifier];
+        [tableView dequeueReusableCellWithIdentifier:
+         OfferCellIdentifier];
         if (!cell1)
           cell1 = [[OMBHomebaseLandlordOfferCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier: OfferCellIdentifier];
         [cell1 loadOfferForRenter:
-          [[self offers] objectAtIndex: indexPath.row - 1]];
+         [[self offers] objectAtIndex: indexPath.row - 1]];
         cell1.clipsToBounds = YES;
         return cell1;
-      }
-    }
-    // Sent Applications
-    if (indexPath.section == 1) {
-      // Blank space
-      if (indexPath.row == 0) {
-        static NSString *EmptySentAppsCellIdentifier =
-          @"EmptySentAppsCellIdentifier";
-        OMBEmptyImageTwoLabelCell *cell =
-          [tableView dequeueReusableCellWithIdentifier:
-            EmptySentAppsCellIdentifier];
-        if (!cell)
-          cell = [[OMBEmptyImageTwoLabelCell alloc] initWithStyle:
-            UITableViewCellStyleDefault reuseIdentifier:
-              EmptySentAppsCellIdentifier];
-        [cell setTopLabelText: @"Sent Applications will"];
-        [cell setMiddleLabelText: @"appear here after you have"];
-        [cell setBottomLabelText: @"paid and signed the lease."];
-        [cell setObjectImageViewImage: [UIImage imageNamed:
-          @"papers_icon_black.png"]];
-        cell.clipsToBounds = YES;
-        return cell;
-      }
-      else{
-        static NSString *SentApplicationCellIdentifier =
-          @"SentApplicationCellIdentifier";
-        OMBSentApplicationCell *cell =
-          [tableView dequeueReusableCellWithIdentifier:
-            SentApplicationCellIdentifier];
-        if (!cell)
-          cell = [[OMBSentApplicationCell alloc] initWithStyle:
-            UITableViewCellStyleDefault reuseIdentifier: SentApplicationCellIdentifier];
-        
-        [cell loadInfo:[[self sentApplications] objectAtIndex:indexPath.row - 1]];
-        //[cell loadFakeInfo]; //remove this
-        cell.clipsToBounds = YES;
-        return cell;
       }
     }
     // Moved In
@@ -807,16 +809,16 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Activity
   if (tableView == _activityTableView) {
+    // Sent Applications
+    if (section == 0){
+      return 1 + [self sentApplications].count;
+      //return 2; // remove this
+    }
     // Booking Requests
-    if (section == 0) {
+    else if (section == 1) {
       // Blank space
       return 1 + [[[OMBUser currentUser].acceptedOffers allValues] count];
       // return 2;
-    }
-    // Sent Applications
-    else if (section == 1){
-      return 1 + [self sentApplications].count;
-      //return 2; // remove this
     }
     // Moved In
     else if (section == 2) {
@@ -846,20 +848,24 @@ numberOfRowsInSection: (NSInteger) section
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (tableView == _activityTableView) {
-    // Offers
+    // Sent Applications
     if (indexPath.section == 0) {
+      if (indexPath.row > 0) {
+        // new view controller
+        [self.navigationController pushViewController:
+         [[OMBHomebaseRenterSentApplicationViewController alloc] initWithOffer:nil]
+           animated:YES];
+      }
+    }
+    // Offers
+    else if (indexPath.section == 1) {
       if (indexPath.row > 0) {
         OMBOffer *offer = [[self offers] objectAtIndex:
           indexPath.row - 1];
+        
         [self.navigationController pushViewController:
           [[OMBOfferInquiryViewController alloc] initWithOffer: offer]
             animated: YES];
-      }
-    }
-    // Sent Applications
-    else if (indexPath.section == 1) {
-      if (indexPath.row > 0) {
-        // new view controller
       }
     }
     // Moved In
@@ -886,8 +892,20 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // Activity
   if (tableView == _activityTableView) {
+    // Sent Applications
+    if (indexPath.section == 0){
+      // Blank space
+      if (indexPath.row == 0) {
+        if ([self sentApplications].count == 0) {
+          return [OMBEmptyImageTwoLabelCell heightForCell];
+        }
+      }
+      else {
+        return [OMBSentApplicationCell heightForCell];
+      }
+    }
     // Booking Requests
-    if (indexPath.section == 0) {
+    else if (indexPath.section == 1) {
       // Blank space
       if (indexPath.row == 0) {
         if ([[[OMBUser currentUser].acceptedOffers allValues] count] == 0) {
@@ -911,18 +929,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         }
         // return [OMBHomebaseRenterTopPriorityCell heightForCell];
         return [OMBHomebaseLandlordOfferCell heightForCell];
-      }
-    }
-    // Sent Applications
-    else if (indexPath.section == 1){
-      // Blank space
-      if (indexPath.row == 0) {
-        if ([self sentApplications].count == 0) {
-          return [OMBEmptyImageTwoLabelCell heightForCell];
-        }
-      }
-      else {
-        return [OMBSentApplicationCell heightForCell];
       }
     }
     // Moved In
@@ -973,13 +979,29 @@ viewForHeaderInSection: (NSInteger) section
   NSString *titleString = @"";
   // Activity
   if (tableView == _activityTableView) {
-    // Booking Requests
-    if (section == 0) {
-      titleString = @"Booking Requests";
-    }
+    UIButton *infoButton = [UIButton new];
+    CGFloat widthIcon = 18.f;
+    infoButton.frame = CGRectMake(blur.frame.size.width - widthIcon - 5.f,
+      4.0f, widthIcon, widthIcon);
+    infoButton.layer.borderColor = [UIColor blueDark].CGColor;
+    infoButton.layer.borderWidth = 1.0f;
+    infoButton.layer.cornerRadius = widthIcon * 0.5f;
+    infoButton.titleLabel.font = [UIFont normalTextFontBold];
+    [infoButton setTitle: @"i" forState: UIControlStateNormal];
+    [infoButton setTitleColor: [UIColor blueDark] forState: UIControlStateNormal];
     // Sent Applications
-    else if (section == 1){
+    if (section == 0){
+      [infoButton addTarget: self action: @selector(showSentAppHowItWorks)
+        forControlEvents: UIControlEventTouchUpInside];
+      [blur addSubview:infoButton];
       titleString = @"Sent Applications";
+    }
+    // Booking Requests
+    else if (section == 1) {
+      [infoButton addTarget: self action: @selector(showHomebaseHowItWorks)
+        forControlEvents: UIControlEventTouchUpInside];
+      [blur addSubview:infoButton];
+      titleString = @"Booking Requests";
     }
     else if (section == 2) {
       // titleString = @"Confirmed Places";
@@ -1320,7 +1342,7 @@ viewForHeaderInSection: (NSInteger) section
   OMBInformationHowItWorksViewController *vc =
     [[OMBInformationHowItWorksViewController alloc] initWithInformationArray:
       array];
-  vc.title = @"Your Offers";
+  vc.title = @"Bookings";
   [(OMBNavigationController *) self.navigationController pushViewController:
      vc animated: YES ];
 }
@@ -1373,6 +1395,43 @@ viewForHeaderInSection: (NSInteger) section
   }];
   cameFromSettingUpPayoutMethods = YES;
   [[self appDelegate].container showPayoutMethods];
+}
+
+- (void) showSentAppHowItWorks
+{
+  NSString *info1 = [NSString stringWithFormat:
+                     @"Find a property that’s right for you and apply! "
+                     @"Once you submit an application it will "
+                     @"be sent to the landlord to review."];
+  NSString *info2 = [NSString stringWithFormat:
+                     @"If the landlord approves your application and chooses "
+                     @"you as a tenant you will be given 4 days "
+                     @"to pay the first month’s rent & deposit and sign the lease."];
+                     //[OMBOffer timelineStringForLandlord]
+  NSString *info3 = [NSString stringWithFormat:
+                     @"Once you’ve paid the place is yours, get ready to move-in!"];
+  
+  NSArray *array = @[
+   @{
+     @"title": @"Send an Application",
+     @"information": info1
+     },
+   @{
+     @"title": @"Landlord Approved",
+     @"information": info2
+     },
+   @{
+     @"title": @"Move In!",
+     @"information": info3
+     }
+   ];
+  
+  OMBInformationHowItWorksViewController *vc =
+    [[OMBInformationHowItWorksViewController alloc] initWithInformationArray:
+      array];
+  vc.title = @"Applications";
+  [(OMBNavigationController *) self.navigationController pushViewController:
+    vc animated: YES ];
 }
 
 - (void) switchToPaymentsTableView

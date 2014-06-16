@@ -1382,7 +1382,8 @@ completion: (void (^) (void)) block
   // Hide the sign up button at the bottom
   signUpButtonBottom.hidden = YES;
   
-  if([[OMBUser currentUser].landlordType isEqualToString: OMBUserTypeLandlord])
+  if([[OMBUser currentUser].landlordType isEqualToString: OMBUserTypeLandlord] ||
+     [[OMBUser currentUser].userType     isEqualToString: OMBUserTypeLandlord])
     [self showMenuLandlordSide];
 }
 
@@ -1820,23 +1821,28 @@ completion: (void (^) (void)) block
 
 - (void) updateLandlordType: (NSNotification *) notification
 {
-  id landlordType = [[notification userInfo] objectForKey: @"landlordType"];
+  id landlordTypeID = [[notification userInfo] objectForKey: @"landlordType"];
+  id userTypeID     = [[notification userInfo] objectForKey: @"userType"];
+  
+  NSString *landlordType = (landlordTypeID != [NSNull null] ? (NSString *) landlordTypeID : @"" );
+  NSString *userType     = (userTypeID     != [NSNull null] ? (NSString *) userTypeID     : @"" );
+  
   // If there is a landlord type of any sort, enable the scroll,
   // and hide the create listing button box
-  NSLog(@"%@", landlordType);
+  NSLog(@"%@, %@", userType, landlordType);
   arrowView.hidden              = YES;
   createListingButton.hidden    = NO;
   hitArea.scrollView            = nil;
   _infiniteScroll.scrollEnabled = NO;
   // if (landlordType != [NSNull null]) {
-  if ([[OMBUser currentUser].landlordType length]) {
-    if ([(NSString *) landlordType length]) {
-      arrowView.hidden              = NO;
-      createListingButton.hidden    = YES;
-      hitArea.scrollView            = _infiniteScroll;
-      _infiniteScroll.scrollEnabled = YES;
-    }
+  //if ([[OMBUser currentUser].landlordType length]) {
+  if ([landlordType length] || [userType length]) {
+    arrowView.hidden              = NO;
+    createListingButton.hidden    = YES;
+    hitArea.scrollView            = _infiniteScroll;
+    _infiniteScroll.scrollEnabled = YES;
   }
+  //}
 }
 
 - (void) updateStatusBarStyle

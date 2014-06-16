@@ -34,7 +34,17 @@ reuseIdentifier: (NSString *)reuseIdentifier
 
 - (void) buttonSelected: (UIButton *) button
 {
-  [self resetButtons];
+  BOOL shouldReset = YES;
+  for(NSNumber *key in [self.selectedButtons allKeys]){
+    if(key == [NSNumber numberWithInt: button.tag]){
+      NSNumber *number = [self.selectedButtons objectForKey:key];
+      if([number boolValue])
+        shouldReset = NO;
+    }
+  }
+  
+  if(shouldReset)
+    [self resetButtons];
 
   [super buttonSelected: button];
 

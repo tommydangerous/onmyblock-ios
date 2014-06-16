@@ -12,7 +12,7 @@
 
 #import "OMBAnnotation.h"
 #import "OMBAnnotationView.h"
-#import "OMBApplyRenterApplicationViewController.h"
+#import "OMBApplyResidenceViewController.h"
 #import "OMBBlurView.h"
 #import "OMBCenteredImageView.h"
 #import "OMBCloseButtonView.h"
@@ -44,6 +44,7 @@
 #import "OMBResidenceImagesConnection.h"
 #import "OMBResidenceBookItConfirmDetailsViewController.h"
 #import "OMBResidenceImageSlideViewController.h"
+#import "OMBResidenceTitleView.h"
 #import "OMBTemporaryResidence.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
@@ -80,37 +81,8 @@ float kResidenceDetailImagePercentage   = 0.5f;
   residence = object;
 
   if ([residence.address length]){
-    UIView *labelView = [UIView new];
-    labelView.frame = CGRectMake( -OMBPadding, 0,
-      [[UIScreen mainScreen] bounds].size.width - (4 * OMBPadding), 36.f);
-
-    UILabel *label =
-      [[UILabel alloc] initWithFrame: CGRectMake( 0, 0,
-        labelView.frame.size.width, 18.f)];
-    label.backgroundColor = [UIColor clearColor];
-    label.font = [UIFont fontWithName: @"HelveticaNeue"
-      size: 14];
-    label.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-    label.shadowOffset    = CGSizeMake(0, 0);
-    label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [UIColor textColor];
-    label.text = residence.address;
-    [labelView addSubview:label];
-
-    UILabel *label2 =
-      [[UILabel alloc] initWithFrame:CGRectMake( 0, label.frame.size.height,
-        label.frame.size.width, 18.f)];
-    label2.backgroundColor = label.backgroundColor;
-    label2.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-      size: 13];
-    label2.shadowColor = label.shadowColor;
-    label2.shadowOffset    = label.shadowOffset;
-    label2.textAlignment = label.textAlignment;
-    label2.textColor = [UIColor grayMedium];
-    label2.text = [NSString stringWithFormat:@"%@, %@",
-      [residence.city capitalizedString],residence.stateFormattedString];
-    [labelView addSubview:label2];
-    self.navigationItem.titleView = labelView;
+    
+    self.navigationItem.titleView = [[OMBResidenceTitleView alloc] initWithResidence: residence];
   }
   else {
     self.title = residence.title;
@@ -1204,6 +1176,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) criteriaApplyNow
 {
   BOOL showApplyNow = YES;
+  BOOL hasSentApp = NO;
+  
   // Is a sublet
   if ([residence isSublet]) {
     showApplyNow = NO;
@@ -1219,16 +1193,29 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // If user has sent an application
   else if ([[OMBUser currentUser] loggedIn] &&
     [[OMBUser currentUser] hasSentApplicationsInResidence: residence]) {
+    hasSentApp = YES;
     showApplyNow = NO;
   }
   
-  NSString *title = showApplyNow ? @"Apply Now" : @"Book It";
-  [_bookItButton setTitle:title forState:UIControlStateNormal];
-  
-  // Method to perform
-  SEL selector = showApplyNow ? @selector(showApplyNow) : @selector(showPlaceOffer);
-  [_bookItButton addTarget:self action: selector
-    forControlEvents:UIControlEventTouchUpInside];
+  if(hasSentApp){
+    [_bookItButton setTitle:@"Applied" forState:UIControlStateNormal];
+    _bookItButton.enabled = NO;
+  }else{
+    SEL selector;
+    NSString *title;
+    
+    if(showApplyNow){
+      title = @"Apply Now";
+      selector = @selector(showApplyNow);
+    }else{
+      title = @"Book It";
+      selector = @selector(showPlaceOffer);
+    }
+    
+    [_bookItButton setTitle:title forState:UIControlStateNormal];
+    [_bookItButton addTarget:self action: selector
+      forControlEvents:UIControlEventTouchUpInside];
+  }
   
 }
 
@@ -1450,7 +1437,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) showApplyNow
 {
   [self.navigationController pushViewController:
-    [[OMBApplyRenterApplicationViewController alloc] init] animated:YES];
+    [[OMBApplyResidenceViewController alloc] init] animated:YES];
 }
 
 - (void) showBookItNow

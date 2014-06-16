@@ -541,7 +541,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   if (_moveInDate)
     stepsRemaining -= 1;
   // Listing Details
-  if (_bedrooms >= 0)
+  if (_bedrooms)
     stepsRemaining -= 1;
 
   return stepsRemaining;
@@ -805,7 +805,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
     _moveInDate = [date timeIntervalSince1970];
   }
   else {
-    _moveInDate = [[NSDate date] timeIntervalSince1970];
+    //_moveInDate = [[NSDate date] timeIntervalSince1970];
   }
 
   // Move-out Date
