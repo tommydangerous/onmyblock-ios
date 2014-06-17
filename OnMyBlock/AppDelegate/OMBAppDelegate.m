@@ -78,12 +78,10 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   [[UIApplication sharedApplication] setStatusBarStyle:
     UIStatusBarStyleDefault];
 
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  self.window   = [[UIWindow alloc] initWithFrame: screen];
-
+  // Setup window and root view controller
+  CGRect screen  = [[UIScreen mainScreen] bounds];
+  self.window    = [[UIWindow alloc] initWithFrame: screen];
   self.container = [[OMBViewControllerContainer alloc] init];
-
-  // Set root view controller for app
   self.window.backgroundColor    = [UIColor backgroundColor];
   self.window.rootViewController = _container;
   [self.window makeKeyAndVisible];
@@ -99,12 +97,9 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
 
   // Check to see if the user has a saved api key in the user defaults
   [[OMBUser currentUser] checkForUserDefaultsAPIKey];
-
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  // NSLog(@"%@", [defaults objectForKey: @"OMBUserDefaultsAPIKey"]);
-
+  // // NSLog(@"%@", [defaults objectForKey: @"OMBUserDefaultsAPIKey"]);
   BOOL shouldShowIntro = NO;
-
   id viewedIntro = [defaults objectForKey: OMBUserDefaultsViewedIntro];
   if (!viewedIntro) {
     [defaults setObject: [NSNumber numberWithBool: NO]
@@ -123,19 +118,6 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     [self.container showIntroAnimatedDissolve: NO];
   else
     [self.container showDiscover];
-
-  // #warning Remove container showing controller
-  // [self.container showMyRenterProfile];
-
-  // This is used to test the radial gradient
-  // UIView *view = [UIView new];
-  // view.backgroundColor = [UIColor whiteColor];
-  // view.frame = screen;
-  // OMBRadialGradient *rg = [[OMBRadialGradient alloc] initWithFrame:
-  //   CGRectMake(0, 0, 320, 200) withColors: @[[UIColor grayColor],
-  //     [UIColor whiteColor]] onLeft: YES];
-  // [view addSubview: rg];
-  // [self.container.currentDetailViewController.view addSubview: view];
 
   // Handle push notification
   // Extract the notification data

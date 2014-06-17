@@ -13,5 +13,6 @@
 #pragma mark - Initializer
 
 - (id) initWithParameters: (NSDictionary *) dictionary;
+- (id) initWithParametersForMap: (NSDictionary *) dictionary;
 
 @end

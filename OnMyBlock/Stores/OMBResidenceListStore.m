@@ -14,6 +14,7 @@
 @interface OMBResidenceListStore ()
 {
   OMBResidenceListConnection *listConnection;
+  NSMutableArray *residenceArray;
 }
 
 @end
@@ -26,7 +27,8 @@
 {
   if (!(self = [super init])) return nil;
 
-  _residences = [NSMutableDictionary dictionary];
+  residenceArray  = [NSMutableArray array];
+  self.residences = [NSMutableDictionary dictionary];
 
   return self;
 }
@@ -78,18 +80,32 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
   for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
     OMBResidence *residence = [[OMBResidence alloc] init];
-    [residence readFromResidenceDictionary: dict];
+    [residence readFromDictionaryLightning: dict];
+    // Add to array and dictionary
+    [residenceArray addObject: residence];
     [self addResidence: residence];
+
+    // OMBResidence *residence = [[OMBResidence alloc] init];
+    // [residence readFromResidenceDictionary: dict];
+    // [self addResidence: residence];
   }
+}
+
+- (void) removeResidences
+{
+  [residenceArray removeAllObjects];
+  [self.residences removeAllObjects];
+}
+
+- (NSArray *) residenceArray
+{
+  return [NSArray arrayWithArray: residenceArray];
 }
 
 - (NSArray *) sortedResidencesByDistanceFromCoordinate: 
   (CLLocationCoordinate2D) coordinate
 {
-  // MKMapPoint p1 = MKMapPointForCoordinate(coord1);
-  // MKMapPoint p2 = MKMapPointForCoordinate(coord2);
-  // CLLocationDistance dist = MKMetersBetweenMapPoints(p1, p2);
-  return [[_residences allValues] sortedArrayUsingComparator: 
+  return [[self.residences allValues] sortedArrayUsingComparator: 
     ^(id obj1, id obj2) {
       MKMapPoint center = MKMapPointForCoordinate(coordinate);
 
@@ -113,6 +129,9 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
         return (NSComparisonResult) NSOrderedAscending;
       return (NSComparisonResult) NSOrderedSame;
     }];
+  // MKMapPoint p1 = MKMapPointForCoordinate(coord1);
+  // MKMapPoint p2 = MKMapPointForCoordinate(coord2);
+  // CLLocationDistance dist = MKMetersBetweenMapPoints(p1, p2);
 }
 
 - (NSArray *) sortedResidencesWithKey: (NSString *) string

@@ -66,7 +66,7 @@ const NSUInteger MAX_ANNOTATIONS = 500;
 delegate: (id) delegate completion: (void (^) (NSError *error)) block
 {
   OMBResidenceListConnection *conn =
-    [[OMBResidenceListConnection alloc] initWithParameters: parameters];
+    [[OMBResidenceListConnection alloc] initWithParametersForMap: parameters];
   conn.completionBlock = block;
   conn.delegate        = delegate;
   [conn start];
@@ -77,41 +77,17 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   NSArray *array = [dictionary objectForKey: @"objects"];
   for (NSDictionary *dict in array) {
     // Create residence
-    NSUInteger residenceUID = [[dict objectForKey: @"id"] intValue];
-    OMBResidence *residence =
-      [[OMBAllResidenceStore sharedStore] residenceForUID: residenceUID];
-    if (!residence)
-      residence = [[OMBResidence alloc] init];
-    [residence readFromResidenceDictionary: dict];
+    OMBResidence *residence = [[OMBResidence alloc] init];
+    [residence readFromDictionaryLightning: dict];
     [self addResidence: residence];
+    // NSUInteger residenceUID = [[dict objectForKey: @"id"] intValue];
+    // OMBResidence *residence =
+    //   [[OMBAllResidenceStore sharedStore] residenceForUID: residenceUID];
+    // if (!residence)
+    //   residence = [[OMBResidence alloc] init];
+    // [residence readFromResidenceDictionary: dict];
+    // [self addResidence: residence];
   }
-
-}
-
-- (void) OLDreadFromDictionary: (NSDictionary *) dictionary
-{
-  [annotations removeAllObjects];
-  NSArray *array = [dictionary objectForKey: @"objects"];
-  if ([array count] > MAX_ANNOTATIONS) {
-    array = [array subarrayWithRange: NSMakeRange(0, MAX_ANNOTATIONS)];
-  }
-  for (NSDictionary *dict in array) {
-    // Create residence
-    NSUInteger residenceUID = [[dict objectForKey: @"id"] intValue];
-    OMBResidence *residence =
-      [[OMBAllResidenceStore sharedStore] residenceForUID: residenceUID];
-    if (!residence)
-      residence = [[OMBResidence alloc] init];
-    [residence readFromResidenceDictionary: dict];
-    // Create annotation
-    OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
-    annotation.coordinate = CLLocationCoordinate2DMake(
-      residence.latitude, residence.longitude);;
-    annotation.residenceUID = residence.uid;
-    // Add to annotations set
-    [annotations addObject: annotation];
-  }
-  NSLog(@"ANNOTATIONS: %i", [annotations count]);
 }
 
 - (NSArray *) residences

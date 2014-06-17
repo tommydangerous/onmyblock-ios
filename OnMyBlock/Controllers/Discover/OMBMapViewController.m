@@ -66,6 +66,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   BOOL isFetchingResidencesForMap;
   NSMutableArray *neighborhoodAnnotationArray;
   NSDictionary *previousMapFilterParameters;
+  CGFloat radiusIncrementInMiles;
   OMBAnnotationCity *sanDiegoAnnotationCity;
 }
 
@@ -83,7 +84,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   fetching           = NO;
   firstLoad          = YES;
-  self.radiusInMiles = 0;
+  radiusIncrementInMiles = 2.0;
+  self.radiusInMiles     = 0;
 
   // Location manager
   locationManager                 = [[CLLocationManager alloc] init];
@@ -352,8 +354,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // Current location button
   currentLocationButton = [[UIButton alloc] init];
   currentLocationButton.backgroundColor = [UIColor whiteColor];
-  currentLocationButton.frame = CGRectMake(10, (screen.size.height - (10 + 40)),
-    40, 40);
+  currentLocationButton.frame = CGRectMake(padding * 0.5f,
+    screenHeight - ((padding * 1.5) + (padding * 2)),
+      padding * 2, padding * 2);
   currentLocationButton.imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
   // currentLocationButton.layer.borderColor = [UIColor grayMedium].CGColor;
   // currentLocationButton.layer.borderWidth = 1.0;
@@ -367,7 +370,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     forState: UIControlStateHighlighted];
   [currentLocationButton addTarget: self action: @selector(goToCurrentLocation)
     forControlEvents: UIControlEventTouchUpInside];
-  [_mapView addSubview: currentLocationButton];
+  [self.mapView addSubview: currentLocationButton];
 
   // Property info view
   propertyInfoView = [[OMBPropertyInfoView alloc] init];
@@ -490,24 +493,31 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   NSDictionary *dictionary = (NSDictionary *)
     [self appDelegate].container.mapFilterViewController.valuesDictionary;
 
+  BOOL shouldSearch = 
+    [self appDelegate].container.mapFilterViewController.shouldSearch;
+
   // Filter
-  // Neighborhood
+  // If there is a neighborhood in the filter, then try to re-fetch
   if ([dictionary objectForKey: @"neighborhood"] != [NSNull null] &&
     [[dictionary objectForKey: @"neighborhood"] isKindOfClass:
       [OMBNeighborhood class]]) {
+    // Neighborhood
     OMBNeighborhood *neighborhood = [dictionary objectForKey:
       @"neighborhood"];
-
     // If the current center coordinate is not equal to the neighborhood's
     // and it should search
     if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate) &&
-        [self appDelegate].container.mapFilterViewController.shouldSearch) {
+        shouldSearch) {
       centerCoordinate = neighborhood.coordinate;
-      [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
-        animated: NO];
+      // If it is on the list, then re-fetch residences for the list
       if ([self isOnList]) {
+        [self resetAndFetchResidencesForList];
+      }
+      else {
+        // Move the map so it re-fetches residences for the map
+        [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
+          animated: NO];
         [self resetListViewResidences];
-        [self fetchResidencesForList];
       }
     }
     // Remove this object so that whenever the user comes back from the
@@ -516,26 +526,30 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     //   removeObjectForKey: @"neighborhood"];
   }
   // If there are filter values, apply and search
-  if ([self appDelegate].container.mapFilterViewController.shouldSearch) {
+  else if (shouldSearch) {
     if ([self isOnList]) {
+      [self resetAndFetchResidencesForList];
+
       firstLoad = YES;
-      _listView.showsPullToRefresh = NO;
-      [self resetListViewResidences];
-      [self fetchResidencesForList];
+      self.listView.showsPullToRefresh = NO;
     }
-    else {
+    else {  
       [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
         animated: NO];
+      [self resetListViewResidences];
     }
-    [self appDelegate].container.mapFilterViewController.shouldSearch = NO;
   }
+
+  // If the view controller should search, then set it back to no
+  // so it doesn't always keep changing the center location
+  if ([self appDelegate].container.mapFilterViewController.shouldSearch)
+    [self appDelegate].container.mapFilterViewController.shouldSearch = NO;
 
   // Check any filter values and display them
   [self updateFilterLabel];
 
-  if (firstLoad){
+  if (firstLoad)
     [activityViewFullScreen startSpinning];
-  }
 }
 
 #pragma mark - Protocol
@@ -577,40 +591,6 @@ didUpdateLocations: (NSArray *) locations
   NSUInteger currentZoomLevel =
     [self zoomLevelForMapRect: self.mapView.visibleMapRect
       withMapViewSizeInPixels: self.mapView.bounds.size];
-  if (previousZoomLevel == currentZoomLevel) {
-    // self.mapView.clusteringEnabled = NO;
-    // NSLog(@"CENTER CHANGED");
-  }
-  else {
-    // [self.mapView removeAnnotations: self.mapView.annotations];
-    // self.mapView.clusteringEnabled = YES;
-    // NSLog(@"ZOOM CHANGED");
-  }
-  // NSLog(@"ZOOM LEVEL: %i", currentZoomLevel);
-
-  // if (currentZoomLevel >= MINIMUM_ZOOM_LEVEL) {
-  //   // if ([self.mapView viewForAnnotation: sanDiegoAnnotationCity])
-  //     // [self.mapView removeAnnotation: sanDiegoAnnotationCity];
-
-  //   [self.mapView.annotationsToIgnore removeAllObjects];
-  //   for (OMBAnnotationCity *annotationCity in neighborhoodAnnotationArray) {
-  //     // [[self.mapView viewForAnnotation: annotationCity] setHidden: YES];
-  //     [self.mapView removeAnnotation: annotationCity];
-  //   }
-  //   // [[self.mapView viewForAnnotation:
-  //   //   sanDiegoAnnotationCity] setHidden: YES];
-  // }
-  // else {
-  //   [self.mapView removeAnnotations: self.mapView.annotations];
-  //   // [self.mapView addAnnotation: sanDiegoAnnotationCity];
-  //   for (OMBAnnotationCity *annotationCity in neighborhoodAnnotationArray) {
-  //     // [[self.mapView viewForAnnotation: annotationCity] setHidden: NO];
-  //     // [self.mapView addAnnotation: annotationCity];
-  //     [self.mapView.annotationsToIgnore addObject: annotationCity];
-  //     [self.mapView addAnnotation: annotationCity];
-  //   }
-  //   // [[self.mapView viewForAnnotation: sanDiegoAnnotationCity] setHidden: NO];
-  // }
 
   MKCoordinateRegion region = map.region;
   float maxLatitude, maxLongitude, minLatitude, minLongitude;
@@ -983,8 +963,9 @@ targetContentOffset: (inout CGPoint *) targetContentOffset
     CGFloat totalContentOffset = contentHeight - scrollViewHeight;
     CGFloat limit = totalContentOffset - (scrollViewHeight / 1.0f);
     if (y > limit) {
-      if ([self isOnList])
+      if ([self isOnList]) {
         [self fetchResidencesForList];
+      }
     }
 
     // Check the speed of scrolling,  if it is slow, download
@@ -1240,35 +1221,42 @@ withTitle: (NSString *) title;
     return;
   }
   else {
-    fetching = YES;
     // if (!activityView.isSpinning) {
     //   [activityView startSpinning];
     // }
   }
+  fetching = YES;
 
-  _radiusInMiles += 4;
+  _radiusInMiles += radiusIncrementInMiles;
 
-  // NSLog(@"RADIUS: %f", _radiusInMiles);
+  // CGFloat maxLatitude, maxLongitude, minLatitude, minLongitude;
 
-  CGFloat maxLatitude, maxLongitude, minLatitude, minLongitude;
-
-  CGFloat degrees = _radiusInMiles / 69.0f;
+  // CGFloat degrees = _radiusInMiles / 69.0f;
 
   // Northwest = maxLatitude, minLongitude
-  maxLatitude  = centerCoordinate.latitude + (degrees * 0.5f);
-  minLongitude = centerCoordinate.longitude - (degrees * 0.5f);
+  // maxLatitude  = centerCoordinate.latitude + (degrees * 0.5f);
+  // minLongitude = centerCoordinate.longitude - (degrees * 0.5f);
 
-  // Southeast = minLatitude, maxLongitude
-  minLatitude  = centerCoordinate.latitude - (degrees * 0.5f);
-  maxLongitude = centerCoordinate.longitude + (degrees * 0.5f);
+  // // Southeast = minLatitude, maxLongitude
+  // minLatitude  = centerCoordinate.latitude - (degrees * 0.5f);
+  // maxLongitude = centerCoordinate.longitude + (degrees * 0.5f);
 
   // Bounds
-  NSString *bounds = [NSString stringWithFormat: @"[%f,%f,%f,%f]",
-    minLongitude, maxLatitude, maxLongitude, minLatitude];
+  // NSString *bounds = [NSString stringWithFormat: @"[%f,%f,%f,%f]",
+  //   minLongitude, maxLatitude, maxLongitude, minLatitude];
 
   NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:
     [self mapFilterParameters]];
-  [params setObject: bounds forKey: @"bounds"];
+  // [params setObject: bounds forKey: @"bounds"];
+
+  // Latitude
+  [params setObject: @(centerCoordinate.latitude) forKey: @"latitude"];
+  // Longitude
+  [params setObject: @(centerCoordinate.longitude) forKey: @"longitude"];
+  // Radius
+  [params setObject: @(radiusIncrementInMiles) forKey: @"radius"];
+  // Current radius
+  [params setObject: @(self.radiusInMiles) forKey: @"current_radius"];
 
   NSInteger currentCount =
     [[OMBResidenceListStore sharedStore].residences count];
@@ -1541,7 +1529,7 @@ withTitle: (NSString *) title;
         [weakSelf.listView.infiniteScrollingView stopAnimating];
         [weakSelf.listView reloadData];
       });
-      //[weakSelf.listView.infiniteScrollingView stopAnimating];
+      // [weakSelf.listView.infiniteScrollingView stopAnimating];
     });
   }
 }
@@ -1554,13 +1542,22 @@ withTitle: (NSString *) title;
   }
 }
 
+- (void) resetAndFetchResidencesForList
+{
+  self.mapView.centerCoordinate = centerCoordinate;
+  [self resetListViewResidences];
+  [self fetchResidencesForList];
+}
+
 - (void) resetCurrentResidencesForList
 {
   // Sort
   // Distance
   if (currentSortKey == OMBMapViewListSortKeyDistance) {
-    currentResidencesForList = [[OMBResidenceListStore sharedStore]
-      sortedResidencesByDistanceFromCoordinate: centerCoordinate];
+    currentResidencesForList = 
+      [[OMBResidenceListStore sharedStore] residenceArray];
+    // currentResidencesForList = [[OMBResidenceListStore sharedStore]
+    //   sortedResidencesByDistanceFromCoordinate: centerCoordinate];
   }
   // Recent
   else if (currentSortKey == OMBMapViewListSortKeyRecent) {
@@ -1581,21 +1578,21 @@ withTitle: (NSString *) title;
         @"minRent" ascending: YES];
   }
   else {
-    currentResidencesForList = [[OMBResidenceListStore sharedStore]
-      sortedResidencesByDistanceFromCoordinate: centerCoordinate];
+    currentResidencesForList = 
+      [[OMBResidenceListStore sharedStore] residenceArray];
+    // currentResidencesForList = [[OMBResidenceListStore sharedStore]
+    //   sortedResidencesByDistanceFromCoordinate: centerCoordinate];
   }
 }
 
 - (void) resetListViewResidences
 {
+  centerCoordinate         = self.mapView.centerCoordinate;
   currentResidencesForList = nil;
-  [[OMBResidenceListStore sharedStore].residences removeAllObjects];
-  pagination = 0;
-  [_listView reloadData];
-
-  centerCoordinate = _mapView.centerCoordinate;
-
-  _radiusInMiles = 0.0f;
+  pagination               = 0;
+  self.radiusInMiles       = 0.0f;
+  [[OMBResidenceListStore sharedStore] removeResidences];
+  [self.listView reloadData];
 }
 
 - (NSArray *) residencesForList
@@ -1840,25 +1837,29 @@ withMiles: (int) miles animated: (BOOL) animated
   switch (control.selectedSegmentIndex) {
     // Show map
     case 0: {
-      self.listViewContainer.alpha = 0.0f;
-      self.mapView.alpha           = 1.0f;
-      if ([self.mapView.annotations count] == 0) {
-        [self mapView: _mapView regionDidChangeAnimated: NO];
-        [UIView animateWithDuration: 0.5f animations: ^{
-          filterView.transform = CGAffineTransformIdentity;
-        }];
+      if (self.listViewContainer.alpha) {
+        self.listViewContainer.alpha = 0.0f;
+        self.mapView.alpha           = 1.0f;
+        if ([self.mapView.annotations count] == 0) {
+          [self mapView: _mapView regionDidChangeAnimated: NO];
+          [UIView animateWithDuration: 0.5f animations: ^{
+            filterView.transform = CGAffineTransformIdentity;
+          }];
+        }
       }
       break;
     }
     // Show list
     case 1: {
-      self.listViewContainer.alpha = 1.0f;
-      self.mapView.alpha           = 0.0f;
-      [self fetchResidencesForList];
-      [UIView animateWithDuration: 0.5f animations: ^{
-        filterView.transform = CGAffineTransformMakeTranslation(
-          0.0f, self.view.bounds.size.height - 20.0f - 64.0f);
-      }];
+      if (self.mapView.alpha) {
+        self.listViewContainer.alpha = 1.0f;
+        self.mapView.alpha           = 0.0f;
+        [self fetchResidencesForList];
+        [UIView animateWithDuration: 0.5f animations: ^{
+          filterView.transform = CGAffineTransformMakeTranslation(
+            0.0f, self.view.bounds.size.height - 20.0f - 64.0f);
+        }];
+      }
       break;
     }
     default:
@@ -1952,7 +1953,7 @@ withMiles: (int) miles animated: (BOOL) animated
   else
     filterView.hidden = YES;
 
-    [self switchViews:segmentedControl];
+  [self switchViews: segmentedControl];
 }
 
 - (void) zoomAtAnnotation: (id <MKAnnotation>) annotation

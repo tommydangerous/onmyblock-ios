@@ -1235,7 +1235,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   }
 
   // Add to the OMBUserStore
-  [[OMBUserStore sharedStore] addUser: self];
+  // [[OMBUserStore sharedStore] addUser: self];
 }
 
 - (void) readFromEmploymentDictionary: (NSDictionary *) dictionary

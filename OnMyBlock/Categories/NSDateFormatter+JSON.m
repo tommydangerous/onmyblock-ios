@@ -12,8 +12,11 @@
 
 + (NSDateFormatter *) JSONDateParser
 {
-  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-  dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
+  static NSDateFormatter *dateFormatter = nil;
+  if (!dateFormatter) {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
+  }
   return dateFormatter; 
 }
 

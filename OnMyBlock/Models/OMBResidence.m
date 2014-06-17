@@ -8,6 +8,7 @@
 
 #import "OMBResidence.h"
 
+#import "NSDateFormatter+JSON.h"
 #import "NSString+Extensions.h"
 #import "OMBAllResidenceStore.h"
 #import "OMBAmenityStore.h"
@@ -37,12 +38,6 @@ NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
 {
   if (!(self = [super init])) return nil;
 
-  self.amenities = [NSMutableDictionary dictionary];
-  for (NSString *amenity in [[OMBAmenityStore sharedStore] allAmenities]) {
-    [self.amenities setObject: [NSNumber numberWithInt: 0]
-      forKey: [amenity lowercaseString]];
-  }
-
   _coverPhotoSizeDictionary = [NSMutableDictionary dictionary];
   _images              = [NSMutableArray array];
   _imageSizeDictionary = [NSMutableDictionary dictionary];
@@ -51,6 +46,20 @@ NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
   _openHouseDates      = [NSMutableArray array];
 
   return self;
+}
+
+#pragma mark - Getters
+
+- (NSMutableDictionary *) amenities
+{
+  if (!_amenities) {
+    _amenities = [NSMutableDictionary dictionary];
+    for (NSString *amenity in [[OMBAmenityStore sharedStore] allAmenities]) {
+      [_amenities setObject: [NSNumber numberWithInt: 0]
+        forKey: [amenity lowercaseString]];
+    }
+  }
+  return _amenities;
 }
 
 #pragma mark - Methods
@@ -547,11 +556,11 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   return stepsRemaining;
 }
 
-- (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size
+- (UIImage *) photoAtIndex: (NSInteger) index withSize: (CGSize) size
 {
-  if ([_images count] > index)
-  {
-    OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex:index];
+  if ([_images count] > index) {
+    OMBResidenceImage *residenceImage = [[self imagesArray] objectAtIndex:
+      index];
     UIImage *img = residenceImage.image;
 
     CGFloat newHeight = size.height;
@@ -574,6 +583,60 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   }
 
   return nil;
+}
+
+- (void) readFromDictionaryLightning: (NSDictionary *) dictionary
+{
+  // Address
+  id address = [dictionary objectForKey: @"address"];
+  if (address != [NSNull null])
+    self.address = [address stripWhiteSpace];
+
+  // Bathrooms
+  id bathrooms = [dictionary objectForKey: @"min_bathrooms"];
+  if (bathrooms != [NSNull null])
+    self.bathrooms = [bathrooms floatValue];
+
+  // Bedrooms
+  id bedrooms = [dictionary objectForKey: @"min_bedrooms"];
+  if (bedrooms != [NSNull null])
+    self.bedrooms = [bathrooms floatValue];
+
+  // City
+  id city = [dictionary objectForKey: @"city"];
+  if (city != [NSNull null])
+    self.city = [city stripWhiteSpace];
+
+  // Latitude
+  id latitude = [dictionary objectForKey: @"latitude"];
+  if (latitude != [NSNull null])
+    self.latitude = [latitude floatValue];
+
+  // Longitude
+  id longitude = [dictionary objectForKey: @"longitude"];
+  if (longitude != [NSNull null])
+    self.longitude = [longitude floatValue];
+
+  // Min Rent
+  id minRent = [dictionary objectForKey: @"min_rent"];
+  if (minRent != [NSNull null])
+    self.minRent = [minRent floatValue];
+
+  // State
+  id state = [dictionary objectForKey: @"state"];
+  if (state != [NSNull null]) {
+    self.state = [state stripWhiteSpace];
+  }
+
+  // Title
+  id title = [dictionary objectForKey: @"title"];
+  if (title != [NSNull null])
+    self.title = title;
+
+  // UID
+  id uid = [dictionary objectForKey: @"id"];
+  if (uid != [NSNull null])
+    self.uid = [uid intValue];
 }
 
 - (void) readFromOffersDictionary: (NSDictionary *) dictionary
@@ -670,211 +733,217 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   //   zip: "92111"
   // }
 
-  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-  dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
+  NSDateFormatter *dateFormatter = [NSDateFormatter JSONDateParser];
 
-  // ID
-  if ([dictionary objectForKey: @"id"] != [NSNull null])
-    _uid = [[dictionary objectForKey: @"id"] intValue];
-
-  // Address
-  if ([dictionary objectForKey: @"address"] != [NSNull null])
-    _address = [[dictionary objectForKey: @"address"] stripWhiteSpace];
+  [self readFromDictionaryLightning: dictionary];
+  
   // Amenities
-  if ([dictionary objectForKey: @"amenities"] != [NSNull null]) {
-    NSArray *amenitiesArray = [[dictionary objectForKey:
-      @"amenities"] componentsSeparatedByString: @","];
+  id amenities = [dictionary objectForKey: @"amenities"];
+  if (amenities != [NSNull null]) {
+    NSMutableDictionary *amenitiesDictionary = self.amenities;
+    NSArray *amenitiesArray = [amenities componentsSeparatedByString: @","];
     for (NSString *amenitiesString in amenitiesArray) {
       if ([amenitiesString length])
-        [_amenities setObject: [NSNumber numberWithInt: 1] forKey:
+        [amenitiesDictionary setObject: [NSNumber numberWithInt: 1] forKey:
           [[amenitiesString stripWhiteSpace] lowercaseString]];
     }
+    _amenities = amenitiesDictionary;
   }
-  // Auction Duration
-  if ([dictionary objectForKey: @"auction_duration"] != [NSNull null])
-    _auctionDuration = [[dictionary objectForKey:
-      @"auction_duration"] intValue];
-  // Auction Start Date
-  if ([dictionary objectForKey: @"auction_start_date"] != [NSNull null])
-    _auctionStartDate = [[dateFormatter dateFromString:
-      [dictionary objectForKey: @"auction_start_date"]] timeIntervalSince1970];
-  // Available on
-  if ([dictionary objectForKey: @"available_on"] != [NSNull null])
-    _availableOn = [[dateFormatter dateFromString:
-      [dictionary objectForKey: @"available_on"]] timeIntervalSince1970];
-  // Bathrooms
-  if ([dictionary objectForKey: @"bathrooms"] != [NSNull null])
-    _bathrooms = [[dictionary objectForKey: @"bathrooms"] floatValue];
-  if ([dictionary objectForKey: @"min_bathrooms"] != [NSNull null]) {
-    _bathrooms = [[dictionary objectForKey: @"min_bathrooms"] floatValue];
-  }
-  // Bedrooms
-  if ([dictionary objectForKey: @"bedrooms"] != [NSNull null])
-    _bedrooms = [[dictionary objectForKey: @"bedrooms"] floatValue];
-  if ([dictionary objectForKey: @"min_bedrooms"] != [NSNull null]) {
-    _bedrooms = [[dictionary objectForKey: @"min_bedrooms"] floatValue];
-  }
-  // Cats
-  if ([dictionary objectForKey: @"cats"] != [NSNull null]) {
-    if ([[dictionary objectForKey: @"cats"] intValue])
-      _cats = YES;
-    else
-      _cats = NO;
-  }
-  // City
-  if ([dictionary objectForKey: @"city"] != [NSNull null]) {
-    _city = [[dictionary objectForKey: @"city"] stripWhiteSpace];
-  }
+  // if ([dictionary objectForKey: @"amenities"] != [NSNull null]) {
+  //   NSArray *amenitiesArray = [[dictionary objectForKey:
+  //     @"amenities"] componentsSeparatedByString: @","];
+  //   for (NSString *amenitiesString in amenitiesArray) {
+  //     if ([amenitiesString length])
+  //       [self.amenities setObject: [NSNumber numberWithInt: 1] forKey:
+  //         [[amenitiesString stripWhiteSpace] lowercaseString]];
+  //   }
+  // }
+
+  // // Auction Duration
+  // if ([dictionary objectForKey: @"auction_duration"] != [NSNull null])
+  //   _auctionDuration = [[dictionary objectForKey:
+  //     @"auction_duration"] intValue];
+
+  // // Auction Start Date
+  // if ([dictionary objectForKey: @"auction_start_date"] != [NSNull null])
+  //   _auctionStartDate = [[dateFormatter dateFromString:
+  //     [dictionary objectForKey: 
+  //       @"auction_start_date"]] timeIntervalSince1970];
+
+  // // Available on
+  // if ([dictionary objectForKey: @"available_on"] != [NSNull null])
+  //   _availableOn = [[dateFormatter dateFromString:
+  //     [dictionary objectForKey: @"available_on"]] timeIntervalSince1970];
+
+  // // Cats
+  // if ([dictionary objectForKey: @"cats"] != [NSNull null]) {
+  //   if ([[dictionary objectForKey: @"cats"] intValue])
+  //     _cats = YES;
+  //   else
+  //     _cats = NO;
+  // }
+
   // Created at
-  if ([dictionary objectForKey: @"created_at"] != [NSNull null])
-    _createdAt = [[dateFormatter dateFromString:
-      [dictionary objectForKey: @"created_at"]] timeIntervalSince1970];
+  id createdAt = [dictionary objectForKey: @"created_at"];
+  if (createdAt != [NSNull null])
+    self.createdAt = [[dateFormatter dateFromString:
+      createdAt] timeIntervalSince1970];
+
   // Description
-  if ([dictionary objectForKey: @"description"] != [NSNull null])
-    _description = [dictionary objectForKey: @"description"];
+  id description = [dictionary objectForKey: @"description"];
+  if (description != [NSNull null])
+    self.description = description;
+
   // Deposit
-  if ([dictionary objectForKey: @"deposit"] != [NSNull null])
-    _deposit = [[dictionary objectForKey: @"deposit"] floatValue];
-  // Dogs
-  if ([dictionary objectForKey: @"dogs"] != [NSNull null]) {
-    if ([[dictionary objectForKey: @"dogs"] intValue])
-      _dogs = YES;
-    else
-      _dogs = NO;
-  }
+  id deposit = [dictionary objectForKey: @"deposit"];
+  if (deposit != [NSNull null])
+    self.deposit = [deposit floatValue];
+
   // Email
-  if ([dictionary objectForKey: @"email"] != [NSNull null])
-    _email = [dictionary objectForKey: @"email"];
+  id email = [dictionary objectForKey: @"email"];
+  if (email != [NSNull null])
+    self.email = email;
+
   // External Source
-  if ([dictionary objectForKey: @"external_source"] != [NSNull null])
-    _externalSource = [dictionary objectForKey: @"external_source"];
+  id externalSource = [dictionary objectForKey: @"external_source"];
+  if (externalSource != [NSNull null])
+    self.externalSource = externalSource;
+
   // Inactive
-  if  ([dictionary objectForKey: @"inactive"] != [NSNull null]) {
-    if ([[dictionary objectForKey: @"inactive"] intValue]) {
-      _inactive = YES;
+  id inactive = [dictionary objectForKey: @"inactive"];
+  if (inactive != [NSNull null]) {
+    if ([inactive intValue]) {
+      self.inactive = YES;
     }
     else {
-      _inactive = NO;
+      self.inactive = NO;
     }
   }
   else {
-    _inactive = NO;
+    self.inactive = NO;
   }
 
-  // Is Auction
-  if ([dictionary objectForKey: @"is_auction"] != [NSNull null]) {
-    if ([[dictionary objectForKey: @"is_auction"] intValue] == 1) {
-      _isAuction = YES;
-    }
-    else {
-      _isAuction = NO;
-    }
-  }
+  // // Is Auction
+  // if ([dictionary objectForKey: @"is_auction"] != [NSNull null]) {
+  //   if ([[dictionary objectForKey: @"is_auction"] intValue] == 1) {
+  //     _isAuction = YES;
+  //   }
+  //   else {
+  //     _isAuction = NO;
+  //   }
+  // }
+
   // Landlord name
-  if ([dictionary objectForKey: @"landlord_name"] != [NSNull null])
-    _landlordName = [dictionary objectForKey: @"landlord_name"];
+  id landlordName = [dictionary objectForKey: @"landlord_name"];
+  if (landlordName != [NSNull null])
+    self.landlordName = landlordName;
 
   // Landlord user id
-  if ([dictionary objectForKey: @"landlord_user_id"] != [NSNull null])
-    _landlordUserID = [[dictionary objectForKey: @"landlord_user_id"] intValue];
+  id landlordUserID = [dictionary objectForKey: @"landlord_user_id"];
+  if (landlordUserID != [NSNull null])
+    self.landlordUserID = [landlordUserID intValue];
 
-  // Latitude
-  if ([dictionary objectForKey: @"latitude"] != [NSNull null])
-    _latitude = [[dictionary objectForKey: @"latitude"] floatValue];
   // Lease months
-  if ([dictionary objectForKey: @"lease_months"] == [NSNull null]) {
-    _leaseMonths = 0;
+  id leaseMonths = [dictionary objectForKey: @"lease_months"];
+  if (leaseMonths == [NSNull null]) {
+    self.leaseMonths = 0;
   }
   else {
-    _leaseMonths = [[dictionary objectForKey: @"lease_months"] intValue];
+    self.leaseMonths = [leaseMonths intValue];
   }
+
   // Lease Type
-  if ([dictionary objectForKey: @"lease_type"] != [NSNull null])
-    _leaseType = [dictionary objectForKey: @"lease_type"];
-  // Longitude
-  if ([dictionary objectForKey: @"longitude"] != [NSNull null])
-    _longitude = [[dictionary objectForKey: @"longitude"] floatValue];
-  // Min Rent
-  if ([dictionary objectForKey: @"min_rent"] != [NSNull null])
-    _minRent = [[dictionary objectForKey: @"min_rent"] floatValue];
+  id leaseType = [dictionary objectForKey: @"lease_type"];
+  if (leaseType != [NSNull null])
+    self.leaseType = leaseType;
+
   // Move-in Date
-  if ([dictionary objectForKey: @"move_in_date"] != [NSNull null] &&
-    [[dictionary objectForKey: @"move_in_date"] length]) {
-    NSDate *date = [dateFormatter dateFromString:
-      [dictionary objectForKey: @"move_in_date"]];
-    _moveInDate = [date timeIntervalSince1970];
-  }
-  else {
-    //_moveInDate = [[NSDate date] timeIntervalSince1970];
+  id moveInDate = [dictionary objectForKey: @"move_in_date"];
+  if (moveInDate != [NSNull null] && [moveInDate length]) {
+    self.moveInDate = [[dateFormatter dateFromString: 
+      moveInDate] timeIntervalSince1970];
   }
 
   // Move-out Date
-  if ([dictionary objectForKey: @"move_out_date"] != [NSNull null] &&
-    [[dictionary objectForKey: @"move_out_date"] length]) {
-    NSDate *date = [dateFormatter dateFromString:
-      [dictionary objectForKey: @"move_out_date"]];
-    _moveOutDate = [date timeIntervalSince1970];
+  id moveOutDate = [dictionary objectForKey: @"move_out_date"];
+  if (moveOutDate != [NSNull null] && [moveOutDate length]) {
+    self.moveOutDate = [[dateFormatter dateFromString: 
+      moveOutDate] timeIntervalSince1970];
   }
-  // else {
-  //   _moveOutDate = [[NSDate date] timeIntervalSince1970];
-  // }
 
   // Phone
-  if ([dictionary objectForKey: @"phone"] != [NSNull null])
-    _phone = [dictionary objectForKey: @"phone"];
+  id phone = [dictionary objectForKey: @"phone"];
+  if (phone != [NSNull null])
+    self.phone = phone;
+
   // Property Type
-  if ([dictionary objectForKey: @"property_type"] != [NSNull null]) {
-    _propertyType = [dictionary objectForKey: @"property_type"];
+  id propertyType = [dictionary objectForKey: @"property_type"];
+  if (propertyType != [NSNull null]) {
+    self.propertyType = propertyType;
   }
+
   // Rented
-  if ([dictionary objectForKey: @"rented"] != [NSNull null]) {
-    if ([[dictionary objectForKey: @"rented"] intValue])
-      _rented = YES;
+  id rented = [dictionary objectForKey: @"rented"];
+  if (rented != [NSNull null]) {
+    if ([rented intValue])
+      self.rented = YES;
     else
-      _rented = NO;
+      self.rented = NO;
   }
-  // Rent it Now Price
-  if ([dictionary objectForKey: @"rent_it_now_price"] != [NSNull null])
-    _rentItNowPrice = [[dictionary objectForKey:
-      @"rent_it_now_price"] floatValue];
+
+  // // Rent it Now Price
+  // if ([dictionary objectForKey: @"rent_it_now_price"] != [NSNull null])
+  //   _rentItNowPrice = [[dictionary objectForKey:
+  //     @"rent_it_now_price"] floatValue];
+
   // Square feet
-  if ([dictionary objectForKey: @"sqft"] != [NSNull null])
-    _squareFeet = [[dictionary objectForKey: @"sqft"] intValue];
-  if ([dictionary objectForKey: @"min_sqft"] != [NSNull null])
-    _squareFeet = [[dictionary objectForKey: @"min_sqft"] intValue];
-  // State
-  if ([dictionary objectForKey: @"state"] != [NSNull null]) {
-    _state = [[dictionary objectForKey: @"state"] stripWhiteSpace];
-  }
-  // Title
-  if ([dictionary objectForKey: @"title"] != [NSNull null])
-    _title = [dictionary objectForKey: @"title"];
+  // if ([dictionary objectForKey: @"sqft"] != [NSNull null])
+  //   _squareFeet = [[dictionary objectForKey: @"sqft"] intValue];
+  // if ([dictionary objectForKey: @"min_sqft"] != [NSNull null])
+  //   _squareFeet = [[dictionary objectForKey: @"min_sqft"] intValue];
+
   // Unit
-  if ([dictionary objectForKey: @"unit"] != [NSNull null])
-    _unit = [dictionary objectForKey: @"unit"];
+  id unit = [dictionary objectForKey: @"unit"];
+  if (unit != [NSNull null])
+    self.unit = unit;
+
   // Updated at
-  if ([dictionary objectForKey: @"updated_at"] != [NSNull null])
-    _updatedAt = [[dateFormatter dateFromString:
-      [dictionary objectForKey: @"updated_at"]] timeIntervalSince1970];
+  id updatedAt = [dictionary objectForKey: @"updated_at"];
+  if (updatedAt != [NSNull null] && [updatedAt length]) {
+    self.updatedAt = [[dateFormatter dateFromString: 
+      updatedAt] timeIntervalSince1970];
+  }
+
   // User
-  if ([dictionary objectForKey: @"user"] != [NSNull null]) {
-    NSDictionary *userDict = [dictionary objectForKey: @"user"];
-    int userUID = [[userDict objectForKey: @"id"] intValue];
-    OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
-    if (!user) {
-      user = [[OMBUser alloc] init];
-    }
+  id userDict = [dictionary objectForKey: @"user"];
+  if (userDict != [NSNull null]) {
+    OMBUser *user = [[OMBUser alloc] init];
     [user readFromDictionary: userDict];
-    _user = user;
+    self.user = user;
   }
   else {
     self.user = nil;
   }
-  // Zip
-  if ([dictionary objectForKey: @"zip"] != [NSNull null])
-    _zip = [dictionary objectForKey: @"zip"];
+  // if ([dictionary objectForKey: @"user"] != [NSNull null]) {
+  //   NSDictionary *userDict = [dictionary objectForKey: @"user"];
+  //   int userUID = [[userDict objectForKey: @"id"] intValue];
+  //   OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
+  //   if (!user) {
+  //     user = [[OMBUser alloc] init];
+  //   }
+  //   [user readFromDictionary: userDict];
+  //   _user = user;
+  // }
+  // else {
+  //   self.user = nil;
+  // }
 
-  [[OMBAllResidenceStore sharedStore] addResidence: self];
+  // Zip
+  id zip = [dictionary objectForKey: @"zip"];
+  if (zip != [NSNull null])
+    self.zip = zip;
+
+  // [[OMBAllResidenceStore sharedStore] addResidence: self];
 }
 
 - (void) removeAmenity: (NSString *) amenity

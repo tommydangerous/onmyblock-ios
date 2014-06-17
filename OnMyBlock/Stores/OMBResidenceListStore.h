@@ -28,6 +28,8 @@
 - (void) fetchResidencesWithParameters: (NSDictionary *) parameters
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
+- (void) removeResidences;
+- (NSArray *) residenceArray;
 - (NSArray *) sortedResidencesByDistanceFromCoordinate:
   (CLLocationCoordinate2D) coordinate;
 - (NSArray *) sortedResidencesWithKey: (NSString *) string

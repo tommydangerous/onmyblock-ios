@@ -121,6 +121,7 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 - (NSDate *) moveOutDateDate;
 - (NSInteger) numberOfStepsLeft;
 - (UIImage *) photoAtIndex:(NSInteger)index withSize:(CGSize) size;
+- (void) readFromDictionaryLightning: (NSDictionary *) dictionary;
 - (void) readFromOffersDictionary: (NSDictionary *) dictionary;
 - (void) readFromOpenHouseDictionary: (NSDictionary *) dictionary;
 - (void) readFromPropertyDictionary: (NSDictionary *) dictionary;

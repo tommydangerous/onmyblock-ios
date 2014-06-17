@@ -62,6 +62,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   CGFloat backgroundImageViewHeight;
   CGFloat favoritesButtonOriginY;
   UIScrollView *hiddenScrollView;
+  UICollectionViewFlowLayout *imageCollectionViewLayout;
   UIPanGestureRecognizer *imagePanGestureRecognizer;
   UITapGestureRecognizer *imageTapGestureRecognizer;
   CGFloat previousOriginX;
@@ -79,16 +80,16 @@ float kResidenceDetailImagePercentage   = 0.5f;
   if (!(self = [super init])) return nil;
 
   residence = object;
+  previousOriginX = previousOriginY = 0.0f;
 
-  if ([residence.address length]){
-    
-    self.navigationItem.titleView = [[OMBResidenceTitleView alloc] initWithResidence: residence];
+  // Title
+  if ([residence.address length]) {
+    self.navigationItem.titleView = 
+      [[OMBResidenceTitleView alloc] initWithResidence: residence];
   }
   else {
     self.title = residence.title;
   }
-
-  previousOriginX = previousOriginY = 0.0f;
 
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(currentUserLogout) name: OMBUserLoggedOutNotification
@@ -131,7 +132,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   // Layout
   CGSize imageCollectionSize = CGSizeMake(screenWidth,
     backgroundImageViewHeight);
-  UICollectionViewFlowLayout *imageCollectionViewLayout =
+  imageCollectionViewLayout =
     [UICollectionViewFlowLayout new];
   imageCollectionViewLayout.itemSize = imageCollectionSize;
   imageCollectionViewLayout.headerReferenceSize = CGSizeZero;
@@ -626,7 +627,14 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
       (y - adjustment);
     if (backRectWithHeight.size.height > backgroundImageViewHeight)
       backRectWithHeight.size.height = backgroundImageViewHeight;
-    imageCollectionView.frame  = backRectWithHeight;
+    // Image collection view layout
+    imageCollectionViewLayout.itemSize = CGSizeMake(
+      imageCollectionView.frame.size.width,
+        backRectWithHeight.size.height);
+    // Image collection view
+    imageCollectionView.collectionViewLayout = imageCollectionViewLayout;
+    imageCollectionView.frame = backRectWithHeight;
+
     // Adjust the gradient
     gradientView.frame         = backRectWithHeight;
     // Adjust the placeholder image
@@ -1394,13 +1402,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) refreshResidenceData
 {
+  // If there is a user associated with the residence
   if (residence.user) {
     // Download the seller's image if it doesn't exist
     if (!residence.user.image)
       [residence.user downloadImageFromImageURLWithCompletion: nil];
   }
 
-  // Critea to show "Book It" or "Apply Now"
+  // Criteria to show "Book It" or "Apply Now"
   [self criteriaApplyNow];
 
   // Inactive

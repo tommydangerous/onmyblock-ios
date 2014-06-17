@@ -17,6 +17,24 @@
 
 - (id) initWithParameters: (NSDictionary *) dictionary
 {
+  // This is used for fetching residences from the list view
+  if (!(self = [super init])) return nil;
+
+  NSString *string = [NSString stringWithFormat: @"%@/places/grid/?",
+    OnMyBlockAPIURL];
+  for (NSString *key in [dictionary allKeys]) {
+    NSString *param = [NSString stringWithFormat:
+      @"%@=%@&", key, [dictionary objectForKey: key]];
+    string = [string stringByAppendingString: param];
+  }
+  [self setRequestWithString: string];
+
+  return self;
+}
+
+- (id) initWithParametersForMap: (NSDictionary *) dictionary
+{
+  // This is used for fetching residences from the map view
   if (!(self = [super init])) return nil;
 
   NSString *string = [NSString stringWithFormat: @"%@/places/?",
@@ -29,6 +47,15 @@
   [self setRequestWithString: string];
 
   return self;
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void) start
+{
+  [self startWithTimeoutInterval: 15 onMainRunLoop: NO];
 }
 
 #pragma mark - Protocol
