@@ -31,13 +31,18 @@
 + (OMBLegalQuestionStore *) sharedStore
 {
   static OMBLegalQuestionStore *store = nil;
-  if (!store) {
+
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
     store = [[OMBLegalQuestionStore alloc] init];
-  }
+  });
+
   return store;
 }
 
 #pragma mark - Instance Methods
+
+#pragma mark - Public
 
 - (void) addLegalQuestion: (OMBLegalQuestion *) object
 {
@@ -60,6 +65,11 @@
     [[OMBLegalQuestionListConnection alloc] init];
   connection.completionBlock = block;
   [connection start];
+}
+
+- (NSUInteger) legalQuestionsCount
+{
+  return [self.legalQuestions count];
 }
 
 - (NSArray *) questionsSortedByQuestion

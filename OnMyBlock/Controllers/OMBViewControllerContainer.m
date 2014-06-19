@@ -1829,7 +1829,6 @@ completion: (void (^) (void)) block
   
   // If there is a landlord type of any sort, enable the scroll,
   // and hide the create listing button box
-  NSLog(@"%@, %@", userType, landlordType);
   arrowView.hidden              = YES;
   createListingButton.hidden    = NO;
   hitArea.scrollView            = nil;

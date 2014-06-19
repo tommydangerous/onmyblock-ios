@@ -17,14 +17,17 @@
 #import "OMBAlertViewBlur.h"
 #import "OMBBecomeVerifiedViewController.h"
 #import "OMBCenteredImageView.h"
+#import "OMBEmployment.h"
 #import "OMBEmploymentCell.h"
 #import "OMBGradientView.h"
 #import "OMBLabelTextFieldCell.h"
+#import "OMBLegalQuestionStore.h"
 #import "OMBLegalViewController.h"
 #import "OMBManageListingsCell.h"
 #import "OMBManageListingsConnection.h"
 #import "OMBOtherUserProfileViewController.h"
 #import "OMBPickerViewCell.h"
+#import "OMBPreviousRental.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoSectionCosignersViewController.h"
 #import "OMBRenterInfoSectionEmploymentViewController.h"
@@ -42,6 +45,9 @@
 @interface OMBApplyResidenceViewController ()
 <UIActionSheetDelegate, UIImagePickerControllerDelegate,
 UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
+{
+  NSUInteger residenceUID;
+}
 
 @end
 
@@ -49,11 +55,14 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
 
 #pragma mark - Initializer
 
-- (id) init
+#pragma mark - Initializer
+
+- (id) initWithResidenceUID: (NSUInteger) uid
 {
   if (!(self = [super init])) return nil;
   
-  self.title = @"My Renter Profile";
+  residenceUID = uid;
+  self.title   = @"My Application";
   
   CGRect rect = [@"First name" boundingRectWithSize:
     CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFontBold]];
@@ -297,22 +306,35 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
     @"school":    user.school ? user.school : @""
   }];
   
-  // If user is a subletter
-  /*if ([user.landlordType isEqualToString: @"subletter"]) {
-    OMBManageListingsConnection *conn =
-    [[OMBManageListingsConnection alloc] init];
-    conn.completionBlock = ^(NSError *error) {
-      [self.table reloadData];
-    };
-    [conn start];
-  }*/
-  
   [effectLabel performEffectAnimation];
   
   [self updateData];
+
+  // Download all the user's renter application info that is required
+  // for submitting an applications
+  // Previous Rental
+  [self fetchObjectsForResourceName: [OMBPreviousRental resourceName]];
+  // Employments
+  [self fetchObjectsForResourceName: [OMBEmployment resourceName]];
+  // Legal questions
+  [user fetchLegalAnswersWithCompletion: nil];
   
-  if(_nextSection)
+  if (_nextSection)
     [self showNextSection];
+}
+
+- (void) fetchObjectsForResourceName: (NSString *) resourceName
+{
+  [[self renterApplication] fetchListForResourceName: resourceName
+    userUID: [OMBUser currentUser].uid delegate: self 
+      completion: ^(NSError *error) {
+        
+      }];
+}
+
+- (OMBRenterApplication *) renterApplication
+{
+  return [OMBUser currentUser].renterApplication;
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -323,6 +345,24 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol OMBConnectionProtocol
+
+- (void) JSONDictionary: (NSDictionary *) dictionary
+forResourceName: (NSString *) resourceName
+{
+  // Employment
+  if ([resourceName isEqualToString: [OMBEmployment resourceName]]) {
+    [[self renterApplication] readFromDictionary: dictionary
+      forModelName: [OMBEmployment modelName]];
+  }
+  // Previous Rental
+  else if ([resourceName isEqualToString: [OMBPreviousRental resourceName]]) {
+    [[self renterApplication] readFromDictionary: dictionary
+      forModelName: [OMBPreviousRental modelName]];
+  }
+  [self reloadTable];
+}
 
 #pragma mark - Protocol UIActionSheetDelegate
 
@@ -1072,24 +1112,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 // Real Methods
 
-- (void) closeAlertBlur
-{
-  [UIView animateWithDuration: OMBStandardDuration animations: ^{
-    alertBlur.alpha = 0.0f;
-  } completion: ^(BOOL finished) {
-    if (finished) {
-      [self.navigationController popViewControllerAnimated: YES];
-      [alertBlur close];
-    }
-  }];
-}
-
-- (BOOL)hasRenterSection:(NSString *)key
-{
-  
-  return ([[[self renterapplicationUserDefaults] objectForKey: key] boolValue]);
-}
-
 - (NSString *) incompleteFieldString
 {
   NSString *string = @"";
@@ -1218,29 +1240,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   
 }
 
-- (NSString *) incompleteSectionString
+- (void) showHomebaseRenter
 {
-  NSString *string = @"";
-  
-  //if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedCosigners])
-  //  string = @"\"Co-signer";
-  //else
-  if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedRentalHistory])
-    string = @"\"Rental History";
-  else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedWorkHistory])
-    string = @"\"Work & School History";
-  else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedLegalQuestions])
-    string = @"\"Legal Questions";
-  
-  return string;
+  [alertBlur close];
+  [[self appDelegate].container showHomebaseRenter];
+  [self.navigationController popViewControllerAnimated: NO];
 }
 
-- (void)showRenterHomebase
-{
-  [self closeAlertBlur];
-}
-
-- (void)shouldSubmitApplication
+- (void) shouldSubmitApplication
 {
   BOOL shouldSubmit = YES;
   NSString *message = @"";
@@ -1264,24 +1271,37 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // If all fields are completed then search for possible sections missing
   // This is just for set the correct message
   
-  if(shouldSubmit){
-    // Search missing section
-    //if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedCosigners])
-    //  shouldSubmit = NO;
-    //else
-    if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedRentalHistory])
-      shouldSubmit = NO;
-    else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedWorkHistory])
-      shouldSubmit = NO;
-    else if(![self hasRenterSection:OMBUserDefaultsRenterApplicationCheckedLegalQuestions])
-      shouldSubmit = NO;
-    
-    if(!shouldSubmit){
-      
-      // Set correct message
-      message = [[self incompleteSectionString] stringByAppendingString:
-        @"\" section is required to submit an application"];
+  if (shouldSubmit) {
+    // Require
+    // Previous rentals
+    // Employments
+    // Legal answers
+    for (NSString *modelName in @[
+      [OMBPreviousRental modelName], [OMBEmployment modelName]]) {
+      if ([[[self renterApplication] objectsWithModelName: modelName
+        sortedWithKey: @"uid" ascending: NO] count] == 0) {
+        // Previous Rental
+        if ([modelName isEqualToString: [OMBPreviousRental modelName]]) {
+          message = @"Rental history";
+        }
+        // Employments
+        else if ([modelName isEqualToString: [OMBEmployment modelName]]) {
+          message = @"Work & School History";
+        }
+        shouldSubmit = NO;
+        break;
+      }
     }
+    // Legal answers
+    if (shouldSubmit) {
+      if ([[self renterApplication].legalAnswers count] != 
+        [[OMBLegalQuestionStore sharedStore] legalQuestionsCount]) {
+        message = @"Legal Questions";
+        shouldSubmit = NO;
+      }
+    }
+    message = [message stringByAppendingString: 
+      @" section is required to submit an application."];
   }
   
   // Submit Application ?
@@ -1296,30 +1316,33 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
-- (void)submitApplication
+- (void) submitApplication
 {
-  
-  [alertBlur setTitle: @"Application Submitted!"];
-  [alertBlur setMessage: @"The landlord will review your application and make a decision. "
-    @"If you have applied with co-applicants make sure they have "
-    @"completed applications as well. Feel free to message the "
-    @"landlord for more information about the property "
-    @"or to schedule a viewing."];
-  [alertBlur setConfirmButtonTitle: @"Okay"];
-  [alertBlur addTargetForConfirmButton: self
-    action: @selector(showRenterHomebase)];
-  [alertBlur addTargetForCancelButton: self
-    action: @selector(submitCanceled)];
-  [alertBlur showInView: self.view withDetails: NO];
-  [alertBlur showBothButtons];
-  [alertBlur hideQuestionButton];
-  
-}
+  [[self renterApplication] createSentApplicationForResidenceUID: residenceUID
+    completion: ^(NSError *error) {
+      if (error) {
+        [self showAlertViewWithError: error];
+      }
+      else {
+        [alertBlur setTitle: @"Application Submitted!"];
+        [alertBlur setMessage: 
+          @"The landlord will review your application and make a decision. "
+          @"If you have applied with co-applicants make sure they have "
+          @"completed applications as well. Feel free to message the "
+          @"landlord for more information about the property "
+          @"or to schedule a viewing."];
+        [alertBlur setConfirmButtonTitle: @"Okay"];
+        [alertBlur addTargetForConfirmButton: self
+          action: @selector(showHomebaseRenter)];
+        [alertBlur showInView: self.view withDetails: NO];
 
-- (void)submitCanceled
-{
-  [alertBlur close];
+        [alertBlur hideCloseButton];
+        [alertBlur hideQuestionButton];
+        [alertBlur showOnlyConfirmButton];
+      }
+      [self containerStopSpinningFullScreen];
+    }];
+  [self containerStartSpinningFullScreen];
 }
-
 
 @end

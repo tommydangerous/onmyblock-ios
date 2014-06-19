@@ -23,6 +23,7 @@
 #import "OMBRoommate.h"
 #import "OMBRenterApplicationUpdateConnection.h"
 #import "OMBSentApplication.h"
+#import "OMBSentApplicationCreateConnection.h"
 #import "OMBSentApplicationListConnection.h"
 
 @interface OMBRenterApplication () <OMBConnectionProtocol>
@@ -147,6 +148,17 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
     [[OMBModelCreateConnection alloc] initWithModel: object];
   conn.completionBlock = block;
   conn.delegate = delegate;
+  [conn start];
+}
+
+- (void) createSentApplicationForResidenceUID: (NSUInteger) residenceUID
+completion: (void (^) (NSError *error)) block
+{
+  OMBSentApplicationCreateConnection *conn = 
+    [[OMBSentApplicationCreateConnection alloc] initWithResidenceUID:
+      residenceUID];
+  conn.completionBlock = block;
+  conn.delegate        = self;
   [conn start];
 }
 

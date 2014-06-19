@@ -308,7 +308,7 @@
     }];
 
     // Fetch coapplicants
-    [self fetchObjectsForResourceName:[OMBRoommate resourceName]];
+    [self fetchObjectsForResourceName: [OMBRoommate resourceName]];
 
     // Fetch cosigners
     [[self renterApplication] fetchCosignersForUserUID: user.uid
@@ -323,19 +323,11 @@
     [self fetchObjectsForResourceName:[OMBEmployment resourceName]];
 
     // Fetch legal questions
-    [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
-      ^(NSError *error) {
-        OMBLegalAnswerListConnection *connection =
-        [[OMBLegalAnswerListConnection alloc] initWithUser: user];
-        connection.completionBlock = ^(NSError *error) {
-          legalAnswers = [NSMutableDictionary dictionaryWithDictionary:
-            user.renterApplication.legalAnswers];
-          [self.table reloadData];
-        };
-        [connection start];
-        [self.table reloadData];
-     }
-    ];
+    [user fetchLegalAnswersWithCompletion: ^(NSError *error) {
+      legalAnswers = [NSMutableDictionary dictionaryWithDictionary:
+        user.renterApplication.legalAnswers];
+      [self.table reloadData];
+    }];
   }
 }
 
@@ -1130,7 +1122,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) emailUser
 {
-  [self email:@[user.email]];
+  [self email: @[user.email]];
 }
 
 - (void) emailCosigner:(id)sender

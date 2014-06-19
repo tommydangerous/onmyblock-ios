@@ -8,6 +8,8 @@
 
 #import "OMBSentApplication.h"
 
+#import "NSDateFormatter+JSON.h"
+
 @implementation OMBSentApplication
 
 #pragma mark - Methods
@@ -30,23 +32,52 @@
 {
   // Sample JSON
   // {
-  //   created_at: "2014-05-19 21:36:37 -0700",
-  //   id: 38,
-  //   move_in_date: "2014-05-19 21:36:37 -0700",
-  //   move_out_date: "2014-08-18 21:36:37 -0700",
-  //   landlord_user_id: 1420,
-  //   renter_application_id: 6,
-  //   residence_id: 666,
-  //   sent: 1
+  //   id: 94,
+  //   renter_application_id: 2,
+  //   residence_id: 218,
+  //   created_at: "2014-06-12 12:25:40 -0700",
+  //   updated_at: "2014-06-15 09:11:18 -0700",
+  //   move_in_date: "2014-08-07 00:00:00 -0700",
+  //   move_out_date: "2015-07-09 00:00:00 -0700",
+  //   sent: true,
+  //   landlord_user_id: 3,
+  //   created_source: "web",
+  //   accepted: false,
+  //   declined: true,
+  //   cancelled: false,
+  //   accepted_date: null
   // }
-  NSDateFormatter *dateFormatter = [NSDateFormatter new];
-  dateFormatter.dateFormat = @"yyyy-MM-d HH:mm:ss ZZZ";
+
+  NSDateFormatter *dateFormatter = [NSDateFormatter JSONDateParser];
+
+  // Accepted
+  id accepted = [dictionary objectForKey: @"accepted"];
+  if (accepted != [NSNull null])
+    self.accepted = [accepted boolValue];
+
+  // Accepted date
+  id acceptedDate = [dictionary objectForKey: @"accepted_date"];
+  if (acceptedDate != [NSNull null])
+    self.acceptedDate = [[dateFormatter dateFromString:
+      acceptedDate] timeIntervalSince1970];
+
+  // Cancelled
+  id cancelled = [dictionary objectForKey: @"cancelled"];
+  if (cancelled != [NSNull null])
+    self.cancelled = [cancelled boolValue];
 
   // Created at
   id createdAt = [dictionary objectForKey: @"created_at"];
   if (createdAt != [NSNull null])
     self.createdAt = [[dateFormatter dateFromString:
       createdAt] timeIntervalSince1970];
+
+  // Declined
+  id declined = [dictionary objectForKey: @"declined"];
+  if (declined != [NSNull null])
+    self.declined = [declined boolValue];
+
+  // Landlord User ID
 
   // Move in date
   id moveInDate = [dictionary objectForKey: @"move_in_date"];
@@ -60,14 +91,19 @@
     self.moveOutDate = [[dateFormatter dateFromString:
       moveOutDate] timeIntervalSince1970];
 
-  // Landlord User ID
-
   // Renter Application ID
 
   // Residence ID
   id residenceID = [dictionary objectForKey: @"residence_id"];
   if (residenceID != [NSNull null])
     self.residenceID = [residenceID intValue];
+
+  // Sent
+  id sent = [dictionary objectForKey: @"sent"];
+  if (sent != [NSNull null])
+    self.sent = [sent boolValue];
+
+  // Updated at
   
   // UID
   id uid = [dictionary objectForKey: @"id"];

@@ -22,7 +22,10 @@
 
 #pragma mark - Instance Methods
 
+#pragma mark - Public
+
 - (void) addLegalQuestion: (OMBLegalQuestion *) object;
+- (NSUInteger) legalQuestionsCount;
 - (void) fetchLegalQuestionsWithCompletion: (void (^)(NSError *)) block;
 - (NSArray *) questionsSortedByQuestion;
 

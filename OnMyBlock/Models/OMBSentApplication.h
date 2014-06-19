@@ -10,7 +10,11 @@
 
 @interface OMBSentApplication : OMBObject
 
+@property (nonatomic) BOOL accepted;
+@property (nonatomic) NSTimeInterval acceptedDate;
+@property (nonatomic) BOOL cancelled;
 @property (nonatomic) NSTimeInterval createdAt;
+@property (nonatomic) BOOL declined;
 @property (nonatomic) NSUInteger landlordUserID;
 @property (nonatomic) NSTimeInterval moveInDate;
 @property (nonatomic) NSTimeInterval moveOutDate;

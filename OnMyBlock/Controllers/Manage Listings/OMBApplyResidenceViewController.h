@@ -77,6 +77,10 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionRenterInfoRow) {
 
 @property int nextSection;
 
+#pragma mark - Initializer
+
+- (id) initWithResidenceUID: (NSUInteger) uid;
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods

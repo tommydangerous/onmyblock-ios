@@ -220,6 +220,7 @@
 		AB95457D18491A87000513BE /* OMBUserImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AB95457C18491A87000513BE /* OMBUserImageDownloader.m */; };
 		AB9545841849B217000513BE /* OMBCenteredImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9545831849B217000513BE /* OMBCenteredImageView.m */; };
 		AB95458A184A8559000513BE /* OMBRenterApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB954589184A8559000513BE /* OMBRenterApplicationViewController.m */; };
+		AB961E4519514F37003F36AB /* OMBSentApplicationCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB961E4419514F37003F36AB /* OMBSentApplicationCreateConnection.m */; };
 		AB9B2602181196F400E6DAC4 /* location.gpx in Resources */ = {isa = PBXBuildFile; fileRef = AB9B2601181196F400E6DAC4 /* location.gpx */; };
 		AB9B26091811A74E00E6DAC4 /* OMBAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26081811A74E00E6DAC4 /* OMBAnnotationView.m */; };
 		AB9B260F1811AA7C00E6DAC4 /* OMBAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B260E1811AA7C00E6DAC4 /* OMBAnnotation.m */; };
@@ -929,6 +930,8 @@
 		AB9545831849B217000513BE /* OMBCenteredImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCenteredImageView.m; sourceTree = "<group>"; };
 		AB954588184A8559000513BE /* OMBRenterApplicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterApplicationViewController.h; sourceTree = "<group>"; };
 		AB954589184A8559000513BE /* OMBRenterApplicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterApplicationViewController.m; sourceTree = "<group>"; };
+		AB961E4319514F37003F36AB /* OMBSentApplicationCreateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSentApplicationCreateConnection.h; sourceTree = "<group>"; };
+		AB961E4419514F37003F36AB /* OMBSentApplicationCreateConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSentApplicationCreateConnection.m; sourceTree = "<group>"; };
 		AB9B2601181196F400E6DAC4 /* location.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = location.gpx; sourceTree = "<group>"; };
 		AB9B26071811A74E00E6DAC4 /* OMBAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAnnotationView.h; sourceTree = "<group>"; };
 		AB9B26081811A74E00E6DAC4 /* OMBAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAnnotationView.m; sourceTree = "<group>"; };
@@ -1754,6 +1757,8 @@
 			children = (
 				AB6E940D192BAAA2005A357A /* OMBSentApplicationListConnection.h */,
 				AB6E940E192BAAA2005A357A /* OMBSentApplicationListConnection.m */,
+				AB961E4319514F37003F36AB /* OMBSentApplicationCreateConnection.h */,
+				AB961E4419514F37003F36AB /* OMBSentApplicationCreateConnection.m */,
 			);
 			path = "Sent Applications";
 			sourceTree = "<group>";
@@ -3696,6 +3701,7 @@
 				AB756AC9185A3ADE001AF572 /* OMBPayPalVerifyMobilePaymentConnection.m in Sources */,
 				ABBA5879186F7D2800E9BF4E /* OMBFinishListingPhotosViewController.m in Sources */,
 				ABB91182189865880046611F /* OMBEditProfileViewController.m in Sources */,
+				AB961E4519514F37003F36AB /* OMBSentApplicationCreateConnection.m in Sources */,
 				ABCB36AF187C8D2F008A0EEF /* OMBOfferAcceptedView.m in Sources */,
 				AB00B9CF18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m in Sources */,
 				AB63D2201821B93A00D63800 /* OMBLoginConnection.m in Sources */,

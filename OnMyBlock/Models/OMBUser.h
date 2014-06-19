@@ -127,6 +127,7 @@ withCompletion: (void (^) (NSError *error)) block;
 - (void) fetchConfirmedTenantsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchCurrentUserInfo;
 - (void) fetchEmploymentsWithCompletion: (void (^) (NSError *error)) block;
+- (void) fetchLegalAnswersWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchMovedInWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchPayoutMethodsWithCompletion: (void (^) (NSError *error)) block;
 - (void) fetchDepositPayoutTransactionsWithCompletion:

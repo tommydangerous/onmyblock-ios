@@ -39,6 +39,8 @@
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) createModelConnection: (OMBObject *) object
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
+- (void) createSentApplicationForResidenceUID: (NSUInteger) residenceUID
+completion: (void (^) (NSError *error)) block;
 - (void) deleteCosignerConnection: (OMBCosigner *) cosigner
 delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) deleteModelConnection: (OMBObject *) object

@@ -223,7 +223,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if(![legalAnswers objectForKey:
         [NSNumber numberWithInt: legalQuestion.uid]]){
       allAnswered = NO;
-      NSLog(@"not exits");
     }
   }
   

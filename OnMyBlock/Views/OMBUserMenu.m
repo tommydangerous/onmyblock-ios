@@ -497,8 +497,6 @@ withNumber: (NSNumber *) number
   NSString *landlordType = (landlordTypeID != [NSNull null] ? (NSString *) landlordTypeID : @"" );
   NSString *userType     = (userTypeID     != [NSNull null] ? (NSString *) userTypeID     : @"" );
   
-  NSLog(@"%@ , %@", userType, landlordType);
-  
   // If this user menu is a user menu with the landlord options
   if (_isForLandlord) {
     if ([landlordType length] || [userType length]) {

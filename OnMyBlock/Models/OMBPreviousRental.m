@@ -79,8 +79,6 @@
     _zip = [dictionary objectForKey: @"zip"];
 
   self.uid = [[dictionary objectForKey: @"id"] intValue];
-
-  NSLog(@"OMBPreviousRental:\n%@", dictionary);
 }
 
 @end

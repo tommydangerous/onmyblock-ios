@@ -1183,6 +1183,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) criteriaApplyNow
 {
+  // Show the 
   BOOL showApplyNow = YES;
   BOOL hasSentApp = NO;
   
@@ -1201,21 +1202,21 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // If user has sent an application
   else if ([[OMBUser currentUser] loggedIn] &&
     [[OMBUser currentUser] hasSentApplicationsInResidence: residence]) {
-    hasSentApp = YES;
     showApplyNow = NO;
+    hasSentApp = YES;
   }
   
-  if(hasSentApp){
-    [_bookItButton setTitle:@"Applied" forState:UIControlStateNormal];
+  if (hasSentApp) {
+    [_bookItButton setTitle: @"Applied" forState: UIControlStateNormal];
     _bookItButton.enabled = NO;
-  }else{
+  } else {
     SEL selector;
     NSString *title;
     
-    if(showApplyNow){
+    if (showApplyNow) {
       title = @"Apply Now";
       selector = @selector(showApplyNow);
-    }else{
+    } else {
       title = @"Book It";
       selector = @selector(showPlaceOffer);
     }
@@ -1445,18 +1446,26 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showApplyNow
 {
-  [self.navigationController pushViewController:
-    [[OMBApplyResidenceViewController alloc] init] animated:YES];
+  if ([[OMBUser currentUser] loggedIn]) {
+    [self.navigationController pushViewController:
+      [[OMBApplyResidenceViewController alloc] initWithResidenceUID:
+        residence.uid] animated: YES];
+  }
+  else {
+    [[self appDelegate].container showSignUp];
+  }
 }
 
 - (void) showBookItNow
 {
-  if ([[OMBUser currentUser] loggedIn])
+  if ([[OMBUser currentUser] loggedIn]) {
     [self.navigationController pushViewController:
       [[OMBResidenceBookItViewController alloc] initWithResidence: residence]
         animated: YES];
-  else
+  }
+  else {
     [[self appDelegate].container showSignUp];
+  }
 }
 
 - (void) showImageSlides

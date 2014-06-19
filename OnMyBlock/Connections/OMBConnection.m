@@ -92,7 +92,7 @@ totalBytesExpectedToWrite: (NSInteger) totalBytesExpectedToWrite
   [[NSNotificationCenter defaultCenter] postNotificationName:
     @"progressConnection" object: [NSNumber numberWithFloat: percentage]];
 
-  NSLog(@"%@: %f/%f (%f)", [_request URL].absoluteString, x, y, percentage);
+  // NSLog(@"%@: %f/%f (%f)", [_request URL].absoluteString, x, y, percentage);
 }
 
 #pragma mark - Protocol NSURLConnectionDelegate
@@ -258,6 +258,9 @@ onMainRunLoop: (BOOL) onMain
 {
   if ([[self json] objectForKey: @"success"] != [NSNull null]) {
     if ([[[self json] objectForKey: @"success"] intValue]) {
+      return YES;
+    }
+    else if ([[[self json] objectForKey: @"success"] boolValue]) {
       return YES;
     }
   }

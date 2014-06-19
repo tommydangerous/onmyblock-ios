@@ -27,6 +27,8 @@
 #import "OMBFavoriteResidence.h"
 #import "OMBIntroStillImagesViewController.h"
 #import "OMBLegalAnswer.h"
+#import "OMBLegalAnswerListConnection.h"
+#import "OMBLegalQuestionStore.h"
 #import "OMBMessage.h"
 #import "OMBMessageDetailConnection.h"
 #import "OMBMessagesUnviewedCountConnection.h"
@@ -636,6 +638,18 @@ withCompletion: (void (^) (NSError *error)) block
 - (void) fetchFavorites
 {
   [[[OMBFavoritesListConnection alloc] init] start];
+}
+
+- (void) fetchLegalAnswersWithCompletion: (void (^) (NSError *error)) block
+{
+  [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
+    ^(NSError *error) {
+      OMBLegalAnswerListConnection *connection =
+        [[OMBLegalAnswerListConnection alloc] initWithUser: self];
+      connection.completionBlock = block;
+      [connection start];
+    }
+  ]; 
 }
 
 - (void) fetchListingsWithCompletion: (void (^) (NSError *error)) block
