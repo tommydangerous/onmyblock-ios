@@ -8,6 +8,8 @@
 
 #import "OMBSentApplicationCreateConnection.h"
 
+#import "OMBRenterApplication.h"
+
 @implementation OMBSentApplicationCreateConnection
 
 #pragma mark - Initializer
@@ -34,7 +36,10 @@
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
   if ([self successful]) {
-    NSLog(@"%@", [self json]);
+    [[OMBUser currentUser].renterApplication readFromSentApplicationDictionary:
+      @{
+        @"objects": @[[[self json] objectForKey: @"object"]]
+      }];
   }
   [super connectionDidFinishLoading: connection];
 }

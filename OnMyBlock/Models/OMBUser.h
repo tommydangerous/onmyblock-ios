@@ -139,7 +139,6 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (void) fetchUserProfileWithCompletion: (void (^) (NSError *error)) block;
 - (NSString *) fullName;
 - (BOOL) hasLandlordType;
-- (BOOL) hasSentApplicationsInResidence:(OMBResidence *)residence;
 - (CGFloat) heightForAboutTextWithWidth: (CGFloat) width;
 - (UIImage *) imageForSize: (CGSize) size;
 - (UIImage *) imageForSizeKey: (NSString *) string;

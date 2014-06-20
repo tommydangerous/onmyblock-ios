@@ -126,6 +126,7 @@
 		AB4ED3021884C738009AFB01 /* OMBResidencePublishConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4ED3011884C738009AFB01 /* OMBResidencePublishConnection.m */; };
 		AB4F9D1E181AAAED0086D618 /* OMBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4F9D1D181AAAED0086D618 /* OMBMenuViewController.m */; };
 		AB4F9D24181ABFA20086D618 /* OMBResidenceImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4F9D23181ABFA20086D618 /* OMBResidenceImageDownloader.m */; };
+		AB563E9F195499B600350234 /* OMBHomebaseRenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB563E9E195499B600350234 /* OMBHomebaseRenterViewController.m */; };
 		AB57EA1E186B7C3C001682DB /* OMBMessageDetailCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB57EA1D186B7C3C001682DB /* OMBMessageDetailCollectionViewFlowLayout.m */; };
 		AB57EA21186BB6D7001682DB /* OMBMessageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB57EA20186BB6D7001682DB /* OMBMessageCollectionViewCell.m */; };
 		AB57EA24186C7662001682DB /* OMBMessageNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB57EA23186C7662001682DB /* OMBMessageNewViewController.m */; };
@@ -326,7 +327,7 @@
 		ABB70067187B58C0005F0730 /* OMBHomebaseLandlordConfirmedTenantsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB7005F187B58C0005F0730 /* OMBHomebaseLandlordConfirmedTenantsViewController.m */; };
 		ABB70068187B58C0005F0730 /* OMBHomebaseLandlordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB70061187B58C0005F0730 /* OMBHomebaseLandlordViewController.m */; };
 		ABB70069187B58C0005F0730 /* OMBOfferInquiryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB70063187B58C0005F0730 /* OMBOfferInquiryViewController.m */; };
-		ABB7006A187B58C0005F0730 /* OMBHomebaseRenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB70066187B58C0005F0730 /* OMBHomebaseRenterViewController.m */; };
+		ABB7006A187B58C0005F0730 /* OMBHomebaseRenterViewControllerOLD.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB70066187B58C0005F0730 /* OMBHomebaseRenterViewControllerOLD.m */; };
 		ABB7006D187B6067005F0730 /* OMBHomebaseRenterRoommateImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB7006C187B6067005F0730 /* OMBHomebaseRenterRoommateImageView.m */; };
 		ABB70070187B76EB005F0730 /* OMBImageTwoLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB7006F187B76EB005F0730 /* OMBImageTwoLabelCell.m */; };
 		ABB70073187B7814005F0730 /* OMBHomebaseRenterTopPriorityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB70072187B7814005F0730 /* OMBHomebaseRenterTopPriorityCell.m */; };
@@ -764,6 +765,8 @@
 		AB4F9D1D181AAAED0086D618 /* OMBMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMenuViewController.m; sourceTree = "<group>"; };
 		AB4F9D22181ABFA20086D618 /* OMBResidenceImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceImageDownloader.h; sourceTree = "<group>"; };
 		AB4F9D23181ABFA20086D618 /* OMBResidenceImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceImageDownloader.m; sourceTree = "<group>"; };
+		AB563E9D195499B600350234 /* OMBHomebaseRenterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHomebaseRenterViewController.h; sourceTree = "<group>"; };
+		AB563E9E195499B600350234 /* OMBHomebaseRenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHomebaseRenterViewController.m; sourceTree = "<group>"; };
 		AB57EA1C186B7C3C001682DB /* OMBMessageDetailCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMessageDetailCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		AB57EA1D186B7C3C001682DB /* OMBMessageDetailCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMessageDetailCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		AB57EA1F186BB6D7001682DB /* OMBMessageCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMessageCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1148,8 +1151,8 @@
 		ABB70061187B58C0005F0730 /* OMBHomebaseLandlordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHomebaseLandlordViewController.m; sourceTree = "<group>"; };
 		ABB70062187B58C0005F0730 /* OMBOfferInquiryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBOfferInquiryViewController.h; sourceTree = "<group>"; };
 		ABB70063187B58C0005F0730 /* OMBOfferInquiryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBOfferInquiryViewController.m; sourceTree = "<group>"; };
-		ABB70065187B58C0005F0730 /* OMBHomebaseRenterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHomebaseRenterViewController.h; sourceTree = "<group>"; };
-		ABB70066187B58C0005F0730 /* OMBHomebaseRenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHomebaseRenterViewController.m; sourceTree = "<group>"; };
+		ABB70065187B58C0005F0730 /* OMBHomebaseRenterViewControllerOLD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHomebaseRenterViewControllerOLD.h; sourceTree = "<group>"; };
+		ABB70066187B58C0005F0730 /* OMBHomebaseRenterViewControllerOLD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHomebaseRenterViewControllerOLD.m; sourceTree = "<group>"; };
 		ABB7006B187B6067005F0730 /* OMBHomebaseRenterRoommateImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHomebaseRenterRoommateImageView.h; sourceTree = "<group>"; };
 		ABB7006C187B6067005F0730 /* OMBHomebaseRenterRoommateImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHomebaseRenterRoommateImageView.m; sourceTree = "<group>"; };
 		ABB7006E187B76EB005F0730 /* OMBImageTwoLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBImageTwoLabelCell.h; sourceTree = "<group>"; };
@@ -2801,8 +2804,8 @@
 		ABB70064187B58C0005F0730 /* Homebase Renter */ = {
 			isa = PBXGroup;
 			children = (
-				ABB70065187B58C0005F0730 /* OMBHomebaseRenterViewController.h */,
-				ABB70066187B58C0005F0730 /* OMBHomebaseRenterViewController.m */,
+				ABB70065187B58C0005F0730 /* OMBHomebaseRenterViewControllerOLD.h */,
+				ABB70066187B58C0005F0730 /* OMBHomebaseRenterViewControllerOLD.m */,
 				ABB7007E187BD5C4005F0730 /* OMBHomebaseRenterRentDepositInfoViewController.h */,
 				ABB7007F187BD5C4005F0730 /* OMBHomebaseRenterRentDepositInfoViewController.m */,
 				ABCB36B0187CA156008A0EEF /* OMBHomebaseRenterAddRemoveRoommatesViewController.h */,
@@ -2813,6 +2816,8 @@
 				ABCB36C0187CC229008A0EEF /* OMBHomebaseRenterAddRoommateFromEmailViewController.m */,
 				DE96A6A0193CD0EB008CCE02 /* OMBHomebaseRenterSentApplicationViewController.h */,
 				DE96A6A1193CD0EB008CCE02 /* OMBHomebaseRenterSentApplicationViewController.m */,
+				AB563E9D195499B600350234 /* OMBHomebaseRenterViewController.h */,
+				AB563E9E195499B600350234 /* OMBHomebaseRenterViewController.m */,
 			);
 			path = "Homebase Renter";
 			sourceTree = "<group>";
@@ -3453,7 +3458,7 @@
 				AB026BD01822E98500E72F53 /* OMBSignUpConnection.m in Sources */,
 				AB57EA21186BB6D7001682DB /* OMBMessageCollectionViewCell.m in Sources */,
 				ABCB36B8187CA64D008A0EEF /* OMBHomebaseRenterAddRemoveRoommatesOptionCell.m in Sources */,
-				ABB7006A187B58C0005F0730 /* OMBHomebaseRenterViewController.m in Sources */,
+				ABB7006A187B58C0005F0730 /* OMBHomebaseRenterViewControllerOLD.m in Sources */,
 				ABDF175C1868D10F004E2755 /* OMBResidenceLeaseAgreementViewController.m in Sources */,
 				AB131F2D1885C87B0057D769 /* OMBResidenceDetailViewController.m in Sources */,
 				AB0269D61822A12600E72F53 /* AMBlurView.m in Sources */,
@@ -3750,6 +3755,7 @@
 				ABBA58961870C59700E9BF4E /* ELCAssetCell.m in Sources */,
 				AB9D6114188CEFDE00C9AC64 /* SDWebImageDownloaderOperation.m in Sources */,
 				ABB06ADE18446773009CBBEA /* OMBGetStartedView.m in Sources */,
+				AB563E9F195499B600350234 /* OMBHomebaseRenterViewController.m in Sources */,
 				AB9FEEF518CFA17400E25FE2 /* OMBRenterInfoAddViewController.m in Sources */,
 				ABED5FE21896E8CE00AD630C /* UIImage+BoxBlur.m in Sources */,
 				ABBA58BE1875C31E00E9BF4E /* OMBMapFilterPlusMinusCell.m in Sources */,

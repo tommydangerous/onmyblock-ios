@@ -76,6 +76,7 @@ extern NSString *const OMBResidencePropertyTypeSublet;
 @property (nonatomic) int lastImagePosition;
 @property (nonatomic, strong) NSMutableArray *offers;
 @property (nonatomic, strong) NSMutableArray *openHouseDates;
+@property (nonatomic) BOOL sentApplication;
 @property (nonatomic, strong) OMBUser *user;
 
 #pragma mark - Methods

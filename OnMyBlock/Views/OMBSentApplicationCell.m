@@ -92,6 +92,8 @@
 
 #pragma mark - Instance Methods
 
+#pragma mark - Public
+
 - (void) adjustFrames
 {
   CGRect screen       = [[UIScreen mainScreen] bounds];
@@ -146,62 +148,60 @@
       bedbadlabelRect.size.width, bedbadlabelRect.size.height);
 }
 
-- (void) loadInfo:(OMBSentApplication *)sentapp
-{
- 
-  // Fetching data
-  if(!residence){
-    residence = [[OMBResidence alloc] init];
-    residence.uid = sentapp.residenceID;
-    [residence fetchDetailsWithCompletion: ^(NSError *error) {
-      [self reloadData];
+- (void) loadInfo: (OMBSentApplication *) sentApplication
+{ 
+  if (sentApplication.residence) {
+    [self reloadData: sentApplication.residence];
+  }
+  else {
+    sentApplication.residence     = [[OMBResidence alloc] init];
+    sentApplication.residence.uid = sentApplication.residenceID;
+    [sentApplication.residence fetchDetailsWithCompletion: ^(NSError *error) {
+      [self reloadData: sentApplication.residence];
     }];
   }
-  
-  [self reloadData];
 }
 
-- (void)reloadData
+#pragma mark - Private
+
+- (void) reloadData: (OMBResidence *) residence
 {
-  
+  if (!residence) return;
   // Name
-  rentLabel.text = [NSString numberToCurrencyString:residence.minRent];
-  
+  rentLabel.text = [NSString numberToCurrencyString: residence.minRent];
   // Address
   addressLabel.text = [residence.address capitalizedString];
-  
   // Bedrooms / Bathrooms
   bedbadlabel.text =  [NSString stringWithFormat:
     @"%.0f bd / %.0f ba", residence.bedrooms, residence.bathrooms];
-  
   // Image
-  if (!residence.coverPhotoURL)
+  if (!residence.coverPhotoURL) {
     [userImageView clearImage];
-  
+  }
   NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
-                       userImageView.bounds.size.width, userImageView.bounds.size.height];
+    userImageView.bounds.size.width, userImageView.bounds.size.height];
   UIImage *image = [residence coverPhotoForSizeKey: sizeKey];
   if (image) {
     userImageView.image = image;
   }
   else {
     __weak typeof(userImageView) weakUserImageView = userImageView;
-    [residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
-      [weakUserImageView.imageView setImageWithURL:
-       residence.coverPhotoURL placeholderImage: nil
-                                           options: SDWebImageRetryFailed completed:
-       ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
-         if (!error && img) {
-           weakUserImageView.image = img;
-           [residence.coverPhotoSizeDictionary setObject:
-            weakUserImageView.image forKey: sizeKey];
+    [residence downloadCoverPhotoWithCompletion: 
+      ^(NSError *error) {
+        [weakUserImageView.imageView setImageWithURL:
+          residence.coverPhotoURL placeholderImage: nil
+            options: SDWebImageRetryFailed completed:
+              ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+                if (!error && img) {
+                  weakUserImageView.image = img;
+                  [residence.coverPhotoSizeDictionary setObject:
+                    weakUserImageView.image forKey: sizeKey];
+           }
          }
-       }
-       ];
+        ];
     }];
     userImageView.image = [OMBResidence placeholderImage];
   }
-
 }
 
 @end

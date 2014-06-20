@@ -1200,16 +1200,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     showApplyNow = NO;
   }
   // If user has sent an application
-  else if ([[OMBUser currentUser] loggedIn] &&
-    [[OMBUser currentUser] hasSentApplicationsInResidence: residence]) {
+  else if ([[OMBUser currentUser] loggedIn] && residence.sentApplication) {
+    hasSentApp   = YES;
     showApplyNow = NO;
-    hasSentApp = YES;
   }
   
   if (hasSentApp) {
     [_bookItButton setTitle: @"Applied" forState: UIControlStateNormal];
     _bookItButton.enabled = NO;
-  } else {
+  } 
+  else {
     SEL selector;
     NSString *title;
     

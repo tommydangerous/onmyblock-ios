@@ -729,19 +729,6 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   return NO;
 }
 
-- (BOOL) hasSentApplicationsInResidence:(OMBResidence *)residence
-{
-  
-  for(OMBSentApplication *sentAppl in
-      [_renterApplication sentApplicationsSortedByKey:@"createdAt" ascending:NO]){
-    
-    if(sentAppl.uid == residence.uid && sentAppl.sent)
-      return YES;
-  }
-  
-  return NO;
-}
-
 - (CGFloat) heightForAboutTextWithWidth: (CGFloat) width
 {
   // This only stores the about text with [UIFont normalFontText] and

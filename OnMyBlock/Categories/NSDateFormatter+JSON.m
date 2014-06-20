@@ -10,14 +10,38 @@
 
 @implementation NSDateFormatter (JSON)
 
+#pragma mark - Methods
+
+#pragma mark - Class Methods
+
+#pragma mark - Public
+
 + (NSDateFormatter *) JSONDateParser
 {
   static NSDateFormatter *dateFormatter = nil;
-  if (!dateFormatter) {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
-  }
+
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    dateFormatter = [[NSDateFormatter alloc] init];
+  });
+
+  [dateFormatter setDateFormatRubyCustom];
+  
   return dateFormatter; 
+}
+
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (void) setDateFormatRubyCustom
+{
+  self.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
+}
+
+- (void) setDateFormatRubyDefault
+{
+  self.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'.000'ZZZ";
 }
 
 @end

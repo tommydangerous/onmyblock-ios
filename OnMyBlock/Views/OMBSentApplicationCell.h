@@ -17,7 +17,6 @@
   UILabel *addressLabel;
   UILabel *bedbadlabel;
   UILabel *rentLabel;
-  OMBResidence *residence;
   OMBCenteredImageView *userImageView;
 }
 
@@ -31,6 +30,6 @@
 
 - (void) adjustFrames;
 - (void) adjustFramesWithoutImage;
-- (void) loadInfo:(OMBSentApplication *)sentapp;
+- (void) loadInfo: (OMBSentApplication *) sentApplication;
 
 @end

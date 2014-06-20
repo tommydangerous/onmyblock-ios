@@ -10,6 +10,19 @@
 
 @interface NSDateFormatter (JSON)
 
+#pragma mark - Methods
+
+#pragma mark - Class Methods
+
+#pragma mark - Public
+
 + (NSDateFormatter *) JSONDateParser;
+
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (void) setDateFormatRubyCustom;
+- (void) setDateFormatRubyDefault;
 
 @end

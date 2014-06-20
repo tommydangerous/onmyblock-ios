@@ -76,6 +76,17 @@ forResourceName: (NSString *) resourceName
 
 #pragma mark - Instance Methods
 
+#pragma mark - Public
+
+- (OMBSentApplication *) sentApplicationForResidenceUID: 
+  (NSUInteger) residenceUID
+{
+  NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i",
+    @"residence_id", residenceUID];
+  return [[[sentApplications allValues] filteredArrayUsingPredicate:
+    predicate] firstObject];
+}
+
 - (void) addCosigner: (OMBCosigner *) object
 {
   [cosigners setObject: object forKey: [NSNumber numberWithInt: object.uid]];
@@ -207,7 +218,7 @@ completion: (void (^) (NSError *error)) block
     [[OMBModelListConnection alloc] initWithResourceName: resourceName
       userUID: userUID];
   conn.completionBlock = block;
-  conn.delegate = delegate;
+  conn.delegate = delegate ? delegate : self;
   [conn start];
 }
 
@@ -217,7 +228,7 @@ completion: (void (^) (NSError *error)) block
   OMBSentApplicationListConnection *conn =
     [[OMBSentApplicationListConnection alloc] init];
   conn.completionBlock = block;
-  conn.delegate        = delegate;
+  conn.delegate        = delegate ? delegate : self;
   conn.resourceName    = [OMBSentApplication resourceName];
   [conn start];
 }

@@ -14,6 +14,7 @@
 @class OMBLegalQuestion;
 @class OMBObject;
 @class OMBRoommate;
+@class OMBSentApplication;
 
 @interface OMBRenterApplication : NSObject
 
@@ -28,6 +29,11 @@
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (OMBSentApplication *) sentApplicationForResidenceUID: 
+  (NSUInteger) residenceUID;
 
 - (void) addCosigner: (OMBCosigner *) object;
 - (void) addEmployment: (OMBEmployment *) object;

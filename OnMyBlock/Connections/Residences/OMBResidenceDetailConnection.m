@@ -28,10 +28,11 @@
   NSString *string = [NSString stringWithFormat:
     @"%@/%@/%i", OnMyBlockAPIURL, resource, residence.uid];
 
-  if ([object isKindOfClass: [OMBTemporaryResidence class]])
+  if ([[OMBUser currentUser] loggedIn]) {
     string = [string stringByAppendingString:
       [NSString stringWithFormat: @"/?access_token=%@",
         [OMBUser currentUser].accessToken]];
+  }
 
   [self setRequestWithString: string];
 
@@ -44,29 +45,6 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  // Sample JSON
-  // {
-  //   address: "3915 Broadlawn Street ",
-  //   available_on: "2013-11-14 00:00:00 +0000",
-  //   bathrooms: "2.0",
-  //   bedrooms: "4.0",
-  //   city: "San Diego",
-  //   created_at: "2013-10-11 17:34:06 -0700",
-  //   description: "Address of Available Listing",
-  //   email: null,
-  //   id: 3415,
-  //   landlord_name: null,
-  //   latitude: 32.815313,
-  //   lease_months: null,
-  //   longitude: -117.168185,
-  //   phone: "(858) 695-9400",
-  //   rent: 2505,
-  //   sqft: 1466,
-  //   state: "CA",
-  //   updated_at: "2013-10-11 17:34:06 -0700",
-  //   zip: "92111"
-  // }
-
   [residence readFromResidenceDictionary: [self json]];
   [super connectionDidFinishLoading: connection];
 }

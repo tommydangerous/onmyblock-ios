@@ -49,6 +49,7 @@
   // }
 
   NSDateFormatter *dateFormatter = [NSDateFormatter JSONDateParser];
+  [dateFormatter setDateFormatRubyDefault];
 
   // Accepted
   id accepted = [dictionary objectForKey: @"accepted"];

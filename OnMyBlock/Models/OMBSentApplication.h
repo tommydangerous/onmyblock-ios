@@ -8,6 +8,8 @@
 
 #import "OMBObject.h"
 
+@class OMBResidence;
+
 @interface OMBSentApplication : OMBObject
 
 @property (nonatomic) BOOL accepted;
@@ -22,5 +24,8 @@
 @property (nonatomic) NSUInteger residenceID;
 @property (nonatomic) BOOL sent;
 @property (nonatomic) NSTimeInterval updatedAt;
+
+// iOS
+@property (strong, nonatomic) OMBResidence *residence;
 
 @end

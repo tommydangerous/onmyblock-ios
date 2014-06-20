@@ -896,6 +896,11 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   //   _rentItNowPrice = [[dictionary objectForKey:
   //     @"rent_it_now_price"] floatValue];
 
+  // Sent application
+  id sentApplication = [dictionary objectForKey: @"sent_application"];
+  if (sentApplication != [NSNull null])
+    self.sentApplication = [sentApplication boolValue];
+
   // Square feet
   // if ([dictionary objectForKey: @"sqft"] != [NSNull null])
   //   _squareFeet = [[dictionary objectForKey: @"sqft"] intValue];
