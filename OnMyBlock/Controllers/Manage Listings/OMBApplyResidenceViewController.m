@@ -21,6 +21,7 @@
 #import "OMBEmploymentCell.h"
 #import "OMBGradientView.h"
 #import "OMBLabelTextFieldCell.h"
+#import "OMBLegalQuestion.h"
 #import "OMBLegalQuestionStore.h"
 #import "OMBLegalViewController.h"
 #import "OMBManageListingsCell.h"
@@ -317,7 +318,29 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   // Employments
   [self fetchObjectsForResourceName: [OMBEmployment resourceName]];
   // Legal questions
-  [user fetchLegalAnswersWithCompletion: nil];
+  [user fetchLegalAnswersWithCompletion: ^(NSError *error){
+    
+    BOOL allAnswered = YES;
+    
+    NSMutableDictionary *legalAnswers =
+      [NSMutableDictionary dictionaryWithDictionary:
+        user.renterApplication.legalAnswers];
+    
+    for(OMBLegalQuestion *legalQuestion in
+        [[OMBLegalQuestionStore sharedStore] questionsSortedByQuestion]){
+      
+      if(![legalAnswers objectForKey:
+           [NSNumber numberWithInt: legalQuestion.uid]]){
+        allAnswered = NO;
+      }
+    }
+    
+    [self saveKeyUserDefaults:allAnswered];
+    // Set YES if all questions have been answered
+    //[self saveKeyUserDefaults: allAnswered];
+    [self.table reloadData];
+    
+  }];
   
   if (_nextSection)
     [self showNextSection];
@@ -1048,6 +1071,19 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
      }
    ];
 }
+
+- (void) saveKeyUserDefaults: (BOOL)save
+{
+  NSMutableDictionary *dictionary =
+    [NSMutableDictionary dictionaryWithDictionary:
+      [self renterapplicationUserDefaults]];
+  [dictionary setObject: [NSNumber numberWithBool: save]
+    forKey: OMBUserDefaultsRenterApplicationCheckedLegalQuestions];
+  [[NSUserDefaults standardUserDefaults] setObject: dictionary
+    forKey: OMBUserDefaultsRenterApplication];
+  [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 
 - (void) saveFromInputAccessoryView
 {
