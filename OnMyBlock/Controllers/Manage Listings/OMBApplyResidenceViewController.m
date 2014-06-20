@@ -62,7 +62,7 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   if (!(self = [super init])) return nil;
   
   residenceUID = uid;
-  self.title   = @"My Application";
+  self.title   = @"Renter Application";
   
   CGRect rect = [@"First name" boundingRectWithSize:
     CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFontBold]];
@@ -1122,15 +1122,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   {
     if(![[valueDictionary objectForKey:key] length]){
       if([key isEqualToString:@"firstName"])
-        string = @"\"First Name";
+        string = @"First Name";
       else if([key isEqualToString:@"lastName"])
-          string = @"\"Last Name";
+          string = @"Last Name";
       else if([key isEqualToString:@"school"])
-          string = @"\"School";
+          string = @"School";
       else if([key isEqualToString:@"email"])
-          string = @"\"Email";
+          string = @"Email";
       else if([key isEqualToString:@"phone"])
-          string = @"\"Phone";
+          string = @"Phone";
       break;
     }
   }
@@ -1263,7 +1263,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       shouldSubmit = NO;
       // Set correct message
       message = [[self incompleteFieldString] stringByAppendingString:
-        @"\" is required to submit an application"];
+        @" is required to submit an application"];
       break;
     }
   }
