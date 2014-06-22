@@ -117,7 +117,19 @@ NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
   return [UIImage imageNamed: @"residence_placeholder_image.png"];
 }
 
-#pragma mark Instance Methods
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (BOOL) isAboveThreshold
+{
+  return [self totalAmount] > [OMBOffer priceThreshold];
+}
+
+- (CGFloat) totalAmount
+{
+  return self.minRent + [self deposit];
+}
 
 - (void) addAmenity: (NSString *) amenity
 {

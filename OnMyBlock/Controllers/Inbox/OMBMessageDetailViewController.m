@@ -731,12 +731,18 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 - (OMBUser *) otherUser
 {
   OMBUser *object;
-  if (conversation && conversation.otherUser)
+  if (conversation && conversation.otherUser) {
     object = conversation.otherUser;
-  else if (residence && residence.user)
+  }
+  else if (residence && residence.user) {
     object = residence.user;
-  else if (user)
+  }
+  else if (user) {
     object = user;
+  }
+  NSLog(@"%@", conversation);
+  NSLog(@"%@", residence);
+  NSLog(@"%@", user);
   return object;
 }
 
@@ -824,10 +830,10 @@ additionalOffsetY: (CGFloat) offsetY
 
 - (void) showRenterProfile
 {
-  if ([self otherUser]) {
+  OMBUser *otherUser = [self otherUser];
+  if (otherUser) {
     OMBOtherUserProfileViewController *vc =
-      [[OMBOtherUserProfileViewController alloc] initWithUser:
-        [self otherUser]];
+      [[OMBOtherUserProfileViewController alloc] initWithUser: otherUser];
     [self.navigationController pushViewController: vc animated: YES];
   }
 }
@@ -859,14 +865,14 @@ additionalOffsetY: (CGFloat) offsetY
 
 - (void) verifyPhone
 {
-  // If no phone number
-  //if ([self otherUser] && [[[self otherUser] phoneString] length]) {
-  if(conversation && residence && [residence.phone length] && !user){
-    phoneBarButtonItem.enabled = YES;
+  BOOL hasPhone = NO;
+  if ([self otherUser] && [[[self otherUser] phoneString] length]) {
+    hasPhone = YES;
   }
-  else {
-    phoneBarButtonItem.enabled = NO;
+  else if (residence && [residence.phone length]) {
+    hasPhone = YES;
   }
+  phoneBarButtonItem.enabled = hasPhone;
 }
 
 @end

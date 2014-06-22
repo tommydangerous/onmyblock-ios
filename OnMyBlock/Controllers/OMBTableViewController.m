@@ -45,7 +45,7 @@
   self.table.delegate                     = self;
   self.table.separatorColor               = [UIColor clearColor];
   self.table.separatorStyle               = UITableViewCellSeparatorStyleNone;
-  self.table.showsVerticalScrollIndicator = NO;
+  // self.table.showsVerticalScrollIndicator = NO;
   [self.view addSubview: self.table];
 }
 

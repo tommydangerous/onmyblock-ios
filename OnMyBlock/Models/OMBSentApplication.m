@@ -28,6 +28,30 @@
 
 #pragma mark - Instance Methods
 
+#pragma mark - Public
+
+- (NSInteger) numberOfMonthsBetweenMovingDates
+{
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit |
+    NSWeekdayCalendarUnit | NSYearCalendarUnit);
+
+  NSDateComponents *moveInComps = [calendar components: unitFlags
+    fromDate: [NSDate dateWithTimeIntervalSince1970: _moveInDate]];
+  [moveInComps setDay: 1];
+  NSDateComponents *moveOutComps = [calendar components: unitFlags
+    fromDate: [NSDate dateWithTimeIntervalSince1970: _moveOutDate]];
+  [moveOutComps setDay: 1];
+
+  NSInteger moveInMonth  = [moveInComps month];
+  NSInteger moveOutMonth = [moveOutComps month];
+
+  NSInteger yearDifference = [moveOutComps year] - [moveInComps year];
+  moveOutMonth += (12 * yearDifference);
+
+  return moveOutMonth - moveInMonth;
+}
+
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
   // Sample JSON

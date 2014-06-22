@@ -8,10 +8,14 @@
 
 #import "OMBTableViewController.h"
 
+@class OMBBlurView;
+
 @interface OMBTableParallaxViewController : OMBTableViewController
 {
+  OMBBlurView *backgroundBlurView;
   CGFloat scaleFactor;
   CGFloat scrollFactor;
+  UIView *tableHeaderView;
 }
 
 @property (nonatomic) BOOL parallaxEnabled;

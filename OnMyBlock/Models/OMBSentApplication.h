@@ -26,6 +26,15 @@
 @property (nonatomic) NSTimeInterval updatedAt;
 
 // iOS
+@property (nonatomic) BOOL paid;
 @property (strong, nonatomic) OMBResidence *residence;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (NSInteger) numberOfMonthsBetweenMovingDates;
 
 @end

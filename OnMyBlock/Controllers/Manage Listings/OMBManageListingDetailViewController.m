@@ -28,9 +28,7 @@
 
 @interface OMBManageListingDetailViewController ()
 {
-  OMBBlurView *backgroundBlurView;
-  OMBCenteredImageView *backgroundImageView;
-  CGFloat backgroundImageViewHeight;
+  OMBCenteredImageView *centerImageView;
   NSDateFormatter *dateFormatter;
   UIImage *editCellImage;
   UIImage *previewCellImage;
@@ -104,16 +102,11 @@
   CGRect screen   = [self screen];
   CGFloat padding = OMBPadding;
 
-  self.table.separatorColor = [UIColor grayMediumAlpha: 0.5f];
-  self.table.separatorInset = UIEdgeInsetsMake(0.0f, padding,
-    0.0f, padding);
-
-  backgroundImageViewHeight = screen.size.height * 0.4f;
-  backgroundImageView = [[OMBCenteredImageView alloc] init];
-  backgroundImageView.frame = CGRectMake(0.0f, 0.0f,
-    screen.size.width, backgroundImageViewHeight);
-  [self setupBackgroundWithView: backgroundImageView
-    startingOffsetY: OMBPadding + OMBStandardHeight];
+  centerImageView = [[OMBCenteredImageView alloc] init];
+  centerImageView.frame = CGRectMake(0.0f, 0.0f,
+    screen.size.width, screen.size.height * 0.4f);
+  [self setupBackgroundWithView: centerImageView
+    startingOffsetY: padding + OMBStandardHeight];
 
   // This black tinted background appears when you click the status row
   fadedBackground = [[UIView alloc] init];
@@ -371,12 +364,6 @@
     widthBottomStatus, cancelRelistButton.frame.origin.y +
       cancelRelistButton.frame.size.height + padding);
   [self.view addSubview: relistView];
-
-  backgroundBlurView = [[OMBBlurView alloc] initWithFrame: screen];
-  backgroundBlurView.blurRadius = 20.0f;
-  backgroundBlurView.clipsToBounds = YES;
-  backgroundBlurView.tintColor = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
-  [self.view insertSubview: backgroundBlurView atIndex: 0];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -387,22 +374,6 @@
 }
 
 #pragma mark - Protocol
-
-#pragma mark - Protocol UIScrollViewDelegate
-
-- (void) scrollViewDidScroll: (UIScrollView *) scrollView
-{
-  [super scrollViewDidScroll: scrollView];
-  if (scrollView == self.table) {
-    CGFloat y = scrollView.contentOffset.y;
-    CGRect rect = backgroundImageView.frame;
-    CGFloat adjustment = y / scrollFactor;
-    rect.size.height = backgroundImageViewHeight - (y - adjustment);
-    if (rect.size.height > backgroundImageViewHeight)
-      rect.size.height = backgroundImageViewHeight;
-    [backgroundImageView setFrame: rect redrawImage: NO];
-  }
-}
 
 #pragma mark - Protocol UITableViewDataSource
 
@@ -748,11 +719,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   conn.completionBlock = ^(NSError *error) {
     // Add the cover photo
     __weak typeof(backgroundBlurView) weakBlurView   = backgroundBlurView;
-    __weak typeof(backgroundImageView) weakImageView = backgroundImageView;
-    [residence setImageForCenteredImageView: backgroundImageView
-      withURL: residence.coverPhotoURL completion: ^{
-        [weakBlurView refreshWithImage: weakImageView.image];
-      }];
+    __weak typeof(centerImageView) weakImageView = centerImageView;
+    [residence setImageForCenteredImageView:
+      (OMBCenteredImageView *) centerImageView
+        withURL: residence.coverPhotoURL completion: ^{
+          [weakBlurView refreshWithImage: [(OMBCenteredImageView *) weakImageView image]];
+        }];
   };
   [conn start];
 }

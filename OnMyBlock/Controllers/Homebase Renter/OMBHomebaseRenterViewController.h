@@ -6,8 +6,23 @@
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import "OMBViewController.h"
+#import "OMBTableParallaxViewController.h"
 
-@interface OMBHomebaseRenterViewController : OMBViewController
+typedef NS_ENUM(NSUInteger, OMBHomebaseRenterSection) {
+  OMBHomebaseRenterSectionSentApplications,
+  OMBHomebaseRenterSectionMovedIn
+};
+
+// Sent applications
+typedef NS_ENUM(NSUInteger, OMBHomebaseRenterSectionSentApplicationsRow) {
+  OMBHomebaseRenterSectionSentApplicationsRowEmpty
+};
+
+// Moved in
+typedef NS_ENUM(NSUInteger, OMBHomebaseRenterSectionMovedInRow) {
+  OMBHomebaseRenterSectionMovedInRowEmpty
+};
+
+@interface OMBHomebaseRenterViewController : OMBTableParallaxViewController
 
 @end

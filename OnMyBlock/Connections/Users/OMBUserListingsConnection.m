@@ -32,7 +32,7 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSLog(@"OMBUserListingsConnection\n%@", [self json]);
+  // NSLog(@"OMBUserListingsConnection\n%@", [self json]);
 
   [user readFromResidencesDictionary: [self json]];
 

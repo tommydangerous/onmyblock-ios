@@ -132,7 +132,9 @@ forResourceName: (NSString *) resourceName
 
 - (void) addSentApplication: (OMBSentApplication *) object
 {
-  [sentApplications setObject: object forKey: @(object.uid)];
+  if (![sentApplications objectForKey: @(object.uid)]) {
+    [sentApplications setObject: object forKey: @(object.uid)];
+  }
 }
 
 - (NSArray *) cosignersSortedByFirstName

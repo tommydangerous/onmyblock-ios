@@ -54,9 +54,6 @@
 {
   if (!(self = [super init])) return nil;
 
-  dateFormatter1 = [NSDateFormatter new];
-  dateFormatter1.dateFormat = @"MMM d, yyyy";
-
   offer = object;
 
   // Student
@@ -121,6 +118,9 @@
 {
   [super loadView];
 
+  dateFormatter = [NSDateFormatter new];
+  dateFormatter.dateFormat = @"MMM d, yyyy";
+
   selectedSegmentIndex = 0;
 
   CGRect screen = [[UIScreen mainScreen] bounds];
@@ -183,8 +183,7 @@
   offerButton.frame = CGRectMake(0.0f, 0.0f,
                                  buttonWidth, buttonsView.frame.size.height);
   offerButton.tag = 0;
-  offerButton.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-                                                size: 15];
+  offerButton.titleLabel.font = [UIFont normalTextFontBold];
   [offerButton addTarget: self action: @selector(segmentButtonSelected:)
         forControlEvents: UIControlEventTouchUpInside];
   [offerButton setTitle: @"Offer" forState: UIControlStateNormal];
@@ -342,16 +341,6 @@
   [self changeTableView];
 }
 
-- (void) viewDidAppear: (BOOL) animated
-{
-  [super viewDidAppear: animated];
-}
-
-- (void) viewDidDisappear: (BOOL) animated
-{
-  [super viewDidDisappear: animated];
-}
-
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
@@ -429,16 +418,18 @@
       }
     }
   }
-  if (performEffect)
+
+  if (performEffect) {
     [effectLabel performEffectAnimation];
+  }
 
   // User image view
-  if (offer.user.image) {
-    userImageView.image = offer.user.image;
+  if ([self user].image) {
+    userImageView.image = [self user].image;
   }
   else {
-    [offer.user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
-      userImageView.image = offer.user.image;
+    [[self user] downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+      userImageView.image = [self user].image;
     }];
   }
 
@@ -462,7 +453,7 @@
   }
 
   // Fetch Applicants
-  [self fetchObjectsForResourceName:[OMBRoommate resourceName]];
+  [self fetchObjectsForResourceName: [OMBRoommate resourceName]];
 
   // Fetch questions
   // [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
@@ -479,10 +470,10 @@
   // Timer
   [self timerFireMethod: nil];
   countdownTimer = [NSTimer timerWithTimeInterval: 1 target: self
-                                         selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
+    selector: @selector(timerFireMethod:) userInfo: nil repeats: YES];
   // NSRunLoopCommonModes, mode used for tracking events
   [[NSRunLoop currentRunLoop] addTimer: countdownTimer
-                               forMode: NSRunLoopCommonModes];
+    forMode: NSRunLoopCommonModes];
 }
 
 #pragma mark - Protocol
@@ -619,7 +610,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           cell1 = [[OMBOfferInquiryResidenceCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier:
               ResidenceCellIdentifier];
-        [cell1 loadResidence: offer.residence];
+        [cell1 loadResidence: [self residence]];
         cell1.separatorInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
         cell1.clipsToBounds = YES;
         return cell1;
@@ -628,24 +619,22 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       else if (indexPath.row == OMBOfferInquirySectionOfferRowDates) {
         static NSString *DatesID = @"DatesID";
         OMBResidenceConfirmDetailsDatesCell *cell1 =
-        [tableView dequeueReusableCellWithIdentifier: DatesID];
+          [tableView dequeueReusableCellWithIdentifier: DatesID];
         if (!cell1) {
           cell1 = [[OMBResidenceConfirmDetailsDatesCell alloc] initWithStyle:
                    UITableViewCellStyleDefault reuseIdentifier: DatesID];
-          // [cell1 loadResidence: offer.residence];
+          // [cell1 loadResidence: [self residence]];
           cell1.leaseMonthsLabel.text = [NSString stringWithFormat:
-            @"%i month lease", [offer numberOfMonthsBetweenMovingDates]];
-          NSDateFormatter *dateFormmater = [NSDateFormatter new];
-          dateFormmater.dateFormat = @"MMM d, yyyy";
+            @"%i month lease", [self numberOfMonthsBetweenMovingDates]];
           // Move in date
           cell1.moveInBackground.backgroundColor  = [UIColor whiteColor];
-          cell1.moveInDateLabel.text = [dateFormmater stringFromDate:
-            [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]];
+          cell1.moveInDateLabel.text = [dateFormatter stringFromDate:
+            [NSDate dateWithTimeIntervalSince1970: [self moveInDate]]];
           cell1.moveInDateLabel.textColor = [UIColor blue];
           // Move out date
-          cell1.moveOutDateLabel.text = [dateFormmater stringFromDate:
-            [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
-          cell1.moveOutDateLabel.textColor = [UIColor blue];
+          cell1.moveOutDateLabel.text = [dateFormatter stringFromDate:
+            [NSDate dateWithTimeIntervalSince1970: [self moveOutDate]]];
+          cell1.moveOutDateLabel.textColor =   [UIColor blue];
           cell1.moveOutBackground.backgroundColor  = [UIColor whiteColor];
         }
         cell1.clipsToBounds = YES;
@@ -698,28 +687,28 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         }
         else if (indexPath.row == OMBOfferInquirySectionOfferRowOffer) {
           cell.detailTextLabel.text = [NSString numberToCurrencyString:
-            offer.amount];
-          cell.textLabel.text = @"Offer";
+            [self rentAmount]];
+          cell.textLabel.text = @"1st Month's Rent";
         }
         else if (indexPath.row ==
           OMBOfferInquirySectionOfferRowSecurityDeposit) {
 
           cell.detailTextLabel.text = [NSString numberToCurrencyString:
-            [offer.residence deposit]];
+            [[self residence] deposit]];
           cell.textLabel.text = @"Security Deposit";
         }
         else if (indexPath.row ==
           OMBOfferInquirySectionOfferRowDownPayment) {
 
           cell.detailTextLabel.text = [NSString numberToCurrencyString:
-                                       [offer downPaymentAmount]];
+            [offer downPaymentAmount]];
           cell.textLabel.text = @"Down Payment";
         }
         else if (indexPath.row ==
           OMBOfferInquirySectionOfferRowRemainingPayment) {
 
           cell.detailTextLabel.text = [NSString numberToCurrencyString:
-                                       [offer remainingBalanceAmount]];
+            [offer remainingBalanceAmount]];
           cell.textLabel.text = @"Remaining Payment";
         }
         cell.clipsToBounds = YES;
@@ -744,7 +733,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell1.detailTextLabel.font =
         [UIFont fontWithName: @"HelveticaNeue-Medium" size: 27];
         cell1.detailTextLabel.text = [NSString numberToCurrencyString:
-                                      [offer totalAmount]];
+          [self rentAmount] + [[self residence] deposit]];
         cell1.detailTextLabel.textColor = [UIColor green];
         cell1.selectionStyle = UITableViewCellSelectionStyleNone;
         cell1.textLabel.font =
@@ -817,198 +806,29 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Profile
   else if (tableView == _profileTableView) {
-
     static NSString *RoommateCellID = @"RoommateCellID";
     OMBRoommateCell *cell = [tableView dequeueReusableCellWithIdentifier:
       RoommateCellID];
-    if(!cell){
-      cell = [[OMBRoommateCell alloc] initWithStyle:UITableViewCellStyleDefault
-        reuseIdentifier:RoommateCellID];
+    if (!cell) {
+      cell = [[OMBRoommateCell alloc] initWithStyle: UITableViewCellStyleDefault
+        reuseIdentifier: RoommateCellID];
+      cell.accessoryType  = UITableViewCellAccessoryDisclosureIndicator;
+      cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     }
-
-    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     // if is a OMB user
-    if(indexPath.row == 0){
-      [cell loadDataFromUser: offer.user];
-
-    }else{
+    if (indexPath.row == 0) {
+      [cell loadDataFromUser: [self user]];
+    }
+    else {
       OMBRoommate *aux = [[self objects] objectAtIndex: indexPath.row - 1];
-      if(!aux.roommate)
+      if (!aux.roommate) {
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      [cell loadData: [[self objects] objectAtIndex: row - 1] user: offer.user];
+      }
+      [cell loadData: [[self objects] objectAtIndex: row - 1] 
+        user: [self user]];
     }
     cell.clipsToBounds = YES;
     return cell;
-
-    // Name, school, about
-    /*if (indexPath.section == 0) {
-      // Name and school
-      if (indexPath.row == 0) {
-        static NSString *NameCellIdentifier = @"NameCellIdentifier";
-        UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:
-                                  NameCellIdentifier];
-        if (!cell1)
-          cell1 = [[UITableViewCell alloc] initWithStyle:
-                   UITableViewCellStyleSubtitle reuseIdentifier: NameCellIdentifier];
-        cell1.detailTextLabel.font =
-        [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
-        cell1.detailTextLabel.text = offer.user.school;
-        cell1.detailTextLabel.textColor = [UIColor grayMedium];
-        cell1.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell1.textLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
-                                               size: 18];
-        cell1.textLabel.text = [offer.user fullName];
-        cell1.textLabel.textColor = [UIColor blueDark];
-        return cell1;
-      }
-      // About
-      else if (indexPath.row == 1) {
-        cell.textLabel.attributedText =
-        [offer.user.about attributedStringWithFont: cell.textLabel.font
-                                        lineHeight: 22.0f];
-        cell.textLabel.numberOfLines = 0;
-      }
-    }
-    // Co-signers
-    else if (indexPath.section == 1) {
-      static NSString *CosignerCellIdentifier = @"CosignerCellIdentifier";
-      OMBCosignerCell *cell1 =
-      [tableView dequeueReusableCellWithIdentifier: CosignerCellIdentifier];
-      if (!cell1)
-        cell1 = [[OMBCosignerCell alloc] initWithStyle:
-                 UITableViewCellStyleDefault
-                                       reuseIdentifier: CosignerCellIdentifier];
-      OMBCosigner *cosigner = [[OMBCosigner alloc] init];
-      cosigner.email = @"drew@onmyblock.com";
-      cosigner.firstName = @"Drew";
-      cosigner.lastName = @"Houston";
-      cosigner.phone = @"4088581234";
-      cosigner.uid = indexPath.row;
-      [cell1 loadData: cosigner];
-      return cell1;
-    }
-    // Co-applicants
-    else if (indexPath.section == 2) {
-      static NSString *CoapplicantCellIdentifier = @"CoapplicantCellIdentifier";
-      OMBCoapplicantCell *cell1 =
-      [tableView dequeueReusableCellWithIdentifier:
-       CoapplicantCellIdentifier];
-      if (!cell1)
-        cell1 = [[OMBCoapplicantCell alloc] initWithStyle:
-                 UITableViewCellStyleDefault
-                                          reuseIdentifier: CoapplicantCellIdentifier];
-      if (indexPath.row % 2) {
-        [cell1 loadUserData];
-      }
-      else {
-        [cell1 loadUnregisteredUserData];
-      }
-      return cell1;
-    }
-    // Pets
-    else if (indexPath.section == 3) {
-      static NSString *PetCellIdentifier = @"PetCellIdentifier";
-      UITableViewCell *cell1 =
-      [tableView dequeueReusableCellWithIdentifier:
-       PetCellIdentifier];
-      if (!cell1) {
-        cell1 = [[UITableViewCell alloc] initWithStyle:
-                 UITableViewCellStyleDefault
-                                       reuseIdentifier: PetCellIdentifier];
-        UIImageView *imageView = [UIImageView new];
-        imageView.frame = CGRectMake(padding, padding,
-                                     standardHeight, standardHeight);
-        if (indexPath.row % 2) {
-          imageView.image = [UIImage imageNamed: @"dogs_icon.png"];
-        }
-        else {
-          imageView.image = [UIImage imageNamed: @"cats_icon.png"];
-        }
-        [cell1.contentView addSubview: imageView];
-      }
-      return cell1;
-    }
-    // Rental History
-    else if (indexPath.section == 4) {
-      static NSString *RentalCellIdentifier = @"RentalCellIdentifier";
-      OMBPreviousRentalCell *cell1 =
-      [tableView dequeueReusableCellWithIdentifier:
-       RentalCellIdentifier];
-      if (!cell1)
-        cell1 = [[OMBPreviousRentalCell alloc] initWithStyle:
-                 UITableViewCellStyleDefault
-                                             reuseIdentifier: RentalCellIdentifier];
-      if (indexPath.row % 2) {
-        [cell1 loadFakeData1];
-      }
-      else {
-        [cell1 loadFakeData2];
-      }
-      return cell1;
-    }
-    // Work History
-    else if (indexPath.section == 5) {
-      // View Linkedin Profile
-      if (indexPath.row == 0) {
-        static NSString *LinkedinCellIdentifier = @"LinkedinCellIdentifier";
-        UITableViewCell *cell1 =
-        [tableView dequeueReusableCellWithIdentifier:
-         LinkedinCellIdentifier];
-        if (!cell1) {
-          cell1 = [[UITableViewCell alloc] initWithStyle:
-                   UITableViewCellStyleDefault
-                                         reuseIdentifier: LinkedinCellIdentifier];
-          // Button
-          UIButton *button = [UIButton new];
-          button.backgroundColor = [UIColor linkedinBlue];
-          button.frame = CGRectMake(padding, padding,
-                                    tableView.frame.size.width - (padding * 2), standardHeight);
-          button.layer.cornerRadius = 5.0f;
-          CGFloat imageSize = standardHeight - (padding * 0.5f);
-          button.titleEdgeInsets = UIEdgeInsetsMake(0.0f, padding * 0.5f,
-                                                    0.0f, 0.0f);
-          button.titleLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium"
-                                                   size: 15];
-          [button setTitle: @"View Linkedin Profile"
-                  forState: UIControlStateNormal];
-          [cell1.contentView addSubview: button];
-          // Image
-          UIImageView *imageView = [UIImageView new];
-          imageView.frame = CGRectMake(padding * 0.5f, padding * 0.25f,
-                                       imageSize, imageSize);
-          imageView.image = [UIImage imageNamed: @"linkedin_icon.png"];
-          [button addSubview: imageView];
-        }
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        return cell1;
-      }
-      else {
-        static NSString *EmploymentCellIdentifier = @"EmploymentCellIdentifier";
-        OMBEmploymentCell *cell1 =
-        [tableView dequeueReusableCellWithIdentifier:
-         EmploymentCellIdentifier];
-        if (!cell1)
-          cell1 = [[OMBEmploymentCell alloc] initWithStyle:
-                   UITableViewCellStyleDefault
-                                           reuseIdentifier: EmploymentCellIdentifier];
-        [cell1 loadFakeData];
-        return cell1;
-      }
-    }
-    // Legal Stuff
-    else if (indexPath.section == 6) {
-      static NSString *LegalCellIdentifier = @"LegalCellIdentifier";
-      OMBLegalQuestionAndAnswerCell *cell1 =
-      [tableView dequeueReusableCellWithIdentifier:
-       LegalCellIdentifier];
-      if (!cell1)
-        cell1 = [[OMBLegalQuestionAndAnswerCell alloc] initWithStyle:
-                 UITableViewCellStyleDefault
-                                                     reuseIdentifier: LegalCellIdentifier];
-      [cell1 loadData: [legalQuestions objectAtIndex: indexPath.row]
-          atIndexPath: indexPath];
-      return cell1;
-    }*/
   }
   cell.clipsToBounds = YES;
   return cell;
@@ -1037,37 +857,6 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (tableView == _profileTableView) {
     // user and their roomates
     return [[self objects] count] + 1;
-
-    // Name & school, about
-    /*if (section == 0) {
-      return 2;
-    }
-    // Co-signers
-    else if (section == 1) {
-      return 0;
-    }
-    // Co-applicants
-    else if (section == 2) {
-      return 0;
-    }
-    // Pets
-    else if (section == 3) {
-      return 0;
-    }
-    // Rental History
-    else if (section == 4) {
-      return 0;
-    }
-    // Work History
-    else if (section == 5) {
-      // View Linkedin Profile
-      // Previous Employment
-      return 1 + 0;
-    }
-    // Legal Stuff
-    else if (section == 6) {
-      return [legalQuestions count];
-    }*/
   }
   return 0;
 }
@@ -1084,7 +873,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       if (indexPath.row == OMBOfferInquirySectionOfferRowResidence) {
         [self.navigationController pushViewController:
          [[OMBResidenceDetailViewController alloc] initWithResidence:
-          offer.residence] animated: YES];
+          [self residence]] animated: YES];
       }
     }
   }
@@ -1094,7 +883,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // user
     if(indexPath.row == 0){
       [self.navigationController pushViewController:
-        [[OMBOtherUserProfileViewController alloc] initWithUser: offer.user]
+        [[OMBOtherUserProfileViewController alloc] initWithUser: [self user]]
           animated: YES];
     }
     // Applicants
@@ -1104,7 +893,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       if(aux.roommate){
         [self.navigationController pushViewController:
           [[OMBOtherUserProfileViewController alloc] initWithUser:
-            [aux otherUser: offer.user]] animated: YES];
+            [aux otherUser: [self user]]] animated: YES];
       }
     }
   }
@@ -1190,56 +979,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // Profile
   else if (tableView == _profileTableView) {
       return [OMBRoommateCell heightForCell];
-
-    // Name & school, about
-    /*if (indexPath.section == 0) {
-      // Name & school
-      if (indexPath.row == 0) {
-        return padding + 23.0f + 20.0f + padding;
-      }
-      // About
-      else if (indexPath.row == 1) {
-        return padding + [offer.user heightForAboutTextWithWidth:
-                          tableView.frame.size.width - (padding * 2)] + padding;
-      }
     }
-    // Co-signers
-    else if (indexPath.section == 1) {
-      return [OMBCosignerCell heightForCell];
-    }
-    // Co-applicants
-    else if (indexPath.section == 2) {
-      return [OMBCoapplicantCell heightForCell];
-    }
-    // Pets
-    else if (indexPath.section == 3) {
-      return padding + standardHeight + padding;
-    }
-    // Rental History
-    else if (indexPath.section == 4) {
-      return [OMBPreviousRentalCell heightForCell];
-    }
-    // Work History
-    else if (indexPath.section == 5) {
-      // View Linkedin Profile
-      if (indexPath.row == 0) {
-        return padding + standardHeight + padding;
-      }
-      // Previous Employment
-      else {
-        return padding + (22.0f * 3) + padding;
-      }
-    }
-    // Legal Stuff
-    else if (indexPath.section == 6) {
-      OMBLegalQuestion *legalQuestion = [legalQuestions objectAtIndex:
-                                         indexPath.row];
-      CGRect rect = [legalQuestion.question boundingRectWithSize:
-                     CGSizeMake([OMBLegalQuestionAndAnswerCell widthForQuestionLabel], 9999)
-                                                            font: [OMBLegalQuestionAndAnswerCell fontForQuestionLabel]];
-      return padding + rect.size.height + (padding * 0.5) + 22.0f + padding;
-    }*/
-  }
   return 0.0f;
 }
 
@@ -1260,30 +1000,6 @@ viewForHeaderInSection: (NSInteger) section
   NSString *titleString = @"";
   // Profile
   if (tableView == _profileTableView) {
-    // Co-signers
-    /*if (section == 1) {
-      titleString = @"Co-signers";
-    }
-    // Co-applicants
-    else if (section == 2) {
-      titleString = @"Co-applicants";
-    }
-    // Pets
-    else if (section == 3) {
-      titleString = @"Pets";
-    }
-    // Rental History
-    else if (section == 4) {
-      titleString = @"Rental History";
-    }
-    // Work History
-    else if (section == 5) {
-      titleString = @"Work History";
-    }
-    // Legal Stuff
-    else if (section == 6) {
-      titleString = @"Legal Stuff";
-    }*/
   }
   label.text = titleString;
   return blurView;
@@ -1315,7 +1031,7 @@ viewForHeaderInSection: (NSInteger) section
             @"and payment is made in full, we will transfer the 1st month’s "
             @"rent and deposit to your payout account and email both parties "
             @"the signed lease.",
-            [offer.user.firstName capitalizedString],
+            [[self user].firstName capitalizedString],
             [NSString numberToCurrencyString: [offer downPaymentAmount]],
             [offer timelineStringForStudent]];
         }
@@ -1324,7 +1040,7 @@ viewForHeaderInSection: (NSInteger) section
             @"%@ has been charged a total payment of %@ and will have %@ "
             @"to sign the lease. Once the lease has been signed, "
             @"we will email both parties the signed lease.",
-            [offer.user.firstName capitalizedString],
+            [[self user].firstName capitalizedString],
             [NSString numberToCurrencyString: [offer downPaymentAmount]],
             [offer timelineStringForStudent]];
         }
@@ -1379,8 +1095,8 @@ viewForHeaderInSection: (NSInteger) section
     @"Ready to accept %@’s offer? %@ will be charged a %@ non-refundable "
     @"down payment and will have %@ to sign the lease and pay the "
     @"remainder of the 1st month’s rent and deposit.",
-      [offer.user.firstName capitalizedString],
-        [offer.user.firstName capitalizedString],
+      [[self user].firstName capitalizedString],
+        [[self user].firstName capitalizedString],
           [NSString numberToCurrencyString:[offer downPaymentAmount]],
             [offer timelineStringForStudent]];
   }
@@ -1389,8 +1105,8 @@ viewForHeaderInSection: (NSInteger) section
     @"Ready to accept %@’s offer? %@ will be charged a total of %@ "
     @"for the 1st month's rent and deposit and "
     @"will have %@ to sign the lease.",
-      [offer.user.firstName capitalizedString],
-        [offer.user.firstName capitalizedString],
+      [[self user].firstName capitalizedString],
+        [[self user].firstName capitalizedString],
           [NSString numberToCurrencyString: [offer downPaymentAmount]],
             [offer timelineStringForStudent]];
   }
@@ -1469,7 +1185,7 @@ viewForHeaderInSection: (NSInteger) section
       // Alert message
       alert.alertMessage.text = [NSString stringWithFormat:
                                  @"Accepting %@'s offer will automatically decline all other offers.",
-                                 [offer.user.firstName capitalizedString]];
+                                 [[self user].firstName capitalizedString]];
       // Alert title
       alert.alertTitle.text = @"Are You Sure?";
     }
@@ -1540,15 +1256,28 @@ viewForHeaderInSection: (NSInteger) section
 
 - (void) changeTableView
 {
-  CGFloat padding = 20.0f;
+  CGFloat padding   = OMBPadding;
   CGFloat threshold = backView.frame.size.height -
-  (padding + buttonsView.frame.size.height + padding);
+    (padding + buttonsView.frame.size.height + padding);
+
+  UIColor *normalBackgroundColor   = [UIColor clearColor];
+  UIColor *normalTextColor         = [UIColor whiteColor];
+  UIColor *selectedBackgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
+  UIColor *selectedTextColor       = [UIColor blueDark];
+  // Offer
   if (selectedSegmentIndex == 0) {
     previouslySelectedIndex = 0;
 
-    offerButton.backgroundColor   = [UIColor colorWithWhite: 1.0f alpha: 0.5f];
-    profileButton.backgroundColor = [UIColor clearColor];
-    contactButton.backgroundColor = [UIColor clearColor];
+    offerButton.backgroundColor   = selectedBackgroundColor;
+    profileButton.backgroundColor = normalBackgroundColor;
+    contactButton.backgroundColor = normalBackgroundColor;
+
+    [offerButton setTitleColor: selectedTextColor
+      forState: UIControlStateNormal];
+    [profileButton setTitleColor: normalTextColor
+      forState: UIControlStateNormal];
+    [contactButton setTitleColor: normalTextColor
+      forState: UIControlStateNormal];
 
     _offerTableView.hidden   = NO;
     _profileTableView.hidden = YES;
@@ -1565,15 +1294,23 @@ viewForHeaderInSection: (NSInteger) section
     // If activity table view content offset is less than threshold
     else if (_offerTableView.contentOffset.y < threshold) {
       _offerTableView.contentOffset = CGPointMake(
-                                                  _offerTableView.contentOffset.x, threshold);
+        _offerTableView.contentOffset.x, threshold);
     }
   }
+  // Profile
   else if (selectedSegmentIndex == 1) {
     previouslySelectedIndex = 1;
 
-    offerButton.backgroundColor   = [UIColor clearColor];
-    profileButton.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.5f];
-    contactButton.backgroundColor = [UIColor clearColor];
+    offerButton.backgroundColor   = normalBackgroundColor;
+    profileButton.backgroundColor = selectedBackgroundColor;
+    contactButton.backgroundColor = normalBackgroundColor;
+
+    [offerButton setTitleColor: normalTextColor
+      forState: UIControlStateNormal];
+    [profileButton setTitleColor: selectedTextColor
+      forState: UIControlStateNormal];
+    [contactButton setTitleColor: normalTextColor
+      forState: UIControlStateNormal];
 
     _offerTableView.hidden   = YES;
     _profileTableView.hidden = NO;
@@ -1594,28 +1331,12 @@ viewForHeaderInSection: (NSInteger) section
        _profileTableView.contentOffset.x, threshold);
     }
 
-    /*OMBRenterProfileViewController *vc =
-     [[OMBRenterProfileViewController alloc] init];
-     [vc loadUser: offer.user];*/
-
-    /*OMBOtherUserProfileViewController *vc =
-     [[OMBOtherUserProfileViewController alloc] initWithUser: offer.user];
-     [self.navigationController pushViewController: vc animated: YES];*/
-
     selectedSegmentIndex = previouslySelectedIndex;
   }
   // Contact
   else if (selectedSegmentIndex == 2) {
-    if ([self offerBelongsToCurrentUser])
-      [self.navigationController pushViewController:
-       [[OMBMessageDetailViewController alloc] initWithUser:
-        offer.landlordUser] animated: YES];
-    else
-      [self.navigationController pushViewController:
-       [[OMBMessageDetailViewController alloc] initWithUser: offer.user]
-                                           animated: YES];
+    [self showContact];
     selectedSegmentIndex = previouslySelectedIndex;
-    // [self changeTableView];
   }
 }
 
@@ -1779,7 +1500,7 @@ viewForHeaderInSection: (NSInteger) section
   [alertBlur setTitle: @"Decline Offer"];
   [alertBlur setMessage: [NSString stringWithFormat:
                           @"Are you sure you want to decline %@'s offer?",
-                          [offer.user.firstName capitalizedString]]];
+                          [[self user].firstName capitalizedString]]];
   [alertBlur resetQuestionDetails];
   [alertBlur hideQuestionButton];
   // Buttons
@@ -1795,9 +1516,8 @@ viewForHeaderInSection: (NSInteger) section
 - (void) fetchObjectsForResourceName: (NSString *) resourceName
 {
   [[self renterApplication] fetchListForResourceName: resourceName
-    userUID: offer.user.uid delegate: self completion: ^(NSError *error) {
-
-  }];
+    userUID: [self user].uid delegate: self completion: ^(NSError *error) {}
+  ];
 }
 
 - (void) hideAlert
@@ -1844,8 +1564,8 @@ viewForHeaderInSection: (NSInteger) section
   venmoTransaction.amount = [NSDecimalNumber decimalNumberWithString:
     [NSString stringWithFormat: @"%f", [offer remainingBalanceAmount]]];
   venmoTransaction.note = [NSString stringWithFormat: @"From: %@, To: %@ - %@",
-    [[OMBUser currentUser] fullName], [offer.residence.user fullName],
-      [offer.residence.address capitalizedString]];
+    [[OMBUser currentUser] fullName], [[self residence].user fullName],
+      [[self residence].address capitalizedString]];
   venmoTransaction.toUserHandle = @"OnMyBlock";
 
   VenmoViewController *venmoViewController =
@@ -1870,6 +1590,20 @@ viewForHeaderInSection: (NSInteger) section
       }];
 }
 
+- (NSTimeInterval) moveInDate
+{
+  return offer.moveInDate;
+}
+
+- (NSTimeInterval) moveOutDate
+{
+  return offer.moveOutDate;
+}
+
+- (NSInteger) numberOfMonthsBetweenMovingDates
+{
+  return [offer numberOfMonthsBetweenMovingDates];
+}
 
 - (NSArray *) objects
 {
@@ -1891,7 +1625,7 @@ viewForHeaderInSection: (NSInteger) section
 
 - (BOOL) offerBelongsToCurrentUser
 {
-  return offer.user.uid == [OMBUser currentUser].uid;
+  return [self user].uid == [OMBUser currentUser].uid;
 }
 
 - (void) offerPaidWithVenmo: (NSNotification *) notification
@@ -2020,9 +1754,19 @@ viewForHeaderInSection: (NSInteger) section
   [alertBlur animateChangeOfContent];
 }
 
+- (CGFloat) rentAmount
+{
+  return offer.amount;
+}
+
 - (OMBRenterApplication *) renterApplication
 {
-  return offer.user.renterApplication;
+  return [self user].renterApplication;
+}
+
+- (OMBResidence *) residence
+{
+  return offer.residence;
 }
 
 - (void) respond
@@ -2059,17 +1803,17 @@ viewForHeaderInSection: (NSInteger) section
   }
   // Landlord
   else {
-    NSString *moveInDateString = [dateFormatter1 stringFromDate:
-      [NSDate dateWithTimeIntervalSince1970: offer.moveInDate]];
-    NSString *moveOutDateString = [dateFormatter1 stringFromDate:
-      [NSDate dateWithTimeIntervalSince1970: offer.moveOutDate]];
+    NSString *moveInDateString = [dateFormatter stringFromDate:
+      [NSDate dateWithTimeIntervalSince1970: [self moveInDate]]];
+    NSString *moveOutDateString = [dateFormatter stringFromDate:
+      [NSDate dateWithTimeIntervalSince1970: [self moveOutDate]]];
     [alertBlur setTitle: @"Respond Now"];
     [alertBlur setMessage: [NSString stringWithFormat:
       @"%@ would like to rent your place from %@ - %@ for %@/mo with a "
       @"deposit of %@.",
-        [offer.user.firstName capitalizedString], moveInDateString,
+        [[self user].firstName capitalizedString], moveInDateString,
           moveOutDateString, [NSString numberToCurrencyString: offer.amount],
-            [NSString numberToCurrencyString: [offer.residence deposit]]]];
+            [NSString numberToCurrencyString: [[self residence] deposit]]]];
     NSString *details;
     if ([offer isAboveThreshold]) {
       details = [NSString stringWithFormat:
@@ -2078,7 +1822,7 @@ viewForHeaderInSection: (NSInteger) section
         @"of the 1st month’s rent and deposit.\n\n"
         @"Decline: Tells the student to look for another place to rent.",
         [NSString numberToCurrencyString: [offer downPaymentAmount]],
-        [[offer.user firstName] capitalizedString],
+        [[[self user] firstName] capitalizedString],
         [offer timelineStringForStudent]];
     }
     else {
@@ -2087,7 +1831,7 @@ viewForHeaderInSection: (NSInteger) section
         @"gives the applicant party %@ to sign the lease.\n\n"
         @"Decline: Tells the student to look for another place to rent.",
         [NSString numberToCurrencyString: [offer downPaymentAmount]],
-        [[offer.user firstName] capitalizedString],
+        [[[self user] firstName] capitalizedString],
         [offer timelineStringForStudent]];
     }
     [alertBlur setQuestionDetails: details];
@@ -2195,7 +1939,7 @@ viewForHeaderInSection: (NSInteger) section
       [offer downPaymentAmount]];
     NSString *remainingBalanceAmount = [NSString numberToCurrencyString:
       [offer remainingBalanceAmount]];
-    NSString *userFirstName = [offer.user.firstName capitalizedString];
+    NSString *userFirstName = [[self user].firstName capitalizedString];
     if ([offer isAboveThreshold]) {
       rememberDetails = [NSString stringWithFormat:
         @"A non-refundable down payment of %@ will be "
@@ -2248,7 +1992,7 @@ viewForHeaderInSection: (NSInteger) section
         @"placed on hold have been reverted back to pending. Please review "
         @"those offers and respond to them.",
         userFirstName,
-        [offer.residence.address capitalizedString]
+        [[self residence].address capitalizedString]
       ];
     }
     else if (offer.confirmed) {
@@ -2294,6 +2038,20 @@ viewForHeaderInSection: (NSInteger) section
       font: [UIFont smallTextFont]].size;
 }
 
+- (void) showContact
+{
+  if ([self offerBelongsToCurrentUser]) {
+    [self.navigationController pushViewController:
+      [[OMBMessageDetailViewController alloc] initWithUser:
+        offer.landlordUser] animated: YES];
+  }
+  else {
+    [self.navigationController pushViewController:
+      [[OMBMessageDetailViewController alloc] initWithUser: [self user]]
+        animated: YES];
+  }
+}
+
 - (void) showPayoutMethods
 {
   [UIView animateWithDuration: 0.25f animations: ^{
@@ -2318,7 +2076,7 @@ viewForHeaderInSection: (NSInteger) section
 
   // Present the PayPalPaymentViewController.
   NSString *shortDescription = [NSString stringWithFormat:
-    @"Remaining Balance for %@", [offer.residence.address capitalizedString]];
+    @"Remaining Balance for %@", [[self residence].address capitalizedString]];
   UINavigationController *nav = (UINavigationController *)
     [self payPalPaymentViewControllerWithAmount: [offer remainingBalanceAmount]
       intent: PayPalPaymentIntentSale shortDescription: shortDescription
@@ -2361,6 +2119,11 @@ viewForHeaderInSection: (NSInteger) section
       }
     }
   }
+}
+
+- (OMBUser *) user
+{
+  return offer.user;
 }
 
 - (void) userAddedFirstPayoutMethod

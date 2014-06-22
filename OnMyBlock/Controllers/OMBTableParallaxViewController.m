@@ -8,12 +8,19 @@
 
 #import "OMBTableParallaxViewController.h"
 
+// Categories
+#import "UIColor+Extensions.h"
+// Views
+#import "OMBBlurView.h"
+#import "OMBCenteredImageView.h"
+
 @interface OMBTableParallaxViewController ()
 {
   UIView *backgroundView;
   CGFloat backgroundViewOriginY;
+  UIView *displayView;
+  CGFloat displayViewOriginalHeight;
   UIView *scaleBackgroundView;
-  UIView *tableHeaderView;
 }
 
 @end
@@ -45,7 +52,10 @@
 
   // Table view
   [self setupForTable];
+  CGFloat padding = OMBPadding;
   self.table.backgroundColor = [UIColor clearColor];
+  self.table.separatorColor  = [UIColor grayMediumAlpha: 0.5f];
+  self.table.separatorInset  = UIEdgeInsetsMake(0.0f, padding, 0.0f, padding);
 
   // Background view
   backgroundView = [UIView new];
@@ -56,6 +66,13 @@
 
   tableHeaderView = [UIView new];
   tableHeaderView.backgroundColor = [UIColor clearColor];
+
+  // Background image that is blurred
+  backgroundBlurView = [[OMBBlurView alloc] initWithFrame: [self screen]];
+  backgroundBlurView.blurRadius    = 20.0f;
+  backgroundBlurView.clipsToBounds = YES;
+  backgroundBlurView.tintColor     = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
+  [self.view insertSubview: backgroundBlurView atIndex: 0];
 }
 
 #pragma mark - Protocol
@@ -68,23 +85,42 @@
   CGFloat adjustment = offsetY / scrollFactor;
   // If the table view is scrolling
   if (scrollView == self.table) {
+    // Move the background view up at a different speed
     if (_parallaxEnabled) {
-      // Move up
-      CGRect backgroundViewRect = backgroundView.frame;
-      CGFloat newOffsetY        = backgroundViewOriginY - adjustment;
-      if (newOffsetY > backgroundViewOriginY)
-        newOffsetY = backgroundViewOriginY;
-      backgroundViewRect.origin.y = newOffsetY;
-      backgroundView.frame        = backgroundViewRect;
+        CGRect backgroundViewRect = backgroundView.frame;
+        CGFloat newOffsetY        = backgroundViewOriginY - adjustment;
+        if (newOffsetY > backgroundViewOriginY)
+          newOffsetY = backgroundViewOriginY;
+        backgroundViewRect.origin.y = newOffsetY;
+        backgroundView.frame        = backgroundViewRect;
     }
+    // Scale the background view when scrolling down
     if (_scalingEnabled) {
-      // Scale
       CGFloat scale = 1 + ((offsetY * scaleFactor * -1) /
         scaleBackgroundView.frame.size.height);
       if (scale < 1)
         scale = 1.0f;
       scaleBackgroundView.transform = CGAffineTransformScale(
         CGAffineTransformIdentity, scale, scale);
+    }
+    // Change the height of the background image view
+    if (displayView) {
+      CGRect rect  = displayView.frame;
+      CGFloat diff = displayViewOriginalHeight - (offsetY - adjustment);
+      if (diff > displayViewOriginalHeight) {
+        diff = displayViewOriginalHeight;
+      }
+      else if (diff < 0) {
+        diff = 0;
+      }
+      rect.size.height = diff;
+
+      if ([displayView respondsToSelector: @selector(setFrame:redrawImage:)]) {
+        [(OMBCenteredImageView *) displayView setFrame: rect redrawImage: NO];
+      }
+      else {
+        displayView.frame = rect;
+      }
     }
   }
 }
@@ -93,20 +129,27 @@
 
 #pragma mark - Instance Methods
 
-// Use this method to setup everything
 - (void) setupBackgroundWithView: (UIView *) view
 startingOffsetY: (NSUInteger) offsetY
 {
-  backgroundViewOriginY = offsetY;
+  // Use this method to setup everything
+
+  displayView               = view;
+  displayViewOriginalHeight = CGRectGetHeight(displayView.frame);
+  backgroundViewOriginY     = offsetY;
+
   // Background view
   backgroundView.frame = CGRectMake(0.0f, backgroundViewOriginY,
-    view.bounds.size.width, view.bounds.size.height);
+    CGRectGetWidth(displayView.frame), displayViewOriginalHeight);
+
   // Scale background view
   scaleBackgroundView.frame = backgroundView.bounds;
-  [scaleBackgroundView addSubview: view];
+  [scaleBackgroundView addSubview: displayView];
+
   // Table header view
-  tableHeaderView.frame = CGRectMake(0.0f, 0.0f, view.bounds.size.width,
-    backgroundViewOriginY + backgroundView.bounds.size.height);
+  tableHeaderView.frame = CGRectMake(0.0f, 0.0f,
+    CGRectGetWidth(displayView.frame),
+      backgroundViewOriginY + CGRectGetHeight(backgroundView.bounds));
   self.table.tableHeaderView = tableHeaderView;
 }
 

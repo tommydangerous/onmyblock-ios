@@ -119,6 +119,8 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   else
     [self.container showDiscover];
 
+  [self.container showHomebaseRenter];
+
   // Handle push notification
   // Extract the notification data
   NSDictionary *notificationPayload =

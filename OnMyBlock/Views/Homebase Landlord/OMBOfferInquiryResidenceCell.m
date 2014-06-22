@@ -46,9 +46,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
         object.coverPhotoURL placeholderImage: nil 
           options: SDWebImageRetryFailed completed:
             ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
-              weakObjectImageView.image = img;
-              [object.coverPhotoSizeDictionary setObject: 
-                weakObjectImageView.image forKey: sizeKey];
+              if (img) {
+                weakObjectImageView.image = img;
+                [object.coverPhotoSizeDictionary setObject:
+                 weakObjectImageView.image forKey: sizeKey];
+              }
             }
           ];
     }];

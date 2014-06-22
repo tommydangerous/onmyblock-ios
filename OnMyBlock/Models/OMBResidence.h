@@ -87,7 +87,11 @@ extern NSString *const OMBResidencePropertyTypeSublet;
 + (NSInteger) numberOfSteps;
 + (UIImage *) placeholderImage;
 
-#pragma mark Instance Methods
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (BOOL) isAboveThreshold;
 
 - (void) addAmenity: (NSString *) amenity;
 - (void) addImageWithResidenceImage: (OMBResidenceImage *) residenceImage

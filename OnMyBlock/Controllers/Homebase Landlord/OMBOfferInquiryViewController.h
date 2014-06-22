@@ -55,7 +55,7 @@ UITableViewDelegate>
   UIButton *contactButton;
   NSTimer *countdownTimer;
   UILabel *countDownTimerLabel;
-  NSDateFormatter *dateFormatter1;
+  NSDateFormatter *dateFormatter;
   BOOL didCancelVenmoAppFromWebView;
   LEffectLabel *effectLabel;
   BOOL firstTimeAlert;

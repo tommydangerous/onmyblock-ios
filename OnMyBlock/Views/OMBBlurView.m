@@ -24,6 +24,22 @@
   return self;
 }
 
+#pragma mark - Accessors
+
+#pragma mark - Setters
+
+- (void) setBounds: (CGRect) rect
+{
+  [super setBounds: rect];
+  _imageView.bounds = rect;
+}
+
+- (void) setFrame: (CGRect) rect
+{
+  [super setFrame: rect];
+  _imageView.frame = rect;
+}
+
 #pragma mark - Methods
 
 #pragma mark - Instance Methods

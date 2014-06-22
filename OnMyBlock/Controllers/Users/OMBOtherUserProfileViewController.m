@@ -56,18 +56,21 @@
 
   user = object;
 
-  backViewImageArray = @[
-    @"neighborhood_downtown.jpg",
-    // @"neighborhood_hillcrest.jpg",
-    @"neighborhood_la_jolla.jpg",
-    @"neighborhood_mission_beach.jpg",
-    @"neighborhood_mission_valley.jpg",
-    @"neighborhood_ocean_beach.jpg",
-    @"neighborhood_pacific_beach.jpg",
-    @"neighborhood_university_towne_center.jpg",
-  ];
+  // backViewImageArray = @[
+  //   @"neighborhood_downtown.jpg",
+  //   // @"neighborhood_hillcrest.jpg",
+  //   @"neighborhood_la_jolla.jpg",
+  //   @"neighborhood_mission_beach.jpg",
+  //   @"neighborhood_mission_valley.jpg",
+  //   @"neighborhood_ocean_beach.jpg",
+  //   @"neighborhood_pacific_beach.jpg",
+  //   @"neighborhood_university_towne_center.jpg",
+  // ];
 
   self.title = [user fullName];
+
+  NSLog(@"Profile");
+  NSLog(@"%i", user.uid);
 
   return self;
 }

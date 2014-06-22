@@ -177,11 +177,6 @@ delegate: (id) delegate completion: (void (^)(NSError *error)) block
 
   // Other user
   if ([dictionary objectForKey: @"other_user"] != [NSNull null]) {
-
-  }
-
-  // Other user
-  if ([dictionary objectForKey: @"other_user"] != [NSNull null]) {
     NSDictionary *userDict = [dictionary objectForKey: @"other_user"];
     NSInteger userUID = [[userDict objectForKey: @"id"] intValue];
     self.otherUser = [[OMBUserStore sharedStore] userWithUID: userUID];

@@ -37,7 +37,8 @@
 {
   [super loadView];
 
-  self.collectionView.backgroundColor = [UIColor grayUltraLight];
+  self.collectionView.alwaysBounceVertical         = YES;
+  self.collectionView.backgroundColor              = [UIColor grayUltraLight];
   self.collectionView.showsVerticalScrollIndicator = NO;
 }
 
