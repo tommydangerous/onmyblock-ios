@@ -1187,8 +1187,13 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   BOOL showApplyNow = YES;
   BOOL hasSentApp = NO;
   
+  // If user has sent an application
+  if ([[OMBUser currentUser] loggedIn] && residence.sentApplication) {
+    hasSentApp   = YES;
+    showApplyNow = NO;
+  }
   // Is a sublet
-  if ([residence isSublet]) {
+  else if ([residence isSublet]) {
     showApplyNow = NO;
   }
   // If rent it now is true
@@ -1196,12 +1201,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     showApplyNow = NO;
   }
   // If minRent is less than or equal to Offer price threshold
-  else if (residence.minRent <= [OMBOffer priceThreshold]) {
-    showApplyNow = NO;
-  }
-  // If user has sent an application
-  else if ([[OMBUser currentUser] loggedIn] && residence.sentApplication) {
-    hasSentApp   = YES;
+  else if ([residence isAboveThreshold]) {
     showApplyNow = NO;
   }
   
@@ -1225,7 +1225,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [_bookItButton addTarget:self action: selector
       forControlEvents:UIControlEventTouchUpInside];
   }
-  
 }
 
 - (int) currentPageOfImages

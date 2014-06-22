@@ -203,24 +203,24 @@
   [_sellerButtons addObject: _createListingButton];
 
   // Homebase
-  _sellerHomebaseButton = [[UIButton alloc] init];
-  [_sellerHomebaseButton addTarget: self action: @selector(showHomebaseLandlord)
-    forControlEvents: UIControlEventTouchUpInside];
-  [_sellerHomebaseButton setTitle: @"Received Bookings"
-    forState: UIControlStateNormal];
-  UIImageView *sellerHomebaseImageView = [[UIImageView alloc] init];
-  sellerHomebaseImageView.frame = discoverImageView.frame;
-  UIImage *sellerHomebaseImage = [UIImage imageNamed:
-    @"homebase_icon.png"];
-  sellerHomebaseImageView.image = [UIImage image: sellerHomebaseImage
-    size: sellerHomebaseImageView.frame.size];
-  sellerHomebaseImageView.image.accessibilityIdentifier = @"homebase_icon.png";
-  sellerHomebaseImageView.tag = 11;
-  [_sellerHomebaseButton addSubview: sellerHomebaseImageView];
-  [_sellerButtons addObject: _sellerHomebaseButton];
-  // Notification badge
-  _sellerHomebaseNotificationBadge = [UILabel new];
-  [_sellerHomebaseButton addSubview: _sellerHomebaseNotificationBadge];
+  // _sellerHomebaseButton = [[UIButton alloc] init];
+  // [_sellerHomebaseButton addTarget: self action: @selector(showHomebaseLandlord)
+  //   forControlEvents: UIControlEventTouchUpInside];
+  // [_sellerHomebaseButton setTitle: @"Received Bookings"
+  //   forState: UIControlStateNormal];
+  // UIImageView *sellerHomebaseImageView = [[UIImageView alloc] init];
+  // sellerHomebaseImageView.frame = discoverImageView.frame;
+  // UIImage *sellerHomebaseImage = [UIImage imageNamed:
+  //   @"homebase_icon.png"];
+  // sellerHomebaseImageView.image = [UIImage image: sellerHomebaseImage
+  //   size: sellerHomebaseImageView.frame.size];
+  // sellerHomebaseImageView.image.accessibilityIdentifier = @"homebase_icon.png";
+  // sellerHomebaseImageView.tag = 11;
+  // [_sellerHomebaseButton addSubview: sellerHomebaseImageView];
+  // [_sellerButtons addObject: _sellerHomebaseButton];
+  // // Notification badge
+  // _sellerHomebaseNotificationBadge = [UILabel new];
+  // [_sellerHomebaseButton addSubview: _sellerHomebaseNotificationBadge];
 
   // Manage listing
   _manageListingsButton = [[UIButton alloc] init];
@@ -268,7 +268,7 @@
     _inboxButton,
     // Seller
     _createListingButton,
-    _sellerHomebaseButton,
+    // _sellerHomebaseButton,
     _manageListingsButton,
     _sellerInboxButton
   ];
@@ -286,8 +286,8 @@
   // Set attributes for notification badges
   NSArray *badgeArray = @[
     _inboxNotificationBadge,
-    _renterHomebaseNotificationBadge,
-    _sellerHomebaseNotificationBadge
+    _renterHomebaseNotificationBadge
+    // _sellerHomebaseNotificationBadge
   ];
   for (UILabel *label in badgeArray) {
     //label.backgroundColor = [UIColor blue];
@@ -505,13 +505,20 @@ withNumber: (NSNumber *) number
       else
         title = userType;
       
-      if([landlordType isEqualToString:@"subletter"])
-        _sellerButtons = [NSMutableArray arrayWithArray:
-          @[_createListingButton,_sellerHomebaseButton,
-            _manageListingsButton,_sellerInboxButton]];
-      else
-        _sellerButtons = [NSMutableArray arrayWithArray:
-          @[_createListingButton,_manageListingsButton,_sellerInboxButton]];
+      // if([landlordType isEqualToString:@"subletter"])
+      //   _sellerButtons = [NSMutableArray arrayWithArray:
+      //     @[_createListingButton,_sellerHomebaseButton,
+      //       _manageListingsButton,_sellerInboxButton]];
+      // else
+      //   _sellerButtons = [NSMutableArray arrayWithArray:
+      //     @[_createListingButton,_manageListingsButton,_sellerInboxButton]];
+
+      _sellerButtons = [NSMutableArray arrayWithArray:
+        @[_createListingButton,
+          _manageListingsButton,
+          _sellerInboxButton
+        ]
+      ];
       
       [self setupForSeller];
     }
@@ -545,9 +552,9 @@ withNumber: (NSNumber *) number
 }
 
 - (void)updateLandlordOffersPendingCount:(NSNotification*)noti {
-    NSNumber *number = noti.object;
-    [self updateNotificationBadgeLabel:_sellerHomebaseNotificationBadge
-                            withNumber:number];
+    // NSNumber *number = noti.object;
+    // [self updateNotificationBadgeLabel:_sellerHomebaseNotificationBadge
+    //                         withNumber:number];
 }
 
 - (void)updateRenterOffersAcceptedCount:(NSNotification*)noti {
@@ -563,8 +570,8 @@ withNumber: (NSNumber *) number
   [self updateNotificationBadgeLabel: _inboxNotificationBadge withNumber: @0];
     [self updateNotificationBadgeLabel:_renterHomebaseNotificationBadge
                             withNumber:@0];
-    [self updateNotificationBadgeLabel:_sellerHomebaseNotificationBadge
-                            withNumber:@0];
+    // [self updateNotificationBadgeLabel:_sellerHomebaseNotificationBadge
+    //                         withNumber:@0];
 }
 
 @end

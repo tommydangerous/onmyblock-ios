@@ -180,6 +180,7 @@
 		AB756ABC185A24F5001AF572 /* intro_still_image_slide_3_background@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB756ABB185A24F5001AF572 /* intro_still_image_slide_3_background@2x.jpg */; };
 		AB756AC2185A25E3001AF572 /* intro_still_image_slide_4_background@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB756AC1185A25E3001AF572 /* intro_still_image_slide_4_background@2x.jpg */; };
 		AB756AC9185A3ADE001AF572 /* OMBPayPalVerifyMobilePaymentConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB756AC8185A3ADE001AF572 /* OMBPayPalVerifyMobilePaymentConnection.m */; };
+		AB75C1D419577F0100766AC1 /* OMBHomebaseLandlordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB75C1D319577F0100766AC1 /* OMBHomebaseLandlordViewController.m */; };
 		AB76C0E018187B3F006354FB /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = AB76C0DF18187B3F006354FB /* UIImage+Color.m */; };
 		AB7A231118A02526004AC149 /* OMBUserProfileConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB7A231018A02526004AC149 /* OMBUserProfileConnection.m */; };
 		AB7A231418A03DBC004AC149 /* OMBUserListingsConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB7A231318A03DBC004AC149 /* OMBUserListingsConnection.m */; };
@@ -326,7 +327,7 @@
 		ABB7005B187B58AA005F0730 /* OMBLegalQuestionAndAnswerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB70053187B58AA005F0730 /* OMBLegalQuestionAndAnswerCell.m */; };
 		ABB7005C187B58AA005F0730 /* OMBOfferInquiryResidenceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB70055187B58AA005F0730 /* OMBOfferInquiryResidenceCell.m */; };
 		ABB70067187B58C0005F0730 /* OMBHomebaseLandlordConfirmedTenantsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB7005F187B58C0005F0730 /* OMBHomebaseLandlordConfirmedTenantsViewController.m */; };
-		ABB70068187B58C0005F0730 /* OMBHomebaseLandlordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB70061187B58C0005F0730 /* OMBHomebaseLandlordViewController.m */; };
+		ABB70068187B58C0005F0730 /* OMBHomebaseLandlordViewControllerOLD.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB70061187B58C0005F0730 /* OMBHomebaseLandlordViewControllerOLD.m */; };
 		ABB70069187B58C0005F0730 /* OMBOfferInquiryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB70063187B58C0005F0730 /* OMBOfferInquiryViewController.m */; };
 		ABB7006A187B58C0005F0730 /* OMBHomebaseRenterViewControllerOLD.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB70066187B58C0005F0730 /* OMBHomebaseRenterViewControllerOLD.m */; };
 		ABB7006D187B6067005F0730 /* OMBHomebaseRenterRoommateImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB7006C187B6067005F0730 /* OMBHomebaseRenterRoommateImageView.m */; };
@@ -863,6 +864,8 @@
 		AB756AC1185A25E3001AF572 /* intro_still_image_slide_4_background@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "intro_still_image_slide_4_background@2x.jpg"; sourceTree = "<group>"; };
 		AB756AC7185A3ADE001AF572 /* OMBPayPalVerifyMobilePaymentConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayPalVerifyMobilePaymentConnection.h; sourceTree = "<group>"; };
 		AB756AC8185A3ADE001AF572 /* OMBPayPalVerifyMobilePaymentConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayPalVerifyMobilePaymentConnection.m; sourceTree = "<group>"; };
+		AB75C1D219577F0100766AC1 /* OMBHomebaseLandlordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHomebaseLandlordViewController.h; sourceTree = "<group>"; };
+		AB75C1D319577F0100766AC1 /* OMBHomebaseLandlordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHomebaseLandlordViewController.m; sourceTree = "<group>"; };
 		AB76C0DE18187B3F006354FB /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
 		AB76C0DF18187B3F006354FB /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
 		AB7A230F18A02526004AC149 /* OMBUserProfileConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBUserProfileConnection.h; sourceTree = "<group>"; };
@@ -1150,8 +1153,8 @@
 		ABB70055187B58AA005F0730 /* OMBOfferInquiryResidenceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBOfferInquiryResidenceCell.m; sourceTree = "<group>"; };
 		ABB7005E187B58C0005F0730 /* OMBHomebaseLandlordConfirmedTenantsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHomebaseLandlordConfirmedTenantsViewController.h; sourceTree = "<group>"; };
 		ABB7005F187B58C0005F0730 /* OMBHomebaseLandlordConfirmedTenantsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHomebaseLandlordConfirmedTenantsViewController.m; sourceTree = "<group>"; };
-		ABB70060187B58C0005F0730 /* OMBHomebaseLandlordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHomebaseLandlordViewController.h; sourceTree = "<group>"; };
-		ABB70061187B58C0005F0730 /* OMBHomebaseLandlordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHomebaseLandlordViewController.m; sourceTree = "<group>"; };
+		ABB70060187B58C0005F0730 /* OMBHomebaseLandlordViewControllerOLD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHomebaseLandlordViewControllerOLD.h; sourceTree = "<group>"; };
+		ABB70061187B58C0005F0730 /* OMBHomebaseLandlordViewControllerOLD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHomebaseLandlordViewControllerOLD.m; sourceTree = "<group>"; };
 		ABB70062187B58C0005F0730 /* OMBOfferInquiryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBOfferInquiryViewController.h; sourceTree = "<group>"; };
 		ABB70063187B58C0005F0730 /* OMBOfferInquiryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBOfferInquiryViewController.m; sourceTree = "<group>"; };
 		ABB70065187B58C0005F0730 /* OMBHomebaseRenterViewControllerOLD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHomebaseRenterViewControllerOLD.h; sourceTree = "<group>"; };
@@ -2804,12 +2807,14 @@
 			children = (
 				ABB7005E187B58C0005F0730 /* OMBHomebaseLandlordConfirmedTenantsViewController.h */,
 				ABB7005F187B58C0005F0730 /* OMBHomebaseLandlordConfirmedTenantsViewController.m */,
-				ABB70060187B58C0005F0730 /* OMBHomebaseLandlordViewController.h */,
-				ABB70061187B58C0005F0730 /* OMBHomebaseLandlordViewController.m */,
+				ABB70060187B58C0005F0730 /* OMBHomebaseLandlordViewControllerOLD.h */,
+				ABB70061187B58C0005F0730 /* OMBHomebaseLandlordViewControllerOLD.m */,
 				ABB70062187B58C0005F0730 /* OMBOfferInquiryViewController.h */,
 				ABB70063187B58C0005F0730 /* OMBOfferInquiryViewController.m */,
 				DE9A41841942763F0026545C /* OMBApplicationResidenceCell.h */,
 				DE9A41851942763F0026545C /* OMBApplicationResidenceCell.m */,
+				AB75C1D219577F0100766AC1 /* OMBHomebaseLandlordViewController.h */,
+				AB75C1D319577F0100766AC1 /* OMBHomebaseLandlordViewController.m */,
 			);
 			path = "Homebase Landlord";
 			sourceTree = "<group>";
@@ -3678,13 +3683,14 @@
 				AB1C2175185145A800ED7C06 /* OMBCosignerAddViewController.m in Sources */,
 				AB4ED2D7188230A4009AFB01 /* OMBResidenceUpdateConnection.m in Sources */,
 				ABE28187186A44FF00A5D14E /* OMBMessageStore.m in Sources */,
+				AB75C1D419577F0100766AC1 /* OMBHomebaseLandlordViewController.m in Sources */,
 				AB1C2178185168A300ED7C06 /* OMBCosignerCell.m in Sources */,
 				ABB70073187B7814005F0730 /* OMBHomebaseRenterTopPriorityCell.m in Sources */,
 				AB9D6137188F495A00C9AC64 /* OMBOfferDecisionConnection.m in Sources */,
 				ABCB36BE187CB843008A0EEF /* OMBHomebaseRenterAddRoommatesViewController.m in Sources */,
 				AB8B794B186E17FC005AB552 /* OMBLabelTextFieldCell.m in Sources */,
 				AB00B9D218BE95A00050D6F4 /* OMBConversationWithResidenceConnection.m in Sources */,
-				ABB70068187B58C0005F0730 /* OMBHomebaseLandlordViewController.m in Sources */,
+				ABB70068187B58C0005F0730 /* OMBHomebaseLandlordViewControllerOLD.m in Sources */,
 				AB9D6118188CEFDE00C9AC64 /* UIImage+GIF.m in Sources */,
 				AB3396F518AD4F1700F49064 /* OMBCollectionViewLayout.m in Sources */,
 				ABE4FBE218902D6A0009D643 /* NSDateFormatter+JSON.m in Sources */,
