@@ -740,9 +740,6 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   else if (user) {
     object = user;
   }
-  NSLog(@"%@", conversation);
-  NSLog(@"%@", residence);
-  NSLog(@"%@", user);
   return object;
 }
 

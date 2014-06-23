@@ -74,12 +74,19 @@ UITableViewDelegate>
   OMBCenteredImageView *userImageView;
 }
 
+@property (nonatomic, strong) UITableView *offerTableView;
+@property (nonatomic, strong) UITableView *profileTableView;
+
 #pragma mark - Initializer
 
 - (id) initWithOffer: (OMBOffer *) object;
 
-// Tables
-@property (nonatomic, strong) UITableView *offerTableView;
-@property (nonatomic, strong) UITableView *profileTableView;
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (void) hideCountdownAndRespondButton;
 
 @end

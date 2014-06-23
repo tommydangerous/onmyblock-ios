@@ -34,25 +34,27 @@
   sentApplication = object;
 
   // Title
-  // Paid
-  if ([self isPaid]) {
-    self.title = @"Payment Completed";
-  }
-  // Accepted
-  else if ([self isAccepted])  {
-    self.title = @"Accepted - Payment Required";
-  }
-  // Cancelled
-  else if ([self isCancelled]) {
-    self.title = @"Application Cancelled";
-  }
-  // Declined
-  else if ([self isDeclined]) {
-    self.title = @"Application Declined";
-  }
-  // Pending
-  else {
-    self.title = @"Waiting for Landlord Response";
+  switch ([sentApplication status]) {
+    case OMBSentApplicationStatusPaid: {
+      self.title = @"Payment Completed";
+      break;  
+    }
+    case OMBSentApplicationStatusAccepted: {
+      self.title = @"Accepted - Payment Required";
+      break;
+    }
+    case OMBSentApplicationStatusDeclined: {
+      self.title = @"Application Declined";
+      break;
+    }
+    case OMBSentApplicationStatusCancelled: {
+      self.title = @"Application Cancelled";
+      break;
+    }
+    default: {
+      self.title = @"Waiting for Landlord Response";
+      break;
+    }
   }
 
   return self;
@@ -67,6 +69,13 @@
   [super loadView];
 
   [offerButton setTitle: @"Details" forState: UIControlStateNormal];
+}
+
+- (void) viewWillAppear: (BOOL) animated
+{
+  [super viewWillAppear: animated];
+
+  [self updateRespondView];
 }
 
 #pragma mark - OMBOfferInquiryViewController
@@ -118,33 +127,34 @@
 
 - (void) setupSizeForRememberDetails
 {
-  // Paid
-  if ([self isPaid]) {
-    rememberDetails = 
-      @"You have successfully paid and you are now ready to move in.";
-  }
-  // Accepted
-  else if ([self isAccepted]) {
-    // This should show a timer
-    rememberDetails =
-      @"Your application has been accepted. "
-      @"You now have to sign the lease and pay the first month’s "
-      @"rent & security deposit.";
-  }
-  // Cancelled
-  else if ([self isCancelled]) {
-    rememberDetails =
-      @"You have cancelled this application.";
-  }
-  // Declined
-  else if ([self isDeclined]) {
-    rememberDetails = 
-      @"Your application has been declined.";
-  }
-  // Pending
-  else {
-    rememberDetails =
-      @"Waiting for landlord to respond.";
+  switch ([sentApplication status]) {
+    case OMBSentApplicationStatusPaid: {
+      rememberDetails = 
+        @"You have successfully paid and you are now ready to move in.";
+      break;  
+    }
+    case OMBSentApplicationStatusAccepted: {
+      rememberDetails =
+        @"Your application has been accepted. "
+        @"You now have to sign the lease and pay the first month’s "
+        @"rent & security deposit.";
+      break;
+    }
+    case OMBSentApplicationStatusDeclined: {
+      rememberDetails = 
+        @"Your application has been declined.";
+      break;
+    }
+    case OMBSentApplicationStatusCancelled: {
+      rememberDetails =
+        @"You have cancelled this application.";
+      break;
+    }
+    default: {
+      rememberDetails =
+        @"Waiting for landlord to respond.";
+      break;
+    }
   }
   sizeForRememberDetails = [rememberDetails boundingRectWithSize:
     CGSizeMake(CGRectGetWidth(self.offerTableView.frame) - (OMBPadding * 2), 
@@ -163,6 +173,32 @@
       [self.navigationController pushViewController:
         [[OMBMessageDetailViewController alloc] initWithResidence:
           sentApplication.residence] animated: YES];
+    }
+  }
+}
+
+- (void) updateRespondView
+{
+  switch ([sentApplication status]) {
+    case OMBSentApplicationStatusPaid: {
+      [self hideCountdownAndRespondButton];
+      break;  
+    }
+    case OMBSentApplicationStatusAccepted: {
+      #warning Pay Now
+      break;
+    }
+    case OMBSentApplicationStatusDeclined: {
+      [self hideCountdownAndRespondButton];
+      break;
+    }
+    case OMBSentApplicationStatusCancelled: {
+      [self hideCountdownAndRespondButton];
+      break;
+    }
+    default: {
+      #warning Cancel
+      break;
     }
   }
 }

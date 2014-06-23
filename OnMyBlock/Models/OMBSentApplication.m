@@ -52,6 +52,27 @@
   return moveOutMonth - moveInMonth;
 }
 
+- (OMBSentApplicationStatus) status
+{
+  // Paid
+  if (self.paid) {
+    return OMBSentApplicationStatusPaid;
+  }
+  // Accepted
+  else if (self.accepted) {
+    return OMBSentApplicationStatusAccepted;
+  }
+  // Declined
+  else if (self.declined) {
+    return OMBSentApplicationStatusDeclined;
+  }
+  // Cancelled
+  else if (self.cancelled) {
+    return OMBSentApplicationStatusCancelled;
+  }
+  return OMBSentApplicationStatusPending;
+}
+
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
   // Sample JSON

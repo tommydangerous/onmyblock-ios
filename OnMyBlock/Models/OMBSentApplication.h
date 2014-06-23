@@ -10,6 +10,14 @@
 
 @class OMBResidence;
 
+typedef NS_ENUM(NSInteger, OMBSentApplicationStatus) {
+  OMBSentApplicationStatusPaid,
+  OMBSentApplicationStatusAccepted,
+  OMBSentApplicationStatusDeclined,
+  OMBSentApplicationStatusCancelled,
+  OMBSentApplicationStatusPending
+};
+
 @interface OMBSentApplication : OMBObject
 
 @property (nonatomic) BOOL accepted;
@@ -36,5 +44,6 @@
 #pragma mark - Public
 
 - (NSInteger) numberOfMonthsBetweenMovingDates;
+- (OMBSentApplicationStatus) status;
 
 @end

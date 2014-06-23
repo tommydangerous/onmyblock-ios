@@ -430,8 +430,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) save
 {
-  OMBHomebaseRenterViewController *vc =
-    (OMBHomebaseRenterViewController *) _delegate;
+  // OMBHomebaseRenterViewController *vc =
+  //   (OMBHomebaseRenterViewController *) _delegate;
   // [vc switchToPaymentsTableView];
   [self.navigationController popViewControllerAnimated: YES];
 

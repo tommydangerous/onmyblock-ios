@@ -1009,6 +1009,20 @@ viewForHeaderInSection: (NSInteger) section
 
 #pragma mark - Instance Methods
 
+#pragma mark - Public
+
+- (void) hideCountdownAndRespondButton
+{
+  countDownTimerLabel.alpha = 0.0f;
+  respondView.alpha = 0.0f;
+  _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
+    CGRectZero];
+  _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
+    CGRectZero];
+}
+
+#pragma mark - Private
+
 - (void) acceptOfferCanceled
 {
   [alertBlur close];
@@ -1533,16 +1547,6 @@ viewForHeaderInSection: (NSInteger) section
     [alertBlur close];
     [self.navigationController popViewControllerAnimated: YES];
   }];
-}
-
-- (void) hideCountdownAndRespondButton
-{
-  countDownTimerLabel.alpha = 0.0f;
-  respondView.alpha = 0.0f;
-  _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
-    CGRectZero];
-  _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
-    CGRectZero];
 }
 
 - (void) launchVenmoApp
