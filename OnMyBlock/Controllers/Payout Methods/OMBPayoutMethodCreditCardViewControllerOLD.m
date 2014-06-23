@@ -1,12 +1,12 @@
 //
-//  OMBPayoutMethodCreditCardViewController.m
+//  OMBPayoutMethodCreditCardViewControllerOLD.m
 //  OnMyBlock
 //
 //  Created by Paul Aguilar on 3/25/14.
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import "OMBPayoutMethodCreditCardViewController.h"
+#import "OMBPayoutMethodCreditCardViewControllerOLD.h"
 
 #import "NSString+Extensions.h"
 #import "OMBLabelTextFieldCell.h"
@@ -18,7 +18,7 @@
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 
-@implementation OMBPayoutMethodCreditCardViewController
+@implementation OMBPayoutMethodCreditCardViewControllerOLD
 
 #pragma mark - Initializer
 
