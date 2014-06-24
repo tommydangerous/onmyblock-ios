@@ -22,7 +22,7 @@
 #import "OMBMyRenterProfileViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOffer.h"
-#import "OMBOtherUserProfileViewController.h"
+#import "OMBUserDetailViewController.h"
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutMethodListCell.h"
 #import "OMBPayoutMethodUpdateConnection.h"
@@ -1455,7 +1455,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       // if is a OMB user
       if (aux.roommate)
         [self.navigationController pushViewController:
-          [[OMBOtherUserProfileViewController alloc] initWithUser:
+          [[OMBUserDetailViewController alloc] initWithUser:
             [aux otherUser: [OMBUser currentUser]]] animated: YES];
     }
   }

@@ -34,7 +34,7 @@
 #import "OMBMyRenterProfileViewController.h"
 #import "OMBNavigationController.h"
 #import "OMBOfferAcceptedView.h"
-#import "OMBOtherUserProfileViewController.h"
+#import "OMBUserDetailViewController.h"
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBRenterApplicationViewController.h"
 #import "OMBRenterProfileViewController.h"
@@ -1688,8 +1688,8 @@ completion: (void (^) (void)) block
 
 - (void) showOtherUserProfile
 {
-  OMBOtherUserProfileViewController *vc =
-    [[OMBOtherUserProfileViewController alloc] initWithUser:
+  OMBUserDetailViewController *vc =
+    [[OMBUserDetailViewController alloc] initWithUser:
       [OMBUser currentUser]];
   [self presentDetailViewController:
     [[OMBNavigationController alloc] initWithRootViewController: vc]];

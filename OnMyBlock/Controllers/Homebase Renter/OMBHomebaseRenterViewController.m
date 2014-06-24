@@ -31,7 +31,7 @@
 #import "OMBSentApplicationDetailViewController.h"
 
 static const CGFloat HomebaseRenterImagePercentage = 0.3f;
-static const CGFloat ViewForHeaderHeight = 13.0f * 2;
+static const CGFloat ViewForHeaderHeight           = 13.0f * 2;
 
 @interface OMBHomebaseRenterViewController ()
 <
@@ -83,7 +83,7 @@ static const CGFloat ViewForHeaderHeight = 13.0f * 2;
   CGRect backViewRect = CGRectMake(0.0f, 0.0f,
     screenWidth, topSpacing + (screenHeight * HomebaseRenterImagePercentage));
   UIView *backViewHolder = [[UIView alloc] initWithFrame: backViewRect];
-  backViewHolder.backgroundColor = [UIColor red];
+  backViewHolder.backgroundColor = [UIColor clearColor];
   backViewHolder.clipsToBounds = YES;
   [self setupBackgroundWithView: backViewHolder startingOffsetY: 0.0f];
   backView = [[OMBBlurView alloc] initWithFrame: backViewHolder.bounds];

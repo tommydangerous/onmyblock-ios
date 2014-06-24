@@ -7,6 +7,8 @@
 //
 
 #import "OMBCosignerListConnection.h"
+// Models
+#import "OMBCosigner.h"
 
 @implementation OMBCosignerListConnection
 
@@ -34,6 +36,11 @@
 {
   if ([self.delegate respondsToSelector: @selector(JSONDictionary:)]) {
     [self.delegate JSONDictionary: [self json]];
+  }
+  else if ([self.delegate respondsToSelector: 
+    @selector(JSONDictionary:forResourceName:)]) {
+    [self.delegate JSONDictionary: [self json] 
+      forResourceName: [OMBCosigner resourceName]];
   }
 
   [super connectionDidFinishLoading: connection];

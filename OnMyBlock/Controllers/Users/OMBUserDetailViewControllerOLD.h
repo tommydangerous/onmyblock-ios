@@ -65,7 +65,7 @@ typedef NS_ENUM(NSInteger, OMBOtherUserProfileSectionListingsRow) {
   OMBOtherUserProfileSectionListingsRowHeader
 };
 
-@interface OMBOtherUserProfileViewController : OMBTableViewController
+@interface OMBUserDetailViewControllerOLD : OMBTableViewController
 <MFMailComposeViewControllerDelegate,
   UICollectionViewDataSource, UICollectionViewDelegate, 
   UICollectionViewDelegateFlowLayout>

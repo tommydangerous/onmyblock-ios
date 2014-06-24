@@ -18,7 +18,7 @@
 #import "OMBManageListingsCell.h"
 #import "OMBMessageDetailViewController.h"
 #import "OMBNavigationController.h"
-#import "OMBOtherUserProfileViewController.h"
+#import "OMBUserDetailViewController.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterProfileUserInfoCell.h"
 #import "OMBResidenceDetailViewController.h"
@@ -1021,7 +1021,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) preview
 {
   [self.navigationController pushViewController:
-    [[OMBOtherUserProfileViewController alloc] initWithUser: user]
+    [[OMBUserDetailViewController alloc] initWithUser: user]
       animated: YES];
 }
 

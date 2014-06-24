@@ -79,16 +79,20 @@
   OMBUser *user = [self.roommate otherUser: userObject];
 
   if (user) {
-    nameLabel.text = [user fullName];
+    nameLabel.text  = [user fullName];
     emailLabel.text = @"OnMyBlock user";
     if (user.image) {
       userImageView.image = [user imageForSize: userImageView.bounds.size];
     }
     else {
       [user downloadImageFromImageURLWithCompletion: ^(NSError *error) {
-        userImageView.image = [user imageForSize: userImageView.bounds.size];
+        if (user.image) {
+          userImageView.image = [user imageForSize: userImageView.bounds.size];
+        }
+        else {
+          userImageView.image = [OMBUser placeholderImage];
+        }
       }];
-      userImageView.image = [OMBUser placeholderImage];
     }
   }
   else {
@@ -115,7 +119,7 @@
               ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                 if (image)
                   weakImageView.image = image;
-                NSLog(@"%@ %@", imageURL, image);
+                // NSLog(@"%@ %@", imageURL, image);
               }];
     }
     else {

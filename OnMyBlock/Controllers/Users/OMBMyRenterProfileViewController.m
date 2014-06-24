@@ -20,7 +20,7 @@
 #import "OMBLegalViewController.h"
 #import "OMBManageListingsCell.h"
 #import "OMBManageListingsConnection.h"
-#import "OMBOtherUserProfileViewController.h"
+#import "OMBUserDetailViewController.h"
 #import "OMBPickerViewCell.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoSectionCosignersViewController.h"
@@ -1001,7 +1001,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) preview
 {
   [self.navigationController pushViewController:
-    [[OMBOtherUserProfileViewController alloc] initWithUser: user]
+    [[OMBUserDetailViewController alloc] initWithUser: user]
       animated: YES];
 }
 

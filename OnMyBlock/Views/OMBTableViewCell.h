@@ -26,4 +26,11 @@
 + (CGFloat) heightForCell;
 + (CGSize) sizeForImage;
 
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (void) hideSeparator;
+- (void) hideSeparatorWithHorizontalPadding: (CGFloat) padding;
+
 @end

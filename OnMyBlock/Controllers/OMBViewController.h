@@ -32,6 +32,7 @@ extern CGFloat const OMBStandardHeight;
   UIBarButtonItem *cancelBarButtonItem;
   UIBarButtonItem *doneBarButtonItem;
   UIBarButtonItem *menuBarButtonItem;
+  UILabel *navigationTitleLabel;
   UIBarButtonItem *saveBarButtonItem;
   UIBarButtonItem *shareBarButtonItem;
 }
@@ -39,6 +40,13 @@ extern CGFloat const OMBStandardHeight;
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+#pragma mark - Private
+
+- (void) animateStatusBarDefault;
+- (void) animateStatusBarLight;
+- (void) setNavigationControllerNavigationBarDefault;
+- (void) setNavigationControllerNavigationBarTransparent;
 
 - (OMBAppDelegate *) appDelegate;
 - (void) containerStartSpinning;

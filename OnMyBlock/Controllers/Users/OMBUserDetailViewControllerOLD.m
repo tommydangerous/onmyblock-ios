@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import "OMBOtherUserProfileViewController.h"
+#import "OMBUserDetailViewControllerOLD.h"
 
 #import "NSString+Extensions.h"
 #import "NSString+PhoneNumber.h"
@@ -39,14 +39,14 @@
 #import "UIImage+NegativeImage.h"
 #import "UIImage+Resize.h"
 
-@interface OMBOtherUserProfileViewController ()
+@interface OMBUserDetailViewControllerOLD ()
 {
   OMBCenteredImageView *userImageView;
 }
 
 @end
 
-@implementation OMBOtherUserProfileViewController
+@implementation OMBUserDetailViewControllerOLD
 
 #pragma mark - Initializer
 
@@ -56,21 +56,7 @@
 
   user = object;
 
-  // backViewImageArray = @[
-  //   @"neighborhood_downtown.jpg",
-  //   // @"neighborhood_hillcrest.jpg",
-  //   @"neighborhood_la_jolla.jpg",
-  //   @"neighborhood_mission_beach.jpg",
-  //   @"neighborhood_mission_valley.jpg",
-  //   @"neighborhood_ocean_beach.jpg",
-  //   @"neighborhood_pacific_beach.jpg",
-  //   @"neighborhood_university_towne_center.jpg",
-  // ];
-
-  self.title = [user fullName];
-
-  NSLog(@"Profile");
-  NSLog(@"%i", user.uid);
+  self.title = [user shortName];
 
   return self;
 }
@@ -1047,7 +1033,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // If is an OMB user
     if (roommate.roommate) {
       [self.navigationController pushViewController:
-        [[OMBOtherUserProfileViewController alloc] initWithUser:
+        [[OMBUserDetailViewControllerOLD alloc] initWithUser:
           [roommate otherUser: user]] animated: YES];
     }
   }

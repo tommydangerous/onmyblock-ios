@@ -29,7 +29,7 @@
 #import "OMBMessageStore.h"
 #import "OMBOffer.h"
 #import "OMBOfferInquiryResidenceCell.h"
-#import "OMBOtherUserProfileViewController.h"
+#import "OMBUserDetailViewController.h"
 #import "OMBPayoutMethod.h"
 #import "OMBPayoutMethodsViewController.h"
 #import "OMBPayoutTransaction.h"
@@ -883,7 +883,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     // user
     if(indexPath.row == 0){
       [self.navigationController pushViewController:
-        [[OMBOtherUserProfileViewController alloc] initWithUser: [self user]]
+        [[OMBUserDetailViewController alloc] initWithUser: [self user]]
           animated: YES];
     }
     // Applicants
@@ -892,7 +892,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       // if is a OMB user
       if(aux.roommate){
         [self.navigationController pushViewController:
-          [[OMBOtherUserProfileViewController alloc] initWithUser:
+          [[OMBUserDetailViewController alloc] initWithUser:
             [aux otherUser: [self user]]] animated: YES];
       }
     }

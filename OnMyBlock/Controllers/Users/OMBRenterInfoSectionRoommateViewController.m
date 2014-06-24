@@ -10,7 +10,7 @@
 
 #import "NSString+OnMyBlock.h"
 #import "OMBNavigationController.h"
-#import "OMBOtherUserProfileViewController.h"
+#import "OMBUserDetailViewController.h"
 #import "OMBRenterApplication.h"
 #import "OMBRenterInfoAddRoommateViewController.h"
 #import "OMBRoommate.h"
@@ -91,7 +91,7 @@
       OMBRoommate *roommate =
         (OMBRoommate *)[[self objects] objectAtIndex: selectedIndexPath.row];
       [self.navigationController pushViewController:
-        [[OMBOtherUserProfileViewController alloc] initWithUser:
+        [[OMBUserDetailViewController alloc] initWithUser:
           [roommate otherUser: user]] animated: YES];
     }
     else if (buttonIndex == 1) {

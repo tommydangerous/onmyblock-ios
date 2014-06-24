@@ -19,7 +19,7 @@
 #import "OMBMessagesLastFetchedWithUserConnection.h"
 #import "OMBMessageStore.h"
 #import "OMBOffer.h"
-#import "OMBOtherUserProfileViewController.h"
+#import "OMBUserDetailViewController.h"
 #import "OMBResidence.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
@@ -829,8 +829,8 @@ additionalOffsetY: (CGFloat) offsetY
 {
   OMBUser *otherUser = [self otherUser];
   if (otherUser) {
-    OMBOtherUserProfileViewController *vc =
-      [[OMBOtherUserProfileViewController alloc] initWithUser: otherUser];
+    OMBUserDetailViewController *vc =
+      [[OMBUserDetailViewController alloc] initWithUser: otherUser];
     [self.navigationController pushViewController: vc animated: YES];
   }
 }

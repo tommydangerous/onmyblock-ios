@@ -27,7 +27,7 @@
 #import "OMBMessageDetailViewController.h"
 #import "OMBMessageNewViewController.h"
 #import "OMBNavigationController.h"
-#import "OMBOtherUserProfileViewController.h"
+#import "OMBUserDetailViewController.h"
 #import "OMBOffer.h"
 #import "OMBRenterApplication.h"
 #import "OMBResidence.h"
@@ -978,8 +978,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   if (indexPath.section == 4) {
     if (indexPath.row == 1) {
       if (residence.user) {
-        OMBOtherUserProfileViewController *vc =
-          [[OMBOtherUserProfileViewController alloc] initWithUser:
+        OMBUserDetailViewController *vc =
+          [[OMBUserDetailViewController alloc] initWithUser:
             residence.user];
         [self.navigationController pushViewController: vc animated: YES];
       }

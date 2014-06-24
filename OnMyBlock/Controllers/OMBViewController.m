@@ -8,9 +8,13 @@
 
 #import "OMBViewController.h"
 
-#import "OMBViewControllerContainer.h"
+// Categories
+#import "UIFont+OnMyBlock.h"
+#import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 #import "UIColor+Extensions.h"
+
+#import "OMBViewControllerContainer.h"
 
 CGFloat const OMBCornerRadius         = 5.0f;
 CGFloat const OMBKeyboardHeight       = 216.0f;
@@ -88,18 +92,17 @@ CGFloat const OMBStandardHeight       = 44.0f;
 - (void) setTitle: (NSString *) string
 {
   [super setTitle: string];
-  UILabel *label = [[UILabel alloc] init];
-  label.backgroundColor = [UIColor clearColor];
-  label.font            = [UIFont fontWithName: @"HelveticaNeue-Light"
-    size: 18];
-  label.frame           = CGRectMake(0, 0, 0, 44);
-  label.shadowColor     = [UIColor clearColor];
-  label.shadowOffset    = CGSizeMake(0, 0);
-  label.text            = string;
-  label.textAlignment   = NSTextAlignmentCenter;
-  label.textColor       = [UIColor textColor];
-  [label sizeToFit];
-  self.navigationItem.titleView = label;
+  navigationTitleLabel = [[UILabel alloc] init];
+  navigationTitleLabel.backgroundColor = [UIColor clearColor];
+  navigationTitleLabel.font            = [UIFont mediumTextFont];
+  navigationTitleLabel.frame           = CGRectMake(0, 0, 0, 44);
+  navigationTitleLabel.shadowColor     = [UIColor clearColor];
+  navigationTitleLabel.shadowOffset    = CGSizeMake(0, 0);
+  navigationTitleLabel.text            = string;
+  navigationTitleLabel.textAlignment   = NSTextAlignmentCenter;
+  navigationTitleLabel.textColor       = [UIColor textColor];
+  [navigationTitleLabel sizeToFit];
+  self.navigationItem.titleView = navigationTitleLabel;
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -112,6 +115,38 @@ CGFloat const OMBStandardHeight       = 44.0f;
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+#pragma mark - Private
+
+- (void) animateStatusBarDefault
+{
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    [[UIApplication sharedApplication] setStatusBarStyle:
+      UIStatusBarStyleDefault];
+  }];
+}
+
+- (void) animateStatusBarLight
+{
+  [UIView animateWithDuration: OMBStandardDuration animations: ^{
+    [[UIApplication sharedApplication] setStatusBarStyle:
+      UIStatusBarStyleLightContent];
+  }];
+}
+
+- (void) setNavigationControllerNavigationBarDefault
+{
+  self.navigationController.navigationBar.tintColor = [UIColor blue];
+  [self.navigationController.navigationBar setBackgroundImage: nil
+    forBarMetrics: UIBarMetricsDefault];
+}
+
+- (void) setNavigationControllerNavigationBarTransparent
+{
+  self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+  [self.navigationController.navigationBar setBackgroundImage: [UIImage new] 
+    forBarMetrics: UIBarMetricsDefault];
+}
 
 - (OMBAppDelegate *) appDelegate
 {

@@ -72,4 +72,20 @@ reuseIdentifier: (NSString *) reuseIdentifier leftPadding: (float) padding
   return CGSizeZero;
 }
 
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (void) hideSeparator
+{
+  [self hideSeparatorWithHorizontalPadding: 0.f];
+}
+
+- (void) hideSeparatorWithHorizontalPadding: (CGFloat) padding
+{
+  self.separatorInset   = UIEdgeInsetsMake(0.f, 0.f, 0.f, 0.f);
+  self.indentationLevel = 1;
+  self.indentationWidth = -1 * (100 + padding);
+}
+
 @end

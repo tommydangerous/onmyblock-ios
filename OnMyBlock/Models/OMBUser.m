@@ -94,6 +94,7 @@ NSString *const OMBOffersLandordPendingCountNotification =
 NSString *const OMBOffersRenterAcceptedCountNotification =
   @"OMBOffersRenterAcceptedCountNotification";
 
+NSString *const OMBLandlordTypeSubletter = @"subletter";
 NSString *const OMBUserTypeLandlord = @"landlord";
 
 // Change the __ENVIRONMENT__ value in file OnMyBlock-Prefix.pch
@@ -729,6 +730,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   return NO;
 }
 
+- (BOOL) hasPhone
+{
+  if ([[self phoneString] length]) {
+    return YES;
+  }
+  return NO;
+}
+
 - (CGFloat) heightForAboutTextWithWidth: (CGFloat) width
 {
   // This only stores the about text with [UIFont normalFontText] and
@@ -786,6 +795,12 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   if (_userType && [_userType isEqualToString: OMBUserTypeLandlord])
     return YES;
   return NO;
+}
+
+- (BOOL) isSubletter
+{
+  return self.landlordType && 
+    [self.landlordType isEqualToString: OMBLandlordTypeSubletter];
 }
 
 - (BOOL) loggedIn

@@ -95,8 +95,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
   _explanationTextView = [[UITextView alloc] init];
   _explanationTextView.autocorrectionType = UITextAutocorrectionTypeYes;
   _explanationTextView.contentInset = UIEdgeInsetsMake(0, -2, 0, 0);
-  _explanationTextView.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-    size: 15];
+  _explanationTextView.font = [UIFont fontWithName: 
+    @"HelveticaNeue-LightItalic" size: 15];
   _explanationTextView.frame = CGRectMake(padding,
     lineView.frame.origin.y + padding,
       screenWidth - (padding * 2), [OMBLegalQuestionCell textViewHeight]);
@@ -261,20 +261,21 @@ atIndexPathForOtherUser: (NSIndexPath *) indexPath
     questionLabel.frame.size.height;
   answerLabel.font = [UIFont normalTextFontBold];
   answerLabel.frame = answerLabelRect;
-  answerLabel.textColor = [UIColor textColor];
-  /*NSAttributedString *aString;
-  NSArray *strings = @[@"No", @"Yes"];
-  if (object.answer) {
-    aString = [NSString attributedStringWithStrings: strings
-      fonts: @[[UIFont normalTextFont], [UIFont normalTextFontBold]]
-        colors: @[[UIColor grayMedium], [UIColor textColor]]];
-  }
-  else {
-    aString = [NSString attributedStringWithStrings: strings
-      fonts: @[[UIFont normalTextFontBold], [UIFont normalTextFont]]
-        colors: @[[UIColor textColor], [UIColor grayMedium]]];
-  }*/
-  answerLabel.text = object.answer ? @"YES" : @"NO";
+  answerLabel.textColor = [UIColor blue]
+  ;
+  // NSAttributedString *aString;
+  // NSArray *strings = @[@"No", @"Yes"];
+  // if (object.answer) {
+  //   aString = [NSString attributedStringWithStrings: strings
+  //     fonts: @[[UIFont normalTextFont], [UIFont normalTextFontBold]]
+  //       colors: @[[UIColor grayMedium], [UIColor textColor]]];
+  // }
+  // else {
+  //   aString = [NSString attributedStringWithStrings: strings
+  //     fonts: @[[UIFont normalTextFontBold], [UIFont normalTextFont]]
+  //       colors: @[[UIColor textColor], [UIColor grayMedium]]];
+  // }
+  answerLabel.text = object.answer ? @"Yes." : @"No.";
   if (object.answer && [[object.explanation stripWhiteSpace] length]) {
     CGRect explanationRect = _explanationTextView.frame;
     explanationRect.origin.y = answerLabel.frame.origin.y +
@@ -284,7 +285,7 @@ atIndexPathForOtherUser: (NSIndexPath *) indexPath
     _explanationTextView.hidden = NO;
     _explanationTextView.scrollEnabled = YES;
     _explanationTextView.text = object.explanation;
-    _explanationTextView.textColor = [UIColor textColor];
+    _explanationTextView.textColor = [UIColor grayMedium];
   }
 }
 
