@@ -44,6 +44,7 @@
   self.navigationItem.rightBarButtonItem.enabled = NO;
   
   [self setupForTable];
+  self.table.separatorInset  = UIEdgeInsetsZero;
   
 }
 
@@ -51,7 +52,14 @@
 {
   [super viewWillAppear:animated];
   
-  #warning Need to add model to support credit card variable
+#warning Need to add model to support credit card variable
+  
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+  [super viewWillDisappear:animated];
+  [self.view endEditing:YES];
   
 }
 
@@ -65,12 +73,18 @@
     
     if(indexPath.row == OMBBillingInfoSectionNameRowLastName)
       return 0.f;
+    return [OMBLabelTextFieldCell heightForCellWithIconImageView];
   }
   // Zip
   else if(indexPath.section == OMBBillingInfoSectionAddress){
     
-      if(indexPath.row == OMBBillingInfoSectionAddressRowZip)
-        return 0.f;
+    if(indexPath.row == OMBBillingInfoSectionAddressRowTitle)
+      return [OMBTwoLabelTextFieldCell heightForCellWithIconImageView];
+    
+    else if(indexPath.row == OMBBillingInfoSectionAddressRowZip)
+      return 0.f;
+    
+    return [OMBTwoLabelTextFieldCell heightForCellWithIconImageView];
   }
   // Spacing
   else if(indexPath.section == OMBBillingInfoSectionSpacing){
@@ -80,7 +94,7 @@
     }
   }
   
-  return [OMBLabelTextFieldCell heightForCellWithIconImageView];
+  return 0.0f;
   
 }
 
@@ -246,7 +260,9 @@
         cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier:addressCellID];
         
-        [cell setFrameUsingIconImageView];
+        [cell setFrameUsingSize:CGSizeZero];
+        [cell setFrameUsingHeight:[OMBLabelTextFieldCell
+          heightForCellWithIconImageView]];
       }
       
       // cell.backgroundColor = transparentWhite;
@@ -267,14 +283,14 @@
         if (!twoCell) {
           twoCell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
             UITableViewCellStyleDefault reuseIdentifier: stateZipCellID];
-          [twoCell setFrameUsingIconImageView];
+          [twoCell setFrameUsingLabelSize:CGSizeZero];
         }
         twoCell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
         twoCell.firstTextField.delegate  = self;
         twoCell.firstTextField.indexPath = indexPath;
         twoCell.firstTextField.placeholder  = @"State";
-        twoCell.firstIconImageView.image = [UIImage image: [UIImage imageNamed:
-          @"user_icon.png"] size: twoCell.firstIconImageView.bounds.size];
+        /*twoCell.firstIconImageView.image = [UIImage image: [UIImage imageNamed:
+          @"user_icon.png"] size: twoCell.firstIconImageView.bounds.size];*/
         twoCell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
         twoCell.secondTextField.delegate  = self;
         twoCell.secondTextField.indexPath = [NSIndexPath

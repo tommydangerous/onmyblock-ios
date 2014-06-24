@@ -43,6 +43,7 @@
   self.navigationItem.rightBarButtonItem.enabled = NO;
   
   [self setupForTable];
+  self.table.separatorInset  = UIEdgeInsetsZero;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -64,13 +65,18 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
   
-
-  if(indexPath.section == OMBCreditCardSpacingSection)
+  // Credit Card Info
+  if(indexPath.section == OMBCreditCardInfoSection){
+    
+    return [OMBLabelTextFieldCell heightForCellWithIconImageView];
+  }
+  // Spacing
+  else if(indexPath.section == OMBCreditCardSpacingSection)
     if (isEditing) {
       return OMBKeyboardHeight;
     }
   
-  return [OMBLabelTextFieldCell heightForCellWithIconImageView];
+  return 0.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -179,7 +185,7 @@
       if (!twoCell) {
         twoCell = [[OMBCreditCardTextFieldCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: expirationCcvCellID];
-        [twoCell setFrameUsingIconImageView];
+        [twoCell setFrameUsingLeftLabel];
       }
       twoCell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
       twoCell.firstTextField.delegate  = self;
@@ -187,8 +193,9 @@
       twoCell.firstTextField.keyboardType = UIKeyboardTypeNumberPad;
       twoCell.firstTextField.placeholder  = @"mm";
       twoCell.firstTextField.tag = indexPath.row;
-      twoCell.firstIconImageView.image = [UIImage image: [UIImage imageNamed:
-        @"user_icon.png"] size: twoCell.firstIconImageView.bounds.size];
+      twoCell.firstTextFieldLabel.text = @"Exp";
+      /*twoCell.firstIconImageView.image = [UIImage image: [UIImage imageNamed:
+        @"user_icon.png"] size: twoCell.firstIconImageView.bounds.size];*/
       
       twoCell.yearTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
       twoCell.yearTextField.delegate  = self;

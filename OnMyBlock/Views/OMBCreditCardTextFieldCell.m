@@ -76,4 +76,14 @@
   
 }
 
+- (void) setFrameUsingLeftLabel
+{
+  [self setFrameUsingIconImageView];
+  
+  self.firstIconImageView.hidden = YES;
+  self.firstTextFieldLabel.frame = CGRectMake(self.firstIconImageView.frame.origin.x,
+    0.0f, 60.f, [OMBCreditCardTextFieldCell heightForCellWithIconImageView]);
+  
+}
+
 @end

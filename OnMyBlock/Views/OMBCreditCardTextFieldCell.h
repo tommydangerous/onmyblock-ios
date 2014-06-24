@@ -20,5 +20,6 @@
 #pragma mark - Instance Methods
 
 - (void) setFrameUsingIconImageView;
+- (void) setFrameUsingLeftLabel;
 
 @end

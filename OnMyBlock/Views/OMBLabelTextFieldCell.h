@@ -25,6 +25,7 @@
 
 #pragma mark - Instance Methods
 
+- (void) setFrameUsingHeight: (CGFloat) height;
 - (void) setFrameUsingIconImageView;
 - (void) setFrameUsingSize: (CGSize) size;
 - (void) setFramesUsingString: (NSString *) string;
