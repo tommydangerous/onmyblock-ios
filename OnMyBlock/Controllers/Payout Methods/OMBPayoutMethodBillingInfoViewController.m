@@ -20,7 +20,7 @@
   if(!(self = [super init]))
     return nil;
   
-  self.title = @"Add Payment";
+  self.title = @"Credit Card";
   valueDictionary = [NSMutableDictionary dictionary];
   
   return self;

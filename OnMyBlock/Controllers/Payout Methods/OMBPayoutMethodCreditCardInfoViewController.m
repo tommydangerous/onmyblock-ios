@@ -20,7 +20,7 @@
   if(!(self = [super init]))
     return nil;
   
-  self.title = @"Add Payment";
+  self.title = @"Credit Card";
   valueDictionary = [NSMutableDictionary dictionary];
   
   return self;
@@ -248,7 +248,7 @@
     if(textField.tag == OMBCreditCardInfoSectionRowExpirationYear){
       
       if([[textField.text stringByReplacingCharactersInRange: range
-         withString:string] intValue] > 12)
+         withString:string] intValue] > 99)
         return NO;
       
     }
