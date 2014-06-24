@@ -107,9 +107,8 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Venmo
   // Paypal
-  // Credit Card
-  // return 3;
-  return 3;
+  // !Credit Card
+  return 2;
 }
 
 #pragma mark - Protocol UITableViewDelegate
