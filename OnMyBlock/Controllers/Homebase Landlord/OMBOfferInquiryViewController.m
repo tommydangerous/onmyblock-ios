@@ -456,16 +456,6 @@
   // Fetch Applicants
   [self fetchObjectsForResourceName: [OMBRoommate resourceName]];
 
-  // Fetch questions
-  // [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
-  //   ^(NSError *error) {
-  //     legalQuestions =
-  //       [[OMBLegalQuestionStore sharedStore] questionsSortedByQuestion];
-  //     [_profileTableView reloadSections: [NSIndexSet indexSetWithIndex: 6]
-  //       withRowAnimation: UITableViewRowAnimationFade];
-  //   }
-  // ];
-
   // Fetch offer's user's renter application info
 
   // Timer
@@ -671,7 +661,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         }
         cell.backgroundColor = [UIColor whiteColor];
         cell.detailTextLabel.font =
-        [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
+          [UIFont fontWithName: @"HelveticaNeue-Medium" size: 15];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         if (indexPath.row == OMBOfferInquirySectionOfferRowPriceBreakdown) {
           cell.textLabel.font = [UIFont normalTextFontBold];

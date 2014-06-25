@@ -62,20 +62,26 @@
 {
   [super viewWillAppear: animated];
   
-  [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
-    ^(NSError *error) {
-      OMBLegalAnswerListConnection *connection =
-        [[OMBLegalAnswerListConnection alloc] initWithUser: user];
-      connection.completionBlock = ^(NSError *error) {
-        legalAnswers = [NSMutableDictionary dictionaryWithDictionary:
-          user.renterApplication.legalAnswers];
-        [self.table reloadData];
-        [activityViewFullScreen stopSpinning];
-      };
-      [connection start];
+  void (^legalCompletion) (NSError *error) = ^(NSError *error) {
+    OMBLegalAnswerListConnection *connection =
+      [[OMBLegalAnswerListConnection alloc] initWithUser: user];
+    connection.completionBlock = ^(NSError *error) {
+      legalAnswers = [NSMutableDictionary dictionaryWithDictionary:
+        user.renterApplication.legalAnswers];
       [self.table reloadData];
-    }
-  ];
+      [activityViewFullScreen stopSpinning];
+    };
+    [connection start];
+    [self.table reloadData];
+  };
+  if ([[OMBLegalQuestionStore sharedStore] legalQuestionsCount]) {
+    legalCompletion(nil);
+  }
+  else {
+    [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
+      legalCompletion
+    ];
+  }
   [activityViewFullScreen startSpinning];
   [self.table reloadData];
 }

@@ -10,6 +10,7 @@
 
 // Categories
 #import "NSString+Extensions.h"
+#import "UIColor+Extensions.h"
 // Models
 #import "OMBResidence.h"
 #import "OMBSentApplication.h"
@@ -206,6 +207,102 @@
 - (OMBUser *) user
 {
   return [OMBUser currentUser];
+}
+
+#pragma mark - Protocol
+
+#pragma mark - Protocol UITableViewDataSource
+
+- (UITableViewCell *) tableView: (UITableView *) tableView
+cellForRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  NSInteger row     = indexPath.row;
+  NSInteger section = indexPath.section;
+
+  static NSString *DepositID = @"DepositID";
+  static NSString *RentID    = @"RentID";
+
+  // Offer
+  if (tableView == self.offerTableView) {
+    // Offer
+    if (section == OMBOfferInquirySectionOffer) {
+      // Rent
+      if (row == OMBOfferInquirySectionOfferRowOffer) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+          RentID];
+        if (!cell) {
+          cell = [[UITableViewCell alloc] initWithStyle:
+            UITableViewCellStyleValue1 reuseIdentifier: RentID]; 
+        }
+        cell.detailTextLabel.font = [UIFont mediumTextFontBold];
+        cell.detailTextLabel.text = [NSString numberToCurrencyString:
+          [self rentAmount]];
+        cell.detailTextLabel.textColor = [UIColor textColor];
+        cell.textLabel.font      = [UIFont mediumTextFont];
+        cell.textLabel.text      = @"Rent";
+        cell.textLabel.textColor = cell.detailTextLabel.textColor;
+        cell.clipsToBounds = YES;
+        return cell;
+      }
+      // Security deposit
+      else if (row == OMBOfferInquirySectionOfferRowSecurityDeposit) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
+          DepositID];
+        if (!cell) {
+          cell = [[UITableViewCell alloc] initWithStyle:
+            UITableViewCellStyleValue1 reuseIdentifier: DepositID]; 
+        }
+        cell.detailTextLabel.font = [UIFont mediumTextFontBold];
+        cell.detailTextLabel.text = [NSString numberToCurrencyString:
+          [[self residence] deposit]];
+        cell.detailTextLabel.textColor = [UIColor textColor];
+        cell.indentationLevel    = 1;
+        cell.indentationWidth    = OMBPadding;
+        cell.separatorInset      = UIEdgeInsetsZero;
+        cell.textLabel.font      = [UIFont mediumTextFont];
+        cell.textLabel.text      = @"Security Deposit";
+        cell.textLabel.textColor = cell.detailTextLabel.textColor;
+        cell.clipsToBounds = YES;
+        return cell;
+      }
+    }
+  }
+
+  return [super tableView: tableView cellForRowAtIndexPath: indexPath];
+}
+
+#pragma mark - Protocol UITableViewDelegate
+
+- (CGFloat) tableView: (UITableView *) tableView
+heightForRowAtIndexPath: (NSIndexPath *) indexPath
+{
+  NSInteger row     = indexPath.row;
+  NSInteger section = indexPath.section;
+
+  // Offer
+  if (tableView == self.offerTableView) {
+    // Offer
+    if (section == OMBOfferInquirySectionOffer) {
+      // Price breakdown
+      if (row == OMBOfferInquirySectionOfferRowPriceBreakdown) {
+        return 0.f;
+      }
+      // Rent
+      else if (row == OMBOfferInquirySectionOfferRowOffer) {
+        return OMBPadding + 27.f + OMBPadding;
+      }
+      // Security deposit
+      else if (row == OMBOfferInquirySectionOfferRowSecurityDeposit) {
+        return OMBStandardHeight;
+      }
+      // Total
+      else if (row == OMBOfferInquirySectionOfferRowTotal) {
+        return 0.f;
+      }
+    }
+  }
+
+  return [super tableView: tableView heightForRowAtIndexPath: indexPath];
 }
 
 @end

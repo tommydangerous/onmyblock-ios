@@ -324,18 +324,34 @@
     @"school":    user.school ? user.school : @""
   }];
   
-  // Fetch data pertaining to sent application requirements
-  if (!hasFetchedRequirements) {
-    [self fetchSentApplicationRequirementsForUser: user completion: 
-      ^(NSError *error) {
-        hasFetchedRequirements = YES;
-        [activityView stopSpinning];
+  [self updateRequirementCounts];
+  void (^legalCompletion) (NSError *error) = ^(NSError *error) {
+    // If all of the requirements are not met, fetch
+    if (employmentCount == 0 || legalAnswerCount < 
+      [[OMBLegalQuestionStore sharedStore] legalQuestionsCount] ||
+        previousRentalCount == 0) {
+      // Fetch data pertaining to sent application requirements
+      if (!hasFetchedRequirements) {
+        [self fetchSentApplicationRequirementsForUser: user completion: 
+          ^(NSError *error) {
+            hasFetchedRequirements = YES;
+            [self.table reloadData];
+            [activityView stopSpinning];
+          }
+        ];
+        [activityView startSpinning];
       }
+    }
+  };
+  if ([[OMBLegalQuestionStore sharedStore] legalQuestionsCount]) {
+    legalCompletion(nil);
+  }
+  else {
+    [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
+      legalCompletion
     ];
-    [activityView startSpinning];
   }
 
-  [self updateRequirementCounts];
   [self updateData];
 
   if (_nextSection) {
@@ -1148,12 +1164,18 @@ completion: (void (^) (NSError *error)) block
 
 - (void) updateRequirementCounts
 {
-  employmentCount = 
-    [[[self renterApplication] employmentsSortedByStartDate] count];
-  legalAnswerCount = [[self renterApplication].legalAnswers count];
-  previousRentalCount = [[[self renterApplication] objectsWithModelName: 
-    [OMBPreviousRental modelName] sortedWithKey: @"moveInDate" 
-      ascending: NO] count];
+  if (employmentCount == 0) {
+    employmentCount = 
+      [[[self renterApplication] employmentsSortedByStartDate] count];
+  }
+  if (legalAnswerCount == 0) {
+    legalAnswerCount = [[self renterApplication].legalAnswers count];
+  }
+  if (previousRentalCount == 0) {
+    previousRentalCount = [[[self renterApplication] objectsWithModelName: 
+      [OMBPreviousRental modelName] sortedWithKey: @"moveInDate" 
+        ascending: NO] count];
+  }
 }
 
 // Above methods are from MyRenterProfile

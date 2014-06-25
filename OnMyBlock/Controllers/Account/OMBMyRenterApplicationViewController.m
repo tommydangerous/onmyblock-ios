@@ -135,24 +135,30 @@
   [employmentConn start];
 
   // Legal Questions
-  [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
-    ^(NSError *error) {
-      legalQuestions =
-        [[OMBLegalQuestionStore sharedStore] questionsSortedByQuestion];
-      // Legal answers
-      OMBLegalAnswerListConnection *connection =
-        [[OMBLegalAnswerListConnection alloc] initWithUser: user];
-      connection.completionBlock = ^(NSError *error) {
-        // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 6]
-        //   withRowAnimation: UITableViewRowAnimationNone];
-        [self.table reloadData];
-      };
-      [connection start];
+  void (^legalCompletion) (NSError *error) = ^(NSError *error) {
+    legalQuestions =
+      [[OMBLegalQuestionStore sharedStore] questionsSortedByQuestion];
+    // Legal answers
+    OMBLegalAnswerListConnection *connection =
+      [[OMBLegalAnswerListConnection alloc] initWithUser: user];
+    connection.completionBlock = ^(NSError *error) {
       // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 6]
       //   withRowAnimation: UITableViewRowAnimationNone];
       [self.table reloadData];
-    }
-  ];
+    };
+    [connection start];
+    // [self.table reloadSections: [NSIndexSet indexSetWithIndex: 6]
+    //   withRowAnimation: UITableViewRowAnimationNone];
+    [self.table reloadData];
+  };
+  if ([[OMBLegalQuestionStore sharedStore] legalQuestionsCount]) {
+    legalCompletion(nil);
+  }
+  else {
+    [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
+      legalCompletion
+    ];
+  }
 }
 
 #pragma mark - Protocol
