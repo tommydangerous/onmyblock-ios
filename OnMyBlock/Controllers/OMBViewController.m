@@ -208,7 +208,7 @@ CGFloat const OMBStandardHeight       = 44.0f;
   // Subclasses implement this
 }
 
-- (void) showAlertViewWithError:(NSError *) error
+- (void) showAlertViewWithError: (NSError *) error
 {
   NSString *message = error.localizedFailureReason != (id) [NSNull null] ?
     error.localizedFailureReason : @"Please try again.";

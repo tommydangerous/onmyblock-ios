@@ -14,6 +14,7 @@
 #import "LIALinkedInApplication.h"
 #import "LIALinkedInHttpClient.h"
 #import "NSString+OnMyBlock.h"
+#import "OMBActivityViewFullScreen.h"
 #import "OMBAlertViewBlur.h"
 #import "OMBBecomeVerifiedViewController.h"
 #import "OMBCenteredImageView.h"
@@ -44,18 +45,29 @@
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 
+// Connections
+#import "OMBSentApplicationRequirementsConnection.h"
+
 @interface OMBApplyResidenceViewController ()
-<UIActionSheetDelegate, UIImagePickerControllerDelegate,
-UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
+<
+  UIActionSheetDelegate, 
+  UIImagePickerControllerDelegate,
+  UINavigationControllerDelegate, 
+  UITextFieldDelegate, 
+  UITextViewDelegate
+>
 {
+  OMBActivityViewFullScreen *activityView;
+  NSUInteger employmentCount;
+  BOOL hasFetchedRequirements;
+  NSUInteger legalAnswerCount;
+  NSUInteger previousRentalCount;
   NSUInteger residenceUID;
 }
 
 @end
 
 @implementation OMBApplyResidenceViewController
-
-#pragma mark - Initializer
 
 #pragma mark - Initializer
 
@@ -288,6 +300,9 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   alertBlur = [[OMBAlertViewBlur alloc] init];
   
   _nextSection = 0;
+
+  activityView = [[OMBActivityViewFullScreen alloc] init];
+  [self.view addSubview: activityView];
   
   //sections = @[@1,@2,@3,@4,@5];
 }
@@ -296,8 +311,9 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
 {
   [super viewWillAppear: animated];
   
-  if (!user)
+  if (!user) {
     user = [OMBUser currentUser];
+  }
   
   valueDictionary = [NSMutableDictionary dictionaryWithDictionary: @{
     @"about":     user.about ? user.about : @"",
@@ -308,120 +324,31 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
     @"school":    user.school ? user.school : @""
   }];
   
-  [effectLabel performEffectAnimation];
-  
+  // Fetch data pertaining to sent application requirements
+  if (!hasFetchedRequirements) {
+    [self fetchSentApplicationRequirementsForUser: user completion: 
+      ^(NSError *error) {
+        hasFetchedRequirements = YES;
+        [activityView stopSpinning];
+      }
+    ];
+    [activityView startSpinning];
+  }
+
+  [self updateRequirementCounts];
   [self updateData];
 
-  // Download renter info if it's first time
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  
-  id downloadedInfo = [defaults objectForKey: OMBUserDefaultsRenterApplicationCreated];
-  
-  if (!downloadedInfo) {
-    [defaults setObject: [NSNumber numberWithBool: NO]
-      forKey: OMBUserDefaultsRenterApplicationCreated];
-  }
-  
-  NSNumber *number = [defaults objectForKey: OMBUserDefaultsRenterApplicationCreated];
-  if (![number boolValue]) {
-    
-    // Download all the user's renter application info that is required
-    // for submitting an applications
-    
-    // Fetch coapplicants
-    [self fetchObjectsForResourceName: [OMBRoommate resourceName]];
-    
-    // Fetch cosigners
-    [[self renterApplication] fetchCosignersForUserUID: [OMBUser currentUser].uid
-      delegate: self completion: ^(NSError *error) {
-        [self reloadTable];
-      }];
-    
-    // Previous Rental
-    [self fetchObjectsForResourceName: [OMBPreviousRental resourceName]];
-    // Employments
-    [self fetchObjectsForResourceName: [OMBEmployment resourceName]];
-    // Legal questions
-    [user fetchLegalAnswersWithCompletion: ^(NSError *error){
-      
-      BOOL allAnswered = YES;
-      
-      NSMutableDictionary *legalAnswers =
-      [NSMutableDictionary dictionaryWithDictionary:
-       user.renterApplication.legalAnswers];
-      
-      for(OMBLegalQuestion *legalQuestion in
-          [[OMBLegalQuestionStore sharedStore] questionsSortedByQuestion]){
-        
-        if(![legalAnswers objectForKey:
-             [NSNumber numberWithInt: legalQuestion.uid]]){
-          allAnswered = NO;
-        }
-      }
-      
-      [self saveKeyUserDefaults: allAnswered
-        forKey: OMBUserDefaultsRenterApplicationCheckedLegalQuestions];
-      // Set YES if all questions have been answered
-      //[self saveKeyUserDefaults: allAnswered];
-      [self.table reloadData];
-      
-    }];
-    
-    
-    [[NSUserDefaults standardUserDefaults] setObject:
-     [NSNumber numberWithBool: YES] forKey: OMBUserDefaultsRenterApplicationCreated];
-    [defaults synchronize];
-  }
-  
-  if (_nextSection)
+  if (_nextSection) {
     [self showNextSection];
-}
+  }
 
-- (void) fetchObjectsForResourceName: (NSString *) resourceName
-{
-  [[self renterApplication] fetchListForResourceName: resourceName
-    userUID: [OMBUser currentUser].uid delegate: self 
-      completion: ^(NSError *error) {
-        
-       // Rental History
-       if([resourceName isEqualToString:[OMBPreviousRental resourceName]]){
-         
-          BOOL saved = [[[self renterApplication] objectsWithModelName: [OMBPreviousRental modelName]
-            sortedWithKey:@"moveInDate" ascending:NO] count];
-          
-          [self saveKeyUserDefaults: saved
-            forKey:OMBUserDefaultsRenterApplicationCheckedRentalHistory];
-        }
-        // Work History
-        else if([resourceName isEqualToString:[OMBEmployment resourceName]]){
-         
-          BOOL saved = [[[self  renterApplication] employmentsSortedByStartDate] count];
-          
-          [self saveKeyUserDefaults:saved
-            forKey:OMBUserDefaultsRenterApplicationCheckedWorkHistory];
-        }
-        // Roommate
-        else if([resourceName isEqualToString:[OMBRoommate resourceName]]){
-          
-          BOOL saved = [[[self  renterApplication] roommatesSort] count];
-          
-          [self saveKeyUserDefaults:saved
-            forKey:OMBUserDefaultsRenterApplicationCheckedCoapplicants];
-        }
-        
-        [self reloadTable];
-        
-      }];
-}
-
-- (OMBRenterApplication *) renterApplication
-{
-  return [OMBUser currentUser].renterApplication;
+  [effectLabel performEffectAnimation];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
 {
   [super viewWillDisappear: animated];
+
   [self done];
   [self save];
 }
@@ -430,35 +357,24 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
 
 #pragma mark - Protocol OMBConnectionProtocol
 
-- (void) JSONDictionary: (NSDictionary *)dictionary
-{
-  
-  [[self renterApplication] readFromCosignerDictionary:dictionary];
-  
-  [self saveKeyUserDefaults: [[[self renterApplication] cosignersSortedByFirstName] count]
-    forKey: OMBUserDefaultsRenterApplicationCheckedCosigners];
-  
-}
-
 - (void) JSONDictionary: (NSDictionary *) dictionary
-forResourceName: (NSString *) resourceName
 {
-  // Employment
-  if ([resourceName isEqualToString: [OMBEmployment resourceName]]) {
-    [[self renterApplication] readFromDictionary: dictionary
-      forModelName: [OMBEmployment modelName]];
+  id count;
+  // Employments
+  count = [dictionary objectForKey: @"employments"];
+  if (count && count != [NSNull null]) {
+    employmentCount = [count intValue];
   }
-  // Previous Rental
-  else if ([resourceName isEqualToString: [OMBPreviousRental resourceName]]) {
-    [[self renterApplication] readFromDictionary: dictionary
-      forModelName: [OMBPreviousRental modelName]];
+  // Legal answers
+  count = [dictionary objectForKey: @"legal_answers"];
+  if (count && count != [NSNull null]) {
+    legalAnswerCount = [count intValue];
   }
-  // Roommate
-  else if ([resourceName isEqualToString: [OMBRoommate resourceName]]) {
-    [[self renterApplication] readFromDictionary: dictionary
-      forModelName: [OMBRoommate modelName]];
+  // Previous rentals
+  count = [dictionary objectForKey: @"previous_rentals"];
+  if (count && count != [NSNull null]) {
+    previousRentalCount = [count intValue];
   }
-  //[self reloadTable];
 }
 
 #pragma mark - Protocol UIActionSheetDelegate
@@ -569,7 +485,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
-          cellForRowAtIndexPath: (NSIndexPath *) indexPath
+cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
@@ -578,7 +494,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   CGRect tableRect = tableView.frame;
   
   UIEdgeInsets maxInsets = UIEdgeInsetsMake(0.0f, tableRect.size.width,
-                                            0.0f, 0.0f);
+    0.0f, 0.0f);
   
   static NSString *EmptyCellID = @"EmptyCellID";
   UITableViewCell *emptyCell = [tableView dequeueReusableCellWithIdentifier:
@@ -777,40 +693,49 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell.selectionStyle = UITableViewCellSelectionStyleDefault;
       [cell resetWithCheckmark];
       NSString *iconImageName;
-      NSString *key = @"";
       NSString *string;
+      BOOL fillCheckmark = NO;
       // Co-applicants
       if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
         iconImageName = @"group_icon.png";
-        key = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
         string = @"Co-applicants";
       }
       else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
         iconImageName = @"landlord_icon.png";
-        key = OMBUserDefaultsRenterApplicationCheckedCosigners;
         string = @"Co-signer";
       }
+      // Previous rentals
       else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
         iconImageName = @"house_icon.png";
-        key = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
         string = @"Rental History";
+        if (previousRentalCount) {
+          fillCheckmark = YES;
+        }
       }
+      // Employments
       else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
         iconImageName = @"papers_icon_black.png";
-        key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
         string = @"Work & School History";
+        if (employmentCount) {
+          fillCheckmark = YES;
+        }
       }
+      // Legal questions and answers
       else if (row == OMBMyRenterProfileSectionRenterInfoRowLegalQuestions) {
         iconImageName = @"law_icon_black.png";
-        key = OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
         string = @"Legal Questions";
+        if (legalAnswerCount >=
+          [[OMBLegalQuestionStore sharedStore] legalQuestionsCount]) {
+          fillCheckmark = YES;
+        }
+      }
+      if (fillCheckmark) {
+        [cell fillCheckmark];
       }
       cell.iconImageView.image = [UIImage image:
         [UIImage imageNamed: iconImageName]
           size: cell.iconImageView.bounds.size];
-      cell.label.text = string;
-      if ([[[self renterapplicationUserDefaults] objectForKey: key] boolValue])
-        [cell fillCheckmark];
+      cell.label.text    = string;
       cell.clipsToBounds = YES;
       return cell;
     }
@@ -861,46 +786,43 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Renter info
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
-    NSString *key = @"";
     // Co-applicants
     if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
-      key = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
       OMBRenterInfoSectionRoommateViewController *vc  =
-      [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser:
-       user];
+        [[OMBRenterInfoSectionRoommateViewController alloc] initWithUser:
+          user];
       vc.delegate = self;
       [self.navigationController pushViewController: vc animated: YES];
     }
     // Co-signers
     else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
-      key = OMBUserDefaultsRenterApplicationCheckedCosigners;
       OMBRenterInfoSectionCosignersViewController *vc  =
-      [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser:
-       user];
+        [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser:
+          user];
       vc.delegate = self;
       [self.navigationController pushViewController: vc animated: YES];
     }
     // Rental History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {
-      key = OMBUserDefaultsRenterApplicationCheckedRentalHistory;
       OMBRenterInfoSectionPreviousRentalViewController *vc  =
-      [[OMBRenterInfoSectionPreviousRentalViewController alloc] initWithUser: user];
+        [[OMBRenterInfoSectionPreviousRentalViewController alloc] initWithUser: 
+          user];
       vc.delegate = self;
       [self.navigationController pushViewController: vc animated: YES];
     }
     // Work History
     else if (row == OMBMyRenterProfileSectionRenterInfoRowWorkHistory) {
-      key = OMBUserDefaultsRenterApplicationCheckedWorkHistory;
       OMBRenterInfoSectionEmploymentViewController *vc  =
-      [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser:  user];
+        [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser:  
+          user];
       vc.delegate = self;
       [self.navigationController pushViewController: vc animated: YES];
     }
     // Legal Questions
     else if (row == OMBMyRenterProfileSectionRenterInfoRowLegalQuestions) {
-      key = OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
-      OMBLegalViewController *vc  = [[OMBLegalViewController alloc] initWithUser: user];
-      //vc.delegate = self;
+      OMBLegalViewController *vc  = 
+        [[OMBLegalViewController alloc] initWithUser: user];
+      // vc.delegate = self;
       [self.navigationController pushViewController: vc animated: YES];
     }
   }
@@ -1019,6 +941,24 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
+#pragma mark - Private
+
+- (OMBRenterApplication *) renterApplication
+{
+  return [OMBUser currentUser].renterApplication;
+}
+
+- (NSMutableDictionary *) renterApplicationUserDefaults
+{
+  NSMutableDictionary *dictionary =
+   [[NSUserDefaults standardUserDefaults] objectForKey:
+     OMBUserDefaultsRenterApplication];
+  if (!dictionary) {
+    dictionary = [NSMutableDictionary dictionary];
+  }
+  return dictionary;
+}
+
 - (void) cancelFromInputAccessoryView
 {
   if (editingTextField)
@@ -1030,17 +970,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self done];
 }
 
-- (NSMutableDictionary *) renterapplicationUserDefaults
-{
-  
-  NSMutableDictionary *dictionary =
-   [[NSUserDefaults standardUserDefaults] objectForKey:
-     OMBUserDefaultsRenterApplication];
-  if (!dictionary)
-    dictionary = [NSMutableDictionary dictionary];
-  return dictionary;
-}
-
 - (void) done
 {
   [self.view endEditing: YES];
@@ -1049,6 +978,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 	savedTextString = nil;
   [self.table beginUpdates];
   [self.table endUpdates];
+}
+
+- (void) fetchSentApplicationRequirementsForUser: (OMBUser *) object
+completion: (void (^) (NSError *error)) block
+{
+  OMBSentApplicationRequirementsConnection *conn =
+    [[OMBSentApplicationRequirementsConnection alloc] initWithUserUID:
+      object.uid];
+  conn.completionBlock = block;
+  conn.delegate        = self;
+  [conn start];
 }
 
 - (void) linkedInButtonSelected
@@ -1147,18 +1087,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
    ];
 }
 
-- (void) saveKeyUserDefaults: (BOOL)save forKey:(NSString *)key
-{
-  NSMutableDictionary *dictionary =
-    [NSMutableDictionary dictionaryWithDictionary:
-      [self renterapplicationUserDefaults]];
-  [dictionary setObject:
-    [NSNumber numberWithBool: save] forKey: key];
-  [[NSUserDefaults standardUserDefaults] setObject: dictionary
-    forKey: OMBUserDefaultsRenterApplication];
-  [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
 - (void) saveFromInputAccessoryView
 {
   [self save];
@@ -1218,6 +1146,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table reloadData];
 }
 
+- (void) updateRequirementCounts
+{
+  employmentCount = 
+    [[[self renterApplication] employmentsSortedByStartDate] count];
+  legalAnswerCount = [[self renterApplication].legalAnswers count];
+  previousRentalCount = [[[self renterApplication] objectsWithModelName: 
+    [OMBPreviousRental modelName] sortedWithKey: @"moveInDate" 
+      ascending: NO] count];
+}
+
 // Above methods are from MyRenterProfile
 
 // Real Methods
@@ -1226,9 +1164,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSString *string = @"";
   
-  NSArray *keyArray = @[@"firstName", @"lastName", @"school", @"email", @"phone"];
+  NSArray *keyArray = @[
+    @"firstName", 
+    @"lastName", 
+    @"school", 
+    @"email", 
+    @"phone"
+  ];
   
-  for(NSString *key in keyArray)
+  for (NSString *key in keyArray)
   {
     if(![[valueDictionary objectForKey:key] length]){
       if([key isEqualToString:@"firstName"])
@@ -1250,7 +1194,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showNextSection
 {
-  NSLog(@"next");
   BOOL animated = NO;
   
   int i;
@@ -1289,65 +1232,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       [self.navigationController pushViewController:vc animated:animated];}
       return;
   }
-  
-  
-  
-  // It iterates 1 cicle searching for any section incomplete
-  /*while(i != _nextSection){
-    // 'Casue is the next incomplete section
-    switch (i) {
-      case 1:// First section(Co-applicants) is not required
-        break;
-      case 2:
-        if (![[[self renterapplicationUserDefaults] objectForKey:
-               OMBUserDefaultsRenterApplicationCheckedCosigners] boolValue]){
-          OMBRenterInfoSectionCosignersViewController *vc  =
-          [[OMBRenterInfoSectionCosignersViewController alloc] initWithUser: user];
-          vc.delegate = self;
-          [self.navigationController pushViewController:vc animated:animated];
-          return;
-        }
-        break;
-      case 3:
-        if (![[[self renterapplicationUserDefaults] objectForKey:
-               OMBUserDefaultsRenterApplicationCheckedRentalHistory] boolValue]){
-          OMBRenterInfoSectionPreviousRentalViewController *vc  =
-          [[OMBRenterInfoSectionPreviousRentalViewController alloc] initWithUser: user];
-          vc.delegate = self;
-          [self.navigationController pushViewController:vc animated:animated];
-          return;
-        }
-        break;
-      case 4:
-        if (![[[self renterapplicationUserDefaults] objectForKey:
-               OMBUserDefaultsRenterApplicationCheckedWorkHistory] boolValue]){
-          OMBRenterInfoSectionEmploymentViewController *vc  =
-          [[OMBRenterInfoSectionEmploymentViewController alloc] initWithUser: user];
-          vc.delegate = self;
-          [self.navigationController pushViewController:vc animated:animated];
-          return;
-        }
-        break;
-      case 5:
-        if (![[[self renterapplicationUserDefaults] objectForKey:
-               OMBUserDefaultsRenterApplicationCheckedLegalQuestions] boolValue]){
-          OMBLegalViewController *vc  = [[OMBLegalViewController alloc] initWithUser: user];
-          vc.delegate = self;
-          [self.navigationController pushViewController:vc animated:animated];
-          return;
-        }
-    }
-    
-    // Jump from the last section to the first or
-    // go to the next section
-    // For check is there is an incomplete section
-    if(i == sections.count)
-      i = 1;
-    else
-      i++;
-    
-  }*/
-  
 }
 
 - (void) showHomebaseRenter
@@ -1361,19 +1245,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   BOOL shouldSubmit = YES;
   NSString *message = @"";
-  NSString *title = @"Almost Finished";
+  NSString *title   = @"Almost Finished";
   
   NSArray *keyArray = @[@"firstName", @"lastName",
     @"school", @"email", @"phone"];
   
   // Search missing field
-  for(NSString *key in keyArray){
-    
-    if(![[valueDictionary objectForKey:key] length]){
-      shouldSubmit = NO;
-      // Set correct message
+  for (NSString *key in keyArray) {
+    if (![[valueDictionary objectForKey:key] length]) {
       message = [[self incompleteFieldString] stringByAppendingString:
         @" is required to submit an application"];
+      shouldSubmit = NO;
       break;
     }
   }
@@ -1384,45 +1266,34 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   if (shouldSubmit) {
     // Require
     // Previous rentals
+    if (previousRentalCount == 0) {
+      message      = @"Rental history";
+      shouldSubmit = NO;
+    }
     // Employments
-    // Legal answers
-    for (NSString *modelName in @[
-      [OMBPreviousRental modelName], [OMBEmployment modelName]]) {
-      if ([[[self renterApplication] objectsWithModelName: modelName
-        sortedWithKey: @"uid" ascending: NO] count] == 0) {
-        // Previous Rental
-        if ([modelName isEqualToString: [OMBPreviousRental modelName]]) {
-          message = @"Rental history";
-        }
-        // Employments
-        else if ([modelName isEqualToString: [OMBEmployment modelName]]) {
-          message = @"Work & School History";
-        }
-        shouldSubmit = NO;
-        break;
-      }
+    else if (employmentCount == 0) {
+      message      = @"Work & School History";
+      shouldSubmit = NO;
     }
     // Legal answers
-    if (shouldSubmit) {
-      if ([[self renterApplication].legalAnswers count] != 
-        [[OMBLegalQuestionStore sharedStore] legalQuestionsCount]) {
-        message = @"Legal Questions";
-        shouldSubmit = NO;
-      }
+    else if (legalAnswerCount < 
+      [[OMBLegalQuestionStore sharedStore] legalQuestionsCount]) {
+      message = @"Legal Questions";
+      shouldSubmit = NO;
     }
     message = [message stringByAppendingString: 
       @" section is required to submit an application."];
   }
   
   // Submit Application ?
-  if(!shouldSubmit){
+  if (shouldSubmit) {
+    [self submitApplication];
+  }
+  else {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title
        message: message delegate: nil
         cancelButtonTitle: @"Continue" otherButtonTitles: nil];
     [alertView show];
-  }
-  else{
-    [self submitApplication];
   }
 }
 

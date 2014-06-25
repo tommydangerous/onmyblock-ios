@@ -167,6 +167,7 @@
 		AB6CCE4918941269000ED5CE /* OMBEmptyImageTwoLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6CCE4818941269000ED5CE /* OMBEmptyImageTwoLabelCell.m */; };
 		AB6E940A192AA8A4005A357A /* OMBSentApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6E9409192AA8A4005A357A /* OMBSentApplication.m */; };
 		AB6E940F192BAAA2005A357A /* OMBSentApplicationListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6E940E192BAAA2005A357A /* OMBSentApplicationListConnection.m */; };
+		AB6FADD7195B6FC3000D6FFE /* OMBSentApplicationRequirementsConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6FADD6195B6FC3000D6FFE /* OMBSentApplicationRequirementsConnection.m */; };
 		AB70CB68186CB9070083DF4C /* OMBTermsPrivacyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB67186CB9070083DF4C /* OMBTermsPrivacyViewController.m */; };
 		AB70CB6D186CB9400083DF4C /* OMBPrivacyPolicyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB6A186CB9400083DF4C /* OMBPrivacyPolicyViewController.m */; };
 		AB70CB6E186CB9400083DF4C /* OMBTermsOfServiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB6C186CB9400083DF4C /* OMBTermsOfServiceViewController.m */; };
@@ -849,6 +850,8 @@
 		AB6E9409192AA8A4005A357A /* OMBSentApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSentApplication.m; sourceTree = "<group>"; };
 		AB6E940D192BAAA2005A357A /* OMBSentApplicationListConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSentApplicationListConnection.h; sourceTree = "<group>"; };
 		AB6E940E192BAAA2005A357A /* OMBSentApplicationListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSentApplicationListConnection.m; sourceTree = "<group>"; };
+		AB6FADD5195B6FC3000D6FFE /* OMBSentApplicationRequirementsConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSentApplicationRequirementsConnection.h; sourceTree = "<group>"; };
+		AB6FADD6195B6FC3000D6FFE /* OMBSentApplicationRequirementsConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSentApplicationRequirementsConnection.m; sourceTree = "<group>"; };
 		AB70CB66186CB9070083DF4C /* OMBTermsPrivacyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTermsPrivacyViewController.h; sourceTree = "<group>"; };
 		AB70CB67186CB9070083DF4C /* OMBTermsPrivacyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTermsPrivacyViewController.m; sourceTree = "<group>"; };
 		AB70CB69186CB9400083DF4C /* OMBPrivacyPolicyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPrivacyPolicyViewController.h; sourceTree = "<group>"; };
@@ -1801,6 +1804,8 @@
 				AB6E940E192BAAA2005A357A /* OMBSentApplicationListConnection.m */,
 				AB961E4319514F37003F36AB /* OMBSentApplicationCreateConnection.h */,
 				AB961E4419514F37003F36AB /* OMBSentApplicationCreateConnection.m */,
+				AB6FADD5195B6FC3000D6FFE /* OMBSentApplicationRequirementsConnection.h */,
+				AB6FADD6195B6FC3000D6FFE /* OMBSentApplicationRequirementsConnection.m */,
 			);
 			path = "Sent Applications";
 			sourceTree = "<group>";
@@ -3688,6 +3693,7 @@
 				AB17AE6518FDDD6F00B6952C /* UILabel+Image.m in Sources */,
 				AB131F311885CE450057D769 /* OMBResidenceOffersConnection.m in Sources */,
 				ABA0808C1868EA7500C7B851 /* OMBResidenceAddPersonalNoteViewController.m in Sources */,
+				AB6FADD7195B6FC3000D6FFE /* OMBSentApplicationRequirementsConnection.m in Sources */,
 				ABE7067D1885EF1A007A4E29 /* OMBMyRenterApplicationEmailPhoneCell.m in Sources */,
 				ABA5B4161856922600F825E1 /* OMBDeleteRenterApplicationSectionModelConnection.m in Sources */,
 				AB449872189AEFFF00979B3B /* OMBLoginSignUpView.m in Sources */,
