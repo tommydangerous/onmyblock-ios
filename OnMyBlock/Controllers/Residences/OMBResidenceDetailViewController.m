@@ -1201,7 +1201,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     showApplyNow = NO;
   }
   // If minRent is less than or equal to Offer price threshold
-  else if ([residence isAboveThreshold]) {
+  else if (![residence isAboveThreshold]) {
     showApplyNow = NO;
   }
   
@@ -1216,14 +1216,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if (showApplyNow) {
       title = @"Apply Now";
       selector = @selector(showApplyNow);
-    } else {
+    } 
+    else {
       title = @"Book It";
       selector = @selector(showPlaceOffer);
     }
-    
-    [_bookItButton setTitle:title forState:UIControlStateNormal];
-    [_bookItButton addTarget:self action: selector
-      forControlEvents:UIControlEventTouchUpInside];
+    [_bookItButton setTitle: title forState: UIControlStateNormal];
+    [_bookItButton addTarget: self action: selector
+      forControlEvents: UIControlEventTouchUpInside];
   }
 }
 

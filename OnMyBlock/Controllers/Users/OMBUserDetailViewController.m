@@ -239,7 +239,8 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
   // Use the padding for inset top, bottom and spacing in between each row
   CGFloat userCollectionViewHeight = (padding * 3) +
     [OMBOtherUserProfileCell heightForCell] * 2;
-  if ([[self user] isLandlord]) {
+  // If user is landlord and not subletter, do not show Facebook & LinkedIn
+  if ([[self user] isLandlord] && ![[self user] isSubletter]) {
     userCollectionViewHeight = (padding * 2) +
       ([OMBOtherUserProfileCell heightForCell] * 1);
   }
@@ -499,13 +500,9 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
   // Update name
   userNameLabel.text = [[self user] fullName];
   // Update subtitle
-  if ([[self user] isLandlord]) {
-    if ([[self user] isSubletter]) {
-      userSubnameTitleLabel.text = @"Subletter";  
-    }
-    else {
-      userSubnameTitleLabel.text = @"Landlord";
-    }
+  // If user is landlord and not subletter
+  if ([[self user] isLandlord] && ![[self user] isSubletter]) {
+    userSubnameTitleLabel.text = @"Landlord";
   }
   else if ([self user].school && [[self user].school length]) {
     userSubnameTitleLabel.text = [self user].school;
@@ -699,12 +696,14 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
   UIImage *image = [UIImage image: [UIImage imageNamed:
     [dictionary objectForKey: @"imageName"]] size: cell.imageView.frame.size];
   cell.imageView.image = image;
-  cell.label.text = [dictionary objectForKey: @"name"];
+  cell.label.text      = [dictionary objectForKey: @"name"];
   cell.valueLabel.text = [dictionary objectForKey: @"value"];
-  if (row == 2 && user.renterApplication.facebookAuthenticated) {
+  // Facebook
+  if (row == 2 && [self renterApplication].facebookAuthenticated) {
     cell.imageView.alpha = 1.0f;
   }
-  else if (row == 3 && user.renterApplication.linkedinAuthenticated) {
+  // LinkedIn
+  else if (row == 3 && [self renterApplication].linkedinAuthenticated) {
     cell.imageView.alpha = 1.0f;
   }
   cell.clipsToBounds = YES;
@@ -714,8 +713,10 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) collectionView: (UICollectionView *) collectionView
 numberOfItemsInSection: (NSInteger) section
 {
-  if ([[self user] isLandlord])
+  // If user is a landlord and not a subletter
+  if ([[self user] isLandlord] && ![[self user] isSubletter]) {
     return 2;
+  }
   return 4;
 }
 

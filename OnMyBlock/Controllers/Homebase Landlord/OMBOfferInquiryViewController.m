@@ -252,7 +252,8 @@
   _profileTableView.delegate = self;
   _profileTableView.hidden = YES;
   _profileTableView.separatorColor = _offerTableView.separatorColor;
-  _profileTableView.separatorInset = _offerTableView.separatorInset;
+  _profileTableView.separatorInset = UIEdgeInsetsMake(0.f, padding, 
+    0.f, padding);
   _profileTableView.showsVerticalScrollIndicator =
   _offerTableView.showsVerticalScrollIndicator;
   [self.view insertSubview: _profileTableView belowSubview: buttonsView];
@@ -826,6 +827,13 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       }
       [cell loadData: [[self objects] objectAtIndex: row - 1] 
         user: [self user]];
+    }
+    if (indexPath.row == [[self objects] count]) {
+      cell.separatorInset = UIEdgeInsetsMake(0.f, 
+        CGRectGetWidth(tableView.frame), 0.f, 0.f);
+    }
+    else {
+      cell.separatorInset = tableView.separatorInset;
     }
     cell.clipsToBounds = YES;
     return cell;

@@ -513,7 +513,7 @@
   if ([[OMBUser currentUser] primaryPaymentPayoutMethod]) {
     // [submitOfferButton setTitle: @"Submit Offer"
     //                    forState: UIControlStateNormal];
-    effectLabel.text = @"Submit offer";
+    effectLabel.text = @"Submit booking";
   }
   else {
     // [submitOfferButton setTitle: @"Add payment method"

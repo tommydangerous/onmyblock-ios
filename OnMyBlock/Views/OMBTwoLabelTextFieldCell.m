@@ -108,6 +108,30 @@
 
 #pragma mark - Instance Methods
 
+- (void) setFrameUsingLabelSize:(CGSize)size
+{
+  CGRect screen       = [[UIScreen mainScreen] bounds];
+  CGFloat screenWidth = screen.size.width;
+  CGFloat padding = OMBPadding;
+  CGFloat middleDividerWidth = 0.5f;
+  CGFloat height = [OMBTwoLabelTextFieldCell heightForCellWithIconImageView];
+  CGFloat widthTextField = (screenWidth -
+    padding - size.width - padding - middleDividerWidth) * .5f;
+  
+  _firstTextFieldLabel.frame = CGRectMake(padding, 0.0f, size.width, height);
+  _firstTextField.frame = CGRectMake(_firstTextFieldLabel.frame.origin.x +
+    _firstTextFieldLabel.frame.size.width + padding, 0.0f,
+      widthTextField, height);
+  
+  middleDivider.frame = CGRectMake(_firstTextField.frame.origin.x +
+    _firstTextField.frame.size.width, 0.0f, middleDividerWidth, height);
+  
+  _secondTextField.frame = CGRectMake(middleDivider.frame.origin.x +
+    middleDivider.frame.size.width + padding, _firstTextField.frame.origin.y,
+      _firstTextField.frame.size.width, _firstTextField.frame.size.height);
+  
+}
+
 - (void) setFrameUsingLeftLabelIconImageView
 {
     CGRect screen       = [[UIScreen mainScreen] bounds];
@@ -125,7 +149,7 @@
     CGFloat separatorWidth = 10.0f;
 
     _viewBackground.frame = CGRectMake(padding, -1.0f,
-                                       screenWidth - 2*padding, height);
+      screenWidth - 2*padding, height);
     
     _viewBackground.backgroundColor = [UIColor whiteColor];
     _viewBackground.layer.borderWidth = 1.0f;
@@ -133,40 +157,41 @@
 
     CGFloat originX1 =  padding + padding2;
     _firstTextFieldLabel.frame = CGRectMake(originX1, 0.0f,
-                                       labelWidth, height);
+      labelWidth, height);
 
     _firstIconImageView.hidden = YES;
 
     _firstTextField.hidden = NO;
     _firstTextField.frame = CGRectMake(originX1 + labelWidth, 0.0f,
-                                        textWidth, height);
+      textWidth, height);
     _labelSeparator.hidden = NO;
-    _labelSeparator.frame = CGRectMake(_firstTextField.frame.origin.x + _firstTextField.frame.size.width - 5.0f, 0.0f,separatorWidth, height);
+    _labelSeparator.frame = CGRectMake(_firstTextField.frame.origin.x +
+      _firstTextField.frame.size.width - 5.0f, 0.0f,separatorWidth, height);
 
     _thirdTextField.hidden = NO;
-    _thirdTextField.frame = CGRectMake(_labelSeparator.frame.origin.x + _labelSeparator.frame.size.width - 0.0f, 0.0f,textWidth, height);
+    _thirdTextField.frame = CGRectMake(_labelSeparator.frame.origin.x +
+      _labelSeparator.frame.size.width - 0.0f, 0.0f,textWidth, height);
 
     
     CGFloat middleDividerWidth = 0.5f;
     middleDivider.frame = CGRectMake(_viewBackground.frame.origin.x +
-                                     _viewBackground.frame.size.width * 0.5f - middleDividerWidth,
-                                     0.0f, middleDividerWidth,
-                                     height);
+      _viewBackground.frame.size.width * 0.5f - middleDividerWidth,
+        0.0f, middleDividerWidth, height);
 
     CGFloat originX2 = middleDivider.frame.origin.x + middleDivider.frame.size.width + padding2;
 
     _secondTextFieldLabel.frame = CGRectMake(originX2, 0.0f,
-                                            secondLabelWidth, height);
+      secondLabelWidth, height);
     
     _secondTextField.hidden = NO;
     _secondTextField.frame = CGRectMake(originX2 + _secondTextFieldLabel.frame.size.width, 0.0f,
-                                            secondTextWidth, height);
+      secondTextWidth, height);
 
     _secondIconImageView.hidden = NO;
     _secondIconImageView.alpha = 0.3f;
-    _secondIconImageView.frame = CGRectMake(_viewBackground.frame.origin.x + _viewBackground.frame.size.width - padding2 - iconSize, (height - iconSize) * 0.5f,
-                                           iconSize, iconSize);
-
+    _secondIconImageView.frame = CGRectMake(_viewBackground.frame.origin.x +
+      _viewBackground.frame.size.width - padding2 - iconSize,
+        (height - iconSize) * 0.5f, iconSize, iconSize);
     
 }
 
@@ -178,16 +203,16 @@
   CGFloat height = [OMBTwoLabelTextFieldCell heightForCellWithIconImageView];
   CGFloat iconSize = height * 0.5f;
   _firstIconImageView.alpha = 0.3f;
-  _firstIconImageView.frame = CGRectMake(padding, (height - iconSize) * 0.5f,
-                                    iconSize, iconSize);
+  _firstIconImageView.frame = CGRectMake(padding,
+    (height - iconSize) * 0.5f, iconSize, iconSize);
   
   CGFloat textWidth = (screenWidth - 4 * padding - iconSize) * 0.5;
   CGFloat originX1 = _firstIconImageView.frame.origin.x +
   _firstIconImageView.frame.size.width + padding;
-  _firstTextField.frame = CGRectMake(originX1, 0.0f,
-                                     textWidth, height);
+  _firstTextField.frame = CGRectMake(originX1, 0.0f, textWidth, height);
   
-  CGFloat originX2 = _firstTextField.frame.origin.x + _firstTextField.frame.size.width + padding;
+  CGFloat originX2 = _firstTextField.frame.origin.x +
+    _firstTextField.frame.size.width + padding;
   _secondTextField.frame = CGRectMake(originX2, 0.0f,
                                      textWidth, height);
 

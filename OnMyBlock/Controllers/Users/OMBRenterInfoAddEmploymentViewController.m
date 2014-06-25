@@ -212,7 +212,7 @@
       cell.firstTextField.delegate  = self;
       cell.firstTextField.font = [UIFont normalTextFont];
       cell.firstTextField.indexPath = indexPath;
-      cell.firstTextField.placeholder = @"Company";
+      cell.firstTextField.placeholder = @"Organization";
       [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
          forControlEvents: UIControlEventEditingChanged];
 
@@ -372,8 +372,28 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
         OMBRenterInfoAddEmploymentSectionFieldsRowCompanyName
           inSection:textField.indexPath.section]];
   else
+    if(textField.indexPath.row == OMBRenterInfoAddEmploymentSectionFieldsRowIncome)
+      if([textField.text length]){
+        textField.text = [textField.text
+          stringByReplacingOccurrencesOfString:@"$ " withString:@""];
+      }
+      
     [self scrollToRowAtIndexPath: textField.indexPath];
 
+}
+
+- (void)textFieldDidEndEditing:(TextFieldPadding *)textField
+{
+  
+  if(textField.indexPath.row == OMBRenterInfoAddEmploymentSectionFieldsRowIncome){
+    
+    if([textField.text length]){
+      NSMutableString *string = [NSMutableString stringWithString:textField.text];
+      [string insertString:@"$ " atIndex:0];
+      textField.text = string;
+    }
+  }
+  
 }
 
 #pragma mark - Methods
@@ -499,7 +519,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   NSInteger row = textField.indexPath.row;
   NSString *string = textField.text;
 
-  if ([string length]) {
+  //if ([string length]) {
     if (row == OMBRenterInfoAddEmploymentSectionFieldsRowCompanyName) {
       [valueDictionary setObject: string forKey: @"companyName"];
     }
@@ -509,7 +529,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     else if (row == OMBRenterInfoAddEmploymentSectionFieldsRowIncome) {
       [valueDictionary setObject: string forKey: @"income"];
     }
-  }
+  //}
 }
 
 - (void) updatePicker

@@ -10,7 +10,7 @@
 
 #import "OMBNavigationController.h"
 #import "OMBPayoutMethodCell.h"
-#import "OMBPayoutMethodCreditCardViewController.h"
+#import "OMBPayoutMethodBillingInfoViewController.h"
 #import "OMBPayoutMethodPayPalViewController.h"
 #import "OMBPayoutMethodVenmoViewController.h"
 #import "UIColor+Extensions.h"
@@ -107,8 +107,7 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Venmo
   // Paypal
-  // Credit Card
-  // return 3;
+  // !Credit Card
   return 2;
 }
 
@@ -130,10 +129,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     }
     // Credit Card
     else if (indexPath.row == 2) {
-      [self presentViewController:
-        [[OMBNavigationController alloc] initWithRootViewController:
-          [[OMBPayoutMethodCreditCardViewController alloc] init]] animated: YES
-            completion: nil];
+      [self.navigationController pushViewController:
+        [[OMBPayoutMethodBillingInfoViewController alloc] init] animated: YES];
     }
   }
   [self.table deselectRowAtIndexPath: indexPath animated: YES];

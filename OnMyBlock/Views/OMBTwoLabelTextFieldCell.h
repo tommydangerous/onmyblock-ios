@@ -32,6 +32,7 @@
 #pragma mark - Instance Methods
 
 - (void) setFrameUsingIconImageView;
+- (void) setFrameUsingLabelSize:(CGSize)size;
 - (void) setFrameUsingLeftLabelIconImageView;
 
 @end

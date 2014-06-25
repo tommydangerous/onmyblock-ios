@@ -42,6 +42,7 @@ extern NSString *const OMBUserDefaultsRenterApplicationCheckedCosigners;
 extern NSString *const OMBUserDefaultsRenterApplicationCheckedLegalQuestions;
 extern NSString *const OMBUserDefaultsRenterApplicationCheckedRentalHistory;
 extern NSString *const OMBUserDefaultsRenterApplicationCheckedWorkHistory;
+extern NSString *const OMBUserDefaultsRenterApplicationCreated;
 // Intro
 extern NSString *const OMBUserDefaultsViewedIntro;
 

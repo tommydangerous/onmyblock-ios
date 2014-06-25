@@ -158,6 +158,18 @@ reuseIdentifier: (NSString *)reuseIdentifier
     screenWidth - (originX + padding), height);
 }
 
+- (void) setFrameUsingHeight: (CGFloat) height
+{
+  CGRect labelRect = _textFieldLabel.frame;
+  labelRect.size.height = height;
+  _textFieldLabel.frame = labelRect;
+  
+  CGRect textRect = _textField.frame;
+  textRect.size.height = height;
+  _textField.frame = textRect;
+  
+}
+
 - (void) setFrameUsingSize: (CGSize) size
 {
   CGRect screen       = [[UIScreen mainScreen] bounds];

@@ -21,6 +21,7 @@
 #import "OMBEmploymentCell.h"
 #import "OMBGradientView.h"
 #import "OMBLabelTextFieldCell.h"
+#import "OMBLegalQuestion.h"
 #import "OMBLegalQuestionStore.h"
 #import "OMBLegalViewController.h"
 #import "OMBManageListingsCell.h"
@@ -35,6 +36,7 @@
 #import "OMBRenterInfoSectionRoommateViewController.h"
 #import "OMBRenterInfoSectionViewController.h"
 #import "OMBRenterProfileUserInfoCell.h"
+#import "OMBRoommate.h"
 #import "OMBTwoLabelTextFieldCell.h"
 #import "OMBViewControllerContainer.h"
 #import "UIColor+Extensions.h"
@@ -62,7 +64,7 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   if (!(self = [super init])) return nil;
   
   residenceUID = uid;
-  self.title   = @"My Application";
+  self.title   = @"Renter Application";
   
   CGRect rect = [@"First name" boundingRectWithSize:
     CGSizeMake(9999, OMBStandardHeight) font: [UIFont normalTextFontBold]];
@@ -310,14 +312,66 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   
   [self updateData];
 
-  // Download all the user's renter application info that is required
-  // for submitting an applications
-  // Previous Rental
-  [self fetchObjectsForResourceName: [OMBPreviousRental resourceName]];
-  // Employments
-  [self fetchObjectsForResourceName: [OMBEmployment resourceName]];
-  // Legal questions
-  [user fetchLegalAnswersWithCompletion: nil];
+  // Download renter info if it's first time
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  
+  id downloadedInfo = [defaults objectForKey: OMBUserDefaultsRenterApplicationCreated];
+  
+  if (!downloadedInfo) {
+    [defaults setObject: [NSNumber numberWithBool: NO]
+      forKey: OMBUserDefaultsRenterApplicationCreated];
+  }
+  
+  NSNumber *number = [defaults objectForKey: OMBUserDefaultsRenterApplicationCreated];
+  if (![number boolValue]) {
+    
+    // Download all the user's renter application info that is required
+    // for submitting an applications
+    
+    // Fetch coapplicants
+    [self fetchObjectsForResourceName: [OMBRoommate resourceName]];
+    
+    // Fetch cosigners
+    [[self renterApplication] fetchCosignersForUserUID: [OMBUser currentUser].uid
+      delegate: self completion: ^(NSError *error) {
+        [self reloadTable];
+      }];
+    
+    // Previous Rental
+    [self fetchObjectsForResourceName: [OMBPreviousRental resourceName]];
+    // Employments
+    [self fetchObjectsForResourceName: [OMBEmployment resourceName]];
+    // Legal questions
+    [user fetchLegalAnswersWithCompletion: ^(NSError *error){
+      
+      BOOL allAnswered = YES;
+      
+      NSMutableDictionary *legalAnswers =
+      [NSMutableDictionary dictionaryWithDictionary:
+       user.renterApplication.legalAnswers];
+      
+      for(OMBLegalQuestion *legalQuestion in
+          [[OMBLegalQuestionStore sharedStore] questionsSortedByQuestion]){
+        
+        if(![legalAnswers objectForKey:
+             [NSNumber numberWithInt: legalQuestion.uid]]){
+          allAnswered = NO;
+        }
+      }
+      
+      [self saveKeyUserDefaults: allAnswered
+        forKey: OMBUserDefaultsRenterApplicationCheckedLegalQuestions];
+      // Set YES if all questions have been answered
+      //[self saveKeyUserDefaults: allAnswered];
+      [self.table reloadData];
+      
+    }];
+    
+    
+    [[NSUserDefaults standardUserDefaults] setObject:
+     [NSNumber numberWithBool: YES] forKey: OMBUserDefaultsRenterApplicationCreated];
+    [defaults synchronize];
+  }
   
   if (_nextSection)
     [self showNextSection];
@@ -328,6 +382,34 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
   [[self renterApplication] fetchListForResourceName: resourceName
     userUID: [OMBUser currentUser].uid delegate: self 
       completion: ^(NSError *error) {
+        
+       // Rental History
+       if([resourceName isEqualToString:[OMBPreviousRental resourceName]]){
+         
+          BOOL saved = [[[self renterApplication] objectsWithModelName: [OMBPreviousRental modelName]
+            sortedWithKey:@"moveInDate" ascending:NO] count];
+          
+          [self saveKeyUserDefaults: saved
+            forKey:OMBUserDefaultsRenterApplicationCheckedRentalHistory];
+        }
+        // Work History
+        else if([resourceName isEqualToString:[OMBEmployment resourceName]]){
+         
+          BOOL saved = [[[self  renterApplication] employmentsSortedByStartDate] count];
+          
+          [self saveKeyUserDefaults:saved
+            forKey:OMBUserDefaultsRenterApplicationCheckedWorkHistory];
+        }
+        // Roommate
+        else if([resourceName isEqualToString:[OMBRoommate resourceName]]){
+          
+          BOOL saved = [[[self  renterApplication] roommatesSort] count];
+          
+          [self saveKeyUserDefaults:saved
+            forKey:OMBUserDefaultsRenterApplicationCheckedCoapplicants];
+        }
+        
+        [self reloadTable];
         
       }];
 }
@@ -348,6 +430,16 @@ UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
 
 #pragma mark - Protocol OMBConnectionProtocol
 
+- (void) JSONDictionary: (NSDictionary *)dictionary
+{
+  
+  [[self renterApplication] readFromCosignerDictionary:dictionary];
+  
+  [self saveKeyUserDefaults: [[[self renterApplication] cosignersSortedByFirstName] count]
+    forKey: OMBUserDefaultsRenterApplicationCheckedCosigners];
+  
+}
+
 - (void) JSONDictionary: (NSDictionary *) dictionary
 forResourceName: (NSString *) resourceName
 {
@@ -361,7 +453,12 @@ forResourceName: (NSString *) resourceName
     [[self renterApplication] readFromDictionary: dictionary
       forModelName: [OMBPreviousRental modelName]];
   }
-  [self reloadTable];
+  // Roommate
+  else if ([resourceName isEqualToString: [OMBRoommate resourceName]]) {
+    [[self renterApplication] readFromDictionary: dictionary
+      forModelName: [OMBRoommate modelName]];
+  }
+  //[self reloadTable];
 }
 
 #pragma mark - Protocol UIActionSheetDelegate
@@ -935,9 +1032,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (NSMutableDictionary *) renterapplicationUserDefaults
 {
+  
   NSMutableDictionary *dictionary =
-  [[NSUserDefaults standardUserDefaults] objectForKey:
-   OMBUserDefaultsRenterApplication];
+   [[NSUserDefaults standardUserDefaults] objectForKey:
+     OMBUserDefaultsRenterApplication];
   if (!dictionary)
     dictionary = [NSMutableDictionary dictionary];
   return dictionary;
@@ -1049,6 +1147,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
    ];
 }
 
+- (void) saveKeyUserDefaults: (BOOL)save forKey:(NSString *)key
+{
+  NSMutableDictionary *dictionary =
+    [NSMutableDictionary dictionaryWithDictionary:
+      [self renterapplicationUserDefaults]];
+  [dictionary setObject:
+    [NSNumber numberWithBool: save] forKey: key];
+  [[NSUserDefaults standardUserDefaults] setObject: dictionary
+    forKey: OMBUserDefaultsRenterApplication];
+  [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (void) saveFromInputAccessoryView
 {
   [self save];
@@ -1122,15 +1232,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   {
     if(![[valueDictionary objectForKey:key] length]){
       if([key isEqualToString:@"firstName"])
-        string = @"\"First Name";
+        string = @"First Name";
       else if([key isEqualToString:@"lastName"])
-          string = @"\"Last Name";
+          string = @"Last Name";
       else if([key isEqualToString:@"school"])
-          string = @"\"School";
+          string = @"School";
       else if([key isEqualToString:@"email"])
-          string = @"\"Email";
+          string = @"Email";
       else if([key isEqualToString:@"phone"])
-          string = @"\"Phone";
+          string = @"Phone";
       break;
     }
   }
@@ -1263,7 +1373,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       shouldSubmit = NO;
       // Set correct message
       message = [[self incompleteFieldString] stringByAppendingString:
-        @"\" is required to submit an application"];
+        @" is required to submit an application"];
       break;
     }
   }

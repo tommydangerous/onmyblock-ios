@@ -1,5 +1,5 @@
 //
-//  OMBPayoutMethodCreditCardViewController.h
+//  OMBPayoutMethodCreditCardViewControllerOLD.h
 //  OnMyBlock
 //
 //  Created by Paul Aguilar on 3/25/14.
@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, OMBPayoutMethodCreditCardSectionCreditCardRow) {
   OMBPayoutMethodCreditCardSectionCreditCardRowCCV
 };
 
-@interface OMBPayoutMethodCreditCardViewController : OMBTableViewController
+@interface OMBPayoutMethodCreditCardViewControllerOLD : OMBTableViewController
 <UITextFieldDelegate>
 {
   UIBarButtonItem *cancelBarButton;

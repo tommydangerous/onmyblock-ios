@@ -337,7 +337,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // View
   filterView = [[UIView alloc] init];
   filterView.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
-  filterView.frame = CGRectMake(0.0f, 64.0f, screenWidth, 20.0f);
+  filterView.frame = CGRectMake(0.0f, screenHeight - padding, 
+    screenWidth, padding);
   filterView.hidden = YES;
   [self.view addSubview: filterView];
   // Label
@@ -1842,9 +1843,9 @@ withMiles: (int) miles animated: (BOOL) animated
         self.mapView.alpha           = 1.0f;
         if ([self.mapView.annotations count] == 0) {
           [self mapView: _mapView regionDidChangeAnimated: NO];
-          [UIView animateWithDuration: 0.5f animations: ^{
-            filterView.transform = CGAffineTransformIdentity;
-          }];
+          // [UIView animateWithDuration: 0.5f animations: ^{
+          //   filterView.transform = CGAffineTransformIdentity;
+          // }];
         }
       }
       break;
@@ -1855,10 +1856,10 @@ withMiles: (int) miles animated: (BOOL) animated
         self.listViewContainer.alpha = 1.0f;
         self.mapView.alpha           = 0.0f;
         [self fetchResidencesForList];
-        [UIView animateWithDuration: 0.5f animations: ^{
-          filterView.transform = CGAffineTransformMakeTranslation(
-            0.0f, self.view.bounds.size.height - 20.0f - 64.0f);
-        }];
+        // [UIView animateWithDuration: 0.5f animations: ^{
+        //   filterView.transform = CGAffineTransformMakeTranslation(
+        //     0.0f, self.view.bounds.size.height - 20.0f - 64.0f);
+        // }];
       }
       break;
     }

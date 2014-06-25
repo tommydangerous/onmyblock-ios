@@ -57,6 +57,8 @@ NSString *const OMBUserDefaultsRenterApplicationCheckedRentalHistory =
   @"OMBUserDefaultsRenterApplicationCheckedRentalHistory";
 NSString *const OMBUserDefaultsRenterApplicationCheckedWorkHistory =
   @"OMBUserDefaultsRenterApplicationCheckedWorkHistory";
+NSString *const OMBUserDefaultsRenterApplicationCreated =
+  @"OMBUserDefaultsRenterApplicationCreated";
 // Intro
 NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
 
