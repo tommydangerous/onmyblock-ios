@@ -115,10 +115,14 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
         style: UIBarButtonItemStylePlain target: self 
           action: @selector(showActionSheet)];
 
+  // Background blur view
+  backgroundBlurView.imageView.alpha = 0.f;
+
   // Navigation background image view
   navigationBackgroundImageView = [UIImageView new];
-  navigationBackgroundImageView.alpha = 0.f;
-  navigationBackgroundImageView.clipsToBounds = YES;
+  navigationBackgroundImageView.alpha           = 0.f;
+  navigationBackgroundImageView.backgroundColor = [UIColor blackColor];
+  navigationBackgroundImageView.clipsToBounds   = YES;
   navigationBackgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
   navigationBackgroundImageView.frame = CGRectMake(0.f, 0.f, 
     screenWidth, topSpacing);
@@ -141,8 +145,10 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
   backViewHolder.clipsToBounds = YES;
   [self setupBackgroundWithView: backViewHolder startingOffsetY: 0.0f];
   backView = [[OMBBlurView alloc] initWithFrame: backViewHolder.bounds];
-  backView.blurRadius = 30.0f;
-  backView.tintColor  = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+  backView.backgroundColor = [UIColor blackColor];
+  backView.blurRadius      = 30.0f;
+  backView.imageView.alpha = 0.f;
+  backView.tintColor       = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
   [backViewHolder addSubview: backView];
 
   // User image
@@ -150,6 +156,8 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
   userImageView = [[OMBCenteredImageView alloc] initWithFrame:
     CGRectMake((screenWidth - userImageWidth) * 0.5f, topSpacing, 
       userImageWidth, userImageWidth)];
+  userImageView.alpha              = 0.f;
+  userImageView.backgroundColor    = [UIColor blackColor];
   userImageView.layer.cornerRadius = userImageWidth * 0.5f;
   [self.view insertSubview: userImageView belowSubview: self.table];
   
@@ -189,6 +197,23 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
   userCollectionView.delegate   = self;
 }
 
+- (void) viewDidAppear: (BOOL) animated
+{
+  [super viewDidAppear: animated];
+
+  // Update the images
+  if ([self user].image) {
+    [self updateBlurredImages];   
+  }
+  else {
+    [[self user] downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+      if ([self user].image) {
+        [self updateBlurredImages];
+      }
+    }];
+  }
+}
+
 - (void) viewDidLoad
 {
   [super viewDidLoad];
@@ -209,8 +234,6 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
     self.navigationItem.rightBarButtonItem = contactBarButtonItem;
   }
 
-  [self updateData];
-
   // Resize collection view
   CGFloat padding = OMBPadding;
   // Use the padding for inset top, bottom and spacing in between each row
@@ -228,7 +251,7 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
   // Profile and renter application
   [[self user] fetchUserProfileWithCompletion: ^(NSError *error) {
     [self reloadTable];
-    [self updateData];
+    [self updateUserInfoData];
   }];
   if ([[self user] isLandlord]) {
     // Listings
@@ -255,6 +278,8 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
       [self reloadTable];
     }];
   }
+
+  [self updateUserInfoData];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -430,20 +455,42 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
   }
 }
 
-- (void) updateData
+- (void) updateBlurredImages
 {
-  // Update the images
-  if ([self user].image) {
-    [self updateImages];   
-  }
-  else {
-    [[self user] downloadImageFromImageURLWithCompletion: ^(NSError *error) {
-      if ([self user].image) {
-        [self updateImages];
-      }
+  if (!blurredUserImage) {
+    blurredUserImage = [self user].image;
+    // Update image
+    [backgroundBlurView refreshWithImage: blurredUserImage];
+    [backView refreshWithImage: blurredUserImage];
+    [userImageView setImage: blurredUserImage];
+    [UIView animateWithDuration: OMBStandardDuration animations: ^{
+      backgroundBlurView.imageView.alpha = 1.f;
+      backView.imageView.alpha           = 1.f;
+      userImageView.alpha                = 1.f;
     }];
   }
+}
 
+- (void) updateNameTitleLabelOpacity
+{
+  CGFloat offsetY = self.table.contentOffset.y;
+  CGFloat offsetY2 = offsetY;
+  if (offsetY2 < 0) {
+    offsetY2 = 0;
+  }
+  CGFloat alpha =
+    pow(offsetY2 / (CGRectGetHeight(userImageView.frame) * 1.3), 4.f);
+  if (alpha > 1.f) {
+    alpha = 1.f;
+  }
+  else if (alpha < 0.f) {
+    alpha = 0.f;
+  }
+  nameTitleLabel.alpha = alpha;
+}
+
+- (void) updateUserInfoData
+{
   // Name title label
   nameTitleLabel.text = [[self user] fullName];
 
@@ -467,6 +514,7 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
     userSubnameTitleLabel.text = @"No school specified";
   }
 
+  // Collection view
   userAttributes = @[
     @{
       @"imageName": @"phone_icon.png",
@@ -502,35 +550,6 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
         @"Verified" : @"Not verified",
     },
   ];
-}
-
-- (void) updateImages
-{
-  if (!blurredUserImage) {
-    blurredUserImage = [self user].image;
-    // Update image
-    [backgroundBlurView refreshWithImage: blurredUserImage];
-    [backView refreshWithImage: blurredUserImage];
-    [userImageView setImage: blurredUserImage];
-  }
-}
-
-- (void) updateNameTitleLabelOpacity
-{
-  CGFloat offsetY = self.table.contentOffset.y;
-  CGFloat offsetY2 = offsetY;
-  if (offsetY2 < 0) {
-    offsetY2 = 0;
-  }
-  CGFloat alpha =
-    pow(offsetY2 / (CGRectGetHeight(userImageView.frame) * 1.3), 4.f);
-  if (alpha > 1.f) {
-    alpha = 1.f;
-  }
-  else if (alpha < 0.f) {
-    alpha = 0.f;
-  }
-  nameTitleLabel.alpha = alpha;
 }
 
 - (void) setNavigationBarImage
