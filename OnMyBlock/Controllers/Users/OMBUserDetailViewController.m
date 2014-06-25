@@ -375,6 +375,13 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
   [self phoneCall: cosigner.phone];
 }
 
+- (void) phoneCallUser
+{
+  if (![[self user] isCurrentUser]) {
+    [self phoneCall: [[self user].phone stringWithNumbersOnly]];
+  }
+}
+
 - (NSArray *) previousRentals
 {
   return [[self renterApplication] objectsWithModelName:
@@ -676,9 +683,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   }
   // Call Phone
   else if (buttonIndex == 1) {
-    if (![[self user] isCurrentUser]) {
-      [self phoneCall: [self user].phone];
-    }
+    [self phoneCallUser];
   }
 }
 

@@ -875,6 +875,9 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
     self.moveInDate = [[dateFormatter dateFromString: 
       moveInDate] timeIntervalSince1970];
   }
+  else {
+    self.moveInDate = [[NSDate date] timeIntervalSince1970];
+  }
 
   // Move-out Date
   id moveOutDate = [dictionary objectForKey: @"move_out_date"];
@@ -890,7 +893,10 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
 
   // Property Type
   id propertyType = [dictionary objectForKey: @"property_type"];
-  if (propertyType != [NSNull null]) {
+  if (propertyType == [NSNull null]) {
+    self.propertyType = OMBResidencePropertyTypeHouse;
+  }
+  else {
     self.propertyType = propertyType;
   }
 

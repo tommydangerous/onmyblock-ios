@@ -1112,8 +1112,12 @@ completion: (void (^) (void)) block
   [[OMBUser currentUser] logout];
   // Remove the account view
   [_accountView removeFromSuperview];
+
   // Update Top detail view
   _topDetailView.hidden = YES;
+  [_topDetailView setImage: [UIImage imageNamed: @"default_user_image.png"]];
+  [_topDetailView setName: @""];
+
   arrowView.hidden = YES;
   // Adjust the intro view
   [self.introViewController setupForLoggedOutUser];
@@ -1306,7 +1310,6 @@ completion: (void (^) (void)) block
   //[self.view addSubview: _accountView];
 
   // Show top detail view
-  _topDetailView.hidden = NO;
   arrowView.hidden = NO;
   // Show the buttons for users who are logged in
   // [self showLoggedInButtons];
@@ -1354,20 +1357,16 @@ completion: (void (^) (void)) block
     completion();
   }
 
+  // Top account view
+  _topDetailView.hidden = NO;
+  [_topDetailView setImage: [UIImage imageNamed: @"default_user_image.png"]];
+  [_topDetailView setName: [[OMBUser currentUser] fullName]];
   // Download the user's profile image and set it to the account image view
   [[OMBUser currentUser] downloadImageFromImageURLWithCompletion:
     ^(NSError *error) {
-      UIImage *image;
       if ([OMBUser currentUser].image) {
-        image = [OMBUser currentUser].image;
+        [_topDetailView setImage: [OMBUser currentUser].image];
       }
-      else {
-        image = [UIImage imageNamed:
-          @"default_user_image.png"];
-      }
-      //[_accountView setImage: image];
-      [_topDetailView setImage: image];
-      [_topDetailView setName:[OMBUser currentUser].fullName];
     }
   ];
 
@@ -1382,9 +1381,12 @@ completion: (void (^) (void)) block
   // Hide the sign up button at the bottom
   signUpButtonBottom.hidden = YES;
   
-  if([[OMBUser currentUser].landlordType isEqualToString: OMBUserTypeLandlord] ||
-     [[OMBUser currentUser].userType     isEqualToString: OMBUserTypeLandlord])
+  // If user is a landlord or a subletter, show the landlord menu right away
+  if ([[OMBUser currentUser].landlordType isEqualToString: 
+    OMBUserTypeLandlord] || 
+    [[OMBUser currentUser].userType isEqualToString: OMBUserTypeLandlord]) {
     [self showMenuLandlordSide];
+  }
 }
 
 - (void) showAccount

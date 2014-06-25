@@ -207,6 +207,8 @@ fonts: (NSArray *) fonts colors: (NSArray *) colors
 
 #pragma mark - Instance Methods
 
+#pragma mark - Public
+
 - (BOOL) containsString:(NSString *)string options:(NSStringCompareOptions)options
 {
   NSRange rng = [self rangeOfString:string options:options];
@@ -315,6 +317,23 @@ secondaryColor: (UIColor *) secondayColor
 {
   return [self stringByTrimmingCharactersInSet: 
     [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+- (NSString *) stringWithNumbersOnly
+{
+  NSString *holder = @"";
+  if ([self length]) {
+    NSRegularExpression *regex = 
+      [NSRegularExpression regularExpressionWithPattern: @"[0-9]+" 
+        options: 0 error: nil];
+    NSArray *matches = [regex matchesInString: self options: 0
+      range: NSMakeRange(0, [self length])];
+    for (NSTextCheckingResult *result in matches) {
+      holder = [holder stringByAppendingString:
+        [self substringWithRange: result.range]];
+    }
+  }
+  return holder;
 }
 
 @end

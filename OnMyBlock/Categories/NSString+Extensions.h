@@ -25,6 +25,9 @@ fonts: (NSArray *) fonts colors: (NSArray *) colors;
 + (NSString *) timeRemainingShortFormatWithInterval: (NSTimeInterval) interval;
 
 #pragma mark - Instance Methods
+
+#pragma mark - Public
+
 - (BOOL) containsString:(NSString *)string options:(NSStringCompareOptions)options;
 - (NSAttributedString *) attributedStringWithFont: (UIFont *) font;
 - (NSAttributedString *) attributedStringWithFont: (UIFont *) font
@@ -38,5 +41,6 @@ secondaryColor: (UIColor *) secondayColor;
 - (NSArray *) matchingResultsWithRegularExpression: (NSString *) string;
 - (NSArray *) stringSeparatedByUppercaseStrings;
 - (NSString *) stripWhiteSpace;
+- (NSString *) stringWithNumbersOnly;
 
 @end

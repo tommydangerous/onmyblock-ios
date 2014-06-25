@@ -176,13 +176,10 @@ delegate: (id) delegate completion: (void (^)(NSError *error)) block
   }
 
   // Other user
-  if ([dictionary objectForKey: @"other_user"] != [NSNull null]) {
-    NSDictionary *userDict = [dictionary objectForKey: @"other_user"];
-    NSInteger userUID = [[userDict objectForKey: @"id"] intValue];
-    self.otherUser = [[OMBUserStore sharedStore] userWithUID: userUID];
-    if (!self.otherUser)
-      self.otherUser = [[OMBUser alloc] init];
-    [self.otherUser readFromDictionary: userDict];
+  id otherUserDict = [dictionary objectForKey: @"other_user"];
+  if (otherUserDict && otherUserDict != [NSNull null]) {
+    self.otherUser = [[OMBUser alloc] init];
+    [self.otherUser readFromDictionary: otherUserDict];
   }
 
   // Viewed user IDs

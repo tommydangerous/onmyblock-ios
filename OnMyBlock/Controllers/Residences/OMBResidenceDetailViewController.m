@@ -297,7 +297,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   // bottomButtonViewHeight = 44.0f;
   bottomButtonViewHeight = OMBStandardButtonHeight;
   _bottomButtonView.frame = CGRectMake(0.0f,
-    screenHeight - bottomButtonViewHeight, screenWidth, bottomButtonViewHeight);
+    screenHeight, screenWidth, bottomButtonViewHeight);
   [self.view addSubview: _bottomButtonView];
 
   // Count down timer
@@ -399,6 +399,28 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [self.view insertSubview: backgroundBlurView atIndex: 0];
 }
 
+- (void) viewDidAppear: (BOOL) animated
+{
+  [super viewDidAppear: animated];
+
+  // Map
+  if ([[map annotations] count] == 0) {
+    CGFloat distanceInMiles = 1609 * 0.5; // 1609 meters = 1 mile
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+      residence.latitude, residence.longitude);
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(
+      coordinate, distanceInMiles, distanceInMiles);
+    [map setRegion: region animated: NO];
+    // Add annotation
+    OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
+    annotation.coordinate     = coordinate;
+    [map addAnnotation: annotation];
+  }
+
+  // Update the blurred background image
+  [self updateBackgroundImage];
+}
+
 - (void) viewDidDisappear: (BOOL) animated
 {
   [super viewDidDisappear: animated];
@@ -425,22 +447,16 @@ float kResidenceDetailImagePercentage   = 0.5f;
 {
   [super viewWillAppear: animated];
 
-  // Need to set this again because when the view disappears,
-  // the _table.delegate is set to nil
-  // if (!_table.delegate)
-  //   _table.delegate = self;
-
   // Fetch residence detail data
   [residence fetchDetailsWithCompletion: ^(NSError *error) {
     [self refreshResidenceData];
+    [self setupBottomButtons];
   }];
 
   // Download images
   [residence downloadImagesWithCompletion: ^(NSError *error) {
     [self reloadImageData];
-    // [activityIndicatorView stopAnimating];
   }];
-  // [activityIndicatorView startAnimating];
   [self reloadImageData];
 
   // Set the rent
@@ -449,51 +465,8 @@ float kResidenceDetailImagePercentage   = 0.5f;
   // Adjust the favorites button if user already favorited
   [self adjustFavoriteButton];
 
-  CGFloat footerHeight = _bottomButtonView.frame.size.height;
-  // If temporary residence, make the favorite button hidden
-  if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
-    _favoritesButton.hidden = YES;
-    [self.navigationItem setRightBarButtonItem: nil animated: NO];
-    // Hide the bottom bar
-    footerHeight = 0.0f;
-    self.bottomButtonView.hidden = YES;
-  }
-
-  // Table footer view
-  // If this residence belongs to the current user
-  if ([[OMBUser currentUser] loggedIn] &&
-    residence.landlordUserID == [OMBUser currentUser].uid) {
-    // Hide the table footer view and buttons at the bottom
-    footerHeight = 0.0f;
-    self.bottomButtonView.hidden = YES;
-  }
-  // Inactive
-  else if (residence.inactive) {
-    // Hide the table footer view and buttons at the bottom
-    footerHeight = 0.0f;
-    self.bottomButtonView.hidden = YES;
-  }
-  _table.tableFooterView = [[UIView alloc] initWithFrame:
-    CGRectMake(0.0f, 0.0f, _table.frame.size.width, footerHeight)];
-
   // Fetch the offers (Do this in another phase, we aren't showing offers)
   // [residence fetchOffersWithCompletion: nil];
-
-  // Map
-  if ([[map annotations] count] == 0) {
-    CGFloat distanceInMiles = 1609 * 0.5; // 1609 meters = 1 mile
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
-      residence.latitude, residence.longitude);
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(
-      coordinate, distanceInMiles, distanceInMiles);
-    [map setRegion: region animated: NO];
-    // Add annotation
-    OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
-    annotation.coordinate     = coordinate;
-    [map addAnnotation: annotation];
-  }
-
-  [self updateBackgroundImage];
 }
 
 - (void) viewWillDisappear: (BOOL) animated
@@ -1430,6 +1403,46 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   hiddenScrollView.contentSize = self.table.contentSize;
 }
 
+- (void) setupBottomButtons
+{
+  // Bottom buttons; Contact and Book It or Apply Now or Applied
+  CGFloat footerHeight = _bottomButtonView.frame.size.height;
+  // If temporary residence, make the favorite button hidden
+  if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
+    _favoritesButton.hidden = YES;
+    [self.navigationItem setRightBarButtonItem: nil animated: NO];
+    // Hide the bottom bar
+    footerHeight = 0.0f;
+    self.bottomButtonView.hidden = YES;
+  }
+
+  // Table footer view
+  // If this residence belongs to the current user
+  if ([[OMBUser currentUser] loggedIn] &&
+    residence.landlordUserID == [OMBUser currentUser].uid) {
+    // Hide the table footer view and buttons at the bottom
+    footerHeight = 0.0f;
+    self.bottomButtonView.hidden = YES;
+  }
+  // Inactive
+  else if (residence.inactive) {
+    // Hide the table footer view and buttons at the bottom
+    footerHeight = 0.0f;
+    self.bottomButtonView.hidden = YES;
+  }
+
+  // Animate the bottom button view up from the bottom of the screen
+  if (!self.bottomButtonView.hidden) {
+    [UIView animateWithDuration: OMBStandardDuration animations: ^{
+      CGRect rect = self.bottomButtonView.frame;
+      rect.origin.y = CGRectGetHeight(self.view.frame) - CGRectGetHeight(rect);
+      self.bottomButtonView.frame = rect;
+    }];
+  }
+  _table.tableFooterView = [[UIView alloc] initWithFrame:
+    CGRectMake(0.0f, 0.0f, _table.frame.size.width, footerHeight)];
+}
+
 - (void) shareButtonSelected
 {
   NSArray *dataToShare = @[[residence shareString]];
@@ -1616,21 +1629,28 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) updateBackgroundImage
 {
-  // Download the residence's images
-  OMBResidenceImagesConnection *conn =
-    [[OMBResidenceImagesConnection alloc] initWithResidence: residence];
-  conn.completionBlock = ^(NSError *error) {
-    // Add the cover photo
-    __weak typeof(backgroundBlurView) weakBlurView   = backgroundBlurView;
-    OMBCenteredImageView *iv = [[OMBCenteredImageView alloc] initWithFrame:
-      self.view.frame];
-    __weak typeof(iv) weakImageView = iv;
-    [residence setImageForCenteredImageView: iv
+  // Add the cover photo
+  OMBCenteredImageView *centeredImageView = 
+    [[OMBCenteredImageView alloc] initWithFrame: self.view.frame];
+  void (^completionBlock) (NSError *error) = ^(NSError *error) {
+    __weak typeof(backgroundBlurView) weakBlurView = backgroundBlurView;
+    __weak typeof(centeredImageView) weakImageView = centeredImageView;
+    [residence setImageForCenteredImageView: centeredImageView
       withURL: residence.coverPhotoURL completion: ^{
         [weakBlurView refreshWithImage: weakImageView.image];
-      }];
+      }
+    ];
   };
-  [conn start];
+  if (residence.coverPhotoURL) {
+    completionBlock(nil);
+  }
+  else {
+    // Download the residence's images
+    OMBResidenceImagesConnection *conn =
+      [[OMBResidenceImagesConnection alloc] initWithResidence: residence];
+    conn.completionBlock = completionBlock;
+    [conn start];
+  }
 }
 
 @end

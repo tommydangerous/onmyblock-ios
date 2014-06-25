@@ -82,7 +82,18 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   self.currentPage = self.maxPages = 1;
   self.fetching    = NO;
 
-  self.title = [residence.address capitalizedString];
+  if ([residence.address length]) {
+    self.title = [residence.address capitalizedString];
+  }
+  else if ([residence.title length]) {
+    self.title = residence.title;
+  }
+  else if ([residence.propertyType length]) {
+    self.title = [residence.propertyType capitalizedString];
+  }
+  else {
+    self.title = @"Property";
+  }
 
   return self;
 }
@@ -152,6 +163,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     [[UIBarButtonItem alloc] initWithTitle: @"Profile"
       style: UIBarButtonItemStylePlain target: self
         action: @selector(showRenterProfile)];
+  renterApplicationBarButtonItem.enabled = NO;
   // Spacing
   UIBarButtonItem *flexibleSpace =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
@@ -159,9 +171,9 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   // Phone
   UIImage *phoneIcon = [UIImage image: [UIImage imageNamed: @"phone_icon.png"]
     size: CGSizeMake(22.0f, 22.0f)];
-  phoneBarButtonItem =
-    [[UIBarButtonItem alloc] initWithImage: phoneIcon style:
-      UIBarButtonItemStylePlain target: self action: @selector(phoneCallUser)];
+  phoneBarButtonItem = [[UIBarButtonItem alloc] initWithImage: phoneIcon style:
+    UIBarButtonItemStylePlain target: self action: @selector(phoneCallUser)];
+  phoneBarButtonItem.enabled = NO;
   // Right padding
   UIBarButtonItem *rightPadding =
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:
@@ -251,6 +263,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
       name: UIKeyboardWillHideNotification object: nil];
 
   [self verifyPhone];
+  [self verifyUser];
 
   if (conversation) {
     [self assignMessages];
@@ -265,15 +278,17 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     conversation = [[OMBConversation alloc] init];
     void (^completion) (NSError * error) = ^void (NSError *error) {
       [self verifyPhone];
+      [self verifyUser];
       [self fetchMessagesWithCompletion: nil];
-      [activityViewFullScreen stopSpinning];
+      
       [bottomToolbar.messageContentTextView becomeFirstResponder];
+      
+      [activityViewFullScreen stopSpinning];
     };
     if (residence) {
       [conversation fetchConversationWithResidenceUID: residence.uid completion:
         completion
       ];
-      renterApplicationBarButtonItem.enabled = NO;
     }
     else if (user) {
       [conversation fetchConversationWithUserUID: user.uid completion:
@@ -730,7 +745,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (OMBUser *) otherUser
 {
-  OMBUser *object;
+  OMBUser *object = nil;
   if (conversation && conversation.otherUser) {
     object = conversation.otherUser;
   }
@@ -743,12 +758,25 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   return object;
 }
 
+- (NSString *) phoneNumber
+{
+  NSString *phoneString = @"";
+  if ([self otherUser]) {
+    phoneString = [self otherUser].phone;
+  }
+  else if (residence) {
+    phoneString = residence.phone;
+  }
+  return [phoneString stringWithNumbersOnly];
+}
+
 - (void) phoneCallUser
 {
-  if ([self otherUser]) {
-    NSString *string = [@"telprompt:" stringByAppendingString:
-      [residence phone]];
-    [[UIApplication sharedApplication] openURL: [NSURL URLWithString: string]];
+  if ([[self phoneNumber] length]) {
+    NSString *phoneString = [@"telprompt:" stringByAppendingString: 
+      [self phoneNumber]];
+    [[UIApplication sharedApplication] openURL: 
+      [NSURL URLWithString: phoneString]];
   }
 }
 
@@ -862,14 +890,12 @@ additionalOffsetY: (CGFloat) offsetY
 
 - (void) verifyPhone
 {
-  BOOL hasPhone = NO;
-  if ([self otherUser] && [[[self otherUser] phoneString] length]) {
-    hasPhone = YES;
-  }
-  else if (residence && [residence.phone length]) {
-    hasPhone = YES;
-  }
-  phoneBarButtonItem.enabled = hasPhone;
+  phoneBarButtonItem.enabled = [[self phoneNumber] length] >= 10;
+}
+
+- (void) verifyUser
+{
+  renterApplicationBarButtonItem.enabled = [self otherUser] ? YES : NO;
 }
 
 @end
