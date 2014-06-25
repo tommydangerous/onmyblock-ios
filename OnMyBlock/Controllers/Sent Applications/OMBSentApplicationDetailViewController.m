@@ -283,17 +283,18 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   if (tableView == self.offerTableView) {
     // Offer
     if (section == OMBOfferInquirySectionOffer) {
+      CGFloat height = OMBPadding + 27.f + OMBPadding;
       // Price breakdown
       if (row == OMBOfferInquirySectionOfferRowPriceBreakdown) {
         return 0.f;
       }
       // Rent
       else if (row == OMBOfferInquirySectionOfferRowOffer) {
-        return OMBPadding + 27.f + OMBPadding;
+        return height;
       }
       // Security deposit
       else if (row == OMBOfferInquirySectionOfferRowSecurityDeposit) {
-        return OMBStandardHeight;
+        return height;
       }
       // Total
       else if (row == OMBOfferInquirySectionOfferRowTotal) {
