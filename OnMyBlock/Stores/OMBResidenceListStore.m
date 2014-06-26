@@ -40,8 +40,12 @@
 + (OMBResidenceListStore *) sharedStore
 {
   static OMBResidenceListStore *store = nil;
-  if (!store)
+
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
     store = [[OMBResidenceListStore alloc] init];
+  });
+
   return store;
 }
 
@@ -78,6 +82,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (void) readFromDictionary: (NSDictionary *) dictionary
 {
+  // NSLog(@"%@", dictionary);
   for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
     OMBResidence *residence = [[OMBResidence alloc] init];
     [residence readFromDictionaryLightning: dict];

@@ -52,7 +52,6 @@
 		AB0E984718ED32D00086AF3D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984618ED32D00086AF3D /* AudioToolbox.framework */; };
 		AB0E984918ED330A0086AF3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984818ED330A0086AF3D /* MobileCoreServices.framework */; };
 		AB0E984B18ED332C0086AF3D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984A18ED332C0086AF3D /* Security.framework */; };
-		AB0E984D18ED33380086AF3D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0E984C18ED33380086AF3D /* StoreKit.framework */; };
 		AB0E985018EDA9D40086AF3D /* NSString+OnMyBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0E984F18EDA9D40086AF3D /* NSString+OnMyBlock.m */; };
 		AB131F2D1885C87B0057D769 /* OMBResidenceDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB131F2A1885C87B0057D769 /* OMBResidenceDetailViewController.m */; };
 		AB131F2E1885C87B0057D769 /* OMBResidenceImageSlideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB131F2C1885C87B0057D769 /* OMBResidenceImageSlideViewController.m */; };
@@ -632,7 +631,6 @@
 		AB0E984618ED32D00086AF3D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		AB0E984818ED330A0086AF3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		AB0E984A18ED332C0086AF3D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		AB0E984C18ED33380086AF3D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		AB0E984E18EDA9D40086AF3D /* NSString+OnMyBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+OnMyBlock.h"; sourceTree = "<group>"; };
 		AB0E984F18EDA9D40086AF3D /* NSString+OnMyBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+OnMyBlock.m"; sourceTree = "<group>"; };
 		AB131F291885C87B0057D769 /* OMBResidenceDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceDetailViewController.h; sourceTree = "<group>"; };
@@ -1574,7 +1572,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AB0E984D18ED33380086AF3D /* StoreKit.framework in Frameworks */,
 				AB0E984B18ED332C0086AF3D /* Security.framework in Frameworks */,
 				AB0E984918ED330A0086AF3D /* MobileCoreServices.framework in Frameworks */,
 				AB0E984718ED32D00086AF3D /* AudioToolbox.framework in Frameworks */,
@@ -1952,7 +1949,6 @@
 				AB0E984418ED32620086AF3D /* Parse.framework */,
 				ABC48E791812397300F01D8D /* QuartzCore.framework */,
 				AB0E984A18ED332C0086AF3D /* Security.framework */,
-				AB0E984C18ED33380086AF3D /* StoreKit.framework */,
 				ABB022C618248D9800F98544 /* SystemConfiguration.framework */,
 				AB802EA118109E5200E04D11 /* UIKit.framework */,
 				ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */,
@@ -3365,6 +3361,11 @@
 				TargetAttributes = {
 					AB802E9918109E5200E04D11 = {
 						DevelopmentTeam = 4PZFNY43X2;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
 					};
 					AB802EB418109E5200E04D11 = {
 						TestTargetID = AB802E9918109E5200E04D11;
@@ -4065,8 +4066,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4092,7 +4093,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "FC25BC7B-1154-4D6C-9A01-90E0A2510D29";
+				PROVISIONING_PROFILE = "BD3847C5-852B-4F79-B7D9-79D5ECDDCCE2";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -4105,8 +4106,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
@@ -4130,7 +4131,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "FC25BC7B-1154-4D6C-9A01-90E0A2510D29";
+				PROVISIONING_PROFILE = "BD3847C5-852B-4F79-B7D9-79D5ECDDCCE2";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
