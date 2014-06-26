@@ -12,10 +12,13 @@
 #import "NSString+Extensions.h"
 #import "UIColor+Extensions.h"
 // Models
+#import "OMBOffer.h"
 #import "OMBResidence.h"
 #import "OMBSentApplication.h"
 // View controllers
+#import "OMBInformationHowItWorksViewController.h"
 #import "OMBMessageDetailViewController.h"
+#import "OMBNavigationController.h"
 
 @interface OMBSentApplicationDetailViewController ()
 {
@@ -68,6 +71,21 @@
 - (void) loadView
 {
   [super loadView];
+
+  // Info button in the navigation bar
+  UIButton *infoButton = [UIButton new];
+  infoButton.frame = CGRectMake(0.0f, 0.0f, 26.0f, 26.0f);
+  infoButton.layer.borderColor = [UIColor blue].CGColor;
+  infoButton.layer.borderWidth = 1.0f;
+  infoButton.layer.cornerRadius = 26.0f * 0.5f;
+  infoButton.titleLabel.font = [UIFont normalTextFontBold];
+  [infoButton addTarget: self action: @selector(showInfo)
+    forControlEvents: UIControlEventTouchUpInside];
+  [infoButton setTitle: @"i" forState: UIControlStateNormal];
+  [infoButton setTitleColor: [UIColor blue] forState: UIControlStateNormal];
+  UIBarButtonItem *infoBarButtonItem = 
+    [[UIBarButtonItem alloc] initWithCustomView: infoButton];
+  self.navigationItem.rightBarButtonItem = infoBarButtonItem;
 
   [offerButton setTitle: @"Details" forState: UIControlStateNormal];
 }
@@ -202,6 +220,51 @@
       break;
     }
   }
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+#pragma mark - Private
+
+- (void) showInfo
+{
+  NSString *info1 = [NSString stringWithFormat:
+    @"Find a property that’s right for you and apply! "
+    @"Once you submit an application it will "
+    @"be sent to the landlord for review."
+  ];
+  NSString *info2 = [NSString stringWithFormat:
+    @"If the landlord approves your application and chooses "
+    @"you as a tenant you will be given %@ "
+    @"to pay the first month’s rent & deposit and sign the lease.",
+    [OMBOffer timelineStringForStudent]
+  ];
+  NSString *info3 = [NSString stringWithFormat:
+    @"Once you’ve paid the place is yours, get ready to move-in!"
+  ];
+  NSArray *array = @[
+    @{
+      @"title":       @"Send an Application",
+      @"information": info1
+    },
+    @{
+      @"title":       @"Landlord Approved",
+      @"information": info2
+    },
+    @{
+      @"title":       @"Move In!",
+      @"information": info3
+    }
+  ];
+  
+  OMBInformationHowItWorksViewController *vc =
+    [[OMBInformationHowItWorksViewController alloc] initWithInformationArray:
+      array];
+  vc.title = @"Applications";
+  [(OMBNavigationController *) self.navigationController pushViewController:
+    vc animated: YES ];
 }
 
 - (OMBUser *) user

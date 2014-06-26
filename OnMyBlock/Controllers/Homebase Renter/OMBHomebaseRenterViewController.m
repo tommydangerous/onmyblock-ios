@@ -424,23 +424,24 @@ viewForHeaderInSection: (NSInteger) section
   NSString *titleString = @"";
 
   // Info button
-  UIButton *infoButton = [UIButton new];
-  CGFloat widthIcon = 18.f;
-  infoButton.frame = CGRectMake(blur.frame.size.width - widthIcon - 5.f,
-    4.0f, widthIcon, widthIcon);
-  infoButton.layer.borderColor = [UIColor blueDark].CGColor;
-  infoButton.layer.borderWidth = 1.0f;
-  infoButton.layer.cornerRadius = widthIcon * 0.5f;
-  infoButton.titleLabel.font = [UIFont normalTextFontBold];
-  [infoButton setTitle: @"i" forState: UIControlStateNormal];
-  [infoButton setTitleColor: [UIColor blueDark] forState: UIControlStateNormal];
+  // UIButton *infoButton = [UIButton new];
+  // CGFloat widthIcon = 18.f;
+  // infoButton.frame = CGRectMake(blur.frame.size.width - widthIcon - 5.f,
+  //   4.0f, widthIcon, widthIcon);
+  // infoButton.layer.borderColor = [UIColor blueDark].CGColor;
+  // infoButton.layer.borderWidth = 1.0f;
+  // infoButton.layer.cornerRadius = widthIcon * 0.5f;
+  // infoButton.titleLabel.font = [UIFont normalTextFontBold];
+  // [infoButton setTitle: @"i" forState: UIControlStateNormal];
+  // [infoButton setTitleColor: [UIColor blueDark] 
+  //   forState: UIControlStateNormal];
 
   // Sent applications
   if (section == OMBHomebaseRenterSectionSentApplications) {
-    [infoButton addTarget: self 
-      action: @selector(showHowItWorksForSentApplications)
-        forControlEvents: UIControlEventTouchUpInside];
-    [blur addSubview: infoButton];
+    // [infoButton addTarget: self 
+    //   action: @selector(showHowItWorksForSentApplications)
+    //     forControlEvents: UIControlEventTouchUpInside];
+    // [blur addSubview: infoButton];
     titleString = @"Sent Applications";
   }
   // Moved in

@@ -41,7 +41,7 @@
 
 - (void) setDateFormatRubyDefault
 {
-  self.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'.000'ZZZ";
+  self.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZZZ";
 }
 
 @end

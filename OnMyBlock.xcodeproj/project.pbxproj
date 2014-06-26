@@ -200,6 +200,9 @@
 		AB8642BF18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642BE18AB591B00995571 /* OMBPlaceOfferInformationStepsViewController.m */; };
 		AB8642C218AB5FF400995571 /* OMBInformationStepsFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642C118AB5FF400995571 /* OMBInformationStepsFlowLayout.m */; };
 		AB8642C518ABE66200995571 /* OMBHelpPopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8642C418ABE66200995571 /* OMBHelpPopUpView.m */; };
+		AB8A9DDF195CA0B7002D6BF2 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB8A9DD9195CA0B7002D6BF2 /* libTestFlight.a */; };
+		AB8A9DE0195CA0B7002D6BF2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AB8A9DDA195CA0B7002D6BF2 /* README.md */; };
+		AB8A9DE1195CA0B7002D6BF2 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = AB8A9DDB195CA0B7002D6BF2 /* release_notes.md */; };
 		AB8B793E186DEF13005AB552 /* OMBCreateListingDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B793D186DEF13005AB552 /* OMBCreateListingDetailCell.m */; };
 		AB8B7941186DFA8A005AB552 /* OMBActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B7940186DFA8A005AB552 /* OMBActivityView.m */; };
 		AB8B7944186E0091005AB552 /* OMBFinishListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB8B7943186E0091005AB552 /* OMBFinishListingViewController.m */; };
@@ -433,9 +436,6 @@
 		ABE2816C186950D400A5D14E /* OMBUserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE2816B186950D400A5D14E /* OMBUserStore.m */; };
 		ABE28170186A068B00A5D14E /* OMBInboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE2816F186A068B00A5D14E /* OMBInboxViewController.m */; };
 		ABE28174186A09D400A5D14E /* OMBInboxCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE28173186A09D400A5D14E /* OMBInboxCell.m */; };
-		ABE2817C186A187E00A5D14E /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABE28176186A187E00A5D14E /* libTestFlight.a */; };
-		ABE2817D186A187E00A5D14E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = ABE28177186A187E00A5D14E /* README.md */; };
-		ABE2817E186A187E00A5D14E /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = ABE28178186A187E00A5D14E /* release_notes.md */; };
 		ABE28181186A410200A5D14E /* OMBMessageDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE28180186A410200A5D14E /* OMBMessageDetailViewController.m */; };
 		ABE28184186A416200A5D14E /* OMBMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE28183186A416200A5D14E /* OMBMessage.m */; };
 		ABE28187186A44FF00A5D14E /* OMBMessageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE28186186A44FF00A5D14E /* OMBMessageStore.m */; };
@@ -905,6 +905,12 @@
 		AB8642C118AB5FF400995571 /* OMBInformationStepsFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBInformationStepsFlowLayout.m; sourceTree = "<group>"; };
 		AB8642C318ABE66200995571 /* OMBHelpPopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHelpPopUpView.h; sourceTree = "<group>"; };
 		AB8642C418ABE66200995571 /* OMBHelpPopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHelpPopUpView.m; sourceTree = "<group>"; };
+		AB8A9DD9195CA0B7002D6BF2 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		AB8A9DDA195CA0B7002D6BF2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		AB8A9DDB195CA0B7002D6BF2 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		AB8A9DDC195CA0B7002D6BF2 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
+		AB8A9DDD195CA0B7002D6BF2 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
+		AB8A9DDE195CA0B7002D6BF2 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		AB8B793C186DEF13005AB552 /* OMBCreateListingDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingDetailCell.h; sourceTree = "<group>"; };
 		AB8B793D186DEF13005AB552 /* OMBCreateListingDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingDetailCell.m; sourceTree = "<group>"; };
 		AB8B793F186DFA8A005AB552 /* OMBActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBActivityView.h; sourceTree = "<group>"; };
@@ -1367,12 +1373,6 @@
 		ABE2816F186A068B00A5D14E /* OMBInboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBInboxViewController.m; sourceTree = "<group>"; };
 		ABE28172186A09D400A5D14E /* OMBInboxCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBInboxCell.h; sourceTree = "<group>"; };
 		ABE28173186A09D400A5D14E /* OMBInboxCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBInboxCell.m; sourceTree = "<group>"; };
-		ABE28176186A187E00A5D14E /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
-		ABE28177186A187E00A5D14E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		ABE28178186A187E00A5D14E /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
-		ABE28179186A187E00A5D14E /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
-		ABE2817A186A187E00A5D14E /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
-		ABE2817B186A187E00A5D14E /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		ABE2817F186A410200A5D14E /* OMBMessageDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMessageDetailViewController.h; sourceTree = "<group>"; };
 		ABE28180186A410200A5D14E /* OMBMessageDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMessageDetailViewController.m; sourceTree = "<group>"; };
 		ABE28182186A416200A5D14E /* OMBMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMessage.h; sourceTree = "<group>"; };
@@ -1590,9 +1590,9 @@
 				AB802E9E18109E5200E04D11 /* Foundation.framework in Frameworks */,
 				ABB022C318248D6E00F98544 /* NewRelicAgent.framework in Frameworks */,
 				ABB3C58718117C1C00DD91C9 /* MapKit.framework in Frameworks */,
+				AB8A9DDF195CA0B7002D6BF2 /* libTestFlight.a in Frameworks */,
 				ABB022DE182491FD00F98544 /* libGoogleAnalyticsServices.a in Frameworks */,
 				AB01ED6B185966AC00333390 /* libxml2.dylib in Frameworks */,
-				ABE2817C186A187E00A5D14E /* libTestFlight.a in Frameworks */,
 				ABBB18E9182458E200211499 /* libz.dylib in Frameworks */,
 				ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */,
 				ABB022C718248D9800F98544 /* SystemConfiguration.framework in Frameworks */,
@@ -1888,6 +1888,7 @@
 		AB802E9118109E5200E04D11 = {
 			isa = PBXGroup;
 			children = (
+				AB8A9DD8195CA0B7002D6BF2 /* TestFlightSDK3.0.2 */,
 				ABBC494C19070F2B00BF9F7D /* Flurry */,
 				ABB911AA18998FB20046611F /* AFNetworking */,
 				AB6155D6184FF9D400A193C7 /* Base64 */,
@@ -1911,7 +1912,6 @@
 				B484A9C118B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m */,
 				AB9D60F3188CEFDE00C9AC64 /* SDWebImage */,
 				DE8D2D4F18BD05F4000E6BF4 /* SVPullToRefresh */,
-				ABE28175186A187E00A5D14E /* TestFlightSDK2.1.3 */,
 				ABED5FDA1896E8CE00AD630C /* UIERealTimeBlurView */,
 				1DED75158C9B4E69A0B6B2C7 /* Pods.xcconfig */,
 			);
@@ -2009,6 +2009,19 @@
 				AB802EBF18109E5200E04D11 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		AB8A9DD8195CA0B7002D6BF2 /* TestFlightSDK3.0.2 */ = {
+			isa = PBXGroup;
+			children = (
+				AB8A9DD9195CA0B7002D6BF2 /* libTestFlight.a */,
+				AB8A9DDA195CA0B7002D6BF2 /* README.md */,
+				AB8A9DDB195CA0B7002D6BF2 /* release_notes.md */,
+				AB8A9DDC195CA0B7002D6BF2 /* TestFlight+AsyncLogging.h */,
+				AB8A9DDD195CA0B7002D6BF2 /* TestFlight+ManualSessions.h */,
+				AB8A9DDE195CA0B7002D6BF2 /* TestFlight.h */,
+			);
+			path = TestFlightSDK3.0.2;
 			sourceTree = "<group>";
 		};
 		AB8B7948186E1693005AB552 /* Manage Listings */ = {
@@ -3151,19 +3164,6 @@
 			path = Inbox;
 			sourceTree = "<group>";
 		};
-		ABE28175186A187E00A5D14E /* TestFlightSDK2.1.3 */ = {
-			isa = PBXGroup;
-			children = (
-				ABE28176186A187E00A5D14E /* libTestFlight.a */,
-				ABE28177186A187E00A5D14E /* README.md */,
-				ABE28178186A187E00A5D14E /* release_notes.md */,
-				ABE28179186A187E00A5D14E /* TestFlight+AsyncLogging.h */,
-				ABE2817A186A187E00A5D14E /* TestFlight+ManualSessions.h */,
-				ABE2817B186A187E00A5D14E /* TestFlight.h */,
-			);
-			path = TestFlightSDK2.1.3;
-			sourceTree = "<group>";
-		};
 		ABE4FBE318902ED70009D643 /* Payout Methods */ = {
 			isa = PBXGroup;
 			children = (
@@ -3397,7 +3397,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB756AB2185A1C8A001AF572 /* intro_still_image_slide_1_background@2x.jpg in Resources */,
-				ABE2817E186A187E00A5D14E /* release_notes.md in Resources */,
 				AB5DD33C18CE019700237AFC /* neighborhood_university_towne_center.jpg in Resources */,
 				AB756ABA185A2483001AF572 /* intro_still_image_slide_2_background@2x.jpg in Resources */,
 				AB5DD33918CE019700237AFC /* neighborhood_mission_valley.jpg in Resources */,
@@ -3405,10 +3404,11 @@
 				ABE28189186A486E00A5D14E /* edward_d@2x.jpg in Resources */,
 				ABB911701898215B0046611F /* intro_still_image_slide_9_background@2x.jpg in Resources */,
 				AB5DD33B18CE019700237AFC /* neighborhood_pacific_beach.jpg in Resources */,
+				AB8A9DE1195CA0B7002D6BF2 /* release_notes.md in Resources */,
 				AB5DD33618CE019700237AFC /* neighborhood_hillcrest.jpg in Resources */,
+				AB8A9DE0195CA0B7002D6BF2 /* README.md in Resources */,
 				ABF8ECA9182D6C6B0080B1E2 /* intro_contact_view_background.jpg in Resources */,
 				ABBA589B1870C59700E9BF4E /* ELCAssetTablePicker.xib in Resources */,
-				ABE2817D186A187E00A5D14E /* README.md in Resources */,
 				AB802EA818109E5200E04D11 /* InfoPlist.strings in Resources */,
 				ABB911591897F7DE0046611F /* intro_still_image_slide_5_background@2x.jpg in Resources */,
 				AB18CF6118E0904F0022ABF1 /* cosigner_agreement.pdf in Resources */,
@@ -4066,8 +4066,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4086,6 +4086,7 @@
 					"$(SRCROOT)/TestFlightSDK2.1.3",
 					"$(PROJECT_DIR)/PayPalMobile",
 					"$(PROJECT_DIR)/Flurry",
+					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -4093,7 +4094,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "BD3847C5-852B-4F79-B7D9-79D5ECDDCCE2";
+				PROVISIONING_PROFILE = "63F513EB-F1FF-4680-BCE4-C7C24D0BBFF9";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -4106,8 +4107,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
@@ -4125,13 +4126,14 @@
 					"$(SRCROOT)/TestFlightSDK2.1.3",
 					"$(PROJECT_DIR)/PayPalMobile",
 					"$(PROJECT_DIR)/Flurry",
+					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "BD3847C5-852B-4F79-B7D9-79D5ECDDCCE2";
+				PROVISIONING_PROFILE = "63F513EB-F1FF-4680-BCE4-C7C24D0BBFF9";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;

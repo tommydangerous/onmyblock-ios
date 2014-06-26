@@ -715,10 +715,17 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
         iconImageName = @"group_icon.png";
         string = @"Co-applicants";
+        if ([[[self renterApplication] roommates] count]) {
+          fillCheckmark = YES;
+        }
       }
+      // Co-signers
       else if (row == OMBMyRenterProfileSectionRenterInfoRowCosigners) {
         iconImageName = @"landlord_icon.png";
         string = @"Co-signer";
+        if ([[[self renterApplication] cosignersSortedByFirstName] count]) {
+          fillCheckmark = YES;
+        }
       }
       // Previous rentals
       else if (row == OMBMyRenterProfileSectionRenterInfoRowRentalHistory) {

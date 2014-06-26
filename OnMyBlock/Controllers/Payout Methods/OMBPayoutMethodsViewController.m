@@ -135,7 +135,7 @@
 
   // Fetch payout methods
   [[OMBUser currentUser] fetchPayoutMethodsWithCompletion: ^(NSError *error) {
-    if ([[OMBUser currentUser].payoutMethods count]) {
+    if ([[self payoutMethods] count]) {
       // [UIView animateWithDuration: 0.25f animations: ^{
       //   noPayoutMethodsView.alpha = 0.0f;
       // }];
@@ -154,7 +154,7 @@
 - (void) updateSelectPayoutMethodButton
 {
   CGRect rect = selectPayoutMethodButton.frame;
-  if ([[OMBUser currentUser].payoutMethods count]) {
+  if ([[self payoutMethods] count]) {
     rect.origin.y = self.view.frame.size.height - 
       (rect.size.height + rect.origin.x);
   }
@@ -187,7 +187,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 - (NSInteger) tableView: (UITableView *) tableView
 numberOfRowsInSection: (NSInteger) section
 {
-  return [[OMBUser currentUser].payoutMethods count];
+  return [[self payoutMethods] count];
 }
 
 #pragma mark - Protocol UITableViewDelegate
@@ -227,8 +227,15 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (NSArray *) payoutMethods
 {
-  return [[OMBUser currentUser] sortedPayoutMethodsWithKey: @"createdAt"
-    ascending: NO];
+  // Return only PayPal payout methods... for now
+  NSArray *array =
+    [[OMBUser currentUser] sortedPayoutMethodsWithKey: @"createdAt"
+      ascending: NO];
+  return [array filteredArrayUsingPredicate: [NSPredicate predicateWithBlock: 
+    ^BOOL (id evaluatedObject, NSDictionary *bindings) {
+      return [(OMBPayoutMethod *) evaluatedObject isPayPal];
+    }
+  ]];
 }
 
 - (void) selectPayoutMethod

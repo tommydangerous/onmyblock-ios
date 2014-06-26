@@ -430,7 +430,7 @@ forModelName: (NSString *) modelName
   [roommates removeObjectForKey: [NSNumber numberWithInt: roommate.uid]];
 }
 
-- (NSArray *) roommatesSort
+- (NSArray *) roommates
 {
   return [roommates allValues];
 }

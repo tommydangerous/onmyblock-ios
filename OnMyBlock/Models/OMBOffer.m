@@ -21,7 +21,7 @@
 #import "OMBUserStore.h"
 
 NSInteger kMaxHoursForLandlordToAccept = 24 * 2;
-NSInteger kMaxHoursForStudentToConfirm = 24 * 7;
+NSInteger kMaxHoursForStudentToConfirm = 24 * 4;
 CGFloat kOfferDownPaymentPercentage    = 0.1;
 
 #if __ENVIRONMENT__ == 1
