@@ -27,6 +27,7 @@
       @"%@=%@&", key, [dictionary objectForKey: key]];
     string = [string stringByAppendingString: param];
   }
+  // NSLog(@"%@", string);
   [self setRequestWithString: string];
 
   return self;

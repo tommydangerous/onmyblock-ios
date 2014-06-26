@@ -12,6 +12,7 @@
 
 #pragma mark - Initializer
 
-- (id) initWithEmail: (NSString *) email content: (NSString *) content;
+- (id) initWithEmail: (NSString *) email content: (NSString *) content
+userInfo: (NSDictionary *) userInfo;
 
 @end

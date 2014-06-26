@@ -1563,11 +1563,21 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showMap
 {
+  NSString *string = @"Map";
+  if ([residence.address length]) {
+    string = [residence.address capitalizedString];
+  }
+  else if ([residence.city length]) {
+    string = [residence.city capitalizedString];
+  }
+  else if ([residence.state length]) {
+    string = [residence stateFormattedString];
+  }
   CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
     residence.latitude, residence.longitude);
   [self.navigationController pushViewController:
     [[OMBMapViewViewController alloc] initWithCoordinate: coordinate
-      title: [residence.address capitalizedString]] animated: YES];
+      title: string] animated: YES];
 }
 
 - (void) showPlaceOffer

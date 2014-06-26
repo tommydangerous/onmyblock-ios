@@ -19,7 +19,8 @@
   if (!(self = [super initWithRootViewController: viewController])) return nil;
 
   self.delegate = self;
-  self.navigationBar.barTintColor = [UIColor whiteColor];
+  // Don't set the bar tint color, leave the default whiteish color
+  // self.navigationBar.barTintColor = [UIColor whiteColor];
   self.navigationBar.shadowImage  = [UIImage new];
   self.navigationBar.tintColor    = [UIColor blue];
   self.navigationBar.translucent  = YES;

@@ -341,10 +341,6 @@
   // [[self appDelegate].container stopSpinning];
   [_activityView stopSpinning];
 
-  // Make the status bar white
-  [[UIApplication sharedApplication] setStatusBarStyle:
-    UIStatusBarStyleLightContent];
-
   // #warning Remove this
   // [_scroll setContentOffset: CGPointMake(4 * _scroll.frame.size.width, 0.0f)
   //   animated: NO];
@@ -354,6 +350,9 @@
 {
   [super viewDidAppear: animated];
 
+  // Make the status bar white
+  [self animateStatusBarLight];
+
   // #warning Remove this
   // [self showLogin];
 }
@@ -362,8 +361,9 @@
 {
   [super viewWillDisappear: animated];
 
-  [[UIApplication sharedApplication] setStatusBarStyle:
-    UIStatusBarStyleDefault];
+  if (![[self appDelegate].container isMenuVisible]) {
+    [self animateStatusBarDefault];
+  }
 
   if (!self.presentedViewController) {
     // If user first comes to the app and is shown the intro,

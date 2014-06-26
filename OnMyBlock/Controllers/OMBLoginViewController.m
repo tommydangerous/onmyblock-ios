@@ -20,6 +20,9 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
+// View controllers
+#import "OMBViewControllerContainer.h"
+
 @implementation OMBLoginViewController
 
 #pragma mark - Initializer
@@ -28,8 +31,7 @@
 {
   if (!(self = [super init])) return nil;
 
-  self.screenName = @"Login View Controller";
-  self.title      = @"Login";
+  self.title = @"Login";
 
   return self;
 }
@@ -84,6 +86,13 @@
   [_loginSignUpView.blurView refreshWithImage: image];
 }
 
+- (void) viewDidAppear: (BOOL) animated
+{
+  [super viewDidAppear: animated];
+
+  [self animateStatusBarLight];
+}
+
 - (void) viewDidDisappear: (BOOL) animated
 {
   [super viewDidDisappear: animated];
@@ -101,6 +110,16 @@
 
   [_activityView stopSpinning];
 }
+
+- (void) viewWillDisappear: (BOOL) animated
+{
+  [super viewWillDisappear: animated];
+
+  if (![[self appDelegate].container isMenuVisible]) {
+    [self animateStatusBarDefault];
+  }
+}
+
 #pragma mark - Protocol
 
 #pragma mark - Protocol UIAlertViewDelegate

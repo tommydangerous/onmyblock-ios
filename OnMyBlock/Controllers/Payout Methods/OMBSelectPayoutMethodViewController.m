@@ -38,6 +38,8 @@
 
   [self setupForTable];
 
+  self.table.separatorInset = UIEdgeInsetsMake(0.f, 
+    CGRectGetWidth(self.table.frame), 0.f, 0.f);
   self.table.tableHeaderView = [[UIView alloc] initWithFrame:
     CGRectMake(0.0f, 0.0f, self.table.frame.size.width, 44.0f)];
 }
@@ -82,23 +84,25 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.iconView.backgroundColor = UIColor.whiteColor;
       cell.nameLabel.text = @"Credit Card";
     }
-    if (indexPath.row == 0) {
-      CALayer *topBorder = [CALayer layer];
-      topBorder.backgroundColor = tableView.separatorColor.CGColor;
-      topBorder.frame = CGRectMake(0.0f, 0.0f,
-        tableView.frame.size.width, 0.5f);
-      [cell.layer addSublayer: topBorder];
-    }
-    else if (indexPath.row ==
-      [tableView numberOfRowsInSection: indexPath.section] - 1) {
-      CALayer *bottomBorder = [CALayer layer];
-      bottomBorder.backgroundColor = tableView.separatorColor.CGColor;
-      bottomBorder.frame = CGRectMake(0.0f,
-        [self tableView: tableView heightForRowAtIndexPath: indexPath] - 0.5f,
-          tableView.frame.size.width, 0.5f);
-      [cell.layer addSublayer: bottomBorder];
-    }
+    // if (indexPath.row == 0) {
+    //   CALayer *topBorder = [CALayer layer];
+    //   topBorder.backgroundColor = tableView.separatorColor.CGColor;
+    //   topBorder.frame = CGRectMake(0.0f, 0.0f,
+    //     tableView.frame.size.width, 0.5f);
+    //   [cell.layer addSublayer: topBorder];
+    // }
+    // else if (indexPath.row ==
+    //   [tableView numberOfRowsInSection: indexPath.section] - 1) {
+    //   CALayer *bottomBorder = [CALayer layer];
+    //   bottomBorder.backgroundColor = tableView.separatorColor.CGColor;
+    //   bottomBorder.frame = CGRectMake(0.0f,
+    //     [self tableView: tableView 
+    //       heightForRowAtIndexPath: indexPath] - 0.5f,
+    //         tableView.frame.size.width, 0.5f);
+    //   [cell.layer addSublayer: bottomBorder];
+    // }
   }
+  cell.clipsToBounds = YES;
   return cell;
 }
 
@@ -139,7 +143,10 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 - (CGFloat) tableView: (UITableView *) tableView
 heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  return 20.0f + 27.0f + 22.0f + 22.0f + 20.0f;
+  if (indexPath.row == 1) {
+    return 20.0f + 27.0f + 22.0f + 22.0f + 20.0f;
+  }
+  return 0.f;
 }
 
 @end

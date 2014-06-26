@@ -8,6 +8,11 @@
 
 #import "OMBConnection.h"
 
+// App delegate
+#import "OMBAppDelegate.h"
+// View controllers
+#import "OMBViewControllerContainer.h"
+
 NSTimeInterval RequestTimeoutInterval = 20;
 NSMutableArray *sharedConnectionList  = nil;
 NSString *const OnMyBlockAPI          = @"/api-v1";
@@ -100,16 +105,20 @@ totalBytesExpectedToWrite: (NSInteger) totalBytesExpectedToWrite
 - (void) connection: (NSURLConnection *) connection
 didFailWithError: (NSError *) error
 {
-  if (_completionBlock)
+  if (_completionBlock) {
     _completionBlock(error);
+  }
   [sharedConnectionList removeObject: self];
   [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-  NSLog(@"%@", error.localizedDescription);
+
+  OMBAppDelegate *appDelegate = 
+    (OMBAppDelegate *) [UIApplication sharedApplication].delegate;
+  [appDelegate.container showAlertViewWithError: error];
 }
 
 #pragma mark - Methods
 
-#pragma mark Instance Methods
+#pragma mark - Instance Methods
 
 - (NSString *) accessToken
 {

@@ -320,9 +320,32 @@ completion: (void (^)(void)) block
   if ([content length]) {
     OMBAppDelegate *appDelegate = (OMBAppDelegate *)
       [UIApplication sharedApplication].delegate;
+    NSDictionary *userInfo = @{};
+    if ([[OMBUser currentUser] loggedIn]) {
+      userInfo = @{
+        @"about": [OMBUser currentUser].about ? 
+          [OMBUser currentUser].about : @"",
+        @"email": [OMBUser currentUser].email ?
+          [OMBUser currentUser].email : @"",
+        @"first_name": [OMBUser currentUser].firstName ? 
+          [OMBUser currentUser].firstName : @"",
+        @"id": @([OMBUser currentUser].uid) ? 
+          @([OMBUser currentUser].uid) : @0,
+        @"landlord_type": [OMBUser currentUser].landlordType ?
+          [OMBUser currentUser].landlordType : @"",
+        @"last_name": [OMBUser currentUser].lastName ? 
+          [OMBUser currentUser].lastName : @"",
+        @"phone": [OMBUser currentUser].phone ? 
+          [OMBUser currentUser].phone : @"",
+        @"school": [OMBUser currentUser].school ? 
+          [OMBUser currentUser].school : @"",
+        @"user_type": [OMBUser currentUser].userType ?
+          [OMBUser currentUser].userType : @""
+      };
+    }
     OMBFeedbackSendEmailConnection *conn =
       [[OMBFeedbackSendEmailConnection alloc] initWithEmail:
-        emailTextField.text content: content];
+        emailTextField.text content: content userInfo: userInfo];
     conn.completionBlock = ^(NSError *error) {
       if (error) {
         [appDelegate.container showAlertViewWithError: error];
@@ -418,18 +441,20 @@ completion: (void (^)(void)) block
 - (void) trackEventForAction: (NSString *) action
 {
   NSString *label;
-  if ([[OMBUser currentUser] loggedIn])
+  if ([[OMBUser currentUser] loggedIn]){
     label = @"signed_in";
-  else
+  }
+  else {
     label = @"signed_out";
-  id <GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-  [tracker send: [[GAIDictionaryBuilder createEventWithCategory: @"Feedback"
-    action: action label: label value: @1] build]];
-
+  }
   [[Mixpanel sharedInstance] track: @"Feedback" properties: @{
     @"action": action,
-    @"label":  label
+    @"status": label
   }];
+
+  // id <GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+  // [tracker send: [[GAIDictionaryBuilder createEventWithCategory: @"Feedback"
+  //   action: action label: label value: @1] build]];
 }
 
 @end

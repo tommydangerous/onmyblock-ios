@@ -82,9 +82,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 {
   if (!(self = [super init])) return nil;
 
-  fetching           = NO;
-  firstLoad          = YES;
-  radiusIncrementInMiles = 2.0;
+  fetching               = NO;
+  firstLoad              = YES;
+  radiusIncrementInMiles = 0.25f;
   self.radiusInMiles     = 0;
 
   // Location manager
@@ -435,6 +435,10 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     @"another location or change filters.";
   [emptyBackground setLabelText: text];
   [_listViewContainer addSubview: emptyBackground];
+
+  [self setDefaultCenterCoordinate];
+  [self setMapViewRegion: centerCoordinate 
+    withMiles: DEFAULT_MILE_RADIUS animated: YES];
 }
 
 - (void) viewDidAppear: (BOOL) animated
@@ -474,10 +478,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [super viewWillAppear: animated];
 
   if (centerCoordinate.latitude == 0.0f && centerCoordinate.longitude == 0.0f) {
-    centerCoordinate = CLLocationCoordinate2DMake(32.78166389765503,
-      -117.16957478041991);
-    [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
-      animated: YES];
+    [self setDefaultCenterCoordinate];
+    [self setMapViewRegion: centerCoordinate 
+      withMiles: DEFAULT_MILE_RADIUS animated: YES];
     // Find user's location
   }
 
@@ -1601,6 +1604,12 @@ withTitle: (NSString *) title;
   if (!currentResidencesForList)
     [self resetCurrentResidencesForList];
   return currentResidencesForList;
+}
+
+- (void) setDefaultCenterCoordinate
+{
+  centerCoordinate = CLLocationCoordinate2DMake(32.78166389765503,
+    -117.16957478041991);
 }
 
 - (void) setMapViewRegion: (CLLocationCoordinate2D) coordinate

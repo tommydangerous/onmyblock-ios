@@ -501,6 +501,10 @@ state: (FBSessionState) state error: (NSError *) error
   id <GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:
     @"UA-45382533-1"];
   NSLog(@"GAITracker: %@", tracker);
+  // Uncaught exceptions represent instances where your app encountered 
+  // unexpected conditions at runtime and are often fatal, 
+  // causing the app to crash
+  [[GAI sharedInstance] setTrackUncaughtExceptions: YES];
 
   // Flurry
   // note: iOS only allows one crash reporting tool per app;
@@ -511,7 +515,14 @@ state: (FBSessionState) state error: (NSError *) error
 
   // Initialize the library with your
   // Mixpanel project token, MIXPANEL_TOKEN
-  [Mixpanel sharedInstanceWithToken: @"6db62604783bd53a107ae8c69832dfda"];
+  // OnMyBlock Prod
+  if (__ENVIRONMENT__ == 3) {
+    [Mixpanel sharedInstanceWithToken: @"236204669d6eba6a611d644a0a77095d"];
+  }
+  // OnMyBlock Dev
+  else {
+    [Mixpanel sharedInstanceWithToken: @"6db62604783bd53a107ae8c69832dfda"];
+  }
 
   // Later, you can get your instance with
   // Mixpanel *mixpanel = [Mixpanel sharedInstance];

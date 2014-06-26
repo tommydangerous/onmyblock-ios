@@ -1102,6 +1102,11 @@ completion: (void (^) (void)) block
   return _detailView.bounds;
 }
 
+- (BOOL) isMenuVisible
+{
+  return menuIsVisible;
+}
+
 - (void) logout
 {
   [self changeTitleLabelColor:discoverButton];
