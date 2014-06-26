@@ -33,8 +33,6 @@
 #import "PayPalMobile.h"
 #import "UIColor+Extensions.h"
 
-#import "OMBRenterApplication.h"
-
 NSString *const FBSessionStateChangedNotification =
   @"com.onmyblock.Login:FBSessionStateChangedNotification";
 
