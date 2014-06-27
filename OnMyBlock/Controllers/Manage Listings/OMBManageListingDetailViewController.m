@@ -723,7 +723,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     [residence setImageForCenteredImageView:
       (OMBCenteredImageView *) centerImageView
         withURL: residence.coverPhotoURL completion: ^{
-          [weakBlurView refreshWithImage: [(OMBCenteredImageView *) weakImageView image]];
+          [weakBlurView refreshWithImage: 
+            [(OMBCenteredImageView *) weakImageView image]];
         }];
   };
   [conn start];
