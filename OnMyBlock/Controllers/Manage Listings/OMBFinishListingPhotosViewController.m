@@ -32,12 +32,12 @@
 {
   if (!(self = [super init])) return nil;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self  selector:@selector(progressConnection:) name:@"progressConnection" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self 
+      selector: @selector(progressConnection:) name: @"progressConnection" 
+        object: nil];
     
   residence  = object;
-
-  self.screenName = @"Photos";
-  self.title      = @"Photos";
+  self.title = @"Photos";
 
   return self;
 }

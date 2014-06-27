@@ -258,27 +258,31 @@
 {
   [super viewWillAppear: animated];
 
-  // Download the residence's images
-  OMBResidenceImagesConnection *conn =
-    [[OMBResidenceImagesConnection alloc] initWithResidence: residence];
-  conn.completionBlock = ^(NSError *error) {
-    // Add the cover photo
-    if (!headerImageView.image)
-      [residence setImageForCenteredImageView: headerImageView
-        withURL: residence.coverPhotoURL completion: nil];
-
-    // Update the Photos (X) count
+  __weak typeof (self) weakSelf = self;
+  if ([residence coverPhoto]) {
+    [headerImageView setImage: [residence coverPhoto]];
     [self verifyPhotos];
-  };
-  [conn start];
-
-  // Image
-  // if ([residence coverPhoto])
-  //   headerImageView.image = [residence coverPhoto];
-  // else
-  //   [headerImageView clearImage];
-  [residence setImageForCenteredImageView: headerImageView
-    withURL: residence.coverPhotoURL completion: nil];
+  }
+  else if (residence.coverPhotoURL) {
+    __weak typeof (headerImageView) weakImageView = headerImageView;
+    [headerImageView.imageView setImageWithURL: residence.coverPhotoURL
+      placeholderImage: nil options: SDWebImageRetryFailed completed:
+        ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+          if (image) {
+            [weakImageView setImage: image];
+          }
+          [weakSelf verifyPhotos];
+        }
+      ];
+  }
+  else {
+    // This will download the cover photo url
+    // Then download the cover photo and set it
+    [residence setImageForCenteredImageView: headerImageView withURL: nil
+      completion: ^{
+        [weakSelf verifyPhotos];
+      }];
+  }
 
   // Reload
   // Photos
@@ -287,7 +291,6 @@
   // [self reloadTitleRow];
 
   [self.table reloadData];
-  [self verifyPhotos];
 
   // Calculate how many steps are left
   NSString *publishNowButtonTitle;
