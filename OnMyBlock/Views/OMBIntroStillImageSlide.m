@@ -79,7 +79,7 @@
   _secondDetailLabel.textColor = _detailLabel.textColor;
   [self addSubview: _secondDetailLabel];
 
-  CGFloat imageSize = screenHeight * 0.25;
+  CGFloat imageSize = screenHeight * 0.19f;
   _imageView = [[UIImageView alloc] init];
   _imageView.frame = CGRectMake((screenWidth - imageSize) * 0.5,
     _titleLabel.frame.origin.y - (imageSize + padding), imageSize, imageSize);

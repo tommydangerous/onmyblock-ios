@@ -76,11 +76,15 @@
     blur.blurRadius = 5.0f;
     blur.imageView.clipsToBounds = YES;
     blur.imageView.contentMode   = UIViewContentModeScaleAspectFill;
-    // If this is the last image, the get started view
-    if ([imageNames indexOfObject: string] == [imageNames count] - 1)
-      blur.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
-    else
-      blur.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+    
+    // If this is the last image or 'Seal the Deal' view
+    if([imageNames indexOfObject: string] == 3 ||
+       [imageNames indexOfObject: string] == [imageNames count] - 1){
+      blur.blurRadius = 3.0f;
+    }
+    
+    blur.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+    
     [blur refreshWithImage: [UIImage imageNamed: string]];
     [self.view insertSubview: blur atIndex: 0];
     [backgroundViewArray addObject: blur];
