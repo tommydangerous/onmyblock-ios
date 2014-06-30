@@ -62,6 +62,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 @interface OMBMapViewController ()
 {
   OMBActivityViewFullScreen *activityViewFullScreen;
+  BOOL isSpinning;
   BOOL firstLoad;
   BOOL isFetchingResidencesForMap;
   NSMutableArray *neighborhoodAnnotationArray;
@@ -552,8 +553,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // Check any filter values and display them
   [self updateFilterLabel];
 
-  if (firstLoad)
-    [activityViewFullScreen startSpinning];
+  //if (firstLoad)
+  //  [activityViewFullScreen startSpinning];
 }
 
 #pragma mark - Protocol
@@ -1228,6 +1229,10 @@ withTitle: (NSString *) title;
     // if (!activityView.isSpinning) {
     //   [activityView startSpinning];
     // }
+    if(![[self residencesForList] count] && !isSpinning){
+      [activityViewFullScreen startSpinning];
+      isSpinning = YES;
+    }
   }
   fetching = YES;
 
@@ -1270,6 +1275,7 @@ withTitle: (NSString *) title;
     delegate: self completion: ^(NSError *error) {
       if (firstLoad) {
         [activityViewFullScreen stopSpinning];
+        isSpinning = NO;
         firstLoad = NO;
       }
 
@@ -1298,6 +1304,8 @@ withTitle: (NSString *) title;
         else {
           // if (activityView.isSpinning)
           //   [activityView stopSpinning];
+          [activityViewFullScreen stopSpinning];
+          isSpinning = NO;
           if ([[self residencesForList] count])
             emptyBackground.alpha = 0.0f;
         }
@@ -1306,6 +1314,8 @@ withTitle: (NSString *) title;
       else {
         // if (activityView.isSpinning)
         //   [activityView stopSpinning];
+        [activityViewFullScreen stopSpinning];
+        isSpinning = NO;
         if ([[self residencesForList] count] == 0)
           [UIView animateWithDuration: OMBStandardDuration animations: ^{
             emptyBackground.alpha = 1.0f;
