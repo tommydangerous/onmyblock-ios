@@ -372,7 +372,7 @@
 {
   NSString *actionButtonString = isLogin ? @"Login" : @"Sign Up";
   headerLabel.text = [NSString stringWithFormat: @"%@ %@",
-    isLandlord ? @"Landlords" : @"Students", actionButtonString];
+    isLandlord ? @"Landlord" : @"Student", actionButtonString];
   _emailTextField.placeholder = [NSString stringWithFormat: @"%@ email",
     isLandlord ? @"Landlord" : @"School"];
   [_actionButton setTitle: actionButtonString
@@ -476,7 +476,7 @@
 
     NSString *actionButtonString = isLogin ? @"Login" : @"Sign Up";
     headerLabel.text = [NSString stringWithFormat: @"%@ %@",
-      isLandlord ? @"Landlords" : @"Students", actionButtonString];
+      isLandlord ? @"Landlord" : @"Student", actionButtonString];
   }
 
   [self refreshContentSize];

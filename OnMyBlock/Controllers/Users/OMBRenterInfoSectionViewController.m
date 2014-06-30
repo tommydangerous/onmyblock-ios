@@ -330,24 +330,25 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) setEmptyLabelText: (NSString *) string
 {
-  CGRect screen        = [self screen];
-  CGFloat screenHeight = screen.size.height;
-  CGFloat screenWidth  = screen.size.width;
+  CGRect screen = [self screen];
 
+  // button centered
+  CGRect buttonRect = addButtonMiddle.frame;
+  buttonRect.origin.y = (screen.size.height - buttonRect.size.height) * .5f;
+  addButtonMiddle.frame = buttonRect;
+  
   emptyLabel.attributedText = [string attributedStringWithFont: 
     emptyLabel.font lineHeight: 27.0f];
   CGRect rect = [emptyLabel.attributedText boundingRectWithSize: 
-    CGSizeMake(screenWidth - (OMBPadding * 2), 9999.0f)
+    CGSizeMake(screen.size.width - (OMBPadding * 2), 9999.0f)
       options: NSStringDrawingUsesLineFragmentOrigin context: nil];
-  emptyLabel.frame = CGRectMake(OMBPadding, (screenHeight - 
-    (rect.size.height + addButtonMiddle.frame.size.height)) * 0.5f, 
-      screenWidth - (OMBPadding * 2), rect.size.height);
+  
+  // Text more toward top.
+  CGFloat originY = addButtonMiddle.frame.origin.y - rect.size.height - 2 * OMBPadding;
+  emptyLabel.frame = CGRectMake(OMBPadding, originY,
+      screen.size.width - (OMBPadding * 2), rect.size.height);
   emptyLabel.textAlignment = NSTextAlignmentCenter;
 
-  CGRect buttonRect = addButtonMiddle.frame;
-  buttonRect.origin.y = emptyLabel.frame.origin.y + 
-    emptyLabel.frame.size.height + (OMBPadding * 2);
-  addButtonMiddle.frame = buttonRect;
 }
 
 - (void) startSpinning

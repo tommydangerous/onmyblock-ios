@@ -31,7 +31,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   _propertyTypeLabel = [UILabel new];
   _propertyTypeLabel.font = [UIFont fontWithName: @"HelveticaNeue-Medium" 
     size: 18];
-  _propertyTypeLabel.textColor = [UIColor blueDark];
+  _propertyTypeLabel.textColor = [UIColor textColor];
   [self.contentView addSubview: _propertyTypeLabel];
 
   return self;
