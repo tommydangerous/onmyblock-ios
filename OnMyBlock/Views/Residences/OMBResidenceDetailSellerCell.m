@@ -104,8 +104,9 @@ reuseIdentifier: (NSString *)reuseIdentifier
 - (void) setImageFromUserOrResidence: (OMBResidence *) residence
 {
   if (residence.user.hasDefaultImage) {
-    [residence setImageForCenteredImageView: _sellerImageView
-      withURL: residence.coverPhotoURL completion: nil];
+    [self.sellerImageView setImage: [OMBUser defaultUserImage]];
+    // [residence setImageForCenteredImageView: _sellerImageView
+    //   withURL: residence.coverPhotoURL completion: nil];
   }
   else {
     _sellerImageView.image = residence.user.image;

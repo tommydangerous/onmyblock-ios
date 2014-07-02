@@ -87,8 +87,16 @@ float kResidenceDetailImagePercentage   = 0.5f;
     self.navigationItem.titleView = 
       [[OMBResidenceTitleView alloc] initWithResidence: residence];
   }
-  else {
+  else if ([residence.title length]) {
     self.title = residence.title;
+  }
+  else if ([residence.city length] && [residence.propertyType length]) {
+    self.title = [NSString stringWithFormat: @"%@ in %@",
+      [residence.propertyType capitalizedString], 
+        [residence.city capitalizedString]];
+  }
+  else {
+    self.title = @"Listing";
   }
 
   [[NSNotificationCenter defaultCenter] addObserver: self
@@ -167,11 +175,11 @@ float kResidenceDetailImagePercentage   = 0.5f;
   // [imageCollectionView addGestureRecognizer: imagePanGestureRecognizer];
 
   // Show when there aren't images
-  placeholderImageView = [[UIImageView alloc] initWithFrame:
-    imageCollectionView.frame];
-  placeholderImageView.hidden = NO;
-  placeholderImageView.image = [OMBResidence placeholderImage];
-  [self.view addSubview: placeholderImageView];
+  // placeholderImageView = [[UIImageView alloc] initWithFrame:
+  //   imageCollectionView.frame];
+  // placeholderImageView.hidden = NO;
+  // placeholderImageView.image = [OMBResidence placeholderImage];
+  // [self.view addSubview: placeholderImageView];
 
   // The table to hold most of the data
   self.table = [[UITableView alloc] initWithFrame: screen
@@ -485,8 +493,9 @@ float kResidenceDetailImagePercentage   = 0.5f;
 viewForAnnotation: (id <MKAnnotation>) annotation
 {
   // If the annotation is the user's location, show the default pulsing circle
-  if (annotation == map.userLocation)
+  if (annotation == map.userLocation) {
     return nil;
+  }
 
   static NSString *ReuseIdentifier = @"AnnotationViewIdentifier";
   OMBAnnotationView *annotationView = (OMBAnnotationView *)
@@ -505,30 +514,45 @@ viewForAnnotation: (id <MKAnnotation>) annotation
 - (UICollectionViewCell *) collectionView: (UICollectionView *) collectionView
 cellForItemAtIndexPath: (NSIndexPath *) indexPath
 {
+  NSInteger row = indexPath.row;
+
   OMBResidenceDetailImageCollectionViewCell *cell =
     [collectionView dequeueReusableCellWithReuseIdentifier:
       [OMBResidenceDetailImageCollectionViewCell reuseIdentifierString]
         forIndexPath: indexPath];
-  [cell loadResidenceImage:
-    [[residence imagesArray] objectAtIndex: indexPath.row]];
-  // Next cell
-  if (indexPath.row < [[residence imagesArray] count] - 1) {
-    NSIndexPath *nextIndexPath = [NSIndexPath indexPathForRow: indexPath.row + 1
-      inSection: indexPath.section];
-    OMBResidenceDetailImageCollectionViewCell *nextCell =
-      [collectionView dequeueReusableCellWithReuseIdentifier:
-        [OMBResidenceDetailImageCollectionViewCell reuseIdentifierString]
-          forIndexPath: nextIndexPath];
-    [nextCell loadResidenceImage:
-      [[residence imagesArray] objectAtIndex: nextIndexPath.row]];
+
+
+  OMBResidenceImage *residenceImage = nil;
+  if ([[self residenceImages] count]) {
+    residenceImage = [[self residenceImages] objectAtIndex: row];
   }
+  [cell loadResidenceImage: residenceImage];
+
+  if (residenceImage) {
+    // Next cell
+    if (indexPath.row < [[residence imagesArray] count] - 1) {
+      NSIndexPath *nextIndexPath = [NSIndexPath indexPathForRow: row + 1
+        inSection: indexPath.section];
+      OMBResidenceDetailImageCollectionViewCell *nextCell =
+        [collectionView dequeueReusableCellWithReuseIdentifier:
+          [OMBResidenceDetailImageCollectionViewCell reuseIdentifierString]
+            forIndexPath: nextIndexPath];
+      [nextCell loadResidenceImage:
+        [[residence imagesArray] objectAtIndex: nextIndexPath.row]];
+    }
+  }
+
   return cell;
 }
 
 - (NSInteger) collectionView: (UICollectionView *) collectionView
 numberOfItemsInSection: (NSInteger) section
 {
-  return [[residence imagesArray] count];
+  NSInteger count = [[self residenceImages] count];
+  if (count) {
+    return count;
+  }
+  return 1;
 }
 
 - (NSInteger) numberOfSectionsInCollectionView:
@@ -600,6 +624,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
       (y - adjustment);
     if (backRectWithHeight.size.height > backgroundImageViewHeight)
       backRectWithHeight.size.height = backgroundImageViewHeight;
+
     // Image collection view layout
     imageCollectionViewLayout.itemSize = CGSizeMake(
       imageCollectionView.frame.size.width,
@@ -611,7 +636,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     // Adjust the gradient
     gradientView.frame         = backRectWithHeight;
     // Adjust the placeholder image
-    placeholderImageView.frame = backRectWithHeight;
+    // placeholderImageView.frame = backRectWithHeight;
 
     // Header view
     backRect.size.height = imageCollectionView.frame.size.height -
@@ -1363,12 +1388,22 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [imageCollectionView reloadData];
 
   // Set the pages text 1/2
-  _pageOfImagesLabel.text = [NSString stringWithFormat: @"%i/%i",
-    [self currentPageOfImages], (int) [[residence imagesArray] count]];
-  if([residence imagesArray].count)
-    placeholderImageView.hidden = YES;
-  else
-    placeholderImageView.hidden = NO;
+  NSString *pageString;
+  if ([[residence imagesArray] count]) {
+    pageString = [NSString stringWithFormat: @"%i/%i",
+      [self currentPageOfImages], (int) [[residence imagesArray] count]];
+  }
+  else {
+    pageString = @"0/0";
+  }
+  self.pageOfImagesLabel.text = pageString;
+
+  // if ([residence imagesArray].count) {
+  //   placeholderImageView.hidden = YES;
+  // }
+  // else {
+  //   placeholderImageView.hidden = NO;
+  // }
 
   [self adjustPageOfImagesLabelFrame];
 }
@@ -1401,6 +1436,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
   [self.table reloadData];
   hiddenScrollView.contentSize = self.table.contentSize;
+}
+
+- (NSArray *) residenceImages
+{
+  return [residence imagesArray];
 }
 
 - (void) setupBottomButtons
