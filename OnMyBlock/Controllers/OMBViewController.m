@@ -188,6 +188,12 @@ CGFloat const OMBStandardHeight       = 44.0f;
   // Subclasses implement this
 }
 
+- (void) mixpanelTrack: (NSString *) eventName 
+properties: (NSDictionary *) dictionary
+{
+  [[Mixpanel sharedInstance] track: eventName properties: dictionary];
+}
+
 - (void) save
 {
   // Subclasses implement this

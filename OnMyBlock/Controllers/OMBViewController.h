@@ -56,6 +56,8 @@ extern CGFloat const OMBStandardHeight;
 - (void) back;
 - (void) cancel;
 - (void) done;
+- (void) mixpanelTrack: (NSString *) eventName 
+properties: (NSDictionary *) dictionary;
 - (void) save;
 - (CGRect) screen;
 - (void) setMenuBarButtonItem;
