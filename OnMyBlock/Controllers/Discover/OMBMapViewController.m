@@ -1693,7 +1693,7 @@ withMiles: (int) miles animated: (BOOL) animated
   CGFloat originY = screen.size.height * 0.5f;
   CGFloat height = screen.size.height * 0.5f;
 
-  if([residentAnnotations count] < 3){
+  if ([residentAnnotations count] < 3){
     CGFloat adjusment =  (3 - [residentAnnotations count]) *
       _residentListMap.frame.size.height / 3.0f ;
     originY += adjusment;

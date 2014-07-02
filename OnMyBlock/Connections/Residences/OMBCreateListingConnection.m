@@ -58,14 +58,9 @@ dictionary: (NSDictionary *) dictionary
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
-
-  NSLog(@"OMBCreateListingConnection\n%@", json);
-
-  if ([[json objectForKey: @"success"] intValue] == 1) {
-    [temporaryResidence readFromResidenceDictionary:
-      [json objectForKey: @"object"]];
+  if ([self successful]) {
+    temporaryResidence.uid = 
+      [[[self objectDictionary] objectForKey: @"id"] intValue];
     [[OMBUser currentUser] addResidence: temporaryResidence];
   }
   [super connectionDidFinishLoading: connection];

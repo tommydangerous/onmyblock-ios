@@ -99,6 +99,7 @@ toImageSizeDictionaryWithSize: (CGSize) size;
 - (void) addOffer: (OMBOffer *) offer;
 - (void) addOpenHouse: (OMBOpenHouse *) openHouse;
 - (void) addResidenceImage: (OMBResidenceImage *) residenceImage;
+- (NSUInteger) amenityCount;
 - (NSArray *) availableAmenities;
 - (NSString *) availableOnString;
 - (void) cancelCoverPhotoDownload;

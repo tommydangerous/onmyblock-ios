@@ -191,6 +191,16 @@ toImageSizeDictionaryWithSize: (CGSize) size
   }
 }
 
+- (NSUInteger) amenityCount
+{
+  for (NSNumber *number in [self.amenities allValues]) {
+    if (number && [number intValue]) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
 - (NSArray *) availableAmenities
 {
   NSMutableArray *array = [NSMutableArray array];

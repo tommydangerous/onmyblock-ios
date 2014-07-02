@@ -106,23 +106,24 @@ reuseIdentifier: (NSString *) reuseIdentifier
          object.coverPhotoURL placeholderImage: nil
            options: SDWebImageRetryFailed completed:
            ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
-            if (img) {
+            if (img && !error) {
               weakCoverPhoto.image = img;
               [object.coverPhotoSizeDictionary setObject:
                 weakCoverPhoto.image forKey: sizeKey];
             }
+            else {
+              weakCoverPhoto.image = [OMBResidence placeholderImage];
+            }
          }
        ];
     }];
-    coverPhoto.image = [OMBResidence placeholderImage];
   }
 
   // Rent
   rentLabel.text = [NSString numberToCurrencyString:_residence.minRent];
-  CGFloat rentWidth = [rentLabel.text
-    boundingRectWithSize:
-      CGSizeMake(screen.size.width - heightCell - padding, rentLabel.frame.size.height)
-        font: rentLabel.font].size.width;
+  CGFloat rentWidth = [rentLabel.text boundingRectWithSize:
+    CGSizeMake(screen.size.width - heightCell - padding, 
+      rentLabel.frame.size.height) font: rentLabel.font].size.width;
   CGRect rentRect = rentLabel.frame;
   rentRect.size.width = rentWidth;
   rentLabel.frame = rentRect;
