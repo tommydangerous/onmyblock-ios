@@ -35,35 +35,6 @@
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 
-@interface OMBMyRenterProfileViewController ()
-<UIActionSheetDelegate, UIImagePickerControllerDelegate,
-  UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate>
-{
-  UILabel *aboutTextViewPlaceholder;
-  UITextView *aboutTextView;
-  OMBCenteredImageView *backImageView;
-  UIView *backView;
-  CGFloat backViewOriginY;
-  UIView *fadedBackground;
-  UILabel *fullNameLabel;
-  OMBGradientView *gradient;
-  LIALinkedInHttpClient *linkedInClient;
-  UIView *nameView;
-  CGFloat nameViewOriginY;
-  UIBarButtonItem *previewBarButtonItem;
-  UIView *scaleBackView;
-  UIToolbar *textFieldToolbar;
-  NSString *savedTextString;
-  UITextView *editingTextView;
-  UITextField *editingTextField;
-  UIActionSheet *uploadActionSheet;
-  OMBUser *user;
-  OMBCenteredImageView *userIconView;
-  NSMutableDictionary *valueDictionary;
-}
-
-@end
-
 @implementation OMBMyRenterProfileViewController
 
 #pragma mark - Initializer
@@ -275,7 +246,7 @@
   // If user is a subletter
   if ([user.landlordType isEqualToString: @"subletter"]) {
     OMBManageListingsConnection *conn =
-    [[OMBManageListingsConnection alloc] init];
+      [[OMBManageListingsConnection alloc] init];
     conn.completionBlock = ^(NSError *error) {
       [self.table reloadData];
     };
@@ -597,6 +568,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
     if (row == OMBMyRenterProfileSectionRenterInfoTopSpacing) {
       emptyCell.backgroundColor = [UIColor backgroundColor];
+      emptyCell.selectionStyle = UITableViewCellSelectionStyleNone;
       emptyCell.separatorInset = maxInsets;
     }
     else {

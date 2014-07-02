@@ -73,14 +73,14 @@
   backgroundViewArray = [NSMutableArray array];
   for (NSString *string in imageNames) {
     OMBBlurView *blur = [[OMBBlurView alloc] initWithFrame: screen];
-    blur.blurRadius = 5.0f;
+    blur.blurRadius = 2.f;
     blur.imageView.clipsToBounds = YES;
     blur.imageView.contentMode   = UIViewContentModeScaleAspectFill;
     
     // If this is the last image or 'Seal the Deal' view
     if([imageNames indexOfObject: string] == 3 ||
        [imageNames indexOfObject: string] == [imageNames count] - 1){
-      blur.blurRadius = 3.0f;
+      blur.blurRadius = 1.5f;
     }
     
     blur.tintColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
