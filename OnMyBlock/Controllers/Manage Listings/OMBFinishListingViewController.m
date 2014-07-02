@@ -532,11 +532,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Amenities & Pets
   else if (indexPath.row == 6) {
     string = @"Amenities & Pets";
-    cell.basicTextLabel.textColor = [UIColor textColor];
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
       0.0f, 0.0f);
-
-    if ([residence amenityCount]) {
+    if ([residence amenityCount])
+      cell.basicTextLabel.textColor = [UIColor textColor]; {
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
