@@ -534,6 +534,7 @@
 		DE9A4183194272CC0026545C /* OMBImageFourLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9A4182194272CC0026545C /* OMBImageFourLabelCell.m */; };
 		DE9A41861942763F0026545C /* OMBApplicationResidenceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9A41851942763F0026545C /* OMBApplicationResidenceCell.m */; };
 		DE9C76FF1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9C76FE1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m */; };
+		DE9C77051965E22300E42B83 /* OMBFinishListingTitleDescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9C77041965E22200E42B83 /* OMBFinishListingTitleDescriptionViewController.m */; };
 		DE9E7A9718D104AE00617563 /* OMBMapFilterLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9E7A9618D104AE00617563 /* OMBMapFilterLocationViewController.m */; };
 		DE9FF67418CF6A500017AA15 /* OMBTopDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */; };
 		DEA0560418E230AD002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.m in Sources */ = {isa = PBXBuildFile; fileRef = DEA0560318E230AD002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.m */; };
@@ -1562,6 +1563,8 @@
 		DE9A41851942763F0026545C /* OMBApplicationResidenceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBApplicationResidenceCell.m; sourceTree = "<group>"; };
 		DE9C76FD1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBImageTwoTextFieldCell.h; sourceTree = "<group>"; };
 		DE9C76FE1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBImageTwoTextFieldCell.m; sourceTree = "<group>"; };
+		DE9C77031965E22200E42B83 /* OMBFinishListingTitleDescriptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingTitleDescriptionViewController.h; sourceTree = "<group>"; };
+		DE9C77041965E22200E42B83 /* OMBFinishListingTitleDescriptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFinishListingTitleDescriptionViewController.m; sourceTree = "<group>"; };
 		DE9E7A9518D104AE00617563 /* OMBMapFilterLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterLocationViewController.h; sourceTree = "<group>"; };
 		DE9E7A9618D104AE00617563 /* OMBMapFilterLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterLocationViewController.m; sourceTree = "<group>"; };
 		DE9FF67218CF6A500017AA15 /* OMBTopDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTopDetailView.h; sourceTree = "<group>"; };
@@ -1871,6 +1874,8 @@
 				AB4ED2DF188462D8009AFB01 /* OMBFinishListingOpenHouseDateAddViewController.m */,
 				AB17AE4D18FD9CB600B6952C /* OMBManageListingDetailViewController.h */,
 				AB17AE4E18FD9CB600B6952C /* OMBManageListingDetailViewController.m */,
+				DE9C77031965E22200E42B83 /* OMBFinishListingTitleDescriptionViewController.h */,
+				DE9C77041965E22200E42B83 /* OMBFinishListingTitleDescriptionViewController.m */,
 			);
 			path = "Manage Listings";
 			sourceTree = "<group>";
@@ -3809,6 +3814,7 @@
 				DE90C986192D106400B531EE /* OMBSentApplicationCell.m in Sources */,
 				AB19A09818617C0E00F84DE9 /* OMBResidenceDetailMapCell.m in Sources */,
 				AB3396FB18AD52FC00F49064 /* OMBInformationHowItWorksCell.m in Sources */,
+				DE9C77051965E22300E42B83 /* OMBFinishListingTitleDescriptionViewController.m in Sources */,
 				AB756AC9185A3ADE001AF572 /* OMBPayPalVerifyMobilePaymentConnection.m in Sources */,
 				ABBA5879186F7D2800E9BF4E /* OMBFinishListingPhotosViewController.m in Sources */,
 				ABB91182189865880046611F /* OMBEditProfileViewController.m in Sources */,

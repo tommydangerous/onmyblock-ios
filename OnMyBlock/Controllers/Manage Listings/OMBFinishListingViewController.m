@@ -21,7 +21,7 @@
 #import "OMBFinishListingOtherDetailsViewController.h"
 #import "OMBFinishListingPhotosViewController.h"
 #import "OMBFinishListingRentAuctionDetailsViewController.h"
-#import "OMBFinishListingTitleViewController.h"
+#import "OMBFinishListingTitleDescriptionViewController.h"
 #import "OMBGradientView.h"
 #import "OMBMapViewController.h"
 #import "OMBResidence.h"
@@ -49,7 +49,6 @@ float const photoViewImageHeightPercentage = 0.32;
 {
   if (!(self = [super init])) return nil;
 
-  numberOfSteps = 7;
   residence     = object;
 
   if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
@@ -322,6 +321,7 @@ float const photoViewImageHeightPercentage = 0.32;
       self.table.frame.size.width, 0.0f);
     self.table.tableFooterView = footerView;
   }
+  
   if(_nextSection)
    [self nextIncompleteSection];
 }
@@ -473,10 +473,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   imageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
   NSString *string = @"";
 
-  // Title
+  // Title / Description
   if (indexPath.row == 0) {
-    string = @"Title";
-    if ([residence.title length]) {
+    string = @"Title and Description";
+    if ([residence.title length] && [residence.description length]) {
       string = residence.title;
       cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
@@ -484,16 +484,16 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Description
-  else if (indexPath.row == 1) {
+  /*else if (indexPath.row == 1) {
     string = @"Description";
     if ([residence.description length]) {
       cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
-  }
+  }*/
   // Rent / Auction Details
-  else if (indexPath.row == 2) {
+  else if (indexPath.row == 1) {
     // string = @"Rent / Auction Details";
     string = @"Rent Details";
     if (residence.minRent) {
@@ -503,7 +503,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Address
-  else if (indexPath.row == 3) {
+  else if (indexPath.row == 2) {
     string = @"Select Address";
     if ([residence.address length] && [residence.city length] &&
         [residence.state length] && [residence.zip length]) {
@@ -514,7 +514,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Lease Details
-  else if (indexPath.row == 4) {
+  else if (indexPath.row == 3) {
     string = @"Lease Details";
     if (residence.moveInDate) {
       cell.basicTextLabel.textColor = [UIColor textColor];
@@ -523,7 +523,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Listing Details
-  else if (indexPath.row == 5) {
+  else if (indexPath.row == 4) {
     string = @"Listing Details";
     if (residence.bedrooms) {
       cell.basicTextLabel.textColor = [UIColor textColor];
@@ -532,7 +532,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Amenities & Pets
-  else if (indexPath.row == 6) {
+  else if (indexPath.row == 5) {
     string = @"Amenities & Pets";
     if ([residence amenityCount]) {
       cell.basicTextLabel.textColor = [UIColor textColor];
@@ -551,14 +551,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 numberOfRowsInSection: (NSInteger) section
 {
   // ! Photos
-  // Title
-  // Description
+  // Title / Description
+  // ! Description
   // Rent / Auction Details
   // Address
   // Lease Details
   // Listing Details
   // Pets & Amenities
-  return 7;
+  return 6;
 }
 
 #pragma mark - Protocol UITableViewDelegate
@@ -566,24 +566,24 @@ numberOfRowsInSection: (NSInteger) section
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
-  // Title
+  // Title and description
   if (indexPath.row == 0) {
-    OMBFinishListingTitleViewController *vc =
-      [[OMBFinishListingTitleViewController alloc]
+    OMBFinishListingTitleDescriptionViewController *vc =
+      [[OMBFinishListingTitleDescriptionViewController alloc]
         initWithResidence: residence];
     vc.delegate = self;
     [self.navigationController pushViewController:vc animated: YES];
   }
   // Description
-  else if (indexPath.row == 1) {
+  /*else if (indexPath.row == 1) {
     OMBFinishListingDescriptionViewController *vc =
       [[OMBFinishListingDescriptionViewController alloc]
         initWithResidence:residence];
     vc.delegate = self;
     [self.navigationController pushViewController:vc animated: YES];
-  }
+  }*/
   // Rent / Auction Details
-  else if (indexPath.row == 2) {
+  else if (indexPath.row == 1) {
     OMBFinishListingRentAuctionDetailsViewController *vc =
       [[OMBFinishListingRentAuctionDetailsViewController alloc]
         initWithResidence:residence];
@@ -591,7 +591,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     [self.navigationController pushViewController:vc animated: YES];
   }
   // Address
-  else if (indexPath.row == 3) {
+  else if (indexPath.row == 2) {
     OMBFinishListingAddressViewController *vc =
       [[OMBFinishListingAddressViewController alloc]
         initWithResidence: residence];
@@ -600,7 +600,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     
   }
   // Lease Details
-  else if (indexPath.row == 4) {
+  else if (indexPath.row == 3) {
     OMBFinishListingLeaseDetailsViewController *vc =
       [[OMBFinishListingLeaseDetailsViewController alloc]
         initWithResidence:residence];
@@ -608,7 +608,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     [self.navigationController pushViewController:vc animated: YES];
   }
   // Listing Details
-  else if (indexPath.row == 5) {
+  else if (indexPath.row == 4) {
     OMBFinishListingOtherDetailsViewController *vc =
       [[OMBFinishListingOtherDetailsViewController alloc]
         initWithResidence:residence];
@@ -616,7 +616,7 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     [self.navigationController pushViewController:vc animated: YES];
   }
   // Pets & Amenities
-  else if (indexPath.row == 6) {
+  else if (indexPath.row == 5) {
     OMBFinishListingAmenitiesViewController *vc =
       [[OMBFinishListingAmenitiesViewController alloc]
         initWithResidence:residence];
@@ -730,23 +730,23 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   BOOL animated = NO;
   
   // Title
-  if (![residence.title length]){
-    OMBFinishListingTitleViewController *vc =
-      [[OMBFinishListingTitleViewController alloc]
+  if (![residence.title length] || ![residence.description length]){
+    OMBFinishListingTitleDescriptionViewController *vc =
+      [[OMBFinishListingTitleDescriptionViewController alloc]
         initWithResidence: residence];
     vc.delegate = self;
     [self.navigationController pushViewController:vc animated: animated];
     return;
   }
   // Description
-  if (![residence.description length]){
+  /*if (![residence.description length]){
     OMBFinishListingDescriptionViewController *vc =
       [[OMBFinishListingDescriptionViewController alloc]
         initWithResidence:residence];
     vc.delegate = self;
     [self.navigationController pushViewController:vc animated: animated];
     return;
-  }
+  }*/
   // Rent / Auction Details
   if (!residence.minRent){
     OMBFinishListingRentAuctionDetailsViewController *vc =

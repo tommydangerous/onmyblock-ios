@@ -12,6 +12,7 @@
 @class OMBFinishListingViewController;
 
 typedef NS_ENUM(NSInteger, OMBFinishListingSection){
+  OMBFinishListingSectionTitleDescription,
   OMBFinishListingSectionTitle,
   OMBFinishListingSectionDescription,
   OMBFinishListingSectionRentDetails,

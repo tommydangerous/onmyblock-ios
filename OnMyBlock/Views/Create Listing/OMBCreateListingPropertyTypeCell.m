@@ -45,7 +45,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
 {
   CGFloat padding = 20.0f;
 
-  CGFloat imageSize = size.height - (padding * 3);
+  CGFloat imageSize = size.height - (padding * 3.5);
   _propertyTypeImageView.frame = CGRectMake(padding * 1.5, 
     (size.height - imageSize) * 0.5, imageSize, imageSize);
 

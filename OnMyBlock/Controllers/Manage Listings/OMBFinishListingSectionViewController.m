@@ -83,11 +83,11 @@
 {
   int incompletes = 0;
   // Title
-  if (![residence.title length])
+  if (![residence.title length] || ![residence.description length])
     incompletes += 1;
   // Description
-  if (![residence.description length])
-    incompletes += 1;
+  /*if (![residence.description length])
+    incompletes += 1;*/
   // Rent / Auction Details
   if (!residence.minRent)
     incompletes += 1;
@@ -108,11 +108,11 @@
 - (OMBFinishListingSection)lastIncompleteSection
 {
   
-  if (![residence.title length])
-    return OMBFinishListingSectionTitle;
+  if (![residence.title length] || ![residence.description length])
+    return OMBFinishListingSectionTitleDescription;
   // Description
-  if (![residence.description length])
-    return OMBFinishListingSectionDescription;
+  /*if (![residence.description length])
+    return OMBFinishListingSectionDescription;*/
   // Rent / Auction Details
   if (!residence.minRent)
     return OMBFinishListingSectionRentDetails;
