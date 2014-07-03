@@ -21,6 +21,8 @@
 #import "OMBRenterInfoSectionRoommateViewController.h"
 #import "OMBRenterInfoSectionViewController.h"
 #import "OMBRenterProfileUserInfoCell.h"
+#import "OMBResidence.h"
+#import "OMBRoommate.h"
 #import "OMBViewControllerContainer.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
@@ -30,18 +32,18 @@
 
 @interface OMBApplyResidenceViewController ()
 {
+  OMBAlertViewBlur *alertBlur;
   OMBActivityViewFullScreen *activityView;
+  LEffectLabel *effectLabel;
   NSUInteger employmentCount;
   BOOL hasFetchedRequirements;
   NSUInteger legalAnswerCount;
   NSUInteger previousRentalCount;
-  NSUInteger residenceUID;
-  
-  OMBAlertViewBlur *alertBlur;
+  OMBResidence *residence;
+  BOOL shouldPopViewController;
   UIButton *submitOfferButton;
-  LEffectLabel *effectLabel;
   
-  //NSArray *sections;
+  // NSArray *sections;
 }
 
 @end
@@ -50,12 +52,12 @@
 
 #pragma mark - Initializer
 
-- (id) initWithResidenceUID: (NSUInteger) uid
+- (id) initWithResidence: (OMBResidence *) object
 {
   if (!(self = [super init])) return nil;
   
-  residenceUID = uid;
-  self.title   = @"Renter Application";
+  residence  = object;
+  self.title = @"Renter Application";
   
   return self;
 }
@@ -112,46 +114,51 @@
 
   activityView = [[OMBActivityViewFullScreen alloc] init];
   [self.view addSubview: activityView];
-  
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-  
-  [self updateRequirementCounts];
-  void (^legalCompletion) (NSError *error) = ^(NSError *error) {
-    // If all of the requirements are not met, fetch
-    if (employmentCount == 0 || legalAnswerCount < 
-      [[OMBLegalQuestionStore sharedStore] legalQuestionsCount] ||
-        previousRentalCount == 0) {
-      // Fetch data pertaining to sent application requirements
-      if (!hasFetchedRequirements) {
-        [self fetchSentApplicationRequirementsForUser: user completion: 
-          ^(NSError *error) {
-            hasFetchedRequirements = YES;
-            [self.table reloadData];
-            [activityView stopSpinning];
-          }
-        ];
-        [activityView startSpinning];
-      }
-    }
-  };
-  if ([[OMBLegalQuestionStore sharedStore] legalQuestionsCount]) {
-    legalCompletion(nil);
+
+  if (shouldPopViewController) {
+    [self.navigationController popViewControllerAnimated: NO];
+    shouldPopViewController = NO;
   }
   else {
-    [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
-      legalCompletion
-    ];
-  }
+    [self updateRequirementCounts];
+    void (^legalCompletion) (NSError *error) = ^(NSError *error) {
+      // If all of the requirements are not met, fetch
+      if (employmentCount == 0 || legalAnswerCount < 
+        [[OMBLegalQuestionStore sharedStore] legalQuestionsCount] ||
+          previousRentalCount == 0) {
+        // Fetch data pertaining to sent application requirements
+        if (!hasFetchedRequirements) {
+          [self fetchSentApplicationRequirementsForUser: user completion: 
+            ^(NSError *error) {
+              hasFetchedRequirements = YES;
+              [self.table reloadData];
+              [activityView stopSpinning];
+            }
+          ];
+          [activityView startSpinning];
+        }
+      }
+    };
+    if ([[OMBLegalQuestionStore sharedStore] legalQuestionsCount]) {
+      legalCompletion(nil);
+    }
+    else {
+      [[OMBLegalQuestionStore sharedStore] fetchLegalQuestionsWithCompletion:
+        legalCompletion
+      ];
+    }
 
-  if (_nextSection) {
-    [self showNextSection];
-  }
+    if (_nextSection) {
+      [self showNextSection];
+    }
 
-  [effectLabel performEffectAnimation];
+    [effectLabel performEffectAnimation];
+  }
 }
 
 #pragma mark - Protocol
@@ -442,9 +449,9 @@ completion: (void (^) (NSError *error)) block
 
 - (void) showHomebaseRenter
 {
+  shouldPopViewController = YES;
   [alertBlur close];
   [[self appDelegate].container showHomebaseRenter];
-  [self.navigationController popViewControllerAnimated: NO];
 }
 
 - (void) shouldSubmitApplication
@@ -505,7 +512,7 @@ completion: (void (^) (NSError *error)) block
 
 - (void) submitApplication
 {
-  [[self renterApplication] createSentApplicationForResidenceUID: residenceUID
+  [[self renterApplication] createSentApplicationForResidenceUID: residence.uid
     completion: ^(NSError *error) {
       if (error) {
         [self showAlertViewWithError: error];
@@ -526,10 +533,18 @@ completion: (void (^) (NSError *error)) block
         [alertBlur hideCloseButton];
         [alertBlur hideQuestionButton];
         [alertBlur showOnlyConfirmButton];
+
+        [self trackApplicationSubmitted];
       }
       [self containerStopSpinningFullScreen];
     }];
   [self containerStartSpinningFullScreen];
+}
+
+- (void) trackApplicationSubmitted
+{
+  OMBMixpanelTrackerTrackSubmission(@"Application Submitted",
+    residence, [OMBUser currentUser]);
 }
 
 - (void) updateRequirementCounts

@@ -173,6 +173,7 @@
 		AB70CB71186CBAA30083DF4C /* OMBPrivacyPolicyStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB70186CBAA30083DF4C /* OMBPrivacyPolicyStore.m */; };
 		AB70CB7A186CD1E00083DF4C /* OMBManageListingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB79186CD1E00083DF4C /* OMBManageListingsViewController.m */; };
 		AB70CB90186D353E0083DF4C /* OMBCreateListingPropertyTypeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB70CB8F186D353E0083DF4C /* OMBCreateListingPropertyTypeCell.m */; };
+		AB72D6C21966131F007FBCA2 /* OMBMixpanelTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = AB72D6C11966131F007FBCA2 /* OMBMixpanelTracker.m */; };
 		AB756AAD185A16D0001AF572 /* OMBIntroStillImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB756AAC185A16D0001AF572 /* OMBIntroStillImagesViewController.m */; };
 		AB756AB0185A1A68001AF572 /* OMBIntroStillImageSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = AB756AAF185A1A68001AF572 /* OMBIntroStillImageSlide.m */; };
 		AB756AB2185A1C8A001AF572 /* intro_still_image_slide_1_background@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB756AB1185A1C8A001AF572 /* intro_still_image_slide_1_background@2x.jpg */; };
@@ -864,6 +865,8 @@
 		AB70CB7B186CD8490083DF4C /* OMBCreateListingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingViewController.h; sourceTree = "<group>"; };
 		AB70CB8E186D353E0083DF4C /* OMBCreateListingPropertyTypeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreateListingPropertyTypeCell.h; sourceTree = "<group>"; };
 		AB70CB8F186D353E0083DF4C /* OMBCreateListingPropertyTypeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCreateListingPropertyTypeCell.m; sourceTree = "<group>"; };
+		AB72D6C01966131F007FBCA2 /* OMBMixpanelTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMixpanelTracker.h; sourceTree = "<group>"; };
+		AB72D6C11966131F007FBCA2 /* OMBMixpanelTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMixpanelTracker.m; sourceTree = "<group>"; };
 		AB756AAB185A16D0001AF572 /* OMBIntroStillImagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBIntroStillImagesViewController.h; sourceTree = "<group>"; };
 		AB756AAC185A16D0001AF572 /* OMBIntroStillImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBIntroStillImagesViewController.m; sourceTree = "<group>"; };
 		AB756AAE185A1A68001AF572 /* OMBIntroStillImageSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBIntroStillImageSlide.h; sourceTree = "<group>"; };
@@ -1888,6 +1891,15 @@
 			path = "Create Listing";
 			sourceTree = "<group>";
 		};
+		AB72D6BF19661308007FBCA2 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				AB72D6C01966131F007FBCA2 /* OMBMixpanelTracker.h */,
+				AB72D6C11966131F007FBCA2 /* OMBMixpanelTracker.m */,
+			);
+			path = Objects;
+			sourceTree = "<group>";
+		};
 		AB802E9118109E5200E04D11 = {
 			isa = PBXGroup;
 			children = (
@@ -1964,6 +1976,7 @@
 		AB802EA318109E5200E04D11 /* OnMyBlock */ = {
 			isa = PBXGroup;
 			children = (
+				AB72D6BF19661308007FBCA2 /* Objects */,
 				ABB3C56C1811719B00DD91C9 /* AppDelegate */,
 				AB9B263D1811CB1300E6DAC4 /* Categories */,
 				AB9B264A1811CE5E00E6DAC4 /* Connections */,
@@ -3685,6 +3698,7 @@
 				AB95457D18491A87000513BE /* OMBUserImageDownloader.m in Sources */,
 				ABE706A3188899DA007A4E29 /* OMBResidenceListStore.m in Sources */,
 				AB9B26461811CB1300E6DAC4 /* NSDate+TimeAgo.m in Sources */,
+				AB72D6C21966131F007FBCA2 /* OMBMixpanelTracker.m in Sources */,
 				ABBA58941870C59700E9BF4E /* ELCAlbumPickerController.m in Sources */,
 				AB19A0831860EFD900F84DE9 /* OMBResidenceDetailAddressCell.m in Sources */,
 				ABABEC5918654F4C008B6768 /* OMBMapFilterBedroomsCell.m in Sources */,

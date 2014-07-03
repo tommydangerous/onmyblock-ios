@@ -19,6 +19,9 @@
 #import "OMBUser.h"
 #import "UIFont+OnMyBlock.h"
 
+// Objects
+#import "OMBMixpanelTracker.h"
+
 extern CGFloat const OMBCornerRadius;
 extern CGFloat const OMBKeyboardHeight;
 extern CGFloat const OMBPadding;
@@ -57,7 +60,7 @@ extern CGFloat const OMBStandardHeight;
 - (void) cancel;
 - (void) done;
 - (void) mixpanelTrack: (NSString *) eventName 
-properties: (NSDictionary *) dictionary;
+properties: (NSDictionary *) properties;
 - (void) save;
 - (CGRect) screen;
 - (void) setMenuBarButtonItem;

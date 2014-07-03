@@ -537,7 +537,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   // 14
   NSInteger year  = [moveInComps year];
   // 10 + 7 = 17
-  month += _leaseMonths;
+  month += self.leaseMonths ? self.leaseMonths : 1;
   // 14 + 17 / 12 (1) = 15
   year += month / 12;
   // 17 % 12 = 5

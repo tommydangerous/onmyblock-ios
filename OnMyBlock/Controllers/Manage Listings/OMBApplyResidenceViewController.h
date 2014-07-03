@@ -8,10 +8,11 @@
 
 #import "OMBMyRenterProfileViewController.h"
 
-@class OMBActivityViewFullScreen;
 @class LEffectLabel;
+@class OMBActivityViewFullScreen;
 @class OMBAlertViewBlur;
 @class OMBCenteredImageView;
+@class OMBResidence;
 
 @interface OMBApplyResidenceViewController : OMBMyRenterProfileViewController
 
@@ -19,6 +20,6 @@
 
 #pragma mark - Initializer
 
-- (id) initWithResidenceUID: (NSUInteger) uid;
+- (id) initWithResidence: (OMBResidence *) object;
 
 @end

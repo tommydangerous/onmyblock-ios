@@ -53,6 +53,9 @@
 #import "UIImage+Resize.h"
 #import "UIImageView+WebCache.h"
 
+// Models
+#import "OMBRoommate.h"
+
 float kResidenceDetailCellSpacingHeight = 40.0f;
 float kResidenceDetailImagePercentage   = 0.5f;
 
@@ -1514,9 +1517,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) showApplyNow
 {
   if ([[OMBUser currentUser] loggedIn]) {
+    [self track: @"Click Apply Now"];
     [self.navigationController pushViewController:
-      [[OMBApplyResidenceViewController alloc] initWithResidenceUID:
-        residence.uid] animated: YES];
+      [[OMBApplyResidenceViewController alloc] initWithResidence: residence] 
+        animated: YES];
   }
   else {
     [[self appDelegate].container showSignUp];
@@ -1637,12 +1641,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) showPlaceOffer
 {
-  if ([[OMBUser currentUser] loggedIn])
+  if ([[OMBUser currentUser] loggedIn]) {
+    [self track: @"Click Book It"];
     [self.navigationController pushViewController:
       [[OMBResidenceBookItConfirmDetailsViewController alloc] initWithResidence:
         residence] animated: YES];
-  else
+  }
+  else {
     [[self appDelegate].container showSignUp];
+  }
 }
 
 - (void) timerFireMethod: (NSTimer *) timer
@@ -1690,6 +1697,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else
     _countDownTimerLabel.text = [NSString stringWithFormat:
       @"Time left in auction: %@", timeString];
+}
+
+- (void) track: (NSString *) eventName
+{
+  [self mixpanelTrack: eventName properties: @{
+    @"bathrooms":    @(residence.bathrooms),
+    @"bedrooms":     @(residence.bedrooms),
+    @"rent":         @(residence.minRent),
+    @"residence_id": @(residence.uid) 
+  }];
 }
 
 - (void) updateBackgroundImage

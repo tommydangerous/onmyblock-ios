@@ -189,14 +189,9 @@ CGFloat const OMBStandardHeight       = 44.0f;
 }
 
 - (void) mixpanelTrack: (NSString *) eventName 
-properties: (NSDictionary *) dictionary
+properties: (NSDictionary *) properties
 {
-  if (__ENVIRONMENT__ == 3) {
-    [[Mixpanel sharedInstance] track: eventName properties: dictionary];
-  }
-  else {
-    NSLog(@"%@: %@", eventName, dictionary);
-  }
+  OMBMixpanelTrackerTrack(eventName, properties);
 }
 
 - (void) save

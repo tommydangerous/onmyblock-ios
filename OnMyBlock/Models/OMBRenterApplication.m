@@ -66,8 +66,12 @@
 - (void) JSONDictionary: (NSDictionary *) dictionary
 forResourceName: (NSString *) resourceName
 {
+  // Roommates
+  if ([resourceName isEqualToString: [OMBRoommate resourceName]]) {
+    [self readFromDictionary: dictionary forModelName: [OMBRoommate modelName]];
+  }
   // Sent Applications
-  if ([resourceName isEqualToString: [OMBSentApplication resourceName]]) {
+  else if ([resourceName isEqualToString: [OMBSentApplication resourceName]]) {
     [self readFromSentApplicationDictionary: dictionary];
   }
 }
@@ -220,7 +224,7 @@ completion: (void (^) (NSError *error)) block
     [[OMBModelListConnection alloc] initWithResourceName: resourceName
       userUID: userUID];
   conn.completionBlock = block;
-  conn.delegate = delegate ? delegate : self;
+  conn.delegate        = delegate ? delegate : self;
   [conn start];
 }
 

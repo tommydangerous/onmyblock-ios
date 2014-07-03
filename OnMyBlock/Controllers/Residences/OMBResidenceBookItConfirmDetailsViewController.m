@@ -651,14 +651,16 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
 #pragma mark - Protocol PayPalPaymentDelegate
 
-- (void) payPalFuturePaymentDidCancel: (PayPalFuturePaymentViewController *)futurePaymentViewController
+- (void) payPalFuturePaymentDidCancel: 
+(PayPalFuturePaymentViewController *)futurePaymentViewController
 {
   // The payment was canceled; dismiss
   [futurePaymentViewController dismissViewControllerAnimated: YES
     completion: nil];
 }
 
-- (void) payPalFuturePaymentViewController: (PayPalFuturePaymentViewController *) futurePaymentViewController
+- (void) payPalFuturePaymentViewController: 
+(PayPalFuturePaymentViewController *) futurePaymentViewController
 didAuthorizeFuturePayment: (NSDictionary *) futurePaymentAuthorization
 {
   // The user has successfully logged into PayPal,
@@ -683,8 +685,10 @@ didAuthorizeFuturePayment: (NSDictionary *) futurePaymentAuthorization
   // Dismiss
   [futurePaymentViewController dismissViewControllerAnimated: YES
     completion: ^{
-      if (offer.authorizationCode)
+      if (offer.authorizationCode) {
         [self createOffer];
+        [self trackBookItSubmitted];
+      }
       else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:
           @"PayPal Authorize Failed" message: @"Please authorize your "
@@ -2070,8 +2074,9 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
     [self payPalPaymentViewControllerWithAmount: [offer downPaymentAmount]
       intent: PayPalPaymentIntentAuthorize shortDescription: shortDescription
         delegate: self];
-  if (nav)
+  if (nav) {
     [self presentViewController: nav animated: YES completion: nil];
+  }
 }
 
 - (void) showPlaceOfferHowItWorks
@@ -2259,6 +2264,12 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
   else {
     [cell disableNextStepButton];
   }
+}
+
+- (void) trackBookItSubmitted
+{
+  OMBMixpanelTrackerTrackSubmission(@"Book It Submitted",
+    residence, [OMBUser currentUser]);
 }
 
 - (TextFieldPadding *) yourOfferTextField

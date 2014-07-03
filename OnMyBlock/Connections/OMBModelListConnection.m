@@ -22,7 +22,7 @@ userUID: (NSUInteger) userUID
     OnMyBlockAPIURL, resourceName];
   [self setRequestWithString: string parameters: @{
     @"access_token": [OMBUser currentUser].accessToken,
-    @"user_id": [NSNumber numberWithInt: userUID]
+    @"user_id":      [NSNumber numberWithInt: userUID]
   }];
 
   return self;

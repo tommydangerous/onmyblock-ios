@@ -344,7 +344,8 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
       options: NSStringDrawingUsesLineFragmentOrigin context: nil];
   
   // Text more toward top.
-  CGFloat originY = addButtonMiddle.frame.origin.y - rect.size.height - 2 * OMBPadding;
+  CGFloat originY = addButtonMiddle.frame.origin.y - 
+    rect.size.height - 2 * OMBPadding;
   emptyLabel.frame = CGRectMake(OMBPadding, originY,
       screen.size.width - (OMBPadding * 2), rect.size.height);
   emptyLabel.textAlignment = NSTextAlignmentCenter;
