@@ -231,7 +231,9 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) addToFavoritesButtonSelected
 {
+  // Logged in
   if ([[OMBUser currentUser] loggedIn]) {
+    // Unfavorite
     if ([[OMBUser currentUser] alreadyFavoritedResidence: _residence]) {
       [[OMBUser currentUser] removeResidenceFromFavorite: _residence];
       [UIView animateWithDuration: 0.5 animations: ^{
@@ -239,11 +241,12 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
           forState: UIControlStateNormal];
       }];
     }
+    // Favorite
     else {
       OMBFavoriteResidence *favoriteResidence =
         [[OMBFavoriteResidence alloc] init];
       favoriteResidence.createdAt = [[NSDate date] timeIntervalSince1970];
-      favoriteResidence.residence = _residence;
+      favoriteResidence.residence = self.residence;
       favoriteResidence.user      = [OMBUser currentUser];
       [[OMBUser currentUser] addFavoriteResidence: favoriteResidence];
       UIImageView *imageView = addToFavoritesButton.imageView;
@@ -258,11 +261,17 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
             imageView.transform = CGAffineTransformIdentity;
           }
         ];
+      // Track
+      [self mixpanelTrack: @"Add Favorite" properties: @{
+        @"current_page": NSStringFromClass([self class]),
+        @"residence_id": @(self.residence.uid)
+      }];
     }
     OMBFavoriteResidenceConnection *connection =
       [[OMBFavoriteResidenceConnection alloc] initWithResidence: _residence];
     [connection start];
   }
+  // Logged out
   else {
     OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     [appDelegate showLogin];

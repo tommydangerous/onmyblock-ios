@@ -1140,7 +1140,7 @@ viewForHeaderInSection: (NSInteger) section
       @"neighborhood": [NSNull null],
       @"propertyType": [NSMutableArray array],
       @"moveInDate":   [NSNull null]
-	  // @"dateAvailable":[NSNull null]
+	   // @"dateAvailable": [NSNull null]
     }
   ];
 }
@@ -1150,46 +1150,54 @@ viewForHeaderInSection: (NSInteger) section
   _shouldSearch = YES;
 
   // Analytics
-  // [Flurry logEvent:@"Article_Read"];
-  // [Flurry logEvent: @"Map_Filter" withParameters:
-  //   [NSDictionary dictionaryWithDictionary: self.valuesDictionary]];
-
-  // id <GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-
-  // for (NSString *key in [_valuesDictionary allKeys]) {
-  //   id value = [_valuesDictionary objectForKey: key];
-  //   if (value != [NSNull null]) {
-  //     BOOL isTrackable = YES;
-  //     if ([value isKindOfClass: [OMBNeighborhood class]]) {
-  //       OMBNeighborhood *n = (OMBNeighborhood *) value;
-  //       value = [NSString stringWithFormat: @"%f,%f",
-  //         n.coordinate.latitude, n.coordinate.longitude];
-  //     }
-  //     else if ([value isKindOfClass: [NSString class]]) {
-  //       isTrackable = [value length] ? YES : NO;
-  //     }
-  //     else if ([value isKindOfClass: [NSArray class]]) {
-  //       isTrackable = [value count] ? YES : NO;
-  //       value = [value componentsJoinedByString: @","];
-  //     }
-  //     else if ([value isKindOfClass: [NSNumber class]]) {
-  //       value = [NSString stringWithFormat: @"%i", [value intValue]];
-  //     }
-  //     if (isTrackable) {
-  //       // Mix Panel
-  //       [[Mixpanel sharedInstance] track: @"Map Filter" properties: @{
-  //         key: value
-  //       }];
-  //       // Google Analytics
-  //       NSString *category = @"Map";
-  //       NSString *action   = [NSString stringWithFormat: 
-  //         @"Filter - %@", key];
-  //       [tracker send: [[GAIDictionaryBuilder createEventWithCategory: 
-  //         category action: action label: value value: @1] build]];
-  //       // NSLog(@"%@: %@", key, value);
-  //     }
-  //   }
-  // }
+  NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+  for (NSString *key in [self.valuesDictionary allKeys]) {
+    id value = [self.valuesDictionary objectForKey: key];
+    if ([value isKindOfClass: [NSArray class]]) {
+      NSArray *array = (NSArray *) value;
+      if ([array count]) {
+        // Bedrooms
+        if ([key isEqualToString: @"bedrooms"]) {
+          array = [array sortedArrayUsingComparator: ^(id obj1, id obj2) {
+            if ([obj1 intValue] > [obj2 intValue]) {
+              return (NSComparisonResult) NSOrderedDescending;
+            }
+            else if ([obj1 intValue] < [obj2 intValue]) {
+              return (NSComparisonResult) NSOrderedAscending;
+            }
+            return NSOrderedSame;
+          }];
+          NSString *bedrooms = [array componentsJoinedByString: @","];
+          [properties setObject: bedrooms forKey: @"bd"];
+        }
+      }
+    }
+    else if (value != [NSNull null]) {
+      // Bathrooms
+      if ([key isEqualToString: @"bathrooms"]) {
+        [properties setObject: value forKey: @"ba"];
+      }
+      // Max rent
+      else if ([key isEqualToString: @"maxRent"]) {
+        [properties setObject: value forKey: @"max_rent"];
+      }
+      // Min rent
+      else if ([key isEqualToString: @"minRent"]) {
+        [properties setObject: value forKey: @"min_rent"];
+      }
+      // Neighborhood
+      else if ([key isEqualToString: @"neighborhood"]) {
+        if ([value isKindOfClass: [OMBNeighborhood class]]) {
+          OMBNeighborhood *neighborhood = (OMBNeighborhood *) value;
+          [properties setObject: @(neighborhood.coordinate.latitude) 
+            forKey: @"lat"];
+          [properties setObject: @(neighborhood.coordinate.longitude) 
+            forKey: @"lng"];
+        }
+      }
+    }
+  }
+  [self mixpanelTrack: @"Search" properties: properties];
 
   [self dismissViewControllerWithCompletion: nil];
 }

@@ -10,22 +10,21 @@
 
 @implementation OMBView
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
+#pragma mark - Methods
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (void) mixpanelTrack: (NSString *) eventName 
+properties: (NSDictionary *) dictionary
 {
-    // Drawing code
+  if (__ENVIRONMENT__ == 3) {
+    [[Mixpanel sharedInstance] track: eventName properties: dictionary];
+  }
+  else {
+    NSLog(@"%@: %@", eventName, dictionary);
+  }
 }
-*/
 
 @end

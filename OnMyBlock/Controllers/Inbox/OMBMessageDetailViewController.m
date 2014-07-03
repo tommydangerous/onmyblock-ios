@@ -835,6 +835,21 @@ additionalOffsetY: (CGFloat) offsetY
           otherButtonTitles: @"Yes", nil];
     [alertView show];
   }
+
+  // Track
+  NSMutableDictionary *properties = 
+    [NSMutableDictionary dictionaryWithDictionary: @{
+      @"user_id": @([OMBUser currentUser].uid)
+    }];
+  // Conversation
+  if (conversation && conversation.uid) {
+    [properties setObject: @(conversation.uid) forKey: @"conversation_id"];
+  }
+  // Residence
+  if (residence && residence.uid) {
+    [properties setObject: @(residence.uid) forKey: @"residence_id"];
+  }
+  [self mixpanelTrack: @"Send Message" properties: properties];
 }
 
 - (void) showContactMore

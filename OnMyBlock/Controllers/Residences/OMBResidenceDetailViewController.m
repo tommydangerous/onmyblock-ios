@@ -103,6 +103,12 @@ float kResidenceDetailImagePercentage   = 0.5f;
     selector: @selector(currentUserLogout) name: OMBUserLoggedOutNotification
       object: nil];
 
+  [self mixpanelTrack: @"View House Profile" properties: @{
+    @"bathrooms": @(residence.bathrooms),
+    @"bedrooms":  @(residence.bedrooms),
+    @"rent":      @(residence.minRent)
+  }];
+
   return self;
 }
 
@@ -1334,7 +1340,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) favoritesButtonSelected
 {
+  // Logged in
   if ([[OMBUser currentUser] loggedIn]) {
+    // Unfavorite
     if ([[OMBUser currentUser] alreadyFavoritedResidence: residence]) {
       [[OMBUser currentUser] removeResidenceFromFavorite: residence];
       [UIView animateWithDuration: 0.5f animations: ^{
@@ -1342,6 +1350,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
           forState: UIControlStateNormal];
       }];
     }
+    // Favorite
     else {
       OMBFavoriteResidence *favoriteResidence =
         [[OMBFavoriteResidence alloc] init];
@@ -1361,11 +1370,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
             imageView.transform = CGAffineTransformIdentity;
           }
         ];
+      // Track
+      [self mixpanelTrack: @"Add Favorite" properties: @{
+        @"current_page": NSStringFromClass([self class]),
+        @"residence_id": @(residence.uid)
+      }];
     }
     OMBFavoriteResidenceConnection *connection =
       [[OMBFavoriteResidenceConnection alloc] initWithResidence: residence];
     [connection start];
   }
+  // Logged out
   else {
     OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     [appDelegate showSignUp];

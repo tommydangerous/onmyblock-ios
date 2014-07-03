@@ -6,14 +6,14 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "OMBView.h"
 
 extern NSString *const OMBEmptyResidencePartialViewCell;
 
 @class OMBGradientView;
 @class OMBResidence;
 
-@interface OMBResidencePartialView : UIView
+@interface OMBResidencePartialView : OMBView
 <UICollectionViewDataSource, UICollectionViewDelegate, 
   UICollectionViewDelegateFlowLayout>
 {
