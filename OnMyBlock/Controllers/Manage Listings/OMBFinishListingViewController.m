@@ -50,13 +50,14 @@ float const photoViewImageHeightPercentage = 0.32;
   if (!(self = [super init])) return nil;
 
   numberOfSteps = 7;
-  residence = object;
+  residence     = object;
 
   if ([residence isKindOfClass: [OMBTemporaryResidence class]]) {
     self.title = @"Finish Listing";
   }
-  else
+  else {
     self.title = @"Edit Listing";
+  }
 
   return self;
 }
@@ -530,17 +531,19 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
   }
-  // Pets & Amenities
+  // Amenities & Pets
   else if (indexPath.row == 6) {
     string = @"Amenities & Pets";
-    cell.basicTextLabel.textColor = [UIColor textColor];
+    if ([residence amenityCount]) {
+      cell.basicTextLabel.textColor = [UIColor textColor];
+      imageView.alpha = 1.0f;
+      imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
+    }
     cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
       0.0f, 0.0f);
-    imageView.alpha = 1.0f;
-    imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
   }
-  cell.clipsToBounds  = YES;
   cell.basicTextLabel.text = string;
+  cell.clipsToBounds       = YES;
   return cell;
 }
 

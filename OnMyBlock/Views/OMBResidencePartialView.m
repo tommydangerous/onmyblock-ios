@@ -181,49 +181,39 @@ numberOfItemsInSection: (NSInteger) section
 - (UICollectionViewCell *) collectionView:(UICollectionView *) collectionView
 cellForItemAtIndexPath: (NSIndexPath *) indexPath
 {
-  if ([_residence imagesArray].count) {
-    OMBFilmstripImageCell *cell =
+  if ([[self residenceImages] count]) {
+    OMBFilmstripImageCell *cell = 
       [collectionView dequeueReusableCellWithReuseIdentifier:
         [OMBFilmstripImageCell reuseID] forIndexPath: indexPath];
-    // Don't resize images or else it hurts performance
-    OMBResidenceImage *residenceImage =
-      [[_residence imagesArray] objectAtIndex: indexPath.row];
 
-    cell.imageView.image = [OMBResidence placeholderImage];
+    // Don't resize the images or else it hurts performance really bad
+    OMBResidenceImage *image = [[self residenceImages] objectAtIndex: 
+      indexPath.row];
+
+    // Use cached image or download it
     __weak typeof(cell) weakCell = cell;
-
-    [cell.imageView setImageWithURL: residenceImage.imageURL
-      placeholderImage: nil
-        options: (SDWebImageRetryFailed |
-          SDWebImageDownloaderProgressiveDownload)
-        completed:
-          ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            if (error) {
-              // NSLog(@"Error: %@, for: %@", error, residenceImage.imageURL);
-            }
-            if(cacheType == SDImageCacheTypeNone || cacheType == SDImageCacheTypeDisk){
-              weakCell.alpha = 0.0f;
-              [UIView animateWithDuration: OMBStandardDuration animations:^{
-                weakCell.alpha = 1.0f;
+    [cell.imageView setImageWithURL: image.imageURL placeholderImage: nil
+      options: (SDWebImageRetryFailed | SDWebImageDownloaderProgressiveDownload)
+        completed: ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+          if (img && !error) {
+            if (cacheType == SDImageCacheTypeNone ||
+              cacheType == SDImageCacheTypeDisk) {
+              // Animate the image into view
+              weakCell.alpha = 0.f;
+              [UIView animateWithDuration: OMBStandardDuration * 0.5f
+              animations: ^{
+                weakCell.alpha = 1.f;
               }];
             }
           }
-        ];
+          else {
+            weakCell.imageView.image = [OMBResidence placeholderImage];
+          }
+        }];
     return cell;
   }
   return [collectionView dequeueReusableCellWithReuseIdentifier:
     OMBEmptyResidencePartialViewCell forIndexPath: indexPath];
-
-  // #warning UIImage resize is hurting performance
-  // UIImage *image = [_residence imageForSize: cell.imageView.bounds.size
-  //   forResidenceImage: residenceImage];
-  // if (image) {
-  //   cell.imageView.image = image;
-  // }
-  // else {
-  //   [_residence addImageWithResidenceImage: residenceImage
-  //     toImageSizeDictionaryWithSize: cell.imageView.bounds.size];
-  // }
 }
 
 #pragma mark - Protocol UICollectionViewDelegate
@@ -303,23 +293,17 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) downloadResidenceImages
 {
-  // return;
-  if (isDownloadingResidenceImages)
+  if (isDownloadingResidenceImages) {
     return;
-  // NSLog(@"DOWNLOAD RESIDENCE IMAGES");
-  [_residence downloadImagesWithCompletion: ^(NSError *error) {
-    [_imagesFilmstrip reloadData];
+  }
+  NSInteger count = [[self residenceImages] count];
+  [self.residence downloadImagesWithCompletion: ^(NSError *error) {
+    if (count != [[self residenceImages] count]) {
+      [self.imagesFilmstrip reloadData];
+    }
     isDownloadingResidenceImages = NO;
-    // NSLog(@"DOWNLOAD RESIDENCE IMAGES COMPLETION");
   }];
   isDownloadingResidenceImages = YES;
-  // NSLog(@"DOWNLOAD IMAGES: %i", _residence.uid);
-
-  // if ([[_residence imagesArray] count] <= 1) {
-  //   [_residence downloadImagesWithCompletion: ^(NSError *error) {
-  //     [_imagesFilmstrip reloadData];
-  //   }];
-  // }
 }
 
 //- (void) loadImageAnimated: (BOOL) animated
@@ -468,6 +452,11 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   _imagesFilmstrip.showsHorizontalScrollIndicator = NO;
 
   [self insertSubview: _imagesFilmstrip atIndex: 0];
+}
+
+- (NSArray *) residenceImages
+{
+  return [self.residence imagesArray];
 }
 
 @end

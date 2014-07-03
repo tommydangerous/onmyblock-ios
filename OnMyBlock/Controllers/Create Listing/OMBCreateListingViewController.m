@@ -989,27 +989,18 @@ replacementString: (NSString *) string
         _temporaryResidence dictionary: valuesDictionary];
     conn.completionBlock = ^(NSError *error) {
       if (_temporaryResidence.uid && !error) {
+        
         // Check to see what type of property it is and then
         // change the user's landlord type
         // Only if the user doesn't already have a landlord type
-
         if (![[OMBUser currentUser] hasLandlordType]) {
-          NSString *landlordType;
-          if ([_temporaryResidence.propertyType isEqualToString:
-            OMBResidencePropertyTypeSublet]) {
-            landlordType = @"subletter";
-          }
-          else {
-            landlordType = @"landlord";
-          }
-          [OMBUser currentUser].landlordType = landlordType;
+          [OMBUser currentUser].landlordType = @"subletter";
+          [[OMBUser currentUser] postLandlordTypeChangeNotification];
+          [[OMBUser currentUser] updateWithDictionary: @{
+              @"landlordType": [OMBUser currentUser].landlordType
+            } completion: nil];
         }
-        [[OMBUser currentUser] postLandlordTypeChangeNotification];
-        [[OMBUser currentUser] updateWithDictionary: @{
-          @"landlordType": [OMBUser currentUser].landlordType
-        } completion: ^(NSError *error) {
 
-        }];
         if ([self.navigationController.viewControllers count] == 1)
           [[self appDelegate].container showManageListings];
         else

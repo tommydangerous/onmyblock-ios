@@ -375,7 +375,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
-          cellForRowAtIndexPath: (NSIndexPath *) indexPath
+cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGFloat padding = 20.0f;
   // Normal cell

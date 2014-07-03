@@ -1888,13 +1888,12 @@
 		AB802E9118109E5200E04D11 = {
 			isa = PBXGroup;
 			children = (
-				AB8A9DD8195CA0B7002D6BF2 /* TestFlightSDK3.0.2 */,
-				ABBC494C19070F2B00BF9F7D /* Flurry */,
 				ABB911AA18998FB20046611F /* AFNetworking */,
 				AB6155D6184FF9D400A193C7 /* Base64 */,
 				ABED5FE91896FAED00AD630C /* DKLiveBlur */,
 				ABED5FD51896E8CD00AD630C /* DRNRealTimeBlurView */,
 				ABBA58811870C59700E9BF4E /* ELCImagePicker */,
+				ABBC494C19070F2B00BF9F7D /* Flurry */,
 				AB802E9C18109E5200E04D11 /* Frameworks */,
 				ABB022D4182491FD00F98544 /* GoogleAnalytics */,
 				AB0269D31822A12600E72F53 /* iOS-Blur */,
@@ -1907,13 +1906,14 @@
 				AB802EA318109E5200E04D11 /* OnMyBlock */,
 				AB802EBC18109E5200E04D11 /* OnMyBlockTests */,
 				ABA5CB5618EE936600D80A90 /* PayPalMobile */,
+				1DED75158C9B4E69A0B6B2C7 /* Pods.xcconfig */,
 				AB802E9B18109E5200E04D11 /* Products */,
 				A685EF92188F27C70074E336 /* ProgressIndicator */,
 				B484A9C118B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m */,
 				AB9D60F3188CEFDE00C9AC64 /* SDWebImage */,
 				DE8D2D4F18BD05F4000E6BF4 /* SVPullToRefresh */,
+				AB8A9DD8195CA0B7002D6BF2 /* TestFlightSDK3.0.2 */,
 				ABED5FDA1896E8CE00AD630C /* UIERealTimeBlurView */,
-				1DED75158C9B4E69A0B6B2C7 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -4083,7 +4083,6 @@
 					"$(inherited)",
 					"$(SRCROOT)/GoogleAnalytics",
 					"$(SRCROOT)/PayPalMobile",
-					"$(SRCROOT)/TestFlightSDK2.1.3",
 					"$(PROJECT_DIR)/PayPalMobile",
 					"$(PROJECT_DIR)/Flurry",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
@@ -4094,7 +4093,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "BD3847C5-852B-4F79-B7D9-79D5ECDDCCE2";
+				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -4123,7 +4122,6 @@
 					"$(inherited)",
 					"$(SRCROOT)/GoogleAnalytics",
 					"$(SRCROOT)/PayPalMobile",
-					"$(SRCROOT)/TestFlightSDK2.1.3",
 					"$(PROJECT_DIR)/PayPalMobile",
 					"$(PROJECT_DIR)/Flurry",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
@@ -4133,7 +4131,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "BD3847C5-852B-4F79-B7D9-79D5ECDDCCE2";
+				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
