@@ -335,12 +335,15 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   
   NSInteger section = indexPath.section;
+  NSInteger row     = indexPath.section;
  
   // Renter info
   if (section == OMBMyRenterProfileSectionRenterInfo){
-    
-    if([user isLandlord] && ![user.landlordType isEqualToString:@"subletter"])
-      return 0.0;
+    // Top spacing
+    if (row == OMBMyRenterProfileSectionRenterInfoTopSpacing) {
+      return OMBStandardHeight;
+    }
+    return OMBStandardButtonHeight;
     
   }
   
