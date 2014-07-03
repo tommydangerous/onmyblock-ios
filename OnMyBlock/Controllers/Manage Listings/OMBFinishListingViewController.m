@@ -39,6 +39,8 @@
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 
+float const photoViewImageHeightPercentage = 0.32;
+
 @implementation OMBFinishListingViewController
 
 #pragma mark - Initializer
@@ -145,7 +147,7 @@
   [unlistView addSubview: unlistButton];
 
   CGFloat visibleImageHeight = screen.size.height *
-    PropertyInfoViewImageHeightPercentage; // ... * 0.4
+    photoViewImageHeightPercentage; // ... * 0.32
   CGFloat headerImageHeight = 44.0f + visibleImageHeight + 44.0f;
 
   // Table header view

@@ -25,8 +25,10 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSection) {
 // User Info
 typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionUserInfoRow) {
   OMBMyRenterProfileSectionUserInfoRowImage,
-  OMBMyRenterProfileSectionUserInfoRowFirstName,
-  OMBMyRenterProfileSectionUserInfoRowLastName,
+  OMBMyRenterProfileSectionUserInfoRowImageFirstName,
+  OMBMyRenterProfileSectionUserInfoRowImageLastName,
+  //OMBMyRenterProfileSectionUserInfoRowFirstName,
+  //OMBMyRenterProfileSectionUserInfoRowLastName,
   OMBMyRenterProfileSectionUserInfoRowSchool,
   OMBMyRenterProfileSectionUserInfoRowEmail,
   OMBMyRenterProfileSectionUserInfoRowPhone,
@@ -47,11 +49,42 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionListingsRow) {
 };
 
 @interface OMBMyRenterProfileViewController : OMBTableViewController
+<
+  UIActionSheetDelegate,
+  UIImagePickerControllerDelegate,
+  UINavigationControllerDelegate,
+  UITextFieldDelegate,
+  UITextViewDelegate
+>
+{
+  UILabel *aboutTextViewPlaceholder;
+  UITextView *aboutTextView;
+  OMBCenteredImageView *backImageView;
+  UIView *backView;
+  CGFloat backViewOriginY;
+  UIView *fadedBackground;
+  UILabel *fullNameLabel;
+  OMBGradientView *gradient;
+  LIALinkedInHttpClient *linkedInClient;
+  UIView *nameView;
+  CGFloat nameViewOriginY;
+  UIBarButtonItem *previewBarButtonItem;
+  UIView *scaleBackView;
+  UIToolbar *textFieldToolbar;
+  NSString *savedTextString;
+  UITextView *editingTextView;
+  UITextField *editingTextField;
+  UIActionSheet *uploadActionSheet;
+  OMBUser *user;
+  OMBCenteredImageView *userIconView;
+  NSMutableDictionary *valueDictionary;
+}
 
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
 
 - (void) loadUser: (OMBUser *) object;
+- (void) showUploadActionSheet;
 
 @end

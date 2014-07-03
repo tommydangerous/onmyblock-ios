@@ -125,7 +125,7 @@
 
   questionLabel = [UILabel new];
   questionLabel.frame = CGRectMake(0.0f, stepLabel.frame.origin.y +
-    stepLabel.frame.size.height + padding, screenWidth, 27.0f);
+    stepLabel.frame.size.height + 3 * padding, screenWidth, 27.0f);
   questionLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 18];
   questionLabel.text = @"What type of place is this?";
   questionLabel.textAlignment = stepLabel.textAlignment;
@@ -134,7 +134,7 @@
 
   headerView.frame = CGRectMake(0.0f, padding + 44.0f, screenWidth,
     progressBarBackground.frame.size.height + stepLabel.frame.size.height +
-      padding + questionLabel.frame.size.height + padding);
+      padding + questionLabel.frame.size.height + 5 * padding);
 
   CGFloat tableViewHeight = screen.size.height -
     (headerView.frame.origin.y + headerView.frame.size.height);
@@ -154,11 +154,15 @@
   topBorder.frame = CGRectMake(0.0f, 0.0f,
     propertyTypeTableView.frame.size.width, 0.5f);
   [propertyTypeTableView.layer addSublayer: topBorder];
-
+  
+  // Height header section in step 1 is 20.f greater than step 2 and 3
+  CGFloat difference = 3 * padding;
+  CGFloat tableViewHeight2 = tableViewHeight + difference;
+  
   // Step 2
   locationView = [UIView new];
   locationView.frame = CGRectMake(screenWidth,
-    propertyTypeTableView.frame.origin.y, screenWidth, tableViewHeight);
+    propertyTypeTableView.frame.origin.y - difference, screenWidth, tableViewHeight2);
   [self.view addSubview: locationView];
 
   cityTextField = [[TextFieldPadding alloc] init];
@@ -219,9 +223,9 @@
   // Step 3
 
   detailsTableView = [[UITableView alloc] initWithFrame: CGRectMake(
-    locationView.frame.origin.x, propertyTypeTableView.frame.origin.y,
-     propertyTypeTableView.frame.size.width,
-      propertyTypeTableView.frame.size.height) style: UITableViewStylePlain];
+    locationView.frame.origin.x, locationView.frame.origin.y,
+      propertyTypeTableView.frame.size.width,
+        locationView.frame.size.height) style: UITableViewStylePlain];
   detailsTableView.alwaysBounceVertical = YES;
   detailsTableView.dataSource = self;
   detailsTableView.delegate = self;
@@ -233,14 +237,14 @@
   lengthLeasePickerView.dataSource = self;
   lengthLeasePickerView.delegate = self;
   lengthLeasePickerView.frame = CGRectMake(0.0f,44.0f,
-                                           lengthLeasePickerView.frame.size.width, lengthLeasePickerView.frame.size.height);
+    lengthLeasePickerView.frame.size.width, lengthLeasePickerView.frame.size.height);
   // Length picker view container
   pickerViewContainer = [UIView new];
   // Header for length picker view with cancel and done button
   AMBlurView *pickerViewHeader = [[AMBlurView alloc] init];
   pickerViewHeader.blurTintColor = [UIColor grayVeryLight];
   pickerViewHeader.frame = CGRectMake(0.0f, 0.0f,
-                                      self.view.frame.size.width, 44.0f);
+    self.view.frame.size.width, 44.0f);
 	[pickerViewContainer addSubview:pickerViewHeader];
   // Header label
   pickerViewHeaderLabel = [UILabel new];
@@ -254,28 +258,30 @@
   UIButton *lengthLeaseCancelButton = [UIButton new];
   lengthLeaseCancelButton.titleLabel.font = pickerViewHeaderLabel.font;
   CGRect lengthLeaseCancelButtonRect = [@"Cancel" boundingRectWithSize:
-                                        CGSizeMake(pickerViewHeader.frame.size.width,
-                                                   pickerViewHeader.frame.size.height)
-                                                                   font: lengthLeaseCancelButton.titleLabel.font];
+    CGSizeMake(pickerViewHeader.frame.size.width,
+      pickerViewHeader.frame.size.height)
+        font: lengthLeaseCancelButton.titleLabel.font];
   lengthLeaseCancelButton.frame = CGRectMake(padding, 0.0f,
-                                             lengthLeaseCancelButtonRect.size.width, pickerViewHeader.frame.size.height);
+    lengthLeaseCancelButtonRect.size.width,
+      pickerViewHeader.frame.size.height);
   [lengthLeaseCancelButton addTarget: self
-                       action: @selector(cancelPicker)
-             forControlEvents: UIControlEventTouchUpInside];
+    action: @selector(cancelPicker)
+      forControlEvents: UIControlEventTouchUpInside];
   [lengthLeaseCancelButton setTitle: @"Cancel" forState: UIControlStateNormal];
   [lengthLeaseCancelButton setTitleColor: [UIColor blueDark]
-                         forState: UIControlStateNormal];
+     forState: UIControlStateNormal];
   [pickerViewHeader addSubview: lengthLeaseCancelButton];
+  
   // Done button
   UIButton *lengthLeaseDoneButton = [UIButton new];
   lengthLeaseDoneButton.titleLabel.font = lengthLeaseCancelButton.titleLabel.font;
   CGRect lengthLeaseDoneButtonRect = [@"Done" boundingRectWithSize:
-                               CGSizeMake(pickerViewHeader.frame.size.width,
-                                          pickerViewHeader.frame.size.height)
-                                                       font: lengthLeaseDoneButton.titleLabel.font];
+    CGSizeMake(pickerViewHeader.frame.size.width,
+      pickerViewHeader.frame.size.height)
+        font: lengthLeaseDoneButton.titleLabel.font];
   lengthLeaseDoneButton.frame = CGRectMake(pickerViewHeader.frame.size.width -
-                                    (padding + lengthLeaseDoneButtonRect.size.width), 0.0f,
-                                    lengthLeaseDoneButtonRect.size.width, pickerViewHeader.frame.size.height);
+    (padding + lengthLeaseDoneButtonRect.size.width), 0.0f,
+      lengthLeaseDoneButtonRect.size.width, pickerViewHeader.frame.size.height);
   [lengthLeaseDoneButton addTarget: self
                      action: @selector(hidePickerView)
            forControlEvents: UIControlEventTouchUpInside];
@@ -285,14 +291,15 @@
   [pickerViewHeader addSubview: lengthLeaseDoneButton];
 
   pickerViewContainer.frame = CGRectMake(0.0f, self.view.frame.size.height,
-                                         lengthLeasePickerView.frame.size.width,
-                                         pickerViewHeader.frame.size.height +
-                                         lengthLeasePickerView.frame.size.height);
+    lengthLeasePickerView.frame.size.width,
+      pickerViewHeader.frame.size.height +
+        lengthLeasePickerView.frame.size.height);
 
   fadedBackground = [[UIView alloc] init];
   fadedBackground.alpha = 0.0f;
   fadedBackground.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.8f];
-  fadedBackground.frame = CGRectMake(0, headerView.frame.origin.y, screen.size.width, screen.size.height - headerView.frame.origin.y - pickerViewContainer.frame.size.height);
+  fadedBackground.frame = CGRectMake(0, headerView.frame.origin.y, screen.size.width,
+    screen.size.height - headerView.frame.origin.y - pickerViewContainer.frame.size.height);
   fadedBackground.frame = screen;
   [self.view addSubview: fadedBackground];
   UITapGestureRecognizer *tapGesture =
@@ -719,7 +726,12 @@ replacementString: (NSString *) string
         questionLabel.text = @"What type of place is this?";
         UILabel *label = (UILabel *) self.navigationItem.titleView;
         label.text = @"Step 1";
-
+        
+        // Move label question
+        CGRect rect0 = questionLabel.frame;
+        rect0.origin.y += 2 * OMBPadding;
+        questionLabel.frame = rect0;
+        
         // Move the propertyTypeTableView
         CGRect rect1 = propertyTypeTableView.frame;
         rect1.origin.x = 0.0f;
@@ -883,7 +895,12 @@ replacementString: (NSString *) string
             [valuesDictionary objectForKey: @"propertyType"]];
         UILabel *label = (UILabel *) self.navigationItem.titleView;
         label.text = @"Step 2";
-
+        
+        // Move label question
+        CGRect rect0 = questionLabel.frame;
+        rect0.origin.y -= 2 * OMBPadding;
+        questionLabel.frame = rect0;
+        
         // Move the propertyTypeTableView
         CGRect rect1                = propertyTypeTableView.frame;
         rect1.origin.x              = -1 * rect1.size.width;

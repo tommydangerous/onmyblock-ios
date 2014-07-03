@@ -533,6 +533,7 @@
 		DE9A4180194264E40026545C /* OMBResidenceTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9A417F194264E40026545C /* OMBResidenceTitleView.m */; };
 		DE9A4183194272CC0026545C /* OMBImageFourLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9A4182194272CC0026545C /* OMBImageFourLabelCell.m */; };
 		DE9A41861942763F0026545C /* OMBApplicationResidenceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9A41851942763F0026545C /* OMBApplicationResidenceCell.m */; };
+		DE9C76FF1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9C76FE1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m */; };
 		DE9E7A9718D104AE00617563 /* OMBMapFilterLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9E7A9618D104AE00617563 /* OMBMapFilterLocationViewController.m */; };
 		DE9FF67418CF6A500017AA15 /* OMBTopDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */; };
 		DEA0560418E230AD002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.m in Sources */ = {isa = PBXBuildFile; fileRef = DEA0560318E230AD002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.m */; };
@@ -1559,6 +1560,8 @@
 		DE9A4182194272CC0026545C /* OMBImageFourLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBImageFourLabelCell.m; sourceTree = "<group>"; };
 		DE9A41841942763F0026545C /* OMBApplicationResidenceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBApplicationResidenceCell.h; sourceTree = "<group>"; };
 		DE9A41851942763F0026545C /* OMBApplicationResidenceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBApplicationResidenceCell.m; sourceTree = "<group>"; };
+		DE9C76FD1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBImageTwoTextFieldCell.h; sourceTree = "<group>"; };
+		DE9C76FE1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBImageTwoTextFieldCell.m; sourceTree = "<group>"; };
 		DE9E7A9518D104AE00617563 /* OMBMapFilterLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterLocationViewController.h; sourceTree = "<group>"; };
 		DE9E7A9618D104AE00617563 /* OMBMapFilterLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterLocationViewController.m; sourceTree = "<group>"; };
 		DE9FF67218CF6A500017AA15 /* OMBTopDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTopDetailView.h; sourceTree = "<group>"; };
@@ -2946,6 +2949,8 @@
 				DE4E685818E0D84F002369B8 /* OMBOtherUserProfileHeaderCell.m */,
 				ABE9CECD195A015A00A8C8E0 /* OMBUserDetailSectionHeaderCell.h */,
 				ABE9CECE195A015A00A8C8E0 /* OMBUserDetailSectionHeaderCell.m */,
+				DE9C76FD1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.h */,
+				DE9C76FE1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m */,
 			);
 			path = Users;
 			sourceTree = "<group>";
@@ -3647,6 +3652,7 @@
 				AB7A231118A02526004AC149 /* OMBUserProfileConnection.m in Sources */,
 				DE9FF67418CF6A500017AA15 /* OMBTopDetailView.m in Sources */,
 				ABF8EC9C182D3C570080B1E2 /* OMBIntroSearchView.m in Sources */,
+				DE9C76FF1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m in Sources */,
 				AB131F371885E25B0057D769 /* OMBMyRenterApplicationViewController.m in Sources */,
 				ABE679BC18932E6900A494FB /* OMBPayoutTransactionListConnection.m in Sources */,
 				AB2EA4C818A9E79700ACE53C /* LEffectLabel.m in Sources */,
@@ -4066,7 +4072,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4093,7 +4099,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -4106,7 +4112,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4131,7 +4137,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;

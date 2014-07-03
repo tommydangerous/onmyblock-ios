@@ -1344,7 +1344,7 @@ completion: (void (^) (void)) block
       // Hide the login view controller inside the intro view controller
       // that was presented by the view controller container
       [self.introViewController.loginViewController
-        dismissViewControllerAnimated: YES completion: ^{
+        dismissViewControllerAnimated: NO completion: ^{
           // Then hide the intro view controller
           [self.introViewController dismissViewControllerAnimated: NO
             completion: completion];

@@ -412,12 +412,16 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   // bedBathLabelFrame.size.width = bedBathRect.size.width;
   // bedBathLabel.frame = bedBathLabelFrame;
 
-  // Title or address
-  if ([_residence validTitle])
+  // Address or title
+  if([_residence.address length]){
+    NSString *string = [NSString stringWithFormat:@"%@, %@, %@",
+      _residence.address, [_residence.city capitalizedString], _residence.stateFormattedString];
+    addressLabel.text = string;
+  }
+  else{
     addressLabel.text = _residence.title;
-  else
-    addressLabel.text = [_residence.address capitalizedString];
-
+  }
+  
   // Add to favorites button image
   [self adjustFavoriteButton];
 }
