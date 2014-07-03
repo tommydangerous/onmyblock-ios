@@ -25,8 +25,10 @@ typedef NS_ENUM(NSInteger, OMBMyRenterProfileSection) {
 // User Info
 typedef NS_ENUM(NSInteger, OMBMyRenterProfileSectionUserInfoRow) {
   OMBMyRenterProfileSectionUserInfoRowImage,
-  OMBMyRenterProfileSectionUserInfoRowFirstName,
-  OMBMyRenterProfileSectionUserInfoRowLastName,
+  OMBMyRenterProfileSectionUserInfoRowImageFirstName,
+  OMBMyRenterProfileSectionUserInfoRowImageLastName,
+  //OMBMyRenterProfileSectionUserInfoRowFirstName,
+  //OMBMyRenterProfileSectionUserInfoRowLastName,
   OMBMyRenterProfileSectionUserInfoRowSchool,
   OMBMyRenterProfileSectionUserInfoRowEmail,
   OMBMyRenterProfileSectionUserInfoRowPhone,

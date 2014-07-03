@@ -16,6 +16,7 @@
 #import "OMBCenteredImageView.h"
 #import "OMBEmploymentCell.h"
 #import "OMBGradientView.h"
+#import "OMBImageTwoTextFieldCell.h"
 #import "OMBLabelTextFieldCell.h"
 #import "OMBLegalViewController.h"
 #import "OMBManageListingsCell.h"
@@ -85,7 +86,7 @@
   backView = [UIView new];
   backView.frame = CGRectMake(0.0f, backViewOriginY,
     screenWidth, screenHeight * 0.4f);
-  [self.view insertSubview: backView belowSubview: self.table];
+  //[self.view insertSubview: backView belowSubview: self.table];
   // Scale back view
   scaleBackView = [UIView new];
   scaleBackView.frame = backView.bounds;
@@ -115,7 +116,7 @@
   // nameView.backgroundColor = [UIColor redColor];
   nameView.frame = CGRectMake(0.0f, nameViewOriginY,
     screenWidth, nameViewHeight);
-  [self.view insertSubview: nameView belowSubview: self.table];
+  //[self.view insertSubview: nameView belowSubview: self.table];
   // User icon
   userIconView = [[OMBCenteredImageView alloc] init];
   // userIconView.frame = CGRectMake(padding, 0.0f,
@@ -143,19 +144,19 @@
         cameraSize, cameraSize);
   cameraImageView.image = [UIImage image:
     [UIImage imageNamed: @"camera_icon.png"] size: cameraImageView.bounds.size];
-  [nameView addSubview: cameraImageView];
+  //[nameView addSubview: cameraImageView];
 
   // Table header view
   UIView *tableHeaderView = [UIView new];
   tableHeaderView.backgroundColor = [UIColor clearColor];
   tableHeaderView.frame = CGRectMake(0.0f, 0.0f, screenWidth,
     backViewOriginY + backView.frame.size.height);
-  self.table.tableHeaderView = tableHeaderView;
+  //self.table.tableHeaderView = tableHeaderView;
 
-  UITapGestureRecognizer *tapGesture =
+  /*UITapGestureRecognizer *tapGesture =
     [[UITapGestureRecognizer alloc] initWithTarget: self
       action: @selector(showUploadActionSheet)];
-  [tableHeaderView addGestureRecognizer: tapGesture];
+  [tableHeaderView addGestureRecognizer: tapGesture];*/
 
   // About text view
   aboutTextView = [UITextView new];
@@ -436,6 +437,57 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.clipsToBounds = YES;
       return cell;
     }
+    // Image, First name and Last Name
+    else if(row == OMBMyRenterProfileSectionUserInfoRowImageFirstName){
+      
+      static NSString *imageTextFieldID = @"imageTextFieldID";
+      OMBImageTwoTextFieldCell *cell = [tableView
+        dequeueReusableCellWithIdentifier:imageTextFieldID];
+      
+      if(!cell){
+        cell = [[OMBImageTwoTextFieldCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier:imageTextFieldID];
+        // Setup frames
+        [cell setupWithImage:user.image];
+        
+        // Upload Photo Recognizer
+        UITapGestureRecognizer *tapGesture =
+          [[UITapGestureRecognizer alloc] initWithTarget: self
+            action: @selector(showUploadActionSheet)];
+        [cell addGestureToImage: tapGesture];
+        
+        // Setup textfield
+        NSString *imageName = @"user_icon.png";
+        cell.firstIconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
+          size: cell.firstIconImageView.frame.size];
+        cell.firstTextField.delegate  = self;
+        cell.firstTextField.indexPath = indexPath;
+        cell.firstTextField.placeholder = @"First name";
+        cell.firstTextField.textColor = [UIColor blueDark];
+        [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
+        
+        cell.secondIconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
+          size: cell.secondIconImageView.frame.size];
+        cell.secondTextField.delegate  = self;
+        cell.secondTextField.indexPath =
+          [NSIndexPath indexPathForRow:OMBMyRenterProfileSectionUserInfoRowImageLastName
+            inSection:indexPath.section] ;
+        cell.secondTextField.placeholder = @"Last name";
+        cell.secondTextField.textColor = cell.firstTextField.textColor;
+        [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
+      }
+      
+      cell.clipsToBounds = YES;
+      cell.firstTextField.text = [[valueDictionary objectForKey: @"firstName"] capitalizedString];
+      cell.secondTextField.text = [[valueDictionary objectForKey: @"lastName"] capitalizedString];
+      // Load image
+      cell.userImage.image = user.image;
+      
+      return cell;
+      
+    }
     // About
     else if (row == OMBMyRenterProfileSectionUserInfoRowAbout) {
       static NSString *AboutCellID = @"AboutCellID";
@@ -478,59 +530,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       NSString *imageName = @"user_icon.png";
       NSString *key;
       NSString *labelString;
-      // First name & Last Name
-      if (row == OMBMyRenterProfileSectionUserInfoRowFirstName) {
-        imageName = @"user_icon.png";
-        NSString *nameLabelString = @"First name";
-        NSString *lastNameLabelString = @"Last name";
-
-        static NSString *LabelTextCellID = @"TwoLabelTextCellID";
-        OMBTwoLabelTextFieldCell *cell =
-        [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
-        if (!cell) {
-          cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
-                  UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
-          [cell setFrameUsingIconImageView];
-        }
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.firstTextField.font = [UIFont normalTextFont];
-        cell.firstTextField.textColor = [UIColor blueDark];
-        cell.firstTextFieldLabel.font = [UIFont normalTextFont];
-        cell.firstIconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
-                                             size: cell.firstIconImageView.frame.size];
-        cell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-        cell.firstTextField.delegate  = self;
-        cell.firstTextField.indexPath = indexPath;
-        cell.firstTextField.keyboardType = UIKeyboardTypeDefault;
-        cell.firstTextField.placeholder = [nameLabelString capitalizedString];
-        cell.firstTextField.text = [valueDictionary objectForKey: @"firstName"];
-        cell.firstTextField.text = [cell.firstTextField.text capitalizedString];
-        cell.firstTextFieldLabel.text = nameLabelString;
-        [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
-                 forControlEvents: UIControlEventEditingChanged];
-
-        cell.secondTextField.font = cell.firstTextField.font;
-        cell.secondTextField.textColor = cell.firstTextField.textColor;
-        cell.secondTextFieldLabel.font = cell.firstTextFieldLabel.font;
-        cell.secondIconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
-                                                   size: cell.secondIconImageView.frame.size];
-        cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-        cell.secondTextField.delegate  = self;
-        cell.secondTextField.indexPath =
-          [NSIndexPath indexPathForRow:OMBMyRenterProfileSectionUserInfoRowLastName
-            inSection:indexPath.section] ;
-        cell.secondTextField.keyboardType = UIKeyboardTypeDefault;
-        cell.secondTextField.placeholder = [lastNameLabelString capitalizedString];
-        cell.secondTextField.text = [valueDictionary objectForKey: @"lastName"];
-        cell.secondTextField.text = [cell.secondTextField.text capitalizedString];
-        cell.secondTextFieldLabel.text = lastNameLabelString;
-        [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
-                       forControlEvents: UIControlEventEditingChanged];
-        cell.clipsToBounds = YES;
-        return cell;
-      }
       // School
-      else if (row == OMBMyRenterProfileSectionUserInfoRowSchool) {
+      if (row == OMBMyRenterProfileSectionUserInfoRowSchool) {
         imageName = @"school_icon.png";
         key         = @"school";
         labelString = @"School";
@@ -776,8 +777,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return 0.0f;
       // return OMBPadding + OMBStandardButtonHeight + OMBPadding;
     }
+    // Image, First and Last Name
+    else if (row == OMBMyRenterProfileSectionUserInfoRowImageFirstName)
+      return [OMBImageTwoTextFieldCell heightForCell];
     // Last Name
-    else if (row == OMBMyRenterProfileSectionUserInfoRowLastName)
+    else if (row == OMBMyRenterProfileSectionUserInfoRowImageLastName)
       return 0.0f;
     // School
     else if (row == OMBMyRenterProfileSectionUserInfoRowSchool) {
@@ -837,10 +841,10 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table beginUpdates];
   [self.table endUpdates];
 
-  if (textField.indexPath.row == OMBMyRenterProfileSectionUserInfoRowLastName)
+  if (textField.indexPath.row == OMBMyRenterProfileSectionUserInfoRowImageLastName)
     [self scrollToRectAtIndexPath:
       [NSIndexPath indexPathForRow:
-        OMBMyRenterProfileSectionUserInfoRowFirstName
+        OMBMyRenterProfileSectionUserInfoRowImageFirstName
           inSection:textField.indexPath.section]];
   else
     [self scrollToRectAtIndexPath: textField.indexPath];
@@ -1038,11 +1042,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) textFieldDidChange: (TextFieldPadding *) textField
 {
   NSInteger row = textField.indexPath.row;
-  if (row == OMBMyRenterProfileSectionUserInfoRowFirstName) {
+  if (row == OMBMyRenterProfileSectionUserInfoRowImageFirstName) {
     if ([textField.text length])
       [valueDictionary setObject: textField.text forKey: @"firstName"];
   }
-  else if (row == OMBMyRenterProfileSectionUserInfoRowLastName) {
+  else if (row == OMBMyRenterProfileSectionUserInfoRowImageLastName) {
     if ([textField.text length])
       [valueDictionary setObject: textField.text forKey: @"lastName"];
   }
