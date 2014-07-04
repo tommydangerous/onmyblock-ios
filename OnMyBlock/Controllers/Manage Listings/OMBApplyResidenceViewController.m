@@ -553,7 +553,9 @@ completion: (void (^) (NSError *error)) block
     employmentCount =
     [[[self renterApplication] employmentsSortedByStartDate] count];
   }
-  if (legalAnswerCount == 0) {
+  if (legalAnswerCount < 
+    [[OMBLegalQuestionStore sharedStore] legalQuestionsCount]) {
+    
     legalAnswerCount = [[self renterApplication].legalAnswers count];
   }
   if (previousRentalCount == 0) {

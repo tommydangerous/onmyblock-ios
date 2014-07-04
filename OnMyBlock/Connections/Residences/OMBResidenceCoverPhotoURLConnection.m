@@ -42,15 +42,16 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
+  NSDictionary *json       = [self json];
   NSString *originalString = [json objectForKey: @"image"];
   NSString *string         = [json objectForKey: @"image"];
 
   OMBResidenceImage *residenceImage = [[OMBResidenceImage alloc] init];
 
   // If the cover photo URL is not empty.png
-  if (json && [string rangeOfString: @"empty"].location == NSNotFound) {
+  if (json && 
+    [string rangeOfString: @"empty"].location == NSNotFound &&
+    [string rangeOfString: @"default_residence_image".location == NSNotFound]) {
     // If URL is something like this //ombrb-prod.s3.amazonaws.com
     if ([string hasPrefix: @"//"]) {
       string = [@"http:" stringByAppendingString: string];
@@ -60,45 +61,24 @@
         OnMyBlockAPI] objectAtIndex: 0];
       string = [NSString stringWithFormat: @"%@%@", baseURLString, string];
     }
-
-    // // Download the residence cover photo from the cover photo url
-    // coverPhotoDownloader = 
-    //  [[OMBResidenceCoverPhotoDownloader alloc] initWithResidence:
-    //    residence];
-    // coverPhotoDownloader.completionBlock = ^(NSError *error) {
-    //  [super connectionDidFinishLoading: connection];
-    // };
-
-    NSString *postionValue = [json objectForKey: @"position"];
-    int position = (id)postionValue != [NSNull null] ? [postionValue intValue] : 1;
-
+    NSUInteger position = 1;
+    id postionValue = [json objectForKey: @"position"];
+    if (postionValue != [NSNull null]) {
+      position = [postionValue intValue];
+    }
     residenceImage.absoluteString = originalString;
-    residenceImage.imageURL = [NSURL URLWithString:string];
+    residenceImage.imageURL       = [NSURL URLWithString: string];
     residenceImage.position       = position;
     residenceImage.uid            = [[json objectForKey: @"id"] intValue];
   }
-  // If residence is not a temporary residence
-  else if (![residence isKindOfClass: [OMBTemporaryResidence class]]) {
-    residenceImage.imageURL = [residence googleStaticStreetViewImageURL];
-    residenceImage.absoluteString = residenceImage.imageURL.absoluteString;
-    residenceImage.position = 0;
-    residenceImage.uid      = -9999 + arc4random_uniform(1000);
-    [residence addResidenceImage: residenceImage];
-      
-    // // If the residence has no image, show the Google Static street view
-    // googleStaticImageDownloader =
-    //   [[OMBResidenceGoogleStaticImageDownloader alloc] initWithResidence:
-    //     residence url: [residence googleStaticStreetViewImageURL]];
-    // googleStaticImageDownloader.completionBlock = ^(NSError *error) {
-    //   [super connectionDidFinishLoading: connection];
-    // };
-    // [googleStaticImageDownloader startDownload];
-  }
-
+  // If there is a valid image URL
   if (residenceImage.imageURL) {
     residence.coverPhotoURL = residenceImage.imageURL;
     [residence addResidenceImage: residenceImage];
     [super connectionDidFinishLoading: connection];
+  }
+  else {
+    residence.hasNoImage = YES;
   }
 }
 
@@ -109,10 +89,9 @@
 - (void) cancelConnection
 {
   [super cancelConnection];
-  if (coverPhotoDownloader)
+  if (coverPhotoDownloader) {
     [coverPhotoDownloader cancelDownload];
-  if (googleStaticImageDownloader)
-    [googleStaticImageDownloader cancelDownload];
+  }
 }
 
 @end

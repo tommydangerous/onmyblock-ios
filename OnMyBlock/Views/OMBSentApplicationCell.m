@@ -167,6 +167,7 @@
 - (void) reloadData: (OMBResidence *) residence
 {
   if (!residence) return;
+  
   // Name
   rentLabel.text = [NSString numberToCurrencyString: residence.minRent];
   // Address
@@ -174,33 +175,38 @@
   // Bedrooms / Bathrooms
   bedbadlabel.text =  [NSString stringWithFormat:
     @"%.0f bd / %.0f ba", residence.bedrooms, residence.bathrooms];
+
   // Image
-  if (!residence.coverPhotoURL) {
-    [userImageView clearImage];
-  }
-  NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
-    userImageView.bounds.size.width, userImageView.bounds.size.height];
-  UIImage *image = [residence coverPhotoForSizeKey: sizeKey];
-  if (image) {
-    userImageView.image = image;
+  if (residence.hasNoImage) {
+    userImageView.image = [OMBResidence placeholderImage];
   }
   else {
-    __weak typeof(userImageView) weakUserImageView = userImageView;
-    [residence downloadCoverPhotoWithCompletion: 
-      ^(NSError *error) {
-        [weakUserImageView.imageView setImageWithURL:
-          residence.coverPhotoURL placeholderImage: nil
-            options: SDWebImageRetryFailed completed:
-              ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
-                if (!error && img) {
-                  weakUserImageView.image = img;
-                  [residence.coverPhotoSizeDictionary setObject:
-                    weakUserImageView.image forKey: sizeKey];
-           }
-         }
-        ];
-    }];
-    userImageView.image = [OMBResidence placeholderImage];
+    NSString *sizeKey = [NSString stringWithFormat: @"%f,%f",
+      userImageView.bounds.size.width, userImageView.bounds.size.height];
+    UIImage *image = [residence coverPhotoForSizeKey: sizeKey];
+    if (image) {
+      userImageView.image = image;
+    }
+    else {
+      __weak typeof(userImageView) weakUserImageView = userImageView;
+      [residence downloadCoverPhotoWithCompletion: 
+        ^(NSError *error) {
+          [weakUserImageView.imageView setImageWithURL:
+            residence.coverPhotoURL placeholderImage: nil
+              options: SDWebImageRetryFailed completed:
+                ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+                  if (!error && img) {
+                    weakUserImageView.image = img;
+                    [residence.coverPhotoSizeDictionary setObject:
+                      weakUserImageView.image forKey: sizeKey];
+                  }
+                  else {
+                    weakUserImageView.image = [OMBResidence placeholderImage];
+                  }
+                }  
+          ];
+      }];
+    }
   }
 }
 

@@ -363,23 +363,25 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table endUpdates];
 
   textField.inputAccessoryView = textFieldToolbar;
+  
+  if (textField.indexPath.row == 
+    OMBRenterInfoAddEmploymentSectionFieldsRowTitle) {
 
-  // [self scrollToRectAtIndexPath: textField.indexPath];
-
-  if (textField.indexPath.row == OMBRenterInfoAddEmploymentSectionFieldsRowTitle)
     [self scrollToRowAtIndexPath:
       [NSIndexPath indexPathForRow:
         OMBRenterInfoAddEmploymentSectionFieldsRowCompanyName
           inSection:textField.indexPath.section]];
-  else
-    if(textField.indexPath.row == OMBRenterInfoAddEmploymentSectionFieldsRowIncome)
-      if([textField.text length]){
+  }
+  else {
+    if (textField.indexPath.row == 
+      OMBRenterInfoAddEmploymentSectionFieldsRowIncome) {
+      if ([textField.text length]){
         textField.text = [textField.text
           stringByReplacingOccurrencesOfString:@"$ " withString:@""];
       }
-      
+    }
     [self scrollToRowAtIndexPath: textField.indexPath];
-
+  }
 }
 
 - (void)textFieldDidEndEditing:(TextFieldPadding *)textField

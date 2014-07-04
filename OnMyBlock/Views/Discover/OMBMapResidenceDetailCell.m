@@ -53,7 +53,7 @@ reuseIdentifier: (NSString *) reuseIdentifier
   rentLabel = [UILabel new];
   rentLabel.font = [UIFont mediumLargeTextFont];
   rentLabel.frame = CGRectMake(coverPhoto.frame.origin.x +
-    coverPhoto.frame.size.width + padding, originLabely,
+    coverPhoto.frame.size.width + (padding * 0.5f), originLabely,
       0.0f, 33.f);
   rentLabel.textAlignment = NSTextAlignmentLeft;
   rentLabel.textColor = [UIColor textColor];
@@ -71,8 +71,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
   titleLabel.font = [UIFont normalTextFont];
   titleLabel.frame = CGRectMake(rentLabel.frame.origin.x,
     rentLabel.frame.origin.y + rentLabel.frame.size.height +
-      padding * 0.25f, self.frame.size.width - heightCell -
-        padding - padding, 22.f);
+      padding * 0.25f, self.frame.size.width - (heightCell + (padding * 1.5f)), 
+        22.f);
   titleLabel.textAlignment = rentLabel.textAlignment;
   titleLabel.textColor = [UIColor grayMedium];
   [self.contentView addSubview: titleLabel];
@@ -172,12 +172,8 @@ reuseIdentifier: (NSString *) reuseIdentifier
   bedBathRect.size.width = widthBedBath;
   bedBathLabel.frame = bedBathRect;
 
-  // Title or address
-  if ([_residence validTitle])
-    titleLabel.text = _residence.title;
-  else
-    titleLabel.text = [_residence.address capitalizedString];
-
+  // Address or title
+  titleLabel.text = [self.residence addressOrTitle];
 }
 
 @end

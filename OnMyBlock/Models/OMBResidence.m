@@ -191,6 +191,21 @@ toImageSizeDictionaryWithSize: (CGSize) size
   }
 }
 
+- (NSString *) addressOrTitle
+{
+  if ([self.address length]) {
+    return [self.address capitalizedString];
+  }
+  else if ([self validTitle]) {
+    return self.title;
+  }
+  else if ([self.city length] && [self.state length]) {
+    return [NSString stringWithFormat: @"%@ in %@",
+      [self.propertyType capitalizedString], [self.city capitalizedString]];
+  }
+  return @"Listing";
+}
+
 - (NSUInteger) amenityCount
 {
   for (NSNumber *number in [self.amenities allValues]) {
