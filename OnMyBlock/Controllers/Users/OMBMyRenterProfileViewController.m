@@ -695,9 +695,7 @@ numberOfRowsInSection: (NSInteger) section
   }
   // Listings
   else if (section == OMBMyRenterProfileSectionListings) {
-    // If the user has listings and is a subletter
-    if ([[self listings] count] && [user.landlordType isEqualToString: @"subletter"]) {
-      // Listings header, create listing, listings
+    if ([[self listings] count] && ![user isStudent]) {
       return 1 + [[self listings] count];
     }
   }
@@ -801,9 +799,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Renter info
   else if (section == OMBMyRenterProfileSectionRenterInfo) {
-    if([user isLandlord] || [user.landlordType isEqualToString:@"subletter"])
-      return 0.0;
-
+    if ([user isLandlord] && ![user isStudent]) {
+      return 0.f;
+    }
     // Top spacing
     if (row == OMBMyRenterProfileSectionRenterInfoTopSpacing) {
       return OMBStandardHeight;
@@ -811,9 +809,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     return OMBStandardButtonHeight;
   }
   // Listing
-  else if (indexPath.section == OMBMyRenterProfileSectionListings) {
+  else if (section == OMBMyRenterProfileSectionListings) {
     // My Listings
-    if (indexPath.row == OMBMyRenterProfileSectionListingsRowInfoHeader) {
+    if (row == OMBMyRenterProfileSectionListingsRowInfoHeader) {
       return OMBPadding + OMBStandardHeight + OMBPadding;
     }
     // Listings

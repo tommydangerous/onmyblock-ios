@@ -34,6 +34,8 @@
 #import "OMBTableViewCell.h"
 #import "OMBTemporaryResidence.h"
 #import "OMBViewControllerContainer.h"
+
+// Categories
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Color.h"
@@ -89,7 +91,8 @@ float const photoViewImageHeightPercentage = 0.32;
   self.view.backgroundColor = [UIColor clearColor];
   [self setupForTable];
   self.table.backgroundColor = [UIColor clearColor];
-  self.table.separatorInset  = UIEdgeInsetsMake(0.0f, padding, 0.0f, padding);
+  // self.table.separatorInset  = UIEdgeInsetsMake(0.0f, padding, 
+  //   0.0f, padding);
 
   // Publish Now view
   CGFloat publishHeight = OMBStandardButtonHeight;
@@ -446,19 +449,19 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   if (!cell) {
     cell = [[OMBTableViewCell alloc] initWithStyle: UITableViewCellStyleValue1
       reuseIdentifier: CellIdentifier];
+    cell.accessoryType             = UITableViewCellAccessoryNone;
     cell.basicTextLabel.frame = CGRectMake(OMBPadding, 0.0f,
       tableView.frame.size.width - (OMBPadding * 2), OMBStandardButtonHeight);
+    cell.detailTextLabel.font      = [UIFont normalTextFont];
+    cell.detailTextLabel.text      = @"";
+    cell.detailTextLabel.textColor = [UIColor grayMedium];
+    cell.basicTextLabel.font       = [UIFont normalTextFontBold];
+    cell.basicTextLabel.textColor  = cell.detailTextLabel.textColor;
   }
-  cell.accessoryType = UITableViewCellAccessoryNone;
-  cell.detailTextLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light"
-    size: 15];
-  cell.detailTextLabel.text      = @"";
-  cell.detailTextLabel.textColor = [UIColor grayMedium];
-  cell.basicTextLabel.font       = [UIFont normalTextFontBold];
-  cell.basicTextLabel.textColor  = cell.detailTextLabel.textColor;
+
   // Checkmark image view
-  CGFloat padding   = 20.0f;
-  CGFloat imageSize = 20.0f;
+  CGFloat padding   = OMBPadding;
+  CGFloat imageSize = OMBPadding;
   UIImageView *imageView = (UIImageView *) [cell.contentView viewWithTag: 8888];
   if (!imageView) {
     imageView = [UIImageView new];
@@ -469,8 +472,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     imageView.tag   = 8888;
     [cell.contentView addSubview: imageView];
   }
-  imageView.alpha = 0.2f;
-  imageView.image = [UIImage imageNamed: @"checkmark_outline.png"];
+  imageView.alpha  = 0.2f;
+  imageView.image  = [UIImage imageNamed: @"checkmark_outline.png"];
   NSString *string = @"";
 
   // Title / Description
@@ -483,20 +486,24 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
   }
-  // Description
-  /*else if (indexPath.row == 1) {
-    string = @"Description";
-    if ([residence.description length]) {
-      cell.basicTextLabel.textColor = [UIColor textColor];
-      imageView.alpha = 1.0f;
-      imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
-    }
-  }*/
+
+  // // Description
+  // else if (indexPath.row == 1) {
+  //   string = @"Description";
+  //   if ([residence.description length]) {
+  //     cell.basicTextLabel.textColor = [UIColor textColor];
+  //     imageView.alpha = 1.0f;
+  //     imageView.image = 
+  //       [UIImage imageNamed: @"checkmark_outline_filled.png"];
+  //   }
+  // }
+
   // Rent / Auction Details
   else if (indexPath.row == 1) {
     // string = @"Rent / Auction Details";
     string = @"Rent Details";
     if (residence.minRent) {
+      string = [residence rentToCurrencyString];
       cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
@@ -506,7 +513,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (indexPath.row == 2) {
     string = @"Select Address";
     if ([residence.address length] && [residence.city length] &&
-        [residence.state length] && [residence.zip length]) {
+      [residence.state length] && [residence.zip length]) {
+
       string = [residence.address capitalizedString];
       cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
@@ -539,11 +547,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       imageView.alpha = 1.0f;
       imageView.image = [UIImage imageNamed: @"checkmark_outline_filled.png"];
     }
-    cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
-      0.0f, 0.0f);
+    cell.separatorInset = UIEdgeInsetsMake(0.f, 
+      CGRectGetWidth(tableView.frame), 0.f, 0.f);
   }
   cell.basicTextLabel.text = string;
-  cell.clipsToBounds       = YES;
+
+  // If we use this, there are some weird lines that appear where the
+  // separator is except it goes across the entire screen over the separator
+  // cell.clipsToBounds = YES;
   return cell;
 }
 

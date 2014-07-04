@@ -797,6 +797,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   return NO;
 }
 
+- (BOOL) isStudent
+{
+  if ([self isLandlord] && ![self isSubletter]) {
+    return NO;
+  }
+  return YES;
+}
+
 - (BOOL) isSubletter
 {
   return self.landlordType && 

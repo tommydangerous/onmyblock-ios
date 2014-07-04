@@ -17,11 +17,10 @@
 
 - (id)initWithResidence:(OMBResidence *)object
 {
-  if(!(self = [super initWithResidence:object]))
-    return nil;
+  if (!(self = [super initWithResidence: object])) return nil;
   
-  self.screenName = self.title = @"Title and description";
-  tagSection = OMBFinishListingSectionTitleDescription;
+  self.screenName = self.title = @"Title and Description";
+  tagSection      = OMBFinishListingSectionTitleDescription;
   
   return self;
 }
@@ -82,14 +81,20 @@
   
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void) viewWillAppear: (BOOL) animated
 {
-  [super viewWillAppear:animated];
+  [super viewWillAppear: animated];
   
   valueDictionary = [NSMutableDictionary dictionaryWithDictionary: @{
-    @"title"       : residence.title,
-    @"description" : residence.description
+    @"description" : @"",
+    @"title"       : @""
    }];
+  if (residence.description && [residence.description length]) {
+    [valueDictionary setObject: residence.description forKey: @"description"];
+  }
+  if (residence.title && [residence.title length]) {
+    [valueDictionary setObject: residence.title forKey: @"title"];
+  }
   
   [self shouldEnableBarButton];
 }

@@ -145,6 +145,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block;
 - (UIImage *) imageForSizeKey: (NSString *) string;
 - (BOOL) isCurrentUser;
 - (BOOL) isLandlord;
+- (BOOL) isStudent;
 - (BOOL) isSubletter;
 - (BOOL) loggedIn;
 - (void) logout;

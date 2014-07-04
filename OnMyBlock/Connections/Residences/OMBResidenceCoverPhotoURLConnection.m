@@ -51,7 +51,7 @@
   // If the cover photo URL is not empty.png
   if (json && 
     [string rangeOfString: @"empty"].location == NSNotFound &&
-    [string rangeOfString: @"default_residence_image".location == NSNotFound]) {
+    [string rangeOfString: @"default_residence_image" ].location == NSNotFound) {
     // If URL is something like this //ombrb-prod.s3.amazonaws.com
     if ([string hasPrefix: @"//"]) {
       string = [@"http:" stringByAppendingString: string];

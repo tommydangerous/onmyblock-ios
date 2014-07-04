@@ -110,9 +110,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     cell.textLabel.textColor = [UIColor textColor];
     if (indexPath.section == 0) {
       if (indexPath.row == 1) {
-        if([[OMBUser currentUser] isLandlord])
-          cell.textLabel.text = @"My Profile";
-        else{
+        if ([[OMBUser currentUser] isStudent]) {
           cell.detailTextLabel.font = cell.textLabel.font;
           NSInteger percentage = [[OMBUser currentUser] profilePercentage];
           cell.detailTextLabel.text = [NSString stringWithFormat:
@@ -124,6 +122,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
             color = [UIColor yellow];
           cell.detailTextLabel.textColor = color;
           cell.textLabel.text = @"My Renter Profile";
+        }
+        else {
+          cell.textLabel.text = @"My Profile";
         }
       }
       else if (indexPath.row == 2) {
