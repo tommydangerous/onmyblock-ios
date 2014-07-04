@@ -109,7 +109,7 @@ NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
 
 + (NSInteger) numberOfSteps
 {
-  return 7;
+  return 6;
 }
 
 + (UIImage *) placeholderImage
@@ -571,12 +571,12 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   // Photos
   if ([_images count])
     stepsRemaining -= 1;
-  // Title
-  if ([_title length])
+  // Title / Description
+  if ([_title length] && [_description length])
     stepsRemaining -= 1;
   // Description
-  if ([_description length])
-    stepsRemaining -= 1;
+  /*if ([_description length])
+    stepsRemaining -= 1;*/
   // Rent / Auction Details
   if (_minRent)
     stepsRemaining -= 1;
