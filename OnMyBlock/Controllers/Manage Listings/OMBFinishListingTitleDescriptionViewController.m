@@ -30,10 +30,30 @@
 {
   [super loadView];
   
+  float padding = 20.f;
+  
   saveBarButtonItem.enabled = YES;
   self.navigationItem.rightBarButtonItem = saveBarButtonItem;
   
   CGFloat screenWidth = [self screen].size.width;
+  
+  // Title
+	titleToolbar = [UIToolbar new];
+	titleToolbar.clipsToBounds = YES;
+	titleToolbar.frame = CGRectMake(0.0f, 0.0f,
+    screenWidth, OMBStandardHeight);
+	titleToolbar.tintColor = [UIColor blue];
+  
+  maxCharacterTitle = 35;
+  
+  countLabel = [UILabel new];
+  countLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 15];
+  countLabel.frame = CGRectMake(padding, 0.0f,
+    titleToolbar.frame.size.width - (padding * 2),
+      titleToolbar.frame.size.height);
+  countLabel.textAlignment = NSTextAlignmentRight;
+  countLabel.textColor = [UIColor grayMedium];
+  [titleToolbar addSubview: countLabel];
   
   // Spacing
 	UIBarButtonItem *flexibleSpace =
@@ -66,19 +86,36 @@
 	// iOS 7 toolbar spacing is 16px; 20px on iPad
 	rightPadding.width = 4.0f;
   
-	textFieldToolbar = [UIToolbar new];
-	textFieldToolbar.clipsToBounds = YES;
-	textFieldToolbar.frame = CGRectMake(0.0f, 0.0f,
+  // Description toolbar
+	descriptionToolbar = [UIToolbar new];
+	descriptionToolbar.clipsToBounds = YES;
+	descriptionToolbar.frame = CGRectMake(0.0f, 0.0f,
     screenWidth, OMBStandardHeight);
-	textFieldToolbar.items = @[leftPadding,
-    cancelBarButtonItemForTextFieldToolbar,
-      flexibleSpace,
-        doneBarButtonItemForTextFieldToolbar,
-          rightPadding];
-	textFieldToolbar.tintColor = [UIColor blue];
+  descriptionToolbar.items = @[leftPadding,
+   cancelBarButtonItemForTextFieldToolbar,
+     flexibleSpace,
+       doneBarButtonItemForTextFieldToolbar,
+         rightPadding];
+	descriptionToolbar.tintColor = [UIColor blue];
+  
+  // Description Text View
+  descriptionTextView = [UITextView new];
+  descriptionTextView.delegate = self;
+  descriptionTextView.font = [UIFont normalTextFont];
+  descriptionTextView.frame = CGRectMake(20.f, padding,
+    screenWidth - (padding * 2), padding * 5);
+  descriptionTextView.textColor = [UIColor blueDark];
+  
+  // Add a placeholder
+  descriptionPlaceholder = [UILabel new];
+  descriptionPlaceholder.font = descriptionTextView.font;
+  descriptionPlaceholder.frame = CGRectMake(5.0f, 8.0f,
+    descriptionTextView.frame.size.width, 20.0f);
+  descriptionPlaceholder.text = @"Please add a description...";
+  descriptionPlaceholder.textColor = [UIColor grayMedium];
+  [descriptionTextView addSubview:descriptionPlaceholder];
   
   [super setupForTable];
-  
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -89,6 +126,7 @@
     @"description" : @"",
     @"title"       : @""
    }];
+  
   if (residence.description && [residence.description length]) {
     [valueDictionary setObject: residence.description forKey: @"description"];
   }
@@ -96,6 +134,7 @@
     [valueDictionary setObject: residence.title forKey: @"title"];
   }
   
+  //[self updateCharacterCount];
   [self shouldEnableBarButton];
 }
 
@@ -108,10 +147,19 @@
 
 #pragma mark - Protocol UITableViewDelegate
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
   
+  // Title
+  if(indexPath.row == 0){
+    return [OMBLabelTextFieldCell heightForCellWithIconImageView];
+  }
+  // Description
+  else if(indexPath.row == 1){
+    return OMBPadding + (22.0f * 5) + OMBPadding;
+  }
   
-  return [OMBLabelTextFieldCell heightForCellWithIconImageView];
+  return 0.0f;
 }
 
 #pragma mark - Protocol UITableViewDataSource
@@ -128,65 +176,126 @@
 {
   NSInteger row = indexPath.row;
   
-  static NSString *LabelTextCellID = @"LabelTextCellID";
-  OMBLabelTextFieldCell *cell =
-    [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
+  static NSString *emptyCellID = @"emptyCellID";
+  UITableViewCell *emptycell =
+  [tableView dequeueReusableCellWithIdentifier: emptyCellID];
+  if(!emptyCellID)
+    emptycell = [[UITableViewCell alloc] initWithStyle:
+      UITableViewCellStyleDefault reuseIdentifier:emptyCellID];
   
-  if (!cell) {
-    cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
-     UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
-    [cell setFrameUsingIconImageView];
-  }
-  
-  cell.selectionStyle = UITableViewCellSelectionStyleNone;
-  cell.textField.font = [UIFont normalTextFont];
-  cell.textField.textColor = [UIColor blueDark];
-  cell.textFieldLabel.font = [UIFont normalTextFont];
-  NSString *imageName = @"user_icon.png";
-  NSString *key;
-  NSString *labelString;
   // Title
-  if (row == 0) {
-    imageName = @"house_icon_2.png";
-    key         = @"title";
-    labelString = @"Title";
-    cell.textField.keyboardType = UIKeyboardTypeDefault;
-  }
-  // Description
-  else if (row == 1) {
-    imageName = @"house_icon_2.png";
-    key         = @"description";
-    labelString = @"Description";
-    cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
-  }
-  cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
-    size: cell.iconImageView.frame.size];
-  cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-  cell.textField.delegate  = self;
-  cell.textField.indexPath = indexPath;
-  cell.textField.placeholder = [labelString capitalizedString];
-  cell.textField.text = [valueDictionary objectForKey: key];
-  cell.textFieldLabel.text = labelString;
+  if(row == 0){
+    static NSString *LabelTextCellID = @"LabelTextCellID";
+    OMBLabelTextFieldCell *cell =
+      [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
+    if (!cell) {
+      cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
+        UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
+      [cell setFrameUsingIconImageView];
+    }
+    
+    NSString *labelString = @"Title";
+    cell.iconImageView.image = [UIImage image: [UIImage imageNamed: @"house_icon_2.png"]
+      size: cell.iconImageView.frame.size];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    cell.textField.delegate  = self;
+    cell.textField.font = [UIFont normalTextFont];
+    cell.textField.indexPath = indexPath;
+    cell.textField.placeholder = [labelString capitalizedString];
+    cell.textField.text = [valueDictionary objectForKey: @"title"];
+    cell.textField.textColor = [UIColor blueDark];
     [cell.textField addTarget: self action: @selector(textFieldDidChange:)
       forControlEvents: UIControlEventEditingChanged];
-  cell.clipsToBounds = YES;
+    cell.clipsToBounds = YES;
+    
+    return cell;
+  }
+  // Description
+  else if(row == 1){
+    static NSString *descriptionCellID = @"descriptionCellID";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:descriptionCellID];
+    if(!cell){
+      cell = [[UITableViewCell alloc] initWithStyle:
+        UITableViewCellStyleDefault reuseIdentifier:descriptionCellID];
+      [descriptionTextView removeFromSuperview];
+      [cell.contentView addSubview:descriptionTextView];
+    }
+    
+    descriptionTextView.text = [valueDictionary objectForKey: @"description"];
+    
+    if ([[descriptionTextView.text stripWhiteSpace] length]) {
+      descriptionPlaceholder.hidden = YES;
+    }
+    else {
+      descriptionPlaceholder.hidden = NO;
+    }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.clipsToBounds = YES;
+    
+    return cell;
+    
+  }
   
-  return cell;
+  return emptycell;
 
 }
 
 #pragma mark - Protocol UITextFieldDelegate
 
+- (BOOL)textField:(UITextField *)textField
+  shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+  
+  if([[textField.text stringByReplacingCharactersInRange:range 
+      withString:string] length] > maxCharacterTitle)
+  {
+    return NO;
+  };
+  
+  return YES;
+}
+
+
 - (void) textFieldDidBeginEditing: (TextFieldPadding *) textField
 {
-  textField.inputAccessoryView = textFieldToolbar;
-
+  textField.inputAccessoryView = titleToolbar;
+  
+  [self updateCharacterCount];
 }
 
 - (BOOL) textFieldShouldReturn: (UITextField *) textField
 {
   [self done];
   return YES;
+}
+
+#pragma mark - UITextViewDelegate
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+  
+  if ([[descriptionTextView.text stripWhiteSpace] length]) {
+    descriptionPlaceholder.hidden = YES;
+  }
+  else {
+    descriptionPlaceholder.hidden = NO;
+  }
+  
+  [valueDictionary setObject: textView.text forKey: @"description"];
+  [self shouldEnableBarButton];
+}
+
+- (void) textViewDidBeginEditing: (UITextView *) textView
+{
+  textView.inputAccessoryView = descriptionToolbar;
+  
+  [self.table beginUpdates];
+  [self.table endUpdates];
+  
+  NSIndexPath *indexPath = [NSIndexPath indexPathForRow: 1 inSection: 0];
+  [self scrollToRectAtIndexPath: indexPath];
 }
 
 #pragma mark - Methods
@@ -199,12 +308,6 @@
   isEditing = NO;
   [self.table beginUpdates];
   [self.table endUpdates];
-}
-
-- (void)save
-{
-  [self done];
-  [self nextSection];
 }
 
 - (void)done
@@ -232,7 +335,7 @@
   }
 }
 
-- (void) doneFromInputAccessoryView
+- (void)doneFromInputAccessoryView
 {
   [self cancelFromInputAccessoryView];
 }
@@ -240,7 +343,21 @@
 - (void)firstResponderAtIndex:(NSIndexPath *)indexPath
 {
   
-  [((OMBLabelTextFieldCell *)[self.table cellForRowAtIndexPath:indexPath]).textField becomeFirstResponder];
+  // Title
+  if(indexPath.row == 0){
+    [((OMBLabelTextFieldCell *)[self.table cellForRowAtIndexPath:indexPath]).textField becomeFirstResponder];
+  }
+  // Description
+  else if(indexPath.row == 1){
+    [descriptionTextView becomeFirstResponder];
+  }
+  
+}
+
+- (void)save
+{
+  [self done];
+  [self nextSection];
 }
 
 - (void) saveFromInputAccessoryView
@@ -248,18 +365,11 @@
 	[self done];
 }
 
-- (void) textFieldDidChange: (TextFieldPadding *) textField
+- (void) scrollToRectAtIndexPath: (NSIndexPath *) indexPath
 {
-  
-  if (textField.indexPath.row == 0) {
-    [valueDictionary setObject: textField.text forKey: @"title"];
-  }
-  else if (textField.indexPath.row == 1) {
-    [valueDictionary setObject: textField.text forKey: @"description"];
-  }
-  
-  [self shouldEnableBarButton];
-  
+  CGRect rect = [self.table rectForRowAtIndexPath: indexPath];
+  rect.origin.y -= descriptionToolbar.frame.size.height * 2;
+  [self.table setContentOffset: rect.origin animated: YES];
 }
 
 - (void)shouldEnableBarButton
@@ -270,6 +380,30 @@
     saveBarButtonItem.enabled = YES;
   else
     saveBarButtonItem.enabled = NO;
+  
+}
+
+- (void) textFieldDidChange: (TextFieldPadding *) textField
+{
+  
+  if (textField.indexPath.row == 0) {
+    [valueDictionary setObject: textField.text forKey: @"title"];
+  }
+  
+  [self updateCharacterCount];
+  [self shouldEnableBarButton];
+  
+}
+
+- (void) updateCharacterCount
+{
+  OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)[self.table cellForRowAtIndexPath:
+   [NSIndexPath indexPathForItem:0 inSection:0]];
+  
+  int number = maxCharacterTitle - [cell.textField.text length];
+  
+  countLabel.text = [NSString stringWithFormat:
+    @"%i characters left", number];
   
 }
 

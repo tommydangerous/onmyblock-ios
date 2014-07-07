@@ -10,9 +10,18 @@
 
 @interface OMBFinishListingTitleDescriptionViewController :
   OMBFinishListingSectionViewController
-<UITextFieldDelegate>
+<UITextFieldDelegate, UITextViewDelegate>
 {
-  UIToolbar *textFieldToolbar;
+  // Title
+  UILabel *countLabel;
+  int maxCharacterTitle;
+  UIToolbar *titleToolbar;
+  
+  // Description
+  UILabel *descriptionPlaceholder;
+  UITextView *descriptionTextView;
+  UIToolbar *descriptionToolbar;
+  
   NSMutableDictionary *valueDictionary;
 }
 
