@@ -8,9 +8,9 @@
 
 #import "OMBFinishListingTitleDescriptionViewController.h"
 
-#import "OMBLabelTextFieldCell.h"
 #import "OMBResidence.h"
 #import "OMBResidenceUpdateConnection.h"
+#import "OMBTextFieldCell.h"
 #import "UIImage+Resize.h"
 
 @implementation OMBFinishListingTitleDescriptionViewController
@@ -152,7 +152,7 @@
   
   // Title
   if(indexPath.row == 0){
-    return [OMBLabelTextFieldCell heightForCellWithIconImageView];
+    return [OMBTextFieldCell heightForCell];
   }
   // Description
   else if(indexPath.row == 1){
@@ -186,17 +186,15 @@
   // Title
   if(row == 0){
     static NSString *LabelTextCellID = @"LabelTextCellID";
-    OMBLabelTextFieldCell *cell =
+    OMBTextFieldCell *cell =
       [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
     if (!cell) {
-      cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
+      cell = [[OMBTextFieldCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
-      [cell setFrameUsingIconImageView];
+    
     }
     
     NSString *labelString = @"Title";
-    cell.iconImageView.image = [UIImage image: [UIImage imageNamed: @"house_icon_2.png"]
-      size: cell.iconImageView.frame.size];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     cell.textField.delegate  = self;
@@ -345,7 +343,7 @@
   
   // Title
   if(indexPath.row == 0){
-    [((OMBLabelTextFieldCell *)[self.table cellForRowAtIndexPath:indexPath]).textField becomeFirstResponder];
+    [((OMBTextFieldCell *)[self.table cellForRowAtIndexPath:indexPath]).textField becomeFirstResponder];
   }
   // Description
   else if(indexPath.row == 1){
@@ -397,7 +395,7 @@
 
 - (void) updateCharacterCount
 {
-  OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)[self.table cellForRowAtIndexPath:
+  OMBTextFieldCell *cell = (OMBTextFieldCell *)[self.table cellForRowAtIndexPath:
    [NSIndexPath indexPathForItem:0 inSection:0]];
   
   int number = maxCharacterTitle - [cell.textField.text length];

@@ -539,6 +539,7 @@
 		DE9E7A9718D104AE00617563 /* OMBMapFilterLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9E7A9618D104AE00617563 /* OMBMapFilterLocationViewController.m */; };
 		DE9FF67418CF6A500017AA15 /* OMBTopDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */; };
 		DEA0560418E230AD002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.m in Sources */ = {isa = PBXBuildFile; fileRef = DEA0560318E230AD002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.m */; };
+		DEC1C8C5196B6783003184AA /* OMBTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC1C8C4196B6783003184AA /* OMBTextFieldCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1574,6 +1575,8 @@
 		DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTopDetailView.m; sourceTree = "<group>"; };
 		DEA0560218E230AC002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodCreditCardViewControllerOLD.h; sourceTree = "<group>"; };
 		DEA0560318E230AD002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodCreditCardViewControllerOLD.m; sourceTree = "<group>"; };
+		DEC1C8C3196B6783003184AA /* OMBTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTextFieldCell.h; sourceTree = "<group>"; };
+		DEC1C8C4196B6783003184AA /* OMBTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTextFieldCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2299,6 +2302,8 @@
 				DE9A4182194272CC0026545C /* OMBImageFourLabelCell.m */,
 				DE6A667C1958A58D007542A1 /* OMBCreditCardTextFieldCell.h */,
 				DE6A667D1958A58D007542A1 /* OMBCreditCardTextFieldCell.m */,
+				DEC1C8C3196B6783003184AA /* OMBTextFieldCell.h */,
+				DEC1C8C4196B6783003184AA /* OMBTextFieldCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3780,6 +3785,7 @@
 				AB6155A9184D99F100A193C7 /* OMBCosignersListViewController.m in Sources */,
 				AB4ED2F318848FEF009AFB01 /* OMBResidenceDeleteConnection.m in Sources */,
 				DE939CF918933AD3006FE90B /* OMBFinishListingLeaseDetailsViewController.m in Sources */,
+				DEC1C8C5196B6783003184AA /* OMBTextFieldCell.m in Sources */,
 				ABBA58B21871E5EF00E9BF4E /* OMBFinishListingTitleViewController.m in Sources */,
 				ABABEBF518625DFA008B6768 /* OMBAuthenticationVenmoConnection.m in Sources */,
 				AB02807F1843F2C30081B30F /* OMBBedroomView.m in Sources */,
@@ -4092,7 +4098,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4119,7 +4125,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -4132,7 +4138,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4157,7 +4163,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
