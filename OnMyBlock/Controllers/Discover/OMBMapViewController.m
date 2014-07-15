@@ -180,10 +180,10 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   sortView.frame = CGRectMake(0.0f, 44.0f,
     _listViewContainer.frame.size.width, 20.0f + 37.0f);
   [_listViewContainer addSubview: sortView];
-  UITapGestureRecognizer *sortViewTap =
-    [[UITapGestureRecognizer alloc] initWithTarget: self
-      action: @selector(showSortButtons)];
-  [sortView.toolbar addGestureRecognizer: sortViewTap];
+  //UITapGestureRecognizer *sortViewTap =
+  //  [[UITapGestureRecognizer alloc] initWithTarget: self
+  //    action: @selector(showSortButtons)];
+  //[sortView.toolbar addGestureRecognizer: sortViewTap];
   // Sort label
   sortLabel = [[UILabel alloc] init];
   sortLabel.font = [UIFont fontWithName: @"HelveticaNeue" size: 14];
@@ -218,7 +218,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   sortArrow.image = [UIImage changeColorForImage:
     [UIImage  imageNamed: @"arrow_left_white.png"] toColor:[UIColor blue]];
   sortArrow.transform = CGAffineTransformMakeRotation(-90 * M_PI / 180.0f);
-  [sortView addSubview: sortArrow];
+  //[sortView addSubview: sortArrow];
 
   // Sort button array
   // sortKeys = @[
@@ -238,10 +238,11 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     sortButtonHighestPrice,
     sortButtonLowestPrice
   ]];
-  CGFloat sortButtonViewHeight = sortView.frame.size.height +
-    ((1 + 37) * [sortButtonArray count]);
+  // Sort Buttons
+  //CGFloat sortButtonViewHeight = sortView.frame.size.height +
+  //  ((1 + 37) * [sortButtonArray count]);
   sortButtonsView = [[UIView alloc] init];
-  sortButtonsView.frame = CGRectMake(0.0f, sortView.frame.origin.y,
+  /*sortButtonsView.frame = CGRectMake(0.0f, sortView.frame.origin.y,
     sortView.frame.size.width, sortButtonViewHeight);
   sortButtonsView.hidden = YES;
   // for (int i = 0; i < [sortKeys count]; i++) {
@@ -297,7 +298,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       forState: UIControlStateHighlighted];
     [sortButtonsView addSubview: button];
   }
-  [_listViewContainer insertSubview: sortButtonsView belowSubview: sortView];
+  [_listViewContainer insertSubview: sortButtonsView belowSubview: sortView];*/
 
   // List view
   _listView = [[UITableView alloc] init];
@@ -383,7 +384,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       self action: @selector(showResidenceDetailViewController)];
   [propertyInfoView addGestureRecognizer: tap];
 
-  // Resident list on MapView(when cluster<=10)
+  // Resident list on MapView(when cluster <= 5)
   residentAnnotations = [NSMutableArray array];
   CGFloat originYreslist = _mapView.frame.size.height;
   CGRect reslistRect =
@@ -514,6 +515,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate) &&
         shouldSearch) {
       centerCoordinate = neighborhood.coordinate;
+      sortSelectionLabel.text = [NSString stringWithFormat:@"Listings near %@",neighborhood.name];
       // If it is on the list, then re-fetch residences for the list
       if ([self isOnList]) {
         [self resetAndFetchResidencesForList];
@@ -1351,6 +1353,7 @@ withTitle: (NSString *) title;
 - (void) goToCurrentLocationAnimated: (BOOL) animated
 {
   if ([[self userDefaults] permissionCurrentLocation]) {
+    sortSelectionLabel.text = @"Listings near Current Location";
     if (!self.mapView.showsUserLocation)
       self.mapView.showsUserLocation = YES;
     [locationManager startUpdatingLocation];
@@ -1520,6 +1523,31 @@ withTitle: (NSString *) title;
 - (void) refreshProperties
 {
   [self mapView: _mapView regionDidChangeAnimated: YES];
+  
+  // Search for schools if there is one that is equal to user's school
+  for (NSString *cityName in [[OMBNeighborhoodStore sharedStore] cities]) {
+    for (OMBNeighborhood *neighborhood in
+         [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity:
+          cityName]) {
+
+      // Compare name places
+      if([[neighborhood.name lowercaseString] isEqualToString:
+        [[OMBUser currentUser].school lowercaseString]]){
+        
+         centerCoordinate = neighborhood.coordinate;
+         sortSelectionLabel.text = [NSString stringWithFormat:@"Listings near %@",neighborhood.name];
+         if ([self isOnList]) {
+           [self resetAndFetchResidencesForList];
+       }
+       else {
+         [self setMapViewRegion: centerCoordinate
+           withMiles: DEFAULT_MILE_RADIUS animated: NO];
+         [self resetListViewResidences];
+       }
+      }
+    }
+  }
+  
 }
 
 - (void) reloadTable
@@ -1618,6 +1646,7 @@ withTitle: (NSString *) title;
 
 - (void) setDefaultCenterCoordinate
 {
+  sortSelectionLabel.text = @"Listings in San Diego";
   centerCoordinate = CLLocationCoordinate2DMake(32.78166389765503,
     -117.16957478041991);
 }
