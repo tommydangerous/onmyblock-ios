@@ -473,6 +473,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 {
   [super viewWillDisappear: animated];
   [self showNavigationBarAnimated: NO];
+  [[OMBResidenceListStore sharedStore] cancelConnection];
 }
 
 - (void) viewWillAppear: (BOOL) animated
@@ -538,7 +539,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       [self resetAndFetchResidencesForList];
 
       firstLoad = YES;
-      self.listView.showsPullToRefresh = NO;
+      // self.listView.showsPullToRefresh = NO;
     }
     else {  
       [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
@@ -554,9 +555,6 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Check any filter values and display them
   [self updateFilterLabel];
-
-  //if (firstLoad)
-  //  [activityViewFullScreen startSpinning];
 }
 
 #pragma mark - Protocol
@@ -1227,14 +1225,9 @@ withTitle: (NSString *) title;
   if (fetching || _radiusInMiles > kMaxRadiusInMiles) {
     return;
   }
-  else {
-    // if (!activityView.isSpinning) {
-    //   [activityView startSpinning];
-    // }
-    if(![[self residencesForList] count] && !isSpinning){
-      [activityViewFullScreen startSpinning];
-      isSpinning = YES;
-    }
+  else if (![[self residencesForList] count] && !isSpinning) {
+    [activityViewFullScreen startSpinning];
+    isSpinning = YES;
   }
   fetching = YES;
 
@@ -1276,54 +1269,50 @@ withTitle: (NSString *) title;
   [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters: params
     delegate: self completion: ^(NSError *error) {
       if (firstLoad) {
-        [activityViewFullScreen stopSpinning];
-        isSpinning = NO;
-        firstLoad = NO;
+        [self stopSpinning];
+        firstLoad  = NO;
       }
 
-      _listView.showsPullToRefresh = YES;
+      // _listView.showsPullToRefresh = YES;
 
       fetching = NO;
       [self resetCurrentResidencesForList];
       [self reloadTable];
 
-      if (currentCount == 0)
+      if (currentCount == 0) {
         [self downloadResidenceImagesForVisibleCells];
+      }
 
-      // Stop fetching residences after 100 mile radius
-      if (_radiusInMiles < kMaxRadiusInMiles) {
+      if (self.radiusInMiles < kMaxRadiusInMiles) {
         NSInteger newCount =
           [[OMBResidenceListStore sharedStore].residences count];
         // NSLog(@"NEW COUNT:     %i", newCount);
 
         // If the count never changed
-        if (newCount == currentCount ||
-          _listView.contentSize.height <= _listView.frame.size.height) {
+        if (newCount == currentCount) {
           // Fetch again
           [self fetchResidencesForList];
         }
         // If new residences were found and added
         else {
-          // if (activityView.isSpinning)
-          //   [activityView stopSpinning];
-          [activityViewFullScreen stopSpinning];
-          isSpinning = NO;
-          if ([[self residencesForList] count])
+          [self stopSpinning];
+          if ([[self residencesForList] count]) {
             emptyBackground.alpha = 0.0f;
+            if ([[self residencesForList] count] < 2) {
+              [self fetchResidencesForList];
+            }
+          }
         }
       }
-      // Stop fetching if radius is more than 100 miles
+      // Stop fetching residences after 100 mile radius
       else {
-        // if (activityView.isSpinning)
-        //   [activityView stopSpinning];
-        [activityViewFullScreen stopSpinning];
-        isSpinning = NO;
-        if ([[self residencesForList] count] == 0)
+        [self stopSpinning];
+        if ([[self residencesForList] count] == 0) {
           [UIView animateWithDuration: OMBStandardDuration animations: ^{
             emptyBackground.alpha = 1.0f;
           }];
+        }
       }
-
       [self reloadTable];
     }
   ];
@@ -1873,6 +1862,12 @@ withMiles: (int) miles animated: (BOOL) animated
     }
   }];
   // NSLog(@"SORT BUTTON SELECTED");
+}
+
+- (void) stopSpinning
+{
+  [activityViewFullScreen stopSpinning];
+  isSpinning = NO;
 }
 
 - (void) switchToListView

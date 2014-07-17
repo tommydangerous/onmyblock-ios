@@ -104,6 +104,7 @@
   descriptionTextView.font = [UIFont normalTextFont];
   descriptionTextView.frame = CGRectMake(20.f, padding,
     screenWidth - (padding * 2), padding * 5);
+  descriptionTextView.inputAccessoryView = descriptionToolbar;
   descriptionTextView.textColor = [UIColor blueDark];
   
   // Add a placeholder
@@ -286,11 +287,9 @@
 }
 
 - (void) textViewDidBeginEditing: (UITextView *) textView
-{
-  textView.inputAccessoryView = descriptionToolbar;
-  
-  [self.table beginUpdates];
-  [self.table endUpdates];
+{ 
+  // [self.table beginUpdates];
+  // [self.table endUpdates];
   
   NSIndexPath *indexPath = [NSIndexPath indexPathForRow: 1 inSection: 0];
   [self scrollToRectAtIndexPath: indexPath];
