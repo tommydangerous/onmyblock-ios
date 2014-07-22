@@ -23,7 +23,7 @@
   
   UILabel *rentedLabel = [UILabel new];
   float height = 40.f;
-  rentedLabel.font = [UIFont normalTextFontBold];
+  rentedLabel.font = [UIFont mediumTextFontBold];
   rentedLabel.frame = CGRectMake(10.f,
     (frame.size.height - height) * .5f,
       60.f, height);
