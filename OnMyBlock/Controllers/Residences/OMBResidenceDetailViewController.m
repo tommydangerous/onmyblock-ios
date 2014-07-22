@@ -30,6 +30,7 @@
 #import "OMBUserDetailViewController.h"
 #import "OMBOffer.h"
 #import "OMBRenterApplication.h"
+#import "OMBRentedBannerView.h"
 #import "OMBResidence.h"
 #import "OMBResidenceBookItViewController.h"
 #import "OMBResidenceCell.h"
@@ -70,6 +71,7 @@ float kResidenceDetailImagePercentage   = 0.5f;
   UITapGestureRecognizer *imageTapGestureRecognizer;
   CGFloat previousOriginX;
   CGFloat previousOriginY;
+  BOOL loaded;
 }
 
 @end
@@ -230,6 +232,12 @@ float kResidenceDetailImagePercentage   = 0.5f;
   gradientView.frame = imageCollectionView.frame;
   [self.view insertSubview: gradientView belowSubview: _table];
 
+  // When this residence is rented
+  rentedBanner = [[OMBRentedBannerView alloc]
+    initWithFrame:CGRectMake(0.0f, backViewOffsetY,
+      screenWidth, OMBStandardButtonHeight)];
+  rentedBanner.hidden = YES;
+  
   // This goes in front of the table
   headerView = [[OMBExtendedHitAreaViewContainer alloc] init];
   // headerView = [UIView new];
@@ -304,6 +312,10 @@ float kResidenceDetailImagePercentage   = 0.5f;
   _currentOfferLabel.textColor = [UIColor whiteColor];;
   [self.view insertSubview: _currentOfferLabel belowSubview: _table];
 
+  // Add banner if front of favorite button
+  // and current offer label
+  [self.view addSubview:rentedBanner];
+  
   // Bottom view
   _bottomButtonView = [[UIView alloc] init];
   _bottomButtonView.backgroundColor = [UIColor colorWithWhite: 1.0f
@@ -650,7 +662,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
     // Header view
     backRect.size.height = imageCollectionView.frame.size.height -
       (y + adjustment);
-    headerView.frame = backRect;
+    headerView.frame = gradientView.frame;
 
     // Adjust the current offer label
     CGRect currentOfferRect   = _currentOfferLabel.frame;
@@ -1426,6 +1438,57 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [self adjustPageOfImagesLabelFrame];
 }
 
+- (void)reloadFrameForBanner
+{
+  // Set right origin
+  backViewOffsetY        = rentedBanner.frame.size.height +
+    OMBPadding + OMBStandardHeight;
+  favoritesButtonOriginY = rentedBanner.frame.size.height +
+    5.0f + OMBPadding + OMBStandardHeight;
+  currentOfferOriginY    = rentedBanner.frame.size.height +
+    (imageCollectionView.frame.origin.y + imageCollectionView.frame.size.height) -
+      (36.0f + (OMBPadding * 0.5f * 2));
+  
+  // Animation
+  [UIView animateWithDuration:OMBStandardDuration animations:^{
+    // Table
+    CGRect rect = self.table.frame;
+    rect.origin.y = rentedBanner.frame.size.height;
+    UIEdgeInsets edgeTable = self.table.contentInset;
+    edgeTable.bottom = rentedBanner.frame.size.height;
+    self.table.contentInset = edgeTable;
+    self.table.frame = rect;
+    
+    // Scroll
+    hiddenScrollView.frame = self.table.frame;
+    // Image colletion
+    CGRect rect1 = imageCollectionView.frame;
+    rect1.origin.y = backViewOffsetY;
+    imageCollectionView.frame = rect1;
+    
+    // HeaderView
+    CGRect rect2 = headerView.frame;
+    rect2.origin.y = backViewOffsetY;
+    headerView.frame = rect2;
+    
+    // Favorite button
+    CGRect rect3 = self.favoritesButton.frame;
+    rect3.origin.y = favoritesButtonOriginY;
+    self.favoritesButton.frame = rect3;
+    
+    // Current offer
+    CGRect rect4 = _currentOfferLabel.frame;
+    rect4.origin.y = currentOfferOriginY;
+    _currentOfferLabel.frame = rect4;
+    // Gradient
+    CGRect gradientRect = gradientView.frame;
+    gradientRect.origin.y = backViewOffsetY;
+    gradientView.frame = gradientRect;
+  } completion:^(BOOL finished) {
+    loaded = YES;
+  }];
+}
+
 - (void) refreshResidenceData
 {
   // If there is a user associated with the residence
@@ -1438,6 +1501,19 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   // Criteria to show "Book It" or "Apply Now"
   [self criteriaApplyNow];
 
+  // If it's rented
+  if(residence.rented){
+    // Show banner
+    rentedBanner.hidden = NO;
+    // Text
+    if([[residence availableOnString] length])
+      rentedBanner.availableLabel.text = [NSString
+        stringWithFormat:@"Available : %@",[residence availableOnString]];
+    
+    if(!loaded)
+      [self reloadFrameForBanner];
+  }
+  
   // Inactive
   if (residence.inactive) {
     // Hide the table footer view and buttons at the bottom

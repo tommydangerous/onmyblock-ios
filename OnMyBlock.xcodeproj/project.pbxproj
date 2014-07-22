@@ -530,6 +530,7 @@
 		DE95E8D918A03B5500A2A341 /* MNFastDateEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8D118A03B5500A2A341 /* MNFastDateEnumeration.m */; };
 		DE95E8DA18A03B5500A2A341 /* NSDate+MNAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8D318A03B5500A2A341 /* NSDate+MNAdditions.m */; };
 		DE96A6A2193CD0EB008CCE02 /* OMBHomebaseRenterSentApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE96A6A1193CD0EB008CCE02 /* OMBHomebaseRenterSentApplicationViewController.m */; };
+		DE97FBEC197DA45900682B15 /* OMBRentedBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE97FBEB197DA45800682B15 /* OMBRentedBannerView.m */; };
 		DE9927D518BE887F0064A902 /* OMBRateFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9927D418BE887F0064A902 /* OMBRateFeedbackViewController.m */; };
 		DE9A4180194264E40026545C /* OMBResidenceTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9A417F194264E40026545C /* OMBResidenceTitleView.m */; };
 		DE9A4183194272CC0026545C /* OMBImageFourLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9A4182194272CC0026545C /* OMBImageFourLabelCell.m */; };
@@ -1557,6 +1558,8 @@
 		DE95E8D318A03B5500A2A341 /* NSDate+MNAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MNAdditions.m"; sourceTree = "<group>"; };
 		DE96A6A0193CD0EB008CCE02 /* OMBHomebaseRenterSentApplicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHomebaseRenterSentApplicationViewController.h; sourceTree = "<group>"; };
 		DE96A6A1193CD0EB008CCE02 /* OMBHomebaseRenterSentApplicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHomebaseRenterSentApplicationViewController.m; sourceTree = "<group>"; };
+		DE97FBEA197DA45800682B15 /* OMBRentedBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRentedBannerView.h; sourceTree = "<group>"; };
+		DE97FBEB197DA45800682B15 /* OMBRentedBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRentedBannerView.m; sourceTree = "<group>"; };
 		DE9927D318BE887F0064A902 /* OMBRateFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRateFeedbackViewController.h; sourceTree = "<group>"; };
 		DE9927D418BE887F0064A902 /* OMBRateFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRateFeedbackViewController.m; sourceTree = "<group>"; };
 		DE9A417E194264E40026545C /* OMBResidenceTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceTitleView.h; sourceTree = "<group>"; };
@@ -2304,6 +2307,8 @@
 				DE6A667D1958A58D007542A1 /* OMBCreditCardTextFieldCell.m */,
 				DEC1C8C3196B6783003184AA /* OMBTextFieldCell.h */,
 				DEC1C8C4196B6783003184AA /* OMBTextFieldCell.m */,
+				DE97FBEA197DA45800682B15 /* OMBRentedBannerView.h */,
+				DE97FBEB197DA45800682B15 /* OMBRentedBannerView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3388,7 +3393,7 @@
 				ORGANIZATIONNAME = OnMyBlock;
 				TargetAttributes = {
 					AB802E9918109E5200E04D11 = {
-						DevelopmentTeam = 4PZFNY43X2;
+						DevelopmentTeam = L6WEK9SB93;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
 								enabled = 0;
@@ -3858,6 +3863,7 @@
 				AB19A09218616C5100F84DE9 /* OMBResidenceDetailDescriptionCell.m in Sources */,
 				ABB70067187B58C0005F0730 /* OMBHomebaseLandlordConfirmedTenantsViewController.m in Sources */,
 				AB57EA27186C788B001682DB /* OMBMessageInputToolbar.m in Sources */,
+				DE97FBEC197DA45900682B15 /* OMBRentedBannerView.m in Sources */,
 				AB9D6121188D73F000C9AC64 /* OMBCurvedLineView.m in Sources */,
 				AB6155A6184D99DF00A193C7 /* OMBCoApplicantsViewController.m in Sources */,
 				AB4ED2E0188462D8009AFB01 /* OMBFinishListingOpenHouseDateAddViewController.m in Sources */,
@@ -4098,8 +4104,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4125,7 +4131,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "BD3847C5-852B-4F79-B7D9-79D5ECDDCCE2";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -4138,8 +4144,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Paul Aguilar (TQL55SLWHL)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/FacebookSDK",
@@ -4163,7 +4169,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "BD3847C5-852B-4F79-B7D9-79D5ECDDCCE2";
+				PROVISIONING_PROFILE = "3EBB9A6A-8815-4393-B22E-2792826F1324";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;

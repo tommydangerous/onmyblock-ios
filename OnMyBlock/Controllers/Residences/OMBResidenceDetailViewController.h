@@ -14,6 +14,7 @@
 @class OMBExtendedHitAreaViewContainer;
 @class OMBGradientView;
 @class OMBMessageDetailViewController;
+@class OMBRentedBannerView;
 @class OMBResidence;
 @class OMBResidenceImageSlideViewController;
 
@@ -37,6 +38,7 @@
   OMBMessageDetailViewController *messageDetailViewController;
   UIImage *notFavoritedImage;
   UIImageView *placeholderImageView;
+  OMBRentedBannerView *rentedBanner;
   OMBResidence *residence;
 }
 
