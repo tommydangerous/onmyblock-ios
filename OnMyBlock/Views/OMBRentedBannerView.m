@@ -26,7 +26,7 @@
   rentedLabel.font = [UIFont mediumTextFontBold];
   rentedLabel.frame = CGRectMake(10.f,
     (frame.size.height - height) * .5f,
-      60.f, height);
+      70.f, height);
   rentedLabel.text = @"Rented";
   rentedLabel.textColor = UIColor.whiteColor;
   [self addSubview:rentedLabel];
