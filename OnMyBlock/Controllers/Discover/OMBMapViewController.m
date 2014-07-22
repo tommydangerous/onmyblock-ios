@@ -745,8 +745,9 @@ viewForAnnotation: (id <MKAnnotation>) annotation
       annotation reuseIdentifier: QVAnnotationViewReuseID];
   }
 
-  annotationView.count = [(QVClusterAnnotation *) annotation count];
-
+  annotationView.count    = [(QVClusterAnnotation *) annotation count];
+  annotationView.isRented = ((QVClusterAnnotation *) annotation).rented;
+  
   return annotationView;
 }
 

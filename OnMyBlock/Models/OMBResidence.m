@@ -659,6 +659,12 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   if (minRent != [NSNull null])
     self.minRent = [minRent floatValue];
 
+  // Rented
+  id rented = [dictionary objectForKey: @"rented"];
+  if (rented != [NSNull null]) {
+    self.rented = [rented intValue] ? YES : NO;
+  }
+  
   // State
   id state = [dictionary objectForKey: @"state"];
   if (state != [NSNull null]) {

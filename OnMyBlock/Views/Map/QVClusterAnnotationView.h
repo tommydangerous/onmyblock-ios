@@ -10,6 +10,7 @@
 
 @property (assign, nonatomic) NSUInteger count;
 @property (nonatomic) BOOL isSelected;
+@property (nonatomic) BOOL isRented;
 
 - (void) deselect;
 - (void) select;

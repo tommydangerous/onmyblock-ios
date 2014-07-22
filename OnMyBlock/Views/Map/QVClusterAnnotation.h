@@ -18,6 +18,7 @@
 @property (assign, nonatomic) NSInteger count;
 @property (copy, nonatomic) NSString *subtitle;
 @property (copy, nonatomic) NSString *title;
+@property (nonatomic) bool rented;
 
 #pragma mark - Initializer
 

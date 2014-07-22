@@ -16,6 +16,11 @@ typedef struct QVHotelInfo {
   char *hotelPhoneNumber;
 } QVHotelInfo;
 
+typedef struct QVResidenceInfo {
+  int  id;
+  bool rented;
+} QVResidenceInfo;
+
 QVQuadTreeNodeData QVDataFromLine (NSString *line)
 {
   // Example line:
@@ -48,7 +53,11 @@ QVQuadTreeNodeData QVDataFromResidence (OMBResidence *residence)
   // NSDictionary *dict = @{
   //   @"id": @(residence.uid)
   // };
-  return QVQuadTreeNodeDataMake(residence.latitude, residence.longitude, NULL);
+  QVResidenceInfo *residenceInfo = malloc(sizeof(QVResidenceInfo));
+  residenceInfo->id     = residence.uid;
+  residenceInfo->rented = (residence.rented ? YES : NO);
+  
+  return QVQuadTreeNodeDataMake(residence.latitude, residence.longitude, residenceInfo);
 }
 
 QVBoundingBox QVBoundingBoxForMapRect (MKMapRect mapRect)
@@ -165,6 +174,7 @@ withZoomScale: (double) zoomScale
       __block double totalX = 0;
       __block double totalY = 0;
       __block int count     = 0;
+      __block bool rented   = false;
 
       NSMutableArray *array = [NSMutableArray array];
 
@@ -172,6 +182,8 @@ withZoomScale: (double) zoomScale
         ^(QVQuadTreeNodeData data) {
           totalX += data.x;
           totalY += data.y;
+          rented  = ((struct QVResidenceInfo *)data.data)->rented;
+          
           count++;
           [array addObject: @{
             @"latitude": @(data.x),
@@ -185,6 +197,7 @@ withZoomScale: (double) zoomScale
         QVClusterAnnotation *annotation =
           [[QVClusterAnnotation alloc] initWithCoordinate: coordinate
             count: count coordinates: [NSArray arrayWithArray: array]];
+        annotation.rented = (count == 1 ? rented : NO);
         [clusteredAnnotations addObject: annotation];
       }
     }

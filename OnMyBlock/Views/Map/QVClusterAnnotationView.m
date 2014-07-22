@@ -78,7 +78,10 @@ reuseIdentifier: (NSString *) reuseIdentifier
 
   UIColor *outerCircleStrokeColor = [UIColor colorWithWhite: 0 alpha: 0.3f];
   // UIColor *innerCircleStrokeColor = [UIColor colorWithWhite: 0 alpha: 0.3f];
-  UIColor *innerCircleFillColor   = [UIColor blue];
+  UIColor *innerCircleFillColor = [UIColor blue];
+  if(_isRented){ //  && _count == 1
+    innerCircleFillColor = [UIColor grayMedium];
+  }
   if (self.isSelected)
     innerCircleFillColor = [UIColor grayDark];
 
