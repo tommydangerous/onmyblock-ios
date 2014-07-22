@@ -1240,9 +1240,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       title = @"Book It";
       selector = @selector(showPlaceOffer);
     }
+    
     [_bookItButton setTitle: title forState: UIControlStateNormal];
     [_bookItButton addTarget: self action: selector
       forControlEvents: UIControlEventTouchUpInside];
+    
+    // If residence is already rented
+    if(residence.rented){
+      _bookItButton.layer.opacity = 0.6;
+      _bookItButton.enabled = NO;
+    }
   }
 }
 
