@@ -1513,9 +1513,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // Show banner
     rentedBanner.hidden = NO;
     // Text
-    if([[residence availableOnString] length])
-      rentedBanner.availableLabel.text = [NSString
-        stringWithFormat:@"Available : %@",[residence availableOnString]];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat       = @"MMMM d, yyyy";
+    NSString *moveInSring = [dateFormatter stringFromDate:
+      [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]];
+
+    rentedBanner.availableLabel.text =
+      [NSString stringWithFormat:@"Available on %@",
+        moveInSring];
     
     if(!loaded)
       [self reloadFrameForBanner];
