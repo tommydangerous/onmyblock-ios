@@ -17,6 +17,7 @@
 @class OMBEmptyBackgroundWithImageAndLabel;
 @class OMBMapFilterViewController;
 @class OMBPropertyInfoView;
+@class QVClusterAnnotation;
 
 extern float const PropertyInfoViewImageHeightPercentage;
 
@@ -68,6 +69,7 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
   UILabel *sortSelectionLabel;
   AMBlurView *sortView;
   NSMutableArray *residentAnnotations;
+  QVClusterAnnotation *recentResidence;
 }
 
 @property (nonatomic, strong) UITableView *listView;

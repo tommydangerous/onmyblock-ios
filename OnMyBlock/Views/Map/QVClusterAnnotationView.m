@@ -85,6 +85,11 @@ reuseIdentifier: (NSString *) reuseIdentifier
   if (self.isSelected)
     innerCircleFillColor = [UIColor grayDark];
 
+  if(self.visited)
+    self.alpha =  .5f;
+  else
+    self.alpha = 1.0f;
+  
   CGRect circleFrame = CGRectInset(rect, 4, 4);
 
   [outerCircleStrokeColor setStroke];
