@@ -4,6 +4,7 @@
 /.env*
 !/.env.example
 OnMyBlock.xcodeproj/xcuserdata
-/.idea
+
+.idea
 
 # /OnMyBlock/*.pch
