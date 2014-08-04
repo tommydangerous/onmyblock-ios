@@ -1,0 +1,32 @@
+#!/bin/bash
+
+folder=/users/tommydangerous/dropbox/xcode/onmyblock
+
+clear
+
+echo "This script will climb through the $folder tree and repair conflict files"
+echo "Press a key to continue..."
+read -n 1
+echo "------------------------------"
+
+find $folder -type f -print0 | while read -d $'\0' file; do
+    newname=$(echo "$file" | sed 's/ (.*conflicted copy.*)//')
+    if [ "$file" != "$newname" ]; then
+        echo "Found conflict file - $file"
+
+        if test -f $newname
+        then
+            backupname=$newname.backup
+            echo " "
+            echo "File with original name already exists, backup as $backupname"
+            mv "$newname" "$backupname"
+        fi
+
+        echo "moving $file to $newname"
+        mv "$file" "$newname"
+
+        echo
+    fi
+done
+
+find $folder -name '*.backup' -delete
