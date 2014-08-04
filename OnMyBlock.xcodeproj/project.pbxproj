@@ -10,6 +10,7 @@
 		6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */; };
 		67E94814188DB97D007703FC /* OMBFilmstripImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */; };
 		67E9481E188DF726007703FC /* OMBMapFilterDateAvailableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */; };
+		9D8BE924EBADCF5709932759 /* OMBGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D8BE205CC89B1ABB0264208 /* OMBGroup.m */; };
 		A685EF95188F27E40074E336 /* CustomLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = A685EF94188F27E40074E336 /* CustomLoading.m */; };
 		AB00B9C118BCF9E30050D6F4 /* OMBConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9C018BCF9E30050D6F4 /* OMBConversation.m */; };
 		AB00B9C418BD1C0E0050D6F4 /* OMBConversationStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9C318BD1C0E0050D6F4 /* OMBConversationStore.m */; };
@@ -560,6 +561,8 @@
 		67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFilmstripImageCell.m; sourceTree = "<group>"; };
 		67E9481C188DF726007703FC /* OMBMapFilterDateAvailableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterDateAvailableCell.h; sourceTree = "<group>"; };
 		67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterDateAvailableCell.m; sourceTree = "<group>"; };
+		9D8BE205CC89B1ABB0264208 /* OMBGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBGroup.m; sourceTree = "<group>"; };
+		9D8BE8DD2A267B69AAE85AC8 /* OMBGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBGroup.h; sourceTree = "<group>"; };
 		A685EF93188F27E40074E336 /* CustomLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomLoading.h; sourceTree = "<group>"; };
 		A685EF94188F27E40074E336 /* CustomLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomLoading.m; sourceTree = "<group>"; };
 		AB00B9BF18BCF9E30050D6F4 /* OMBConversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBConversation.h; sourceTree = "<group>"; };
@@ -2362,6 +2365,8 @@
 				AB18CF3018DE9C920022ABF1 /* OMBObject.m */,
 				AB6E9408192AA8A4005A357A /* OMBSentApplication.h */,
 				AB6E9409192AA8A4005A357A /* OMBSentApplication.m */,
+				9D8BE205CC89B1ABB0264208 /* OMBGroup.m */,
+				9D8BE8DD2A267B69AAE85AC8 /* OMBGroup.h */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3979,6 +3984,7 @@
 				ABE4FC031890A3180009D643 /* OMBPayoutMethodUpdateConnection.m in Sources */,
 				AB17AE4118FD180600B6952C /* QVClusterAnnotation.m in Sources */,
 				AB026BD31822EFBC00E72F53 /* OMBFavoritesListViewController.m in Sources */,
+				9D8BE924EBADCF5709932759 /* OMBGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

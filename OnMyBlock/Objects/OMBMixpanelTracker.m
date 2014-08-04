@@ -22,7 +22,7 @@ void OMBMixpanelTrackerTrack (NSString *eventName, NSDictionary *properties)
     [[Mixpanel sharedInstance] track: eventName properties: properties];
   }
   else {
-    NSLog(@"%@: %@", eventName, properties);
+    NSLog(@"OMBMixpanelTracker - %@: %@", eventName, properties);
   }
 }
 
