@@ -3393,7 +3393,7 @@
 				ORGANIZATIONNAME = OnMyBlock;
 				TargetAttributes = {
 					AB802E9918109E5200E04D11 = {
-						DevelopmentTeam = L6WEK9SB93;
+						DevelopmentTeam = 4PZFNY43X2;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
 								enabled = 0;
