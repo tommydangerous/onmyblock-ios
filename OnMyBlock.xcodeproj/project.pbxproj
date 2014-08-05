@@ -11,6 +11,7 @@
 		67E94814188DB97D007703FC /* OMBFilmstripImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */; };
 		67E9481E188DF726007703FC /* OMBMapFilterDateAvailableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */; };
 		9D8BE924EBADCF5709932759 /* OMBGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D8BE205CC89B1ABB0264208 /* OMBGroup.m */; };
+		9D8BEF316E91D777F003CCE4 /* OMBUser+Collections.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D8BEB756E64242DA9D6200B /* OMBUser+Collections.m */; };
 		A685EF95188F27E40074E336 /* CustomLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = A685EF94188F27E40074E336 /* CustomLoading.m */; };
 		AB00B9C118BCF9E30050D6F4 /* OMBConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9C018BCF9E30050D6F4 /* OMBConversation.m */; };
 		AB00B9C418BD1C0E0050D6F4 /* OMBConversationStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB00B9C318BD1C0E0050D6F4 /* OMBConversationStore.m */; };
@@ -562,7 +563,9 @@
 		67E9481C188DF726007703FC /* OMBMapFilterDateAvailableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterDateAvailableCell.h; sourceTree = "<group>"; };
 		67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapFilterDateAvailableCell.m; sourceTree = "<group>"; };
 		9D8BE205CC89B1ABB0264208 /* OMBGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBGroup.m; sourceTree = "<group>"; };
+		9D8BE4E039CCC212A2AAC1E8 /* OMBUser+Collections.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OMBUser+Collections.h"; sourceTree = "<group>"; };
 		9D8BE8DD2A267B69AAE85AC8 /* OMBGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBGroup.h; sourceTree = "<group>"; };
+		9D8BEB756E64242DA9D6200B /* OMBUser+Collections.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OMBUser+Collections.m"; sourceTree = "<group>"; };
 		A685EF93188F27E40074E336 /* CustomLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomLoading.h; sourceTree = "<group>"; };
 		A685EF94188F27E40074E336 /* CustomLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomLoading.m; sourceTree = "<group>"; };
 		AB00B9BF18BCF9E30050D6F4 /* OMBConversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBConversation.h; sourceTree = "<group>"; };
@@ -1634,6 +1637,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9D8BE8EA364C6B944751587A /* Users */ = {
+			isa = PBXGroup;
+			children = (
+				9D8BEB756E64242DA9D6200B /* OMBUser+Collections.m */,
+				9D8BE4E039CCC212A2AAC1E8 /* OMBUser+Collections.h */,
+			);
+			path = Users;
+			sourceTree = "<group>";
+		};
+		9D8BEA631BA8DCFDEE32080C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9D8BE8EA364C6B944751587A /* Users */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		A685EF92188F27C70074E336 /* ProgressIndicator */ = {
 			isa = PBXGroup;
 			children = (
@@ -2466,6 +2486,7 @@
 				AB62C8C818F2283F00285BE8 /* NSUserDefaults+OnMyBlock.m */,
 				AB17AE6318FDDD6F00B6952C /* UILabel+Image.h */,
 				AB17AE6418FDDD6F00B6952C /* UILabel+Image.m */,
+				9D8BEA631BA8DCFDEE32080C /* Models */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -3985,6 +4006,7 @@
 				AB17AE4118FD180600B6952C /* QVClusterAnnotation.m in Sources */,
 				AB026BD31822EFBC00E72F53 /* OMBFavoritesListViewController.m in Sources */,
 				9D8BE924EBADCF5709932759 /* OMBGroup.m in Sources */,
+				9D8BEF316E91D777F003CCE4 /* OMBUser+Collections.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

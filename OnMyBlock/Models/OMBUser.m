@@ -57,6 +57,9 @@
 #import "OMBUserUpdateConnection.h"
 #import "OMBUserUploadImageConnection.h"
 #import "OMBViewControllerContainer.h"
+
+// Categories
+#import "OMBUser+Collections.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 
@@ -126,22 +129,8 @@ NSString *const OMBUserTypeLandlord = @"landlord";
 {
   if (!(self = [super init])) return nil;
 
-  _acceptedOffers      = [NSMutableDictionary dictionary];
-  _confirmedTenants    = [NSMutableDictionary dictionary];
-  _depositPayoutTransactions = [NSMutableDictionary dictionary];
-  _favorites           = [NSMutableDictionary dictionary];
-  _imageSizeDictionary = [NSMutableDictionary dictionary];
-  _messages            = [NSMutableDictionary dictionary];
-  _movedIn             = [NSMutableDictionary dictionary];
-  _movedInOut          = [NSMutableDictionary dictionary];
-  _payoutMethods       = [NSMutableDictionary dictionary];
-  _receivedOffers      = [NSMutableDictionary dictionary];
-  _renterApplication   = [[OMBRenterApplication alloc] init];
-  _residences          = [NSMutableDictionary dictionaryWithDictionary: @{
-    @"residences":          [NSMutableDictionary dictionary],
-    @"temporaryResidences": [NSMutableDictionary dictionary]
-  }];
-  _heightForAboutTextDictionary = [NSMutableDictionary dictionary];
+  self.renterApplication = [[OMBRenterApplication alloc] init];
+  [self initializeCollections];
 
   // [[NSNotificationCenter defaultCenter] addObserver: self
   //   selector: @selector(logout)
@@ -285,8 +274,8 @@ withCompletion: (void (^) (NSError *error)) block
 - (void) addAcceptedOffer: (OMBOffer *) offer
 {
   NSNumber *key = [NSNumber numberWithInt: offer.uid];
-  if (![_acceptedOffers objectForKey: key])
-    [_acceptedOffers setObject: offer forKey: key];
+  if (![self.acceptedOffers objectForKey: key])
+    [self.acceptedOffers setObject: offer forKey: key];
 }
 
 - (void) addConfirmedTenant: (OMBOffer *) object
@@ -1071,7 +1060,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   NSMutableSet *newSet = [NSMutableSet set];
   for (NSDictionary *dict in [dictionary objectForKey: @"objects"]) {
     NSInteger offerUID = [[dict objectForKey: @"id"] intValue];
-    OMBOffer *offer = [_acceptedOffers objectForKey:
+    OMBOffer *offer = [self.acceptedOffers objectForKey:
       [NSNumber numberWithInt: offerUID]];
     if (!offer) {
       offer = [[OMBOffer alloc] init];
@@ -1087,14 +1076,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
   // Remove the offers that are no longer suppose to be there
   NSMutableSet *oldSet = [NSMutableSet setWithArray:
-    [[_acceptedOffers allValues] valueForKey: @"uid"]];
+    [[self.acceptedOffers allValues] valueForKey: @"uid"]];
   [oldSet minusSet: newSet];
   for (NSNumber *number in [oldSet allObjects]) {
-    [_acceptedOffers removeObjectForKey: number];
+    [self.acceptedOffers removeObjectForKey: number];
   }
 
-    if (_acceptedOffers.count > 0) {
-        NSArray *offers = [_acceptedOffers allValues];
+    if (self.acceptedOffers.count > 0) {
+        NSArray *offers = [self.acceptedOffers allValues];
         __block int waitingOffers = 0;
         [offers enumerateObjectsUsingBlock:^(OMBOffer *obj, NSUInteger idx, BOOL *stop) {
             if ( obj.accepted == YES && !(obj.onHold || obj.confirmed || obj.rejected || obj.declined)) {
@@ -1510,7 +1499,7 @@ withCompletion: (void (^) (NSError *error)) block
 {
   NSNumber *key = [NSNumber numberWithInt: offer.uid];
   if (type == OMBUserOfferTypeAccepted)
-    [_acceptedOffers removeObjectForKey: key];
+    [self.acceptedOffers removeObjectForKey: key];
   else if (type == OMBUserOfferTypeReceived)
     [_receivedOffers removeObjectForKey: key];
 }
@@ -1776,7 +1765,7 @@ withKeys: (NSArray *) keys ascending: (BOOL) ascending
   }
   NSArray *array;
   if (type == OMBUserOfferTypeAccepted)
-    array = [_acceptedOffers allValues];
+    array = [self.acceptedOffers allValues];
   else if (type == OMBUserOfferTypeReceived)
     array = [_receivedOffers allValues];
   return [array sortedArrayUsingDescriptors: arrayOfKeys];
