@@ -77,9 +77,9 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
     UIStatusBarStyleDefault];
 
   // Setup window and root view controller
-  CGRect screen  = [[UIScreen mainScreen] bounds];
-  self.window    = [[UIWindow alloc] initWithFrame: screen];
-  self.container = [[OMBViewControllerContainer alloc] init];
+  CGRect screen                  = [[UIScreen mainScreen] bounds];
+  self.window                    = [[UIWindow alloc] initWithFrame: screen];
+  self.container                 = [[OMBViewControllerContainer alloc] init];
   self.window.backgroundColor    = [UIColor backgroundColor];
   self.window.rootViewController = _container;
   [self.window makeKeyAndVisible];
@@ -117,7 +117,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   else
     [self.container showDiscover];
 
-  // [self.container showAccount];
+  [self.container showAccount];
 
   // Handle push notification
   // Extract the notification data

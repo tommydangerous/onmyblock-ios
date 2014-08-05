@@ -18,7 +18,7 @@
   return @"group";
 }
 
-+ (NSString *) resourceName
++ (NSString *)resourceName
 {
   return [NSString stringWithFormat:@"%@s", [OMBGroup modelName]];
 }

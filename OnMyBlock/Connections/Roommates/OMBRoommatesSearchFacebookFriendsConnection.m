@@ -32,8 +32,8 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  if ([self.delegate respondsToSelector: @selector(JSONDictionary:)]) {
-    [self.delegate JSONDictionary: [self json]];
+  if ([self.delegate conformsToProtocol:@protocol(OMBConnectionProtocol)]) {
+    [self.delegate JSONDictionary:[self json]];
   }
   [super connectionDidFinishLoading: connection];
 }

@@ -230,6 +230,7 @@
 		AB9545841849B217000513BE /* OMBCenteredImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9545831849B217000513BE /* OMBCenteredImageView.m */; };
 		AB95458A184A8559000513BE /* OMBRenterApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB954589184A8559000513BE /* OMBRenterApplicationViewController.m */; };
 		AB961E4519514F37003F36AB /* OMBSentApplicationCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB961E4419514F37003F36AB /* OMBSentApplicationCreateConnection.m */; };
+		AB9A166419918D0000996145 /* OMBUser+Groups.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9A166319918D0000996145 /* OMBUser+Groups.m */; };
 		AB9B2602181196F400E6DAC4 /* location.gpx in Resources */ = {isa = PBXBuildFile; fileRef = AB9B2601181196F400E6DAC4 /* location.gpx */; };
 		AB9B26091811A74E00E6DAC4 /* OMBAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26081811A74E00E6DAC4 /* OMBAnnotationView.m */; };
 		AB9B260F1811AA7C00E6DAC4 /* OMBAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B260E1811AA7C00E6DAC4 /* OMBAnnotation.m */; };
@@ -365,15 +366,6 @@
 		ABB911A518998CA80046611F /* LIALinkedInAuthorizationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB9119C18998CA80046611F /* LIALinkedInAuthorizationViewController.m */; };
 		ABB911A618998CA80046611F /* LIALinkedInHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB9119E18998CA80046611F /* LIALinkedInHttpClient.m */; };
 		ABB911A718998CA80046611F /* NSString+LIAEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB911A018998CA80046611F /* NSString+LIAEncode.m */; };
-		ABB911BE18998FB30046611F /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB911AC18998FB20046611F /* AFHTTPRequestOperation.m */; };
-		ABB911BF18998FB30046611F /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB911AE18998FB20046611F /* AFHTTPRequestOperationManager.m */; };
-		ABB911C018998FB30046611F /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB911B018998FB20046611F /* AFHTTPSessionManager.m */; };
-		ABB911C118998FB30046611F /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB911B318998FB30046611F /* AFNetworkReachabilityManager.m */; };
-		ABB911C218998FB30046611F /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB911B518998FB30046611F /* AFSecurityPolicy.m */; };
-		ABB911C318998FB30046611F /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB911B718998FB30046611F /* AFURLConnectionOperation.m */; };
-		ABB911C418998FB30046611F /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB911B918998FB30046611F /* AFURLRequestSerialization.m */; };
-		ABB911C518998FB30046611F /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB911BB18998FB30046611F /* AFURLResponseSerialization.m */; };
-		ABB911C618998FB30046611F /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB911BD18998FB30046611F /* AFURLSessionManager.m */; };
 		ABB911CB189998810046611F /* OMBAuthenticationLinkedInConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB911CA189998810046611F /* OMBAuthenticationLinkedInConnection.m */; };
 		ABBA5866186E2A9100E9BF4E /* OMBFinishListingSectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA5865186E2A9100E9BF4E /* OMBFinishListingSectionViewController.m */; };
 		ABBA5869186E2B7700E9BF4E /* OMBFinishListingAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBA5868186E2B7700E9BF4E /* OMBFinishListingAddressViewController.m */; };
@@ -969,6 +961,8 @@
 		AB954589184A8559000513BE /* OMBRenterApplicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterApplicationViewController.m; sourceTree = "<group>"; };
 		AB961E4319514F37003F36AB /* OMBSentApplicationCreateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSentApplicationCreateConnection.h; sourceTree = "<group>"; };
 		AB961E4419514F37003F36AB /* OMBSentApplicationCreateConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSentApplicationCreateConnection.m; sourceTree = "<group>"; };
+		AB9A166219918D0000996145 /* OMBUser+Groups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OMBUser+Groups.h"; sourceTree = "<group>"; };
+		AB9A166319918D0000996145 /* OMBUser+Groups.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OMBUser+Groups.m"; sourceTree = "<group>"; };
 		AB9B2601181196F400E6DAC4 /* location.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = location.gpx; sourceTree = "<group>"; };
 		AB9B26071811A74E00E6DAC4 /* OMBAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAnnotationView.h; sourceTree = "<group>"; };
 		AB9B26081811A74E00E6DAC4 /* OMBAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAnnotationView.m; sourceTree = "<group>"; };
@@ -1240,25 +1234,6 @@
 		ABB9119E18998CA80046611F /* LIALinkedInHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LIALinkedInHttpClient.m; sourceTree = "<group>"; };
 		ABB9119F18998CA80046611F /* NSString+LIAEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+LIAEncode.h"; sourceTree = "<group>"; };
 		ABB911A018998CA80046611F /* NSString+LIAEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+LIAEncode.m"; sourceTree = "<group>"; };
-		ABB911AB18998FB20046611F /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
-		ABB911AC18998FB20046611F /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
-		ABB911AD18998FB20046611F /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
-		ABB911AE18998FB20046611F /* AFHTTPRequestOperationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperationManager.m; sourceTree = "<group>"; };
-		ABB911AF18998FB20046611F /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
-		ABB911B018998FB20046611F /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPSessionManager.m; sourceTree = "<group>"; };
-		ABB911B118998FB30046611F /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
-		ABB911B218998FB30046611F /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
-		ABB911B318998FB30046611F /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
-		ABB911B418998FB30046611F /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFSecurityPolicy.h; sourceTree = "<group>"; };
-		ABB911B518998FB30046611F /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFSecurityPolicy.m; sourceTree = "<group>"; };
-		ABB911B618998FB30046611F /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
-		ABB911B718998FB30046611F /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
-		ABB911B818998FB30046611F /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLRequestSerialization.h; sourceTree = "<group>"; };
-		ABB911B918998FB30046611F /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLRequestSerialization.m; sourceTree = "<group>"; };
-		ABB911BA18998FB30046611F /* AFURLResponseSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLResponseSerialization.h; sourceTree = "<group>"; };
-		ABB911BB18998FB30046611F /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
-		ABB911BC18998FB30046611F /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
-		ABB911BD18998FB30046611F /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
 		ABB911C9189998810046611F /* OMBAuthenticationLinkedInConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAuthenticationLinkedInConnection.h; sourceTree = "<group>"; };
 		ABB911CA189998810046611F /* OMBAuthenticationLinkedInConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAuthenticationLinkedInConnection.m; sourceTree = "<group>"; };
 		ABBA5864186E2A9100E9BF4E /* OMBFinishListingSectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingSectionViewController.h; sourceTree = "<group>"; };
@@ -1642,6 +1617,8 @@
 			children = (
 				9D8BEB756E64242DA9D6200B /* OMBUser+Collections.m */,
 				9D8BE4E039CCC212A2AAC1E8 /* OMBUser+Collections.h */,
+				AB9A166219918D0000996145 /* OMBUser+Groups.h */,
+				AB9A166319918D0000996145 /* OMBUser+Groups.m */,
 			);
 			path = Users;
 			sourceTree = "<group>";
@@ -1937,7 +1914,6 @@
 		AB802E9118109E5200E04D11 = {
 			isa = PBXGroup;
 			children = (
-				ABB911AA18998FB20046611F /* AFNetworking */,
 				AB6155D6184FF9D400A193C7 /* Base64 */,
 				ABED5FE91896FAED00AD630C /* DKLiveBlur */,
 				ABED5FD51896E8CD00AD630C /* DRNRealTimeBlurView */,
@@ -2446,10 +2422,7 @@
 		AB9B263D1811CB1300E6DAC4 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				ABE9CEC41958EA1000A8C8E0 /* UIImage+Alpha.h */,
-				ABE9CEC51958EA1000A8C8E0 /* UIImage+Alpha.m */,
-				ABE9CEC61958EA1000A8C8E0 /* UIImage+RoundedCorner.h */,
-				ABE9CEC71958EA1000A8C8E0 /* UIImage+RoundedCorner.m */,
+				9D8BEA631BA8DCFDEE32080C /* Models */,
 				AB9B263E1811CB1300E6DAC4 /* NSDate+TimeAgo.h */,
 				AB9B263F1811CB1300E6DAC4 /* NSDate+TimeAgo.m */,
 				ABE4FBE018902D6A0009D643 /* NSDateFormatter+JSON.h */,
@@ -2466,10 +2439,16 @@
 				AB1C217A18516D7F00ED7C06 /* NSString+PhoneNumber.m */,
 				ABE679B618932A3100A494FB /* NSString+UAObfuscatedString.h */,
 				ABE679B718932A3100A494FB /* NSString+UAObfuscatedString.m */,
+				AB62C8C718F2283F00285BE8 /* NSUserDefaults+OnMyBlock.h */,
+				AB62C8C818F2283F00285BE8 /* NSUserDefaults+OnMyBlock.m */,
+				ABA5CB5318EE907B00D80A90 /* OMBViewController+PayPalPayment.h */,
+				ABA5CB5418EE907B00D80A90 /* OMBViewController+PayPalPayment.m */,
 				AB9B26421811CB1300E6DAC4 /* UIColor+Extensions.h */,
 				AB9B26431811CB1300E6DAC4 /* UIColor+Extensions.m */,
 				ABE679B01892D1F900A494FB /* UIFont+OnMyBlock.h */,
 				ABE679B11892D1F900A494FB /* UIFont+OnMyBlock.m */,
+				ABE9CEC41958EA1000A8C8E0 /* UIImage+Alpha.h */,
+				ABE9CEC51958EA1000A8C8E0 /* UIImage+Alpha.m */,
 				AB76C0DE18187B3F006354FB /* UIImage+Color.h */,
 				AB76C0DF18187B3F006354FB /* UIImage+Color.m */,
 				AB6155DA1850DB3600A193C7 /* UIImage+FixOrientation.h */,
@@ -2480,13 +2459,10 @@
 				AB0269BC182293DC00E72F53 /* UIImage+NegativeImage.m */,
 				AB9B26441811CB1300E6DAC4 /* UIImage+Resize.h */,
 				AB9B26451811CB1300E6DAC4 /* UIImage+Resize.m */,
-				ABA5CB5318EE907B00D80A90 /* OMBViewController+PayPalPayment.h */,
-				ABA5CB5418EE907B00D80A90 /* OMBViewController+PayPalPayment.m */,
-				AB62C8C718F2283F00285BE8 /* NSUserDefaults+OnMyBlock.h */,
-				AB62C8C818F2283F00285BE8 /* NSUserDefaults+OnMyBlock.m */,
+				ABE9CEC61958EA1000A8C8E0 /* UIImage+RoundedCorner.h */,
+				ABE9CEC71958EA1000A8C8E0 /* UIImage+RoundedCorner.m */,
 				AB17AE6318FDDD6F00B6952C /* UILabel+Image.h */,
 				AB17AE6418FDDD6F00B6952C /* UILabel+Image.m */,
-				9D8BEA631BA8DCFDEE32080C /* Models */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -3071,32 +3047,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		ABB911AA18998FB20046611F /* AFNetworking */ = {
-			isa = PBXGroup;
-			children = (
-				ABB911AB18998FB20046611F /* AFHTTPRequestOperation.h */,
-				ABB911AC18998FB20046611F /* AFHTTPRequestOperation.m */,
-				ABB911AD18998FB20046611F /* AFHTTPRequestOperationManager.h */,
-				ABB911AE18998FB20046611F /* AFHTTPRequestOperationManager.m */,
-				ABB911AF18998FB20046611F /* AFHTTPSessionManager.h */,
-				ABB911B018998FB20046611F /* AFHTTPSessionManager.m */,
-				ABB911B118998FB30046611F /* AFNetworking.h */,
-				ABB911B218998FB30046611F /* AFNetworkReachabilityManager.h */,
-				ABB911B318998FB30046611F /* AFNetworkReachabilityManager.m */,
-				ABB911B418998FB30046611F /* AFSecurityPolicy.h */,
-				ABB911B518998FB30046611F /* AFSecurityPolicy.m */,
-				ABB911B618998FB30046611F /* AFURLConnectionOperation.h */,
-				ABB911B718998FB30046611F /* AFURLConnectionOperation.m */,
-				ABB911B818998FB30046611F /* AFURLRequestSerialization.h */,
-				ABB911B918998FB30046611F /* AFURLRequestSerialization.m */,
-				ABB911BA18998FB30046611F /* AFURLResponseSerialization.h */,
-				ABB911BB18998FB30046611F /* AFURLResponseSerialization.m */,
-				ABB911BC18998FB30046611F /* AFURLSessionManager.h */,
-				ABB911BD18998FB30046611F /* AFURLSessionManager.m */,
-			);
-			path = AFNetworking;
-			sourceTree = "<group>";
-		};
 		ABB911C8189998630046611F /* Authentications */ = {
 			isa = PBXGroup;
 			children = (
@@ -3606,7 +3556,6 @@
 				ABE7B90318FC880900642777 /* MDCParallaxView.m in Sources */,
 				AB9FEEFB18D0171400E25FE2 /* OMBLabelSwitchCell.m in Sources */,
 				ABBA58BB1875A49200E9BF4E /* OMBStandardLeaseViewController.m in Sources */,
-				ABB911C218998FB30046611F /* AFSecurityPolicy.m in Sources */,
 				ABE679B818932A3100A494FB /* NSString+UAObfuscatedString.m in Sources */,
 				AB026BD01822E98500E72F53 /* OMBSignUpConnection.m in Sources */,
 				AB57EA21186BB6D7001682DB /* OMBMessageCollectionViewCell.m in Sources */,
@@ -3620,7 +3569,6 @@
 				AB0C36B818407590006DC3AD /* OMBTriangleView.m in Sources */,
 				ABE4FBF6189045E40009D643 /* OMBPayoutMethodPayPalViewController.m in Sources */,
 				AB9D6112188CEFDE00C9AC64 /* SDWebImageDecoder.m in Sources */,
-				ABB911BF18998FB30046611F /* AFHTTPRequestOperationManager.m in Sources */,
 				AB034B151837D3DC00811074 /* OMBGradientView.m in Sources */,
 				AB0E985018EDA9D40086AF3D /* NSString+OnMyBlock.m in Sources */,
 				AB4ED3021884C738009AFB01 /* OMBResidencePublishConnection.m in Sources */,
@@ -3691,6 +3639,7 @@
 				ABBA58971870C59700E9BF4E /* ELCAssetTablePicker.m in Sources */,
 				AB17AE4F18FD9CB600B6952C /* OMBManageListingDetailViewController.m in Sources */,
 				ABBB18DD182453BF00211499 /* OMBAnnotationCity.m in Sources */,
+				AB9A166419918D0000996145 /* OMBUser+Groups.m in Sources */,
 				ABABEC4C1864D56A008B6768 /* OMBMapViewController.m in Sources */,
 				ABA3D69B18A9423D006CE8C1 /* OMBTestFlowLayout.m in Sources */,
 				DE8D2D5518BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m in Sources */,
@@ -3720,7 +3669,6 @@
 				ABBB18CB182408DB00211499 /* OMBFavoriteResidenceConnection.m in Sources */,
 				ABB70069187B58C0005F0730 /* OMBOfferInquiryViewController.m in Sources */,
 				AB18CF5C18E084E90022ABF1 /* OMBResidenceLegalDetailsViewController.m in Sources */,
-				ABB911C318998FB30046611F /* AFURLConnectionOperation.m in Sources */,
 				AB131F2E1885C87B0057D769 /* OMBResidenceImageSlideViewController.m in Sources */,
 				ABA5B41C1856B07000F825E1 /* OMBEmploymentAddViewController.m in Sources */,
 				AB00B9C418BD1C0E0050D6F4 /* OMBConversationStore.m in Sources */,
@@ -3804,7 +3752,6 @@
 				AB19A095186172A500F84DE9 /* OMBResidenceDetailSellerCell.m in Sources */,
 				AB70CB6E186CB9400083DF4C /* OMBTermsOfServiceViewController.m in Sources */,
 				ABABEC5C18655ED3008B6768 /* OMBMapFilterBathroomsCell.m in Sources */,
-				ABB911C618998FB30046611F /* AFURLSessionManager.m in Sources */,
 				ABE28170186A068B00A5D14E /* OMBInboxViewController.m in Sources */,
 				AB4ED2E71884807F009AFB01 /* OMBOpenHouseDeleteConnection.m in Sources */,
 				DEA0560418E230AD002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.m in Sources */,
@@ -3844,7 +3791,6 @@
 				DE92B90118F8451900D03AC7 /* OMBRadialGradient.m in Sources */,
 				AB8642C218AB5FF400995571 /* OMBInformationStepsFlowLayout.m in Sources */,
 				AB9545761848FB58000513BE /* OMBAccountProfileViewController.m in Sources */,
-				ABB911C118998FB30046611F /* AFNetworkReachabilityManager.m in Sources */,
 				ABED5FEC1896FAED00AD630C /* DKLiveBlurView.m in Sources */,
 				ABE9CEC31958AB6600A8C8E0 /* OMBUserDetailViewController.m in Sources */,
 				AB33970A18AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m in Sources */,
@@ -3856,7 +3802,6 @@
 				ABE28174186A09D400A5D14E /* OMBInboxCell.m in Sources */,
 				AB18CF3118DE9C920022ABF1 /* OMBObject.m in Sources */,
 				ABF8ECB9182D84170080B1E2 /* OMBSignUpView.m in Sources */,
-				ABB911C518998FB30046611F /* AFURLResponseSerialization.m in Sources */,
 				AB1D4A80182C35B800FF4F23 /* OMBIntroViewController.m in Sources */,
 				AB9545701848E5EB000513BE /* OMBAccountViewController.m in Sources */,
 				AB18CF2B18DE60950022ABF1 /* OMBModelConnection.m in Sources */,
@@ -3873,7 +3818,6 @@
 				ABCB36AF187C8D2F008A0EEF /* OMBOfferAcceptedView.m in Sources */,
 				AB00B9CF18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m in Sources */,
 				AB63D2201821B93A00D63800 /* OMBLoginConnection.m in Sources */,
-				ABB911C418998FB30046611F /* AFURLRequestSerialization.m in Sources */,
 				ABED5FDF1896E8CE00AD630C /* DRNRealTimeBlurView.m in Sources */,
 				ABDF175318688F4C004E2755 /* OMBResidenceConfirmDetailsPlaceOfferCell.m in Sources */,
 				ABA5CB5518EE907B00D80A90 /* OMBViewController+PayPalPayment.m in Sources */,
@@ -3942,7 +3886,6 @@
 				AB17AE6818FDDEF100B6952C /* OMBManageListingDetailStatusCell.m in Sources */,
 				AB8642BC18AB50A500995571 /* OMBInformationStepsCell.m in Sources */,
 				ABB91197189976060046611F /* OMBLinkedInButton.m in Sources */,
-				ABB911C018998FB30046611F /* AFHTTPSessionManager.m in Sources */,
 				ABB3C5821811789100DD91C9 /* OMBTabBarController.m in Sources */,
 				AB9D6116188CEFDE00C9AC64 /* SDWebImagePrefetcher.m in Sources */,
 				AB802EAA18109E5200E04D11 /* main.m in Sources */,
@@ -3973,7 +3916,6 @@
 				ABB7000D1879FB8C005F0730 /* OMBImageThreeLabelCell.m in Sources */,
 				ABE679B21892D1F900A494FB /* UIFont+OnMyBlock.m in Sources */,
 				DE8D2D5618BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m in Sources */,
-				ABB911BE18998FB30046611F /* AFHTTPRequestOperation.m in Sources */,
 				ABCE30F718945E6F00D134F5 /* OMBCollectionView.m in Sources */,
 				AB76C0E018187B3F006354FB /* UIImage+Color.m in Sources */,
 				ABD6FC6C1914428C0070D7F0 /* OMBTextFieldToolbar.m in Sources */,

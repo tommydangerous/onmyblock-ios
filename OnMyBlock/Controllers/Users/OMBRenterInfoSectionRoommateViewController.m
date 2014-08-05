@@ -165,7 +165,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) fetchObjects
 {
-  [self fetchObjectsForResourceName: [OMBRoommate resourceName]];
+  // [[self renterApplication] fetchListForResourceName: resourceName
+  //   userUID: user.uid delegate: self completion: ^(NSError *error) {
+  //     [self hideEmptyLabel: [[self objects] count]];
+  //     [self stopSpinning];
+  //   }];
+  [self startSpinning];
 }
 
 - (NSArray *) objects

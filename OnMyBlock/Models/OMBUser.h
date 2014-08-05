@@ -6,8 +6,6 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 typedef enum {
   OMBUserOfferTypeAccepted,
   OMBUserOfferTypeReceived
@@ -59,6 +57,7 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 @property (nonatomic, strong) OMBNeighborhood *currentLocation;
 @property (nonatomic, strong) NSMutableDictionary *depositPayoutTransactions;
 @property (nonatomic, strong) NSMutableDictionary *favorites;
+@property (nonatomic, strong) NSMutableDictionary *groups;
 @property (nonatomic) BOOL hasDefaultImage;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) NSMutableDictionary *imageSizeDictionary;

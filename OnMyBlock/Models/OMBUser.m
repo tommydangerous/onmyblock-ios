@@ -60,6 +60,7 @@
 
 // Categories
 #import "OMBUser+Collections.h"
+#import "OMBUser+Groups.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 
@@ -132,11 +133,17 @@ NSString *const OMBUserTypeLandlord = @"landlord";
   self.renterApplication = [[OMBRenterApplication alloc] init];
   [self initializeCollections];
 
-  // [[NSNotificationCenter defaultCenter] addObserver: self
-  //   selector: @selector(logout)
-  //     name: OMBCurrentUserLogoutNotification object: nil];
-
   return self;
+}
+
+#pragma mark - Getters
+
+- (NSMutableDictionary *)groups
+{
+  if (!_groups) {
+    _groups = [NSMutableDictionary dictionary];
+  }
+  return _groups;
 }
 
 #pragma mark - Override
