@@ -45,4 +45,21 @@
   return self;
 }
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void)loadDateAvailable:(NSTimeInterval)timeInterval
+{
+  
+  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+  dateFormatter.dateFormat       = @"MMMM d, yyyy";
+  NSString *moveInSring = [dateFormatter stringFromDate:
+    [NSDate dateWithTimeIntervalSince1970: timeInterval]];
+  
+  _availableLabel.text = [NSString stringWithFormat:
+    @"Available on %@", moveInSring];
+  
+}
+
 @end
