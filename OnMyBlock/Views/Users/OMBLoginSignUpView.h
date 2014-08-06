@@ -12,17 +12,24 @@
 @class OMBBlurView;
 @class OMBCloseButtonView;
 @class OMBFacebookButton;
+@class OMBFullListView;
 @class OMBOrView;
 @class TextFieldPadding;
 
 typedef NS_ENUM(NSInteger, OMBLoginSignUpViewTextField) {
   OMBLoginSignUpViewTextFieldFirstName,
   OMBLoginSignUpViewTextFieldLastName,
+  OMBLoginSignUpViewTextFieldSchool,
   OMBLoginSignUpViewTextFieldEmail,
   OMBLoginSignUpViewTextFieldPassword
 };
 
-@interface OMBLoginSignUpView : OMBView <UITextFieldDelegate>
+@interface OMBLoginSignUpView : OMBView
+<
+  UITableViewDataSource,
+  UITableViewDelegate,
+  UITextFieldDelegate
+>
 {
   UIButton *actionSwitchButton;
   UIView *bottomView;
@@ -36,6 +43,10 @@ typedef NS_ENUM(NSInteger, OMBLoginSignUpViewTextField) {
   NSMutableArray *textFieldFrameArray;
   UIView *textFieldView;
   UIButton *userSwitchButton;
+  NSInteger schoolIndex;
+  OMBFullListView *schoolList;
+  NSArray *schools;
+  UIView *schoolView;
 }
 
 @property (nonatomic, strong) UIButton *actionButton;
@@ -46,6 +57,7 @@ typedef NS_ENUM(NSInteger, OMBLoginSignUpViewTextField) {
 @property (nonatomic, strong) TextFieldPadding *firstNameTextField;
 @property (nonatomic, strong) TextFieldPadding *lastNameTextField;
 @property (nonatomic, strong) TextFieldPadding *passwordTextField;
+@property (nonatomic, strong) TextFieldPadding *schoolTextField;
 
 #pragma mark - Methods
 
@@ -54,6 +66,7 @@ typedef NS_ENUM(NSInteger, OMBLoginSignUpViewTextField) {
 - (void) clearTextFields;
 - (BOOL) isLandlord;
 - (BOOL) isLogin;
+- (NSString *) schoolSelected;
 - (void) scrollToTop;
 - (void) switchToLandlord;
 - (void) switchToLogin;
