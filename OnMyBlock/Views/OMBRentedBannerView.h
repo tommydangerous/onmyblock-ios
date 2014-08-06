@@ -10,4 +10,10 @@
 
 @property (nonatomic, strong) UILabel *availableLabel;
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void)loadDateAvailable:(NSTimeInterval)timeInterval;
+
 @end

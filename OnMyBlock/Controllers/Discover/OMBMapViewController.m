@@ -555,6 +555,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   // Check any filter values and display them
   [self updateFilterLabel];
+  [self updateRecentResidence];
 }
 
 #pragma mark - Protocol
@@ -747,6 +748,13 @@ viewForAnnotation: (id <MKAnnotation>) annotation
 
   annotationView.count    = [(QVClusterAnnotation *) annotation count];
   annotationView.isRented = ((QVClusterAnnotation *) annotation).rented;
+  
+  int residenceId = ((QVClusterAnnotation *) annotation).residenceId;
+  annotationView.visited = NO;
+  if(residenceId && [[OMBUser currentUser] loggedIn]){
+    // Check if user has visited residence in residence detail controller
+    annotationView.visited = [[OMBUser currentUser] visited:residenceId];
+  }
   
   return annotationView;
 }
@@ -1709,6 +1717,14 @@ withMiles: (int) miles animated: (BOOL) animated
 
 - (void) showResidenceDetailViewController
 {
+  
+  if([[_mapView selectedAnnotations] count] && [[OMBUser currentUser] loggedIn]){
+    for(id<MKAnnotation> annotation in [_mapView selectedAnnotations]){
+      if([annotation isKindOfClass:[QVClusterAnnotation class]]){
+        recentResidence = annotation;
+      }
+    }
+  }
   [self.navigationController pushViewController:
     [[OMBResidenceDetailViewController alloc] initWithResidence:
       propertyInfoView.residence] animated: YES];
@@ -1999,6 +2015,15 @@ withMiles: (int) miles animated: (BOOL) animated
     filterView.hidden = YES;
 
   [self switchViews: segmentedControl];
+}
+
+- (void)updateRecentResidence
+{
+  if(recentResidence){
+    QVClusterAnnotationView *annotationView =
+      (QVClusterAnnotationView *)[_mapView viewForAnnotation:recentResidence];
+    annotationView.visited = YES;
+  }
 }
 
 - (void) zoomAtAnnotation: (id <MKAnnotation>) annotation

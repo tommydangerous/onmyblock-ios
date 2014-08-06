@@ -175,6 +175,7 @@ withZoomScale: (double) zoomScale
       __block double totalY = 0;
       __block int count     = 0;
       __block bool rented   = false;
+      __block int residenceId = 0;
 
       NSMutableArray *array = [NSMutableArray array];
 
@@ -183,6 +184,7 @@ withZoomScale: (double) zoomScale
           totalX += data.x;
           totalY += data.y;
           rented  = ((struct QVResidenceInfo *)data.data)->rented;
+          residenceId = ((struct QVResidenceInfo *)data.data)->id;
           
           count++;
           [array addObject: @{
@@ -197,7 +199,8 @@ withZoomScale: (double) zoomScale
         QVClusterAnnotation *annotation =
           [[QVClusterAnnotation alloc] initWithCoordinate: coordinate
             count: count coordinates: [NSArray arrayWithArray: array]];
-        annotation.rented = (count == 1 ? rented : NO);
+        annotation.rented      = (count == 1 ? rented : NO);
+        annotation.residenceId = (count == 1 ? residenceId : 0);
         [clusteredAnnotations addObject: annotation];
       }
     }

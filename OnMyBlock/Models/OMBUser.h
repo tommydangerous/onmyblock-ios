@@ -71,6 +71,7 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 @property (nonatomic, strong) NSMutableDictionary *receivedOffers;
 @property (nonatomic, strong) OMBRenterApplication *renterApplication;
 @property (nonatomic, strong) NSMutableDictionary *residences;
+@property (nonatomic, strong) NSMutableDictionary *residencesVisited;
 @property (nonatomic, strong) NSMutableDictionary *heightForAboutTextDictionary;
 @property (nonatomic) int uid;
 
@@ -99,6 +100,7 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 - (void) addReceivedOffer: (OMBOffer *) offer;
 - (void) addFavoriteResidence: (OMBFavoriteResidence *) favoriteResidence;
 - (void) addResidence: (OMBResidence *) residence;
+- (void) addResidenceVisited:(OMBResidence *)residence;
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence;
 - (void) authenticateVenmoWithCode: (NSString *) code
 depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block;
@@ -189,5 +191,6 @@ ascending: (BOOL) ascending;
 completion: (void (^) (NSError *error)) block;
 - (void) uploadImage: (UIImage *) img
 withCompletion: (void (^) (NSError *error)) block;
+- (BOOL) visited:(int)uid;
 
 @end
