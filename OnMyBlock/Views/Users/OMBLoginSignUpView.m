@@ -13,6 +13,7 @@
 #import "OMBCloseButtonView.h"
 #import "OMBFullListView.h"
 #import "OMBFacebookButton.h"
+#import "OMBFullListCell.h"
 #import "OMBOrView.h"
 #import "OMBSchool.h"
 #import "OMBSchoolStore.h"
@@ -321,21 +322,22 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   static NSString *cellID = @"cellID";
-  UITableViewCell *cell = [tableView
+  OMBFullListCell *cell = [tableView
     dequeueReusableCellWithIdentifier:cellID];
   if(!cell)
-    cell = [[UITableViewCell alloc] initWithStyle:
+    cell = [[OMBFullListCell alloc] initWithStyle:
       UITableViewCellStyleDefault reuseIdentifier:cellID];
+    
+  if(indexPath.row == 9 || indexPath.row == 11)
+    [cell addBorder];
+  else
+    [cell removeBorder];
   
-  cell.backgroundColor = UIColor.clearColor;
-  cell.selectionStyle = UITableViewCellSelectionStyleNone;
   if(schoolIndex == indexPath.row)
     cell.textLabel.font = [UIFont normalTextFontBold];
   else
     cell.textLabel.font = [UIFont normalTextFont];
   cell.textLabel.text = ((OMBSchool *)schools[indexPath.row]).displayName;
-  cell.textLabel.textColor = UIColor.whiteColor;
-  //cell.userInteractionEnabled = NO;
   
   return cell;
 }
@@ -361,7 +363,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  return 45.f;
+  return [OMBFullListCell heightForCell];
 }
 
 #pragma mark - Protocol UITextFieldDelegate

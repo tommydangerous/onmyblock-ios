@@ -45,7 +45,7 @@
   UILabel *line = [UILabel new];
   line.backgroundColor = UIColor.whiteColor;
   line.frame = CGRectMake(titleLabel.frame.origin.x, titleLabel.frame.origin.y +
-    titleLabel.frame.size.height + padding, screen.size.width - 2 * padding, 1.f);
+    titleLabel.frame.size.height + padding, screen.size.width - 2 * padding, 1.5f);
   [self addSubview:line];
   
   // Close view

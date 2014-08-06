@@ -102,11 +102,11 @@
   
   //---------------------------------------------------------------
   
-  OMBSchool *none   = [OMBSchool new];
-  none.coordinate   = CLLocationCoordinate2DMake(0.0, 0.0);
-  none.displayName  = @"None";
-  none.realName     = @"";
-  [schools addObject:none];
+  OMBSchool *other   = [OMBSchool new];
+  other.coordinate   = CLLocationCoordinate2DMake(0.0, 0.0);
+  other.displayName  = @"Other";
+  other.realName     = @"";
+  [schools addObject:other];
   
   return self;
 }
