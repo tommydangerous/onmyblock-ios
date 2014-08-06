@@ -19,6 +19,7 @@
 @property (copy, nonatomic) NSString *subtitle;
 @property (copy, nonatomic) NSString *title;
 @property (nonatomic) bool rented;
+@property (nonatomic) int residenceId;
 
 #pragma mark - Initializer
 
