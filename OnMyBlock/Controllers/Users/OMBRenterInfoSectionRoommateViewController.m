@@ -24,7 +24,7 @@
 #import "OMBUser+Groups.h"
 
 @interface OMBRenterInfoSectionRoommateViewController ()
-<OMBUserGroupsDelegate>
+<OMBGroupDelegate, OMBUserGroupsDelegate>
 {
   UIActionSheet *profileDeleteActionSheet;
   NSIndexPath *selectedIndexPath;
@@ -84,6 +84,19 @@
 
 #pragma mark - Protocol
 
+#pragma mark - Protocol OMBGroupDelegate
+
+- (void)deleteUserFailed:(NSError *)error
+{
+  [self showAlertViewWithError:error];
+  [self refresh];
+}
+
+- (void)deleteUserSucceeded
+{
+  [self refresh];
+}
+
 #pragma mark - Protocol OMBUserGroupsDelegate
 
 - (void)groupsFetchedFailed:(NSError *)error
@@ -111,8 +124,11 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
     }
     // Delete
     else if (buttonIndex == 1) {
-      NSLog(@"DELETE %@", aUser);
+      OMBGroup *group = [self groupAtIndexPath:selectedIndexPath];
+      [group deleteUser:aUser accessToken:user.accessToken 
+        delegate:self];
       selectedIndexPath = nil;
+      [self startSpinning];
     }
   }
   else {
@@ -130,7 +146,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
 - (NSInteger)tableView:(UITableView *)tableView
 numberOfRowsInSection:(NSInteger)section
 {
-  OMBGroup *group = [[self objects] objectAtIndex:section];
+  OMBGroup *group = 
+    [self groupAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section]];
   return [group.users count];
 }
 
@@ -200,12 +217,18 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (NSArray *)objects
 {
-  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name"
-    ascending:YES];
-  return [[user.groups allValues] sortedArrayUsingDescriptors:@[sort]];
+  return [user.groups allValues];
 }
 
 #pragma mark - Private
+
+- (OMBGroup *)groupAtIndexPath:(NSIndexPath *)indexPath
+{
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name"
+    ascending:YES];
+  return [[[self objects] sortedArrayUsingDescriptors:
+    @[sort]] objectAtIndex:indexPath.section];
+}
 
 - (void)refresh
 {
@@ -221,7 +244,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (OMBUser *)userAtIndexPath:(NSIndexPath *)indexPath
 {
-  OMBGroup *group = [[self objects] objectAtIndex:indexPath.section];
+  OMBGroup *group = [self groupAtIndexPath:indexPath];
   NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"firstName"
     ascending:YES];
   return [[[group.users allValues] sortedArrayUsingDescriptors:

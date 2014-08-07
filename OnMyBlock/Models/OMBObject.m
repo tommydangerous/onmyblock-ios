@@ -65,4 +65,9 @@ forResourceName: (NSString *) resourceName
   return [NSString stringWithFormat: @"%@s", [self modelName]];
 }
 
+- (OMBSessionManager *)sessionMananger
+{
+  return [OMBSessionManager sharedManager];
+}
+
 @end

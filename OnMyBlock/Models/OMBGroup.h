@@ -7,10 +7,12 @@
 
 @class OMBUser;
 
-@protocol OMBGroupDelegate
+@protocol OMBGroupDelegate <NSObject>
 
-@required
+@optional
 
+- (void)deleteUserFailed:(NSError *)error;
+- (void)deleteUserSucceeded;
 - (void)saveUserFailed:(NSError *)error;
 - (void)saveUserSucceeded;
 
@@ -31,5 +33,7 @@
 - (void)addUser:(OMBUser *)user;
 - (void)createUserWithDictionary:(NSDictionary *)dictionary 
 accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate;
+- (void)deleteUser:(OMBUser *)user accessToken:(NSString *)accessToken
+delegate:(id<OMBGroupDelegate>)delegate;
 
 @end

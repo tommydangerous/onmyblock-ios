@@ -87,18 +87,46 @@ accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate
     [dictionary objectForKey:@"firstName"] : @"";
   NSString *lastName = [dictionary objectForKey:@"lastName"] ?
     [dictionary objectForKey:@"lastName"] : @"";
-  OMBSessionManager *manager = [OMBSessionManager sharedManager];
-  [manager POST:@"groups/add_user" parameters:@{
+  [[self sessionMananger] POST:@"groups/add_user" parameters:@{
     @"access_token": accessToken,
     @"email":        email,
     @"first_name":   firstName,
     @"last_name":    lastName
   } success:^(NSURLSessionDataTask *task, id responseObject) {
     [self readFromDictionary:responseObject];
-    [delegate saveUserSucceeded];
+    if ([delegate respondsToSelector:@selector(saveUserSucceeded)]) {
+      [delegate saveUserSucceeded];
+    }
   } failure:^(NSURLSessionDataTask *task, NSError *error) {
-    [delegate saveUserFailed:error];
+    if ([delegate respondsToSelector:@selector(saveUserFailed:)]) {
+      [delegate saveUserFailed:error];
+    }
   }];
+}
+
+- (void)deleteUser:(OMBUser *)user accessToken:(NSString *)accessToken
+delegate:(id<OMBGroupDelegate>)delegate
+{
+  [[self sessionMananger] POST:@"groups/remove_user" parameters:@{
+    @"access_token": accessToken,
+    @"user_id":      @(user.uid)
+  } success:^(NSURLSessionDataTask *task, id responseObject) {
+    if ([delegate respondsToSelector:@selector(deleteUserSucceeded)]) {
+      [self removeUser:user];
+      [delegate deleteUserSucceeded];
+    }
+  } failure:^(NSURLSessionDataTask *task, NSError *error) {
+    if ([delegate respondsToSelector:@selector(deleteUserFailed:)]) {
+      [delegate deleteUserFailed:error];
+    }
+  }];
+}
+
+#pragma mark - Private
+
+- (void) removeUser:(OMBUser *)user
+{
+  [self.users removeObjectForKey:@(user.uid)];
 }
 
 @end

@@ -25,8 +25,9 @@
 
 #pragma mark - Instance Methods
 
-- (NSString *) modelName;
-- (void) readFromDictionary: (NSDictionary *) dictionary;
-- (NSString *) resourceName;
+- (NSString *)modelName;
+- (void)readFromDictionary:(NSDictionary *)dictionary;
+- (NSString *)resourceName;
+- (OMBSessionManager *)sessionMananger;
 
 @end
