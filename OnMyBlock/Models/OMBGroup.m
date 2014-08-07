@@ -81,16 +81,21 @@
 - (void)createUserWithDictionary:(NSDictionary *)dictionary 
 accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate
 {
+  NSString *email = [dictionary objectForKey:@"email"] ?
+    [dictionary objectForKey:@"email"] : @"";
+  NSString *firstName = [dictionary objectForKey:@"firstName"] ?
+    [dictionary objectForKey:@"firstName"] : @"";
+  NSString *lastName = [dictionary objectForKey:@"lastName"] ?
+    [dictionary objectForKey:@"lastName"] : @"";
   OMBSessionManager *manager = [OMBSessionManager sharedManager];
   [manager POST:@"groups/add_user" parameters:@{
     @"access_token": accessToken,
-    @"email":        [dictionary objectForKey:@"email"],
-    @"first_name":   [dictionary objectForKey:@"firstName"],
-    @"last_name":    [dictionary objectForKey:@"lastName"]
+    @"email":        email,
+    @"first_name":   firstName,
+    @"last_name":    lastName
   } success:^(NSURLSessionDataTask *task, id responseObject) {
     [self readFromDictionary:responseObject];
     [delegate saveUserSucceeded];
-    NSLog(@"%@", self.users);
   } failure:^(NSURLSessionDataTask *task, NSError *error) {
     [delegate saveUserFailed:error];
   }];

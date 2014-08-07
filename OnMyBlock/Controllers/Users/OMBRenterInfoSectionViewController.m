@@ -176,8 +176,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
 #pragma mark - Protocol UITableViewDelegate
 
-- (void) tableView: (UITableView *) tableView
-didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   selectedIndexPath = indexPath;
   [deleteActionSheet showInView: self.view];
