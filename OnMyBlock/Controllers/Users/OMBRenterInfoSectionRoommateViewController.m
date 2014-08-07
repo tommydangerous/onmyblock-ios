@@ -16,7 +16,15 @@
 #import "OMBRoommate.h"
 #import "OMBRoommateCell.h"
 
-@interface OMBRenterInfoSectionRoommateViewController()
+// Connections
+#import "OMBModelListConnection.h"
+
+// Models
+#import "OMBGroup.h"
+#import "OMBUser+Groups.h"
+
+@interface OMBRenterInfoSectionRoommateViewController ()
+<OMBUserGroupsDelegate>
 {
   UIActionSheet *profileDeleteActionSheet;
   NSIndexPath *selectedIndexPath;
@@ -32,7 +40,7 @@
 {
   if (!(self = [super initWithUser: object])) return nil;
 
-  self.title = @"Co-applicants";
+  self.title = @"Roommates";
   tagSection = 1;
 
   return self;
@@ -42,9 +50,9 @@
 
 #pragma mark - Override UIViewController
 
-- (void) loadView
+- (void) viewDidLoad
 {
-  [super loadView];
+  [super viewDidLoad];
 
   [self setEmptyLabelText: @"When you add a co-applicant, \n"
     @"we will send them an invitation \n"
@@ -54,9 +62,10 @@
   [addButtonMiddle setTitle: @"Add Co-applicant"
     forState: UIControlStateNormal];
   
-  profileDeleteActionSheet = [[UIActionSheet alloc] initWithTitle: nil delegate: self
-    cancelButtonTitle: @"Cancel" destructiveButtonTitle: @"View Profile"
-      otherButtonTitles: @"Delete", nil];
+  profileDeleteActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
+    delegate:self cancelButtonTitle: @"Cancel" 
+      destructiveButtonTitle: @"View Profile" 
+        otherButtonTitles: @"Delete", nil];
   profileDeleteActionSheet.destructiveButtonIndex = 1;
   [self.view addSubview: profileDeleteActionSheet];
 }
@@ -73,18 +82,23 @@
 
 #pragma mark - Protocol
 
-#pragma mark - Protocol OMBConnectionProtocol
+#pragma mark - Protocol OMBUserGroupsDelegate
 
-- (void) JSONDictionary: (NSDictionary *) dictionary
+- (void)groupsFetchedFailed:(NSError *)error
 {
-  [[self renterApplication] readFromDictionary: dictionary
-    forModelName: [OMBRoommate modelName]];
-  [self reloadTable];
+  [self showAlertViewWithError:error];
+  [self refresh];
+}
+
+- (void)groupsFetchedSucceeded
+{
+  [self refresh];
 }
 
 #pragma mark - Protocol UIActionSheetDelegate
 
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void) actionSheet:(UIActionSheet *)actionSheet 
+clickedButtonAtIndex:(NSInteger)buttonIndex
 {
   if(actionSheet == profileDeleteActionSheet){
     if (buttonIndex == 0){
@@ -137,7 +151,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   return [OMBRoommateCell heightForCell];
 }
 
-- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void) tableView:(UITableView *)tableView 
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   OMBRoommate *testUser = (OMBRoommate *)
     [[self objects] objectAtIndex: indexPath.row];
@@ -155,6 +170,8 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Instance Methods
 
+#pragma mark - Public
+
 - (void) addButtonSelected
 {
   [self presentViewController:
@@ -165,11 +182,17 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 - (void) fetchObjects
 {
-  // [[self renterApplication] fetchListForResourceName: resourceName
-  //   userUID: user.uid delegate: self completion: ^(NSError *error) {
-  //     [self hideEmptyLabel: [[self objects] count]];
-  //     [self stopSpinning];
-  //   }];
+  // OMBModelListConnection *conn = 
+  //   [[OMBModelListConnection alloc] initWithResourceName:
+  //     [OMBGroup resourceName] userUID: [OMBUser currentUser].uid];
+  // conn.delegate = self;
+  // conn.completionBlock = ^(NSError *error) {
+  //   // [self hideEmptyLabel: [[self objects] count]];
+  //   [self stopSpinning];
+  // };
+  // [conn start];
+  
+  [[OMBUser currentUser] fetchGroupsWithDelegate:self];
   [self startSpinning];
 }
 
@@ -179,7 +202,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES];
 }
 
-- (void) reloadTable
+#pragma mark - Private
+
+- (void)refresh
+{
+  [self hideEmptyLabel:[[self objects] count]];
+  [self stopSpinning];
+  [self reloadTable];
+}
+
+- (void)reloadTable
 {
   [self.table reloadData];
 }

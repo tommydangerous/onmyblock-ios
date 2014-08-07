@@ -7,9 +7,8 @@
 
 @interface OMBGroup : OMBObject
 
-@property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic) NSUInteger ownerId;
-@property (nonatomic) NSTimeInterval updatedAt;
+@property (nonatomic, strong) NSMutableDictionary *users;
 
 @end

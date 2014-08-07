@@ -10,6 +10,13 @@
 
 @class OMBGroup;
 
+@protocol OMBUserGroupsDelegate <NSObject>
+
+- (void)groupsFetchedFailed:(NSError *)error;
+- (void)groupsFetchedSucceeded;
+
+@end
+
 @interface OMBUser (Groups)
 
 #pragma mark - Methods
@@ -19,5 +26,6 @@
 #pragma mark - Public
 
 - (void)addGroup:(OMBGroup *)group;
+- (void)fetchGroupsWithDelegate:(id<OMBUserGroupsDelegate>)delegate;
 
 @end

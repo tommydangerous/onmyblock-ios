@@ -111,6 +111,7 @@
 		AB3DA22718B0605900B0EE1D /* OMBActivityViewFullScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3DA22618B0605900B0EE1D /* OMBActivityViewFullScreen.m */; };
 		AB449872189AEFFF00979B3B /* OMBLoginSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */; };
 		AB44FBC118358DA400F07747 /* OMBResidencePartialView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB44FBC018358DA400F07747 /* OMBResidencePartialView.m */; };
+		AB4981011992BF6500976AFC /* OMBSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4981001992BF6500976AFC /* OMBSessionManager.m */; };
 		AB4ED2D4188222C8009AFB01 /* OMBResidenceImageUpdateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4ED2D3188222C8009AFB01 /* OMBResidenceImageUpdateConnection.m */; };
 		AB4ED2D7188230A4009AFB01 /* OMBResidenceUpdateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4ED2D6188230A4009AFB01 /* OMBResidenceUpdateConnection.m */; };
 		AB4ED2DA18845DEF009AFB01 /* OMBOpenHouse.m in Sources */ = {isa = PBXBuildFile; fileRef = AB4ED2D918845DEF009AFB01 /* OMBOpenHouse.m */; };
@@ -745,6 +746,8 @@
 		AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBLoginSignUpView.m; sourceTree = "<group>"; };
 		AB44FBBF18358DA400F07747 /* OMBResidencePartialView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidencePartialView.h; sourceTree = "<group>"; };
 		AB44FBC018358DA400F07747 /* OMBResidencePartialView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidencePartialView.m; sourceTree = "<group>"; };
+		AB4980FF1992BF6500976AFC /* OMBSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSessionManager.h; sourceTree = "<group>"; };
+		AB4981001992BF6500976AFC /* OMBSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSessionManager.m; sourceTree = "<group>"; };
 		AB4ED2D2188222C8009AFB01 /* OMBResidenceImageUpdateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceImageUpdateConnection.h; sourceTree = "<group>"; };
 		AB4ED2D3188222C8009AFB01 /* OMBResidenceImageUpdateConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceImageUpdateConnection.m; sourceTree = "<group>"; };
 		AB4ED2D5188230A4009AFB01 /* OMBResidenceUpdateConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceUpdateConnection.h; sourceTree = "<group>"; };
@@ -1780,6 +1783,15 @@
 			path = LEffectLabel;
 			sourceTree = "<group>";
 		};
+		AB4980FE1992B57200976AFC /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				AB4980FF1992BF6500976AFC /* OMBSessionManager.h */,
+				AB4981001992BF6500976AFC /* OMBSessionManager.m */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
 		AB4ED2E118847772009AFB01 /* Open Houses */ = {
 			isa = PBXGroup;
 			children = (
@@ -1986,7 +1998,7 @@
 		AB802EA318109E5200E04D11 /* OnMyBlock */ = {
 			isa = PBXGroup;
 			children = (
-				AB72D6BF19661308007FBCA2 /* Objects */,
+				AB4980FE1992B57200976AFC /* Networking */,
 				ABB3C56C1811719B00DD91C9 /* AppDelegate */,
 				AB9B263D1811CB1300E6DAC4 /* Categories */,
 				AB9B264A1811CE5E00E6DAC4 /* Connections */,
@@ -1998,6 +2010,7 @@
 				AB26131B18198E260053A8AA /* Layouts */,
 				AB17AE4318FD183500B6952C /* Map */,
 				AB9B260C1811AA6600E6DAC4 /* Models */,
+				AB72D6BF19661308007FBCA2 /* Objects */,
 				AB00B9C718BD48340050D6F4 /* Protocol */,
 				AB9B26241811AF6C00E6DAC4 /* Stores */,
 				AB802EA418109E5200E04D11 /* Supporting Files */,
@@ -3585,6 +3598,7 @@
 				AB6155CB184F86F600A193C7 /* OMBUserMenu.m in Sources */,
 				AB9B26501811CE8E00E6DAC4 /* OMBPropertiesConnection.m in Sources */,
 				AB8642B918AB43B500995571 /* OMBInformationStepsViewController.m in Sources */,
+				AB4981011992BF6500976AFC /* OMBSessionManager.m in Sources */,
 				DE9A4180194264E40026545C /* OMBResidenceTitleView.m in Sources */,
 				ABF8ECA1182D504E0080B1E2 /* OMBIntroContactView.m in Sources */,
 				ABE2816918694AED00A5D14E /* OMBFavoriteResidenceCell.m in Sources */,

@@ -5,7 +5,22 @@
 
 #import "OMBGroup.h"
 
+// Models
+#import "OMBUser.h"
+
 @implementation OMBGroup
+
+#pragma mark - Accessors
+
+#pragma mark - Getters
+
+- (NSMutableDictionary *)users
+{
+  if (!_users) {
+    _users = [NSMutableDictionary dictionary];
+  }
+  return _users;
+}
 
 #pragma mark - Methods
 
@@ -27,7 +42,7 @@
 
 #pragma mark - Public
 
-- (void) readFromDictionary:(NSDictionary *)dictionary
+- (void)readFromDictionary:(NSDictionary *)dictionary
 {
   // Name
   id name = [dictionary objectForKey:@"name"];
@@ -47,7 +62,22 @@
     self.uid = [uid intValue];
   }
 
-  NSLog(@"%@", dictionary);
+  // Users
+  id users = [dictionary objectForKey:@"users"];
+  if (users != [NSNull null]) {
+    for (NSDictionary *dict in users) {
+      OMBUser *user = [[OMBUser alloc] init];
+      [user readFromDictionary: dict];
+      [self addUser:user];
+    }
+  }
+}
+
+#pragma mark - Private
+
+- (void)addUser:(OMBUser *)user
+{
+  [self.users setObject:user forKey:@(user.uid)];
 }
 
 @end

@@ -6,8 +6,10 @@
 //  Copyright (c) 2014 OnMyBlock. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+// Networking
+#import "OMBSessionManager.h"
 
+// Protocols
 #import "OMBConnectionProtocol.h"
 
 @interface OMBObject : NSObject <OMBConnectionProtocol>

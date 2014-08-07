@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "AFNetworking.h"
 #import "NSError+OnMyBlock.h"
 #import "OMBConnectionProtocol.h"
 #import "OMBObject.h"

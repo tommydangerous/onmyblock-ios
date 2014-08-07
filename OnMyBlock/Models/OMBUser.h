@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 OnMyBlock. All rights reserved.
 //
 
+#import "OMBObject.h"
+
 typedef enum {
   OMBUserOfferTypeAccepted,
   OMBUserOfferTypeReceived
@@ -38,7 +40,7 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 @class OMBRenterApplication;
 @class OMBResidence;
 
-@interface OMBUser : NSObject
+@interface OMBUser : OMBObject
 
 @property (nonatomic, strong) NSString *about;
 @property (nonatomic, strong) NSString *accessToken;
@@ -71,7 +73,6 @@ extern NSString *const OMBOffersRenterAcceptedCountNotification;
 @property (nonatomic, strong) OMBRenterApplication *renterApplication;
 @property (nonatomic, strong) NSMutableDictionary *residences;
 @property (nonatomic, strong) NSMutableDictionary *heightForAboutTextDictionary;
-@property (nonatomic) int uid;
 
 #pragma mark - Methods
 

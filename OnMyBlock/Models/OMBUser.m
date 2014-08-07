@@ -60,7 +60,6 @@
 
 // Categories
 #import "OMBUser+Collections.h"
-#import "OMBUser+Groups.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 
@@ -475,7 +474,7 @@ depositMethod: (BOOL) deposit withCompletion: (void (^) (NSError *error)) block
 
 - (BOOL) compareUser: (OMBUser *) user
 {
-  return _uid == user.uid;
+  return self.uid == user.uid;
 }
 
 - (void) confirmOffer: (OMBOffer *) offer
@@ -607,7 +606,7 @@ withCompletion: (void (^) (NSError *error)) block
   OMBUserCurrentUserInfoConnection *conn =
     [[OMBUserCurrentUserInfoConnection alloc] init];
   conn.completionBlock = ^(NSError *error) {
-    if (_uid && !error) {
+    if (self.uid && !error) {
       [[NSNotificationCenter defaultCenter] postNotificationName:
         OMBUserLoggedInNotification object: nil];
     }
@@ -783,7 +782,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (BOOL) isCurrentUser
 {
-  return _uid == [OMBUser currentUser].uid;
+  return self.uid == [OMBUser currentUser].uid;
 }
 
 - (BOOL) isLandlord
@@ -1177,7 +1176,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   NSInteger userUID = 0;
   if ([dictionary objectForKey: @"id"] != [NSNull null]) {
     userUID = [[dictionary objectForKey: @"id"] intValue];
-    _uid = userUID;
+    self.uid = userUID;
   }
   // Make sure readFromDictionary doesn't overwrite the
   // current user's access token
