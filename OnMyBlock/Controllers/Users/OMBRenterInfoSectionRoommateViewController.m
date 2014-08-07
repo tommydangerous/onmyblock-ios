@@ -193,7 +193,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
   for (OMBGroup *group in [user.groups allValues]) {
     [users addObjectsFromArray: [group.users allValues]];
   }
-  return users;
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"firstName"
+    ascending:YES];
+  return [users sortedArrayUsingDescriptors:@[sort]];
 }
 
 #pragma mark - Private
