@@ -1198,7 +1198,14 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
   else
     _firstName = @"";
   // Image URL
-  NSString *string = [dictionary objectForKey: @"image_url"];
+  NSString *string = @"";
+  if ([dictionary objectForKey:@"image"] != [NSNull null]) {
+    string = [dictionary objectForKey:@"image"];
+  }
+  if ([string length] == 0 &&
+    [dictionary objectForKey:@"image_url"] != [NSNull null]) {
+    string = [dictionary objectForKey:@"image_url"];
+  }
   // If URL is something like this //ombrb-prod.s3.amazonaws.com
   if ([string hasPrefix: @"//"]) {
     string = [@"http:" stringByAppendingString: string];

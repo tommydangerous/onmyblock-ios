@@ -119,23 +119,24 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
 
 #pragma mark - Protocol UITableViewDataSource
 
-- (UITableViewCell *) tableView: (UITableView *) tableView
-cellForRowAtIndexPath: (NSIndexPath *) indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView
+cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   NSUInteger row     = indexPath.row;
   NSUInteger section = indexPath.section;
 
   static NSString *RoommateID = @"RoommateID";
-  OMBRoommateCell *cell = [tableView dequeueReusableCellWithIdentifier:
-    RoommateID];
-  if (!cell)
-    cell = [[OMBRoommateCell alloc] initWithStyle: UITableViewCellStyleDefault
-      reuseIdentifier: RoommateID];
-  [cell loadData: [[self objects] objectAtIndex: row] user: user];
-  // Last row
-  if (row == [self tableView: tableView numberOfRowsInSection: section] - 1) {
-    cell.separatorInset = UIEdgeInsetsMake(0.0f, tableView.frame.size.width,
-      0.0f, 0.0f);
+  OMBRoommateCell *cell = 
+    [tableView dequeueReusableCellWithIdentifier:RoommateID];
+  if (!cell) {
+    cell = [[OMBRoommateCell alloc] initWithStyle:UITableViewCellStyleDefault
+      reuseIdentifier:RoommateID];
+  }
+  [cell loadDataFromUser:[[self objects] objectAtIndex:row]];
+  if (row == [self tableView:tableView numberOfRowsInSection:section] - 1) {
+    cell.separatorInset = UIEdgeInsetsMake(
+      0, CGRectGetWidth(tableView.frame), 0, 0
+    );
   }
   else {
     cell.separatorInset = tableView.separatorInset;
@@ -172,7 +173,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma mark - Public
 
-- (void) addButtonSelected
+- (void)addButtonSelected
 {
   [self presentViewController:
     [[OMBNavigationController alloc] initWithRootViewController:
@@ -180,26 +181,19 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         completion: nil];
 }
 
-- (void) fetchObjects
+- (void)fetchObjects
 {
-  // OMBModelListConnection *conn = 
-  //   [[OMBModelListConnection alloc] initWithResourceName:
-  //     [OMBGroup resourceName] userUID: [OMBUser currentUser].uid];
-  // conn.delegate = self;
-  // conn.completionBlock = ^(NSError *error) {
-  //   // [self hideEmptyLabel: [[self objects] count]];
-  //   [self stopSpinning];
-  // };
-  // [conn start];
-  
-  [[OMBUser currentUser] fetchGroupsWithDelegate:self];
+  [user fetchGroupsWithDelegate:self];
   [self startSpinning];
 }
 
-- (NSArray *) objects
+- (NSArray *)objects
 {
-  return [[self renterApplication] objectsWithModelName:
-    [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES];
+  NSMutableArray *users = [NSMutableArray array];
+  for (OMBGroup *group in [user.groups allValues]) {
+    [users addObjectsFromArray: [group.users allValues]];
+  }
+  return users;
 }
 
 #pragma mark - Private
