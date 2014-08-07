@@ -36,9 +36,9 @@
 
 #pragma mark - Initializer
 
-- (id) initWithUser: (OMBUser *) object
+- (id)initWithUser:(OMBUser *)object
 {
-  if (!(self = [super initWithUser: object])) return nil;
+  if (!(self = [super initWithUser:object])) return nil;
 
   self.title = @"Roommates";
   tagSection = 1;
@@ -54,25 +54,27 @@
 {
   [super viewDidLoad];
 
-  [self setEmptyLabelText: @"When you add a co-applicant, \n"
+  [self setEmptyLabelText:
+    @"When you add a co-applicant, \n"
     @"we will send them an invitation \n"
-    @"to fill out their renter profiles."];
+    @"to fill out their renter profiles."
+  ];
 
-  [addButton setTitle: @"Add Co-applicant" forState: UIControlStateNormal];
-  [addButtonMiddle setTitle: @"Add Co-applicant"
-    forState: UIControlStateNormal];
+  [addButton setTitle:@"Add Co-applicant" forState:UIControlStateNormal];
+  [addButtonMiddle setTitle:@"Add Co-applicant"
+    forState:UIControlStateNormal];
   
   profileDeleteActionSheet = [[UIActionSheet alloc] initWithTitle:nil 
-    delegate:self cancelButtonTitle: @"Cancel" 
-      destructiveButtonTitle: @"View Profile" 
-        otherButtonTitles: @"Delete", nil];
+    delegate:self cancelButtonTitle:@"Cancel" 
+      destructiveButtonTitle:@"View Profile" 
+        otherButtonTitles:@"Delete", nil];
   profileDeleteActionSheet.destructiveButtonIndex = 1;
-  [self.view addSubview: profileDeleteActionSheet];
+  [self.view addSubview:profileDeleteActionSheet];
 }
 
-- (void) viewWillAppear: (BOOL) animated
+- (void)viewWillAppear:(BOOL)animated
 {
-  [super viewWillAppear: animated];
+  [super viewWillAppear:animated];
   key = OMBUserDefaultsRenterApplicationCheckedCoapplicants;
 
   [self fetchObjects];
@@ -97,22 +99,23 @@
 
 #pragma mark - Protocol UIActionSheetDelegate
 
-- (void) actionSheet:(UIActionSheet *)actionSheet 
+- (void)actionSheet:(UIActionSheet *)actionSheet 
 clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-  if(actionSheet == profileDeleteActionSheet){
-    if (buttonIndex == 0){
-      OMBRoommate *roommate =
-        (OMBRoommate *)[[self objects] objectAtIndex: selectedIndexPath.row];
+  if (actionSheet == profileDeleteActionSheet) {
+    // View Profile
+    if (buttonIndex == 0) {
       [self.navigationController pushViewController:
         [[OMBUserDetailViewController alloc] initWithUser:
-          [roommate otherUser: user]] animated: YES];
+          [self userAtIndexPath:selectedIndexPath]] animated:YES];
     }
+    // Delete
     else if (buttonIndex == 1) {
-      [self deleteModelObjectAtIndexPath: selectedIndexPath];
+      [self deleteModelObjectAtIndexPath:selectedIndexPath];
       selectedIndexPath = nil;
     }
-  }else{
+  }
+  else {
     [super actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
   }
 }
@@ -132,7 +135,7 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
     cell = [[OMBRoommateCell alloc] initWithStyle:UITableViewCellStyleDefault
       reuseIdentifier:RoommateID];
   }
-  [cell loadDataFromUser:[[self objects] objectAtIndex:row]];
+  [cell loadDataFromUser:[self userAtIndexPath:indexPath]];
   if (row == [self tableView:tableView numberOfRowsInSection:section] - 1) {
     cell.separatorInset = UIEdgeInsetsMake(
       0, CGRectGetWidth(tableView.frame), 0, 0
@@ -146,25 +149,19 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma mark - Protocol UITableViewDelegate
 
-- (CGFloat) tableView: (UITableView *) tableView
-heightForRowAtIndexPath: (NSIndexPath *) indexPath
+- (CGFloat)tableView:(UITableView *)tableView
+heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   return [OMBRoommateCell heightForCell];
 }
 
-- (void) tableView:(UITableView *)tableView 
+- (void)tableView:(UITableView *)tableView 
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  OMBRoommate *testUser = (OMBRoommate *)
-    [[self objects] objectAtIndex: indexPath.row];
-  
-  if (!testUser.roommate) {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-  }else{
-    selectedIndexPath = indexPath;
-    [profileDeleteActionSheet showInView: self.view];
-    [tableView deselectRowAtIndexPath: indexPath animated: YES];
-  }
+  selectedIndexPath = indexPath;
+  [profileDeleteActionSheet showInView:self.view];
+
+  [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - Methods
@@ -184,7 +181,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)fetchObjects
 {
   [user fetchGroupsWithDelegate:self];
-  [self startSpinning];
+  if ([[self objects] count] == 0) {
+    [self startSpinning];
+  }
 }
 
 - (NSArray *)objects
@@ -210,6 +209,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)reloadTable
 {
   [self.table reloadData];
+}
+
+- (OMBUser *)userAtIndexPath:(NSIndexPath *)indexPath
+{
+  return [[self objects] objectAtIndex:indexPath.row];
 }
 
 @end
