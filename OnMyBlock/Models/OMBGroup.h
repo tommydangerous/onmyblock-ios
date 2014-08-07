@@ -5,10 +5,31 @@
 
 #import "OMBObject.h"
 
+@class OMBUser;
+
+@protocol OMBGroupDelegate
+
+@required
+
+- (void)saveUserFailed:(NSError *)error;
+- (void)saveUserSucceeded;
+
+@end
+
 @interface OMBGroup : OMBObject
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic) NSUInteger ownerId;
 @property (nonatomic, strong) NSMutableDictionary *users;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (void)addUser:(OMBUser *)user;
+- (void)createUserWithDictionary:(NSDictionary *)dictionary 
+accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate;
 
 @end

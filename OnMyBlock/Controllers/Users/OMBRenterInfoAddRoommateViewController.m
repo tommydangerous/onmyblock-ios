@@ -16,9 +16,15 @@
 #import "OMBRenterApplication.h"
 #import "OMBTwoLabelTextFieldCell.h"
 #import "OMBViewControllerContainer.h"
+
+// Models
+#import "OMBGroup.h"
+
+// Categories
+#import "OMBUser+Groups.h"
 #import "UIImage+Resize.h"
 
-@interface OMBRenterInfoAddRoommateViewController ()
+@interface OMBRenterInfoAddRoommateViewController () <OMBGroupDelegate>
 {
   UIButton *facebookButton;
   BOOL isSearching;
@@ -114,6 +120,21 @@
     }
   }
   [searchTableView reloadData];
+}
+
+#pragma mark - Protocol OMBGroupDelegate
+
+- (void)saveUserFailed:(NSError *)error
+{
+  [self showAlertViewWithError:error];
+  [self cancel];
+  [self containerStopSpinning];
+}
+
+- (void)saveUserSucceeded
+{
+  [self cancel];
+  [self containerStopSpinning];
 }
 
 #pragma mark - Protocol UITableViewDataSource
@@ -418,21 +439,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
-- (void) save
+- (OMBGroup *)group
 {
-  [super save];
-  [[self renterApplication] createModelConnection: modelObject
-    delegate: modelObject completion: ^(NSError *error) {
-      if (error) {
-        [self showAlertViewWithError: error];
-      }
-      else {
-        [[self renterApplication] addModel: modelObject];
-        [self cancel];
-      }
-      isSaving = NO;
-      [self containerStopSpinning];
-    }];
+  return [[self user] primaryGroup];
+}
+
+- (void)save
+{
+  [self.view endEditing:YES];
+  [[self group] createUserWithDictionary:valueDictionary
+    accessToken:[self user].accessToken delegate:self];
   [self containerStartSpinning];
 }
 
@@ -452,11 +468,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   [searchFacebookFriendsConnection start];
 }
 
-- (void) setupForSearching: (BOOL) setup
+- (void)setupForSearching:(BOOL)setup
 {
-  isSearching = setup;
+  isSearching              = setup;
   self.table.scrollEnabled = !setup;
-  searchTableView.hidden = !setup;
+  searchTableView.hidden   = !setup;
 }
 
 - (NSArray *) sortedSearchResultsDictionaryKeys
@@ -465,7 +481,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     @selector(localizedCaseInsensitiveCompare:)];
 }
 
-- (void) textFieldDidChange: (TextFieldPadding *) textField
+- (void)textFieldDidChange:(TextFieldPadding *)textField
 {
   NSInteger row = textField.indexPath.row;
   NSString *string = textField.text;
@@ -497,7 +513,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
-- (OMBUser *) user
+- (OMBUser *)user
 {
   return [OMBUser currentUser];
 }

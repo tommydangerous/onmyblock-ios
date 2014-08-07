@@ -37,6 +37,11 @@
   }];
 }
 
+- (OMBGroup *)primaryGroup
+{
+  return [[self.groups allValues] firstObject];
+}
+
 #pragma mark - Private
 
 - (void)readFromGroupsDictionary:(id)dictionary

@@ -27,5 +27,6 @@
 
 - (void)addGroup:(OMBGroup *)group;
 - (void)fetchGroupsWithDelegate:(id<OMBUserGroupsDelegate>)delegate;
+- (OMBGroup *)primaryGroup;
 
 @end

@@ -42,6 +42,11 @@
 
 #pragma mark - Public
 
+- (void)addUser:(OMBUser *)user
+{
+  [self.users setObject:user forKey:@(user.uid)];
+}
+
 - (void)readFromDictionary:(NSDictionary *)dictionary
 {
   // Name
@@ -73,11 +78,22 @@
   }
 }
 
-#pragma mark - Private
-
-- (void)addUser:(OMBUser *)user
+- (void)createUserWithDictionary:(NSDictionary *)dictionary 
+accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate
 {
-  [self.users setObject:user forKey:@(user.uid)];
+  OMBSessionManager *manager = [OMBSessionManager sharedManager];
+  [manager POST:@"groups/add_user" parameters:@{
+    @"access_token": accessToken,
+    @"email":        [dictionary objectForKey:@"email"],
+    @"first_name":   [dictionary objectForKey:@"firstName"],
+    @"last_name":    [dictionary objectForKey:@"lastName"]
+  } success:^(NSURLSessionDataTask *task, id responseObject) {
+    [self readFromDictionary:responseObject];
+    [delegate saveUserSucceeded];
+    NSLog(@"%@", self.users);
+  } failure:^(NSURLSessionDataTask *task, NSError *error) {
+    [delegate saveUserFailed:error];
+  }];
 }
 
 @end
