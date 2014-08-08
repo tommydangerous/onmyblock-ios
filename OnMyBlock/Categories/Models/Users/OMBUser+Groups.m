@@ -43,12 +43,7 @@
 
 - (OMBGroup *)primaryGroup
 {
-  OMBGroup *group = [[self.groups allValues] firstObject];
-  if (!group) {
-    [self fetchGroupsWithDelegate:nil];
-    group = [[OMBGroup alloc] init];
-  }
-  return group;
+  return [[self.groups allValues] firstObject];
 }
 
 #pragma mark - Private

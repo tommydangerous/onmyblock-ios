@@ -49,6 +49,19 @@
 
 #pragma mark - Instance Methods
 
+#pragma mark - Private
+
+- (void)addSentApplication:(OMBSentApplication *)sentApplication
+{
+  [self.sentApplications setObject:sentApplication 
+    forKey:@(sentApplication.uid)];
+}
+
+- (void)removeUser:(OMBUser *)user
+{
+  [self.users removeObjectForKey:@(user.uid)];
+}
+
 #pragma mark - Public
 
 - (void)addUser:(OMBUser *)user
@@ -96,7 +109,7 @@ accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate
     @"residence_id":   dictionary[@"residenceId"]
   } success:^(NSURLSessionDataTask *task, id responseObject) {
     OMBSentApplication *sentApplication = [[OMBSentApplication alloc] init];
-    [sentApplication readFromDictionary: responseObject];
+    [sentApplication readFromDictionary:responseObject];
     [self addSentApplication:sentApplication];
     if ([delegate respondsToSelector:
       @selector(createSentApplicationSucceeded)]) {
@@ -156,17 +169,37 @@ delegate:(id<OMBGroupDelegate>)delegate
   }];
 }
 
-#pragma mark - Private
-
-- (void)addSentApplication:(OMBSentApplication *)sentApplication
+- (void)fetchSentApplicationsWithAccessToken:(NSString *)accessToken
+delegate:(id<OMBGroupDelegate>)delegate
 {
-  [self.sentApplications setObject:sentApplication 
-    forKey:@(sentApplication.uid)];
+  NSString *urlString = 
+    [NSString stringWithFormat:@"groups/%i/sent-applications", self.uid];
+
+  [[self sessionMananger] GET:urlString parameters:@{
+    @"access_token": accessToken
+  } success:^(NSURLSessionDataTask *task, id responseObject) {
+    for (NSDictionary *dict in responseObject[@"objects"]) {
+      OMBSentApplication *sentApp = [[OMBSentApplication alloc] init];
+      [sentApp readFromDictionary:dict];
+      [self addSentApplication:sentApp];
+    }
+    if ([delegate respondsToSelector:
+      @selector(fetchSentApplicationsSucceeded)]) {
+      [delegate fetchSentApplicationsSucceeded];
+    }
+  } failure:^(NSURLSessionDataTask *task, NSError *error) {
+    if ([delegate respondsToSelector:@selector(fetchSentApplicationsFailed:)]) {
+      [delegate fetchSentApplicationsFailed:error];
+    }
+  }];
 }
 
-- (void)removeUser:(OMBUser *)user
+- (NSArray *)sentApplicationsSortedByCreatedAt
 {
-  [self.users removeObjectForKey:@(user.uid)];
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"createdAt"
+    ascending:NO];
+  return [[self.sentApplications allValues] sortedArrayUsingDescriptors:
+    @[sort]];
 }
 
 @end

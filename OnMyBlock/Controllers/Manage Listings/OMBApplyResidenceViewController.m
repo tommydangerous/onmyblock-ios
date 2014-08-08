@@ -36,7 +36,8 @@
 // Models
 #import "OMBGroup.h"
 
-@interface OMBApplyResidenceViewController () <OMBGroupDelegate>
+@interface OMBApplyResidenceViewController () 
+<OMBGroupDelegate, OMBUserGroupsDelegate>
 {
   OMBAlertViewBlur *alertBlur;
   OMBActivityViewFullScreen *activityView;
@@ -220,6 +221,16 @@
   [self trackApplicationSubmitted];
 
   [self containerStopSpinningFullScreen];
+}
+
+- (void)groupsFetchedSucceeded
+{
+  [self submitApplication];
+}
+
+- (void)groupsFetchedFailed:(NSError *)error
+{
+  [self showAlertViewWithError:error];
 }
 
 #pragma mark - Protocol UITableViewDataSource
@@ -545,7 +556,12 @@ completion: (void (^) (NSError *error)) block
   
   // Submit Application ?
   if (shouldSubmit) {
-    [self submitApplication];
+    if ([[self currentUser] primaryGroup]) {
+      [self submitApplication];
+    }
+    else {
+      [[self currentUser] fetchGroupsWithDelegate:self];
+    }
   }
   else {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: title

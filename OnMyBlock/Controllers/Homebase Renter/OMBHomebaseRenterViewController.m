@@ -10,9 +10,11 @@
 
 // Categories
 #import "NSString+Extensions.h"
+#import "OMBUser+Groups.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 // Models
+#import "OMBGroup.h"
 #import "OMBOffer.h"
 #import "OMBRenterApplication.h"
 // Protocols
@@ -36,6 +38,8 @@ static const CGFloat ViewForHeaderHeight           = 13.0f * 2;
 @interface OMBHomebaseRenterViewController ()
 <
   OMBConnectionProtocol,
+  OMBGroupDelegate,
+  OMBUserGroupsDelegate,
   UIScrollViewDelegate,
   UITableViewDataSource,
   UITableViewDelegate
@@ -124,15 +128,19 @@ static const CGFloat ViewForHeaderHeight           = 13.0f * 2;
   [self.view addSubview: activityViewFullScreen];
 }
 
-- (void) viewWillAppear: (BOOL) animated
+- (void)viewDidAppear:(BOOL)animated
 {
-  [super viewWillAppear: animated];
+  [super viewDidAppear:animated];
 
-  // Refresh the blur views with image
   UIImage *backgroundImage = 
-    [UIImage imageNamed: @"intro_still_image_slide_2_background.jpg"];
-  [backgroundBlurView refreshWithImage: backgroundImage];
-  [backView refreshWithImage: backgroundImage];
+    [UIImage imageNamed:@"intro_still_image_slide_2_background.jpg"];
+  [backgroundBlurView refreshWithImage:backgroundImage];
+  [backView refreshWithImage:backgroundImage];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+  [super viewWillAppear:animated];
   
   if ([[self user] loggedIn]) {
     [self fetchSentApplications];
@@ -146,7 +154,7 @@ static const CGFloat ViewForHeaderHeight           = 13.0f * 2;
 
 #pragma mark - Private
 
-- (void) fetchMovedIn
+- (void)fetchMovedIn
 {
   [[self user] fetchMovedInWithCompletion:
     ^(NSError *error) {
@@ -155,27 +163,38 @@ static const CGFloat ViewForHeaderHeight           = 13.0f * 2;
   ];
 }
 
-- (void) fetchSentApplications
+- (void)fetchSentApplications
 {
-  [[self user].renterApplication fetchSentApplicationsWithDelegate: 
-    nil completion: ^(NSError *error) {
-      [self.table reloadData];
-    }
-  ];
+  if ([self primaryGroup]) {
+    [self fetchSentApplicationsForGroup];
+  }
+  else {
+    [[self user] fetchGroupsWithDelegate:self];
+  }
 }
 
-- (NSArray *) movedIn
+- (void)fetchSentApplicationsForGroup
+{
+  [[self primaryGroup] fetchSentApplicationsWithAccessToken:
+    [self user].accessToken delegate:self];
+}
+
+- (NSArray *)movedIn
 {
   return [[OMBUser currentUser].movedIn allValues];
 }
 
-- (NSArray *) sentApplications
+- (OMBGroup *)primaryGroup
 {
-  return [[self user].renterApplication
-     sentApplicationsSortedByKey: @"createdAt" ascending: NO];
+  return [[self user] primaryGroup];
 }
 
-- (void) showHowItWorksForSentApplications
+- (NSArray *)sentApplications
+{
+  return [[self primaryGroup] sentApplicationsSortedByCreatedAt];
+}
+
+- (void)showHowItWorksForSentApplications
 {
   NSString *info1 = [NSString stringWithFormat:
     @"Find a property that’s right for you and apply! "
@@ -211,24 +230,48 @@ static const CGFloat ViewForHeaderHeight           = 13.0f * 2;
     vc animated: YES ];
 }
 
-- (OMBUser *) user
+- (OMBUser *)user
 {
   return [OMBUser currentUser];
 }
 
 #pragma mark - Protocol
 
+#pragma mark - Protocol OMBGroupDelegate
+
+- (void)fetchSentApplicationsFailed:(NSError *)error
+{
+  [self showAlertViewWithError:error];
+}
+
+- (void)fetchSentApplicationsSucceeded
+{
+  [self.table reloadData];
+}
+
+#pragma mark - Protocol OMBUserGroupsDelegate
+
+- (void)groupsFetchedFailed:(NSError *)error
+{
+  [self showAlertViewWithError:error];
+}
+
+- (void)groupsFetchedSucceeded
+{
+  [self fetchSentApplicationsForGroup];
+}
+
 #pragma mark - UITableViewDataSource
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
   // Sent applications
   // Moved in
   return 2;
 }
 
-- (UITableViewCell *) tableView: (UITableView *) tableView
-cellForRowAtIndexPath: (NSIndexPath *) indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView
+cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   static NSString *EmptyID = @"EmptyID";
   UITableViewCell *emptyCell = [tableView dequeueReusableCellWithIdentifier:
@@ -276,8 +319,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
             SentApplicationCellIdentifier];
         cell.backgroundColor = cellBackgroundColor;
       }
-      [cell loadInfo: 
-        [[self sentApplications] objectAtIndex: row - 1]];
+      [cell loadInfo:[[self sentApplications] objectAtIndex:row - 1]];
       cell.clipsToBounds = YES;
       return cell;
     }
@@ -328,12 +370,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   return emptyCell;
 }
 
-- (NSInteger) tableView: (UITableView *) tableView
-numberOfRowsInSection: (NSInteger) section
+- (NSInteger)tableView: (UITableView *)tableView
+numberOfRowsInSection:(NSInteger)section
 {
   // Sent applications
   if (section == OMBHomebaseRenterSectionSentApplications) {
-    return 1 + [self sentApplications].count;
+    return 1 + [[self primaryGroup].sentApplications count];
   }
   // Move in
   else if (section == OMBHomebaseRenterSectionMovedIn) {
@@ -344,8 +386,8 @@ numberOfRowsInSection: (NSInteger) section
 
 #pragma mark - UITableViewDelegate
 
-- (void) tableView: (UITableView *) tableView
-didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   NSUInteger row     = indexPath.row;
   NSUInteger section = indexPath.section;

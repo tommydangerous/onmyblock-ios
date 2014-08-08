@@ -15,6 +15,8 @@
 - (void)createSentApplicationSucceeded;
 - (void)deleteUserFailed:(NSError *)error;
 - (void)deleteUserSucceeded;
+- (void)fetchSentApplicationsFailed:(NSError *)error;
+- (void)fetchSentApplicationsSucceeded;
 - (void)saveUserFailed:(NSError *)error;
 - (void)saveUserSucceeded;
 
@@ -40,5 +42,8 @@ accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate;
 accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate;
 - (void)deleteUser:(OMBUser *)user accessToken:(NSString *)accessToken
 delegate:(id<OMBGroupDelegate>)delegate;
+- (void)fetchSentApplicationsWithAccessToken:(NSString *)accessToken
+delegate:(id<OMBGroupDelegate>)delegate;
+- (NSArray *)sentApplicationsSortedByCreatedAt;
 
 @end
