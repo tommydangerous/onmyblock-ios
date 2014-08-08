@@ -103,7 +103,7 @@
 - (void)createSentApplicationWithDictionary:(NSDictionary *)dictionary
 accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate
 {
-  [[self sessionMananger] POST:@"transaction-process/apply" parameters:@{
+  [[self sessionManager] POST:@"transaction-process/apply" parameters:@{
     @"access_token":   accessToken,
     @"created_source": @"ios",
     @"residence_id":   dictionary[@"residenceId"]
@@ -133,7 +133,7 @@ accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate
   NSString *lastName = [dictionary objectForKey:@"lastName"] ?
     [dictionary objectForKey:@"lastName"] : @"";
     
-  [[self sessionMananger] POST:@"groups/add_user" parameters:@{
+  [[self sessionManager] POST:@"groups/add_user" parameters:@{
     @"access_token":   accessToken,
     @"created_source": @"ios",
     @"email":          email,
@@ -154,7 +154,7 @@ accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate
 - (void)deleteUser:(OMBUser *)user accessToken:(NSString *)accessToken
 delegate:(id<OMBGroupDelegate>)delegate
 {
-  [[self sessionMananger] POST:@"groups/remove_user" parameters:@{
+  [[self sessionManager] POST:@"groups/remove_user" parameters:@{
     @"access_token": accessToken,
     @"user_id":      @(user.uid)
   } success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -172,11 +172,9 @@ delegate:(id<OMBGroupDelegate>)delegate
 - (void)fetchSentApplicationsWithAccessToken:(NSString *)accessToken
 delegate:(id<OMBGroupDelegate>)delegate
 {
-  NSString *urlString = 
-    [NSString stringWithFormat:@"groups/%i/sent-applications", self.uid];
-
-  [[self sessionMananger] GET:urlString parameters:@{
-    @"access_token": accessToken
+  [[self sessionManager] GET:@"groups/sent-applications" parameters:@{
+    @"access_token": accessToken,
+    @"group_id":     @(self.uid)
   } success:^(NSURLSessionDataTask *task, id responseObject) {
     for (NSDictionary *dict in responseObject[@"objects"]) {
       OMBSentApplication *sentApp = [[OMBSentApplication alloc] init];

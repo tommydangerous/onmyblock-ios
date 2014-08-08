@@ -28,6 +28,6 @@
 - (NSString *)modelName;
 - (void)readFromDictionary:(NSDictionary *)dictionary;
 - (NSString *)resourceName;
-- (OMBSessionManager *)sessionMananger;
+- (OMBSessionManager *)sessionManager;
 
 @end

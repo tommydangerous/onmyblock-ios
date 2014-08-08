@@ -453,11 +453,6 @@
     cameFromSettingUpPayoutMethods = NO;
   }
 
-  // Fetch Applicants
-  [self fetchObjectsForResourceName: [OMBRoommate resourceName]];
-
-  // Fetch offer's user's renter application info
-
   // Timer
   [self timerFireMethod: nil];
   countdownTimer = [NSTimer timerWithTimeInterval: 1 target: self
@@ -806,18 +801,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.accessoryType  = UITableViewCellAccessoryDisclosureIndicator;
       cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     }
-    // if is a OMB user
-    if (indexPath.row == 0) {
-      [cell loadDataFromUser: [self user]];
-    }
-    else {
-      OMBRoommate *aux = [[self objects] objectAtIndex: indexPath.row - 1];
-      if (!aux.roommate) {
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      }
-      [cell loadData: [[self objects] objectAtIndex: row - 1] 
-        user: [self user]];
-    }
+    // [cell loadDataFromUser:[self userAtIndexPath:indexPath]];
+    // Remove the bottom separator
     if (indexPath.row == [[self objects] count]) {
       cell.separatorInset = UIEdgeInsetsMake(0.f, 
         CGRectGetWidth(tableView.frame), 0.f, 0.f);

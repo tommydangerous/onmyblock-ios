@@ -32,7 +32,7 @@
 
 #pragma mark - Public
 
-- (NSInteger) numberOfMonthsBetweenMovingDates
+- (NSInteger)numberOfMonthsBetweenMovingDates
 {
   NSCalendar *calendar = [NSCalendar currentCalendar];
   NSUInteger unitFlags = (NSDayCalendarUnit | NSMonthCalendarUnit |
@@ -54,7 +54,7 @@
   return moveOutMonth - moveInMonth;
 }
 
-- (OMBSentApplicationStatus) status
+- (OMBSentApplicationStatus)status
 {
   // Paid
   if (self.paid) {

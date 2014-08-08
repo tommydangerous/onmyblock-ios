@@ -10,6 +10,7 @@
 
 // Categories
 #import "NSString+Extensions.h"
+#import "OMBSentApplication+Group.h"
 #import "UIColor+Extensions.h"
 // Models
 #import "OMBOffer.h"
@@ -21,6 +22,7 @@
 #import "OMBNavigationController.h"
 
 @interface OMBSentApplicationDetailViewController ()
+<OMBSentApplicationGroupDelegate>
 {
   OMBSentApplication *sentApplication;
 }
@@ -31,7 +33,7 @@
 
 #pragma mark - Initializer
 
-- (id) initWithSentApplication: (OMBSentApplication *) object
+- (id)initWithSentApplication:(OMBSentApplication *)object
 {
   if (!(self = [super init])) return nil;
 
@@ -68,10 +70,8 @@
 
 #pragma mark - UIViewController
 
-- (void) loadView
+- (void)viewDidLoad
 {
-  [super loadView];
-
   // Info button in the navigation bar
   UIButton *infoButton = [UIButton new];
   infoButton.frame = CGRectMake(0.0f, 0.0f, 26.0f, 26.0f);
@@ -93,58 +93,58 @@
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
-
+  [self fetchGroup];
   [self updateRespondView];
 }
 
 #pragma mark - OMBOfferInquiryViewController
 
-- (NSTimeInterval) moveInDate
+- (NSTimeInterval)moveInDate
 {
   return sentApplication.moveInDate;
 }
 
-- (NSTimeInterval) moveOutDate
+- (NSTimeInterval)moveOutDate
 {
   return sentApplication.moveOutDate;
 }
 
-- (NSInteger) numberOfMonthsBetweenMovingDates
+- (NSInteger)numberOfMonthsBetweenMovingDates
 {
   return [sentApplication numberOfMonthsBetweenMovingDates];
 }
 
-- (BOOL) isAccepted
+- (BOOL)isAccepted
 {
   return sentApplication.accepted;
 }
 
-- (BOOL) isCancelled
+- (BOOL)isCancelled
 {
   return sentApplication.cancelled;
 }
 
-- (BOOL) isDeclined
+- (BOOL)isDeclined
 {
   return sentApplication.declined;
 }
 
-- (BOOL) isPaid
+- (BOOL)isPaid
 {
   return sentApplication.paid;
 }
 
-- (CGFloat) rentAmount
+- (CGFloat)rentAmount
 {
   return sentApplication.residence.minRent;
 }
 
-- (OMBResidence *) residence
+- (OMBResidence *)residence
 {
   return sentApplication.residence;
 }
 
-- (void) setupSizeForRememberDetails
+- (void)setupSizeForRememberDetails
 {
   switch ([sentApplication status]) {
     case OMBSentApplicationStatusPaid: {
@@ -180,7 +180,7 @@
       9999.f) font: [UIFont smallTextFont]].size;
 }
 
-- (void) showContact
+- (void)showContact
 {
   if (sentApplication.residence) {
     if (sentApplication.residence.user) {
@@ -196,7 +196,7 @@
   }
 }
 
-- (void) updateRespondView
+- (void)updateRespondView
 {
   switch ([sentApplication status]) {
     case OMBSentApplicationStatusPaid: {
@@ -228,7 +228,13 @@
 
 #pragma mark - Private
 
-- (void) showInfo
+- (void)fetchGroup
+{
+  [sentApplication fetchGroupWithAccessToken:[self user].accessToken
+    delegate:self];
+}
+
+- (void)showInfo
 {
   NSString *info1 = [NSString stringWithFormat:
     @"Find a property that’s right for you and apply! "
@@ -267,12 +273,24 @@
     vc animated: YES ];
 }
 
-- (OMBUser *) user
+- (OMBUser *)user
 {
   return [OMBUser currentUser];
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol OMBSentApplicationGroupDelegate
+
+- (void)fetchGroupSucceeded
+{
+  !!!
+}
+
+- (void)fetchGroupFailed:(NSError *)error
+{
+  [self showAlertViewWithError:error];
+}
 
 #pragma mark - Protocol UITableViewDataSource
 

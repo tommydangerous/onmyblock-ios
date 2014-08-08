@@ -171,7 +171,9 @@ static const CGFloat ViewForHeaderHeight           = 13.0f * 2;
   else {
     [[self user] fetchGroupsWithDelegate:self];
   }
-  [self containerStartSpinning];
+  if (![[self primaryGroup].sentApplications count]) {
+    [self containerStartSpinning];
+  }
 }
 
 - (void)fetchSentApplicationsForGroup

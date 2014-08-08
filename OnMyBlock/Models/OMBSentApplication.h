@@ -8,6 +8,7 @@
 
 #import "OMBObject.h"
 
+@class OMBGroup;
 @class OMBResidence;
 
 typedef NS_ENUM(NSInteger, OMBSentApplicationStatus) {
@@ -34,8 +35,9 @@ typedef NS_ENUM(NSInteger, OMBSentApplicationStatus) {
 @property (nonatomic) NSTimeInterval updatedAt;
 
 // iOS
+@property (nonatomic, strong) OMBGroup *group;
 @property (nonatomic) BOOL paid;
-@property (strong, nonatomic) OMBResidence *residence;
+@property (nonatomic, strong) OMBResidence *residence;
 
 #pragma mark - Methods
 

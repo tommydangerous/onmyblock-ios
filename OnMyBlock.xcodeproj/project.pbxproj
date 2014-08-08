@@ -108,6 +108,7 @@
 		AB3396FB18AD52FC00F49064 /* OMBInformationHowItWorksCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3396FA18AD52FC00F49064 /* OMBInformationHowItWorksCell.m */; };
 		AB33970A18AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB33970918AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m */; };
 		AB33970D18AE91D000F49064 /* OMBMyRenterProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB33970C18AE91D000F49064 /* OMBMyRenterProfileViewController.m */; };
+		AB37205A19958F9700ED0779 /* OMBSentApplication+Group.m in Sources */ = {isa = PBXBuildFile; fileRef = AB37205919958F9700ED0779 /* OMBSentApplication+Group.m */; };
 		AB3DA22718B0605900B0EE1D /* OMBActivityViewFullScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3DA22618B0605900B0EE1D /* OMBActivityViewFullScreen.m */; };
 		AB449872189AEFFF00979B3B /* OMBLoginSignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB449871189AEFFF00979B3B /* OMBLoginSignUpView.m */; };
 		AB44FBC118358DA400F07747 /* OMBResidencePartialView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB44FBC018358DA400F07747 /* OMBResidencePartialView.m */; };
@@ -740,6 +741,8 @@
 		AB33970918AD8B2E00F49064 /* OMBMessagesLastFetchedWithUserConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMessagesLastFetchedWithUserConnection.m; sourceTree = "<group>"; };
 		AB33970B18AE91D000F49064 /* OMBMyRenterProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMyRenterProfileViewController.h; sourceTree = "<group>"; };
 		AB33970C18AE91D000F49064 /* OMBMyRenterProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMyRenterProfileViewController.m; sourceTree = "<group>"; };
+		AB37205819958F9700ED0779 /* OMBSentApplication+Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OMBSentApplication+Group.h"; sourceTree = "<group>"; };
+		AB37205919958F9700ED0779 /* OMBSentApplication+Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OMBSentApplication+Group.m"; sourceTree = "<group>"; };
 		AB3DA22518B0605900B0EE1D /* OMBActivityViewFullScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBActivityViewFullScreen.h; sourceTree = "<group>"; };
 		AB3DA22618B0605900B0EE1D /* OMBActivityViewFullScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBActivityViewFullScreen.m; sourceTree = "<group>"; };
 		AB449870189AEFFF00979B3B /* OMBLoginSignUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBLoginSignUpView.h; sourceTree = "<group>"; };
@@ -1629,6 +1632,7 @@
 		9D8BEA631BA8DCFDEE32080C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				AB37205719958F7600ED0779 /* SentApplications */,
 				9D8BE8EA364C6B944751587A /* Users */,
 			);
 			path = Models;
@@ -1781,6 +1785,15 @@
 				AB2EA4C718A9E79700ACE53C /* LEffectLabel.m */,
 			);
 			path = LEffectLabel;
+			sourceTree = "<group>";
+		};
+		AB37205719958F7600ED0779 /* SentApplications */ = {
+			isa = PBXGroup;
+			children = (
+				AB37205819958F9700ED0779 /* OMBSentApplication+Group.h */,
+				AB37205919958F9700ED0779 /* OMBSentApplication+Group.m */,
+			);
+			path = SentApplications;
 			sourceTree = "<group>";
 		};
 		AB4980FE1992B57200976AFC /* Networking */ = {
@@ -1998,7 +2011,6 @@
 		AB802EA318109E5200E04D11 /* OnMyBlock */ = {
 			isa = PBXGroup;
 			children = (
-				AB4980FE1992B57200976AFC /* Networking */,
 				ABB3C56C1811719B00DD91C9 /* AppDelegate */,
 				AB9B263D1811CB1300E6DAC4 /* Categories */,
 				AB9B264A1811CE5E00E6DAC4 /* Connections */,
@@ -2010,6 +2022,7 @@
 				AB26131B18198E260053A8AA /* Layouts */,
 				AB17AE4318FD183500B6952C /* Map */,
 				AB9B260C1811AA6600E6DAC4 /* Models */,
+				AB4980FE1992B57200976AFC /* Networking */,
 				AB72D6BF19661308007FBCA2 /* Objects */,
 				AB00B9C718BD48340050D6F4 /* Protocol */,
 				AB9B26241811AF6C00E6DAC4 /* Stores */,
@@ -3614,6 +3627,7 @@
 				AB5DD32C18CE011500237AFC /* OMBAmenityStore.m in Sources */,
 				AB9D611A188CEFDE00C9AC64 /* UIImage+WebP.m in Sources */,
 				DE8E8ECB19085C68005DCB6A /* OMBFacebookUserCell.m in Sources */,
+				AB37205A19958F9700ED0779 /* OMBSentApplication+Group.m in Sources */,
 				ABBA58981870C59700E9BF4E /* ELCImagePickerController.m in Sources */,
 				ABB70079187BA9B9005F0730 /* OMBHomebaseRenterPaymentNotificationCell.m in Sources */,
 				ABB9117418982B330046611F /* OMBRenterProfileViewController.m in Sources */,
