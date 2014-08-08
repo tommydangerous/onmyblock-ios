@@ -171,6 +171,7 @@ static const CGFloat ViewForHeaderHeight           = 13.0f * 2;
   else {
     [[self user] fetchGroupsWithDelegate:self];
   }
+  [self containerStartSpinning];
 }
 
 - (void)fetchSentApplicationsForGroup
@@ -242,11 +243,13 @@ static const CGFloat ViewForHeaderHeight           = 13.0f * 2;
 - (void)fetchSentApplicationsFailed:(NSError *)error
 {
   [self showAlertViewWithError:error];
+  [self containerStopSpinning];
 }
 
 - (void)fetchSentApplicationsSucceeded
 {
   [self.table reloadData];
+  [self containerStopSpinning];
 }
 
 #pragma mark - Protocol OMBUserGroupsDelegate
@@ -254,11 +257,13 @@ static const CGFloat ViewForHeaderHeight           = 13.0f * 2;
 - (void)groupsFetchedFailed:(NSError *)error
 {
   [self showAlertViewWithError:error];
+  [self containerStopSpinning];
 }
 
 - (void)groupsFetchedSucceeded
 {
   [self fetchSentApplicationsForGroup];
+  [self containerStopSpinning];
 }
 
 #pragma mark - UITableViewDataSource
@@ -396,7 +401,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     if (row != OMBHomebaseRenterSectionSentApplicationsRowEmpty) {
       [self.navigationController pushViewController:
         [[OMBSentApplicationDetailViewController alloc] initWithSentApplication:
-          [[self sentApplications] objectAtIndex: row - 1]] animated: YES];
+          [[self sentApplications] objectAtIndex:row - 1]] animated:YES];
     }
   }
   // Moved in
