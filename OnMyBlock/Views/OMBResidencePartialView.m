@@ -160,12 +160,13 @@ NSString *const OMBEmptyResidencePartialViewCell =
 
   
   // Rented banner
-  heightRentedBanner = 25.f;
+  heightRentedBanner = 28.f;
   CGRect rentedRect = CGRectMake(0.0f,
     self.frame.size.height - heightRentedBanner,
       screenWidth, heightRentedBanner);
   rentedBanner = [[OMBRentedBannerView alloc] initWithFrame:rentedRect];
   rentedBanner.hidden = YES;
+  rentedBanner.rentedLabel.font = [UIFont normalTextFontBold];
   [self addSubview:rentedBanner];
   
   return self;
