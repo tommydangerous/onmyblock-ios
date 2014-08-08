@@ -1200,27 +1200,14 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
-- (void) criteriaApplyNow
+- (void)criteriaApplyNow
 {
-  // Show the 
-  BOOL showApplyNow = YES;
-  BOOL hasSentApp = NO;
+  BOOL hasSentApp   = NO;
+  BOOL showApplyNow = residence.isAuction;
   
   // If user has sent an application
   if ([[OMBUser currentUser] loggedIn] && residence.sentApplication) {
     hasSentApp   = YES;
-    showApplyNow = NO;
-  }
-  // Is a sublet
-  else if ([residence isSublet]) {
-    showApplyNow = NO;
-  }
-  // If rent it now is true
-  else if (residence.rentItNow) {
-    showApplyNow = NO;
-  }
-  // If minRent is less than or equal to Offer price threshold
-  else if (![residence isAboveThreshold]) {
     showApplyNow = NO;
   }
   
@@ -1240,13 +1227,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       title = @"Book It";
       selector = @selector(showPlaceOffer);
     }
-    
-    [_bookItButton setTitle: title forState: UIControlStateNormal];
     [_bookItButton addTarget: self action: selector
       forControlEvents: UIControlEventTouchUpInside];
+    [_bookItButton setTitle: title forState: UIControlStateNormal];
     
     // If residence is already rented
-    if(residence.rented){
+    if (residence.rented) {
       _bookItButton.layer.opacity = 0.6;
       _bookItButton.enabled = NO;
     }

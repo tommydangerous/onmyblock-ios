@@ -27,10 +27,16 @@
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 
+// Categories
+#import "OMBUser+Groups.h"
+
 // Connections
 #import "OMBSentApplicationRequirementsConnection.h"
 
-@interface OMBApplyResidenceViewController ()
+// Models
+#import "OMBGroup.h"
+
+@interface OMBApplyResidenceViewController () <OMBGroupDelegate>
 {
   OMBAlertViewBlur *alertBlur;
   OMBActivityViewFullScreen *activityView;
@@ -185,6 +191,37 @@
   }
 }
 
+#pragma mark - Protocol OMBGroupDelegate
+
+- (void)createSentApplicationFailed:(NSError *)error
+{
+  [self showAlertViewWithError: error];
+  [self containerStopSpinningFullScreen];
+}
+
+- (void)createSentApplicationSucceeded
+{
+  [alertBlur setTitle:@"Application Submitted!"];
+  [alertBlur setMessage: 
+    @"The landlord will review your application and make a decision. "
+    @"If you have applied with co-applicants make sure they have "
+    @"completed applications as well. Feel free to message the "
+    @"landlord for more information about the property "
+    @"or to schedule a viewing."];
+  [alertBlur setConfirmButtonTitle:@"Okay"];
+  [alertBlur addTargetForConfirmButton:self
+    action:@selector(showHomebaseRenter)];
+  [alertBlur showInView:self.view withDetails:NO];
+
+  [alertBlur hideCloseButton];
+  [alertBlur hideQuestionButton];
+  [alertBlur showOnlyConfirmButton];
+
+  [self trackApplicationSubmitted];
+
+  [self containerStopSpinningFullScreen];
+}
+
 #pragma mark - Protocol UITableViewDataSource
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
@@ -211,7 +248,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (row == OMBMyRenterProfileSectionRenterInfoRowCoapplicants) {
         iconImageName = @"group_icon.png";
         string = @"Co-applicants";
-        if ([[[self renterApplication] roommates] count]) {
+        if ([[user primaryGroup].users count]) {
           fillCheckmark = YES;
         }
       }
@@ -363,6 +400,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 
 #pragma mark - Private
 
+- (OMBUser *)currentUser
+{
+  return [OMBUser currentUser];
+}
+
 - (NSString *) incompleteFieldString
 {
   NSString *string = @"";
@@ -513,34 +555,11 @@ completion: (void (^) (NSError *error)) block
   }
 }
 
-- (void) submitApplication
+- (void)submitApplication
 {
-  [[self renterApplication] createSentApplicationForResidenceUID: residence.uid
-    completion: ^(NSError *error) {
-      if (error) {
-        [self showAlertViewWithError: error];
-      }
-      else {
-        [alertBlur setTitle: @"Application Submitted!"];
-        [alertBlur setMessage: 
-          @"The landlord will review your application and make a decision. "
-          @"If you have applied with co-applicants make sure they have "
-          @"completed applications as well. Feel free to message the "
-          @"landlord for more information about the property "
-          @"or to schedule a viewing."];
-        [alertBlur setConfirmButtonTitle: @"Okay"];
-        [alertBlur addTargetForConfirmButton: self
-          action: @selector(showHomebaseRenter)];
-        [alertBlur showInView: self.view withDetails: NO];
-
-        [alertBlur hideCloseButton];
-        [alertBlur hideQuestionButton];
-        [alertBlur showOnlyConfirmButton];
-
-        [self trackApplicationSubmitted];
-      }
-      [self containerStopSpinningFullScreen];
-    }];
+  [[[self currentUser] primaryGroup] createSentApplicationWithDictionary:@{
+    @"residenceId": @(residence.uid)
+  } accessToken:[self currentUser].accessToken delegate:self];
   [self containerStartSpinningFullScreen];
 }
 

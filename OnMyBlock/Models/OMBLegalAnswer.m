@@ -20,7 +20,12 @@
     _answer = YES;
   else
     _answer = NO;
-  _explanation = [dictionary objectForKey: @"explanation"];
+
+  id explanation = [dictionary objectForKey: @"explanation"];
+  if (explanation != [NSNull null]) {
+    self.explanation = [dictionary objectForKey: @"explanation"];
+  }
+  
   _legalQuestionID = [[dictionary objectForKey: @"legal_question_id"] intValue];
   _uid = [[dictionary objectForKey: @"id"] intValue];
 }

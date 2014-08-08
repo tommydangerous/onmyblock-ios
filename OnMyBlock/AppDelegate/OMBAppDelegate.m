@@ -117,7 +117,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   else
     [self.container showDiscover];
 
-  [self.container showAccount];
+  // [self.container showAccount];
 
   // Handle push notification
   // Extract the notification data

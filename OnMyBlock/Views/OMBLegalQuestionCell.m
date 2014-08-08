@@ -233,7 +233,8 @@ atIndexPathForOtherUser: (NSIndexPath *) indexPath
       [self yesButtonHighlighted];
     else
       [self noButtonHighlighted];
-    if ([[_legalAnswer.explanation stripWhiteSpace] length] > 0) {
+    if (_legalAnswer.explanation &&
+        [[_legalAnswer.explanation stripWhiteSpace] length] > 0) {
       _explanationTextView.text      = _legalAnswer.explanation;
       _explanationTextView.textColor = [UIColor textColor];
     }

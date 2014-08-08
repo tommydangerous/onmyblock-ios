@@ -6,6 +6,7 @@
 #import "OMBGroup.h"
 
 // Models
+#import "OMBSentApplication.h"
 #import "OMBUser.h"
 
 @implementation OMBGroup
@@ -13,6 +14,14 @@
 #pragma mark - Accessors
 
 #pragma mark - Getters
+
+- (NSMutableDictionary *)sentApplications
+{
+  if (!_sentApplications) {
+    _sentApplications = [NSMutableDictionary dictionary];
+  }
+  return _sentApplications;
+}
 
 - (NSMutableDictionary *)users
 {
@@ -78,6 +87,29 @@
   }
 }
 
+- (void)createSentApplicationWithDictionary:(NSDictionary *)dictionary
+accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate
+{
+  [[self sessionMananger] POST:@"transaction-process/apply" parameters:@{
+    @"access_token":   accessToken,
+    @"created_source": @"ios",
+    @"residence_id":   dictionary[@"residenceId"]
+  } success:^(NSURLSessionDataTask *task, id responseObject) {
+    OMBSentApplication *sentApplication = [[OMBSentApplication alloc] init];
+    [sentApplication readFromDictionary: responseObject];
+    [self addSentApplication:sentApplication];
+    if ([delegate respondsToSelector:
+      @selector(createSentApplicationSucceeded)]) {
+      [delegate createSentApplicationSucceeded];
+    }
+  } failure:^(NSURLSessionDataTask *task, NSError *error) {
+    if ([delegate respondsToSelector:
+      @selector(createSentApplicationFailed:)]) {
+      [delegate createSentApplicationFailed:error];
+    }
+  }];
+}
+
 - (void)createUserWithDictionary:(NSDictionary *)dictionary 
 accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate
 {
@@ -87,11 +119,13 @@ accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate
     [dictionary objectForKey:@"firstName"] : @"";
   NSString *lastName = [dictionary objectForKey:@"lastName"] ?
     [dictionary objectForKey:@"lastName"] : @"";
+    
   [[self sessionMananger] POST:@"groups/add_user" parameters:@{
-    @"access_token": accessToken,
-    @"email":        email,
-    @"first_name":   firstName,
-    @"last_name":    lastName
+    @"access_token":   accessToken,
+    @"created_source": @"ios",
+    @"email":          email,
+    @"first_name":     firstName,
+    @"last_name":      lastName
   } success:^(NSURLSessionDataTask *task, id responseObject) {
     [self readFromDictionary:responseObject];
     if ([delegate respondsToSelector:@selector(saveUserSucceeded)]) {
@@ -124,7 +158,13 @@ delegate:(id<OMBGroupDelegate>)delegate
 
 #pragma mark - Private
 
-- (void) removeUser:(OMBUser *)user
+- (void)addSentApplication:(OMBSentApplication *)sentApplication
+{
+  [self.sentApplications setObject:sentApplication 
+    forKey:@(sentApplication.uid)];
+}
+
+- (void)removeUser:(OMBUser *)user
 {
   [self.users removeObjectForKey:@(user.uid)];
 }

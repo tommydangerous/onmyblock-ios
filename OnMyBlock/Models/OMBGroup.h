@@ -11,6 +11,8 @@
 
 @optional
 
+- (void)createSentApplicationFailed:(NSError *)error;
+- (void)createSentApplicationSucceeded;
 - (void)deleteUserFailed:(NSError *)error;
 - (void)deleteUserSucceeded;
 - (void)saveUserFailed:(NSError *)error;
@@ -22,6 +24,7 @@
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic) NSUInteger ownerId;
+@property (nonatomic, strong) NSMutableDictionary *sentApplications;
 @property (nonatomic, strong) NSMutableDictionary *users;
 
 #pragma mark - Methods
@@ -31,6 +34,8 @@
 #pragma mark - Public
 
 - (void)addUser:(OMBUser *)user;
+- (void)createSentApplicationWithDictionary:(NSDictionary *)dictionary
+accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate;
 - (void)createUserWithDictionary:(NSDictionary *)dictionary 
 accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate;
 - (void)deleteUser:(OMBUser *)user accessToken:(NSString *)accessToken

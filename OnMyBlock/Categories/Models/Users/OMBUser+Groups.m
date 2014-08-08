@@ -31,15 +31,24 @@
     @"access_token": [OMBUser currentUser].accessToken
   } success:^(NSURLSessionDataTask *task, id responseObject) {
     [self readFromGroupsDictionary:responseObject];
-    [delegate groupsFetchedSucceeded];
+    if ([delegate respondsToSelector:@selector(groupsFetchedSucceeded)]) {
+      [delegate groupsFetchedSucceeded];
+    }
   } failure:^(NSURLSessionDataTask *task, NSError *error) {
-    [delegate groupsFetchedFailed:error];
+    if ([delegate respondsToSelector:@selector(groupsFetchedFailed:)]) {
+      [delegate groupsFetchedFailed:error];
+    }
   }];
 }
 
 - (OMBGroup *)primaryGroup
 {
-  return [[self.groups allValues] firstObject];
+  OMBGroup *group = [[self.groups allValues] firstObject];
+  if (!group) {
+    [self fetchGroupsWithDelegate:nil];
+    group = [[OMBGroup alloc] init];
+  }
+  return group;
 }
 
 #pragma mark - Private

@@ -16,14 +16,16 @@
 
 #pragma mark - Class Methods
 
-+ (NSString *) modelName
+#pragma mark - Public
+
++ (NSString *)modelName
 {
   return @"sent_application";
 }
 
-+ (NSString *) resourceName
++ (NSString *)resourceName
 {
-  return [NSString stringWithFormat: @"%@s", [OMBSentApplication modelName]];
+  return [NSString stringWithFormat:@"%@s", [OMBSentApplication modelName]];
 }
 
 #pragma mark - Instance Methods
@@ -73,7 +75,7 @@
   return OMBSentApplicationStatusPending;
 }
 
-- (void) readFromDictionary: (NSDictionary *) dictionary
+- (void)readFromDictionary:(NSDictionary *)dictionary
 {
   // Sample JSON
   // {
@@ -157,12 +159,12 @@
     self.uid = [uid intValue];
 }
 
-- (NSString *) modelName
+- (NSString *)modelName
 {
   return [OMBSentApplication modelName];
 }
 
-- (NSString *) resourceName
+- (NSString *)resourceName
 {
   return [OMBSentApplication resourceName];
 }

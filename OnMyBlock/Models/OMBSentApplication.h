@@ -43,7 +43,7 @@ typedef NS_ENUM(NSInteger, OMBSentApplicationStatus) {
 
 #pragma mark - Public
 
-- (NSInteger) numberOfMonthsBetweenMovingDates;
-- (OMBSentApplicationStatus) status;
+- (NSInteger)numberOfMonthsBetweenMovingDates;
+- (OMBSentApplicationStatus)status;
 
 @end

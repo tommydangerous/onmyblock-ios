@@ -26,6 +26,9 @@
 #import "OMBUserStore.h"
 #import "UIImage+Resize.h"
 
+// Models
+#import "OMBSentApplication.h"
+
 NSString *const OMBResidencePropertyTypeApartment = @"apartment";
 NSString *const OMBResidencePropertyTypeHouse     = @"house";
 NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
@@ -866,15 +869,11 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
     self.inactive = NO;
   }
 
-  // // Is Auction
-  // if ([dictionary objectForKey: @"is_auction"] != [NSNull null]) {
-  //   if ([[dictionary objectForKey: @"is_auction"] intValue] == 1) {
-  //     _isAuction = YES;
-  //   }
-  //   else {
-  //     _isAuction = NO;
-  //   }
-  // }
+  // Is Auction
+  id isAuction = [dictionary objectForKey: @"is_auction"];
+  if (isAuction != [NSNull null]) {
+    self.isAuction = [isAuction boolValue];
+  }
 
   // Landlord name
   id landlordName = [dictionary objectForKey: @"landlord_name"];
@@ -947,8 +946,10 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
 
   // Sent application
   id sentApplication = [dictionary objectForKey: @"sent_application"];
-  if (sentApplication != [NSNull null])
-    self.sentApplication = [sentApplication boolValue];
+  if (sentApplication != [NSNull null]) {
+    self.sentApplication = [[OMBSentApplication alloc] init];
+    [self.sentApplication readFromDictionary: sentApplication];
+  }
 
   // Square feet
   // if ([dictionary objectForKey: @"sqft"] != [NSNull null])
