@@ -13,6 +13,7 @@
 #import "OMBSentApplication+Group.h"
 #import "UIColor+Extensions.h"
 // Models
+#import "OMBGroup.h"
 #import "OMBOffer.h"
 #import "OMBResidence.h"
 #import "OMBSentApplication.h"
@@ -99,21 +100,6 @@
 
 #pragma mark - OMBOfferInquiryViewController
 
-- (NSTimeInterval)moveInDate
-{
-  return sentApplication.moveInDate;
-}
-
-- (NSTimeInterval)moveOutDate
-{
-  return sentApplication.moveOutDate;
-}
-
-- (NSInteger)numberOfMonthsBetweenMovingDates
-{
-  return [sentApplication numberOfMonthsBetweenMovingDates];
-}
-
 - (BOOL)isAccepted
 {
   return sentApplication.accepted;
@@ -132,6 +118,26 @@
 - (BOOL)isPaid
 {
   return sentApplication.paid;
+}
+
+- (NSTimeInterval)moveInDate
+{
+  return sentApplication.moveInDate;
+}
+
+- (NSTimeInterval)moveOutDate
+{
+  return sentApplication.moveOutDate;
+}
+
+- (NSInteger)numberOfMonthsBetweenMovingDates
+{
+  return [sentApplication numberOfMonthsBetweenMovingDates];
+}
+
+- (NSArray *)objects
+{
+  return [sentApplication.group usersSortedByFirstName];
 }
 
 - (CGFloat)rentAmount
@@ -284,7 +290,7 @@
 
 - (void)fetchGroupSucceeded
 {
-  !!!
+  [self.profileTableView reloadData];
 }
 
 - (void)fetchGroupFailed:(NSError *)error
@@ -294,8 +300,8 @@
 
 #pragma mark - Protocol UITableViewDataSource
 
-- (UITableViewCell *) tableView: (UITableView *) tableView
-cellForRowAtIndexPath: (NSIndexPath *) indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView
+cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;

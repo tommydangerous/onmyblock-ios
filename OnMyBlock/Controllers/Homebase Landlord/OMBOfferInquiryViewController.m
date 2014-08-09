@@ -565,8 +565,7 @@ paymentViewController
 cellForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGFloat padding = OMBPadding;
-  //CGFloat standardHeight = OMBStandardHeight;
-  NSUInteger row = indexPath.row;
+  NSUInteger row  = indexPath.row;
 
   static NSString *CellIdentifier = @"CellIdentifier";
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
@@ -801,11 +800,11 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       cell.accessoryType  = UITableViewCellAccessoryDisclosureIndicator;
       cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     }
-    // [cell loadDataFromUser:[self userAtIndexPath:indexPath]];
+    [cell loadDataFromUser: [self userAtIndexPath:indexPath]];
     // Remove the bottom separator
-    if (indexPath.row == [[self objects] count]) {
-      cell.separatorInset = UIEdgeInsetsMake(0.f, 
-        CGRectGetWidth(tableView.frame), 0.f, 0.f);
+    if (row == [[self objects] count] - 1) {
+      cell.separatorInset = UIEdgeInsetsMake(
+        0.f, CGRectGetWidth(tableView.frame), 0.f, 0.f);
     }
     else {
       cell.separatorInset = tableView.separatorInset;
@@ -838,8 +837,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   }
   // Profile
   else if (tableView == _profileTableView) {
-    // user and their roomates
-    return [[self objects] count] + 1;
+    return [[self objects] count];
   }
   return 0;
 }
@@ -861,26 +859,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     }
   }
   // Applicants
-  else if(tableView == _profileTableView)
-  {
-    // user
-    if(indexPath.row == 0){
-      [self.navigationController pushViewController:
-        [[OMBUserDetailViewController alloc] initWithUser: [self user]]
-          animated: YES];
-    }
-    // Applicants
-    else {
-      OMBRoommate *aux = [[self objects] objectAtIndex: indexPath.row - 1];
-      // if is a OMB user
-      if(aux.roommate){
-        [self.navigationController pushViewController:
-          [[OMBUserDetailViewController alloc] initWithUser:
-            [aux otherUser: [self user]]] animated: YES];
-      }
-    }
+  else if (tableView == _profileTableView) {
+    [self.navigationController pushViewController:
+      [[OMBUserDetailViewController alloc] initWithUser:
+        [self userAtIndexPath:indexPath]] animated:YES];
   }
-
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
@@ -991,18 +974,6 @@ viewForHeaderInSection: (NSInteger) section
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
-
-#pragma mark - Public
-
-- (void) hideCountdownAndRespondButton
-{
-  countDownTimerLabel.alpha = 0.0f;
-  respondView.alpha = 0.0f;
-  _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
-    CGRectZero];
-  _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
-    CGRectZero];
-}
 
 #pragma mark - Private
 
@@ -1594,8 +1565,7 @@ viewForHeaderInSection: (NSInteger) section
 
 - (NSArray *) objects
 {
-  return [[self renterApplication] objectsWithModelName:
-    [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES];
+  return @[];
 }
 
 - (void) offerAcceptedConfirmed
@@ -2121,11 +2091,28 @@ viewForHeaderInSection: (NSInteger) section
     [vc dismissViewControllerAnimated: YES completion: nil];
 }
 
+- (OMBUser *)userAtIndexPath:(NSIndexPath *)indexPath
+{
+  return [[self objects] objectAtIndex:indexPath.row];
+}
+
 - (void) venmoAppSwitchCancelled: (NSNotification *) notification
 {
   [UIView animateWithDuration: OMBStandardDuration animations: ^{
     alertBlur.alpha = 1.0f;
   }];
+}
+
+#pragma mark - Public
+
+- (void) hideCountdownAndRespondButton
+{
+  countDownTimerLabel.alpha = 0.0f;
+  respondView.alpha = 0.0f;
+  _offerTableView.tableFooterView = [[UIView alloc] initWithFrame:
+    CGRectZero];
+  _profileTableView.tableFooterView = [[UIView alloc] initWithFrame:
+    CGRectZero];
 }
 
 @end

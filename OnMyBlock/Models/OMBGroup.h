@@ -45,5 +45,6 @@ delegate:(id<OMBGroupDelegate>)delegate;
 - (void)fetchSentApplicationsWithAccessToken:(NSString *)accessToken
 delegate:(id<OMBGroupDelegate>)delegate;
 - (NSArray *)sentApplicationsSortedByCreatedAt;
+- (NSArray *)usersSortedByFirstName;
 
 @end

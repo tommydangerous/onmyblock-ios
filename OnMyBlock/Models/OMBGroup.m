@@ -200,4 +200,11 @@ delegate:(id<OMBGroupDelegate>)delegate
     @[sort]];
 }
 
+- (NSArray *)usersSortedByFirstName
+{
+  NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"firstName"
+    ascending:YES];
+  return [[self.users allValues] sortedArrayUsingDescriptors:@[sort]];
+}
+
 @end
