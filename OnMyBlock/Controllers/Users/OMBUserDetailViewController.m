@@ -275,6 +275,7 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
     [[self user] fetchLegalAnswersWithCompletion: ^(NSError *error) {
       legalAnswers = [NSDictionary dictionaryWithDictionary:
         [self renterApplication].legalAnswers];
+      [self setupLegalQuestionSizeArray];
       [self reloadTable];
     }];
   }
@@ -1300,10 +1301,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return headerHeight;
     }
     else {
-      if (!legalQuestionSizeArray) {
-        [self setupLegalQuestionSizeArray];
+      if (legalQuestionSizeArray) {
+        return [[legalQuestionSizeArray objectAtIndex: row - 1] floatValue];
       }
-      return [[legalQuestionSizeArray objectAtIndex: row - 1] floatValue];
     }
   }
   // Listings
