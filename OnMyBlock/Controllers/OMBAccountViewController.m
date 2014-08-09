@@ -36,9 +36,9 @@
 
 #pragma mark - Override UIViewController
 
-- (void) loadView
+- (void)viewDidLoad
 {
-  [super loadView];
+  [super viewDidLoad];
 
   [self setMenuBarButtonItem];
     
@@ -57,6 +57,7 @@
 
 - (void) viewWillAppear:(BOOL)animated
 {
+  [super viewWillAppear:animated];
   [self.table reloadData];
 }
 
