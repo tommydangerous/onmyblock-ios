@@ -560,7 +560,8 @@ completion: (void (^) (NSError *error)) block
       [self submitApplication];
     }
     else {
-      [[self currentUser] fetchGroupsWithDelegate:self];
+      [[self currentUser] fetchGroupsWithAccessToken:
+        [self currentUser].accessToken delegate:self];
     }
   }
   else {

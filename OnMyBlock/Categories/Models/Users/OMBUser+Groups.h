@@ -12,8 +12,12 @@
 
 @protocol OMBUserGroupsDelegate <NSObject>
 
+@optional
+
 - (void)groupsFetchedFailed:(NSError *)error;
 - (void)groupsFetchedSucceeded;
+- (void)primaryGroupFetchedFailed:(NSError *)error;
+- (void)primaryGroupFetchedSucceeded;
 
 @end
 
@@ -26,7 +30,10 @@
 #pragma mark - Public
 
 - (void)addGroup:(OMBGroup *)group;
-- (void)fetchGroupsWithDelegate:(id<OMBUserGroupsDelegate>)delegate;
+- (void)fetchGroupsWithAccessToken:(NSString *)accessToken
+delegate:(id<OMBUserGroupsDelegate>)delegate;
+- (void)fetchPrimaryGroupWithAccessToken:(NSString *)accessToken
+delegate:(id<OMBUserGroupsDelegate>)delegate;
 - (OMBGroup *)primaryGroup;
 
 @end

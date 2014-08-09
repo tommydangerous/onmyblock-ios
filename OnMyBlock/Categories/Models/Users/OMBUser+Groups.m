@@ -24,11 +24,11 @@
   [self.groups setObject:group forKey:@(group.uid)];
 }
 
-- (void)fetchGroupsWithDelegate:(id<OMBUserGroupsDelegate>)delegate
+- (void)fetchGroupsWithAccessToken:(NSString *)accessToken
+delegate:(id<OMBUserGroupsDelegate>)delegate
 {
-  OMBSessionManager *manager = [OMBSessionManager sharedManager];
-  [manager GET:@"groups" parameters:@{ 
-    @"access_token": [OMBUser currentUser].accessToken
+  [[self sessionManager] GET:@"groups" parameters:@{ 
+    @"access_token": accessToken
   } success:^(NSURLSessionDataTask *task, id responseObject) {
     [self readFromGroupsDictionary:responseObject];
     if ([delegate respondsToSelector:@selector(groupsFetchedSucceeded)]) {
@@ -38,6 +38,23 @@
     if ([delegate respondsToSelector:@selector(groupsFetchedFailed:)]) {
       [delegate groupsFetchedFailed:error];
     }
+  }];
+}
+
+- (void)fetchPrimaryGroupWithAccessToken:(NSString *)accessToken
+delegate:(id<OMBUserGroupsDelegate>)delegate
+{
+  NSString *urlString = [NSString stringWithFormat:@"users/%i/primary-group",
+    self.uid];
+  [[self sessionManager] GET:urlString parameters:@{
+    @"access_token": accessToken
+  } success:^(NSURLSessionDataTask *task, id responseObject) {
+    [self readFromGroupsDictionary:@{
+      @"objects": @[responseObject]
+    }];
+    
+  } failure:^(NSURLSessionDataTask *task, NSError *error) {
+
   }];
 }
 

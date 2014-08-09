@@ -21,10 +21,11 @@
 #import "OMBGroup.h"
 
 // Categories
+#import "OMBGroup+Users.h"
 #import "OMBUser+Groups.h"
 #import "UIImage+Resize.h"
 
-@interface OMBRenterInfoAddRoommateViewController () <OMBGroupDelegate>
+@interface OMBRenterInfoAddRoommateViewController () <OMBGroupUsersDelegate>
 {
   UIButton *facebookButton;
   BOOL isSearching;

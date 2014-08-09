@@ -10,6 +10,7 @@
 
 // Categories
 #import "NSString+Extensions.h"
+#import "OMBGroup+Users.h"
 #import "OMBSentApplication+Group.h"
 #import "UIColor+Extensions.h"
 // Models

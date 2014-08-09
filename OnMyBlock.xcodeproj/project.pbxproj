@@ -44,6 +44,7 @@
 		AB0280641843B2160081B30F /* OMBIntroAuctionView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0280631843B2160081B30F /* OMBIntroAuctionView.m */; };
 		AB02807F1843F2C30081B30F /* OMBBedroomView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB02807E1843F2C30081B30F /* OMBBedroomView.m */; };
 		AB034B151837D3DC00811074 /* OMBGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB034B141837D3DC00811074 /* OMBGradientView.m */; };
+		AB0AD725199683920025D339 /* OMBGroup+Users.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0AD724199683920025D339 /* OMBGroup+Users.m */; };
 		AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */; };
 		AB0BC54A18A2B4750067BFF7 /* OMBMovedInConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0BC54918A2B4750067BFF7 /* OMBMovedInConnection.m */; };
 		AB0C36AB1840652B006DC3AD /* OMBPaddleView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0C36AA1840652B006DC3AD /* OMBPaddleView.m */; };
@@ -620,6 +621,8 @@
 		AB02807E1843F2C30081B30F /* OMBBedroomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBBedroomView.m; sourceTree = "<group>"; };
 		AB034B131837D3DC00811074 /* OMBGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBGradientView.h; sourceTree = "<group>"; };
 		AB034B141837D3DC00811074 /* OMBGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBGradientView.m; sourceTree = "<group>"; };
+		AB0AD723199683920025D339 /* OMBGroup+Users.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OMBGroup+Users.h"; sourceTree = "<group>"; };
+		AB0AD724199683920025D339 /* OMBGroup+Users.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OMBGroup+Users.m"; sourceTree = "<group>"; };
 		AB0BC54518A1D4570067BFF7 /* OMBAlertViewBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAlertViewBlur.h; sourceTree = "<group>"; };
 		AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAlertViewBlur.m; sourceTree = "<group>"; };
 		AB0BC54818A2B4750067BFF7 /* OMBMovedInConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMovedInConnection.h; sourceTree = "<group>"; };
@@ -1632,6 +1635,7 @@
 		9D8BEA631BA8DCFDEE32080C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				AB0AD722199683730025D339 /* Groups */,
 				AB37205719958F7600ED0779 /* SentApplications */,
 				9D8BE8EA364C6B944751587A /* Users */,
 			);
@@ -1683,6 +1687,15 @@
 				AB0269D51822A12600E72F53 /* AMBlurView.m */,
 			);
 			path = "iOS-Blur";
+			sourceTree = "<group>";
+		};
+		AB0AD722199683730025D339 /* Groups */ = {
+			isa = PBXGroup;
+			children = (
+				AB0AD723199683920025D339 /* OMBGroup+Users.h */,
+				AB0AD724199683920025D339 /* OMBGroup+Users.m */,
+			);
+			path = Groups;
 			sourceTree = "<group>";
 		};
 		AB17AE3C18FD180600B6952C /* Map */ = {
@@ -3803,6 +3816,7 @@
 				AB1C2178185168A300ED7C06 /* OMBCosignerCell.m in Sources */,
 				ABB70073187B7814005F0730 /* OMBHomebaseRenterTopPriorityCell.m in Sources */,
 				AB9D6137188F495A00C9AC64 /* OMBOfferDecisionConnection.m in Sources */,
+				AB0AD725199683920025D339 /* OMBGroup+Users.m in Sources */,
 				ABCB36BE187CB843008A0EEF /* OMBHomebaseRenterAddRoommatesViewController.m in Sources */,
 				AB8B794B186E17FC005AB552 /* OMBLabelTextFieldCell.m in Sources */,
 				AB00B9D218BE95A00050D6F4 /* OMBConversationWithResidenceConnection.m in Sources */,

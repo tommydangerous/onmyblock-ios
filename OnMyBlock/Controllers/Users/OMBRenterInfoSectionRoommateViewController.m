@@ -16,6 +16,9 @@
 #import "OMBRoommate.h"
 #import "OMBRoommateCell.h"
 
+// Categories
+#import "OMBGroup+Users.h"
+
 // Connections
 #import "OMBModelListConnection.h"
 
@@ -24,7 +27,7 @@
 #import "OMBUser+Groups.h"
 
 @interface OMBRenterInfoSectionRoommateViewController ()
-<OMBGroupDelegate, OMBUserGroupsDelegate>
+<OMBGroupUsersDelegate, OMBUserGroupsDelegate>
 {
   UIActionSheet *profileDeleteActionSheet;
   NSIndexPath *selectedIndexPath;
@@ -209,7 +212,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)fetchObjects
 {
-  [user fetchGroupsWithDelegate:self];
+  [user fetchGroupsWithAccessToken:[OMBUser currentUser].accessToken 
+    delegate:self];
   if ([[self objects] count] == 0) {
     [self startSpinning];
   }

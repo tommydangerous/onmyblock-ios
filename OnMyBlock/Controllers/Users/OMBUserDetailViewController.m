@@ -11,6 +11,8 @@
 // Categories
 #import "NSString+Extensions.h"
 #import "NSString+PhoneNumber.h"
+#import "OMBGroup+Users.h"
+#import "OMBUser+Groups.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 #import "UIImage+ImageEffects.h"
@@ -18,6 +20,7 @@
 // Models
 #import "OMBCosigner.h"
 #import "OMBEmployment.h"
+#import "OMBGroup.h"
 #import "OMBLegalAnswer.h"
 #import "OMBLegalQuestion.h"
 #import "OMBPreviousRental.h"
@@ -48,6 +51,7 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
 @interface OMBUserDetailViewController ()
 <
   MFMailComposeViewControllerDelegate,
+  OMBUserGroupsDelegate,
   UIActionSheetDelegate,
   UICollectionViewDataSource, 
   UICollectionViewDelegate, 
@@ -92,9 +96,26 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
 
 #pragma mark - UIViewController
 
-- (void) loadView
+- (void)viewDidAppear:(BOOL)animated
 {
-  [super loadView];
+  [super viewDidAppear: animated];
+
+  // Update the images
+  if ([self user].image) {
+    [self updateBlurredImages];   
+  }
+  else {
+    [[self user] downloadImageFromImageURLWithCompletion: ^(NSError *error) {
+      if ([self user].image) {
+        [self updateBlurredImages];
+      }
+    }];
+  }
+}
+
+- (void)viewDidLoad
+{
+  [super viewDidLoad];
 
   // Dimensions
   CGRect screen          = [self screen];
@@ -195,28 +216,6 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
   userCollectionView.backgroundColor = [UIColor whiteColor];
   userCollectionView.dataSource = self;
   userCollectionView.delegate   = self;
-}
-
-- (void) viewDidAppear: (BOOL) animated
-{
-  [super viewDidAppear: animated];
-
-  // Update the images
-  if ([self user].image) {
-    [self updateBlurredImages];   
-  }
-  else {
-    [[self user] downloadImageFromImageURLWithCompletion: ^(NSError *error) {
-      if ([self user].image) {
-        [self updateBlurredImages];
-      }
-    }];
-  }
-}
-
-- (void) viewDidLoad
-{
-  [super viewDidLoad];
 
   [userCollectionView registerClass: [OMBOtherUserProfileCell class]
     forCellWithReuseIdentifier: [OMBOtherUserProfileCell reuseIdentifier]];
@@ -262,7 +261,7 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
   }
   else {
     // Roommates
-    [self fetchObjectsForResourceName: [OMBRoommate resourceName]];
+    [user fetchPrimaryGroupWithAccessToken:@"" delegate:self];
     // Cosigners
     [[self renterApplication] fetchCosignersForUserUID: [self user].uid
       delegate: self completion: ^(NSError *error) {
@@ -398,10 +397,9 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
   return [self user].renterApplication;
 }
 
-- (NSArray *) roommates
+- (NSArray *)roommates
 {
-  return [[self renterApplication] objectsWithModelName:
-    [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES]; 
+  return [[user primaryGroup] otherUsersSortedByFirstName:user];
 }
 
 - (void) setupLegalQuestionSizeArray
@@ -647,13 +645,8 @@ didFinishWithResult: (MFMailComposeResult) result error: (NSError *) error
 - (void) JSONDictionary: (NSDictionary *) dictionary
 forResourceName: (NSString *) resourceName
 {
-  // Roommates
-  if ([resourceName isEqualToString: [OMBRoommate resourceName]]) {
-    [[self renterApplication] readFromDictionary: dictionary
-      forModelName: [OMBRoommate modelName]];
-  }
   // Cosigners
-  else if ([resourceName isEqualToString: [OMBCosigner resourceName]]) {
+  if ([resourceName isEqualToString: [OMBCosigner resourceName]]) {
     [[self renterApplication] readFromCosignerDictionary: dictionary];
   }
   // Previous rentals
@@ -666,6 +659,18 @@ forResourceName: (NSString *) resourceName
     [[self renterApplication] readFromDictionary: dictionary
       forModelName: [OMBEmployment modelName]];
   }
+}
+
+#pragma mark - Protocol OMBUserGroupsDelegate
+
+- (void)primaryGroupFetchedFailed:(NSError *)error {
+  [self showAlertViewWithError:error];
+}
+
+- (void)primaryGroupFetchedSucceeded {
+  [self.table reloadSections:
+    [NSIndexSet indexSetWithIndex:OMBUserDetailSectionRoommates]
+      withRowAnimation:UITableViewRowAnimationFade]; 
 }
 
 #pragma mark - Protocol UIActionSheetDelegate
@@ -923,16 +928,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       else {
         cell.separatorInset = tableView.separatorInset;
       }
-      OMBRoommate *roommate = [[self roommates] objectAtIndex: row - 1];
-      if ([roommate otherUser: [self user]]) {
-        cell.selectedBackgroundView = selectedBackgroundView;  
-        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-      }
-      else {
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      }
-      [cell loadData: roommate user: user];
-      cell.clipsToBounds = YES;
+      [cell loadDataFromUser:[[self roommates] objectAtIndex: row - 1]];
+      cell.clipsToBounds          = YES;
+      cell.selectedBackgroundView = selectedBackgroundView;
+      cell.selectionStyle         = UITableViewCellSelectionStyleDefault;
       return cell;
     }
   }
@@ -1327,21 +1326,14 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
-
   // Roommates
   if (section == OMBUserDetailSectionRoommates) {
     if (row > 0 ) {
-      OMBRoommate *roommate = (OMBRoommate *)
-        [[self roommates] objectAtIndex: row - 1];
-      // If is an OMB user
-      if (roommate.roommate) {
-        [self.navigationController pushViewController:
-          [[OMBUserDetailViewController alloc] initWithUser:
-            [roommate otherUser: [self user]]] animated: YES];
-      }
+      [self.navigationController pushViewController:
+        [[OMBUserDetailViewController alloc] initWithUser:
+          [[self roommates] objectAtIndex: row - 1]] animated:YES];
     }
   }
-
   // Listings
   else if (section == OMBUserDetailSectionListings) {
     if (row > 0) {
@@ -1351,7 +1343,6 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
             animated: YES];
     }
   }
-
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 

@@ -13,12 +13,8 @@
 
 - (void)createSentApplicationFailed:(NSError *)error;
 - (void)createSentApplicationSucceeded;
-- (void)deleteUserFailed:(NSError *)error;
-- (void)deleteUserSucceeded;
 - (void)fetchSentApplicationsFailed:(NSError *)error;
 - (void)fetchSentApplicationsSucceeded;
-- (void)saveUserFailed:(NSError *)error;
-- (void)saveUserSucceeded;
 
 @end
 
@@ -38,13 +34,8 @@
 - (void)addUser:(OMBUser *)user;
 - (void)createSentApplicationWithDictionary:(NSDictionary *)dictionary
 accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate;
-- (void)createUserWithDictionary:(NSDictionary *)dictionary 
-accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate;
-- (void)deleteUser:(OMBUser *)user accessToken:(NSString *)accessToken
-delegate:(id<OMBGroupDelegate>)delegate;
 - (void)fetchSentApplicationsWithAccessToken:(NSString *)accessToken
 delegate:(id<OMBGroupDelegate>)delegate;
 - (NSArray *)sentApplicationsSortedByCreatedAt;
-- (NSArray *)usersSortedByFirstName;
 
 @end
