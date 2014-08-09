@@ -61,6 +61,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
 @end
 
 @implementation OMBViewControllerContainer
+
 // #warning Remove this
 // - (void) showTest
 // {
@@ -69,7 +70,36 @@ CGFloat kBackgroundMaxScale = 5.0f;
 //       [OMBResidence fakeResidence]] animated: YES];
 // }
 
-#pragma mark - Setter & Getters
+#pragma mark - Initializer
+
+- (id) init
+{
+  if (!(self = [super init])) return nil;
+
+  // Landlord type
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(updateLandlordType:)
+      name: OMBCurrentUserLandlordTypeChangeNotification object: nil];
+
+  // These 3 post this notification
+  // Login connection
+  // Sign up connection
+  // User authenticate with server
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(setupForLoggedInUser)
+      name: OMBUserLoggedInNotification object: nil];
+
+  [[NSNotificationCenter defaultCenter] addObserver: self
+    selector: @selector(updateAccountView)
+      name: OMBCurrentUserUploadedImage object: nil];
+
+  _slideEnabled = YES;
+
+  return self;
+}
+
+#pragma mark - Accessors
+
 // Both
 // Account
 - (OMBNavigationController *) accountNavigationController
@@ -245,40 +275,9 @@ CGFloat kBackgroundMaxScale = 5.0f;
   return _manageListingsNavigationController;
 }
 
-//- (<#paramName#>*)<#paramName#> {
-//    if (!<#paramName#>){
-//
-//    }
-//    return <#paramName#>;
-//}
+#pragma mark - Override
 
-#pragma mark - Initializer
-
-- (id) init
-{
-  if (!(self = [super init])) return nil;
-
-  // Landlord type
-  [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(updateLandlordType:)
-      name: OMBCurrentUserLandlordTypeChangeNotification object: nil];
-
-  // These 3 post this notification
-  // Login connection
-  // Sign up connection
-  // User authenticate with server
-  [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(setupForLoggedInUser)
-      name: OMBUserLoggedInNotification object: nil];
-
-  [[NSNotificationCenter defaultCenter] addObserver: self
-    selector: @selector(updateAccountView)
-      name: OMBCurrentUserUploadedImage object: nil];
-
-  _slideEnabled = YES;
-
-  return self;
-}
+#pragma mark - Override UIViewController
 
 - (void) loadView
 {
@@ -303,7 +302,7 @@ CGFloat kBackgroundMaxScale = 5.0f;
   menuOffsetXThreshold = screenWidth * 0.5;
   // How fast does the user need to swipe to show or hide the menu
   menuSpeedThreshold = 800;
-  menuWidth = screenWidth * 0.8;
+  menuWidth = screenWidth * 0.9;
 
   self.view.backgroundColor = [UIColor redColor];
   self.view.frame = screen;
@@ -833,6 +832,21 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:
   _menuScroll.contentSize = CGSizeMake(menuWidth, height);
 }
 
+- (void)animateStatusBarDefault:(BOOL)statusBarStyle
+{
+  [[UIApplication sharedApplication] setStatusBarHidden:YES];
+  if (statusBarStyle) {
+    [[UIApplication sharedApplication] setStatusBarStyle:
+      UIStatusBarStyleDefault];
+  }
+  else {
+    [[UIApplication sharedApplication] setStatusBarStyle:
+      UIStatusBarStyleLightContent];
+  }
+  [[UIApplication sharedApplication] setStatusBarHidden:NO
+    withAnimation:UIStatusBarAnimationFade];
+}
+
 - (void) changeTitleLabelColor:(UIButton *)button
 {
   for(UIButton *button in currentMenuButtons){
@@ -1045,6 +1059,7 @@ completion: (void (^) (void)) block
       block();
     // Remove detail view overlay from the detail view
     [_detailViewOverlay removeFromSuperview];
+    // Show black status bar
     [[UIApplication sharedApplication] setStatusBarStyle:
       UIStatusBarStyleDefault];
   }];
@@ -1616,9 +1631,10 @@ completion: (void (^) (void)) block
     CGRect topDetailFrame = _topDetailView.frame;
     topDetailFrame.origin.y =  0.0f;
     _topDetailView.frame = topDetailFrame;
-  } completion: ^(BOOL finished) {
+  } completion:^(BOOL finished) {
     // Add detail view overlay to the detail view
     [_detailView addSubview: _detailViewOverlay];
+    // Status bar white
     [[UIApplication sharedApplication] setStatusBarStyle:
       UIStatusBarStyleLightContent];
   }];
