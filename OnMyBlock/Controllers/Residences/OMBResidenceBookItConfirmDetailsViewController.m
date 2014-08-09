@@ -971,18 +971,12 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       static NSString *RoommateCellID = @"RoommateCellID";
       OMBRoommateCell *cell = [tableView dequeueReusableCellWithIdentifier:
         RoommateCellID];
-      if(!cell)
-        cell = [[OMBRoommateCell alloc] initWithStyle:UITableViewCellStyleDefault
-          reuseIdentifier: RoommateCellID];
-      [cell loadData: [[self roommates] objectAtIndex: indexPath.row - 1]
-        user: [OMBUser currentUser]];
-
-        OMBRoommate *aux = [[self roommates] objectAtIndex: indexPath.row - 1];
-        // if is a OMB user
-        if(!aux.roommate)
-        {
-            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        }
+      if (!cell) {
+        cell = [[OMBRoommateCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier:RoommateCellID];
+      }
+      [cell loadDataFromUser:
+        [[self roommates] objectAtIndex: indexPath.row - 1]];
       // If this is the last roommate
       if (row == [[self roommates] count]) {
         cell.separatorInset = maxInsets;
@@ -1943,10 +1937,9 @@ shouldHighlightRowAtIndexPath: (NSIndexPath *) indexPath
   [self.table endUpdates];
 }
 
-- (NSArray *) roommates
+- (NSArray *)roommates
 {
-  return [[self renterApplication] objectsWithModelName:
-    [OMBRoommate modelName] sortedWithKey: @"firstName" ascending: YES];
+  return @[];
 }
 
 - (void) saveDatePreferences
