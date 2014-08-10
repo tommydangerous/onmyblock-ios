@@ -13,8 +13,10 @@
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
 #import "UIColor+Extensions.h"
-
+// Controllers
 #import "OMBViewControllerContainer.h"
+// Views
+#import "OMBMenuBarButtonItem.h"
 
 CGFloat const OMBCornerRadius         = 5.0f;
 CGFloat const OMBKeyboardHeight       = 216.0f;
@@ -78,11 +80,14 @@ CGFloat const OMBStandardHeight       = 44.0f;
       action: @selector(shareButtonSelected)];
 
   // Menu
-  menuBarButtonItem =
-    [[UIBarButtonItem alloc] initWithImage:
-      [UIImage image:  [UIImage imageNamed: @"menu_icon_staggered.png"]
-        size: CGSizeMake(26.0f, 26.0f)] style: UIBarButtonItemStylePlain
-          target: self action: @selector(showContainer)];
+  // menuBarButtonItem =
+  //   [[UIBarButtonItem alloc] initWithImage:
+  //     [UIImage image:  [UIImage imageNamed: @"menu_icon_staggered.png"]
+  //       size: CGSizeMake(26.0f, 26.0f)] style: UIBarButtonItemStylePlain
+  //         target: self action: @selector(showContainer)];
+  menuBarButtonItem = 
+    [[OMBMenuBarButtonItem alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
+  [menuBarButtonItem addTarget:self action:@selector(showContainer)];
 
   self.navigationItem.backBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle: @""

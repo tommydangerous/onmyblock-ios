@@ -22,6 +22,8 @@
 // Objects
 #import "OMBMixpanelTracker.h"
 
+@class OMBMenuBarButtonItem;
+
 extern CGFloat const OMBCornerRadius;
 extern CGFloat const OMBKeyboardHeight;
 extern CGFloat const OMBPadding;
@@ -34,7 +36,7 @@ extern CGFloat const OMBStandardHeight;
   UIBarButtonItem *backBarButtonItem;
   UIBarButtonItem *cancelBarButtonItem;
   UIBarButtonItem *doneBarButtonItem;
-  UIBarButtonItem *menuBarButtonItem;
+  OMBMenuBarButtonItem *menuBarButtonItem;
   UILabel *navigationTitleLabel;
   UIBarButtonItem *saveBarButtonItem;
   UIBarButtonItem *shareBarButtonItem;

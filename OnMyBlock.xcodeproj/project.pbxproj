@@ -45,6 +45,7 @@
 		AB02807F1843F2C30081B30F /* OMBBedroomView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB02807E1843F2C30081B30F /* OMBBedroomView.m */; };
 		AB034B151837D3DC00811074 /* OMBGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB034B141837D3DC00811074 /* OMBGradientView.m */; };
 		AB0AD725199683920025D339 /* OMBGroup+Users.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0AD724199683920025D339 /* OMBGroup+Users.m */; };
+		AB0AD7291996DCFC0025D339 /* OMBMenuBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0AD7281996DCFC0025D339 /* OMBMenuBarButtonItem.m */; };
 		AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */; };
 		AB0BC54A18A2B4750067BFF7 /* OMBMovedInConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0BC54918A2B4750067BFF7 /* OMBMovedInConnection.m */; };
 		AB0C36AB1840652B006DC3AD /* OMBPaddleView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0C36AA1840652B006DC3AD /* OMBPaddleView.m */; };
@@ -623,6 +624,8 @@
 		AB034B141837D3DC00811074 /* OMBGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBGradientView.m; sourceTree = "<group>"; };
 		AB0AD723199683920025D339 /* OMBGroup+Users.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OMBGroup+Users.h"; sourceTree = "<group>"; };
 		AB0AD724199683920025D339 /* OMBGroup+Users.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OMBGroup+Users.m"; sourceTree = "<group>"; };
+		AB0AD7271996DCFC0025D339 /* OMBMenuBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMenuBarButtonItem.h; sourceTree = "<group>"; };
+		AB0AD7281996DCFC0025D339 /* OMBMenuBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMenuBarButtonItem.m; sourceTree = "<group>"; };
 		AB0BC54518A1D4570067BFF7 /* OMBAlertViewBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAlertViewBlur.h; sourceTree = "<group>"; };
 		AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAlertViewBlur.m; sourceTree = "<group>"; };
 		AB0BC54818A2B4750067BFF7 /* OMBMovedInConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMovedInConnection.h; sourceTree = "<group>"; };
@@ -1698,6 +1701,15 @@
 			path = Groups;
 			sourceTree = "<group>";
 		};
+		AB0AD7261996DCD60025D339 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				AB0AD7271996DCFC0025D339 /* OMBMenuBarButtonItem.h */,
+				AB0AD7281996DCFC0025D339 /* OMBMenuBarButtonItem.m */,
+			);
+			path = Buttons;
+			sourceTree = "<group>";
+		};
 		AB17AE3C18FD180600B6952C /* Map */ = {
 			isa = PBXGroup;
 			children = (
@@ -2130,6 +2142,7 @@
 		AB9B26031811A49200E6DAC4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				AB0AD7261996DCD60025D339 /* Buttons */,
 				AB70CB81186CEC840083DF4C /* Create Listing */,
 				AB95456B1848DAC0000513BE /* DDPageControl.h */,
 				AB95456C1848DAC0000513BE /* DDPageControl.m */,
@@ -2174,6 +2187,8 @@
 				ABED5FCA1895975400AD630C /* OMBCollectionViewCell.m */,
 				AB1C2176185168A300ED7C06 /* OMBCosignerCell.h */,
 				AB1C2177185168A300ED7C06 /* OMBCosignerCell.m */,
+				DE6A667C1958A58D007542A1 /* OMBCreditCardTextFieldCell.h */,
+				DE6A667D1958A58D007542A1 /* OMBCreditCardTextFieldCell.m */,
 				AB9D611F188D73F000C9AC64 /* OMBCurvedLineView.h */,
 				AB9D6120188D73F000C9AC64 /* OMBCurvedLineView.m */,
 				ABBA58AA1871623100E9BF4E /* OMBDatePickerCell.h */,
@@ -2266,6 +2281,8 @@
 				ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */,
 				DE92B8FF18F8451900D03AC7 /* OMBRadialGradient.h */,
 				DE92B90018F8451900D03AC7 /* OMBRadialGradient.m */,
+				DE97FBEA197DA45800682B15 /* OMBRentedBannerView.h */,
+				DE97FBEB197DA45800682B15 /* OMBRentedBannerView.m */,
 				AB9012A11852AEF0003153A2 /* OMBRenterApplicationAddModelCell.h */,
 				AB9012A21852AEF0003153A2 /* OMBRenterApplicationAddModelCell.m */,
 				ABAF227F185249FC0041BF60 /* OMBRenterApplicationPetCell.h */,
@@ -2292,6 +2309,8 @@
 				ABBC495119070F4300BF9F7D /* OMBSwitch.m */,
 				ABAF227018522E390041BF60 /* OMBTableViewCell.h */,
 				ABAF227118522E390041BF60 /* OMBTableViewCell.m */,
+				DEC1C8C3196B6783003184AA /* OMBTextFieldCell.h */,
+				DEC1C8C4196B6783003184AA /* OMBTextFieldCell.m */,
 				ABD6FC6A1914428C0070D7F0 /* OMBTextFieldToolbar.h */,
 				ABD6FC6B1914428C0070D7F0 /* OMBTextFieldToolbar.m */,
 				DE9FF67218CF6A500017AA15 /* OMBTopDetailView.h */,
@@ -2341,12 +2360,6 @@
 				DE9A417F194264E40026545C /* OMBResidenceTitleView.m */,
 				DE9A4181194272CC0026545C /* OMBImageFourLabelCell.h */,
 				DE9A4182194272CC0026545C /* OMBImageFourLabelCell.m */,
-				DE6A667C1958A58D007542A1 /* OMBCreditCardTextFieldCell.h */,
-				DE6A667D1958A58D007542A1 /* OMBCreditCardTextFieldCell.m */,
-				DEC1C8C3196B6783003184AA /* OMBTextFieldCell.h */,
-				DEC1C8C4196B6783003184AA /* OMBTextFieldCell.m */,
-				DE97FBEA197DA45800682B15 /* OMBRentedBannerView.h */,
-				DE97FBEB197DA45800682B15 /* OMBRentedBannerView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3664,6 +3677,7 @@
 				AB9FEF0818D0B3E800E25FE2 /* OMBDeleteConnection.m in Sources */,
 				ABB9115218971CB00046611F /* OMBUserCurrentUserInfoConnection.m in Sources */,
 				AB9B26391811B7ED00E6DAC4 /* OCAlgorithms.m in Sources */,
+				AB0AD7291996DCFC0025D339 /* OMBMenuBarButtonItem.m in Sources */,
 				AB01ED3A1857DB5300333390 /* OMBLegalQuestion.m in Sources */,
 				AB1C216F1851436200ED7C06 /* OMBRenterApplication.m in Sources */,
 				ABA3D69E18A944F0006CE8C1 /* OMBOtherUserProfileCell.m in Sources */,

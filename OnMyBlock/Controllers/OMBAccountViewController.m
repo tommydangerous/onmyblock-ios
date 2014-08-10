@@ -27,7 +27,7 @@
 {
   if (!(self = [super init])) return nil;
 
-  self.screenName = self.title = @"Account";
+  // self.screenName = self.title = @"Account";
 
   return self;
 }
@@ -65,22 +65,23 @@
 
 #pragma mark - UIActionSheetDelegate
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet 
+clickedButtonAtIndex:(NSInteger)buttonIndex
 {
   OMBAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-  
-  if(buttonIndex == 0)
+  if (buttonIndex == 0) {
     [appDelegate.container logout];
+  }
 }
 
 #pragma mark - Protocol UITableViewDataSource
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
   // Profile, renter application, payment info, transactions
   // How it works, terms of service, privacy statement, rate us
   // Logout
-  return 4;
+  return 0;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
