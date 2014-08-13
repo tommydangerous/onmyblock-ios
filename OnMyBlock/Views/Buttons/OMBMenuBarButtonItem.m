@@ -47,8 +47,10 @@
   for (int i = 0; i < rows; i++) {
     UIView *row         = [[UIView alloc] init];
     row.backgroundColor = [UIColor blue];
-    row.frame           = CGRectMake(0, (heightOfRow + heightOfSpace) * i, 
-      [heightArray[i] floatValue], heightOfRow);
+    row.frame           = CGRectMake(
+      0, (heightOfRow + heightOfSpace) * i, 
+      [heightArray[i] floatValue], heightOfRow
+    );
     row.userInteractionEnabled = NO;
     [self.customView addSubview:row];
   }

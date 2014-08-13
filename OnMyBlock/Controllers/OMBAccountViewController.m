@@ -27,7 +27,7 @@
 {
   if (!(self = [super init])) return nil;
 
-  // self.screenName = self.title = @"Account";
+  self.title = @"Account";
 
   return self;
 }
@@ -81,7 +81,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
   // Profile, renter application, payment info, transactions
   // How it works, terms of service, privacy statement, rate us
   // Logout
-  return 0;
+  return 4;
 }
 
 - (UITableViewCell *) tableView: (UITableView *) tableView
