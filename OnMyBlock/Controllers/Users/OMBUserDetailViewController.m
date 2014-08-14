@@ -11,7 +11,6 @@
 // Categories
 #import "NSString+Extensions.h"
 #import "NSString+PhoneNumber.h"
-#import "OMBGroup+Users.h"
 #import "OMBUser+Groups.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -400,7 +399,7 @@ static const CGFloat UserDetailImagePercentage = 0.4f;
 
 - (NSArray *)roommates
 {
-  return [[user primaryGroup] otherUsersSortedByFirstName:user];
+  return [[user primaryGroup] otherUsersAndInvitations:user];
 }
 
 - (void) setupLegalQuestionSizeArray
@@ -929,10 +928,19 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       else {
         cell.separatorInset = tableView.separatorInset;
       }
-      [cell loadDataFromUser:[[self roommates] objectAtIndex: row - 1]];
+      id object = [[self roommates] objectAtIndex: row - 1];
+      // User
+      if ([object isKindOfClass:[OMBUser class]]) {
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        [cell loadDataFromUser:object];
+      }
+      // Invitation
+      else {
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        [cell loadDataFromInvitation:object];
+      }
       cell.clipsToBounds          = YES;
       cell.selectedBackgroundView = selectedBackgroundView;
-      cell.selectionStyle         = UITableViewCellSelectionStyleDefault;
       return cell;
     }
   }
@@ -1329,9 +1337,13 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
   // Roommates
   if (section == OMBUserDetailSectionRoommates) {
     if (row > 0 ) {
-      [self.navigationController pushViewController:
-        [[OMBUserDetailViewController alloc] initWithUser:
-          [[self roommates] objectAtIndex: row - 1]] animated:YES];
+      id object = [[self roommates] objectAtIndex: row - 1];
+      // If user
+      if ([object isKindOfClass:[OMBUser class]]) {
+        [self.navigationController pushViewController:
+          [[OMBUserDetailViewController alloc] initWithUser:object] 
+            animated:YES];
+      }
     }
   }
   // Listings

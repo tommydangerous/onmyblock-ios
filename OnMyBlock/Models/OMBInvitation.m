@@ -54,4 +54,34 @@
   }
 }
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (NSString *)fullName
+{
+  NSString *fullName = @"";
+  if (self.firstName && [self.firstName length]) {
+    fullName = [self.firstName capitalizedString];
+  }
+  if (self.lastName && [self.lastName length]) {
+    fullName = [fullName stringByAppendingString:
+      [NSString stringWithFormat:@" %@", [self.lastName capitalizedString]]];
+  }
+  return fullName;
+}
+
+- (NSURL *)providerImageURL
+{
+  NSString *string = @"";
+  if (self.providerId && [self.providerId length]) {
+    string = [NSString stringWithFormat:
+      @"http://graph.facebook.com/%@/picture?type=large",
+        self.providerId];
+  }
+  return [NSURL URLWithString:string];
+}
+
 @end

@@ -9,15 +9,11 @@
 #import "OMBTableViewCell.h"
 
 @class OMBCenteredImageView;
+@class OMBInvitation;
 @class OMBRoommate;
 @class OMBUser;
 
 @interface OMBRoommateCell : OMBTableViewCell
-{
-  UILabel *emailLabel;
-  UILabel *nameLabel;
-  OMBCenteredImageView *userImageView;
-}
 
 @property (nonatomic, strong) OMBRoommate *roommate;
 
@@ -25,7 +21,10 @@
 
 #pragma mark - Instance Methods
 
+#pragma mark - Public
+
 - (void) loadData: (OMBRoommate *) object user: (OMBUser *) userObject;
+- (void) loadDataFromInvitation:(OMBInvitation *)invitation;
 - (void) loadDataFromUser: (OMBUser *) object;
 
 @end

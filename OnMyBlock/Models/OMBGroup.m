@@ -5,6 +5,10 @@
 
 #import "OMBGroup.h"
 
+// Categories
+#import "OMBGroup+Invitations.h"
+#import "OMBGroup+Users.h"
+
 // Models
 #import "OMBInvitation.h"
 #import "OMBSentApplication.h"
@@ -164,6 +168,12 @@ delegate:(id<OMBGroupDelegate>)delegate
       [delegate fetchSentApplicationsFailed:error];
     }
   }];
+}
+
+- (NSArray *)otherUsersAndInvitations:(OMBUser *)user
+{
+  return [[self otherUsersSortedByFirstName:user] arrayByAddingObjectsFromArray:
+    [self invitationsSortedByFirstName]];
 }
 
 - (NSArray *)sentApplicationsSortedByCreatedAt

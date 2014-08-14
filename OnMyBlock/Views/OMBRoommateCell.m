@@ -8,14 +8,31 @@
 
 #import "OMBRoommateCell.h"
 
-#import "OMBCenteredImageView.h"
+// Categories
+#import "UIColor+Extensions.h"
+#import "UIFont+OnMyBlock.h"
+
+// Models
+#import "OMBInvitation.h"
 #import "OMBResidence.h"
 #import "OMBRoommate.h"
 #import "OMBUser.h"
+
+// View Controllers
 #import "OMBViewController.h"
-#import "UIColor+Extensions.h"
-#import "UIFont+OnMyBlock.h"
+
+// Views
+#import "OMBCenteredImageView.h"
 #import "UIImageView+WebCache.h"
+
+@interface OMBRoommateCell ()
+{
+  UILabel *emailLabel;
+  UILabel *nameLabel;
+  OMBCenteredImageView *userImageView;
+}
+
+@end
 
 @implementation OMBRoommateCell
 
@@ -112,6 +129,26 @@
       [userImageView setImage: [OMBUser placeholderImage]];
       emailLabel.text = self.roommate.email;
     }
+  }
+}
+
+- (void)loadDataFromInvitation:(OMBInvitation *)invitation
+{
+  nameLabel.text  = [invitation fullName];
+  emailLabel.text = @"Invited user";
+  if (invitation.providerId && [invitation.providerId length]) {
+    __weak typeof(userImageView) weakImageView = userImageView;
+    [userImageView.imageView setImageWithURL:[invitation providerImageURL]
+      placeholderImage:[OMBUser placeholderImage]
+      options:(SDWebImageRetryFailed | SDWebImageDownloaderProgressiveDownload)
+      completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (image) {
+          weakImageView.image = image;
+        }
+      }];
+  }
+  else {
+    userImageView.image = [OMBUser placeholderImage];
   }
 }
 

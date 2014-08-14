@@ -18,4 +18,13 @@
 @property (nonatomic, strong) NSString *providerId;
 @property (nonatomic) NSInteger userId;
 
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+#pragma mark - Public
+
+- (NSString *)fullName;
+- (NSURL *)providerImageURL;
+
 @end

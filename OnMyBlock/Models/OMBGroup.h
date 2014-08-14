@@ -37,6 +37,7 @@
 accessToken:(NSString *)accessToken delegate:(id<OMBGroupDelegate>)delegate;
 - (void)fetchSentApplicationsWithAccessToken:(NSString *)accessToken
 delegate:(id<OMBGroupDelegate>)delegate;
+- (NSArray *)otherUsersAndInvitations:(OMBUser *)user;
 - (NSArray *)sentApplicationsSortedByCreatedAt;
 
 @end
