@@ -49,12 +49,14 @@ delegate:(id<OMBUserGroupsDelegate>)delegate
   [[self sessionManager] GET:urlString parameters:@{
     @"access_token": accessToken
   } success:^(NSURLSessionDataTask *task, id responseObject) {
-    [self readFromGroupsDictionary:@{
-      @"objects": @[responseObject]
-    }];
-    
+    [self readFromGroupsDictionary:responseObject];
+    if ([delegate respondsToSelector:@selector(primaryGroupFetchedSucceeded)]) {
+      [delegate primaryGroupFetchedSucceeded];
+    }
   } failure:^(NSURLSessionDataTask *task, NSError *error) {
-
+    if ([delegate respondsToSelector:@selector(primaryGroupFetchedFailed:)]) {
+      [delegate primaryGroupFetchedFailed:error];
+    }
   }];
 }
 

@@ -20,6 +20,7 @@
 
 @interface OMBGroup : OMBObject
 
+@property (nonatomic, strong) NSMutableDictionary *invitations;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic) NSUInteger ownerId;
 @property (nonatomic, strong) NSMutableDictionary *sentApplications;

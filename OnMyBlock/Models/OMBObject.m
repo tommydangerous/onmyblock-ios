@@ -55,9 +55,13 @@ forResourceName: (NSString *) resourceName
     @"_"] lowercaseString];
 }
 
-- (void) readFromDictionary: (NSDictionary *) dictionary
+- (void)readFromDictionary:(NSDictionary *)dictionary
 {
-  // Subclasses implement this
+  // UID
+  id uid = [dictionary objectForKey:@"id"];
+  if (uid != [NSNull null]) {
+    self.uid = [uid intValue];
+  }
 }
 
 - (NSString *) resourceName

@@ -99,6 +99,7 @@
 		AB1C217B18516D7F00ED7C06 /* NSString+PhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1C217A18516D7F00ED7C06 /* NSString+PhoneNumber.m */; };
 		AB1D4A80182C35B800FF4F23 /* OMBIntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1D4A7F182C35B800FF4F23 /* OMBIntroViewController.m */; };
 		AB1D4A89182C486500FF4F23 /* OMBWelcomeView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1D4A88182C486500FF4F23 /* OMBWelcomeView.m */; };
+		AB210A3D199D115D00AFB42E /* OMBInvitation.m in Sources */ = {isa = PBXBuildFile; fileRef = AB210A3C199D115D00AFB42E /* OMBInvitation.m */; };
 		AB2613111818EC800053A8AA /* OMBResidenceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2613101818EC800053A8AA /* OMBResidenceCell.m */; };
 		AB26131718197D030053A8AA /* OMBCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB26131618197D030053A8AA /* OMBCollectionViewController.m */; };
 		AB26131E18198E570053A8AA /* OMBSpringFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AB26131D18198E570053A8AA /* OMBSpringFlowLayout.m */; };
@@ -725,6 +726,8 @@
 		AB1D4A7F182C35B800FF4F23 /* OMBIntroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBIntroViewController.m; sourceTree = "<group>"; };
 		AB1D4A87182C486500FF4F23 /* OMBWelcomeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBWelcomeView.h; sourceTree = "<group>"; };
 		AB1D4A88182C486500FF4F23 /* OMBWelcomeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBWelcomeView.m; sourceTree = "<group>"; };
+		AB210A3B199D115D00AFB42E /* OMBInvitation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBInvitation.h; sourceTree = "<group>"; };
+		AB210A3C199D115D00AFB42E /* OMBInvitation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBInvitation.m; sourceTree = "<group>"; };
 		AB26130F1818EC800053A8AA /* OMBResidenceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceCell.h; sourceTree = "<group>"; };
 		AB2613101818EC800053A8AA /* OMBResidenceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceCell.m; sourceTree = "<group>"; };
 		AB26131518197D030053A8AA /* OMBCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCollectionViewController.h; sourceTree = "<group>"; };
@@ -2415,6 +2418,8 @@
 				AB6E9409192AA8A4005A357A /* OMBSentApplication.m */,
 				9D8BE205CC89B1ABB0264208 /* OMBGroup.m */,
 				9D8BE8DD2A267B69AAE85AC8 /* OMBGroup.h */,
+				AB210A3B199D115D00AFB42E /* OMBInvitation.h */,
+				AB210A3C199D115D00AFB42E /* OMBInvitation.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3747,6 +3752,7 @@
 				AB19A0831860EFD900F84DE9 /* OMBResidenceDetailAddressCell.m in Sources */,
 				ABABEC5918654F4C008B6768 /* OMBMapFilterBedroomsCell.m in Sources */,
 				AB4ED2F018848414009AFB01 /* OMBResidenceOpenHouseListConnection.m in Sources */,
+				AB210A3D199D115D00AFB42E /* OMBInvitation.m in Sources */,
 				AB2613111818EC800053A8AA /* OMBResidenceCell.m in Sources */,
 				AB5B49CE1832D64000ED96DC /* OMBIntroductionView.m in Sources */,
 				ABB7005B187B58AA005F0730 /* OMBLegalQuestionAndAnswerCell.m in Sources */,

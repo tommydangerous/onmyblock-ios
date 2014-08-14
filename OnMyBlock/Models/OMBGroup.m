@@ -6,6 +6,7 @@
 #import "OMBGroup.h"
 
 // Models
+#import "OMBInvitation.h"
 #import "OMBSentApplication.h"
 #import "OMBUser.h"
 
@@ -14,6 +15,14 @@
 #pragma mark - Accessors
 
 #pragma mark - Getters
+
+- (NSMutableDictionary *)invitations
+{
+  if (!_invitations) {
+    _invitations = [NSMutableDictionary dictionary];
+  }
+  return _invitations;
+}
 
 - (NSMutableDictionary *)sentApplications
 {
@@ -29,6 +38,48 @@
     _users = [NSMutableDictionary dictionary];
   }
   return _users;
+}
+
+#pragma mark - Override
+
+#pragma mark - Override OMBObject
+
+- (void)readFromDictionary:(NSDictionary *)dictionary
+{
+  [super readFromDictionary:dictionary];
+
+  // Name
+  id name = [dictionary objectForKey:@"name"];
+  if (name != [NSNull null]) {
+    self.name = name;
+  }
+
+  // Owner ID
+  id ownerId = [dictionary objectForKey:@"owner_id"];
+  if (ownerId != [NSNull null]) {
+    self.ownerId = [ownerId intValue];
+  }
+
+  // Users
+  id users = [dictionary objectForKey:@"users"];
+  if (users != [NSNull null]) {
+    for (NSDictionary *dict in users) {
+      // The object in the array could be a JSON of an invitation model
+      id classType = [dict objectForKey:@"class_type"];
+      if (classType != [NSNull null] && 
+        [classType isEqualToString:@"Invitation"]) {
+        OMBInvitation *invitation = [[OMBInvitation alloc] init];
+        [invitation readFromDictionary:dict];
+        [self addInvitation:invitation];
+      }
+      // User
+      else {
+        OMBUser *user = [[OMBUser alloc] init];
+        [user readFromDictionary:dict];
+        [self addUser:user];
+      }
+    }
+  }
 }
 
 #pragma mark - Methods
@@ -64,35 +115,9 @@
   [self.users setObject:user forKey:@(user.uid)];
 }
 
-- (void)readFromDictionary:(NSDictionary *)dictionary
+- (void)addInvitation:(OMBInvitation *)invitation
 {
-  // Name
-  id name = [dictionary objectForKey:@"name"];
-  if (name != [NSNull null]) {
-    self.name = name;
-  }
-
-  // Owner ID
-  id ownerId = [dictionary objectForKey:@"owner_id"];
-  if (ownerId != [NSNull null]) {
-    self.ownerId = [ownerId intValue];
-  }
-
-  // UID
-  id uid = [dictionary objectForKey:@"id"];
-  if (uid != [NSNull null]) {
-    self.uid = [uid intValue];
-  }
-
-  // Users
-  id users = [dictionary objectForKey:@"users"];
-  if (users != [NSNull null]) {
-    for (NSDictionary *dict in users) {
-      OMBUser *user = [[OMBUser alloc] init];
-      [user readFromDictionary: dict];
-      [self addUser:user];
-    }
-  }
+  [self.invitations setObject:invitation forKey:@(invitation.uid)];
 }
 
 - (void)createSentApplicationWithDictionary:(NSDictionary *)dictionary
