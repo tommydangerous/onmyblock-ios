@@ -148,8 +148,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [self setMenuBarButtonItem];
   // Right bar button item
   self.navigationItem.rightBarButtonItem =
-    [[UIBarButtonItem alloc] initWithImage: [UIImage image:
-      [UIImage imageNamed: @"search_icon.png"] size: CGSizeMake(26, 26)]
+    [[UIBarButtonItem alloc] initWithImage:
+      [UIImage imageNamed: @"map_search_icon.png"]
         style: UIBarButtonItemStylePlain target: self
           action: @selector(showSearch)];
 
