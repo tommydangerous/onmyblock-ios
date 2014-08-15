@@ -11,6 +11,7 @@
 extern NSString *const OMBEmptyResidencePartialViewCell;
 
 @class OMBGradientView;
+@class OMBRentedBannerView;
 @class OMBResidence;
 
 @interface OMBResidencePartialView : OMBView
@@ -23,12 +24,15 @@ extern NSString *const OMBEmptyResidencePartialViewCell;
   OMBGradientView *addToFavoritesButtonView;
   UIImageView *arrowImageView;
   UILabel *bedBathLabel;
+  float heightRentedBanner;
   OMBGradientView *infoView;
   BOOL isDownloadingResidenceImages;
   UIImage *minusFavoriteImage;
   UILabel *offersAndTimeLabel;
   UIImage *plusFavoriteImage;
+  OMBRentedBannerView *rentedBanner;
   UILabel *rentLabel;
+  float originInfo;
 }
 
 @property (nonatomic, copy) void (^completionBlock) (NSError *error);
