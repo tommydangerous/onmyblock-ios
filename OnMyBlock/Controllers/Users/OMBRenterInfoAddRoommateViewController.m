@@ -323,18 +323,21 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         [self cancelFromInputAccessoryView];
       }
       else {
-        NSString *key = [[self sortedSearchResultsDictionaryKeys] objectAtIndex:
-          row];
-        NSDictionary *dict = [searchResultsDictionary objectForKey: key];
-        [valueDictionary setObject: [NSString stringWithFormat:
-          @"%@@facebook.com", [dict objectForKey: @"username"]]
-            forKey: @"email"];
-        [valueDictionary setObject: [dict objectForKey: @"first_name"]
-          forKey: @"firstName"];
-        [valueDictionary setObject: [dict objectForKey: @"last_name"]
-          forKey: @"lastName"];
-        [valueDictionary setObject: [dict objectForKey: @"id"]
-          forKey: @"providerId"];
+        NSString *key = 
+          [[self sortedSearchResultsDictionaryKeys] objectAtIndex:row];
+        NSDictionary *dict = [searchResultsDictionary objectForKey:key];
+        // First name
+        [valueDictionary setObject:[dict objectForKey:@"first_name"]
+          forKey:@"firstName"];
+        // Last name
+        [valueDictionary setObject:[dict objectForKey:@"last_name"]
+          forKey:@"lastName"];
+        // Provider id
+        [valueDictionary setObject:[dict objectForKey:@"id"]
+          forKey:@"providerId"];
+        // Username
+        [valueDictionary setObject:[dict objectForKey:@"username"]
+          forKey:@"username"];
         [self save];
       }
     }

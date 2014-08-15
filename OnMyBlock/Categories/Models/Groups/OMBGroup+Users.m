@@ -42,13 +42,19 @@ accessToken:(NSString *)accessToken delegate:(id<OMBGroupUsersDelegate>)delegate
     [dictionary objectForKey:@"firstName"] : @"";
   NSString *lastName = [dictionary objectForKey:@"lastName"] ?
     [dictionary objectForKey:@"lastName"] : @"";
+  NSString *providerId = [dictionary objectForKey:@"providerId"] ?
+    [dictionary objectForKey:@"providerId"] : @"";
+  NSString *username = [dictionary objectForKey:@"username"] ?
+    [dictionary objectForKey:@"username"] : @"";
     
   [[self sessionManager] POST:@"groups/add_user" parameters:@{
     @"access_token":   accessToken,
     @"created_source": @"ios",
     @"email":          email,
     @"first_name":     firstName,
-    @"last_name":      lastName
+    @"last_name":      lastName,
+    @"provider_id":    providerId,
+    @"username":       username
   } success:^(NSURLSessionDataTask *task, id responseObject) {
     [self readFromDictionary:responseObject];
     if ([delegate respondsToSelector:@selector(saveUserSucceeded)]) {

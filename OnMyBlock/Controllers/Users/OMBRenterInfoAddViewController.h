@@ -9,7 +9,7 @@
 #import "OMBTableViewController.h"
 
 @interface OMBRenterInfoAddViewController : OMBTableViewController
-<UITextFieldDelegate>
+<OMBConnectionProtocol, UITextFieldDelegate>
 {
   BOOL isEditing;
   BOOL isSaving;
