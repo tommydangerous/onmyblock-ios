@@ -504,6 +504,10 @@
 		DE5089A618D517BF00C998BF /* OMBRenterInfoAddPreviousRentalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE50899E18D517BF00C998BF /* OMBRenterInfoAddPreviousRentalViewController.m */; };
 		DE5089A818D517BF00C998BF /* OMBRenterInfoSectionEmploymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5089A018D517BF00C998BF /* OMBRenterInfoSectionEmploymentViewController.m */; };
 		DE5089AA18D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5089A218D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m */; };
+		DE5D3E581992B36000B44C53 /* OMBSchool.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5D3E571992B36000B44C53 /* OMBSchool.m */; };
+		DE5D3E5B1992B3D300B44C53 /* OMBSchoolStore.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5D3E5A1992B3D300B44C53 /* OMBSchoolStore.m */; };
+		DE5D3E5E1992B45800B44C53 /* OMBFullListView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5D3E5D1992B45800B44C53 /* OMBFullListView.m */; };
+		DE5D3E611992CF9000B44C53 /* OMBFullListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5D3E601992CF9000B44C53 /* OMBFullListCell.m */; };
 		DE6A667B19587AE4007542A1 /* OMBPayoutMethodCreditCardInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE6A667A19587AE4007542A1 /* OMBPayoutMethodCreditCardInfoViewController.m */; };
 		DE6A667E1958A58D007542A1 /* OMBCreditCardTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE6A667D1958A58D007542A1 /* OMBCreditCardTextFieldCell.m */; };
 		DE8711851954F51900616C37 /* OMBPayoutMethodBillingInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8711841954F51900616C37 /* OMBPayoutMethodBillingInfoViewController.m */; };
@@ -1506,6 +1510,14 @@
 		DE5089A018D517BF00C998BF /* OMBRenterInfoSectionEmploymentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionEmploymentViewController.m; sourceTree = "<group>"; };
 		DE5089A118D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoSectionPreviousRentalViewController.h; sourceTree = "<group>"; };
 		DE5089A218D517BF00C998BF /* OMBRenterInfoSectionPreviousRentalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OMBRenterInfoSectionPreviousRentalViewController.m; sourceTree = "<group>"; };
+		DE5D3E561992B36000B44C53 /* OMBSchool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSchool.h; sourceTree = "<group>"; };
+		DE5D3E571992B36000B44C53 /* OMBSchool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSchool.m; sourceTree = "<group>"; };
+		DE5D3E591992B3D300B44C53 /* OMBSchoolStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSchoolStore.h; sourceTree = "<group>"; };
+		DE5D3E5A1992B3D300B44C53 /* OMBSchoolStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSchoolStore.m; sourceTree = "<group>"; };
+		DE5D3E5C1992B45800B44C53 /* OMBFullListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFullListView.h; sourceTree = "<group>"; };
+		DE5D3E5D1992B45800B44C53 /* OMBFullListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFullListView.m; sourceTree = "<group>"; };
+		DE5D3E5F1992CF9000B44C53 /* OMBFullListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFullListCell.h; sourceTree = "<group>"; };
+		DE5D3E601992CF9000B44C53 /* OMBFullListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFullListCell.m; sourceTree = "<group>"; };
 		DE6A667919587AE4007542A1 /* OMBPayoutMethodCreditCardInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPayoutMethodCreditCardInfoViewController.h; sourceTree = "<group>"; };
 		DE6A667A19587AE4007542A1 /* OMBPayoutMethodCreditCardInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodCreditCardInfoViewController.m; sourceTree = "<group>"; };
 		DE6A667C1958A58D007542A1 /* OMBCreditCardTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCreditCardTextFieldCell.h; sourceTree = "<group>"; };
@@ -2309,6 +2321,10 @@
 				DEC1C8C4196B6783003184AA /* OMBTextFieldCell.m */,
 				DE97FBEA197DA45800682B15 /* OMBRentedBannerView.h */,
 				DE97FBEB197DA45800682B15 /* OMBRentedBannerView.m */,
+				DE5D3E5C1992B45800B44C53 /* OMBFullListView.h */,
+				DE5D3E5D1992B45800B44C53 /* OMBFullListView.m */,
+				DE5D3E5F1992CF9000B44C53 /* OMBFullListCell.h */,
+				DE5D3E601992CF9000B44C53 /* OMBFullListCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2362,6 +2378,8 @@
 				AB18CF3018DE9C920022ABF1 /* OMBObject.m */,
 				AB6E9408192AA8A4005A357A /* OMBSentApplication.h */,
 				AB6E9409192AA8A4005A357A /* OMBSentApplication.m */,
+				DE5D3E561992B36000B44C53 /* OMBSchool.h */,
+				DE5D3E571992B36000B44C53 /* OMBSchool.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2397,6 +2415,8 @@
 				AB00EAD218C9075D004FD6F8 /* OMBResidenceMapStore.m */,
 				AB5DD32A18CE011500237AFC /* OMBAmenityStore.h */,
 				AB5DD32B18CE011500237AFC /* OMBAmenityStore.m */,
+				DE5D3E591992B3D300B44C53 /* OMBSchoolStore.h */,
+				DE5D3E5A1992B3D300B44C53 /* OMBSchoolStore.m */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -3614,6 +3634,7 @@
 				DE9A4180194264E40026545C /* OMBResidenceTitleView.m in Sources */,
 				ABF8ECA1182D504E0080B1E2 /* OMBIntroContactView.m in Sources */,
 				ABE2816918694AED00A5D14E /* OMBFavoriteResidenceCell.m in Sources */,
+				DE5D3E581992B36000B44C53 /* OMBSchool.m in Sources */,
 				AB57EA24186C7662001682DB /* OMBMessageNewViewController.m in Sources */,
 				ABB91160189808020046611F /* OMBView.m in Sources */,
 				AB9D6119188CEFDE00C9AC64 /* UIImage+MultiFormat.m in Sources */,
@@ -3661,6 +3682,7 @@
 				ABA4F207187CF01600D725D4 /* OMBGoogleMapsReverseGeocodingConnection.m in Sources */,
 				ABA3D69818A92EF1006CE8C1 /* OMBUserDetailViewControllerOLD.m in Sources */,
 				AB8C8C281815A62F00A1B087 /* OMBResidenceCoverPhotoDownloader.m in Sources */,
+				DE5D3E5E1992B45800B44C53 /* OMBFullListView.m in Sources */,
 				AB9FEF0218D02D3800E25FE2 /* OMBCosignerListConnection.m in Sources */,
 				ABBA58971870C59700E9BF4E /* ELCAssetTablePicker.m in Sources */,
 				AB17AE4F18FD9CB600B6952C /* OMBManageListingDetailViewController.m in Sources */,
@@ -3861,6 +3883,7 @@
 				DE6A667E1958A58D007542A1 /* OMBCreditCardTextFieldCell.m in Sources */,
 				ABBA58A31870DC7300E9BF4E /* OMBFinishListingAuctionStartPriceCell.m in Sources */,
 				AB19A09218616C5100F84DE9 /* OMBResidenceDetailDescriptionCell.m in Sources */,
+				DE5D3E5B1992B3D300B44C53 /* OMBSchoolStore.m in Sources */,
 				ABB70067187B58C0005F0730 /* OMBHomebaseLandlordConfirmedTenantsViewController.m in Sources */,
 				AB57EA27186C788B001682DB /* OMBMessageInputToolbar.m in Sources */,
 				DE97FBEC197DA45900682B15 /* OMBRentedBannerView.m in Sources */,
@@ -3878,6 +3901,7 @@
 				ABB70076187B83C0005F0730 /* OMBHomebaseRenterNotificationCell.m in Sources */,
 				AB7A231418A03DBC004AC149 /* OMBUserListingsConnection.m in Sources */,
 				AB0C36AB1840652B006DC3AD /* OMBPaddleView.m in Sources */,
+				DE5D3E611992CF9000B44C53 /* OMBFullListCell.m in Sources */,
 				ABB3C5741811776700DD91C9 /* OMBViewController.m in Sources */,
 				ABBA58951870C59700E9BF4E /* ELCAsset.m in Sources */,
 				ABCB36AC187C7524008A0EEF /* OMBAlertView.m in Sources */,
@@ -4131,7 +4155,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -4169,7 +4193,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;

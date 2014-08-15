@@ -16,7 +16,6 @@
 #import "OCMapView.h"
 #import "OMBActivityViewFullScreen.h"
 #import "OMBActivityView.h"
-#import "OMBAllResidenceStore.h"
 #import "OMBAnnotation.h"
 #import "OMBAnnotationCity.h"
 #import "OMBAnnotationView.h"
@@ -25,16 +24,14 @@
 #import "OMBMapResidenceDetailCell.h"
 #import "OMBNavigationController.h"
 #import "OMBNeighborhood.h"
-#import "OMBNeighborhoodStore.h"
 #import "OMBPropertyInfoView.h"
 #import "OMBResidenceBookItConfirmDetailsViewController.h"
 #import "OMBResidence.h"
 #import "OMBResidenceCell.h"
 #import "OMBResidenceCollectionViewCell.h"
 #import "OMBResidenceDetailViewController.h"
-#import "OMBResidenceListStore.h"
-#import "OMBResidenceMapStore.h"
 #import "OMBResidencePartialView.h"
+#import "OMBSchool.h"
 #import "OMBSpringFlowLayout.h"
 #import "OMBUser.h"
 #import "OMBViewControllerContainer.h"
@@ -46,6 +43,12 @@
 #import "UIImage+Color.h"
 #import "UIImage+NegativeImage.h"
 #import "UIImage+Resize.h"
+// Stores
+#import "OMBAllResidenceStore.h"
+#import "OMBNeighborhoodStore.h"
+#import "OMBResidenceListStore.h"
+#import "OMBResidenceMapStore.h"
+#import "OMBSchoolStore.h"
 
 #define CLCOORDINATE_EPSILON 0.005f
 #define CLCOORDINATES_EQUAL2(coord1, coord2) (fabs(coord1.latitude - coord2.latitude) < CLCOORDINATE_EPSILON && fabs(coord1.longitude - coord2.longitude) < CLCOORDINATE_EPSILON)
@@ -1522,30 +1525,54 @@ withTitle: (NSString *) title;
 {
   [self mapView: _mapView regionDidChangeAnimated: YES];
   
-  // Search for schools if there is one that is equal to user's school
-  for (NSString *cityName in [[OMBNeighborhoodStore sharedStore] cities]) {
-    for (OMBNeighborhood *neighborhood in
-         [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity:
-          cityName]) {
-
-      // Compare name places
-      if([[neighborhood.name lowercaseString] isEqualToString:
-        [[OMBUser currentUser].school lowercaseString]]){
-        
-         centerCoordinate = neighborhood.coordinate;
-         sortSelectionLabel.text = [NSString stringWithFormat:@"Listings near %@",neighborhood.name];
-         if ([self isOnList]) {
-           [self resetAndFetchResidencesForList];
-       }
-       else {
-         [self setMapViewRegion: centerCoordinate
-           withMiles: DEFAULT_MILE_RADIUS animated: NO];
-         [self resetListViewResidences];
-       }
+  NSString *userSchool = [OMBUser currentUser].school;
+  
+  if([userSchool length]) // avoid none "" in schools
+  {
+    // Search for neightborhood if there is one that is equal to user's school
+    for (NSString *cityName in [[OMBNeighborhoodStore sharedStore] cities]) {
+      for (OMBNeighborhood *neighborhood in
+           [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForCity:
+            cityName]) {
+             
+        // Compare name places
+        if([[neighborhood.name lowercaseString] isEqualToString:
+            [userSchool lowercaseString]]){
+               
+          centerCoordinate = neighborhood.coordinate;
+          sortSelectionLabel.text = [NSString
+            stringWithFormat:@"Listings near %@",neighborhood.name];
+          [self reloadRegion];
+          return;
+        }
+      }
+    }
+    
+    // Search for schools
+    for(OMBSchool *school in [[OMBSchoolStore sharedStore] schools]){
+      
+      if([school.realName isEqualToString:userSchool]){
+        centerCoordinate = school.coordinate;
+        sortSelectionLabel.text = [NSString
+          stringWithFormat:@"Listings near %@",school.displayName];
+        [self reloadRegion];
+        return;
       }
     }
   }
   
+}
+
+- (void) reloadRegion
+{
+  if ([self isOnList]) {
+    [self resetAndFetchResidencesForList];
+  }
+  else {
+    [self setMapViewRegion: centerCoordinate
+      withMiles: DEFAULT_MILE_RADIUS animated: NO];
+    [self resetListViewResidences];
+  }
 }
 
 - (void) reloadTable

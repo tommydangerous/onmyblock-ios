@@ -271,6 +271,7 @@
   NSString *firstNameString = _loginSignUpView.firstNameTextField.text;
   NSString *lastNameString  = _loginSignUpView.lastNameTextField.text;
   NSString *passwordString  = _loginSignUpView.passwordTextField.text;
+  NSString *schoolString    = [_loginSignUpView schoolSelected];
 
   NSString *message;
   if ([firstNameString length] == 0) {
@@ -296,10 +297,11 @@
   NSMutableDictionary *params =
     [NSMutableDictionary dictionaryWithDictionary: @{
       @"created_source": @"ios",
-      @"email":      emailString,
-      @"first_name": firstNameString,
-      @"last_name":  lastNameString,
-      @"password":   passwordString
+      @"email"      : emailString,
+      @"first_name" : firstNameString,
+      @"last_name"  : lastNameString,
+      @"password"   : passwordString,
+      @"school"     : schoolString
     }];
   NSString *userTypeKey = @"user_type";
   if ([_loginSignUpView isLandlord]) {
