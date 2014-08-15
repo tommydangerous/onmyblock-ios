@@ -14,6 +14,7 @@
 #import "OMBFavoriteResidenceConnection.h"
 #import "OMBGradientView.h"
 #import "OMBMapViewController.h"
+#import "OMBRentedBannerView.h"
 #import "OMBResidence.h"
 #import "OMBResidenceCoverPhotoURLConnection.h"
 #import "OMBResidenceImagesConnection.h"
@@ -90,12 +91,13 @@ NSString *const OMBEmptyResidencePartialViewCell =
   CGFloat rentLabelHeight    = padding * 2;
   CGFloat infoViewHeight = marginTop + marginTop + (bedBathLabelHeight * 2) +
     marginBottom;
+  originInfo = imageHeight - infoViewHeight;
   infoView        = [[OMBGradientView alloc] init];
   infoView.colors = @[
     [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.0],
     [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.8]
   ];
-  infoView.frame = CGRectMake(0.0f, imageHeight - infoViewHeight, 
+  infoView.frame = CGRectMake(0.0f, originInfo,
     screenWidth, infoViewHeight);
   [self addSubview: infoView];
 
@@ -156,6 +158,17 @@ NSString *const OMBEmptyResidencePartialViewCell =
   // activityIndicatorView.frame = activityFrame;
   // [self addSubview: activityIndicatorView];
 
+  
+  // Rented banner
+  heightRentedBanner = 28.f;
+  CGRect rentedRect = CGRectMake(0.0f,
+    self.frame.size.height - heightRentedBanner,
+      screenWidth, heightRentedBanner);
+  rentedBanner = [[OMBRentedBannerView alloc] initWithFrame:rentedRect];
+  rentedBanner.hidden = YES;
+  rentedBanner.rentedLabel.font = [UIFont normalTextFontBold];
+  [self addSubview:rentedBanner];
+  
   return self;
 }
 
@@ -414,6 +427,16 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   // Address or title
   addressLabel.text = [self.residence addressOrTitle];
   
+  // Rented Banner
+  if(_residence.rented){
+    rentedBanner.hidden = NO;
+    [rentedBanner loadDateAvailable:object.moveInDate];
+    [self resizeFrameBanner:YES];
+  }
+  else{
+    rentedBanner.hidden = YES;
+    [self resizeFrameBanner:NO];
+  }
   // Add to favorites button image
   [self adjustFavoriteButton];
 }
@@ -458,6 +481,17 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
 - (NSArray *) residenceImages
 {
   return [self.residence imagesArray];
+}
+
+- (void)resizeFrameBanner:(BOOL)resize
+{
+  CGRect frame = infoView.frame;
+  if(resize)
+    frame.origin.y = originInfo - heightRentedBanner;
+  else
+    frame.origin.y = originInfo;
+  infoView.frame = frame;
+
 }
 
 @end

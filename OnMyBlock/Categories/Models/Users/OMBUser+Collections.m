@@ -29,6 +29,7 @@
     @"residences":          [NSMutableDictionary dictionary],
     @"temporaryResidences": [NSMutableDictionary dictionary]
   }];
+  self.residencesVisited            = [NSMutableDictionary dictionary];
   self.heightForAboutTextDictionary = [NSMutableDictionary dictionary];
 }
 

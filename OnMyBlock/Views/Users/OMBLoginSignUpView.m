@@ -11,12 +11,19 @@
 #import "AMBlurView.h"
 #import "OMBBlurView.h"
 #import "OMBCloseButtonView.h"
+#import "OMBFullListView.h"
 #import "OMBFacebookButton.h"
+#import "OMBFullListCell.h"
 #import "OMBOrView.h"
+#import "OMBSchool.h"
+#import "OMBSchoolStore.h"
 #import "OMBViewController.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
+
+
+#define DEGREES_TO_RADIANS(x) (M_PI * x / 180.0)
 
 @implementation OMBLoginSignUpView
 
@@ -106,6 +113,11 @@
     UITextAutocapitalizationTypeWords;
   _lastNameTextField.clearButtonMode = _firstNameTextField.clearButtonMode;
   _lastNameTextField.placeholder = @"Last name";
+  // School
+  _schoolTextField = [[TextFieldPadding alloc] init];
+  //_schoolTextField.clearButtonMode = _firstNameTextField.clearButtonMode;
+  _schoolTextField.userInteractionEnabled = NO;
+  _schoolTextField.placeholder = @"School";
   // Email
   _emailTextField = [[TextFieldPadding alloc] init];
   _emailTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -120,6 +132,7 @@
   NSArray *textFieldImageArray = @[
     @"user_icon.png",
     @"user_icon.png",
+    @"school_icon.png",
     @"messages_icon_dark.png",
     @"password_icon.png"
   ];
@@ -127,6 +140,7 @@
   NSArray *textFieldArray = @[
     _firstNameTextField,
     _lastNameTextField,
+    _schoolTextField,
     _emailTextField,
     _passwordTextField
   ];
@@ -134,13 +148,37 @@
   textFieldBorderArray = [NSMutableArray array];
   textFieldFrameArray  = [NSMutableArray array];
   for (TextFieldPadding *textField in textFieldArray) {
+    
     NSInteger index = [textFieldArray indexOfObject: textField];
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
     // textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     textField.delegate = self;
     textField.font = [UIFont normalTextFont];
-    textField.frame = CGRectMake(0.0f, index * buttonHeight,
-      width, buttonHeight);
+    float widthObject = width;
+    
+    int auxIndex = (index > 0 ? index - 1 : index);
+    // Half of width
+    if(textField == _firstNameTextField || textField == _lastNameTextField){
+      float origin = 0.0f;
+      // Next to first name
+      if(textField == _lastNameTextField)
+        origin = widthObject * .5f;
+      
+      textField.frame = CGRectMake(origin, auxIndex * buttonHeight,
+        widthObject * .5f, buttonHeight);
+      if(textField == _firstNameTextField){
+        // Right border
+        UIView *bor = [UIView new];
+        bor.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
+        bor.frame = CGRectMake(textField.frame.size.width - 1.0f, 0.0f,
+          1.0f, textField.frame.size.height);
+        [textField addSubview: bor];
+        }
+      }
+    else{
+      textField.frame = CGRectMake(0.0f, auxIndex * buttonHeight,
+        widthObject, buttonHeight);
+    }
     [textFieldFrameArray addObject: [NSValue valueWithCGRect: textField.frame]];
     textField.leftPaddingX = buttonHeight;
     textField.paddingY = 0.0f;
@@ -149,22 +187,61 @@
     textField.returnKeyType = UIReturnKeyDone;
     textField.rightPaddingX = padding;
     textField.textColor = [UIColor textColor];
-    [textFieldView addSubview: textField];
-    // Image view
-    UIImageView *iv = [UIImageView new];
-    iv.alpha = 0.3f;
-    iv.frame = CGRectMake(15.0f, 15.0f,
-      textField.frame.size.height - (15.0f * 2),
-        textField.frame.size.height - (15.0f * 2));
-    iv.image = [UIImage imageNamed: [textFieldImageArray objectAtIndex: index]];
-    [textField addSubview: iv];
+    if(textField == _lastNameTextField){
+      textField.leftPaddingX = buttonHeight * .5f;
+    }
+    else{
+      if(textField == _firstNameTextField){
+        textField.rightPaddingX = padding * .5f;
+      }
+      // Image view
+      UIImageView *iv = [UIImageView new];
+      iv.alpha = 0.3f;
+      iv.frame = CGRectMake(15.0f, 15.0f,
+        textField.frame.size.height - (15.0f * 2),
+          textField.frame.size.height - (15.0f * 2));
+      iv.image = [UIImage imageNamed: [textFieldImageArray objectAtIndex: index]];
+      [textField addSubview: iv];
+    }
     // Top border
-    if (index > 0) {
+    if (index > 1) {
       UIView *bor = [UIView new];
       bor.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
       bor.frame = CGRectMake(0.0f, 0.0f, textField.frame.size.width, 1.0f);
       [textField addSubview: bor];
       [textFieldBorderArray addObject: bor];
+    }
+    // Add arrow and tap recognizer
+    if(textField == _schoolTextField){
+      // Arrow image
+      // float widthIcon  = textField.frame.size.height * .3f;
+      // float heightIcon = textField.frame.size.height * .34f;
+      // UIImageView *arrow = [UIImageView new];
+      // arrow.frame = CGRectMake(textField.frame.size.width - widthIcon - padding,
+      //   (textField.frame.size.height - heightIcon) * .5f,
+      //     widthIcon, heightIcon);
+      // arrow.image = [UIImage imageNamed:@"arrow_left"];
+      // arrow.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-90));
+      // [textField addSubview:arrow];
+      
+      // Textfield container for gesture recognizer
+      schoolView = [UIView new];
+      schoolView.frame = textField.frame;
+      schoolView.backgroundColor = UIColor.clearColor;
+      
+      textField.frame = CGRectMake(0.0f, 0.0f,
+        textField.frame.size.width, textField.frame.size.height);
+      [schoolView addSubview:textField];
+      
+      // Gesture to show schools
+      UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc]
+        initWithTarget:self action:@selector(showSchools)];
+      [schoolView addGestureRecognizer:recognizer];
+      
+      [textFieldView addSubview: schoolView];
+    }
+    else{
+      [textFieldView addSubview: textField];
     }
   }
 
@@ -219,6 +296,13 @@
     forState: UIControlStateNormal];
   [bottomView addSubview: actionSwitchButton];
 
+  // School List
+  schools = [[OMBSchoolStore sharedStore] schools];
+  schoolList = [OMBFullListView new];
+  schoolList.table.dataSource = self;
+  schoolList.table.delegate   = self;
+  schoolIndex = -1;
+  
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(keyboardWillShow:)
       name: UIKeyboardWillShowNotification object: nil];
@@ -233,6 +317,55 @@
 
 #pragma mark - Protocol
 
+#pragma mark - Protocol UITableViewDataSource
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  static NSString *cellID = @"cellID";
+  OMBFullListCell *cell = [tableView
+    dequeueReusableCellWithIdentifier:cellID];
+  if(!cell)
+    cell = [[OMBFullListCell alloc] initWithStyle:
+      UITableViewCellStyleDefault reuseIdentifier:cellID];
+    
+  if(indexPath.row == 9 || indexPath.row == 11)
+    [cell addBorder];
+  else
+    [cell removeBorder];
+  
+  if(schoolIndex == indexPath.row)
+    cell.textLabel.font = [UIFont normalTextFontBold];
+  else
+    cell.textLabel.font = [UIFont normalTextFont];
+  cell.textLabel.text = ((OMBSchool *)schools[indexPath.row]).displayName;
+  
+  return cell;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section
+{
+  
+  return schools.count;
+}
+
+#pragma mark - Protocol UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  schoolIndex = indexPath.row;
+  _schoolTextField.text =
+    ((OMBSchool *)[schools objectAtIndex:schoolIndex]).displayName;
+  [schoolList closeView];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView
+heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  return [OMBFullListCell heightForCell];
+}
+
 #pragma mark - Protocol UITextFieldDelegate
 
 - (void) textFieldDidBeginEditing: (UITextField *) textField
@@ -245,10 +378,10 @@
   NSInteger index = 0;
   if (textField == _emailTextField)
     index = OMBLoginSignUpViewTextFieldEmail;
-  else if (textField == _firstNameTextField)
+  else if (textField == _firstNameTextField || textField == _lastNameTextField)
     index = OMBLoginSignUpViewTextFieldFirstName;
-  else if (textField == _lastNameTextField)
-    index = OMBLoginSignUpViewTextFieldLastName;
+  /*else if (textField == _lastNameTextField)
+    index = OMBLoginSignUpViewTextFieldLastName;*/
   else if (textField == _passwordTextField)
     index = OMBLoginSignUpViewTextFieldPassword;
 
@@ -283,8 +416,9 @@
 
 - (void) clearTextFields
 {
+  schoolIndex = -1;
   _emailTextField.text = _firstNameTextField.text =
-    _lastNameTextField.text = _passwordTextField.text = @"";
+    _lastNameTextField.text = _passwordTextField.text = _schoolTextField.text = @"";
 }
 
 - (CGFloat) heightForScrollContentSize
@@ -327,9 +461,27 @@
   }];
 }
 
+- (NSString *) schoolSelected
+{
+  if(!isLandlord && schoolIndex >= 0){
+    return [((OMBSchool *)[schools objectAtIndex:schoolIndex]) realName];
+  }
+  
+  return @"";
+}
+
 - (void) scrollToTop
 {
   [scroll setContentOffset: CGPointZero animated: YES];
+}
+
+- (void) showSchools
+{
+  [self endEditing:YES];
+  
+  [schoolList setupWithTitle:@"Schools" inView:self];
+  [schoolList showView];
+  
 }
 
 - (void) switchToLandlord
@@ -379,6 +531,39 @@
     forState: UIControlStateNormal];
   [userSwitchButton setTitle: [NSString stringWithFormat: @"Are you a %@?",
     isLandlord ? @"student" : @"landlord"] forState: UIControlStateNormal];
+  schoolView.hidden = isLandlord;
+  
+  [UIView animateWithDuration:OMBStandardDuration animations:^{
+    textFieldView.frame = CGRectMake(textFieldView.frame.origin.x,
+      textFieldView.frame.origin.y, textFieldView.frame.size.width,
+        _emailTextField.frame.size.height * (isLandlord ? 3 : 4));
+    
+    CGRect rectEmail, rectPassword;
+    if(isLandlord){
+      rectEmail = [[textFieldFrameArray objectAtIndex:
+        OMBLoginSignUpViewTextFieldSchool] CGRectValue];
+      rectPassword = [[textFieldFrameArray objectAtIndex:
+        OMBLoginSignUpViewTextFieldEmail] CGRectValue];
+    }
+    else{
+      rectEmail = [[textFieldFrameArray objectAtIndex:
+        OMBLoginSignUpViewTextFieldEmail] CGRectValue];
+      rectPassword = [[textFieldFrameArray objectAtIndex:
+        OMBLoginSignUpViewTextFieldPassword] CGRectValue];
+    }
+    
+    schoolView.alpha = isLandlord ? 0.0f : 1.0f;
+    _emailTextField.frame = rectEmail;
+    _passwordTextField.frame = rectPassword;
+    
+    // Bottom view
+    bottomView.frame = CGRectMake(bottomView.frame.origin.x,
+      textFieldView.frame.origin.y + textFieldView.frame.size.height +
+        OMBPadding, bottomView.frame.size.width,
+          bottomView.frame.size.height);
+  }];
+  
+  [self refreshContentSize];
 }
 
 - (void) updateViews
@@ -388,24 +573,27 @@
     [UIView animateWithDuration: OMBStandardDuration animations: ^{
       _firstNameTextField.alpha = 0.0f;
       _lastNameTextField.alpha  = 0.0f;
+      schoolView.alpha    = 0.0f;
       userSwitchButton.hidden = YES;
       // Email
       CGRect rect1 = [[textFieldFrameArray objectAtIndex:
         OMBLoginSignUpViewTextFieldFirstName] CGRectValue];
+      rect1.size.width = _schoolTextField.frame.size.width;
       _emailTextField.frame = rect1;
       _emailTextField.placeholder = @"Email";
       // Password
       CGRect rect2 = [[textFieldFrameArray objectAtIndex:
-        OMBLoginSignUpViewTextFieldLastName] CGRectValue];
+        OMBLoginSignUpViewTextFieldSchool] CGRectValue];
+      rect2.size.width = _schoolTextField.frame.size.width;
       _passwordTextField.frame = rect2;
       // Resize the text field view
       textFieldView.frame = CGRectMake(textFieldView.frame.origin.x,
         textFieldView.frame.origin.y, textFieldView.bounds.size.width,
           _emailTextField.frame.size.height * 2);
       // Hide the top borders
-      for (NSInteger i = OMBLoginSignUpViewTextFieldLastName;
+      for (NSInteger i = OMBLoginSignUpViewTextFieldSchool;
         i < OMBLoginSignUpViewTextFieldEmail; i++) {
-        UIView *v = [textFieldBorderArray objectAtIndex: i];
+        UIView *v = [textFieldBorderArray objectAtIndex: i - 1];
         v.hidden = YES;
       }
       // Bottom view
@@ -417,6 +605,7 @@
       if (finished) {
         _firstNameTextField.hidden = YES;
         _lastNameTextField.hidden  = YES;
+        schoolView.hidden    = YES;
       }
     }];
     // Facebook
@@ -435,28 +624,42 @@
   else {
     _firstNameTextField.hidden = NO;
     _lastNameTextField.hidden  = NO;
+    schoolView.hidden    = isLandlord;
     userSwitchButton.hidden = NO;
     [UIView animateWithDuration: OMBStandardDuration animations: ^{
       _firstNameTextField.alpha = 1.0f;
       _lastNameTextField.alpha  = 1.0f;
+      schoolView.alpha    = isLandlord ? 0.0f : 1.0f;
+      
+      CGRect rectEmail, rectPassword;
+      
+      if(isLandlord){
+        rectEmail = [[textFieldFrameArray objectAtIndex:
+          OMBLoginSignUpViewTextFieldSchool] CGRectValue];
+        rectPassword = [[textFieldFrameArray objectAtIndex:
+          OMBLoginSignUpViewTextFieldEmail] CGRectValue];
+      }
+      else{
+        rectEmail = [[textFieldFrameArray objectAtIndex:
+          OMBLoginSignUpViewTextFieldEmail] CGRectValue];
+        rectPassword = [[textFieldFrameArray objectAtIndex:
+          OMBLoginSignUpViewTextFieldPassword] CGRectValue];
+      }
+      
       // Email
-      CGRect rect1 = [[textFieldFrameArray objectAtIndex:
-        OMBLoginSignUpViewTextFieldEmail] CGRectValue];
-      _emailTextField.frame = rect1;
+      _emailTextField.frame = rectEmail;
       _emailTextField.placeholder = [NSString stringWithFormat: @"%@ email",
         isLandlord ? @"Landlord" : @"School"];
       // Password
-      CGRect rect2 = [[textFieldFrameArray objectAtIndex:
-        OMBLoginSignUpViewTextFieldPassword] CGRectValue];
-      _passwordTextField.frame = rect2;
+      _passwordTextField.frame = rectPassword;
       // Resize the text field view
       textFieldView.frame = CGRectMake(textFieldView.frame.origin.x,
         textFieldView.frame.origin.y, textFieldView.bounds.size.width,
-          _emailTextField.frame.size.height * 4);
+          _emailTextField.frame.size.height * (isLandlord ? 3 : 4));
       // Hide the top borders
-      for (NSInteger i = OMBLoginSignUpViewTextFieldLastName;
+      for (NSInteger i = OMBLoginSignUpViewTextFieldSchool;
         i < OMBLoginSignUpViewTextFieldEmail; i++) {
-        UIView *v = [textFieldBorderArray objectAtIndex: i];
+        UIView *v = [textFieldBorderArray objectAtIndex: i - 1];
         v.hidden = NO;
       }
       // Bottom view

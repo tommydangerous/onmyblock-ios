@@ -476,6 +476,11 @@ float kResidenceDetailImagePercentage   = 0.5f;
 {
   [super viewWillAppear: animated];
 
+  // Add residence visited for current user
+  if ([[OMBUser currentUser] loggedIn]) {
+    [[OMBUser currentUser] addResidenceVisited:residence];
+  }
+  
   // Fetch residence detail data
   [residence fetchDetailsWithCompletion: ^(NSError *error) {
     [self refreshResidenceData];
@@ -1499,14 +1504,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // Show banner
     rentedBanner.hidden = NO;
     // Text
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat       = @"MMMM d, yyyy";
-    NSString *moveInSring = [dateFormatter stringFromDate:
-      [NSDate dateWithTimeIntervalSince1970: residence.moveInDate]];
-
-    rentedBanner.availableLabel.text =
-      [NSString stringWithFormat:@"Available on %@",
-        moveInSring];
+    [rentedBanner loadDateAvailable:residence.moveInDate];
     
     if(!loaded)
       [self reloadFrameForBanner];

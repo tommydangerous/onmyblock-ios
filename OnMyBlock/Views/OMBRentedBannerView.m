@@ -21,21 +21,21 @@
 
   self.backgroundColor = [UIColor orange];
   
-  UILabel *rentedLabel = [UILabel new];
   float height = 40.f;
-  rentedLabel.font = [UIFont mediumTextFontBold];
-  rentedLabel.frame = CGRectMake(10.f,
+  _rentedLabel = [UILabel new];
+  _rentedLabel.font = [UIFont mediumTextFontBold];
+  _rentedLabel.frame = CGRectMake(10.f,
     (frame.size.height - height) * .5f,
       70.f, height);
-  rentedLabel.text = @"Rented";
-  rentedLabel.textColor = UIColor.whiteColor;
-  [self addSubview:rentedLabel];
+  _rentedLabel.text = @"Rented";
+  _rentedLabel.textColor = UIColor.whiteColor;
+  [self addSubview:_rentedLabel];
   
   _availableLabel = [UILabel new];
-  float widthLabel = frame.size.width - rentedLabel.frame.size.width - 3 * 10.f;
+  float widthLabel = frame.size.width - _rentedLabel.frame.size.width - 3 * 10.f;
   _availableLabel.font = [UIFont smallTextFont];
-  _availableLabel.frame = CGRectMake(rentedLabel.frame.origin.x +
-    rentedLabel.frame.size.width + 10.f,
+  _availableLabel.frame = CGRectMake(_rentedLabel.frame.origin.x +
+    _rentedLabel.frame.size.width + 10.f,
       (frame.size.height - 20.f) * .5f,
         widthLabel, 20.f);
   _availableLabel.textAlignment = NSTextAlignmentRight;
@@ -43,6 +43,20 @@
   [self addSubview:_availableLabel];
   
   return self;
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void)loadDateAvailable:(NSTimeInterval)timeInterval
+{
+  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+  dateFormatter.dateFormat       = @"MMMM d, yyyy";
+  NSString *moveInSring = [dateFormatter stringFromDate:
+    [NSDate dateWithTimeIntervalSince1970: timeInterval]];
+  _availableLabel.text = [NSString stringWithFormat:
+    @"Available on %@", moveInSring];
 }
 
 @end

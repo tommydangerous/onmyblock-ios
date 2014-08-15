@@ -24,7 +24,7 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
-@interface OMBMapFilterLocationViewController ()
+@interface OMBMapFilterLocationViewController () <UISearchBarDelegate>
 {
   CLLocationManager *locationManager;
 }
@@ -82,34 +82,45 @@
                             sortedNeighborhoodsForName:@""];
 
   // Header view
-  AMBlurView *neighborhoodTableHeaderView = [AMBlurView new];
-  // neighborhoodTableHeaderView.backgroundColor = [UIColor blue];
+  AMBlurView *neighborhoodTableHeaderView   = [AMBlurView new];
   neighborhoodTableHeaderView.blurTintColor = [UIColor grayLight];
-  neighborhoodTableHeaderView.frame = CGRectMake(0.0f, 0.0f,
-    self.table.frame.size.width, (OMBPadding * 0.5f) + OMBStandardHeight +
-      (OMBPadding * 0.5f) + OMBStandardHeight);
+  neighborhoodTableHeaderView.frame         = CGRectMake(
+    0, 0, self.table.frame.size.width, OMBStandardHeight * 2
+  );
   self.table.tableHeaderView = neighborhoodTableHeaderView;
+
   // Filter
-  filterTextField = [[TextFieldPadding alloc] init];
-  filterTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-  filterTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-  filterTextField.backgroundColor = [UIColor whiteColor];
-  filterTextField.delegate = self;
-  filterTextField.font = [UIFont normalTextFont];
-  filterTextField.frame = CGRectMake(padding * 0.5f, padding * 0.5f,
-    neighborhoodTableHeaderView.frame.size.width - padding,
-      OMBStandardHeight);
-  filterTextField.layer.cornerRadius = OMBCornerRadius;
-  filterTextField.leftPaddingX = padding * 0.5f;
-  filterTextField.returnKeyType = UIReturnKeySearch;
-  filterTextField.rightPaddingX = filterTextField.leftPaddingX;
-  filterTextField.placeholderColor = [UIColor grayMedium];
-  filterTextField.placeholder = @"Search city or school";
-  filterTextField.textAlignment = NSTextAlignmentCenter;
-  filterTextField.textColor = [UIColor textColor];
-  [filterTextField addTarget: self action: @selector(textFieldDidChange:)
-    forControlEvents: UIControlEventEditingChanged];
-  [neighborhoodTableHeaderView addSubview: filterTextField];
+  // filterTextField = [[TextFieldPadding alloc] init];
+  // filterTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+  // filterTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+  // filterTextField.backgroundColor = [UIColor grayUltraLight];
+  // filterTextField.delegate = self;
+  // filterTextField.font = [UIFont normalTextFont];
+  // filterTextField.frame = CGRectMake(
+  //   0, 0, neighborhoodTableHeaderView.frame.size.width, OMBStandardHeight
+  // );
+  // filterTextField.leftPaddingX = padding;
+  // filterTextField.returnKeyType = UIReturnKeySearch;
+  // filterTextField.rightPaddingX = filterTextField.leftPaddingX;
+  // filterTextField.placeholderColor = [UIColor grayMedium];
+  // filterTextField.placeholder = @"Search city or school";
+  // filterTextField.textAlignment = NSTextAlignmentCenter;
+  // filterTextField.textColor = [UIColor textColor];
+  // [filterTextField addTarget: self action: @selector(textFieldDidChange:)
+  //   forControlEvents: UIControlEventEditingChanged];
+
+  UISearchBar *searchBar           = [[UISearchBar alloc] init];
+  searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+  searchBar.autocorrectionType     = UITextAutocorrectionTypeNo;
+  searchBar.delegate               = self;
+  searchBar.frame = CGRectMake(0, 0, 
+    CGRectGetWidth(neighborhoodTableHeaderView.frame), OMBStandardHeight
+  );
+  searchBar.placeholder = @"Search city or school";
+  searchBar.tintColor   = [UIColor blue];
+  searchBar.translucent = YES;
+  [neighborhoodTableHeaderView addSubview:searchBar];
+
   // Filter image view
   // CGFloat sizeImage = OMBPadding * 0.8f;
   // filterImageView = [[UIImageView alloc] initWithImage:
@@ -127,9 +138,8 @@
   //   UIControlContentHorizontalAlignmentLeft;
   currentLocationButton.backgroundColor = [UIColor whiteColor];
   currentLocationButton.frame = CGRectMake(0.0f,
-    filterTextField.frame.origin.y + filterTextField.frame.size.height +
-      filterTextField.frame.origin.y,
-        neighborhoodTableHeaderView.frame.size.width, OMBStandardHeight);
+    searchBar.frame.origin.y + searchBar.frame.size.height,
+      neighborhoodTableHeaderView.frame.size.width, OMBStandardHeight);
   currentLocationButton.titleLabel.font = [UIFont normalTextFontBold];
   [currentLocationButton addTarget: self action: @selector(useCurrentLocation)
     forControlEvents: UIControlEventTouchUpInside];
@@ -204,6 +214,21 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   if(isEditing){
     [self hideTextField];
   }
+}
+
+#pragma mark - Protocol UISearchBarDelegate
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+  [self.view endEditing:YES];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+  temporaryNeighborhoods = 
+    [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForName:
+      [searchText lowercaseString]];
+  [self.table reloadData];
 }
 
 #pragma mark - Protocol UITableViewDataSource

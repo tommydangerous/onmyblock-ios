@@ -382,6 +382,15 @@ withCompletion: (void (^) (NSError *error)) block
   NSLog(@"%@", residence);
 }
 
+- (void) addResidenceVisited:(OMBResidence *)residence
+{
+  NSNumber *key = [NSNumber numberWithInt: residence.uid];
+  // This object just need residence's uid.
+  // Maybe could use residence object for store it.
+  if (![_residencesVisited objectForKey: key])
+    [_residencesVisited setObject: @(residence.uid) forKey: key];
+}
+
 - (BOOL) alreadyFavoritedResidence: (OMBResidence *) residence
 {
   if ([_favorites objectForKey: [NSString stringWithFormat: @"%i",
@@ -858,7 +867,8 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
       key];
     [dict removeAllObjects];
   }
-
+  [[OMBUser currentUser].residencesVisited removeAllObjects];
+  
   [OMBUser currentUser].uid = 0;
 
   // Clear conversations
@@ -1838,6 +1848,15 @@ withCompletion: (void (^) (NSError *error)) block
   // OMBViewControllerContainer
   [[NSNotificationCenter defaultCenter] postNotificationName:
     OMBCurrentUserUploadedImage object: nil];
+}
+
+- (BOOL) visited:(int)uid
+{
+  NSNumber *key = [NSNumber numberWithInt: uid];
+  if([_residencesVisited objectForKey: key])
+    return YES;
+  
+  return NO;
 }
 
 @end

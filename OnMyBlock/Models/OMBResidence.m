@@ -627,6 +627,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
 
 - (void) readFromDictionaryLightning: (NSDictionary *) dictionary
 {
+  NSDateFormatter *dateFormatter = [NSDateFormatter JSONDateParser];
   // Address
   id address = [dictionary objectForKey: @"address"];
   if (address != [NSNull null])
@@ -662,6 +663,16 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   if (minRent != [NSNull null])
     self.minRent = [minRent floatValue];
 
+  // Move-in Date
+  id moveInDate = [dictionary objectForKey: @"move_in_date"];
+  if (moveInDate != [NSNull null] && [moveInDate length]) {
+    self.moveInDate = [[dateFormatter dateFromString:
+     moveInDate] timeIntervalSince1970];
+  }
+  else {
+    self.moveInDate = [[NSDate date] timeIntervalSince1970];
+  }
+  
   // Rented
   id rented = [dictionary objectForKey: @"rented"];
   if (rented != [NSNull null]) {
