@@ -171,10 +171,10 @@ withZoomScale: (double) zoomScale
       MKMapRect mapRect = MKMapRectMake(x / scaleFactor, y / scaleFactor,
         1.0 / scaleFactor, 1.0 / scaleFactor);
 
-      __block double totalX = 0;
-      __block double totalY = 0;
-      __block int count     = 0;
-      __block bool rented   = false;
+      __block double totalX   = 0;
+      __block double totalY   = 0;
+      __block int count       = 0;
+      __block bool rented     = false;
       __block int residenceId = 0;
 
       NSMutableArray *array = [NSMutableArray array];
@@ -183,7 +183,7 @@ withZoomScale: (double) zoomScale
         ^(QVQuadTreeNodeData data) {
           totalX += data.x;
           totalY += data.y;
-          rented  = ((struct QVResidenceInfo *)data.data)->rented;
+          rented      = ((struct QVResidenceInfo *)data.data)->rented;
           residenceId = ((struct QVResidenceInfo *)data.data)->id;
           
           count++;

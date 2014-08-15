@@ -16,10 +16,10 @@
 @property (assign, nonatomic) CLLocationCoordinate2D coordinate;
 @property (strong, nonatomic) NSArray *coordinates;
 @property (assign, nonatomic) NSInteger count;
-@property (copy, nonatomic) NSString *subtitle;
-@property (copy, nonatomic) NSString *title;
 @property (nonatomic) bool rented;
 @property (nonatomic) int residenceId;
+@property (copy, nonatomic) NSString *subtitle;
+@property (copy, nonatomic) NSString *title;
 
 #pragma mark - Initializer
 

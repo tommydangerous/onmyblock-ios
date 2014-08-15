@@ -477,8 +477,9 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [super viewWillAppear: animated];
 
   // Add residence visited for current user
-  if([[OMBUser currentUser] loggedIn])
+  if ([[OMBUser currentUser] loggedIn]) {
     [[OMBUser currentUser] addResidenceVisited:residence];
+  }
   
   // Fetch residence detail data
   [residence fetchDetailsWithCompletion: ^(NSError *error) {

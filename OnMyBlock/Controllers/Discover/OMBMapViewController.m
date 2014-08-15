@@ -1717,10 +1717,10 @@ withMiles: (int) miles animated: (BOOL) animated
 
 - (void) showResidenceDetailViewController
 {
-  
-  if([[_mapView selectedAnnotations] count] && [[OMBUser currentUser] loggedIn]){
-    for(id<MKAnnotation> annotation in [_mapView selectedAnnotations]){
-      if([annotation isKindOfClass:[QVClusterAnnotation class]]){
+  if ([[_mapView selectedAnnotations] count] && 
+    [[OMBUser currentUser] loggedIn]) {
+    for (id<MKAnnotation> annotation in [_mapView selectedAnnotations]) {
+      if ([annotation isKindOfClass:[QVClusterAnnotation class]]) {
         recentResidence = annotation;
       }
     }
@@ -1728,7 +1728,6 @@ withMiles: (int) miles animated: (BOOL) animated
   [self.navigationController pushViewController:
     [[OMBResidenceDetailViewController alloc] initWithResidence:
       propertyInfoView.residence] animated: YES];
-  // NSLog(@"SHOW RESIDENCE VIEW CONTROLLER");
 }
 
 - (void) showResidentListAnnotation
@@ -2019,7 +2018,7 @@ withMiles: (int) miles animated: (BOOL) animated
 
 - (void)updateRecentResidence
 {
-  if(recentResidence){
+  if (recentResidence) {
     QVClusterAnnotationView *annotationView =
       (QVClusterAnnotationView *)[_mapView viewForAnnotation:recentResidence];
     annotationView.visited = YES;
