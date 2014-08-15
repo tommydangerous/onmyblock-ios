@@ -8,6 +8,17 @@
 
 #import "OMBGroup.h"
 
+@class OMBInvitation;
+
+@protocol OMBGroupInvitationsDelegate <NSObject>
+
+@optional
+
+- (void)deleteInvitationFailed:(NSError *)error;
+- (void)deleteInvitationSucceeded;
+
+@end
+
 @interface OMBGroup (Invitations)
 
 #pragma mark - Methods
@@ -16,6 +27,9 @@
 
 #pragma mark - Public
 
+- (void)deleteInvitation:(OMBInvitation *)invitation 
+accessToken:(NSString *)accessToken 
+delegate:(id<OMBGroupInvitationsDelegate>)delegate;
 - (NSArray *)invitationsSortedByFirstName;
 
 @end
