@@ -8,6 +8,7 @@
 
 @interface OMBRentedBannerView : UIView
 
+@property (nonatomic, strong) UILabel *rentedLabel;
 @property (nonatomic, strong) UILabel *availableLabel;
 
 #pragma mark - Methods
