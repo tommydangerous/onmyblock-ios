@@ -8,6 +8,9 @@
 
 #import "OMBFullListCell.h"
 
+// View controllers
+#import "OMBViewController.h"
+
 @implementation OMBFullListCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style
@@ -40,9 +43,13 @@
 {
   if(![self viewWithTag:55]){
     UIView *border = [UIView new];
-    border.backgroundColor = [UIColor colorWithWhite:1.0f alpha:.7f];
+    border.backgroundColor = [UIColor colorWithWhite:1.0f alpha:0.3];
     border.frame = CGRectMake(5.f, 45.f - 1.f,
       self.frame.size.width - 50.f, 1.f);
+    border.frame = CGRectMake(
+      0, [OMBFullListCell heightForCell] - 1,
+      CGRectGetWidth(self.frame) - (OMBPadding * 2), 1
+    );
     border.tag = 55;
     [self addSubview:border];
   }

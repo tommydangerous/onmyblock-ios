@@ -36,8 +36,8 @@
   // Title
   titleLabel = [UILabel new];
   titleLabel.font = [UIFont mediumTextFontBold];
-  titleLabel.frame = CGRectMake(padding, padding * 1.5f,
-    screen.size.width - 2 * padding, 30.f);
+  titleLabel.frame = CGRectMake(padding, (padding * 2),
+    screen.size.width - (2 * padding), 27.f);
   titleLabel.textAlignment = NSTextAlignmentCenter;
   titleLabel.textColor = UIColor.whiteColor;
   [self addSubview:titleLabel];
@@ -45,7 +45,7 @@
   UILabel *line = [UILabel new];
   line.backgroundColor = UIColor.whiteColor;
   line.frame = CGRectMake(titleLabel.frame.origin.x, titleLabel.frame.origin.y +
-    titleLabel.frame.size.height + padding, screen.size.width - 2 * padding, 1.5f);
+    titleLabel.frame.size.height + (padding * 0.5), screen.size.width - 2 * padding, 1.5f);
   [self addSubview:line];
   
   // Close view
