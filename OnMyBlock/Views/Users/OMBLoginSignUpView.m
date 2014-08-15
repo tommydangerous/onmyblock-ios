@@ -214,15 +214,15 @@
     // Add arrow and tap recognizer
     if(textField == _schoolTextField){
       // Arrow image
-      float widthIcon  = textField.frame.size.height * .3f;
-      float heightIcon = textField.frame.size.height * .34f;
-      UIImageView *arrow = [UIImageView new];
-      arrow.frame = CGRectMake(textField.frame.size.width - widthIcon - padding,
-        (textField.frame.size.height - heightIcon) * .5f,
-          widthIcon, heightIcon);
-      arrow.image = [UIImage imageNamed:@"arrow_left"];
-      arrow.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-90));
-      [textField addSubview:arrow];
+      // float widthIcon  = textField.frame.size.height * .3f;
+      // float heightIcon = textField.frame.size.height * .34f;
+      // UIImageView *arrow = [UIImageView new];
+      // arrow.frame = CGRectMake(textField.frame.size.width - widthIcon - padding,
+      //   (textField.frame.size.height - heightIcon) * .5f,
+      //     widthIcon, heightIcon);
+      // arrow.image = [UIImage imageNamed:@"arrow_left"];
+      // arrow.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(-90));
+      // [textField addSubview:arrow];
       
       // Textfield container for gesture recognizer
       schoolView = [UIView new];
