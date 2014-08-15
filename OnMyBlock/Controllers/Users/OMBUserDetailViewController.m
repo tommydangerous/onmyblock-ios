@@ -668,9 +668,10 @@ forResourceName: (NSString *) resourceName
 }
 
 - (void)primaryGroupFetchedSucceeded {
-  [self.table reloadSections:
-    [NSIndexSet indexSetWithIndex:OMBUserDetailSectionRoommates]
-      withRowAnimation:UITableViewRowAnimationFade]; 
+//  [self.table reloadSections:
+//    [NSIndexSet indexSetWithIndex:OMBUserDetailSectionRoommates]
+//      withRowAnimation:UITableViewRowAnimationFade];
+  [self reloadTable];
 }
 
 #pragma mark - Protocol UIActionSheetDelegate
