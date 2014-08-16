@@ -55,7 +55,6 @@
   dateFormatter.dateFormat       = @"MMMM d, yyyy";
   NSString *moveInSring = [dateFormatter stringFromDate:
     [NSDate dateWithTimeIntervalSince1970: timeInterval]];
-  NSLog(@"%@", [NSDate dateWithTimeIntervalSince1970: timeInterval]);
   _availableLabel.text = [NSString stringWithFormat:
     @"Available on %@", moveInSring];
 }
