@@ -7,7 +7,6 @@
 //
 
 #import "OMBTableViewController.h"
-#import <MessageUI/MessageUI.h>
 
 @interface OMBRateFeedbackViewController : OMBTableViewController
 <MFMailComposeViewControllerDelegate, UIAlertViewDelegate>
