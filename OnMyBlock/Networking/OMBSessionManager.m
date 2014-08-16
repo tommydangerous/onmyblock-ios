@@ -29,6 +29,14 @@
     _sharedManager = 
       [[OMBSessionManager alloc] initWithBaseURL:baseURL
         sessionConfiguration:configuration];
+    // This fixes NSURLErrorDomain Code=-999
+    [_sharedManager setSessionDidReceiveAuthenticationChallengeBlock:
+      ^NSURLSessionAuthChallengeDisposition 
+        (NSURLSession *session, NSURLAuthenticationChallenge *challenge, 
+          NSURLCredential * __autoreleasing *credential) {
+            return NSURLSessionAuthChallengePerformDefaultHandling;
+          }
+    ];
   });
   return _sharedManager;
 }

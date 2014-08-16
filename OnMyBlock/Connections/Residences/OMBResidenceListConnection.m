@@ -66,8 +66,6 @@
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
   // Add the residences to the list store for the map's list view
-  // [[OMBResidenceListStore sharedStore] readFromDictionary: [self json]];
-
   if ([self.delegate respondsToSelector: @selector(JSONDictionary:)]) {
     [self.delegate JSONDictionary: [self json]];
   }

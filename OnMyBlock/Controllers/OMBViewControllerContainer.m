@@ -49,6 +49,9 @@
 // #import "OMBResidence.h"
 // #import "OMBResidenceDetailViewController.h"
 
+// View Controllers
+#import "OMBUserDetailViewController.h"
+
 CGFloat kBackgroundMaxScale = 5.0f;
 
 @interface OMBViewControllerContainer ()
@@ -1060,8 +1063,16 @@ completion: (void (^) (void)) block
     // Remove detail view overlay from the detail view
     [_detailViewOverlay removeFromSuperview];
     // Show black status bar
-    [[UIApplication sharedApplication] setStatusBarStyle:
-      UIStatusBarStyleDefault];
+    if ([self.currentDetailViewController isKindOfClass:
+      [OMBNavigationController class]]) {
+      if (![[(OMBNavigationController *)
+        self.currentDetailViewController topViewController] isKindOfClass:
+          [OMBUserDetailViewController class]]) {
+
+        [[UIApplication sharedApplication] setStatusBarStyle:
+          UIStatusBarStyleDefault];
+      }
+    }
   }];
 
   // Animate the buttons

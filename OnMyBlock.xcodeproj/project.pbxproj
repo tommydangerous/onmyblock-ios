@@ -488,6 +488,7 @@
 		ABF18BB41816CCDA002DD723 /* OMBNeighborhoodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF18BB31816CCDA002DD723 /* OMBNeighborhoodStore.m */; };
 		ABF18BBA1816D3F0002DD723 /* TextFieldPadding.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF18BB91816D3F0002DD723 /* TextFieldPadding.m */; };
 		ABF18BBD1816F913002DD723 /* OMBListButton.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF18BBC1816F913002DD723 /* OMBListButton.m */; };
+		ABF89831199ECE8A005C44F3 /* OMBApplicationDelegateObject.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF89830199ECE8A005C44F3 /* OMBApplicationDelegateObject.m */; };
 		ABF8EC9C182D3C570080B1E2 /* OMBIntroSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF8EC9B182D3C570080B1E2 /* OMBIntroSearchView.m */; };
 		ABF8ECA1182D504E0080B1E2 /* OMBIntroContactView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABF8ECA0182D504E0080B1E2 /* OMBIntroContactView.m */; };
 		ABF8ECA9182D6C6B0080B1E2 /* intro_contact_view_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ABF8ECA8182D6C6B0080B1E2 /* intro_contact_view_background.jpg */; };
@@ -1484,6 +1485,8 @@
 		ABF18BB91816D3F0002DD723 /* TextFieldPadding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldPadding.m; sourceTree = "<group>"; };
 		ABF18BBB1816F913002DD723 /* OMBListButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBListButton.h; sourceTree = "<group>"; };
 		ABF18BBC1816F913002DD723 /* OMBListButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBListButton.m; sourceTree = "<group>"; };
+		ABF8982F199ECE8A005C44F3 /* OMBApplicationDelegateObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBApplicationDelegateObject.h; sourceTree = "<group>"; };
+		ABF89830199ECE8A005C44F3 /* OMBApplicationDelegateObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBApplicationDelegateObject.m; sourceTree = "<group>"; };
 		ABF8EC9A182D3C570080B1E2 /* OMBIntroSearchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBIntroSearchView.h; sourceTree = "<group>"; };
 		ABF8EC9B182D3C570080B1E2 /* OMBIntroSearchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBIntroSearchView.m; sourceTree = "<group>"; };
 		ABF8EC9F182D504E0080B1E2 /* OMBIntroContactView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBIntroContactView.h; sourceTree = "<group>"; };
@@ -2829,6 +2832,8 @@
 			children = (
 				ABB3C56D1811719B00DD91C9 /* OMBAppDelegate.h */,
 				ABB3C56E1811719B00DD91C9 /* OMBAppDelegate.m */,
+				ABF8982F199ECE8A005C44F3 /* OMBApplicationDelegateObject.h */,
+				ABF89830199ECE8A005C44F3 /* OMBApplicationDelegateObject.m */,
 			);
 			path = AppDelegate;
 			sourceTree = "<group>";
@@ -3629,6 +3634,7 @@
 				ABCB36B2187CA156008A0EEF /* OMBHomebaseRenterAddRemoveRoommatesViewController.m in Sources */,
 				AB9B26471811CB1300E6DAC4 /* NSString+Extensions.m in Sources */,
 				ABCB36BB187CAF97008A0EEF /* OMBHomebaseRenterAddRemoveRoommatesRoommateCell.m in Sources */,
+				ABF89831199ECE8A005C44F3 /* OMBApplicationDelegateObject.m in Sources */,
 				AB0C36B218406779006DC3AD /* OMBStopwatchView.m in Sources */,
 				ABED5FE51896ED5E00AD630C /* OMBBlurView.m in Sources */,
 				DE95E8DA18A03B5500A2A341 /* NSDate+MNAdditions.m in Sources */,

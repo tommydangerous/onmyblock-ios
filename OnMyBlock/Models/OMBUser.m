@@ -1601,7 +1601,7 @@ ascending: (BOOL) ascending
       [alertView show];
     }
     else {
-      NSLog(@"Facebook active session is open\n%@", user);
+      // NSLog(@"Facebook active session is open\n%@", user);
       [OMBUser currentUser].facebookAccessToken =
         [[[FBSession activeSession] accessTokenData] accessToken];
       [OMBUser currentUser].facebookId = [user objectForKey: @"id"];

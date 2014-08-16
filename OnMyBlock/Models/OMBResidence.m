@@ -666,8 +666,13 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   // Move-in Date
   id moveInDate = [dictionary objectForKey: @"move_in_date"];
   if (moveInDate != [NSNull null] && [moveInDate length]) {
-    self.moveInDate = [[dateFormatter dateFromString:
-     moveInDate] timeIntervalSince1970];
+    self.moveInDate = 
+      [[dateFormatter dateFromString:moveInDate] timeIntervalSince1970];
+    if (self.moveInDate == 0) {
+      [dateFormatter setDateFormatRubyDefault];
+      self.moveInDate = 
+        [[dateFormatter dateFromString:moveInDate] timeIntervalSince1970];
+    }
   }
   else {
     self.moveInDate = [[NSDate date] timeIntervalSince1970];

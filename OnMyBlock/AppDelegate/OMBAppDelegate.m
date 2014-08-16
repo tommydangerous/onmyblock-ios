@@ -33,6 +33,9 @@
 #import "PayPalMobile.h"
 #import "UIColor+Extensions.h"
 
+// Application
+#import "OMBApplicationDelegateObject.h"
+
 NSString *const FBSessionStateChangedNotification =
   @"com.onmyblock.Login:FBSessionStateChangedNotification";
 
@@ -69,7 +72,7 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
       break;
     }
   }
-
+  
   [self setupThirdPartyApplications];
 
   // The app launches with a white status bar, so set it back to black
@@ -301,6 +304,8 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
 
 - (void) applicationDidBecomeActive: (UIApplication *) application
 {
+  [[self applicationDelegateObject] checkMinimumVersion];
+
   // Stop all the spinners
   [[NSNotificationCenter defaultCenter] postNotificationName:
     OMBActivityIndicatorViewStopAnimatingNotification object: nil];
@@ -322,6 +327,13 @@ sourceApplication: (NSString *) sourceApplication annotation: (id) annotation
 #pragma mark - Methods
 
 #pragma mark - Instance Methods
+
+#pragma mark - Private Methods
+
+- (OMBApplicationDelegateObject *)applicationDelegateObject
+{
+  return [OMBApplicationDelegateObject sharedObject];
+}
 
 - (void) clearFacebookTokenInformation
 {
