@@ -535,11 +535,16 @@
 		DE95E8D918A03B5500A2A341 /* MNFastDateEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8D118A03B5500A2A341 /* MNFastDateEnumeration.m */; };
 		DE95E8DA18A03B5500A2A341 /* NSDate+MNAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DE95E8D318A03B5500A2A341 /* NSDate+MNAdditions.m */; };
 		DE96A6A2193CD0EB008CCE02 /* OMBHomebaseRenterSentApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE96A6A1193CD0EB008CCE02 /* OMBHomebaseRenterSentApplicationViewController.m */; };
+		DE96BDC819A2830D00743535 /* OMBNeedHelpCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE96BDC719A2830D00743535 /* OMBNeedHelpCell.m */; };
+		DE96BDCB19A2928C00743535 /* OMBNeedHelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE96BDCA19A2928C00743535 /* OMBNeedHelpViewController.m */; };
+		DE96BDCE19A2A40B00743535 /* OMBNeedHelpTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE96BDCD19A2A40B00743535 /* OMBNeedHelpTitleCell.m */; };
+		DE96BDD119A2BD7500743535 /* OMBNeedHelpTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE96BDD019A2BD7500743535 /* OMBNeedHelpTextFieldCell.m */; };
 		DE97FBEC197DA45900682B15 /* OMBRentedBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE97FBEB197DA45800682B15 /* OMBRentedBannerView.m */; };
 		DE9927D518BE887F0064A902 /* OMBRateFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9927D418BE887F0064A902 /* OMBRateFeedbackViewController.m */; };
 		DE9A4180194264E40026545C /* OMBResidenceTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9A417F194264E40026545C /* OMBResidenceTitleView.m */; };
 		DE9A4183194272CC0026545C /* OMBImageFourLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9A4182194272CC0026545C /* OMBImageFourLabelCell.m */; };
 		DE9A41861942763F0026545C /* OMBApplicationResidenceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9A41851942763F0026545C /* OMBApplicationResidenceCell.m */; };
+		DE9A4F5219A3BB41004F59C9 /* OMBNeedHelpTwoTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9A4F5119A3BB41004F59C9 /* OMBNeedHelpTwoTextFieldCell.m */; };
 		DE9C76FF1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9C76FE1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m */; };
 		DE9C77051965E22300E42B83 /* OMBFinishListingTitleDescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9C77041965E22200E42B83 /* OMBFinishListingTitleDescriptionViewController.m */; };
 		DE9E7A9718D104AE00617563 /* OMBMapFilterLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9E7A9618D104AE00617563 /* OMBMapFilterLocationViewController.m */; };
@@ -1572,6 +1577,14 @@
 		DE95E8D318A03B5500A2A341 /* NSDate+MNAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MNAdditions.m"; sourceTree = "<group>"; };
 		DE96A6A0193CD0EB008CCE02 /* OMBHomebaseRenterSentApplicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBHomebaseRenterSentApplicationViewController.h; sourceTree = "<group>"; };
 		DE96A6A1193CD0EB008CCE02 /* OMBHomebaseRenterSentApplicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBHomebaseRenterSentApplicationViewController.m; sourceTree = "<group>"; };
+		DE96BDC619A2830C00743535 /* OMBNeedHelpCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBNeedHelpCell.h; sourceTree = "<group>"; };
+		DE96BDC719A2830D00743535 /* OMBNeedHelpCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBNeedHelpCell.m; sourceTree = "<group>"; };
+		DE96BDC919A2928C00743535 /* OMBNeedHelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBNeedHelpViewController.h; sourceTree = "<group>"; };
+		DE96BDCA19A2928C00743535 /* OMBNeedHelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBNeedHelpViewController.m; sourceTree = "<group>"; };
+		DE96BDCC19A2A40B00743535 /* OMBNeedHelpTitleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBNeedHelpTitleCell.h; sourceTree = "<group>"; };
+		DE96BDCD19A2A40B00743535 /* OMBNeedHelpTitleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBNeedHelpTitleCell.m; sourceTree = "<group>"; };
+		DE96BDCF19A2BD7500743535 /* OMBNeedHelpTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBNeedHelpTextFieldCell.h; sourceTree = "<group>"; };
+		DE96BDD019A2BD7500743535 /* OMBNeedHelpTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBNeedHelpTextFieldCell.m; sourceTree = "<group>"; };
 		DE97FBEA197DA45800682B15 /* OMBRentedBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRentedBannerView.h; sourceTree = "<group>"; };
 		DE97FBEB197DA45800682B15 /* OMBRentedBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRentedBannerView.m; sourceTree = "<group>"; };
 		DE9927D318BE887F0064A902 /* OMBRateFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRateFeedbackViewController.h; sourceTree = "<group>"; };
@@ -1582,6 +1595,8 @@
 		DE9A4182194272CC0026545C /* OMBImageFourLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBImageFourLabelCell.m; sourceTree = "<group>"; };
 		DE9A41841942763F0026545C /* OMBApplicationResidenceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBApplicationResidenceCell.h; sourceTree = "<group>"; };
 		DE9A41851942763F0026545C /* OMBApplicationResidenceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBApplicationResidenceCell.m; sourceTree = "<group>"; };
+		DE9A4F5019A3BB41004F59C9 /* OMBNeedHelpTwoTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBNeedHelpTwoTextFieldCell.h; sourceTree = "<group>"; };
+		DE9A4F5119A3BB41004F59C9 /* OMBNeedHelpTwoTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBNeedHelpTwoTextFieldCell.m; sourceTree = "<group>"; };
 		DE9C76FD1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBImageTwoTextFieldCell.h; sourceTree = "<group>"; };
 		DE9C76FE1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBImageTwoTextFieldCell.m; sourceTree = "<group>"; };
 		DE9C77031965E22200E42B83 /* OMBFinishListingTitleDescriptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFinishListingTitleDescriptionViewController.h; sourceTree = "<group>"; };
@@ -2393,6 +2408,14 @@
 				DE5D3E5D1992B45800B44C53 /* OMBFullListView.m */,
 				DE5D3E5F1992CF9000B44C53 /* OMBFullListCell.h */,
 				DE5D3E601992CF9000B44C53 /* OMBFullListCell.m */,
+				DE96BDC619A2830C00743535 /* OMBNeedHelpCell.h */,
+				DE96BDC719A2830D00743535 /* OMBNeedHelpCell.m */,
+				DE96BDCC19A2A40B00743535 /* OMBNeedHelpTitleCell.h */,
+				DE96BDCD19A2A40B00743535 /* OMBNeedHelpTitleCell.m */,
+				DE96BDCF19A2BD7500743535 /* OMBNeedHelpTextFieldCell.h */,
+				DE96BDD019A2BD7500743535 /* OMBNeedHelpTextFieldCell.m */,
+				DE9A4F5019A3BB41004F59C9 /* OMBNeedHelpTwoTextFieldCell.h */,
+				DE9A4F5119A3BB41004F59C9 /* OMBNeedHelpTwoTextFieldCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2950,6 +2973,8 @@
 				ABDF17471866392E004E2755 /* Residences */,
 				AB563EA31954EAA700350234 /* Sent Applications */,
 				ABB9117118982ACF0046611F /* Users */,
+				DE96BDC919A2928C00743535 /* OMBNeedHelpViewController.h */,
+				DE96BDCA19A2928C00743535 /* OMBNeedHelpViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -3691,6 +3716,7 @@
 				ABED5FEF189705ED00AD630C /* OMBMapViewViewController.m in Sources */,
 				ABCB36C1187CC229008A0EEF /* OMBHomebaseRenterAddRoommateFromEmailViewController.m in Sources */,
 				AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */,
+				DE9A4F5219A3BB41004F59C9 /* OMBNeedHelpTwoTextFieldCell.m in Sources */,
 				AB9D611B188CEFDE00C9AC64 /* UIImageView+WebCache.m in Sources */,
 				DE9A41861942763F0026545C /* OMBApplicationResidenceCell.m in Sources */,
 				AB5DD32C18CE011500237AFC /* OMBAmenityStore.m in Sources */,
@@ -3745,6 +3771,7 @@
 				ABA080831868DDD000C7B851 /* OMBResidenceConfirmDetailsBuyerCell.m in Sources */,
 				DE95E8D418A03B5500A2A341 /* MNCalendarView.m in Sources */,
 				AB70CB68186CB9070083DF4C /* OMBTermsPrivacyViewController.m in Sources */,
+				DE96BDCE19A2A40B00743535 /* OMBNeedHelpTitleCell.m in Sources */,
 				ABABEC4B1864D56A008B6768 /* OMBMapFilterOldViewController.m in Sources */,
 				ABD6FC6F1915DE030070D7F0 /* OMBFeedbackSendEmailConnection.m in Sources */,
 				AB19A08C186123CB00F84DE9 /* OMBResidenceDetailCell.m in Sources */,
@@ -3817,6 +3844,7 @@
 				ABA080861868E76200C7B851 /* OMBTextViewViewController.m in Sources */,
 				ABE4FBFA189045E40009D643 /* OMBSelectPayoutMethodViewController.m in Sources */,
 				AB18CF2E18DE6EDA0022ABF1 /* OMBModelDeleteConnection.m in Sources */,
+				DE96BDD119A2BD7500743535 /* OMBNeedHelpTextFieldCell.m in Sources */,
 				DE4E685918E0D84F002369B8 /* OMBOtherUserProfileHeaderCell.m in Sources */,
 				ABE9CECF195A015A00A8C8E0 /* OMBUserDetailSectionHeaderCell.m in Sources */,
 				AB00B9C118BCF9E30050D6F4 /* OMBConversation.m in Sources */,
@@ -3920,6 +3948,7 @@
 				ABCB36AF187C8D2F008A0EEF /* OMBOfferAcceptedView.m in Sources */,
 				AB00B9CF18BDD0D50050D6F4 /* OMBConversationWithUserConnection.m in Sources */,
 				AB63D2201821B93A00D63800 /* OMBLoginConnection.m in Sources */,
+				DE96BDC819A2830D00743535 /* OMBNeedHelpCell.m in Sources */,
 				ABED5FDF1896E8CE00AD630C /* DRNRealTimeBlurView.m in Sources */,
 				ABDF175318688F4C004E2755 /* OMBResidenceConfirmDetailsPlaceOfferCell.m in Sources */,
 				ABA5CB5518EE907B00D80A90 /* OMBViewController+PayPalPayment.m in Sources */,
@@ -3982,6 +4011,7 @@
 				ABB911A418998CA80046611F /* LIALinkedInApplication.m in Sources */,
 				AB9B26481811CB1300E6DAC4 /* UIColor+Extensions.m in Sources */,
 				ABB7006D187B6067005F0730 /* OMBHomebaseRenterRoommateImageView.m in Sources */,
+				DE96BDCB19A2928C00743535 /* OMBNeedHelpViewController.m in Sources */,
 				AB44FBC118358DA400F07747 /* OMBResidencePartialView.m in Sources */,
 				ABA4F214187D422B00D725D4 /* OMBTemporaryResidence.m in Sources */,
 				ABB173BF189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m in Sources */,
