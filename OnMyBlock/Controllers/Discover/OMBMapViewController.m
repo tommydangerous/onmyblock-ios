@@ -23,6 +23,8 @@
 #import "OMBMapFilterViewController.h"
 #import "OMBMapResidenceDetailCell.h"
 #import "OMBNavigationController.h"
+#import "OMBNeedHelpCell.h"
+#import "OMBNeedHelpViewController.h"
 #import "OMBNeighborhood.h"
 #import "OMBPropertyInfoView.h"
 #import "OMBResidenceBookItConfirmDetailsViewController.h"
@@ -441,6 +443,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [emptyBackground setLabelText: text];
   [_listViewContainer addSubview: emptyBackground];
 
+  shouldShowHelpView = YES;
+  
   [self setDefaultCenterCoordinate];
   [self setMapViewRegion: centerCoordinate 
     withMiles: DEFAULT_MILE_RADIUS animated: YES];
@@ -505,7 +509,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   BOOL shouldSearch = 
     [self appDelegate].container.mapFilterViewController.shouldSearch;
-
+  shouldShowHelpView = !shouldSearch;
+  
   // Filter
   // If there is a neighborhood in the filter, then try to re-fetch
   if ([dictionary objectForKey: @"neighborhood"] != [NSNull null] &&
@@ -1026,24 +1031,49 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 
   // Resident list
   if(tableView == _listView){
-    static NSString *CellIdentifier = @"CellIdentifier";
-    OMBResidenceCell *cell = [tableView dequeueReusableCellWithIdentifier:
-      CellIdentifier];
-    if (!cell) {
-      cell = [[OMBResidenceCell alloc] initWithStyle:
-        UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+    if (indexPath.row == 0 && shouldShowHelpView) {
+      static NSString *NeedHelpID = @"NeedHelpID";
+      OMBNeedHelpCell *cell = [tableView
+        dequeueReusableCellWithIdentifier:NeedHelpID];
+      
+      if (!cell) {
+        cell = [[OMBNeedHelpCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier:NeedHelpID];
+        
+        cell.needPlaceLabel.text = @"Need help now?";
+        [cell.contactButton addTarget:self action:@selector(showHelp)
+          forControlEvents:UIControlEventTouchUpInside];
+      }
+      return cell;
     }
-    OMBResidence *residence = [[self residencesForList] objectAtIndex:
-      indexPath.row];
-    [cell loadResidenceData: residence];
-    __weak OMBMapViewController *weakSelf = self;
-    cell.residencePartialView.selected =
-    ^(OMBResidence *residence, NSInteger __unused imageIndex) {
-      [weakSelf.navigationController pushViewController:
-       [[OMBResidenceDetailViewController alloc] initWithResidence:
-        residence] animated: YES];
-    };
-    return cell;
+    else{
+      NSInteger originalRow;
+      if (shouldShowHelpView) {
+        originalRow = indexPath.row - 1;
+      }
+      else {
+        originalRow = indexPath.row;
+      }
+      
+      static NSString *CellIdentifier = @"CellIdentifier";
+      OMBResidenceCell *cell = [tableView dequeueReusableCellWithIdentifier:
+        CellIdentifier];
+      if (!cell) {
+        cell = [[OMBResidenceCell alloc] initWithStyle:
+          UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+      }
+      OMBResidence *residence = [[self residencesForList] objectAtIndex:
+        originalRow];
+      [cell loadResidenceData: residence];
+      __weak OMBMapViewController *weakSelf = self;
+      cell.residencePartialView.selected =
+      ^(OMBResidence *residence, NSInteger __unused imageIndex) {
+        [weakSelf.navigationController pushViewController:
+         [[OMBResidenceDetailViewController alloc] initWithResidence:
+          residence] animated: YES];
+      };
+      return cell;
+    }
   }
   // Resident annotation
   else if(tableView == _residentListMap) {
@@ -1068,10 +1098,14 @@ numberOfRowsInSection: (NSInteger) section
 {
   // Resident list
   if(tableView == _listView){
+    NSInteger rows;
+    
     if([currentResidencesForList count] < (pagination + 1) * 10)
-      return [currentResidencesForList count];
+      rows = [currentResidencesForList count];
     else
-      return (pagination + 1) * 10;
+      rows = (pagination + 1) * 10;
+    
+    return shouldShowHelpView ? rows + 1 : rows;
   }
   // Resident annotation
   else if(tableView == _residentListMap){
@@ -1685,6 +1719,12 @@ withMiles: (int) miles animated: (BOOL) animated
     MKCoordinateRegionMakeWithDistance(coordinate, distanceInMiles,
       distanceInMiles);
   [_mapView setRegion: region animated: animated];
+}
+
+- (void) showHelp
+{
+  [self.navigationController pushViewController:
+    [[OMBNeedHelpViewController alloc] init] animated:YES];
 }
 
 - (void) showSearch
