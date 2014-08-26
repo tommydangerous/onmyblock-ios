@@ -57,7 +57,7 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
   NSUInteger previousZoomLevel;
   OMBPropertyInfoView *propertyInfoView;
   UISegmentedControl *segmentedControl;
-  BOOL shouldShowHelpView;
+  BOOL showHelpView;
   UIImageView *sortArrow;
   UIView *sortButtonsView;
   NSMutableArray *sortButtonArray;

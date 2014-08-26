@@ -12,6 +12,7 @@
 
 #import "AMBlurView.h"
 #import "NSString+Extensions.h"
+#import "NSString+OnMyBlock.h"
 #import "NSUserDefaults+OnMyBlock.h"
 #import "OCMapView.h"
 #import "OMBActivityViewFullScreen.h"
@@ -443,7 +444,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [emptyBackground setLabelText: text];
   [_listViewContainer addSubview: emptyBackground];
 
-  shouldShowHelpView = YES;
+  showHelpView = YES;
   
   [self setDefaultCenterCoordinate];
   [self setMapViewRegion: centerCoordinate 
@@ -509,7 +510,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   BOOL shouldSearch = 
     [self appDelegate].container.mapFilterViewController.shouldSearch;
-  shouldShowHelpView = !shouldSearch;
+  showHelpView = !shouldSearch;
   
   // Filter
   // If there is a neighborhood in the filter, then try to re-fetch
@@ -1031,7 +1032,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 
   // Resident list
   if(tableView == _listView){
-    if (indexPath.row == 0 && shouldShowHelpView) {
+    if (indexPath.row == 0 && [self shouldShowHelpView]) {
       static NSString *NeedHelpID = @"NeedHelpID";
       OMBNeedHelpCell *cell = [tableView
         dequeueReusableCellWithIdentifier:NeedHelpID];
@@ -1040,15 +1041,14 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBNeedHelpCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier:NeedHelpID];
         
-        cell.needPlaceLabel.text = @"Need help now?";
-        [cell.contactButton addTarget:self action:@selector(showHelp)
-          forControlEvents:UIControlEventTouchUpInside];
+        cell.titleLabel.text = @"Need help now?";
+        cell.secondLabel.text = @"Contact us";
       }
       return cell;
     }
     else{
       NSInteger originalRow;
-      if (shouldShowHelpView) {
+      if ([self shouldShowHelpView]) {
         originalRow = indexPath.row - 1;
       }
       else {
@@ -1105,7 +1105,7 @@ numberOfRowsInSection: (NSInteger) section
     else
       rows = (pagination + 1) * 10;
     
-    return shouldShowHelpView ? rows + 1 : rows;
+    return [self shouldShowHelpView] ? rows + 1 : rows;
   }
   // Resident annotation
   else if(tableView == _residentListMap){
@@ -1136,6 +1136,7 @@ forRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) tableView: (UITableView *) tableView
 didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
+  // List Annotations
   if (tableView == _residentListMap &&
      [residentAnnotations count] > indexPath.row) {
     OMBResidence *residence = [residentAnnotations objectAtIndex:
@@ -1143,6 +1144,12 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
     [self.navigationController pushViewController:
       [[OMBResidenceDetailViewController alloc] initWithResidence:
         residence] animated: YES];
+  }
+  // Need help row
+  else if (tableView == _listView &&
+          [[tableView cellForRowAtIndexPath:indexPath]
+            isKindOfClass:[OMBNeedHelpCell class]]) {
+    [self showHelp];
   }
 
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
@@ -1407,6 +1414,17 @@ withTitle: (NSString *) title;
   }
   // [_mapView setCenterCoordinate: [_mapView userLocation].coordinate
   //   animated: animated];
+}
+
+- (BOOL) hasSentHelpForm
+{
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  if ([defaults objectForKey:OMBUserDefaultsSentFormHelp]) {
+    NSNumber *value = [defaults objectForKey:OMBUserDefaultsSentFormHelp];
+    return [value boolValue];
+  }
+  
+  return NO;
 }
 
 - (void) hideNavigationBarAndSortView
@@ -1721,6 +1739,11 @@ withMiles: (int) miles animated: (BOOL) animated
   [_mapView setRegion: region animated: animated];
 }
 
+- (BOOL) shouldShowHelpView
+{
+  return showHelpView && ![self hasSentHelpForm];
+}
+                               
 - (void) showHelp
 {
   [self.navigationController pushViewController:
