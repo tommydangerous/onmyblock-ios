@@ -9,6 +9,8 @@
 #import "OMBNeedHelpViewController.h"
 
 #import "NSString+Extensions.h"
+#import "NSString+OnMyBlock.h"
+#import "NSString+PhoneNumber.h"
 #import "OMBMapViewController.h"
 #import "OMBNeedHelpCell.h"
 #import "OMBNeedHelpTextFieldCell.h"
@@ -212,25 +214,46 @@
   
   // Detail
   detailString =
-    @"Need help finding the perfect college pad? "
-    @"Let us know what you’re looking for and "
-    @"we will match you with our best listings.";
+    @"Let us know what you're looking for and "
+    @"we'll help find you the perfect college pad.";
   
-  detailFont = [UIFont normalTextFontBold];
+  detailFont = [UIFont mediumTextFontBold];
   
   detailHeight = [detailString boundingRectWithSize:
     CGSizeMake(self.table.frame.size.width - (20.f * 2), 9999)
-      font:detailFont].size.height;
+      font: detailFont].size.height;
+  
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+  [super viewDidAppear:animated];
+  
+  // Fields required
+  indexRequired = @[
+    @"first_name",
+    @"last_name",
+    @"phone",
+    @"email",
+    @"place"
+  ];
   
 }
 
 #pragma mark - Protocol
 
+#pragma mark - Protocol UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView
+  clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+  [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark - Protocol UIPickerViewDataSource
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
-
   // Budget
   if (pickerView == budgetPickerView) {
     return 2;
@@ -333,6 +356,9 @@
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
   
+  if (section == OMBNeedHelpSectionPhoneCall) {
+    [self call];
+  }
   if (section == OMBNeedHelpSectionBudget && row == 1) {
     [self showPickerView:budgetPickerView];
   }
@@ -453,11 +479,8 @@
       if (!cell) {
         cell = [[OMBNeedHelpCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier:callCellID];
-        cell.needPlaceLabel.text = @"Call us!";
-        [cell.contactButton setTitle:[self phoneNumberFormated:YES]
-          forState:UIControlStateNormal];
-        [cell.contactButton addTarget:self action:@selector(call)
-          forControlEvents:UIControlEventTouchUpInside];
+        cell.titleLabel.text = @"Call us";
+        cell.secondLabel.text = [self phoneNumberFormated:YES];
       }
       
       return cell;
@@ -504,7 +527,7 @@
         cell = [[OMBNeedHelpTitleCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier:titleFirstLastID];
       }
-      cell.titleLabel.text = @"First* & Last Name*";
+      cell.titleLabel.text = @"First & Last Name*";
       
       return cell;
     }
@@ -868,6 +891,19 @@
   [self scrollToRectAtIndexPath:textField.indexPath];
 }
 
+- (void)textFieldDidEndEditing:(TextFieldPadding *)textField
+{
+  
+  // Phone format
+  if (textField.indexPath.section == OMBNeedHelpSectionPhone) {
+    if ([[textField.text phoneNumberString] length]) {
+      textField.text = [textField.text phoneNumberString];
+      [valuesDictionary setObject:textField.text forKey:@"phone"];
+    }
+  }
+  
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
   [self done];
@@ -969,6 +1005,50 @@
 
 }
 
+- (BOOL) hasCompleteFields
+{
+  
+  // Search for empty textfields in required fields
+//  for (NSNumber *number in indexRequired) {
+//    NSInteger section = [number integerValue];
+//    
+//    UITableViewCell *cell = [self.table
+//      cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:section]];
+//    
+//    if ([cell isKindOfClass:[OMBNeedHelpTextFieldCell class]]) {
+//      
+//      int lenght = [((OMBNeedHelpTextFieldCell *)cell).textField.text length];
+//      
+//      if (lenght == 0) {
+//        return NO;
+//      }
+//    }
+//    else if ([cell isKindOfClass:[OMBNeedHelpTwoTextFieldCell class]]) {
+//      
+//      int lenght1 = [((OMBNeedHelpTwoTextFieldCell *)cell).textField.text length];
+//      int lenght2 = [((OMBNeedHelpTwoTextFieldCell *)cell).secondTextField.text length];
+//      
+//      if (lenght1 == 0 || lenght2 ==0) {
+//        return NO;
+//      }
+//    }
+//  }
+  
+  for (NSString *key in indexRequired) {
+    
+    if ([valuesDictionary objectForKey: key]) {
+      if (![[valuesDictionary objectForKey: key] length]) {
+        return NO;
+      }
+    }
+    else {
+      return NO;
+    }
+  }
+  
+  return YES;
+}
+
 - (void) hidePickerView
 {
   isShowPicker = NO;
@@ -984,16 +1064,25 @@
 - (NSString *)phoneNumberFormated:(BOOL)formated
 {
   if (formated) {
-    return @"1 (800) 500-0610";
+    return @"(650) 331-7819";
   }
   
-  return @"18005000610";
+  return @"6503317819";
 }
 
 - (void) removePickers
 {
   [leaseLengthPicker removeFromSuperview];
   [budgetPickerView removeFromSuperview];
+}
+
+- (void) rememberFormSubmitted
+{
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  [defaults setObject: [NSNumber numberWithBool: YES]
+    forKey: OMBUserDefaultsSentFormHelp];
+
+  [defaults synchronize];
 }
 
 - (void) scrollToRectAtIndexPath: (NSIndexPath *) indexPath
@@ -1040,8 +1129,24 @@
 
 - (void) submit
 {
-  NSLog(@"%s %@",__PRETTY_FUNCTION__, [valuesDictionary description]);
-  // TODO: send data
+  
+  if ([self hasCompleteFields]) {
+    
+    // TODO: send data
+    
+    [self rememberFormSubmitted];
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: nil
+      message: @"Thanks! We’ll contact you with matching listings soon."
+        delegate: self cancelButtonTitle: @"Ok" otherButtonTitles: nil];
+    [alertView show];
+  }
+  else {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Almost Finished"
+      message: @"Some fields are required (*)" delegate: nil
+        cancelButtonTitle: @"Continue" otherButtonTitles: nil];
+    [alertView show];
+  }
 }
 
 - (void) textFieldDidChange: (TextFieldPadding *) textField

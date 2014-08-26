@@ -45,6 +45,8 @@ extern NSString *const OMBUserDefaultsRenterApplicationCheckedWorkHistory;
 extern NSString *const OMBUserDefaultsRenterApplicationCreated;
 // Intro
 extern NSString *const OMBUserDefaultsViewedIntro;
+// Help form
+extern NSString *const OMBUserDefaultsSentFormHelp;
 
 // Venmo
 extern NSString *const VenmoClientID;

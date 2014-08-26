@@ -29,6 +29,7 @@ typedef NS_ENUM(NSInteger, OMBNeedHelpSection){
 
 @interface OMBNeedHelpViewController : OMBTableViewController
 <
+  UIAlertViewDelegate,
   UIPickerViewDataSource,
   UIPickerViewDelegate,
   UITextFieldDelegate,
@@ -60,6 +61,8 @@ typedef NS_ENUM(NSInteger, OMBNeedHelpSection){
   
   BOOL keyboardIsVisible;
   NSMutableDictionary *valuesDictionary;
+  
+  NSArray *indexRequired;
 }
 
 @end

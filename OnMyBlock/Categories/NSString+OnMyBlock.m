@@ -61,6 +61,8 @@ NSString *const OMBUserDefaultsRenterApplicationCreated =
   @"OMBUserDefaultsRenterApplicationCreated";
 // Intro
 NSString *const OMBUserDefaultsViewedIntro = @"OMBUserDefaultsViewedIntro";
+// Help form
+NSString *const OMBUserDefaultsSentFormHelp = @"OMBUserDefaultsSentFormHelp";
 
 // Venmo
 NSString *const VenmoClientID = @"1522";
