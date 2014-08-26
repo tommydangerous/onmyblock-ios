@@ -10,7 +10,7 @@
 
 @interface OMBNeedHelpCell : OMBTableViewCell
 
-@property (nonatomic, strong) UILabel *needPlaceLabel;
-@property (nonatomic, strong) UIButton *contactButton;
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UILabel *secondLabel;
 
 @end

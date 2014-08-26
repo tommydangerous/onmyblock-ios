@@ -30,25 +30,24 @@
   float padding = 20.f;
   float originY = (height - (40.f + 35.f)) * .5f;
   
-  _needPlaceLabel = [UILabel new];
-  _needPlaceLabel.font = [UIFont largeTextFontBold];
-  _needPlaceLabel.frame = CGRectMake(padding, originY,
+  _titleLabel = [UILabel new];
+  _titleLabel.font = [UIFont largeTextFontBold];
+  _titleLabel.frame = CGRectMake(padding, originY,
     screen.size.width - 2 * padding, 40.f);
-  _needPlaceLabel.textAlignment = NSTextAlignmentCenter;
-  _needPlaceLabel.textColor = UIColor.whiteColor;
-  [self.contentView addSubview:_needPlaceLabel];
+  _titleLabel.textAlignment = NSTextAlignmentCenter;
+  _titleLabel.textColor = UIColor.whiteColor;
+  [self.contentView addSubview:_titleLabel];
   
-  _contactButton = [UIButton new];
-  _contactButton.frame = CGRectMake(
+  _secondLabel = [UILabel new];
+  _secondLabel.font = [UIFont normalTextFont];
+  _secondLabel.frame = CGRectMake(
     (screen.size.width - 130.f) * .5f,
-      _needPlaceLabel.frame.origin.y +
-        _needPlaceLabel.frame.size.height,
+      _titleLabel.frame.origin.y +
+        _titleLabel.frame.size.height,
           130.f, 35.f);
-  _contactButton.titleLabel.font = [UIFont normalTextFont];
-  [_contactButton setTitle:@"Contact Us" forState:UIControlStateNormal];
-  [_contactButton setTitleColor:[UIColor blue]
-    forState:UIControlStateNormal];
-  [self.contentView addSubview:_contactButton];
+  _secondLabel.textAlignment = NSTextAlignmentCenter;
+  _secondLabel.textColor = [UIColor blue];
+  [self.contentView addSubview:_secondLabel];
   
   UIView *borderView = [UIView new];
   borderView.frame = CGRectMake(0.0f,

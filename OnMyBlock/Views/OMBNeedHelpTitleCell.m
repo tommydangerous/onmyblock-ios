@@ -23,12 +23,12 @@
   CGRect screen = [UIScreen mainScreen].bounds;
   
   self.clipsToBounds = YES;
-  self.backgroundColor = [UIColor grayVeryLight];
+  self.backgroundColor = [UIColor grayUltraLight];
   self.selectionStyle = UITableViewCellStyleDefault;
   
   _titleLabel = [UILabel new];
   _titleLabel.font = [UIFont normalTextFontBold];
-  _titleLabel.frame = CGRectMake(20.f, 5.f,
+  _titleLabel.frame = CGRectMake(20.f, 10.f,
     screen.size.width - 2 * 20.f, 20.f);
   _titleLabel.textColor = [UIColor blueDark];
   [self.contentView addSubview:_titleLabel];
