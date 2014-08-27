@@ -30,7 +30,7 @@
   _titleLabel.font = [UIFont normalTextFontBold];
   _titleLabel.frame = CGRectMake(20.f, 10.f,
     screen.size.width - 2 * 20.f, 20.f);
-  _titleLabel.textColor = [UIColor blueDark];
+  _titleLabel.textColor = UIColor.darkGrayColor;
   [self.contentView addSubview:_titleLabel];
   
   return self;

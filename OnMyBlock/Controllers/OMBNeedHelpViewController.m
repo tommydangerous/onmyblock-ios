@@ -385,7 +385,7 @@
   // Detail
   else if (section == OMBNeedHelpSectionDetail) {
     if (row == 0) {
-      return OMBPadding + detailHeight + OMBPadding;
+      return OMBPadding * 1.5f + detailHeight + OMBPadding * 1.5f;
     }
   }
   // Submit
@@ -498,17 +498,17 @@
       
       UILabel *label = [UILabel new];
       label.font = detailFont;
-      label.frame = CGRectMake(padding, padding,
+      label.frame = CGRectMake(padding, padding * 1.5f,
         tableView.frame.size.width - (padding * 2),
           detailHeight);
       label.numberOfLines = 0;
       label.text = detailString;
       label.textAlignment = NSTextAlignmentCenter;
-      label.textColor = [UIColor blue];
+      label.textColor = UIColor.whiteColor;
       [cell.contentView addSubview: label];
     }
     
-    cell.backgroundColor = UIColor.whiteColor;
+    cell.backgroundColor = [UIColor blue];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.separatorInset = UIEdgeInsetsMake(0.0f,
       tableView.frame.size.width, 0.0f, 0.0f);
@@ -527,7 +527,7 @@
         cell = [[OMBNeedHelpTitleCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier:titleFirstLastID];
       }
-      cell.titleLabel.text = @"First & Last Name*";
+      cell.titleLabel.text = @"First Name*\t\t\t   Last Name*";
       
       return cell;
     }
