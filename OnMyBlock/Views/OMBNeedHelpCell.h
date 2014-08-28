@@ -8,9 +8,11 @@
 
 #import "OMBTableViewCell.h"
 
+@class OMBBlurView;
+
 @interface OMBNeedHelpCell : OMBTableViewCell
 {
-  UIImageView *backgroundView;
+  OMBBlurView *backgroundView;
 }
 
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -20,6 +22,6 @@
 
 #pragma mark - Instance Methods
 
-- (void)setBackgroundImage:(NSString *)nameImage;
+- (void)setBackgroundImage:(NSString *)nameImage withBlur:(BOOL)blur;
 
 @end

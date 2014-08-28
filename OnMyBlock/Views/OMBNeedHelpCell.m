@@ -8,6 +8,7 @@
 
 #import "OMBNeedHelpCell.h"
 
+#import "OMBBlurView.h"
 #import "OMBMapViewController.h"
 #import "UIFont+OnMyBlock.h"
 
@@ -30,7 +31,8 @@
   float padding = 20.f;
   float originY = (height - (40.f + 35.f)) * .5f;
   
-  backgroundView = [UIImageView new];
+  backgroundView = [OMBBlurView new];
+  backgroundView.imageView.clipsToBounds = YES;
   backgroundView.contentMode = UIViewContentModeScaleToFill;
   backgroundView.frame = CGRectMake(0.0f,
     0.0f, screen.size.width, height);
@@ -45,7 +47,7 @@
   [self.contentView addSubview:_titleLabel];
   
   _secondLabel = [UILabel new];
-  _secondLabel.font = [UIFont normalTextFontBold];
+  _secondLabel.font = [UIFont normalTextFont];
   _secondLabel.frame = CGRectMake(
     (screen.size.width - 130.f) * .5f,
       _titleLabel.frame.origin.y +
@@ -69,9 +71,10 @@
 #pragma mark - Instance Methods
 
 - (void)setBackgroundImage:(NSString *)nameImage
+      withBlur:(BOOL)blur;
 {
-  
-  backgroundView.image = [UIImage imageNamed:nameImage];
+  backgroundView.blurRadius = blur ? 11.f : 0.0f;
+  [backgroundView refreshWithImage: [UIImage imageNamed: nameImage]];
 }
 
 @end

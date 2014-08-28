@@ -1043,7 +1043,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         
         cell.titleLabel.text = @"Need a place now?";
         cell.secondLabel.text = @"Contact us";
-        [cell setBackgroundImage:@"ios_need_place_now"];
+        [cell setBackgroundImage:@"ios_need_place_now" withBlur:NO];
       }
       return cell;
     }

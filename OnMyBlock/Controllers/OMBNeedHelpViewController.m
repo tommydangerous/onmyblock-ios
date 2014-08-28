@@ -484,7 +484,7 @@
           UITableViewCellStyleDefault reuseIdentifier:callCellID];
         cell.titleLabel.text = @"Call us";
         cell.secondLabel.text = [self phoneNumberFormated:YES];
-        [cell setBackgroundImage:@"ios_house"];
+        [cell setBackgroundImage:@"ios_house" withBlur:YES];
       }
       
       return cell;
@@ -887,6 +887,9 @@
 
 - (void)textFieldDidBeginEditing:(TextFieldPadding *)textField
 {
+  textField.layer.borderColor = [UIColor blue].CGColor;
+  textField.layer.borderWidth = 1.f;
+  
   keyboardIsVisible = YES;
   textField.inputAccessoryView = textFieldToolbar;
   
@@ -897,6 +900,7 @@
 
 - (void)textFieldDidEndEditing:(TextFieldPadding *)textField
 {
+  textField.layer.borderWidth = 0.0f;
   
   // Phone format
   if (textField.indexPath.section == OMBNeedHelpSectionPhone) {
@@ -918,6 +922,9 @@
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
+  textView.layer.borderColor = [UIColor blue].CGColor;
+  textView.layer.borderWidth = 1.0f;
+  
   keyboardIsVisible = YES;
   
   NSIndexPath *indexPath = [NSIndexPath indexPathForRow:
@@ -926,6 +933,12 @@
   [self.table beginUpdates];
   [self.table endUpdates];
   [self scrollToRectAtIndexPath: indexPath];
+}
+
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+  textView.layer.borderWidth = 0.0f;
 }
 
 - (void)textViewDidChange:(UITextView *)textView
