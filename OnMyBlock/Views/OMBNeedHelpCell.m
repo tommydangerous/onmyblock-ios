@@ -30,6 +30,12 @@
   float padding = 20.f;
   float originY = (height - (40.f + 35.f)) * .5f;
   
+  backgroundView = [UIImageView new];
+  backgroundView.contentMode = UIViewContentModeScaleToFill;
+  backgroundView.frame = CGRectMake(0.0f,
+    0.0f, screen.size.width, height);
+  [self.contentView addSubview:backgroundView];
+  
   _titleLabel = [UILabel new];
   _titleLabel.font = [UIFont largeTextFontBold];
   _titleLabel.frame = CGRectMake(padding, originY,
@@ -39,7 +45,7 @@
   [self.contentView addSubview:_titleLabel];
   
   _secondLabel = [UILabel new];
-  _secondLabel.font = [UIFont normalTextFont];
+  _secondLabel.font = [UIFont normalTextFontBold];
   _secondLabel.frame = CGRectMake(
     (screen.size.width - 130.f) * .5f,
       _titleLabel.frame.origin.y +
@@ -56,6 +62,16 @@
   [self.contentView addSubview:borderView];
   
   return self;
+}
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void)setBackgroundImage:(NSString *)nameImage
+{
+  
+  backgroundView.image = [UIImage imageNamed:nameImage];
 }
 
 @end

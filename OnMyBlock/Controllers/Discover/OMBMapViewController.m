@@ -1041,8 +1041,9 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         cell = [[OMBNeedHelpCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier:NeedHelpID];
         
-        cell.titleLabel.text = @"Need help now?";
+        cell.titleLabel.text = @"Need a place now?";
         cell.secondLabel.text = @"Contact us";
+        [cell setBackgroundImage:@"ios_need_place_now"];
       }
       return cell;
     }

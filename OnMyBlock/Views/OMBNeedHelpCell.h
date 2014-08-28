@@ -9,8 +9,17 @@
 #import "OMBTableViewCell.h"
 
 @interface OMBNeedHelpCell : OMBTableViewCell
+{
+  UIImageView *backgroundView;
+}
 
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *secondLabel;
+
+#pragma mark - Methods
+
+#pragma mark - Instance Methods
+
+- (void)setBackgroundImage:(NSString *)nameImage;
 
 @end

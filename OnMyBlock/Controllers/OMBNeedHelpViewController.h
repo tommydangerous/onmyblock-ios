@@ -8,6 +8,7 @@
 
 #import "OMBTableViewController.h"
 
+@class OMBAlertViewBlur;
 @class OMBTextFieldToolbar;
 
 // Sections
@@ -36,6 +37,9 @@ typedef NS_ENUM(NSInteger, OMBNeedHelpSection){
   UITextViewDelegate
 >
 {
+  
+  OMBAlertViewBlur *alertViewBlur;
+  
   UITextView *aditionalTextView;
   NSInteger auxRowLease;
   NSInteger auxRowMinBudget;

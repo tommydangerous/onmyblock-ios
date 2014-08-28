@@ -11,6 +11,7 @@
 #import "NSString+Extensions.h"
 #import "NSString+OnMyBlock.h"
 #import "NSString+PhoneNumber.h"
+#import "OMBAlertViewBlur.h"
 #import "OMBMapViewController.h"
 #import "OMBNeedHelpCell.h"
 #import "OMBNeedHelpTextFieldCell.h"
@@ -28,7 +29,7 @@
   if (!(self = [super init]))
     return nil;
   
-  self.title = @"Need help now?";
+  self.title = @"Need a place now?";
   
   return self;
 }
@@ -194,6 +195,8 @@
         pickerViewHeader.frame.size.height +
           leaseLengthPicker.frame.size.height);
   
+  
+    alertViewBlur = [OMBAlertViewBlur new];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -214,8 +217,8 @@
   
   // Detail
   detailString =
-    @"Let us know what you're looking for and "
-    @"we'll help find you the perfect college pad.";
+    @"Need to move in soon? Tell us know what you're "
+    @"looking for and we'll help you find a place now.";
   
   detailFont = [UIFont mediumTextFontBold];
   
@@ -481,6 +484,7 @@
           UITableViewCellStyleDefault reuseIdentifier:callCellID];
         cell.titleLabel.text = @"Call us";
         cell.secondLabel.text = [self phoneNumberFormated:YES];
+        [cell setBackgroundImage:@"ios_house"];
       }
       
       return cell;
@@ -949,8 +953,12 @@
 
 - (void) cancelPicker
 {
-//  [self updatePicker];
   [self hidePickerView];
+}
+
+- (void) closeAlertView
+{
+  [alertViewBlur close];
 }
 
 - (void) done
@@ -1133,13 +1141,18 @@
   if ([self hasCompleteFields]) {
     
     // TODO: send data
-    
     [self rememberFormSubmitted];
     
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: nil
-      message: @"Thanks! We’ll contact you with matching listings soon."
-        delegate: self cancelButtonTitle: @"Ok" otherButtonTitles: nil];
-    [alertView show];
+    [alertViewBlur setTitle: @"Thank you!"];
+    [alertViewBlur setMessage: @"We'll contact you with the "
+      "perfect college pad soon."];
+    [alertViewBlur setConfirmButtonTitle: @"Okay"];
+    [alertViewBlur addTargetForConfirmButton: self
+      action: @selector(closeAlertView)];
+    [alertViewBlur showInView: self.view withDetails: NO];
+    [alertViewBlur showOnlyConfirmButton];
+    [alertViewBlur hideQuestionButton];
+
   }
   else {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Almost Finished"
