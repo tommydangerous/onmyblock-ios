@@ -73,7 +73,7 @@
 - (void)setBackgroundImage:(NSString *)nameImage
       withBlur:(BOOL)blur;
 {
-  backgroundView.blurRadius = blur ? 11.f : 0.0f;
+  backgroundView.blurRadius = blur ? 12.f : 0.0f;
   [backgroundView refreshWithImage: [UIImage imageNamed: nameImage]];
 }
 

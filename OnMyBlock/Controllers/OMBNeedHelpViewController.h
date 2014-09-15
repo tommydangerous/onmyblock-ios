@@ -15,17 +15,21 @@
 typedef NS_ENUM(NSInteger, OMBNeedHelpSection){
   OMBNeedHelpSectionPhoneCall,
   OMBNeedHelpSectionDetail,
-  OMBNeedHelpSectionFirsLastName,
-  OMBNeedHelpSectionPhone,
-  OMBNeedHelpSectionEmail,
-  OMBNeedHelpSectionSchool,
-  OMBNeedHelpSectionPlace,
-  OMBNeedHelpSectionBedrooms,
-  OMBNeedHelpSectionBudget,
-  OMBNeedHelpSectionLeaseLength,
-  OMBNeedHelpSectionAditional,
+  OMBNeedHelpSectionForm,
   OMBNeedHelpSectionSubmit,
   OMBNeedHelpSectionSpacing
+};
+
+typedef NS_ENUM(NSInteger, OMBNeedHelpSectionFormRow){
+  OMBNeedHelpSectionFormRowFirsLastName,
+  OMBNeedHelpSectionFormRowPhone,
+  OMBNeedHelpSectionFormRowEmail,
+  OMBNeedHelpSectionFormRowSchool,
+  OMBNeedHelpSectionFormRowPlace,
+  OMBNeedHelpSectionFormRowBedrooms,
+  OMBNeedHelpSectionFormRowBudget,
+  OMBNeedHelpSectionFormRowLeaseLength,
+  OMBNeedHelpSectionFormRowAditional,
 };
 
 @interface OMBNeedHelpViewController : OMBTableViewController
@@ -37,10 +41,11 @@ typedef NS_ENUM(NSInteger, OMBNeedHelpSection){
   UITextViewDelegate
 >
 {
-  
   OMBAlertViewBlur *alertViewBlur;
   
   UITextView *aditionalTextView;
+  UILabel *aditionalPlaceholder;
+  
   NSInteger auxRowLease;
   NSInteger auxRowMinBudget;
   NSInteger auxRowMaxBudget;

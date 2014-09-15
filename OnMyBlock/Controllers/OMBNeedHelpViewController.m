@@ -14,13 +14,17 @@
 #import "OMBAlertViewBlur.h"
 #import "OMBMapViewController.h"
 #import "OMBNeedHelpCell.h"
-#import "OMBNeedHelpTextFieldCell.h"
-#import "OMBNeedHelpTwoTextFieldCell.h"
-#import "OMBNeedHelpTitleCell.h"
+//#import "OMBNeedHelpTextFieldCell.h"
+//#import "OMBNeedHelpTwoTextFieldCell.h"
+//#import "OMBNeedHelpTitleCell.h"
 #import "OMBTextFieldToolbar.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Color.h"
+
+#import "OMBLabelTextFieldCell.h"
+#import "OMBTwoLabelTextFieldCell.h"
+#import "UIImage+Resize.h"
 
 @implementation OMBNeedHelpViewController
 
@@ -37,6 +41,8 @@
 - (void)loadView
 {
   [super loadView];
+  
+  [super setupForTable];
   
   CGRect screen = [UIScreen mainScreen].bounds;
   float padding = OMBPadding;
@@ -83,12 +89,20 @@
   aditionalTextView.backgroundColor = UIColor.whiteColor;
   aditionalTextView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
   aditionalTextView.delegate = self;
-  aditionalTextView.font = [UIFont normalSmallTextFont];
+  aditionalTextView.font = [UIFont normalTextFont];
   aditionalTextView.frame = CGRectMake(padding, padding,
     screen.size.width - (padding * 2), padding * 5);
   aditionalTextView.inputAccessoryView = textFieldToolbar;
-  aditionalTextView.layer.cornerRadius = OMBCornerRadius;
-  aditionalTextView.textColor = [UIColor textColor];
+  aditionalTextView.textColor = [UIColor grayDark];
+  
+  // About text view placeholder
+  aditionalPlaceholder = [UILabel new];
+  aditionalPlaceholder.font = aditionalTextView.font;
+  aditionalPlaceholder.frame = CGRectMake(5.0f, 8.0f,
+    aditionalTextView.frame.size.width, 20.0f);
+  aditionalPlaceholder.text = @"Anything else we should know?";
+  aditionalPlaceholder.textColor = [UIColor grayLight];
+  [aditionalTextView addSubview: aditionalPlaceholder];
   
   // Picker view container
   pickerViewContainer = [UIView new];
@@ -217,7 +231,7 @@
   
   // Detail
   detailString =
-    @"Need to move in soon? Tell us know what you're "
+    @"Need to move in soon? Let us know what you're "
     @"looking for and we'll help you find a place now.";
   
   detailFont = [UIFont mediumTextFontBold];
@@ -355,21 +369,23 @@
 - (void)tableView:(UITableView *)tableView
   didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+  [tableView deselectRowAtIndexPath:indexPath animated:YES];
   
-  NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
+  NSInteger row     = indexPath.row;
   
   if (section == OMBNeedHelpSectionPhoneCall) {
     [self call];
   }
-  if (section == OMBNeedHelpSectionBudget && row == 1) {
-    [self showPickerView:budgetPickerView];
-  }
-  else if (section == OMBNeedHelpSectionLeaseLength && row == 1) {
-    [self showPickerView:leaseLengthPicker];
+  if (section == OMBNeedHelpSectionForm) {
+    if (row == OMBNeedHelpSectionFormRowBudget) {
+      [self showPickerView:budgetPickerView];
+    }
+    else if (row == OMBNeedHelpSectionFormRowLeaseLength) {
+      [self showPickerView:leaseLengthPicker];
+    }
   }
   
-  [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView
@@ -380,17 +396,23 @@
   
   // PhoneCall
   if (section == OMBNeedHelpSectionPhoneCall) {
-    if (row == 0) {
-      return [UIScreen mainScreen].bounds.size.height *
-        PropertyInfoViewImageHeightPercentage;
-    }
+    return [UIScreen mainScreen].bounds.size.height *
+      PropertyInfoViewImageHeightPercentage;
   }
   // Detail
   else if (section == OMBNeedHelpSectionDetail) {
-    if (row == 0) {
-      return OMBPadding * 1.5f + detailHeight + OMBPadding * 1.5f;
+    return OMBPadding * 1.5f + detailHeight + OMBPadding * 1.5f;
+  }
+  // Form
+  else if (section == OMBNeedHelpSectionForm) {
+    if (row == OMBNeedHelpSectionFormRowAditional) {
+      return OMBPadding + aditionalTextView.frame.size.height + OMBPadding;
+    }
+    else {
+      return [OMBLabelTextFieldCell heightForCellWithIconImageView];
     }
   }
+  
   // Submit
   else if (section == OMBNeedHelpSectionSubmit) {
     return OMBPadding + submitButton.frame.size.height + OMBPadding;
@@ -401,36 +423,6 @@
       return OMBKeyboardHeight + textFieldToolbar.frame.size.height;
     }
   }
-  
-  // Title Form
-  else if (row == 0) {
-    return [OMBNeedHelpTitleCell heightForCell];
-  }
-  // Firs & Last Name
-  else if (section == OMBNeedHelpSectionFirsLastName) {
-    return [OMBNeedHelpTwoTextFieldCell heightForCell];
-  }
-  // Phone
-  else if (section == OMBNeedHelpSectionPhone ||
-           section == OMBNeedHelpSectionEmail ||
-           section == OMBNeedHelpSectionSchool ||
-           section == OMBNeedHelpSectionPlace ||
-           section == OMBNeedHelpSectionBedrooms) {
-    return [OMBNeedHelpTextFieldCell heightForCell];
-  }
-  // Budget
-  else if (section == OMBNeedHelpSectionBudget) {
-    return [OMBNeedHelpTextFieldCell heightForCell];
-  }
-  // LeaseLength
-  else if (section == OMBNeedHelpSectionLeaseLength) {
-    return [OMBNeedHelpTextFieldCell heightForCell];
-  }
-  // Aditional
-  else if (section == OMBNeedHelpSectionAditional) {
-    return OMBPadding + aditionalTextView.frame.size.height + OMBPadding;
-  }
-  
   return 0.0f;
 }
 
@@ -440,18 +432,10 @@
 {
   // PhoneCall
   // Detail
-  // FirsLastName
-  // Phone
-  // Email
-  // School
-  // Place
-  // Bedrooms
-  // Budget
-  // LeaseLength
-  // Aditional
+  // Form
   // Submit
   // Spacing
-  return 13;
+  return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
@@ -460,6 +444,7 @@
   
   NSInteger row     = indexPath.row;
   NSInteger section = indexPath.section;
+  
   float padding = OMBPadding;
   
   static NSString *emptyCellID = @"emptyCellID";
@@ -474,21 +459,23 @@
   // Phone Call
   if (section == OMBNeedHelpSectionPhoneCall) {
     
-    if (row == 0) {
-      static NSString *callCellID = @"callCellID";
-      OMBNeedHelpCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:callCellID];
-      
-      if (!cell) {
-        cell = [[OMBNeedHelpCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:callCellID];
-        cell.titleLabel.text = @"Call us";
-        cell.secondLabel.text = [self phoneNumberFormated:YES];
-        [cell setBackgroundImage:@"ios_house" withBlur:YES];
-      }
-      
-      return cell;
+    static NSString *callCellID = @"callCellID";
+    OMBNeedHelpCell *cell = [tableView
+      dequeueReusableCellWithIdentifier:callCellID];
+    
+    if (!cell) {
+      cell = [[OMBNeedHelpCell alloc] initWithStyle:
+        UITableViewCellStyleDefault reuseIdentifier:callCellID];
+      cell.titleLabel.text = @"Call us";
+      cell.secondLabel.font = [UIFont normalTextFontBold];
+      cell.secondLabel.text = [self phoneNumberFormated:YES];
+      [cell setBackgroundImage:@"lustre-pearl-exterior-31.jpg" withBlur:YES];
     }
+    
+    cell.separatorInset = UIEdgeInsetsMake(0.0f,
+      tableView.frame.size.width, 0.0f, 0.0f);
+    
+    return cell;
   }
   // Detail
   else if (section == OMBNeedHelpSectionDetail) {
@@ -521,282 +508,12 @@
 
   }
   // Form
-  // Firs & Last Name
-  else if (section == OMBNeedHelpSectionFirsLastName) {
-    if (row == 0) {
-      NSString *titleFirstLastID = @"titleFirstLastID";
-      OMBNeedHelpTitleCell *cell =
-        [tableView dequeueReusableCellWithIdentifier:titleFirstLastID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTitleCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:titleFirstLastID];
-      }
-      cell.titleLabel.text = @"First Name*\t\t\t   Last Name*";
-      
-      return cell;
-    }
-    else {
-      NSString *firstLastID = @"firstLastID";
-      OMBNeedHelpTwoTextFieldCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:firstLastID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTwoTextFieldCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:firstLastID];
-      }
-      cell.textField.delegate = self;
-      cell.textField.indexPath = indexPath;
-      cell.textField.keyboardType = UIKeyboardTypeDefault;
-      cell.textField.tag = 1;
-      [cell.textField addTarget: self
-        action: @selector(textFieldDidChange:)
-          forControlEvents: UIControlEventEditingChanged];
-      
-      cell.secondTextField.delegate = self;
-      cell.secondTextField.indexPath = indexPath;
-      cell.secondTextField.keyboardType = UIKeyboardTypeDefault;
-      cell.secondTextField.tag = 2;
-      [cell.secondTextField addTarget: self
-        action: @selector(textFieldDidChange:)
-          forControlEvents: UIControlEventEditingChanged];
-      
-      return cell;
-    }
-  }
-  // Phone
-  else if (section == OMBNeedHelpSectionPhone) {
-    if (row == 0) {
-      NSString *titlePhoneNumberID = @"titlePhoneNumberID";
-      OMBNeedHelpTitleCell *cell =
-        [tableView dequeueReusableCellWithIdentifier:titlePhoneNumberID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTitleCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:titlePhoneNumberID];
-      }
-      cell.titleLabel.text = @"Phone number*";
-      
-      return cell;
-    }
-    else {
-      NSString *phoneCellID = @"phoneCellID";
-      OMBNeedHelpTextFieldCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:phoneCellID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTextFieldCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:phoneCellID];
-      }
-      cell.textField.delegate = self;
-      cell.textField.indexPath = indexPath;
-      cell.textField.keyboardType = UIKeyboardTypePhonePad;
-      [cell.textField addTarget: self
-        action: @selector(textFieldDidChange:)
-          forControlEvents: UIControlEventEditingChanged];
-      
-      return cell;
-    }
-  }
-  // Email
-  else if (section == OMBNeedHelpSectionEmail) {
-    if (row == 0) {
-      NSString *titleEmailID = @"titleEmailID";
-      OMBNeedHelpTitleCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:titleEmailID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTitleCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:titleEmailID];
-      }
-      cell.titleLabel.text = @"Email*";
-      
-      return cell;
-    }
-    else {
-      NSString *emailCellID = @"emailCellID";
-      OMBNeedHelpTextFieldCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:emailCellID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTextFieldCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:emailCellID];
-      }
-      cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-      cell.textField.delegate = self;
-      cell.textField.indexPath = indexPath;
-      cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
-      [cell.textField addTarget: self
-        action: @selector(textFieldDidChange:)
-          forControlEvents: UIControlEventEditingChanged];
-      
-      return cell;
-    }
-  }
-  // School
-  else if (section == OMBNeedHelpSectionSchool) {
-    if (row == 0) {
-      NSString *titleSchoolID = @"titleSchoolID";
-      OMBNeedHelpTitleCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:titleSchoolID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTitleCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:titleSchoolID];
-      }
-      cell.titleLabel.text = @"School";
-      
-      return cell;
-    }
-    else {
-      NSString *schoolCellID = @"schoolCellID";
-      OMBNeedHelpTextFieldCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:schoolCellID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTextFieldCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:schoolCellID];
-      }
-      cell.textField.delegate = self;
-      cell.textField.indexPath = indexPath;
-      cell.textField.keyboardType = UIKeyboardTypeDefault;
-      [cell.textField addTarget: self
-        action: @selector(textFieldDidChange:)
-          forControlEvents: UIControlEventEditingChanged];
-      
-      return cell;
-    }
-  }
-  // Place
-  else if (section == OMBNeedHelpSectionPlace) {
-    if (row == 0) {
-      NSString *titlePlaceID = @"titlePlaceID";
-      OMBNeedHelpTitleCell *cell =
-        [tableView dequeueReusableCellWithIdentifier:titlePlaceID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTitleCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:titlePlaceID];
-      }
-      cell.titleLabel.text = @"Where would you like to live?*";
-      
-      return cell;
-    }
-    else {
-      NSString *placeCellID = @"placeCellID";
-      OMBNeedHelpTextFieldCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:placeCellID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTextFieldCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:placeCellID];
-      }
-      cell.textField.delegate = self;
-      cell.textField.indexPath = indexPath;
-      [cell.textField addTarget: self
-        action: @selector(textFieldDidChange:)
-          forControlEvents: UIControlEventEditingChanged];
-      
-      return cell;
-    }
-  }
-  // Bedrooms
-  else if (section == OMBNeedHelpSectionBedrooms) {
-    if (row == 0) {
-      NSString *titleBedroomsID = @"titleBedroomsID";
-      OMBNeedHelpTitleCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:titleBedroomsID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTitleCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:titleBedroomsID];
-      }
-      cell.titleLabel.text = @"Number of bedrooms";
-      
-      return cell;
-    }
-    else {
-      NSString *bedroomCellID = @"bedroomCellID";
-      OMBNeedHelpTextFieldCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:bedroomCellID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTextFieldCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:bedroomCellID];
-      }
-      cell.textField.delegate = self;
-      cell.textField.indexPath = indexPath;
-      cell.textField.keyboardType = UIKeyboardTypeNumberPad;
-      [cell.textField addTarget: self
-        action: @selector(textFieldDidChange:)
-          forControlEvents: UIControlEventEditingChanged];
-      
-      return cell;
-    }
-  }
-  // Budget
-  else if (section == OMBNeedHelpSectionBudget) {
-    if (row == 0) {
-      NSString *titleBudgetID = @"titleBudgetID";
-      OMBNeedHelpTitleCell *cell =
-      [tableView dequeueReusableCellWithIdentifier:titleBudgetID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTitleCell alloc] initWithStyle:
-                UITableViewCellStyleDefault reuseIdentifier:titleBudgetID];
-      }
-      cell.titleLabel.text = @"Budget Range";
-      
-      return cell;
-    }
-    else {
-      NSString *budgetID = @"budgetID";
-      OMBNeedHelpTextFieldCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:budgetID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTextFieldCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:budgetID];
-      }
-      
-      cell.textField.indexPath = indexPath;
-      cell.textField.userInteractionEnabled = NO;
-      
-      return cell;
-    }
-  }
-  // Lease Length
-  else if (section == OMBNeedHelpSectionLeaseLength) {
-    if (row == 0) {
-      NSString *titleLeaseID = @"titleLeaseID";
-      OMBNeedHelpTitleCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:titleLeaseID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTitleCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:titleLeaseID];
-      }
-      cell.titleLabel.text = @"Prefered lease length";
-      
-      return cell;
-    }
-    else {
-      NSString *leaseID = @"leaseID";
-      OMBNeedHelpTextFieldCell *cell = [tableView
-         dequeueReusableCellWithIdentifier:leaseID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTextFieldCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:leaseID];
-      }
-      cell.textField.indexPath = indexPath;
-      cell.textField.userInteractionEnabled = NO;
-      
-      return cell;
-    }
-  }
-  // Aditional
-  else if (section == OMBNeedHelpSectionAditional) {
-    if (row == 0) {
-      NSString *titleAditionalID = @"titleAditionalID";
-      OMBNeedHelpTitleCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:titleAditionalID];
-      if (!cell) {
-        cell = [[OMBNeedHelpTitleCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:titleAditionalID];
-      }
-      cell.titleLabel.text = @"Anything else we should know?";
-      
-      return cell;
-    }
-    else {
+  else if (section == OMBNeedHelpSectionForm) {
+    // Firs & Last Name
+    if (row == OMBNeedHelpSectionFormRowAditional) {
       static NSString *AditionalCellID = @"AditionalCellID";
-      UITableViewCell *cell = [tableView
-        dequeueReusableCellWithIdentifier: AditionalCellID];
+      UITableViewCell *cell =
+        [tableView dequeueReusableCellWithIdentifier: AditionalCellID];
       if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier: AditionalCellID];
@@ -804,11 +521,133 @@
         [cell.contentView addSubview: aditionalTextView];
       }
       
-      cell.backgroundColor = [UIColor grayUltraLight];
+//      aditionalTextView.text = [valuesDictionary objectForKey: @"about"];
+      if ([[aditionalTextView.text stripWhiteSpace] length]) {
+        aditionalPlaceholder.hidden = YES;
+      }
+      else {
+        aditionalPlaceholder.hidden = NO;
+      }
+      
       cell.clipsToBounds = YES;
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
       cell.separatorInset = UIEdgeInsetsMake(0.0f,
         tableView.frame.size.width, 0.0f, 0.0f);
+      
+      return cell;
+    }
+    else {
+      
+      NSString *formCellID = @"formCellID";
+      OMBLabelTextFieldCell *cell = [tableView
+        dequeueReusableCellWithIdentifier:formCellID];
+      if (!cell) {
+        cell = [[OMBLabelTextFieldCell alloc] initWithStyle:
+                UITableViewCellStyleDefault reuseIdentifier:formCellID];
+        [cell setFrameUsingIconImageView];
+      }
+      
+      NSString *placeholder = @"";
+      NSString *imageName = @"";
+      
+      cell.textField.keyboardType = UIKeyboardTypeDefault;
+      
+      if (row == OMBNeedHelpSectionFormRowFirsLastName) {
+        
+        imageName = @"user_icon.png";
+        static NSString *LabelTextCellID = @"TwoLabelTextCellID";
+        OMBTwoLabelTextFieldCell *cell =
+        [tableView dequeueReusableCellWithIdentifier: LabelTextCellID];
+        if (!cell) {
+          cell = [[OMBTwoLabelTextFieldCell alloc] initWithStyle:
+                  UITableViewCellStyleDefault reuseIdentifier: LabelTextCellID];
+          [cell setFrameUsingIconImageView];
+        }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        // First Name
+        cell.firstIconImageView.image =
+          [UIImage image: [UIImage imageNamed: imageName]
+            size: cell.firstIconImageView.frame.size];
+        cell.firstTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        cell.firstTextField.delegate  = self;
+        cell.firstTextField.font = [UIFont normalTextFont];
+        cell.firstTextField.indexPath = indexPath;
+        cell.firstTextField.placeholder = @"First Name*";
+        cell.firstTextField.tag = 1;
+//        cell.firstTextField.text = [valueDictionary objectForKey:@"state"];
+        [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
+        
+        // Last Name
+        cell.secondTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        cell.secondTextField.delegate  = self;
+        cell.secondTextField.font = cell.firstTextField.font;
+        cell.secondTextField.indexPath = indexPath;
+        cell.secondTextField.tag = 2;
+        cell.secondTextField.placeholder = @"Last Name*";
+//        cell.secondTextField.text = [valueDictionary objectForKey:@"zip"];
+        [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
+        cell.clipsToBounds = YES;
+        return cell;
+        
+      }
+      
+      // Phone
+      else if (row == OMBNeedHelpSectionFormRowPhone) {
+        cell.textField.keyboardType = UIKeyboardTypePhonePad;
+        imageName = @"phone_icon.png";
+        placeholder = @"Phone number*";
+      }
+      // Email
+      else if (row == OMBNeedHelpSectionFormRowEmail) {
+        cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
+        imageName = @"messages_icon_dark.png";
+        placeholder = @"Email*";
+      }
+      // School
+      else if (row == OMBNeedHelpSectionFormRowSchool) {
+        imageName = @"school_icon.png";
+        placeholder = @"School";
+      }
+      // Place
+      else if (row == OMBNeedHelpSectionFormRowPlace) {
+        imageName = @"location_icon_black";
+        placeholder = @"Where would you like to live?*";
+      }
+      // Bedrooms
+      else if (row == OMBNeedHelpSectionFormRowBedrooms) {
+        cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+        imageName = @"bed_icon_black.png";
+        placeholder = @"Number of bedrooms";
+      }
+      // Budget
+      else if (row == OMBNeedHelpSectionFormRowBudget) {
+        cell.textField.userInteractionEnabled = NO;
+        imageName = @"moneybag_icon_black.png";
+        placeholder = @"Budget Range";
+      }
+      // Lease Length
+      else if (row == OMBNeedHelpSectionFormRowLeaseLength) {
+        cell.textField.userInteractionEnabled = NO;
+        imageName = @"calendar_icon_black.png";
+        placeholder = @"Prefered lease Length";
+      }
+      
+      cell.clipsToBounds = YES;
+      cell.iconImageView.image = [UIImage image: [UIImage imageNamed: imageName]
+        size: cell.iconImageView.frame.size];
       cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.textField.delegate = self;
+      cell.textField.font = [UIFont normalTextFont];
+      cell.textField.indexPath = indexPath;
+      cell.textField.placeholder = placeholder;
+      cell.textField.textColor = [UIColor grayDark];
+      [cell.textField addTarget: self
+        action: @selector(textFieldDidChange:)
+          forControlEvents: UIControlEventEditingChanged];
       
       return cell;
     }
@@ -857,23 +696,22 @@
   else if (section == OMBNeedHelpSectionDetail) {
     return 1;
   }
+  // Form
+  else if (section == OMBNeedHelpSectionForm) {
+    // FirsLastName
+    // Phone
+    // Email
+    // School
+    // Place
+    // Bedrooms
+    // Budget
+    // LeaseLength
+    // Aditional
+    return 9;
+  }
   // Submit
   else if (section == OMBNeedHelpSectionSubmit) {
     return 1;
-  }
-  // Form
-  else if (section == OMBNeedHelpSectionFirsLastName ||
-           section == OMBNeedHelpSectionPhone ||
-           section == OMBNeedHelpSectionEmail ||
-           section == OMBNeedHelpSectionSchool ||
-           section == OMBNeedHelpSectionPlace ||
-           section == OMBNeedHelpSectionBedrooms ||
-           section == OMBNeedHelpSectionBudget ||
-           section == OMBNeedHelpSectionLeaseLength ||
-           section == OMBNeedHelpSectionAditional) {
-    // Title
-    // Field
-    return 2;
   }
   // Spacing
   else if (section == OMBNeedHelpSectionSpacing) {
@@ -887,8 +725,6 @@
 
 - (void)textFieldDidBeginEditing:(TextFieldPadding *)textField
 {
-  textField.layer.borderColor = [UIColor blue].CGColor;
-  textField.layer.borderWidth = 1.f;
   
   keyboardIsVisible = YES;
   textField.inputAccessoryView = textFieldToolbar;
@@ -900,10 +736,9 @@
 
 - (void)textFieldDidEndEditing:(TextFieldPadding *)textField
 {
-  textField.layer.borderWidth = 0.0f;
   
   // Phone format
-  if (textField.indexPath.section == OMBNeedHelpSectionPhone) {
+  if (textField.indexPath.row == OMBNeedHelpSectionFormRowPhone) {
     if ([[textField.text phoneNumberString] length]) {
       textField.text = [textField.text phoneNumberString];
       [valuesDictionary setObject:textField.text forKey:@"phone"];
@@ -922,27 +757,33 @@
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
-  textView.layer.borderColor = [UIColor blue].CGColor;
-  textView.layer.borderWidth = 1.0f;
-  
+//  textView.layer.borderColor = [UIColor blue].CGColor;
+//  textView.layer.borderWidth = 1.0f;
+
   keyboardIsVisible = YES;
   
-  NSIndexPath *indexPath = [NSIndexPath indexPathForRow:
-    1 inSection: OMBNeedHelpSectionAditional];
+  NSIndexPath *indexPath = [NSIndexPath
+    indexPathForRow: OMBNeedHelpSectionFormRowAditional
+      inSection: OMBNeedHelpSectionForm];
   
   [self.table beginUpdates];
   [self.table endUpdates];
   [self scrollToRectAtIndexPath: indexPath];
 }
 
-
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-  textView.layer.borderWidth = 0.0f;
+//  textView.layer.borderWidth = 0.0f;
 }
 
 - (void)textViewDidChange:(UITextView *)textView
 {
+  if ([[textView.text stripWhiteSpace] length]) {
+    aditionalPlaceholder.hidden = YES;
+  }
+  else {
+    aditionalPlaceholder.hidden = NO;
+  }
   [valuesDictionary setObject:textView.text forKey:@"aditional"];
 }
 
@@ -989,11 +830,11 @@
   
   // Budget
   if ([budgetPickerView superview]) {
-    OMBNeedHelpTextFieldCell *cell = (OMBNeedHelpTextFieldCell *)
+    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
       [self.table cellForRowAtIndexPath:
-        [NSIndexPath indexPathForRow: 1
-          inSection: OMBNeedHelpSectionBudget]];
-  
+        [NSIndexPath indexPathForRow: OMBNeedHelpSectionFormRowBudget
+          inSection: OMBNeedHelpSectionForm]];
+    
     budgetMinString = [self pickerView:budgetPickerView
       titleForRow: auxRowMinBudget forComponent:0];
     
@@ -1015,10 +856,10 @@
   else if ([leaseLengthPicker superview]) {
     NSString *string = [leaseOptions objectAtIndex: auxRowLease];
    
-    OMBNeedHelpTextFieldCell *cell = (OMBNeedHelpTextFieldCell *)
+    OMBLabelTextFieldCell *cell = (OMBLabelTextFieldCell *)
       [self.table cellForRowAtIndexPath:
-        [NSIndexPath indexPathForItem:1
-          inSection:OMBNeedHelpSectionLeaseLength]];
+        [NSIndexPath indexPathForItem:OMBNeedHelpSectionFormRowLeaseLength
+          inSection:OMBNeedHelpSectionForm]];
     
     cell.textField.text = string;
     [valuesDictionary setObject:@(auxRowLease) forKey:@"lease_length"];
@@ -1028,33 +869,7 @@
 
 - (BOOL) hasCompleteFields
 {
-  
-  // Search for empty textfields in required fields
-//  for (NSNumber *number in indexRequired) {
-//    NSInteger section = [number integerValue];
-//    
-//    UITableViewCell *cell = [self.table
-//      cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:section]];
-//    
-//    if ([cell isKindOfClass:[OMBNeedHelpTextFieldCell class]]) {
-//      
-//      int lenght = [((OMBNeedHelpTextFieldCell *)cell).textField.text length];
-//      
-//      if (lenght == 0) {
-//        return NO;
-//      }
-//    }
-//    else if ([cell isKindOfClass:[OMBNeedHelpTwoTextFieldCell class]]) {
-//      
-//      int lenght1 = [((OMBNeedHelpTwoTextFieldCell *)cell).textField.text length];
-//      int lenght2 = [((OMBNeedHelpTwoTextFieldCell *)cell).secondTextField.text length];
-//      
-//      if (lenght1 == 0 || lenght2 ==0) {
-//        return NO;
-//      }
-//    }
-//  }
-  
+  // Check for required fields
   for (NSString *key in indexRequired) {
     
     if ([valuesDictionary objectForKey: key]) {
@@ -1181,7 +996,7 @@
   NSString *key;
   NSString *string = textField.text;
   
-  if (textField.indexPath.section == OMBNeedHelpSectionFirsLastName) {
+  if (textField.indexPath.row == OMBNeedHelpSectionFormRowFirsLastName) {
     if (textField.tag == 1) {
       key = @"first_name";
     }
@@ -1189,19 +1004,19 @@
       key = @"last_name";
     }
   }
-  else if (textField.indexPath.section == OMBNeedHelpSectionPhone) {
+  else if (textField.indexPath.row == OMBNeedHelpSectionFormRowPhone) {
     key = @"phone";
   }
-  else if (textField.indexPath.section == OMBNeedHelpSectionEmail) {
+  else if (textField.indexPath.row == OMBNeedHelpSectionFormRowEmail) {
     key = @"email";
   }
-  else if (textField.indexPath.section == OMBNeedHelpSectionSchool) {
+  else if (textField.indexPath.row == OMBNeedHelpSectionFormRowSchool) {
     key = @"school";
   }
-  else if (textField.indexPath.section == OMBNeedHelpSectionPlace) {
+  else if (textField.indexPath.row == OMBNeedHelpSectionFormRowPlace) {
     key = @"place";
   }
-  else if (textField.indexPath.section == OMBNeedHelpSectionBedrooms) {
+  else if (textField.indexPath.row == OMBNeedHelpSectionFormRowBedrooms) {
     key = @"bedrooms";
   }
   
