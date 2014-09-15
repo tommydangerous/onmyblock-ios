@@ -515,6 +515,7 @@
 		DE8D2D5518BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8D2D5218BD05F4000E6BF4 /* UIScrollView+SVInfiniteScrolling.m */; };
 		DE8D2D5618BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8D2D5418BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m */; };
 		DE8E8ECB19085C68005DCB6A /* OMBFacebookUserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8E8ECA19085C68005DCB6A /* OMBFacebookUserCell.m */; };
+		DE901D0419C7A47C00B3AD7D /* lustre-pearl-exterior-31.jpg in Resources */ = {isa = PBXBuildFile; fileRef = DE901D0319C7A47C00B3AD7D /* lustre-pearl-exterior-31.jpg */; };
 		DE90C986192D106400B531EE /* OMBSentApplicationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DE90C985192D106400B531EE /* OMBSentApplicationCell.m */; };
 		DE92170918D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170818D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m */; };
 		DE92170C18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE92170B18D79740003E25DF /* OMBRenterInfoAddRoommateViewController.m */; };
@@ -1538,6 +1539,7 @@
 		DE8D2D5418BD05F4000E6BF4 /* UIScrollView+SVPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SVPullToRefresh.m"; sourceTree = "<group>"; };
 		DE8E8EC919085C68005DCB6A /* OMBFacebookUserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFacebookUserCell.h; sourceTree = "<group>"; };
 		DE8E8ECA19085C68005DCB6A /* OMBFacebookUserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFacebookUserCell.m; sourceTree = "<group>"; };
+		DE901D0319C7A47C00B3AD7D /* lustre-pearl-exterior-31.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "lustre-pearl-exterior-31.jpg"; sourceTree = "<group>"; };
 		DE90C984192D106400B531EE /* OMBSentApplicationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSentApplicationCell.h; sourceTree = "<group>"; };
 		DE90C985192D106400B531EE /* OMBSentApplicationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSentApplicationCell.m; sourceTree = "<group>"; };
 		DE92170718D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBRenterInfoSectionRoommateViewController.h; sourceTree = "<group>"; };
@@ -2864,6 +2866,7 @@
 		ABB3C56F1811719B00DD91C9 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				DE901D0319C7A47C00B3AD7D /* lustre-pearl-exterior-31.jpg */,
 				AB5DD32D18CE019700237AFC /* neighborhood_downtown.jpg */,
 				AB5DD32E18CE019700237AFC /* neighborhood_hillcrest.jpg */,
 				AB5DD32F18CE019700237AFC /* neighborhood_la_jolla.jpg */,
@@ -3536,6 +3539,7 @@
 				AB8A9DE0195CA0B7002D6BF2 /* README.md in Resources */,
 				ABF8ECA9182D6C6B0080B1E2 /* intro_contact_view_background.jpg in Resources */,
 				ABBA589B1870C59700E9BF4E /* ELCAssetTablePicker.xib in Resources */,
+				DE901D0419C7A47C00B3AD7D /* lustre-pearl-exterior-31.jpg in Resources */,
 				AB802EA818109E5200E04D11 /* InfoPlist.strings in Resources */,
 				ABB911591897F7DE0046611F /* intro_still_image_slide_5_background@2x.jpg in Resources */,
 				AB18CF6118E0904F0022ABF1 /* cosigner_agreement.pdf in Resources */,
