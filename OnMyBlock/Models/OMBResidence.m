@@ -81,7 +81,7 @@ NSString *const OMBResidencePropertyTypeSublet    = @"sublet";
     residence.city = @"Gondor";
     residence.createdAt = [[NSDate date] timeIntervalSince1970];
     residence.deposit = 2100.00;
-    residence.description = @"The best place to not suffer.";
+    residence.desc = @"The best place to not suffer.";
     residence.email = @"witch_king@gmail.com";
     residence.landlordName = @"Nazgul Smith";
     residence.latitude = -32;
@@ -574,11 +574,11 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   // Photos
   if ([_images count])
     stepsRemaining -= 1;
-  // Title / Description
-  if ([_title length] && [_description length])
+  // Title / desc
+  if ([_title length] && [_desc length])
     stepsRemaining -= 1;
-  // Description
-  /*if ([_description length])
+  // desc
+  /*if ([_desc length])
     stepsRemaining -= 1;*/
   // Rent / Auction Details
   if (_minRent)
@@ -779,7 +779,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   //   bedrooms: "4.0",
   //   city: "San Diego",
   //   created_at: "2013-10-11 17:34:06 -0700",
-  //   description: "Address of Available Listing",
+  //   desc: "Address of Available Listing",
   //   email: null,
   //   id: 3415,
   //   landlord_name: null,
@@ -851,10 +851,10 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
     self.createdAt = [[dateFormatter dateFromString:
       createdAt] timeIntervalSince1970];
 
-  // Description
-  id description = [dictionary objectForKey: @"description"];
-  if (description != [NSNull null])
-    self.description = description;
+  // desc
+  id desc = [dictionary objectForKey: @"description"];
+  if (desc != [NSNull null])
+    self.desc = desc;
 
   // Deposit
   id deposit = [dictionary objectForKey: @"deposit"];
@@ -1160,7 +1160,7 @@ completion: (void (^) (NSError *error)) block
   _cats = residence.cats;
   _city = residence.city;
   _createdAt = residence.createdAt;
-  _description = residence.description;
+  _desc = residence.desc;
   _dogs = residence.dogs;
   _email = residence.email;
   _isAuction = residence.isAuction;

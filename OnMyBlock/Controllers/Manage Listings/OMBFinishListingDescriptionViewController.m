@@ -127,7 +127,7 @@
   if ([self wordsRemaining] < 0)
     return;
   
-  residence.description = descriptionTextView.text;
+  residence.desc = descriptionTextView.text;
 
   OMBResidenceUpdateConnection *conn = 
     [[OMBResidenceUpdateConnection alloc] initWithResidence: residence 
@@ -139,8 +139,8 @@
 
 - (void) setTextForDescriptionView
 {
-  if ([residence.description length])
-    descriptionTextView.text = residence.description;
+  if ([residence.desc length])
+    descriptionTextView.text = residence.desc;
 }
 
 - (void) updateCharacterCount

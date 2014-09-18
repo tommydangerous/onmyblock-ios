@@ -85,7 +85,7 @@
   XCTAssertEqual(residence.createdAt, [[dateFormatter dateFromString:
     [residenceDictionary objectForKey: @"created_at"]] timeIntervalSince1970],
       @"Residence should parse created_at correctly");
-  XCTAssertEqual(residence.description, 
+  XCTAssertEqual(residence.desc, 
     [residenceDictionary objectForKey: @"description"], 
       @"Residence should parse description correctly");
   XCTAssertEqual(residence.email, 

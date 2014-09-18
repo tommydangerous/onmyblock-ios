@@ -479,7 +479,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // Title / Description
   if (indexPath.row == 0) {
     string = @"Title and Description";
-    if ([residence.title length] && [residence.description length]) {
+    if ([residence.title length] && [residence.desc length]) {
       string = residence.title;
       cell.basicTextLabel.textColor = [UIColor textColor];
       imageView.alpha = 1.0f;
@@ -490,7 +490,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
   // // Description
   // else if (indexPath.row == 1) {
   //   string = @"Description";
-  //   if ([residence.description length]) {
+  //   if ([residence.desc length]) {
   //     cell.basicTextLabel.textColor = [UIColor textColor];
   //     imageView.alpha = 1.0f;
   //     imageView.image = 
@@ -717,7 +717,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   else if (![residence.title length])
     string = @"Please give your place a title.";
   // Description
-  else if (![residence.description length])
+  else if (![residence.desc length])
     string = @"Please write short description about your place.";
   // Rent / Auction Details
   else if (!residence.minRent)
@@ -741,7 +741,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   BOOL animated = NO;
   
   // Title
-  if (![residence.title length] || ![residence.description length]){
+  if (![residence.title length] || ![residence.desc length]){
     OMBFinishListingTitleDescriptionViewController *vc =
       [[OMBFinishListingTitleDescriptionViewController alloc]
         initWithResidence: residence];
@@ -750,7 +750,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     return;
   }
   // Description
-  /*if (![residence.description length]){
+  /*if (![residence.desc length]){
     OMBFinishListingDescriptionViewController *vc =
       [[OMBFinishListingDescriptionViewController alloc]
         initWithResidence:residence];
