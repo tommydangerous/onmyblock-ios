@@ -379,7 +379,6 @@ withCompletion: (void (^) (NSError *error)) block
   else {
     [dict setObject: residence forKey: key];
   }
-  NSLog(@"%@", residence);
 }
 
 - (void) addResidenceVisited:(OMBResidence *)residence
@@ -1483,7 +1482,7 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
       [residence readFromResidenceDictionary: dict];
 
       [self addResidence: residence];
-
+      
       [[OMBResidenceStore sharedStore] addResidence: residence];
     }
     else {

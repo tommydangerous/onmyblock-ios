@@ -366,10 +366,10 @@
   [self.view addSubview: relistView];
 }
 
-- (void) viewWillAppear: (BOOL) animated
+- (void) viewWillAppear:(BOOL)animated
 {
-  [super viewWillAppear: animated];
-
+  [super viewWillAppear:animated];
+  [self.table reloadData];
   [self updateBackgroundImage];
 }
 

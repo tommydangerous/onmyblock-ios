@@ -641,7 +641,7 @@ forResidenceImage: (OMBResidenceImage *) residenceImage
   // Bedrooms
   id bedrooms = [dictionary objectForKey: @"min_bedrooms"];
   if (bedrooms != [NSNull null])
-    self.bedrooms = [bathrooms floatValue];
+    self.bedrooms = [bedrooms floatValue];
 
   // City
   id city = [dictionary objectForKey: @"city"];
@@ -1151,36 +1151,36 @@ completion: (void (^) (NSError *error)) block
 
 - (void) updateResidenceWithResidence: (OMBResidence *) residence
 {
-  _address = residence.address;
-  _auctionDuration = residence.auctionDuration;
+  _address          = residence.address;
+  _auctionDuration  = residence.auctionDuration;
   _auctionStartDate = residence.auctionStartDate;
-  _availableOn = residence.availableOn;
-  _bathrooms = residence.bathrooms;
-  _bedrooms = residence.bedrooms;
-  _cats = residence.cats;
-  _city = residence.city;
-  _createdAt = residence.createdAt;
-  _desc = residence.desc;
-  _dogs = residence.dogs;
-  _email = residence.email;
-  _isAuction = residence.isAuction;
-  _landlordName = residence.landlordName;
-  _latitude = residence.latitude;
-  _leaseMonths = residence.leaseMonths;
-  _leaseType = residence.leaseType;
-  _longitude = residence.longitude;
-  _minRent = residence.minRent;
-  _moveInDate = residence.moveInDate;
-  _phone = residence.phone;
-  _propertyType = residence.propertyType;
-  _rentItNowPrice = residence.squareFeet;
-  _squareFeet = residence.squareFeet;
-  _state = residence.state;
-  _title = residence.title;
-  _uid = residence.uid;
-  _unit = residence.unit;
-  _updatedAt = residence.updatedAt;
-  _zip = residence.zip;
+  _availableOn      = residence.availableOn;
+  _bathrooms        = residence.bathrooms;
+  _bedrooms         = residence.bedrooms;
+  _cats             = residence.cats;
+  _city             = residence.city;
+  _createdAt        = residence.createdAt;
+  _desc             = residence.desc;
+  _dogs             = residence.dogs;
+  _email            = residence.email;
+  _isAuction        = residence.isAuction;
+  _landlordName     = residence.landlordName;
+  _latitude         = residence.latitude;
+  _leaseMonths      = residence.leaseMonths;
+  _leaseType        = residence.leaseType;
+  _longitude        = residence.longitude;
+  _minRent          = residence.minRent;
+  _moveInDate       = residence.moveInDate;
+  _phone            = residence.phone;
+  _propertyType     = residence.propertyType;
+  _rentItNowPrice   = residence.squareFeet;
+  _squareFeet       = residence.squareFeet;
+  _state            = residence.state;
+  _title            = residence.title;
+  _uid              = residence.uid;
+  _unit             = residence.unit;
+  _updatedAt        = residence.updatedAt;
+  _zip              = residence.zip;
 }
 
 - (BOOL) validTitle
