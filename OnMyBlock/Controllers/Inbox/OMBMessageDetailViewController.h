@@ -16,6 +16,9 @@
 
 @interface OMBMessageDetailViewController : OMBViewController
 <OMBConnectionProtocol>
+{
+  CGFloat keyboardHeight;
+}
 
 @property (nonatomic, strong) UICollectionView *collection;
 @property (nonatomic) NSInteger currentPage;

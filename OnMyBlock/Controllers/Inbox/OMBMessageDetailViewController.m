@@ -129,6 +129,7 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
   CGRect screen = [[UIScreen mainScreen] bounds];
   self.view = [[UIView alloc] initWithFrame: screen];
 
+  keyboardHeight = 216.f;
   CGFloat toolbarHeight = 44.0f;
 
   // Collection view
@@ -434,7 +435,7 @@ atIndexPath: (NSIndexPath *) indexPath
         withReuseIdentifier: FooterIdentifier forIndexPath: indexPath];
     if (!reusableView) {
       reusableView = [[UICollectionReusableView alloc] initWithFrame:
-        CGRectMake(0.0f, 0.0f, collectionView.frame.size.width, 216.0f)];
+        CGRectMake(0.0f, 0.0f, collectionView.frame.size.width, keyboardHeight)];
     }
     return reusableView;
   }
@@ -470,7 +471,7 @@ referenceSizeForFooterInSection: (NSInteger) section
 
   CGFloat height = 0.0f;
   if (isEditing && [_messages count] > 1)
-    height = 216.0f;
+    height = keyboardHeight;
   return CGSizeMake(collectionView.frame.size.width, height);
 }
 
@@ -622,7 +623,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
   toolbarRect.size.height =
     bottomToolbar.messageContentTextView.frame.size.height + (44.0f - 32.0f);
   toolbarRect.origin.y = screen.size.height -
-    (toolbarRect.size.height + 216.0f);
+    (toolbarRect.size.height + keyboardHeight);
   bottomToolbar.frame = toolbarRect;
 }
 
@@ -693,13 +694,15 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
 {
   NSTimeInterval duration = [[notification.userInfo objectForKey:
     UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-
+  keyboardHeight = [[[notification userInfo] objectForKey:
+    UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+  
   [UIView animateWithDuration: duration delay: 0.0f
     options: UIViewAnimationOptionCurveEaseOut animations: ^{
       CGRect screen = [[UIScreen mainScreen] bounds];
       CGRect rect = bottomToolbar.frame;
       rect.origin.y = screen.size.height -
-        (bottomToolbar.frame.size.height + 216.0f);
+        (bottomToolbar.frame.size.height + keyboardHeight);
       bottomToolbar.frame = rect;
     }
     completion: nil
@@ -712,7 +715,7 @@ sizeForItemAtIndexPath: (NSIndexPath *) indexPath
     _collection.frame.size.height) {
 
     CGPoint contentOffset = _collection.contentOffset;
-    contentOffset.y += 216.0f;
+    contentOffset.y += keyboardHeight;
     [_collection setContentOffset: contentOffset animated: YES];
   }
 }
