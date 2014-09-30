@@ -287,7 +287,6 @@
 		ABA5B4291857B20900F825E1 /* OMBEmploymentCreateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA5B4281857B20900F825E1 /* OMBEmploymentCreateConnection.m */; };
 		ABA5B42C1857B9E300F825E1 /* OMBEmploymentListConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA5B42B1857B9E300F825E1 /* OMBEmploymentListConnection.m */; };
 		ABA5CB5518EE907B00D80A90 /* OMBViewController+PayPalPayment.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA5CB5418EE907B00D80A90 /* OMBViewController+PayPalPayment.m */; };
-		ABA5CB5D18EE936600D80A90 /* libPayPalMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA5CB5718EE936600D80A90 /* libPayPalMobile.a */; };
 		ABABEBF518625DFA008B6768 /* OMBAuthenticationVenmoConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABABEBF418625DFA008B6768 /* OMBAuthenticationVenmoConnection.m */; };
 		ABABEC351863C239008B6768 /* ILTranslucentView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABABEC341863C239008B6768 /* ILTranslucentView.m */; };
 		ABABEC4B1864D56A008B6768 /* OMBMapFilterOldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABABEC481864D56A008B6768 /* OMBMapFilterOldViewController.m */; };
@@ -305,7 +304,6 @@
 		ABB022C518248D9100F98544 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB022C418248D9100F98544 /* CoreTelephony.framework */; };
 		ABB022C718248D9800F98544 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB022C618248D9800F98544 /* SystemConfiguration.framework */; };
 		ABB022D3182490D700F98544 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB022D2182490D700F98544 /* CoreData.framework */; };
-		ABB022DE182491FD00F98544 /* libGoogleAnalyticsServices.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB022DC182491FD00F98544 /* libGoogleAnalyticsServices.a */; };
 		ABB06ADE18446773009CBBEA /* OMBGetStartedView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB06ADD18446773009CBBEA /* OMBGetStartedView.m */; };
 		ABB06AE418453640009CBBEA /* OMBViewControllerContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB06AE318453640009CBBEA /* OMBViewControllerContainer.m */; };
 		ABB173BF189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB173BE189C6C070010D28F /* OMBEmptyBackgroundWithImageAndLabel.m */; };
@@ -412,6 +410,7 @@
 		ABD6FC6F1915DE030070D7F0 /* OMBFeedbackSendEmailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD6FC6E1915DE030070D7F0 /* OMBFeedbackSendEmailConnection.m */; };
 		ABD8EF4F1820071600C28686 /* OMBResidenceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD8EF4E1820071600C28686 /* OMBResidenceTests.m */; };
 		ABDD0BC518F05D8400F837B5 /* OMBModelDetailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDD0BC418F05D8400F837B5 /* OMBModelDetailConnection.m */; };
+		ABDD7C0519DB3337008C71E0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABDD7C0419DB3337008C71E0 /* StoreKit.framework */; };
 		ABDF174A1866396C004E2755 /* OMBResidenceBookItViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDF17491866396C004E2755 /* OMBResidenceBookItViewController.m */; };
 		ABDF174D18663AE8004E2755 /* OMBResidenceBookItCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDF174C18663AE8004E2755 /* OMBResidenceBookItCell.m */; };
 		ABDF17501866B5F6004E2755 /* OMBResidenceBookItConfirmDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDF174F1866B5F6004E2755 /* OMBResidenceBookItConfirmDetailsViewController.m */; };
@@ -545,8 +544,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		087253DC80A3480BCA2E2099 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		13DE5B8C062A4BEBBE2A2D69 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		1DED75158C9B4E69A0B6B2C7 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		1A0B602977704B272C60F1CC /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		67E94812188DB97D007703FC /* OMBFilmstripImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFilmstripImageCell.h; sourceTree = "<group>"; };
 		67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFilmstripImageCell.m; sourceTree = "<group>"; };
 		67E9481C188DF726007703FC /* OMBMapFilterDateAvailableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterDateAvailableCell.h; sourceTree = "<group>"; };
@@ -1073,12 +1073,6 @@
 		ABA5B42B1857B9E300F825E1 /* OMBEmploymentListConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBEmploymentListConnection.m; sourceTree = "<group>"; };
 		ABA5CB5318EE907B00D80A90 /* OMBViewController+PayPalPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OMBViewController+PayPalPayment.h"; sourceTree = "<group>"; };
 		ABA5CB5418EE907B00D80A90 /* OMBViewController+PayPalPayment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OMBViewController+PayPalPayment.m"; sourceTree = "<group>"; };
-		ABA5CB5718EE936600D80A90 /* libPayPalMobile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPayPalMobile.a; sourceTree = "<group>"; };
-		ABA5CB5818EE936600D80A90 /* PayPalConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalConfiguration.h; sourceTree = "<group>"; };
-		ABA5CB5918EE936600D80A90 /* PayPalFuturePaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalFuturePaymentViewController.h; sourceTree = "<group>"; };
-		ABA5CB5A18EE936600D80A90 /* PayPalMobile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalMobile.h; sourceTree = "<group>"; };
-		ABA5CB5B18EE936600D80A90 /* PayPalPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalPayment.h; sourceTree = "<group>"; };
-		ABA5CB5C18EE936600D80A90 /* PayPalPaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayPalPaymentViewController.h; sourceTree = "<group>"; };
 		ABABEBF318625DFA008B6768 /* OMBAuthenticationVenmoConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAuthenticationVenmoConnection.h; sourceTree = "<group>"; };
 		ABABEBF418625DFA008B6768 /* OMBAuthenticationVenmoConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAuthenticationVenmoConnection.m; sourceTree = "<group>"; };
 		ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VenmoAppSwitch.framework; sourceTree = "<group>"; };
@@ -1110,13 +1104,6 @@
 		ABB022C418248D9100F98544 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		ABB022C618248D9800F98544 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		ABB022D2182490D700F98544 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		ABB022D5182491FD00F98544 /* GAI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAI.h; sourceTree = "<group>"; };
-		ABB022D6182491FD00F98544 /* GAIDictionaryBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAIDictionaryBuilder.h; sourceTree = "<group>"; };
-		ABB022D7182491FD00F98544 /* GAIFields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAIFields.h; sourceTree = "<group>"; };
-		ABB022D8182491FD00F98544 /* GAILogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAILogger.h; sourceTree = "<group>"; };
-		ABB022D9182491FD00F98544 /* GAITrackedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAITrackedViewController.h; sourceTree = "<group>"; };
-		ABB022DA182491FD00F98544 /* GAITracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAITracker.h; sourceTree = "<group>"; };
-		ABB022DC182491FD00F98544 /* libGoogleAnalyticsServices.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalyticsServices.a; sourceTree = "<group>"; };
 		ABB06ADC18446773009CBBEA /* OMBGetStartedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBGetStartedView.h; sourceTree = "<group>"; };
 		ABB06ADD18446773009CBBEA /* OMBGetStartedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBGetStartedView.m; sourceTree = "<group>"; };
 		ABB06AE218453640009CBBEA /* OMBViewControllerContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBViewControllerContainer.h; sourceTree = "<group>"; };
@@ -1319,6 +1306,8 @@
 		ABDAA81B181563310027F04C /* OMBMapViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapViewControllerTests.m; sourceTree = "<group>"; };
 		ABDD0BC318F05D8400F837B5 /* OMBModelDetailConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBModelDetailConnection.h; sourceTree = "<group>"; };
 		ABDD0BC418F05D8400F837B5 /* OMBModelDetailConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBModelDetailConnection.m; sourceTree = "<group>"; };
+		ABDD7C0419DB3337008C71E0 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		ABDD7C0719DB3527008C71E0 /* OnMyBlockPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = OnMyBlockPlayground.playground; sourceTree = "<group>"; };
 		ABDF17481866396C004E2755 /* OMBResidenceBookItViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceBookItViewController.h; sourceTree = "<group>"; };
 		ABDF17491866396C004E2755 /* OMBResidenceBookItViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceBookItViewController.m; sourceTree = "<group>"; };
 		ABDF174B18663AE8004E2755 /* OMBResidenceBookItCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceBookItCell.h; sourceTree = "<group>"; };
@@ -1558,6 +1547,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABDD7C0519DB3337008C71E0 /* StoreKit.framework in Frameworks */,
 				AB0E984B18ED332C0086AF3D /* Security.framework in Frameworks */,
 				AB0E984918ED330A0086AF3D /* MobileCoreServices.framework in Frameworks */,
 				AB0E984718ED32D00086AF3D /* AudioToolbox.framework in Frameworks */,
@@ -1572,12 +1562,10 @@
 				ABB3C58918117C2200DD91C9 /* CoreLocation.framework in Frameworks */,
 				ABB022C518248D9100F98544 /* CoreTelephony.framework in Frameworks */,
 				AB01ED6F185966BD00333390 /* CFNetwork.framework in Frameworks */,
-				ABA5CB5D18EE936600D80A90 /* libPayPalMobile.a in Frameworks */,
 				AB802E9E18109E5200E04D11 /* Foundation.framework in Frameworks */,
 				ABB022C318248D6E00F98544 /* NewRelicAgent.framework in Frameworks */,
 				ABB3C58718117C1C00DD91C9 /* MapKit.framework in Frameworks */,
 				AB8A9DDF195CA0B7002D6BF2 /* libTestFlight.a in Frameworks */,
-				ABB022DE182491FD00F98544 /* libGoogleAnalyticsServices.a in Frameworks */,
 				AB01ED6B185966AC00333390 /* libxml2.dylib in Frameworks */,
 				ABBB18E9182458E200211499 /* libz.dylib in Frameworks */,
 				ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */,
@@ -1950,7 +1938,6 @@
 				ABBA58811870C59700E9BF4E /* ELCImagePicker */,
 				ABBC494C19070F2B00BF9F7D /* Flurry */,
 				AB802E9C18109E5200E04D11 /* Frameworks */,
-				ABB022D4182491FD00F98544 /* GoogleAnalytics */,
 				ABB9119818998CA80046611F /* IOSLinkedInAPI */,
 				AB0269D31822A12600E72F53 /* iOS-Blur */,
 				AB2EA4C518A9E79700ACE53C /* LEffectLabel */,
@@ -1960,8 +1947,7 @@
 				AB9B262E1811B7ED00E6DAC4 /* OCMapView */,
 				AB802EA318109E5200E04D11 /* OnMyBlock */,
 				AB802EBC18109E5200E04D11 /* OnMyBlockTests */,
-				ABA5CB5618EE936600D80A90 /* PayPalMobile */,
-				1DED75158C9B4E69A0B6B2C7 /* Pods.xcconfig */,
+				E59901AAB7B3678522119D99 /* Pods */,
 				AB802E9B18109E5200E04D11 /* Products */,
 				A685EF92188F27C70074E336 /* ProgressIndicator */,
 				B484A9C118B56F26005DEBBE /* PSPDFUIKitMainThreadGuard.m */,
@@ -1983,6 +1969,7 @@
 		AB802E9C18109E5200E04D11 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ABDD7C0419DB3337008C71E0 /* StoreKit.framework */,
 				AB8C8C291815C31000A1B087 /* Accelerate.framework */,
 				AB0E984618ED32D00086AF3D /* AudioToolbox.framework */,
 				AB01ED6C185966B500333390 /* AVFoundation.framework */,
@@ -2028,6 +2015,7 @@
 				AB9B260C1811AA6600E6DAC4 /* Models */,
 				AB4980FE1992B57200976AFC /* Networking */,
 				AB72D6BF19661308007FBCA2 /* Objects */,
+				ABDD7C0619DB34EA008C71E0 /* Playgrounds */,
 				AB00B9C718BD48340050D6F4 /* Protocol */,
 				AB9B26241811AF6C00E6DAC4 /* Stores */,
 				AB802EA418109E5200E04D11 /* Supporting Files */,
@@ -2644,19 +2632,6 @@
 			path = "Residence Image";
 			sourceTree = "<group>";
 		};
-		ABA5CB5618EE936600D80A90 /* PayPalMobile */ = {
-			isa = PBXGroup;
-			children = (
-				ABA5CB5718EE936600D80A90 /* libPayPalMobile.a */,
-				ABA5CB5818EE936600D80A90 /* PayPalConfiguration.h */,
-				ABA5CB5918EE936600D80A90 /* PayPalFuturePaymentViewController.h */,
-				ABA5CB5A18EE936600D80A90 /* PayPalMobile.h */,
-				ABA5CB5B18EE936600D80A90 /* PayPalPayment.h */,
-				ABA5CB5C18EE936600D80A90 /* PayPalPaymentViewController.h */,
-			);
-			path = PayPalMobile;
-			sourceTree = "<group>";
-		};
 		ABABEC461864D547008B6768 /* Discover */ = {
 			isa = PBXGroup;
 			children = (
@@ -2695,20 +2670,6 @@
 				DE92915C18EF4929006CD5B6 /* OMBMapResidenceDetailCell.m */,
 			);
 			path = Discover;
-			sourceTree = "<group>";
-		};
-		ABB022D4182491FD00F98544 /* GoogleAnalytics */ = {
-			isa = PBXGroup;
-			children = (
-				ABB022D5182491FD00F98544 /* GAI.h */,
-				ABB022D6182491FD00F98544 /* GAIDictionaryBuilder.h */,
-				ABB022D7182491FD00F98544 /* GAIFields.h */,
-				ABB022D8182491FD00F98544 /* GAILogger.h */,
-				ABB022D9182491FD00F98544 /* GAITrackedViewController.h */,
-				ABB022DA182491FD00F98544 /* GAITracker.h */,
-				ABB022DC182491FD00F98544 /* libGoogleAnalyticsServices.a */,
-			);
-			path = GoogleAnalytics;
 			sourceTree = "<group>";
 		};
 		ABB3C56C1811719B00DD91C9 /* AppDelegate */ = {
@@ -3090,6 +3051,14 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		ABDD7C0619DB34EA008C71E0 /* Playgrounds */ = {
+			isa = PBXGroup;
+			children = (
+				ABDD7C0719DB3527008C71E0 /* OnMyBlockPlayground.playground */,
+			);
+			path = Playgrounds;
+			sourceTree = "<group>";
+		};
 		ABDF17471866392E004E2755 /* Residences */ = {
 			isa = PBXGroup;
 			children = (
@@ -3295,6 +3264,15 @@
 			name = GetStarted;
 			sourceTree = "<group>";
 		};
+		E59901AAB7B3678522119D99 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				087253DC80A3480BCA2E2099 /* Pods.debug.xcconfig */,
+				1A0B602977704B272C60F1CC /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -3457,7 +3435,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -4044,7 +4022,7 @@
 		};
 		AB802EC718109E5200E04D11 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1DED75158C9B4E69A0B6B2C7 /* Pods.xcconfig */;
+			baseConfigurationReference = 087253DC80A3480BCA2E2099 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -4070,10 +4048,6 @@
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
 				SDKROOT = iphoneos;
@@ -4084,7 +4058,7 @@
 		};
 		AB802EC818109E5200E04D11 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1DED75158C9B4E69A0B6B2C7 /* Pods.xcconfig */;
+			baseConfigurationReference = 1A0B602977704B272C60F1CC /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -4107,10 +4081,6 @@
 					"$(PROJECT_DIR)/PayPalMobile",
 					"$(PROJECT_DIR)/Flurry",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
