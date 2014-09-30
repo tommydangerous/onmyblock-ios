@@ -9,7 +9,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-GoogleAnalytics-iOS-SDK.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-Mixpanel.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-PayPal-iOS-SDK.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -27,22 +37,32 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>00F7F09F014440389C788305</key>
+		<key>43FBDB43C11DA07A778E0836</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>65DD9D3D523B45F4AB2D1837</key>
+		<key>6C8EB2AEC3782DB2E3DF9113</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8EA81DE15A564FEA9E141146</key>
+		<key>72636A7CFBFFF4B4FC99B381</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F60ADFC5002944D5920050D4</key>
+		<key>D6AF8AEE9ACBC020C805CBC6</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E114F70298E23A437731E4FE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F5C4D4A969476BF9ADD17F25</key>
 		<dict>
 			<key>primary</key>
 			<true/>
