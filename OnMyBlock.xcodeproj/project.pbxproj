@@ -4041,9 +4041,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/GoogleAnalytics",
-					"$(SRCROOT)/PayPalMobile",
-					"$(PROJECT_DIR)/PayPalMobile",
 					"$(PROJECT_DIR)/Flurry",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
@@ -4076,9 +4073,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/GoogleAnalytics",
-					"$(SRCROOT)/PayPalMobile",
-					"$(PROJECT_DIR)/PayPalMobile",
 					"$(PROJECT_DIR)/Flurry",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
