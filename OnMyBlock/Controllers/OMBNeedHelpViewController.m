@@ -101,7 +101,7 @@
   aditionalTextView.frame = CGRectMake(padding, padding,
     screen.size.width - (padding * 2), padding * 5);
   aditionalTextView.inputAccessoryView = textFieldToolbar;
-  aditionalTextView.textColor = [UIColor grayDark];
+  aditionalTextView.textColor = [UIColor textColor];
   
   // About text view placeholder
   aditionalPlaceholder = [UILabel new];
@@ -538,7 +538,6 @@
   }
   // Form
   else if (section == OMBNeedHelpSectionForm) {
-    // Firs & Last Name
     if (row == OMBNeedHelpSectionFormRowAditional) {
       static NSString *AditionalCellID = @"AditionalCellID";
       UITableViewCell *cell =
@@ -549,8 +548,6 @@
         [aditionalTextView removeFromSuperview];
         [cell.contentView addSubview: aditionalTextView];
       }
-      
-//      aditionalTextView.text = [valuesDictionary objectForKey: @"about"];
       if ([[aditionalTextView.text stripWhiteSpace] length]) {
         aditionalPlaceholder.hidden = YES;
       }
@@ -604,7 +601,6 @@
         cell.firstTextField.indexPath = indexPath;
         cell.firstTextField.placeholder = @"First Name*";
         cell.firstTextField.tag = 1;
-//        cell.firstTextField.text = [valueDictionary objectForKey:@"state"];
         [cell.firstTextField addTarget: self action: @selector(textFieldDidChange:)
           forControlEvents: UIControlEventEditingChanged];
         
@@ -615,7 +611,6 @@
         cell.secondTextField.indexPath = indexPath;
         cell.secondTextField.tag = 2;
         cell.secondTextField.placeholder = @"Last Name*";
-//        cell.secondTextField.text = [valueDictionary objectForKey:@"zip"];
         [cell.secondTextField addTarget: self action: @selector(textFieldDidChange:)
           forControlEvents: UIControlEventEditingChanged];
         cell.clipsToBounds = YES;
@@ -673,7 +668,7 @@
       cell.textField.font = [UIFont normalTextFont];
       cell.textField.indexPath = indexPath;
       cell.textField.placeholder = placeholder;
-      cell.textField.textColor = [UIColor grayDark];
+      cell.textField.textColor = [UIColor textColor];
       [cell.textField addTarget: self
         action: @selector(textFieldDidChange:)
           forControlEvents: UIControlEventEditingChanged];
