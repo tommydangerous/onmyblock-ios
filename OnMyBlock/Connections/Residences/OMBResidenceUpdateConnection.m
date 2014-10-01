@@ -157,7 +157,7 @@ attributes: (NSArray *) attributes
   NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
     options: 0 error: nil];
 
-  NSLog(@"OMBResidenceUpdateConnection\n%@", json);
+  // NSLog(@"OMBResidenceUpdateConnection\n%@", json);
 
   NSDictionary *objectDict = [json objectForKey: @"object"];
   NSInteger inactive = [[objectDict objectForKey: @"inactive"] intValue];

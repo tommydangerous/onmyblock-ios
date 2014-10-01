@@ -886,7 +886,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           UITableViewCellStyleDefault reuseIdentifier:
             DescriptionCellIdentifier];
         cell.backgroundColor = cellBackgroundColor;
-        [cell loadData: residence.description];
+        [cell loadData: residence.desc];
       }
       return cell;
     }
@@ -976,7 +976,7 @@ numberOfRowsInSection: (NSInteger) section
 
   // Description
   else if (section == 3) {
-    if ([[residence.description stripWhiteSpace] length])
+    if ([[residence.desc stripWhiteSpace] length])
       return 2;
   }
 
@@ -1060,9 +1060,9 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
       return kResidenceDetailCellSpacingHeight;
     }
     else if (indexPath.row == 1) {
-      if (residence.description && [residence.description length]) {
+      if (residence.desc && [residence.desc length]) {
         NSAttributedString *aString =
-          [residence.description attributedStringWithFont:
+          [residence.desc attributedStringWithFont:
             [UIFont fontWithName: @"HelveticaNeue-Light" size: 15]
               lineHeight: 23.0f];
         CGRect rect = [aString boundingRectWithSize:

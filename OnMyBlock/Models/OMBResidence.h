@@ -38,7 +38,7 @@ extern NSString *const OMBResidencePropertyTypeSublet;
 @property (nonatomic, strong) NSString *city;
 @property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic) CGFloat deposit;
-@property (nonatomic, strong) NSString *description;
+@property (nonatomic, strong) NSString *desc;
 @property (nonatomic) BOOL dogs;
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *externalSource;

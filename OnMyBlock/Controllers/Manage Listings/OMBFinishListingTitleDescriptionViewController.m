@@ -128,8 +128,8 @@
     @"title"       : @""
    }];
   
-  if (residence.description && [residence.description length]) {
-    [valueDictionary setObject: residence.description forKey: @"description"];
+  if (residence.desc && [residence.desc length]) {
+    [valueDictionary setObject: residence.desc forKey: @"description"];
   }
   if (residence.title && [residence.title length]) {
     [valueDictionary setObject: residence.title forKey: @"title"];
@@ -311,14 +311,14 @@
 {
   
   residence.title       = [valueDictionary objectForKey:@"title"];
-  residence.description = [valueDictionary objectForKey:@"description"];
+  residence.desc = [valueDictionary objectForKey:@"description"];
   
   // Title
   if(![residence.title length]){
     [self firstResponderAtIndex: [NSIndexPath indexPathForRow:0 inSection:0]];
   }
   // Description
-  else if (![residence.description length]) {
+  else if (![residence.desc length]) {
     [self firstResponderAtIndex: [NSIndexPath indexPathForRow:1 inSection:0]];
   }
   // Update

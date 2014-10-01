@@ -30,10 +30,7 @@
 
 - (void) connectionDidFinishLoading: (NSURLConnection *) connection
 {
-  NSDictionary *json = [NSJSONSerialization JSONObjectWithData: container
-    options: 0 error: nil];
-
-  [[OMBUser currentUser] readFromResidencesDictionary: json];
+  [[OMBUser currentUser] readFromResidencesDictionary:[self json]];
 
   [super connectionDidFinishLoading: connection];
 }
