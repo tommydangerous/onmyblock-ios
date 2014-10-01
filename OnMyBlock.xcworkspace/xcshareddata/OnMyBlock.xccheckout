@@ -10,6 +10,8 @@
 	<string>OnMyBlock</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>67620B5EFA902936DF04070AF595B76AB0333747</key>
+		<string>https://github.com/Alamofire/Alamofire.git</string>
 		<key>A20FD4CAD2A4B01C314139CE775B26B6365D2C9D</key>
 		<string>ssh://github.com/QuantumVenturess/onmyblock-ios.git</string>
 	</dict>
@@ -17,6 +19,8 @@
 	<string>OnMyBlock.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>67620B5EFA902936DF04070AF595B76AB0333747</key>
+		<string>../Alamofire</string>
 		<key>A20FD4CAD2A4B01C314139CE775B26B6365D2C9D</key>
 		<string>..</string>
 	</dict>
@@ -28,6 +32,14 @@
 	<string>A20FD4CAD2A4B01C314139CE775B26B6365D2C9D</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>67620B5EFA902936DF04070AF595B76AB0333747</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Alamofire</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

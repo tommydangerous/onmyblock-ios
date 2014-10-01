@@ -26,21 +26,29 @@
 #import "OMBTwoLabelTextFieldCell.h"
 #import "UIImage+Resize.h"
 
+// Categories
+#import "NSString+PhoneNumber.h"
+
+@interface OMBNeedHelpViewController() <HelpDelegate>
+{
+
+}
+@end
+
 @implementation OMBNeedHelpViewController
 
 - (id)init
 {
-  if (!(self = [super init]))
-    return nil;
-  
+  if (!(self = [super init])) return nil;
+
   self.title = @"Need a place now?";
-  
+
   return self;
 }
 
-- (void)loadView
+- (void)viewDidLoad
 {
-  [super loadView];
+  [super viewDidLoad];
   
   [super setupForTable];
   
@@ -252,12 +260,33 @@
     @"last_name",
     @"phone",
     @"email",
-    @"place"
+    @"location"
   ];
   
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol HelpDelegate
+
+- (void)createHelpForStudentSucceeded
+{
+  [self containerStopSpinning];
+  [alertViewBlur setTitle: @"Thank you!"];
+  [alertViewBlur setMessage: @"We'll contact you with the "
+    "perfect college pad soon."];
+  [alertViewBlur setConfirmButtonTitle: @"Okay"];
+  [alertViewBlur addTargetForConfirmButton: self
+    action: @selector(closeAlertView)];
+  [alertViewBlur showInView: self.view withDetails: NO];
+  [alertViewBlur showOnlyConfirmButton];
+  [alertViewBlur hideQuestionButton];
+}
+
+- (void)createHelpForStudentFailed:(NSError *)error {
+  [self containerStopSpinning];
+  [self showAlertViewWithError:error];
+}
 
 #pragma mark - Protocol UIAlertViewDelegate
 
@@ -784,7 +813,7 @@
   else {
     aditionalPlaceholder.hidden = NO;
   }
-  [valuesDictionary setObject:textView.text forKey:@"aditional"];
+  [valuesDictionary setObject:textView.text forKey:@"comment"];
 }
 
 #pragma mark - Methods
@@ -813,6 +842,7 @@
 - (void) closeAlertView
 {
   [alertViewBlur close];
+  [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void) done
@@ -842,10 +872,10 @@
       titleForRow: auxRowMaxBudget forComponent:1];
     
     [valuesDictionary setObject: [NSNumber numberWithInt: 500 * auxRowMinBudget]
-        forKey: @"minRent"];
+        forKey: @"budget"];
     
     [valuesDictionary setObject: [NSNumber numberWithInt: 500 * auxRowMaxBudget]
-        forKey: @"maxRent"];
+        forKey: @"budget"];
     
     cell.textField.text = [NSString stringWithFormat:@"%@ - %@",
       budgetMinString, budgetMaxString];
@@ -871,7 +901,6 @@
 {
   // Check for required fields
   for (NSString *key in indexRequired) {
-    
     if ([valuesDictionary objectForKey: key]) {
       if (![[valuesDictionary objectForKey: key] length]) {
         return NO;
@@ -881,7 +910,6 @@
       return NO;
     }
   }
-  
   return YES;
 }
 
@@ -899,11 +927,11 @@
 
 - (NSString *)phoneNumberFormated:(BOOL)formated
 {
+  NSString *phoneNumber = [NSString companyPhoneNumberString];
   if (formated) {
-    return @"(650) 331-7819";
+    return [phoneNumber phoneNumberString];
   }
-  
-  return @"6503317819";
+  return phoneNumber;
 }
 
 - (void) removePickers
@@ -965,27 +993,17 @@
 
 - (void) submit
 {
-  
   if ([self hasCompleteFields]) {
-    
-    // TODO: send data
-    [self rememberFormSubmitted];
-    
-    [alertViewBlur setTitle: @"Thank you!"];
-    [alertViewBlur setMessage: @"We'll contact you with the "
-      "perfect college pad soon."];
-    [alertViewBlur setConfirmButtonTitle: @"Okay"];
-    [alertViewBlur addTargetForConfirmButton: self
-      action: @selector(closeAlertView)];
-    [alertViewBlur showInView: self.view withDetails: NO];
-    [alertViewBlur showOnlyConfirmButton];
-    [alertViewBlur hideQuestionButton];
-
+    // [self rememberFormSubmitted];
+    Help *help = [[Help alloc] init];
+    [help createHelpForStudent:valuesDictionary delegate:self];
+    [self containerStartSpinning];
   }
   else {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"Almost Finished"
-      message: @"Some fields are required (*)" delegate: nil
-        cancelButtonTitle: @"Continue" otherButtonTitles: nil];
+    UIAlertView *alertView = 
+      [[UIAlertView alloc] initWithTitle:@"Almost Finished"
+        message: @"Some fields are required (*)" delegate: nil
+          cancelButtonTitle: @"Continue" otherButtonTitles: nil];
     [alertView show];
   }
 }
@@ -1014,14 +1032,13 @@
     key = @"school";
   }
   else if (textField.indexPath.row == OMBNeedHelpSectionFormRowPlace) {
-    key = @"place";
+    key = @"location";
   }
   else if (textField.indexPath.row == OMBNeedHelpSectionFormRowBedrooms) {
     key = @"bedrooms";
   }
   
   [valuesDictionary setObject:string forKey:key];
-  
 }
 
 @end

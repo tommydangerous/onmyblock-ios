@@ -459,6 +459,9 @@
 		ABE9CEC91958EA1000A8C8E0 /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE9CEC71958EA1000A8C8E0 /* UIImage+RoundedCorner.m */; };
 		ABE9CECC1959D81D00A8C8E0 /* OMBAttributedTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE9CECB1959D81D00A8C8E0 /* OMBAttributedTextCell.m */; };
 		ABE9CECF195A015A00A8C8E0 /* OMBUserDetailSectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE9CECE195A015A00A8C8E0 /* OMBUserDetailSectionHeaderCell.m */; };
+		ABEB2BFA19DBAECC009F70F0 /* NSStringConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEB2BF919DBAECC009F70F0 /* NSStringConstants.swift */; };
+		ABEB2BFC19DC5BB9009F70F0 /* Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEB2BFB19DC5BB9009F70F0 /* Help.swift */; };
+		ABEB2BFE19DC7444009F70F0 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEB2BFD19DC7444009F70F0 /* Object.swift */; };
 		ABED5FCB1895975400AD630C /* OMBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABED5FCA1895975400AD630C /* OMBCollectionViewCell.m */; };
 		ABED5FCE1895977200AD630C /* OMBResidenceDetailImageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABED5FCD1895977200AD630C /* OMBResidenceDetailImageCollectionViewCell.m */; };
 		ABED5FDF1896E8CE00AD630C /* DRNRealTimeBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABED5FD71896E8CE00AD630C /* DRNRealTimeBlurView.m */; };
@@ -548,6 +551,19 @@
 			remoteInfo = OnMyBlock;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		ABEB2C0919DC7852009F70F0 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		087253DC80A3480BCA2E2099 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1409,6 +1425,10 @@
 		ABE9CECB1959D81D00A8C8E0 /* OMBAttributedTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAttributedTextCell.m; sourceTree = "<group>"; };
 		ABE9CECD195A015A00A8C8E0 /* OMBUserDetailSectionHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBUserDetailSectionHeaderCell.h; sourceTree = "<group>"; };
 		ABE9CECE195A015A00A8C8E0 /* OMBUserDetailSectionHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBUserDetailSectionHeaderCell.m; sourceTree = "<group>"; };
+		ABEB2BF519DBAE88009F70F0 /* OnMyBlock-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnMyBlock-Bridging-Header.h"; sourceTree = "<group>"; };
+		ABEB2BF919DBAECC009F70F0 /* NSStringConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSStringConstants.swift; sourceTree = "<group>"; };
+		ABEB2BFB19DC5BB9009F70F0 /* Help.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Help.swift; sourceTree = "<group>"; };
+		ABEB2BFD19DC7444009F70F0 /* Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 		ABED5FC91895975400AD630C /* OMBCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBCollectionViewCell.h; sourceTree = "<group>"; };
 		ABED5FCA1895975400AD630C /* OMBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBCollectionViewCell.m; sourceTree = "<group>"; };
 		ABED5FCC1895977200AD630C /* OMBResidenceDetailImageCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBResidenceDetailImageCollectionViewCell.h; sourceTree = "<group>"; };
@@ -2025,6 +2045,7 @@
 				ABB3C5711811775300DD91C9 /* Controllers */,
 				AB18CF5D18E0904E0022ABF1 /* Documents */,
 				AB8C8C101815783A00A1B087 /* Downloaders */,
+				ABEB2BF819DBAECC009F70F0 /* Extensions */,
 				ABB3C56F1811719B00DD91C9 /* Images */,
 				AB802EAF18109E5200E04D11 /* Images.xcassets */,
 				AB26131B18198E260053A8AA /* Layouts */,
@@ -2032,6 +2053,7 @@
 				AB9B260C1811AA6600E6DAC4 /* Models */,
 				AB4980FE1992B57200976AFC /* Networking */,
 				AB72D6BF19661308007FBCA2 /* Objects */,
+				ABEB2BF519DBAE88009F70F0 /* OnMyBlock-Bridging-Header.h */,
 				ABDD7C0619DB34EA008C71E0 /* Playgrounds */,
 				AB00B9C718BD48340050D6F4 /* Protocol */,
 				AB9B26241811AF6C00E6DAC4 /* Stores */,
@@ -2385,6 +2407,8 @@
 				AB210A3C199D115D00AFB42E /* OMBInvitation.m */,
 				DE5D3E561992B36000B44C53 /* OMBSchool.h */,
 				DE5D3E571992B36000B44C53 /* OMBSchool.m */,
+				ABEB2BFB19DC5BB9009F70F0 /* Help.swift */,
+				ABEB2BFD19DC7444009F70F0 /* Object.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3220,6 +3244,14 @@
 			path = Messages;
 			sourceTree = "<group>";
 		};
+		ABEB2BF819DBAECC009F70F0 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				ABEB2BF919DBAECC009F70F0 /* NSStringConstants.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		ABED5FD51896E8CD00AD630C /* DRNRealTimeBlurView */ = {
 			isa = PBXGroup;
 			children = (
@@ -3313,6 +3345,7 @@
 				AB802E9618109E5200E04D11 /* Sources */,
 				AB802E9718109E5200E04D11 /* Frameworks */,
 				CA538827C0154B7F9F50E6CD /* Copy Pods Resources */,
+				ABEB2C0919DC7852009F70F0 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -3578,7 +3611,6 @@
 				ABCB36C1187CC229008A0EEF /* OMBHomebaseRenterAddRoommateFromEmailViewController.m in Sources */,
 				AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */,
 				DE9A4F5219A3BB41004F59C9 /* OMBNeedHelpTwoTextFieldCell.m in Sources */,
-				AB9D611B188CEFDE00C9AC64 /* UIImageView+WebCache.m in Sources */,
 				DE9A41861942763F0026545C /* OMBApplicationResidenceCell.m in Sources */,
 				AB5DD32C18CE011500237AFC /* OMBAmenityStore.m in Sources */,
 				DE8E8ECB19085C68005DCB6A /* OMBFacebookUserCell.m in Sources */,
@@ -3601,6 +3633,7 @@
 				AB18CF2518DE12E60022ABF1 /* OMBModelCreateConnection.m in Sources */,
 				AB4ED2D4188222C8009AFB01 /* OMBResidenceImageUpdateConnection.m in Sources */,
 				AB9545731848E6C1000513BE /* OMBTableViewController.m in Sources */,
+				ABEB2BFE19DC7444009F70F0 /* Object.swift in Sources */,
 				ABE4AD4919143059007EFA33 /* OMBFeedbackView.m in Sources */,
 				ABB70080187BD5C4005F0730 /* OMBHomebaseRenterRentDepositInfoViewController.m in Sources */,
 				AB9FEF0818D0B3E800E25FE2 /* OMBDeleteConnection.m in Sources */,
@@ -3718,6 +3751,7 @@
 				AB4ED2FD1884AD9F009AFB01 /* OMBResidenceDetailConnection.m in Sources */,
 				DE93158F1891E05800111CF6 /* OMBCreateListingViewController.m in Sources */,
 				DE16026C18D7A13000D67614 /* OMBRoommateCell.m in Sources */,
+				ABEB2BFA19DBAECC009F70F0 /* NSStringConstants.swift in Sources */,
 				AB63D2171821ABF500D63800 /* OMBLoginViewController.m in Sources */,
 				ABDF174D18663AE8004E2755 /* OMBResidenceBookItCell.m in Sources */,
 				AB8C8C131815784B00A1B087 /* OMBImageDownloader.m in Sources */,
@@ -3813,6 +3847,7 @@
 				ABE9CEC91958EA1000A8C8E0 /* UIImage+RoundedCorner.m in Sources */,
 				AB4ED2DA18845DEF009AFB01 /* OMBOpenHouse.m in Sources */,
 				AB5B49D51833C9A400ED96DC /* OMBResidenceGoogleStaticImageDownloader.m in Sources */,
+				ABEB2BFC19DC5BB9009F70F0 /* Help.swift in Sources */,
 				ABB3C5701811719B00DD91C9 /* OMBAppDelegate.m in Sources */,
 				AB8B7941186DFA8A005AB552 /* OMBActivityView.m in Sources */,
 				ABE7069D188863B3007A4E29 /* OMBMessageCreateConnection.m in Sources */,
@@ -4061,6 +4096,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_RESOURCE_RULES_PATH[sdk=*]" = "";
@@ -4074,6 +4110,7 @@
 				GCC_PREFIX_HEADER = "OnMyBlock/OnMyBlock-Prefix.pch";
 				INFOPLIST_FILE = "OnMyBlock/OnMyBlock-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flurry",
@@ -4083,6 +4120,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "OnMyBlock/OnMyBlock-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4094,6 +4133,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4106,6 +4146,7 @@
 				GCC_PREFIX_HEADER = "OnMyBlock/OnMyBlock-Prefix.pch";
 				INFOPLIST_FILE = "OnMyBlock/OnMyBlock-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flurry",
@@ -4114,6 +4155,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "7B3E82A4-0386-4C50-8635-237088D74794";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "OnMyBlock/OnMyBlock-Bridging-Header.h";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
