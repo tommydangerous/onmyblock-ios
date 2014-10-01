@@ -487,23 +487,21 @@
   
   // Phone Call
   if (section == OMBNeedHelpSectionPhoneCall) {
-    
     static NSString *callCellID = @"callCellID";
-    OMBNeedHelpCell *cell = [tableView
-      dequeueReusableCellWithIdentifier:callCellID];
-    
+    OMBNeedHelpCell *cell = [tableView dequeueReusableCellWithIdentifier:
+      callCellID];
     if (!cell) {
-      cell = [[OMBNeedHelpCell alloc] initWithStyle:
-        UITableViewCellStyleDefault reuseIdentifier:callCellID];
-      cell.titleLabel.text = @"Call us";
-      cell.secondLabel.font = [UIFont normalTextFontBold];
-      cell.secondLabel.text = [self phoneNumberFormated:YES];
+      cell = [[OMBNeedHelpCell alloc] initWithStyle:UITableViewCellStyleDefault 
+        reuseIdentifier:callCellID];
+      // cell.secondLabel.font = [UIFont mediumTextFont];
+      // cell.secondLabel.text = [self phoneNumberFormated:YES];
+      // cell.titleLabel.font  = [UIFont mediumTextFont];
+      // cell.titleLabel.text  = @"Call us";
+      [cell addCallButton];
       [cell setBackgroundImage:@"lustre-pearl-exterior-31.jpg" withBlur:YES];
     }
-    
     cell.separatorInset = UIEdgeInsetsMake(0.0f,
       tableView.frame.size.width, 0.0f, 0.0f);
-    
     return cell;
   }
   // Detail

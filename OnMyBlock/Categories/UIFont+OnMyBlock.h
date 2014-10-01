@@ -30,5 +30,7 @@ extern NSString *const OMBFontNameBold;
 + (UIFont *) normalTextFontBold;
 + (UIFont *) smallTextFont;
 + (UIFont *) smallTextFontBold;
++ (UIFont *) veryLargeTextFont;
++ (UIFont *) veryLargeTextFontBold;
 
 @end
