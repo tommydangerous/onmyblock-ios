@@ -80,10 +80,11 @@
     (CGRectGetHeight(backgroundView.frame) - callButtonWidth) * 0.5,
     callButtonWidth, callButtonWidth
   );
-  callButton.layer.borderColor  = [UIColor whiteColor].CGColor;
-  callButton.layer.borderWidth  = 2;
-  callButton.layer.cornerRadius = CGRectGetWidth(callButton.frame) * 0.5;
-  callButton.titleLabel.font    = [UIFont mediumLargeTextFontBold];
+  callButton.layer.borderColor      = [UIColor whiteColor].CGColor;
+  callButton.layer.borderWidth      = 2;
+  callButton.layer.cornerRadius     = CGRectGetWidth(callButton.frame) * 0.5;
+  callButton.titleLabel.font        = [UIFont mediumLargeTextFontBold];
+  callButton.userInteractionEnabled = NO;
   [callButton setTitle:@"Call us" forState:UIControlStateNormal];
   [callButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
   
