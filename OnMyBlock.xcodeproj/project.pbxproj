@@ -409,6 +409,8 @@
 		ABD6FC6C1914428C0070D7F0 /* OMBTextFieldToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD6FC6B1914428C0070D7F0 /* OMBTextFieldToolbar.m */; };
 		ABD6FC6F1915DE030070D7F0 /* OMBFeedbackSendEmailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD6FC6E1915DE030070D7F0 /* OMBFeedbackSendEmailConnection.m */; };
 		ABD8EF4F1820071600C28686 /* OMBResidenceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD8EF4E1820071600C28686 /* OMBResidenceTests.m */; };
+		ABDAD22E19DDFB43000A3E57 /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDAD22D19DDFB43000A3E57 /* SearchManager.swift */; };
+		ABDAD23019DDFCAE000A3E57 /* SchoolSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDAD22F19DDFCAE000A3E57 /* SchoolSearchManager.swift */; };
 		ABDD0BC518F05D8400F837B5 /* OMBModelDetailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDD0BC418F05D8400F837B5 /* OMBModelDetailConnection.m */; };
 		ABDD7C0519DB3337008C71E0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABDD7C0419DB3337008C71E0 /* StoreKit.framework */; };
 		ABDF174A1866396C004E2755 /* OMBResidenceBookItViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDF17491866396C004E2755 /* OMBResidenceBookItViewController.m */; };
@@ -1326,6 +1328,8 @@
 		ABD6FC6E1915DE030070D7F0 /* OMBFeedbackSendEmailConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFeedbackSendEmailConnection.m; sourceTree = "<group>"; };
 		ABD8EF4E1820071600C28686 /* OMBResidenceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceTests.m; sourceTree = "<group>"; };
 		ABDAA81B181563310027F04C /* OMBMapViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMapViewControllerTests.m; sourceTree = "<group>"; };
+		ABDAD22D19DDFB43000A3E57 /* SearchManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
+		ABDAD22F19DDFCAE000A3E57 /* SchoolSearchManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchoolSearchManager.swift; sourceTree = "<group>"; };
 		ABDD0BC318F05D8400F837B5 /* OMBModelDetailConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBModelDetailConnection.h; sourceTree = "<group>"; };
 		ABDD0BC418F05D8400F837B5 /* OMBModelDetailConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBModelDetailConnection.m; sourceTree = "<group>"; };
 		ABDD7C0419DB3337008C71E0 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -2355,60 +2359,62 @@
 		AB9B260C1811AA6600E6DAC4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				ABEB2BFB19DC5BB9009F70F0 /* Help.swift */,
+				ABEB2BFD19DC7444009F70F0 /* Object.swift */,
 				AB9B260D1811AA7C00E6DAC4 /* OMBAnnotation.h */,
 				AB9B260E1811AA7C00E6DAC4 /* OMBAnnotation.m */,
-				AB8C8C20181597F900A1B087 /* OMBResidence.h */,
-				AB8C8C21181597F900A1B087 /* OMBResidence.m */,
-				ABF18BAF1816CC65002DD723 /* OMBNeighborhood.h */,
-				ABF18BB01816CC65002DD723 /* OMBNeighborhood.m */,
-				AB63D2121821AB2C00D63800 /* OMBUser.h */,
-				AB63D2131821AB2C00D63800 /* OMBUser.m */,
-				AB026BD7182307B200E72F53 /* OMBFavoriteResidence.h */,
-				AB026BD8182307B200E72F53 /* OMBFavoriteResidence.m */,
 				ABBB18DB182453BF00211499 /* OMBAnnotationCity.h */,
 				ABBB18DC182453BF00211499 /* OMBAnnotationCity.m */,
-				AB1A0338183E547C0016CD7B /* OMBResidenceImage.h */,
-				AB1A0339183E547C0016CD7B /* OMBResidenceImage.m */,
-				AB1C216D1851436200ED7C06 /* OMBRenterApplication.h */,
-				AB1C216E1851436200ED7C06 /* OMBRenterApplication.m */,
+				AB00B9BF18BCF9E30050D6F4 /* OMBConversation.h */,
+				AB00B9C018BCF9E30050D6F4 /* OMBConversation.m */,
 				AB1C21701851436D00ED7C06 /* OMBCosigner.h */,
 				AB1C21711851436D00ED7C06 /* OMBCosigner.m */,
-				ABAF228F18526DF30041BF60 /* OMBPreviousRental.h */,
-				ABAF229018526DF30041BF60 /* OMBPreviousRental.m */,
 				ABA5B417185699CB00F825E1 /* OMBEmployment.h */,
 				ABA5B418185699CB00F825E1 /* OMBEmployment.m */,
-				AB01ED381857DB5300333390 /* OMBLegalQuestion.h */,
-				AB01ED391857DB5300333390 /* OMBLegalQuestion.m */,
+				AB026BD7182307B200E72F53 /* OMBFavoriteResidence.h */,
+				AB026BD8182307B200E72F53 /* OMBFavoriteResidence.m */,
+				9D8BE8DD2A267B69AAE85AC8 /* OMBGroup.h */,
+				9D8BE205CC89B1ABB0264208 /* OMBGroup.m */,
+				AB210A3B199D115D00AFB42E /* OMBInvitation.h */,
+				AB210A3C199D115D00AFB42E /* OMBInvitation.m */,
 				AB01ED3E18580B0700333390 /* OMBLegalAnswer.h */,
 				AB01ED3F18580B0700333390 /* OMBLegalAnswer.m */,
+				AB01ED381857DB5300333390 /* OMBLegalQuestion.h */,
+				AB01ED391857DB5300333390 /* OMBLegalQuestion.m */,
 				ABE28182186A416200A5D14E /* OMBMessage.h */,
 				ABE28183186A416200A5D14E /* OMBMessage.m */,
-				ABA4F212187D422B00D725D4 /* OMBTemporaryResidence.h */,
-				ABA4F213187D422B00D725D4 /* OMBTemporaryResidence.m */,
-				AB4ED2D818845DEF009AFB01 /* OMBOpenHouse.h */,
-				AB4ED2D918845DEF009AFB01 /* OMBOpenHouse.m */,
+				ABF18BAF1816CC65002DD723 /* OMBNeighborhood.h */,
+				ABF18BB01816CC65002DD723 /* OMBNeighborhood.m */,
+				AB18CF2F18DE9C920022ABF1 /* OMBObject.h */,
+				AB18CF3018DE9C920022ABF1 /* OMBObject.m */,
 				AB131F321885DA1F0057D769 /* OMBOffer.h */,
 				AB131F331885DA1F0057D769 /* OMBOffer.m */,
+				AB4ED2D818845DEF009AFB01 /* OMBOpenHouse.h */,
+				AB4ED2D918845DEF009AFB01 /* OMBOpenHouse.m */,
 				ABE4FBDD18902B140009D643 /* OMBPayoutMethod.h */,
 				ABE4FBDE18902B140009D643 /* OMBPayoutMethod.m */,
 				ABE679AD1891C30300A494FB /* OMBPayoutTransaction.h */,
 				ABE679AE1891C30300A494FB /* OMBPayoutTransaction.m */,
-				AB00B9BF18BCF9E30050D6F4 /* OMBConversation.h */,
-				AB00B9C018BCF9E30050D6F4 /* OMBConversation.m */,
+				ABAF228F18526DF30041BF60 /* OMBPreviousRental.h */,
+				ABAF229018526DF30041BF60 /* OMBPreviousRental.m */,
+				AB1C216D1851436200ED7C06 /* OMBRenterApplication.h */,
+				AB1C216E1851436200ED7C06 /* OMBRenterApplication.m */,
+				AB8C8C20181597F900A1B087 /* OMBResidence.h */,
+				AB8C8C21181597F900A1B087 /* OMBResidence.m */,
+				AB1A0338183E547C0016CD7B /* OMBResidenceImage.h */,
+				AB1A0339183E547C0016CD7B /* OMBResidenceImage.m */,
 				ABD19B9D18D7698C007DF1E5 /* OMBRoommate.h */,
 				ABD19B9E18D7698C007DF1E5 /* OMBRoommate.m */,
-				AB18CF2F18DE9C920022ABF1 /* OMBObject.h */,
-				AB18CF3018DE9C920022ABF1 /* OMBObject.m */,
-				AB6E9408192AA8A4005A357A /* OMBSentApplication.h */,
-				AB6E9409192AA8A4005A357A /* OMBSentApplication.m */,
-				9D8BE205CC89B1ABB0264208 /* OMBGroup.m */,
-				9D8BE8DD2A267B69AAE85AC8 /* OMBGroup.h */,
-				AB210A3B199D115D00AFB42E /* OMBInvitation.h */,
-				AB210A3C199D115D00AFB42E /* OMBInvitation.m */,
 				DE5D3E561992B36000B44C53 /* OMBSchool.h */,
 				DE5D3E571992B36000B44C53 /* OMBSchool.m */,
-				ABEB2BFB19DC5BB9009F70F0 /* Help.swift */,
-				ABEB2BFD19DC7444009F70F0 /* Object.swift */,
+				AB6E9408192AA8A4005A357A /* OMBSentApplication.h */,
+				AB6E9409192AA8A4005A357A /* OMBSentApplication.m */,
+				ABA4F212187D422B00D725D4 /* OMBTemporaryResidence.h */,
+				ABA4F213187D422B00D725D4 /* OMBTemporaryResidence.m */,
+				AB63D2121821AB2C00D63800 /* OMBUser.h */,
+				AB63D2131821AB2C00D63800 /* OMBUser.m */,
+				ABDAD22F19DDFCAE000A3E57 /* SchoolSearchManager.swift */,
+				ABDAD22D19DDFB43000A3E57 /* SearchManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3698,6 +3704,7 @@
 				AB8C8C22181597F900A1B087 /* OMBResidence.m in Sources */,
 				AB9FEEF818CFAF4100E25FE2 /* OMBRenterInfoAddCosignerViewController.m in Sources */,
 				DE92170918D7972A003E25DF /* OMBRenterInfoSectionRoommateViewController.m in Sources */,
+				ABDAD23019DDFCAE000A3E57 /* SchoolSearchManager.swift in Sources */,
 				AB17AE4218FD180600B6952C /* QVClusterAnnotationView.m in Sources */,
 				ABA5B4291857B20900F825E1 /* OMBEmploymentCreateConnection.m in Sources */,
 				AB17AE4C18FD9C7800B6952C /* OMBTableParallaxViewController.m in Sources */,
@@ -3969,6 +3976,7 @@
 				ABE4FC031890A3180009D643 /* OMBPayoutMethodUpdateConnection.m in Sources */,
 				AB17AE4118FD180600B6952C /* QVClusterAnnotation.m in Sources */,
 				AB026BD31822EFBC00E72F53 /* OMBFavoritesListViewController.m in Sources */,
+				ABDAD22E19DDFB43000A3E57 /* SearchManager.swift in Sources */,
 				9D8BE924EBADCF5709932759 /* OMBGroup.m in Sources */,
 				9D8BEF316E91D777F003CCE4 /* OMBUser+Collections.m in Sources */,
 			);

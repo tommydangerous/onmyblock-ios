@@ -16,7 +16,9 @@ import Foundation
 class Help: Object {
 
   // Methods
-  // Public
+  // Public methods
+
+  // Instance methods
   func createHelpForStudent(dictionary: [String: AnyObject],
     delegate: HelpDelegate?) -> () {
       
