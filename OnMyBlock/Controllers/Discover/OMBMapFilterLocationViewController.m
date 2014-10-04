@@ -19,13 +19,14 @@
 #import "OMBMapFilterRentCell.h"
 #import "OMBMapFilterDateAvailableCell.h"
 #import "OMBNeighborhood.h"
-#import "OMBNeighborhoodStore.h"
+//#import "OMBNeighborhoodStore.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
 @interface OMBMapFilterLocationViewController ()
 <
+  SearchManagerDelegate,
   UISearchBarDelegate
 >
 {
@@ -84,8 +85,8 @@
   self.table.separatorColor = [UIColor grayLight];
   self.table.separatorInset = UIEdgeInsetsMake(
     0.0f, padding, 0.0f, 0.0f);
-  temporaryNeighborhoods = [[OMBNeighborhoodStore sharedStore]
-    sortedNeighborhoodsForName:@""];
+  //  temporaryNeighborhoods = [[OMBNeighborhoodStore sharedStore]
+  //    sortedNeighborhoodsForName:@""];
 
   // Header view
   AMBlurView *neighborhoodTableHeaderView   = [AMBlurView new];
@@ -124,6 +125,8 @@
     forState: UIControlStateNormal];
   [neighborhoodTableHeaderView addSubview: currentLocationButton];
 
+  neighborhoodArray = [NSMutableArray array];
+  
   // Footer view
   self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
 }
@@ -154,6 +157,30 @@
   [self foundLocations: locations];
 }
 
+#pragma mark - SearchManagerDelegate
+
+- (void)searchFailedWithError:(NSError *)error
+{
+  // When user is typing quickly, current searching have to be canceled.
+}
+
+- (void)searchSucceededWithResponseObject:(id)responseObject
+{
+  if ([responseObject isKindOfClass:[NSArray class]]) {
+    
+    neighborhoodArray = [NSMutableArray array];
+    for (NSDictionary *dic in responseObject) {
+      OMBNeighborhood *neighborhood = [OMBNeighborhood new];
+      neighborhood.name = [dic objectForKey:@"text"];
+//      [[[dic objectForKey:@"payload"] objectForKey:@"latlon"] splitCoordinates:@","];
+      #warning missing coordinates
+      [neighborhoodArray addObject:neighborhood];
+    }
+  }
+  
+  [self.table reloadData];
+}
+
 #pragma mark - Protocol UIAlertViewDelegate
 
 - (void) alertView: (UIAlertView *) alertView
@@ -180,10 +207,14 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 - (void)searchBar:(UISearchBar *)searchBar
   textDidChange:(NSString *)searchText
 {
-  temporaryNeighborhoods =
-    [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForName:
-      [searchText lowercaseString]];
-  [self.table reloadData];
+//  temporaryNeighborhoods =
+//    [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForName:
+//      [searchText lowercaseString]];
+//  [self.table reloadData];
+  SchoolSearchManager *schoolSearch = [SchoolSearchManager sharedInstance];
+  [schoolSearch cancel];
+  [schoolSearch search:@{ @"query" : searchText }
+    accessToken:nil delegate:self];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
@@ -195,15 +226,15 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView
 {
-  return [[temporaryNeighborhoods allKeys] count];
+//  return [[temporaryNeighborhoods allKeys] count];
+  return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *) tableView
   cellForRowAtIndexPath:(NSIndexPath *) indexPath
 {
   if (tableView == self.table) {
-    static NSString *NeighborhoodCellID =
-      @"NeighborhoodNameCellIdentifier";
+    static NSString *NeighborhoodCellID = @"NeighborhoodNameCellIdentifier";
     UITableViewCell *cell = [tableView
       dequeueReusableCellWithIdentifier: NeighborhoodCellID];
     if (!cell) {
@@ -211,11 +242,13 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
         UITableViewCellStyleDefault reuseIdentifier:NeighborhoodCellID];
     }
 
-    NSArray *keys = [[temporaryNeighborhoods allKeys]
-      sortedArrayUsingSelector: @selector(localizedCaseInsensitiveCompare:)];
-    OMBNeighborhood *neighborhoodCity = [[temporaryNeighborhoods
-      objectForKey:keys[indexPath.section]]
-        objectAtIndex: indexPath.row];
+//    NSArray *keys = [[temporaryNeighborhoods allKeys]
+//      sortedArrayUsingSelector: @selector(localizedCaseInsensitiveCompare:)];
+//    OMBNeighborhood *neighborhoodCity = [[temporaryNeighborhoods
+//      objectForKey:keys[indexPath.section]]
+//        objectAtIndex: indexPath.row];
+    OMBNeighborhood *neighborhoodCity =
+      [neighborhoodArray objectAtIndex:indexPath.row];
     
     if (_selectedNeighborhood == neighborhoodCity) {
       cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -239,10 +272,11 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   // Neighborhood
   if (tableView == self.table) {
-    NSArray *keys = [[temporaryNeighborhoods allKeys]
-      sortedArrayUsingSelector: @selector(localizedCaseInsensitiveCompare:)];
-    
-    return [[temporaryNeighborhoods objectForKey:keys[section]] count];
+//    NSArray *keys = [[temporaryNeighborhoods allKeys]
+//      sortedArrayUsingSelector: @selector(localizedCaseInsensitiveCompare:)];
+//    
+//    return [[temporaryNeighborhoods objectForKey:keys[section]] count];
+    return neighborhoodArray.count;
   }
   return 0;
 }
@@ -253,13 +287,15 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (tableView == self.table) {
-    NSArray *keys = [[temporaryNeighborhoods allKeys]
-      sortedArrayUsingSelector:
-        @selector(localizedCaseInsensitiveCompare:)];
-    OMBNeighborhood *neighborhood = [[temporaryNeighborhoods
-      objectForKey:keys[indexPath.section]]
-        objectAtIndex: indexPath.row];
-
+//    NSArray *keys = [[temporaryNeighborhoods allKeys]
+//      sortedArrayUsingSelector:
+//        @selector(localizedCaseInsensitiveCompare:)];
+//    OMBNeighborhood *neighborhood = [[temporaryNeighborhoods
+//      objectForKey:keys[indexPath.section]]
+//        objectAtIndex: indexPath.row];
+    OMBNeighborhood *neighborhood =
+      [neighborhoodArray objectAtIndex:indexPath.row];
+    
     if (_selectedNeighborhood == neighborhood) {
       _selectedNeighborhood = nil;
     }
@@ -296,15 +332,16 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 viewForHeaderInSection: (NSInteger) section
 {
   if (tableView == self.table) {
-    NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
-      @selector(localizedCaseInsensitiveCompare:)];
+//    NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
+//      @selector(localizedCaseInsensitiveCompare:)];
     AMBlurView *blur = [[AMBlurView alloc] init];
     blur.blurTintColor = [UIColor grayLight];
     blur.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 13.0f * 2);
     UILabel *label = [UILabel new];
     label.font = [UIFont smallTextFontBold];
     label.frame = blur.frame;
-    label.text = [keys[section] capitalizedString];
+//    label.text = [keys[section] capitalizedString];
+    label.text = @"Results";
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor blueDark];
     [blur addSubview: label];

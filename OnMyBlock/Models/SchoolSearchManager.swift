@@ -22,6 +22,11 @@ class SchoolSearchManager: SearchManager {
     return Static.instance
   }
   // Instance methods
+  
+  func cancel() {
+    operationManager.operationQueue.cancelAllOperations();
+  }
+  
   override func search(dictionary: [String: AnyObject], accessToken: String?,
     delegate: SearchManagerDelegate?) -> () {
     // Pass a dictionary with a key=query and a value of whatever searching for

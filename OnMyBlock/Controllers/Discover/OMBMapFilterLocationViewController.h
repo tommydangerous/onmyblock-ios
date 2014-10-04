@@ -17,7 +17,8 @@
 >
 {
   UIBarButtonItem *searchBarButtonItem;
-  NSDictionary *temporaryNeighborhoods;
+//  NSDictionary *temporaryNeighborhoods;
+  NSMutableArray *neighborhoodArray;
 }
 
 @property OMBNeighborhood *selectedNeighborhood;
