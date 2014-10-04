@@ -312,19 +312,19 @@
   OMBMapFilterNeighborhoodCell *cell = (OMBMapFilterNeighborhoodCell *)
   [self.table cellForRowAtIndexPath:
    [NSIndexPath indexPathForRow: 1 inSection: 0]];
+  
   NSString *string = @"";
   selectedNeighborhood = filterViewController.selectedNeighborhood;
+  
   if (selectedNeighborhood) {
     string = selectedNeighborhood.name;
+    [_valuesDictionary setObject:
+      selectedNeighborhood forKey: @"neighborhood"];
+  } else {
+    [_valuesDictionary setObject:@"" forKey: @"neighborhood"];
   }
+  
   cell.neighborhoodTextField.text = string;
-  if (selectedNeighborhood) {
-    [_valuesDictionary setObject: selectedNeighborhood
-      forKey: @"neighborhood"];
-  }
-  else
-    [_valuesDictionary setObject: @"" forKey: @"neighborhood"];
-
 
   moveInDates = [NSMutableDictionary dictionary];
 
@@ -741,7 +741,7 @@ numberOfRowsInSection: (NSInteger) section
 #pragma mark - Protocol UITableViewDelegate
 
 - (void) tableView: (UITableView *) tableView
-didSelectRowAtIndexPath: (NSIndexPath *) indexPath
+  didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   // The normal table with all the rows of filter options
   if (tableView == self.table) {
@@ -917,13 +917,15 @@ viewForHeaderInSection: (NSInteger) section
   [self resetValuesDictionary];
 
   [self dismissViewControllerWithCompletion: ^{
-    // Neighborhood
+    // Clear Neighborhood
     OMBMapFilterNeighborhoodCell *neighborhoodCell =
       (OMBMapFilterNeighborhoodCell *) [self.table cellForRowAtIndexPath:
         [NSIndexPath indexPathForRow: 1 inSection: 0]];
     neighborhoodCell.neighborhoodTextField.text = @"";
+    // No neighborhood selected
     selectedNeighborhood = nil;
     [neighborhoodTableView reloadData];
+    
     // Clear rent
     OMBMapFilterRentCell *rentCell = (OMBMapFilterRentCell *)
       [self.table cellForRowAtIndexPath:
@@ -955,17 +957,6 @@ viewForHeaderInSection: (NSInteger) section
   }];
 }
 
-- (void) cancelSelectNeighborhood
-{
-  selectedNeighborhood = nil;
-  OMBMapFilterNeighborhoodCell *cell = (OMBMapFilterNeighborhoodCell *)
-    [self.table cellForRowAtIndexPath:
-      [NSIndexPath indexPathForRow: 1 inSection: 0]];
-  cell.neighborhoodTextField.text = @"";
-  [neighborhoodTableView reloadData];
-  [self hideNeighborhoodTableViewContainer];
-}
-
 - (void) cancelPicker
 {
 	if ([rentPickerView superview]) {
@@ -988,6 +979,17 @@ viewForHeaderInSection: (NSInteger) section
 	}
 
   [self hidePickerView];
+}
+
+- (void) cancelSelectNeighborhood
+{
+  selectedNeighborhood = nil;
+  OMBMapFilterNeighborhoodCell *cell = (OMBMapFilterNeighborhoodCell *)
+    [self.table cellForRowAtIndexPath:
+      [NSIndexPath indexPathForRow: 1 inSection: 0]];
+  cell.neighborhoodTextField.text = @"";
+  [neighborhoodTableView reloadData];
+  [self hideNeighborhoodTableViewContainer];
 }
 
 - (void) dismissViewControllerWithCompletion: (void (^)(void)) block
@@ -1211,8 +1213,8 @@ viewForHeaderInSection: (NSInteger) section
 {
   filterViewController.selectedNeighborhood = selectedNeighborhood;
   [self presentViewController:
-   [[OMBNavigationController alloc] initWithRootViewController:
-    filterViewController] animated: YES completion: nil];
+    [[OMBNavigationController alloc] initWithRootViewController:
+      filterViewController] animated: YES completion: nil];
 
   /*CGRect rect = neighborhoodTableViewContainer.frame;
   rect.origin.y = self.view.frame.size.height -

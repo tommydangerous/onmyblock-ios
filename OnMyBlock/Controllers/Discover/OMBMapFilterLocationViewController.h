@@ -12,17 +12,15 @@
 @class TextFieldPadding;
 
 @interface OMBMapFilterLocationViewController : OMBTableViewController
-<CLLocationManagerDelegate, UIScrollViewDelegate, UITextFieldDelegate>
+<
+  CLLocationManagerDelegate
+>
 {
-  TextFieldPadding *filterTextField;
-  UIImageView *filterImageView;
-  BOOL isEditing;
   UIBarButtonItem *searchBarButtonItem;
   NSDictionary *temporaryNeighborhoods;
 }
 
 @property OMBNeighborhood *selectedNeighborhood;
-
 
 #pragma mark - Initializer
 
