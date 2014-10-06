@@ -19,4 +19,15 @@
   return [self.name lowercaseString];
 }
 
+- (void) readFromQBox:(NSDictionary *)dic
+{
+  // coordinates
+  NSArray *coordinate = [[[dic objectForKey:@"payload"]
+    objectForKey: @"latlon"] componentsSeparatedByString: @","];
+  
+  _coordinate = CLLocationCoordinate2DMake(
+     [coordinate[0] doubleValue], [coordinate[1] doubleValue]);
+  _name = [dic objectForKey:@"text"];
+}
+
 @end

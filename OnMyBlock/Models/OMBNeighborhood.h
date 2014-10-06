@@ -18,5 +18,6 @@
 #pragma mark - Instance Methods
 
 - (NSString *) nameKey;
+- (void) readFromQBox:(NSDictionary *)dic;
 
 @end

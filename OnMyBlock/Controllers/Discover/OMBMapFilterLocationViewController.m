@@ -171,9 +171,7 @@
     neighborhoodArray = [NSMutableArray array];
     for (NSDictionary *dic in responseObject) {
       OMBNeighborhood *neighborhood = [OMBNeighborhood new];
-      neighborhood.name = [dic objectForKey:@"text"];
-//      [[[dic objectForKey:@"payload"] objectForKey:@"latlon"] splitCoordinates:@","];
-      #warning missing coordinates
+      [neighborhood readFromQBox:dic];
       [neighborhoodArray addObject:neighborhood];
     }
   }
@@ -195,12 +193,12 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   }
 }
 
-//#pragma mark - Protocol UIScrollViewDelegate
-//
-//- (void) scrollViewWillBeginDragging: (UIScrollView *) scrollView
-//{
-//  
-//}
+#pragma mark - Protocol UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging: (UIScrollView *)scrollView
+{
+  [self.view endEditing:YES];
+}
 
 #pragma mark - Protocol UISearchBarDelegate
 
