@@ -24,6 +24,17 @@
 
 #pragma mark - Instance Methods
 
+- (void)readFromQBox:(NSDictionary *)dic
+{
+  // coordinates
+  NSArray *coordinate = [[[dic objectForKey:@"payload"]
+    objectForKey: @"latlon"] componentsSeparatedByString: @","];
+  
+  _coordinate = CLLocationCoordinate2DMake(
+    [coordinate[0] doubleValue], [coordinate[1] doubleValue]);
+  _displayName = [dic objectForKey:@"text"];
+}
+
 - (NSString *)realName
 {
   if(_realName)

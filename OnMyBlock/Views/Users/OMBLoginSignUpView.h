@@ -26,6 +26,7 @@ typedef NS_ENUM(NSInteger, OMBLoginSignUpViewTextField) {
 
 @interface OMBLoginSignUpView : OMBView
 <
+  UISearchBarDelegate,
   UITableViewDataSource,
   UITableViewDelegate,
   UITextFieldDelegate
@@ -39,9 +40,9 @@ typedef NS_ENUM(NSInteger, OMBLoginSignUpViewTextField) {
   BOOL isLogin;
   OMBOrView *orView;
   UIScrollView *scroll;
-  NSInteger schoolIndex;
-  OMBFullListView *schoolList;
-  NSArray *schools;
+  NSString *schoolNameSelected;
+  OMBFullListView *schoolListView;
+  NSMutableArray *schools;
   UIView *schoolView;
   NSMutableArray *textFieldBorderArray;
   NSMutableArray *textFieldFrameArray;

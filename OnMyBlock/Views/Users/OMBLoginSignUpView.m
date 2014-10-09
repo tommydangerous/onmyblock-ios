@@ -16,13 +16,21 @@
 #import "OMBFullListCell.h"
 #import "OMBOrView.h"
 #import "OMBSchool.h"
-#import "OMBSchoolStore.h"
 #import "OMBViewController.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
 #define DEGREES_TO_RADIANS(x) (M_PI * x / 180.0)
+
+@interface OMBLoginSignUpView ()
+<
+  SearchManagerDelegate
+>
+{
+  OMBSchool *otherSchool;
+}
+@end
 
 @implementation OMBLoginSignUpView
 
@@ -295,12 +303,28 @@
     forState: UIControlStateNormal];
   [bottomView addSubview: actionSwitchButton];
 
+  otherSchool = [OMBSchool new];
+  otherSchool.displayName = @"Other";
+  
+//  schools = [[OMBSchoolStore sharedStore] schools];
   // School List
-  schools = [[OMBSchoolStore sharedStore] schools];
-  schoolList = [OMBFullListView new];
-  schoolList.table.dataSource = self;
-  schoolList.table.delegate   = self;
-  schoolIndex = -1;
+  schools = [NSMutableArray array];
+  
+  schoolListView = [OMBFullListView new];
+  schoolListView.table.dataSource = self;
+  schoolListView.table.delegate   = self;
+  schoolNameSelected = @"";
+  
+  UISearchBar *searchBar           = [[UISearchBar alloc] init];
+  searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+  searchBar.autocorrectionType     = UITextAutocorrectionTypeNo;
+  searchBar.barTintColor = UIColor.clearColor;
+  searchBar.delegate               = self;
+  searchBar.frame = CGRectMake(0, padding,
+    CGRectGetWidth(schoolListView.frame), OMBStandardHeight);
+  searchBar.placeholder = @"Search school";
+  [searchBar setBackgroundImage:[UIImage imageWithColor:UIColor.clearColor]];
+  [schoolListView addSubview:searchBar];
   
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(keyboardWillShow:)
@@ -316,6 +340,52 @@
 
 #pragma mark - Protocol
 
+#pragma mark - Protocol SearchManagerDelegate
+
+- (void)searchFailedWithError:(NSError *)error
+{
+  // When user is typing quickly, current searching have to be canceled.
+}
+
+- (void)searchSucceededWithResponseObject:(id)responseObject
+{
+  if ([responseObject isKindOfClass:[NSArray class]]) {
+    
+    schools = [NSMutableArray array];
+    for (NSDictionary *dic in responseObject) {
+      OMBSchool *school = [OMBSchool new];
+      [school readFromQBox:dic];
+      [schools addObject:school];
+    }
+    [schools addObject:otherSchool];
+  }
+  
+  [schoolListView.table reloadData];
+}
+
+#pragma mark - Protocol UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+  [schoolListView endEditing:YES];
+}
+
+#pragma mark - Protocol UISearchBarDelegate
+
+- (void)searchBar:(UISearchBar *)searchBar
+  textDidChange:(NSString *)searchText
+{
+  SchoolSearchManager *schoolSearch = [SchoolSearchManager sharedInstance];
+  [schoolSearch cancel];
+  [schoolSearch search:@{ @"query" : searchText }
+    accessToken:nil delegate:self];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+  [schoolListView endEditing:YES];
+}
+
 #pragma mark - Protocol UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
@@ -330,19 +400,22 @@
       UITableViewCellStyleDefault reuseIdentifier:cellID];
   }
   
-  if (indexPath.row == 9 || indexPath.row == 11) {
-    [cell addBorder];
-  } else {
-    [cell removeBorder];
-  }
+//  if (indexPath.row == 9 || indexPath.row == 11) {
+//    [cell addBorder];
+//  } else {
+//    [cell removeBorder];
+//  }
   
-  if (schoolIndex == indexPath.row) {
+  NSString *schoolName = ((OMBSchool *)schools[indexPath.row]).displayName;
+  
+  if (schoolNameSelected == schoolName) {
     cell.textLabel.font = [UIFont normalTextFontBold];
   }
   else {
     cell.textLabel.font = [UIFont normalTextFont];
   }
-  cell.textLabel.text = ((OMBSchool *)schools[indexPath.row]).displayName;
+  
+  cell.textLabel.text = schoolName;
   
   return cell;
 }
@@ -358,11 +431,11 @@
 - (void)tableView:(UITableView *)tableView
   didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+  schoolNameSelected = ((OMBSchool *)[schools
+    objectAtIndex:indexPath.row]).displayName;
   
-  schoolIndex = indexPath.row;
-  _schoolTextField.text = ((OMBSchool *)[schools
-    objectAtIndex:schoolIndex]).displayName;
-  [schoolList closeView];
+  _schoolTextField.text = schoolNameSelected;
+  [schoolListView closeView];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView
@@ -428,7 +501,7 @@
 
 - (void) clearTextFields
 {
-  schoolIndex = -1;
+  schoolNameSelected = @"";
   _emailTextField.text = _firstNameTextField.text =
     _lastNameTextField.text = _passwordTextField.text = _schoolTextField.text = @"";
 }
@@ -477,8 +550,8 @@
 
 - (NSString *) schoolSelected
 {
-  if(!isLandlord && schoolIndex >= 0){
-    return [((OMBSchool *)[schools objectAtIndex:schoolIndex]) realName];
+  if(!isLandlord){
+    return schoolNameSelected;
   }
   
   return @"";
@@ -493,8 +566,8 @@
 {
   [self endEditing:YES];
   
-  [schoolList setupWithTitle:@"Schools" inView:self];
-  [schoolList showView];
+  [schoolListView setupWithTitle:@"Schools" inView:self];
+  [schoolListView showView];
 }
 
 - (void) switchToLandlord

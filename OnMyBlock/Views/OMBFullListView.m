@@ -40,7 +40,7 @@
     screen.size.width - (2 * padding), 27.f);
   titleLabel.textAlignment = NSTextAlignmentCenter;
   titleLabel.textColor = UIColor.whiteColor;
-  [self addSubview:titleLabel];
+//  [self addSubview:titleLabel];
   
   UILabel *line = [UILabel new];
   line.backgroundColor = UIColor.whiteColor;
@@ -60,9 +60,9 @@
   [self addSubview:closeView];
   
   // List
-  float originTable = line.frame.origin.y + line.frame.size.height + padding;
+  float originTable = line.frame.origin.y + line.frame.size.height;
   float heightTable = screen.size.height - originTable -
-    (screen.size.height - frameClose.origin.y + padding);
+    (screen.size.height - frameClose.origin.y) - padding * .5f;
   _table = [UITableView new];
   _table.backgroundColor = UIColor.clearColor;
   _table.contentInset = UIEdgeInsetsMake(0.0f, padding, 0.0f, -padding);
@@ -89,7 +89,7 @@
 {
   [backgroundBlurView refreshWithView:view];
   
-  titleLabel.text = title;
+//  titleLabel.text = title;
   
   [_table reloadData];
 }
