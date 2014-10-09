@@ -19,7 +19,6 @@
 #import "OMBMapFilterRentCell.h"
 #import "OMBMapFilterDateAvailableCell.h"
 #import "OMBNeighborhood.h"
-//#import "OMBNeighborhoodStore.h"
 #import "TextFieldPadding.h"
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
@@ -85,8 +84,6 @@
   self.table.separatorColor = [UIColor grayLight];
   self.table.separatorInset = UIEdgeInsetsMake(
     0.0f, padding, 0.0f, 0.0f);
-  //  temporaryNeighborhoods = [[OMBNeighborhoodStore sharedStore]
-  //    sortedNeighborhoodsForName:@""];
 
   // Header view
   AMBlurView *neighborhoodTableHeaderView   = [AMBlurView new];
@@ -157,7 +154,7 @@
   [self foundLocations: locations];
 }
 
-#pragma mark - SearchManagerDelegate
+#pragma mark - Protocol SearchManagerDelegate
 
 - (void)searchFailedWithError:(NSError *)error
 {
@@ -205,10 +202,6 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 - (void)searchBar:(UISearchBar *)searchBar
   textDidChange:(NSString *)searchText
 {
-//  temporaryNeighborhoods =
-//    [[OMBNeighborhoodStore sharedStore] sortedNeighborhoodsForName:
-//      [searchText lowercaseString]];
-//  [self.table reloadData];
   SchoolSearchManager *schoolSearch = [SchoolSearchManager sharedInstance];
   [schoolSearch cancel];
   [schoolSearch search:@{ @"query" : searchText }
@@ -232,6 +225,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   cellForRowAtIndexPath:(NSIndexPath *) indexPath
 {
   if (tableView == self.table) {
+    
     static NSString *NeighborhoodCellID = @"NeighborhoodNameCellIdentifier";
     UITableViewCell *cell = [tableView
       dequeueReusableCellWithIdentifier: NeighborhoodCellID];
@@ -239,26 +233,34 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
       cell = [[UITableViewCell alloc] initWithStyle:
         UITableViewCellStyleDefault reuseIdentifier:NeighborhoodCellID];
     }
-
-//    NSArray *keys = [[temporaryNeighborhoods allKeys]
-//      sortedArrayUsingSelector: @selector(localizedCaseInsensitiveCompare:)];
-//    OMBNeighborhood *neighborhoodCity = [[temporaryNeighborhoods
-//      objectForKey:keys[indexPath.section]]
-//        objectAtIndex: indexPath.row];
-    OMBNeighborhood *neighborhoodCity =
-      [neighborhoodArray objectAtIndex:indexPath.row];
     
-    if (_selectedNeighborhood == neighborhoodCity) {
-      cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    if (neighborhoodArray.count) {
+      OMBNeighborhood *neighborhoodCity =
+        [neighborhoodArray objectAtIndex:indexPath.row];
+      
+      if (_selectedNeighborhood == neighborhoodCity) {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+      }
+      else {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+      }
+      cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+      cell.textLabel.text = neighborhoodCity.name;
+      cell.textLabel.textAlignment = NSTextAlignmentLeft;
+      cell.textLabel.textColor = [UIColor textColor];
+      cell.userInteractionEnabled = YES;
     }
     else {
       cell.accessoryType = UITableViewCellAccessoryNone;
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+      cell.textLabel.text = @"No matching schools";
+      cell.textLabel.textAlignment = NSTextAlignmentCenter;
+      cell.textLabel.textColor = UIColor.lightGrayColor;
+      cell.userInteractionEnabled = NO;
     }
     
     cell.backgroundColor = [UIColor whiteColor];
     cell.textLabel.font = [UIFont normalTextFont];
-    cell.textLabel.text = neighborhoodCity.name;
-    cell.textLabel.textColor = [UIColor textColor];
     
     return cell;
   }
@@ -270,11 +272,12 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 {
   // Neighborhood
   if (tableView == self.table) {
-//    NSArray *keys = [[temporaryNeighborhoods allKeys]
-//      sortedArrayUsingSelector: @selector(localizedCaseInsensitiveCompare:)];
-//    
-//    return [[temporaryNeighborhoods objectForKey:keys[section]] count];
-    return neighborhoodArray.count;
+    if (neighborhoodArray.count) {
+      return neighborhoodArray.count;
+    }
+    else {
+      return 1;
+    }
   }
   return 0;
 }
@@ -285,12 +288,6 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
   didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
   if (tableView == self.table) {
-//    NSArray *keys = [[temporaryNeighborhoods allKeys]
-//      sortedArrayUsingSelector:
-//        @selector(localizedCaseInsensitiveCompare:)];
-//    OMBNeighborhood *neighborhood = [[temporaryNeighborhoods
-//      objectForKey:keys[indexPath.section]]
-//        objectAtIndex: indexPath.row];
     OMBNeighborhood *neighborhood =
       [neighborhoodArray objectAtIndex:indexPath.row];
     
@@ -330,15 +327,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 viewForHeaderInSection: (NSInteger) section
 {
   if (tableView == self.table) {
-//    NSArray *keys = [[temporaryNeighborhoods allKeys] sortedArrayUsingSelector:
-//      @selector(localizedCaseInsensitiveCompare:)];
     AMBlurView *blur = [[AMBlurView alloc] init];
     blur.blurTintColor = [UIColor grayLight];
     blur.frame = CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 13.0f * 2);
     UILabel *label = [UILabel new];
     label.font = [UIFont smallTextFontBold];
     label.frame = blur.frame;
-//    label.text = [keys[section] capitalizedString];
     label.text = @"Results";
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor blueDark];
