@@ -103,7 +103,7 @@
   searchBar.frame = CGRectMake(0, 0, 
     CGRectGetWidth(neighborhoodTableHeaderView.frame), OMBStandardHeight
   );
-  searchBar.placeholder = @"Search city or school";
+  searchBar.placeholder = @"Search school";
   searchBar.tintColor   = [UIColor blue];
   searchBar.translucent = YES;
   [neighborhoodTableHeaderView addSubview:searchBar];
@@ -310,7 +310,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 - (CGFloat) tableView: (UITableView *) tableView
 heightForHeaderInSection: (NSInteger) section
 {
-  if (tableView == self.table) {
+  if (tableView == self.table && neighborhoodArray.count) {
     return 13.0f * 2;
   }
   return 0.0f;

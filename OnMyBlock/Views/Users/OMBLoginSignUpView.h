@@ -39,14 +39,14 @@ typedef NS_ENUM(NSInteger, OMBLoginSignUpViewTextField) {
   BOOL isLogin;
   OMBOrView *orView;
   UIScrollView *scroll;
-  NSMutableArray *textFieldBorderArray;
-  NSMutableArray *textFieldFrameArray;
-  UIView *textFieldView;
-  UIButton *userSwitchButton;
   NSInteger schoolIndex;
   OMBFullListView *schoolList;
   NSArray *schools;
   UIView *schoolView;
+  NSMutableArray *textFieldBorderArray;
+  NSMutableArray *textFieldFrameArray;
+  UIView *textFieldView;
+  UIButton *userSwitchButton;
 }
 
 @property (nonatomic, strong) UIButton *actionButton;

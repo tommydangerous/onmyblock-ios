@@ -22,7 +22,6 @@
 #import "UIColor+Extensions.h"
 #import "UIImage+Color.h"
 
-
 #define DEGREES_TO_RADIANS(x) (M_PI * x / 180.0)
 
 @implementation OMBLoginSignUpView
@@ -166,7 +165,7 @@
       
       textField.frame = CGRectMake(origin, auxIndex * buttonHeight,
         widthObject * .5f, buttonHeight);
-      if(textField == _firstNameTextField){
+      if (textField == _firstNameTextField) {
         // Right border
         UIView *bor = [UIView new];
         bor.backgroundColor = [UIColor colorWithWhite: 0.0f alpha: 0.3f];
@@ -175,7 +174,7 @@
         [textField addSubview: bor];
         }
       }
-    else{
+    else {
       textField.frame = CGRectMake(0.0f, auxIndex * buttonHeight,
         widthObject, buttonHeight);
     }
@@ -187,11 +186,11 @@
     textField.returnKeyType = UIReturnKeyDone;
     textField.rightPaddingX = padding;
     textField.textColor = [UIColor textColor];
-    if(textField == _lastNameTextField){
+    if (textField == _lastNameTextField) {
       textField.leftPaddingX = buttonHeight * .5f;
     }
-    else{
-      if(textField == _firstNameTextField){
+    else {
+      if(textField == _firstNameTextField) {
         textField.rightPaddingX = padding * .5f;
       }
       // Image view
@@ -212,7 +211,7 @@
       [textFieldBorderArray addObject: bor];
     }
     // Add arrow and tap recognizer
-    if(textField == _schoolTextField){
+    if (textField == _schoolTextField) {
       // Arrow image
       // float widthIcon  = textField.frame.size.height * .3f;
       // float heightIcon = textField.frame.size.height * .34f;
@@ -240,7 +239,7 @@
       
       [textFieldView addSubview: schoolView];
     }
-    else{
+    else {
       [textFieldView addSubview: textField];
     }
   }
@@ -319,49 +318,55 @@
 
 #pragma mark - Protocol UITableViewDataSource
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView
+  cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   static NSString *cellID = @"cellID";
   OMBFullListCell *cell = [tableView
     dequeueReusableCellWithIdentifier:cellID];
-  if(!cell)
+  
+  if (!cell) {
     cell = [[OMBFullListCell alloc] initWithStyle:
       UITableViewCellStyleDefault reuseIdentifier:cellID];
-    
-  if(indexPath.row == 9 || indexPath.row == 11)
-    [cell addBorder];
-  else
-    [cell removeBorder];
+  }
   
-  if(schoolIndex == indexPath.row)
+  if (indexPath.row == 9 || indexPath.row == 11) {
+    [cell addBorder];
+  } else {
+    [cell removeBorder];
+  }
+  
+  if (schoolIndex == indexPath.row) {
     cell.textLabel.font = [UIFont normalTextFontBold];
-  else
+  }
+  else {
     cell.textLabel.font = [UIFont normalTextFont];
+  }
   cell.textLabel.text = ((OMBSchool *)schools[indexPath.row]).displayName;
   
   return cell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
+  numberOfRowsInSection:(NSInteger)section
 {
-  
   return schools.count;
 }
 
 #pragma mark - Protocol UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView
-didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+  didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+  
   schoolIndex = indexPath.row;
-  _schoolTextField.text =
-    ((OMBSchool *)[schools objectAtIndex:schoolIndex]).displayName;
+  _schoolTextField.text = ((OMBSchool *)[schools
+    objectAtIndex:schoolIndex]).displayName;
   [schoolList closeView];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView
-heightForRowAtIndexPath:(NSIndexPath *)indexPath
+  heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   return [OMBFullListCell heightForCell];
 }
@@ -376,27 +381,34 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
   }
 
   NSInteger index = 0;
-  if (textField == _emailTextField)
+  if (textField == _emailTextField) {
     index = OMBLoginSignUpViewTextFieldEmail;
-  else if (textField == _firstNameTextField || textField == _lastNameTextField)
+  }
+  else if (textField == _firstNameTextField || textField == _lastNameTextField) {
     index = OMBLoginSignUpViewTextFieldFirstName;
+  }
   /*else if (textField == _lastNameTextField)
     index = OMBLoginSignUpViewTextFieldLastName;*/
-  else if (textField == _passwordTextField)
+  else if (textField == _passwordTextField) {
     index = OMBLoginSignUpViewTextFieldPassword;
+  }
 
   CGFloat contentHeight = scroll.contentSize.height;
   CGFloat height        = scroll.frame.size.height;
   CGFloat bottomY       = contentHeight - height;
 
   CGFloat originY = textFieldView.frame.origin.y;
-  if (isLogin)
+  if (isLogin) {
     index -= 2;
-  if (index < 0)
+  }
+  if (index < 0) {
     index = 0;
+  }
+  
   originY += index * _firstNameTextField.frame.size.height;
-  if (originY > bottomY)
+  if (originY > bottomY) {
     originY = bottomY;
+  }
 
   CGPoint point = CGPointMake(0.0f, originY);
   [UIView animateWithDuration: OMBStandardDuration animations: ^{
@@ -454,8 +466,10 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   CGFloat height = bottomView.frame.origin.y +
     bottomView.frame.size.height + OMBPadding;
-  if (isEditing)
+  
+  if (isEditing) {
     height += OMBKeyboardHeight;
+  }
   [UIView animateWithDuration: OMBStandardDuration animations: ^{
     scroll.contentSize = CGSizeMake(scroll.contentSize.width, height);
   }];
@@ -481,7 +495,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
   
   [schoolList setupWithTitle:@"Schools" inView:self];
   [schoolList showView];
-  
 }
 
 - (void) switchToLandlord
@@ -523,6 +536,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
 - (void) updateUserViews
 {
   NSString *actionButtonString = isLogin ? @"Login" : @"Sign Up";
+  
   headerLabel.text = [NSString stringWithFormat: @"%@ %@",
     isLandlord ? @"Landlord" : @"Student", actionButtonString];
   _emailTextField.placeholder = [NSString stringWithFormat: @"%@ email",
@@ -539,13 +553,13 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
         _emailTextField.frame.size.height * (isLandlord ? 3 : 4));
     
     CGRect rectEmail, rectPassword;
-    if(isLandlord){
+    if (isLandlord) {
       rectEmail = [[textFieldFrameArray objectAtIndex:
         OMBLoginSignUpViewTextFieldSchool] CGRectValue];
       rectPassword = [[textFieldFrameArray objectAtIndex:
         OMBLoginSignUpViewTextFieldEmail] CGRectValue];
     }
-    else{
+    else {
       rectEmail = [[textFieldFrameArray objectAtIndex:
         OMBLoginSignUpViewTextFieldEmail] CGRectValue];
       rectPassword = [[textFieldFrameArray objectAtIndex:
@@ -633,13 +647,13 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
       
       CGRect rectEmail, rectPassword;
       
-      if(isLandlord){
+      if (isLandlord) {
         rectEmail = [[textFieldFrameArray objectAtIndex:
           OMBLoginSignUpViewTextFieldSchool] CGRectValue];
         rectPassword = [[textFieldFrameArray objectAtIndex:
           OMBLoginSignUpViewTextFieldEmail] CGRectValue];
       }
-      else{
+      else {
         rectEmail = [[textFieldFrameArray objectAtIndex:
           OMBLoginSignUpViewTextFieldEmail] CGRectValue];
         rectPassword = [[textFieldFrameArray objectAtIndex:

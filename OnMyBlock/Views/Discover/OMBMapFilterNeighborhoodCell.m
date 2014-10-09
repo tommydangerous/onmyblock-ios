@@ -40,7 +40,7 @@ reuseIdentifier: (NSString *)reuseIdentifier
   _neighborhoodTextField.layer.cornerRadius = 5.0f;
   _neighborhoodTextField.paddingX = padding;
   _neighborhoodTextField.placeholderColor = [UIColor grayLight];
-  _neighborhoodTextField.placeholder = @"Select a location";
+  _neighborhoodTextField.placeholder = @"Select a School";
   _neighborhoodTextField.returnKeyType = UIReturnKeyDone;
   _neighborhoodTextField.textAlignment = NSTextAlignmentCenter;
   _neighborhoodTextField.textColor = [UIColor blue];
