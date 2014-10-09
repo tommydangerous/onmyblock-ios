@@ -400,15 +400,9 @@
       UITableViewCellStyleDefault reuseIdentifier:cellID];
   }
   
-//  if (indexPath.row == 9 || indexPath.row == 11) {
-//    [cell addBorder];
-//  } else {
-//    [cell removeBorder];
-//  }
-  
   NSString *schoolName = ((OMBSchool *)schools[indexPath.row]).displayName;
   
-  if (schoolNameSelected == schoolName) {
+  if ([schoolNameSelected isEqualToString:schoolName]) {
     cell.textLabel.font = [UIFont normalTextFontBold];
   }
   else {
