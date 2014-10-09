@@ -93,7 +93,7 @@
   );
   self.table.tableHeaderView = neighborhoodTableHeaderView;
 
-  UISearchBar *searchBar           = [[UISearchBar alloc] init];
+  searchBar                        = [[UISearchBar alloc] init];
   searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
   searchBar.autocorrectionType     = UITextAutocorrectionTypeNo;
   searchBar.delegate               = self;
@@ -275,7 +275,7 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
     if (neighborhoodArray.count) {
       return neighborhoodArray.count;
     }
-    else {
+    else if ([searchBar.text length]){
       return 1;
     }
   }

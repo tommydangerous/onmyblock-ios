@@ -16,8 +16,7 @@
   CLLocationManagerDelegate
 >
 {
-  UIBarButtonItem *searchBarButtonItem;
-//  NSDictionary *temporaryNeighborhoods;
+  UISearchBar *searchBar;
   NSMutableArray *neighborhoodArray;
 }
 
