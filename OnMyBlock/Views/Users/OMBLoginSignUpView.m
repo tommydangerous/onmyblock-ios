@@ -320,8 +320,8 @@
   searchBar.autocorrectionType     = UITextAutocorrectionTypeNo;
   searchBar.barTintColor = UIColor.clearColor;
   searchBar.delegate               = self;
-  searchBar.frame = CGRectMake(0, padding,
-    CGRectGetWidth(schoolListView.frame), OMBStandardHeight);
+  searchBar.frame = CGRectMake(padding * 0.6f, padding,
+    CGRectGetWidth(schoolListView.frame) - 2 * (padding * 0.6f), OMBStandardHeight);
   searchBar.placeholder = @"Search school";
   [searchBar setBackgroundImage:[UIImage imageWithColor:UIColor.clearColor]];
   [schoolListView addSubview:searchBar];

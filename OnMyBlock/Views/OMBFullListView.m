@@ -44,14 +44,19 @@
   
   UILabel *line = [UILabel new];
   line.backgroundColor = UIColor.whiteColor;
-  line.frame = CGRectMake(titleLabel.frame.origin.x, titleLabel.frame.origin.y +
-    titleLabel.frame.size.height + (padding * 0.5), screen.size.width - 2 * padding, 1.5f);
+  line.frame = CGRectMake(
+    titleLabel.frame.origin.x,
+      titleLabel.frame.origin.y +
+        titleLabel.frame.size.height + (padding * 0.5),
+          screen.size.width - 2 * padding, 1.f);
   [self addSubview:line];
   
   // Close view
   float widthClose = 30.f;
-  CGRect frameClose = CGRectMake((screen.size.width - widthClose) * .5f,
-    screen.size.height - padding - widthClose, widthClose, widthClose);
+  CGRect frameClose = CGRectMake(
+    (screen.size.width - widthClose) * .5f,
+      screen.size.height - padding - widthClose,
+        widthClose, widthClose);
   // Close button
   OMBCloseButtonView *closeView = [[OMBCloseButtonView alloc]
     initWithFrame:frameClose color:UIColor.whiteColor];
