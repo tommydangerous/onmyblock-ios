@@ -173,7 +173,7 @@
     }
   }
   
-  [self.table reloadData];
+  [self reloadData];
 }
 
 #pragma mark - Protocol UIAlertViewDelegate
@@ -307,7 +307,8 @@ clickedButtonAtIndex: (NSInteger) buttonIndex
 - (CGFloat) tableView: (UITableView *) tableView
 heightForHeaderInSection: (NSInteger) section
 {
-  if (tableView == self.table && neighborhoodArray.count) {
+  if (tableView == self.table &&
+      (neighborhoodArray.count || [searchBar.text length])) {
     return 13.0f * 2;
   }
   return 0.0f;
@@ -371,6 +372,18 @@ viewForHeaderInSection: (NSInteger) section
     [self done];
   }
   [locationManager stopUpdatingLocation];
+}
+
+- (void)reloadData
+{
+  if (neighborhoodArray.count) {
+    self.table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+  }
+  else {
+    self.table.separatorStyle = UITableViewCellSeparatorStyleNone;
+  }
+  
+  [self.table reloadData];
 }
 
 - (void) useCurrentLocation
