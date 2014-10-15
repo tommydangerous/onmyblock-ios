@@ -320,7 +320,7 @@ didSelectItemAtIndexPath: (NSIndexPath *) indexPath
   NSInteger count = [[self residenceImages] count];
   [self.residence downloadImagesWithCompletion: ^(NSError *error) {
     if (count != [[self residenceImages] count]) {
-      [self.imagesFilmstrip reloadData];
+      // [self.imagesFilmstrip reloadData];
     }
     isDownloadingResidenceImages = NO;
   }];

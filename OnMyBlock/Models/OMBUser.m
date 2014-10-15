@@ -61,7 +61,11 @@
 // Categories
 #import "OMBUser+Collections.h"
 #import "UIFont+OnMyBlock.h"
+#import "UIImage+FixOrientation.h"
 #import "UIImage+Resize.h"
+
+// Objects
+#import "Base64.h"
 
 NSString *const OMBActivityIndicatorViewStartAnimatingNotification =
   @"OMBActivityIndicatorViewStartAnimatingNotification";
@@ -1833,15 +1837,35 @@ completion: (void (^) (NSError *error)) block
 - (void) uploadImage: (UIImage *) img
 withCompletion: (void (^) (NSError *error)) block
 {
-  CGSize newSize = CGSizeMake(640.0f, 320.0f);
-
-  UIImage *image = [UIImage image: img proportionatelySized: newSize];
+  UIImage *image = [[UIImage image:img 
+    proportionatelySized:CGSizeMake(640.0f, 320.0f)] fixOrientation];
   [OMBUser currentUser].image = image;
 
-  OMBUserUploadImageConnection *conn =
-    [[OMBUserUploadImageConnection alloc] init];
-  conn.completionBlock = block;
-  [conn start];
+  // Convert our image to Base64 encoding
+  [Base64 initialize];
+  NSData *imageData = [UIImage compressImage:image withMinimumResolution:0];
+  AFHTTPRequestOperationManager *manager = 
+    [[AFHTTPRequestOperationManager alloc] initWithBaseURL:
+      [NSURL URLWithString:OnMyBlockAPIURL]];
+  AFHTTPRequestOperation *operation = [manager POST:@"users/upload_image"
+    parameters: @{
+      @"access_token": self.accessToken,
+      @"image_data":   [Base64 encode:imageData]
+    } constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+      // [formData appendPartWithFormData:[Base64 encode:imageData] 
+      //   name:@"image_data"];
+      // [formData appendPartWithFileData: [Base64 encode:imageData]
+      //   name:@"image_data" fileName:@"image/png" mimeType:@"image/png"];
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+      if (block) {
+        block(nil);
+      }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+      if (block) {
+        block(error);
+      }
+    }];
+  [operation start];
 
   // Observers:
   // OMBViewControllerContainer

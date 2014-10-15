@@ -1461,19 +1461,7 @@ completion: (void (^) (void)) block
   NSString *idButton = ((OMBUserMenu *)
     [userMenuArray objectAtIndex: 0]).discoverButton.titleLabel.text;
   [self changeTitleLabelColorUserMenu: idButton];
-  //[self highlightDiscover];
   [self changeTitleLabelColor: discoverButton];
-  // if (!_mapNavigationController) {
-  //   // Search
-  //   _mapFilterViewController = [[OMBMapFilterViewController alloc] init];
-  //   _mapFilterNavigationController =
-  //     [[OMBNavigationController alloc] initWithRootViewController:
-  //       _mapFilterViewController];
-  //   // Map, Discover
-  //   _mapNavigationController =
-  //     [[OMBNavigationController alloc] initWithRootViewController:
-  //       [[OMBMapViewController alloc] init]];
-  // }
   [self hideMenuWithFactor: 1.0f];
   [self presentDetailViewController: self.mapNavigationController];
 }

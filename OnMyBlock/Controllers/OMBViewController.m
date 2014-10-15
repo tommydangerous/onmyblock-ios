@@ -9,10 +9,11 @@
 #import "OMBViewController.h"
 
 // Categories
+#import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Color.h"
 #import "UIImage+Resize.h"
-#import "UIColor+Extensions.h"
+#import "UIImageView+WebCache.h"
 // Controllers
 #import "OMBViewControllerContainer.h"
 // Views
@@ -50,6 +51,14 @@ CGFloat const OMBStandardHeight       = 44.0f;
 }
 
 #pragma mark - Override UIViewController
+
+- (void)didReceiveMemoryWarning
+{
+  [super didReceiveMemoryWarning];
+  SDImageCache *imageCache = [SDImageCache sharedImageCache];
+  [imageCache clearMemory];
+  [imageCache clearDisk];
+}
 
 - (void) loadView
 {

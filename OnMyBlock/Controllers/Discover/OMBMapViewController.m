@@ -60,8 +60,9 @@ float const PropertyInfoViewImageHeightPercentage = 0.4;
 
 int kMaxRadiusInMiles = 100;
 
-const CGFloat DEFAULT_MILE_RADIUS = 4.0f;
-const NSUInteger MINIMUM_ZOOM_LEVEL = 12;
+const CGFloat DEFAULT_MILE_RADIUS        = 4.0f;
+const NSUInteger MINIMUM_SPINNER_COUNTER = 3;
+const NSUInteger MINIMUM_ZOOM_LEVEL      = 12;
 
 static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
@@ -75,6 +76,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   NSDictionary *previousMapFilterParameters;
   CGFloat radiusIncrementInMiles;
   OMBAnnotationCity *sanDiegoAnnotationCity;
+  NSTimer *timer;
+  NSUInteger timerCounter;
 }
 
 @property (strong, nonatomic) QVCoordinateQuadTree *coordinateQuadTree;
@@ -114,14 +117,15 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
       annotationCity.cityName   = neighborhood.name;
       annotationCity.coordinate = neighborhood.coordinate;
 
-      [neighborhoodAnnotationArray addObject: annotationCity];
-      // [self.mapView.annotationsToIgnore addObject: annotationCity];
-      // [self.mapView removeAnnotation: annotationCity];
-      // [self.mapView addAnnotation: annotationCity];
+      [neighborhoodAnnotationArray addObject:annotationCity];
     }
   }
 
   previousZoomLevel = 0;
+  timer = [NSTimer timerWithTimeInterval:1 target:self 
+    selector:@selector(timerFired:) userInfo:nil repeats:YES];
+  timerCounter = MINIMUM_SPINNER_COUNTER;
+  [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 
   self.screenName = @"Map View Controller";
 
@@ -135,6 +139,12 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 #pragma mark - Override
 
 #pragma mark - Override UIViewController
+
+- (void)didReceiveMemoryWarning
+{
+  [super didReceiveMemoryWarning];
+  [self resetListViewResidences];
+}
 
 - (void) loadView
 {
@@ -488,6 +498,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 {
   [super viewWillAppear: animated];
 
+  timerCounter = MINIMUM_SPINNER_COUNTER;
+
   if (centerCoordinate.latitude == 0.0f && centerCoordinate.longitude == 0.0f) {
     [self setDefaultCenterCoordinate];
     [self setMapViewRegion: centerCoordinate 
@@ -496,11 +508,13 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   }
 
   // This is so that the spinner doesn't freeze and just stay there
-  if (fetching)
+  if (fetching) {
     fetching = NO;
+  }
   // Only stop the spinner if it is spinning and there is at least 1 residence
-  if (activityView.isSpinning && [[self residencesForList] count])
+  if (activityView.isSpinning && [[self residencesForList] count]) {
     [activityView stopSpinning];
+  }
 
   // This reloads the list view if it is visible
   [self reloadTable];
@@ -525,7 +539,8 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate) &&
         shouldSearch) {
       centerCoordinate = neighborhood.coordinate;
-      sortSelectionLabel.text = [NSString stringWithFormat:@"Listings near %@",neighborhood.name];
+      sortSelectionLabel.text = 
+        [NSString stringWithFormat:@"Listings near %@",neighborhood.name];
       // If it is on the list, then re-fetch residences for the list
       if ([self isOnList]) {
         [self resetAndFetchResidencesForList];
@@ -1279,9 +1294,8 @@ withTitle: (NSString *) title;
   if (fetching || _radiusInMiles > kMaxRadiusInMiles) {
     return;
   }
-  else if (![[self residencesForList] count] && !isSpinning) {
-    [activityViewFullScreen startSpinning];
-    isSpinning = YES;
+  else if ([[self residencesForList] count] == 0 && !isSpinning) {
+    [self startSpinning];
   }
   fetching = YES;
 
@@ -1971,10 +1985,19 @@ withMiles: (int) miles animated: (BOOL) animated
   // NSLog(@"SORT BUTTON SELECTED");
 }
 
-- (void) stopSpinning
+- (void)startSpinning
 {
-  [activityViewFullScreen stopSpinning];
+  if (timerCounter >= MINIMUM_SPINNER_COUNTER) {
+    isSpinning = YES;
+    [activityViewFullScreen startSpinning];
+  }
+}
+
+- (void)stopSpinning
+{
   isSpinning = NO;
+  [activityViewFullScreen stopSpinning];
+  timerCounter = 0;
 }
 
 - (void) switchToListView
@@ -2016,6 +2039,11 @@ withMiles: (int) miles animated: (BOOL) animated
     default:
       break;
   }
+}
+
+- (void)timerFired:(NSTimer *)aTimer
+{
+  timerCounter += 1;
 }
 
 - (void) updateFilterLabel

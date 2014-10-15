@@ -268,7 +268,9 @@ toImageSizeDictionaryWithSize: (CGSize) size
 
 - (void) cancelCoverPhotoDownload
 {
-  [coverPhotoURLConnection cancelConnection];
+  if (coverPhotoURLConnection) {
+    [coverPhotoURLConnection cancelConnection];
+  }
 }
 
 - (UIImage *) coverPhoto

@@ -36,6 +36,9 @@
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+Resize.h"
 
+// Categories
+#import "UIImageView+WebCache.h"
+
 @implementation OMBMyRenterProfileViewController
 
 #pragma mark - Initializer
@@ -175,12 +178,6 @@
   aboutTextViewPlaceholder.text = @"Share a little about you…";
   aboutTextViewPlaceholder.textColor = [UIColor grayMedium];
   [aboutTextView addSubview: aboutTextViewPlaceholder];
-
-  // Action sheet
-  uploadActionSheet = [[UIActionSheet alloc] initWithTitle: nil delegate: self
-    cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil
-      otherButtonTitles: @"Take Photo", @"Choose Existing", nil];
-  [self.view addSubview: uploadActionSheet];
 
   // Spacing
   UIBarButtonItem *flexibleSpace =
@@ -1032,9 +1029,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
-- (void) showUploadActionSheet
+- (void)showUploadActionSheet
 {
-  [uploadActionSheet showInView: self.view];
+  UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil 
+    delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
+      otherButtonTitles:@"Take Photo", @"Choose Existing", nil];
+  [sheet showInView:self.view];
 }
 
 - (void) textFieldDidChange: (TextFieldPadding *) textField

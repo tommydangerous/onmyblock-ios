@@ -115,12 +115,12 @@ didFinishLaunchingWithOptions: (NSDictionary *) launchOptions
   }
   [defaults synchronize];
 
-  if (shouldShowIntro)
+  if (shouldShowIntro) {
     [self.container showIntroAnimatedDissolve: NO];
-  else
+  }
+  else {
     [self.container showDiscover];
-
-  // [self.container showAccount];
+  }
 
   // Handle push notification
   // Extract the notification data

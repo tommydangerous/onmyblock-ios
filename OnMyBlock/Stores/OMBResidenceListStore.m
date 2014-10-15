@@ -66,7 +66,7 @@
 {
   if (listConnection) {
     [listConnection cancelConnection];
-    listConnection = nil;
+    // listConnection = nil;
   }
 }
 

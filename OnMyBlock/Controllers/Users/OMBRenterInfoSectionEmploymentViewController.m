@@ -146,9 +146,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 - (void) linkedInButtonSelected
 {
   LIALinkedInApplication *app = 
-    [LIALinkedInApplication applicationWithRedirectURL: @"https://onmyblock.com"
-      clientId: @"75zr1yumwx0wld" clientSecret: @"XNY3VsMzvdhyR1ej"
-        state: @"DCEEFWF45453sdffef424" grantedAccess: @[@"r_fullprofile"]];
+    [LIALinkedInApplication applicationWithRedirectURL:
+      [NSString linkedInRedirectURL] clientId:[NSString linkedInClientID] 
+        clientSecret:[NSString linkedInClientSecret]
+          state:[NSString linkedInState] 
+            grantedAccess:[NSString linkedInGrantedAccess]];
   linkedInClient = [LIALinkedInHttpClient clientForApplication: app 
     presentingViewController: self];
   [linkedInClient getAuthorizationCode: ^(NSString *code) {

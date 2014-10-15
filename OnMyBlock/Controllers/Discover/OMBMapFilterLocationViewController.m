@@ -24,10 +24,7 @@
 #import "UIImage+Color.h"
 
 @interface OMBMapFilterLocationViewController ()
-<
-  SearchManagerDelegate,
-  UISearchBarDelegate
->
+<SearchManagerDelegate, UISearchBarDelegate>
 {
   CLLocationManager *locationManager;
 }
@@ -128,9 +125,13 @@
   self.table.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
 }
 
-- (void) viewWillAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
+  [super viewWillAppear:animated];
   [self.table reloadData];
+  if ([searchBar.text length] == 0) {
+    [searchBar becomeFirstResponder];
+  }
 }
 
 #pragma mark - Protocol
@@ -350,11 +351,13 @@ viewForHeaderInSection: (NSInteger) section
 - (void) cancel
 {
   _selectedNeighborhood = nil;
+  [self.view endEditing:YES];
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void) done
 {
+  [self.view endEditing:YES];
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 

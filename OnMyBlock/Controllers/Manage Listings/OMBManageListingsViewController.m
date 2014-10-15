@@ -28,7 +28,6 @@
   UIButton *createListingButton;
   AMBlurView *createListingView;
   NSMutableArray *imagesArray;
-  OMBActivityViewFullScreen *activityViewFullScreen;
 }
 
 @end
@@ -100,22 +99,32 @@
   [createListingButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateHighlighted];
   [createListingView addSubview: createListingButton];
-
-  activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
-  [self.view addSubview: activityViewFullScreen];
 }
 
 - (void) viewWillAppear: (BOOL) animated
 {
   [super viewWillAppear: animated];
 
+  BOOL isEmpty = [[self listings] count] == 0;
+
   OMBManageListingsConnection *conn =
     [[OMBManageListingsConnection alloc] init];
   conn.completionBlock = ^(NSError *error) {
+    if (isEmpty) {
+      [self containerStopSpinningFullScreen];
+    }
+    else {
+      [self containerStopSpinning];
+    }
     [self.table reloadData];
-    [activityViewFullScreen stopSpinning];
   };
-  [activityViewFullScreen startSpinning];
+  if (isEmpty) {
+    [self containerStartSpinningFullScreen];
+  }
+  else {
+    [self containerStartSpinning];
+  }
+  
   [conn start];
 
   imagesArray = [NSMutableArray array];
