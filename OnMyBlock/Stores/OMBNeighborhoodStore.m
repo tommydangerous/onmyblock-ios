@@ -87,7 +87,20 @@
   cuestaCollege.coordinate = CLLocationCoordinate2DMake(35.3300, -120.7424);
   cuestaCollege.name = @"Cuesta College";
 
+  OMBNeighborhood *berkeley = [[OMBNeighborhood alloc] init];
+  berkeley.coordinate = CLLocationCoordinate2DMake(37.871519, -122.260401);
+  berkeley.name       = @"University of California - Berkeley";
+
+  OMBNeighborhood *usc = [[OMBNeighborhood alloc] init];
+  usc.coordinate = CLLocationCoordinate2DMake(34.021058, -118.283858);
+  usc.name       = @"University of Southern California";
+
   self.neighborhoods = @{
+    @"berkeley": @{
+      @"schools": @{
+        [berkeley nameKey]: berkeley
+      }
+    },
     @"san diego": @{
       @"schools": @{
         [ptLoma nameKey]: ptLoma,
@@ -110,6 +123,11 @@
       @"schools": @{
         [calPolySlo nameKey]:    calPolySlo,
         [cuestaCollege nameKey]: cuestaCollege
+      }
+    },
+    @"southern california": @{
+      @"schools": @{
+        [usc nameKey]: usc
       }
     }
   };

@@ -99,6 +99,23 @@
   cuesta.coordinate  = CLLocationCoordinate2DMake(35.3300, -120.7424);
   cuesta.displayName = @"Cuesta College";
   [schools addObject:cuesta];
+
+  //---------------------------------------------------------------
+
+  // UC Berkeley
+  OMBSchool *berkeley  = [[OMBSchool alloc] init];
+  berkeley.coordinate  = CLLocationCoordinate2DMake(37.871519, -122.260401);
+  berkeley.displayName = @"UC Berkeley";
+  berkeley.realName    = @"University of California - Berkeley";
+  [schools addObject:berkeley];
+
+  //---------------------------------------------------------------
+  
+  OMBSchool *usc  = [[OMBSchool alloc] init];
+  usc.coordinate  = CLLocationCoordinate2DMake(34.021058, -118.283858);
+  usc.displayName = @"University of Southern California";
+  usc.realName    = @"University of Southern California";
+  [schools addObject:usc];
   
   //---------------------------------------------------------------
   
