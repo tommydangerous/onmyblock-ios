@@ -544,20 +544,26 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate) &&
         shouldSearch) {
       
-      [self manageEmptyWithSchoolName:neighborhood.name];
-      
-      centerCoordinate = neighborhood.coordinate;
-      sortSelectionLabel.text = 
-        [NSString stringWithFormat:@"Listings near %@",neighborhood.name];
-      // If it is on the list, then re-fetch residences for the list
-      if ([self isOnList]) {
-        [self resetAndFetchResidencesForList];
+      if ([[neighborhood.name lowercaseString]
+            isEqualToString:@"my current location"]) {
+        [self goToCurrentLocation];
       }
       else {
-        // Move the map so it re-fetches residences for the map
-        [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
-          animated: NO];
-        [self resetListViewResidences];
+        [self manageEmptyWithSchoolName:neighborhood.name];
+        
+        centerCoordinate = neighborhood.coordinate;
+        sortSelectionLabel.text = 
+          [NSString stringWithFormat:@"Listings near %@",neighborhood.name];
+        // If it is on the list, then re-fetch residences for the list
+        if ([self isOnList]) {
+          [self resetAndFetchResidencesForList];
+        }
+        else {
+          // Move the map so it re-fetches residences for the map
+          [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
+            animated: NO];
+          [self resetListViewResidences];
+        }
       }
     }
     // Remove this object so that whenever the user comes back from the
@@ -1066,7 +1072,8 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
         
         cell.titleLabel.text = @"Need a place now?";
         cell.secondLabel.text = @"Contact us";
-        [cell setBackgroundImage:@"ios_need_place_now" withBlur:NO];
+        [cell setBackgroundImage:@"omb_icon_cell" withBlur:NO];
+        [cell disableTintView];
       }
       return cell;
     }
@@ -1420,6 +1427,7 @@ withTitle: (NSString *) title;
 
 - (void) goToCurrentLocationAnimated: (BOOL) animated
 {
+  
   if ([[self userDefaults] permissionCurrentLocation]) {
     sortSelectionLabel.text = @"Listings near Current Location";
     if (!self.mapView.showsUserLocation)
@@ -1640,6 +1648,11 @@ withTitle: (NSString *) title;
       
       if([school.realName isEqualToString:userSchool]){
   
+        if ([school.realName isEqualToString:@"Other"]) {
+          [self goToCurrentLocation];
+          return;
+        }
+        
         [self manageEmptyWithSchoolName:school.displayName];
         centerCoordinate = school.coordinate;
         sortSelectionLabel.text = [NSString
@@ -2246,11 +2259,11 @@ withMapViewSizeInPixels: (CGSize) viewSizeInPixels
       if (!(toKeep.count + toAdd.count)) {
         emptyOverlayView.hidden = NO;
         if (isCurrentLocation) {
-          emptyOverlayView.titleLabel.text = @"We're not live in your area.";
+          [emptyOverlayView setTitle:@"We're not live in your area."];
         }
         else {
-          emptyOverlayView.titleLabel.text = [NSString
-            stringWithFormat:@"We're not live at %@.", schoolName];
+          [emptyOverlayView setTitle:[NSString
+            stringWithFormat:@"We're not live at %@.", schoolName]];
         }
       }
       else {

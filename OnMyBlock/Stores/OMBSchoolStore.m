@@ -122,7 +122,7 @@
   OMBSchool *other   = [OMBSchool new];
   other.coordinate   = CLLocationCoordinate2DMake(0.0, 0.0);
   other.displayName  = @"Other";
-  other.realName     = @"";
+  other.realName     = @"Other";
   [schools addObject:other];
   
   return self;
