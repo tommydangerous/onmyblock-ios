@@ -13,6 +13,7 @@
 @interface OMBNeedHelpCell : OMBTableViewCell
 {
   OMBBlurView *backgroundView;
+  UIView *tintView;
 }
 
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -23,6 +24,7 @@
 #pragma mark - Instance Methods
 
 - (void)addCallButton;
+- (void)disableTintView;
 - (void)setBackgroundImage:(NSString *)nameImage withBlur:(BOOL)blur;
 
 @end

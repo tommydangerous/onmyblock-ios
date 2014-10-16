@@ -9,7 +9,13 @@
 #import "OMBView.h"
 
 @interface OMBEmptyResultsOverlayView : OMBView
+{
+  UILabel *subtitleLabel;
+  UILabel *titleLabel;
+}
 
-@property (nonatomic, strong) UILabel *titleLabel;
+#pragma mark - Instance Methods
+
+- (void)setTitle:(NSString *)title;
 
 @end

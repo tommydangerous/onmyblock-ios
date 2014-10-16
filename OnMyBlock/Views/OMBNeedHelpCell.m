@@ -44,9 +44,9 @@
     0.0f, screen.size.width, height);
   [self.contentView addSubview:backgroundView];
 
-  UIView *tint = [[UIView alloc] initWithFrame:backgroundView.bounds];
-  tint.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
-  [backgroundView addSubview:tint];
+  tintView = [[UIView alloc] initWithFrame:backgroundView.bounds];
+  tintView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
+  [backgroundView addSubview:tintView];
   
   _titleLabel       = [UILabel new];
   _titleLabel.font  = [UIFont largeTextFontBold];
@@ -64,7 +64,7 @@
         _titleLabel.frame.size.height,
           130.f, 35.f);
   _secondLabel.textAlignment = NSTextAlignmentCenter;
-  _secondLabel.textColor = [UIColor blue];
+  _secondLabel.textColor = [UIColor textColor];
   [self.contentView addSubview:_secondLabel];
   
   UIView *borderView = [UIView new];
@@ -103,6 +103,11 @@
   [[NSRunLoop currentRunLoop] addTimer:[NSTimer timerWithTimeInterval:1.3
     target:self selector:@selector(animateCallButton) userInfo:nil repeats:YES] 
       forMode:NSRunLoopCommonModes];
+}
+
+- (void)disableTintView
+{
+  tintView.hidden = YES;
 }
 
 - (void)setBackgroundImage:(NSString *)nameImage withBlur:(BOOL)blur;
