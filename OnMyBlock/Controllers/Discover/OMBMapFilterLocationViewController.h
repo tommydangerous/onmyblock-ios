@@ -1,61 +1,61 @@
-// //
-// //  OMBMapFilterLocationViewController.h
-// //  OnMyBlock
-// //
-// //  Created by Paul Aguilar on 3/12/14.
-// //  Copyright (c) 2014 OnMyBlock. All rights reserved.
-// //
+ //
+ //  OMBMapFilterLocationViewController.h
+ //  OnMyBlock
+ //
+ //  Created by Paul Aguilar on 3/12/14.
+ //  Copyright (c) 2014 OnMyBlock. All rights reserved.
+ //
 
-// #import "OMBTableViewController.h"
+ #import "OMBTableViewController.h"
 
-// @class OMBNeighborhood;
-// @class TextFieldPadding;
+ @class OMBNeighborhood;
+ @class TextFieldPadding;
 
-// @interface OMBMapFilterLocationViewController : OMBTableViewController
-// <
-//   CLLocationManagerDelegate
-// >
-// {
-//   UISearchBar *searchBar;
-//   NSMutableArray *neighborhoodArray;
-// }
+ @interface OMBMapFilterLocationViewController : OMBTableViewController
+ <
+   CLLocationManagerDelegate
+ >
+ {
+   UISearchBar *searchBar;
+   NSMutableArray *neighborhoodArray;
+ }
 
-// @property OMBNeighborhood *selectedNeighborhood;
+ @property OMBNeighborhood *selectedNeighborhood;
 
-// #pragma mark - Initializer
+ #pragma mark - Initializer
 
-// - (id) initWithSelectedNeighborhood:(OMBNeighborhood *) selectedNeighborhood;
+ - (id) initWithSelectedNeighborhood:(OMBNeighborhood *) selectedNeighborhood;
 
-// @end
+ @end
 
+////
+////  OMBMapFilterLocationViewController.h
+////  OnMyBlock
+////
+////  Created by Paul Aguilar on 3/12/14.
+////  Copyright (c) 2014 OnMyBlock. All rights reserved.
+////
 //
-//  OMBMapFilterLocationViewController.h
-//  OnMyBlock
+//#import "OMBTableViewController.h"
 //
-//  Created by Paul Aguilar on 3/12/14.
-//  Copyright (c) 2014 OnMyBlock. All rights reserved.
+//@class OMBNeighborhood;
+//@class TextFieldPadding;
 //
-
-#import "OMBTableViewController.h"
-
-@class OMBNeighborhood;
-@class TextFieldPadding;
-
-@interface OMBMapFilterLocationViewController : OMBTableViewController
-<CLLocationManagerDelegate, UIScrollViewDelegate, UITextFieldDelegate>
-{
-  TextFieldPadding *filterTextField;
-  UIImageView *filterImageView;
-  BOOL isEditing;
-  UIBarButtonItem *searchBarButtonItem;
-  NSDictionary *temporaryNeighborhoods;
-}
-
-@property OMBNeighborhood *selectedNeighborhood;
-
-
-#pragma mark - Initializer
-
-- (id) initWithSelectedNeighborhood:(OMBNeighborhood *) selectedNeighborhood;
-
-@end
+//@interface OMBMapFilterLocationViewController : OMBTableViewController
+//<CLLocationManagerDelegate, UIScrollViewDelegate, UITextFieldDelegate>
+//{
+//  TextFieldPadding *filterTextField;
+//  UIImageView *filterImageView;
+//  BOOL isEditing;
+//  UIBarButtonItem *searchBarButtonItem;
+//  NSDictionary *temporaryNeighborhoods;
+//}
+//
+//@property OMBNeighborhood *selectedNeighborhood;
+//
+//
+//#pragma mark - Initializer
+//
+//- (id) initWithSelectedNeighborhood:(OMBNeighborhood *) selectedNeighborhood;
+//
+//@end
