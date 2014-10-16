@@ -542,6 +542,7 @@
 		DE9FF67418CF6A500017AA15 /* OMBTopDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9FF67318CF6A500017AA15 /* OMBTopDetailView.m */; };
 		DEA0560418E230AD002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.m in Sources */ = {isa = PBXBuildFile; fileRef = DEA0560318E230AD002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.m */; };
 		DEC1C8C5196B6783003184AA /* OMBTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC1C8C4196B6783003184AA /* OMBTextFieldCell.m */; };
+		DEE80BAD19F015DE00C1D50C /* OMBEmptyResultsOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = DEE80BAC19F015DE00C1D50C /* OMBEmptyResultsOverlayView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1581,6 +1582,8 @@
 		DEA0560318E230AD002A962C /* OMBPayoutMethodCreditCardViewControllerOLD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPayoutMethodCreditCardViewControllerOLD.m; sourceTree = "<group>"; };
 		DEC1C8C3196B6783003184AA /* OMBTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTextFieldCell.h; sourceTree = "<group>"; };
 		DEC1C8C4196B6783003184AA /* OMBTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTextFieldCell.m; sourceTree = "<group>"; };
+		DEE80BAB19F015DE00C1D50C /* OMBEmptyResultsOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBEmptyResultsOverlayView.h; sourceTree = "<group>"; };
+		DEE80BAC19F015DE00C1D50C /* OMBEmptyResultsOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBEmptyResultsOverlayView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2352,6 +2355,8 @@
 				DE96BDD019A2BD7500743535 /* OMBNeedHelpTextFieldCell.m */,
 				DE9A4F5019A3BB41004F59C9 /* OMBNeedHelpTwoTextFieldCell.h */,
 				DE9A4F5119A3BB41004F59C9 /* OMBNeedHelpTwoTextFieldCell.m */,
+				DEE80BAB19F015DE00C1D50C /* OMBEmptyResultsOverlayView.h */,
+				DEE80BAC19F015DE00C1D50C /* OMBEmptyResultsOverlayView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3681,6 +3686,7 @@
 				DE9FF67418CF6A500017AA15 /* OMBTopDetailView.m in Sources */,
 				ABF8EC9C182D3C570080B1E2 /* OMBIntroSearchView.m in Sources */,
 				DE9C76FF1965ADDB00E42B83 /* OMBImageTwoTextFieldCell.m in Sources */,
+				DEE80BAD19F015DE00C1D50C /* OMBEmptyResultsOverlayView.m in Sources */,
 				AB131F371885E25B0057D769 /* OMBMyRenterApplicationViewController.m in Sources */,
 				ABE679BC18932E6900A494FB /* OMBPayoutTransactionListConnection.m in Sources */,
 				AB2EA4C818A9E79700ACE53C /* LEffectLabel.m in Sources */,
