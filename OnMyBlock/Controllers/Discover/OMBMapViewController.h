@@ -15,6 +15,7 @@
 @class OCMapView;
 @class OMBActivityView;
 @class OMBEmptyBackgroundWithImageAndLabel;
+@class OMBEmptyResultsOverlayView;
 @class OMBMapFilterViewController;
 @class OMBPropertyInfoView;
 @class QVClusterAnnotation;
@@ -41,9 +42,11 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
   UIButton *currentLocationButton;
   OMBMapViewListSortKey currentSortKey;
   OMBEmptyBackgroundWithImageAndLabel *emptyBackground;
+  OMBEmptyResultsOverlayView *emptyOverlayView;
   BOOL fetching;
   UILabel *filterLabel;
   UIView *filterView;
+  BOOL isCurrentLocation;
   BOOL isDraggingListView;
   BOOL isScrollingFast;
   BOOL isScrollingListViewDown;
@@ -51,11 +54,13 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
   CGPoint lastOffset;
   NSTimeInterval lastOffsetCapture;
   CLLocationManager *locationManager;
+  BOOL manageEmpty;
   AMBlurView *navigationBarCover;
   int pagination;
   CGFloat previousOffsetY;
   NSUInteger previousZoomLevel;
   OMBPropertyInfoView *propertyInfoView;
+  NSString *schoolName;
   UISegmentedControl *segmentedControl;
   BOOL showHelpView;
   UIImageView *sortArrow;

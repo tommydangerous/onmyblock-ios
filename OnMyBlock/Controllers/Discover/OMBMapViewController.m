@@ -21,6 +21,7 @@
 #import "OMBAnnotationCity.h"
 #import "OMBAnnotationView.h"
 #import "OMBEmptyBackgroundWithImageAndLabel.h"
+#import "OMBEmptyResultsOverlayView.h"
 #import "OMBMapFilterViewController.h"
 #import "OMBMapResidenceDetailCell.h"
 #import "OMBNavigationController.h"
@@ -454,6 +455,10 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [emptyBackground setLabelText: text];
   [_listViewContainer addSubview: emptyBackground];
 
+  emptyOverlayView= [OMBEmptyResultsOverlayView new];
+  emptyOverlayView.hidden = YES;
+  [self.mapView addSubview:emptyOverlayView];
+  
   showHelpView = YES;
   
   [self setDefaultCenterCoordinate];
@@ -538,6 +543,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     // and it should search
     if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate) &&
         shouldSearch) {
+      
+      [self manageEmptyWithSchoolName:neighborhood.name];
+      
       centerCoordinate = neighborhood.coordinate;
       sortSelectionLabel.text = 
         [NSString stringWithFormat:@"Listings near %@",neighborhood.name];
@@ -1396,6 +1404,9 @@ withTitle: (NSString *) title;
       fetching = NO;
       [[OMBResidenceListStore sharedStore] cancelConnection];
     }
+    
+    [self manageEmptyWithSchoolName:@""];
+    
     [self fetchResidencesForList];
     [self setMapViewRegion: centerCoordinate withMiles: 2 animated: YES];
   }
@@ -1522,6 +1533,14 @@ withTitle: (NSString *) title;
   }
 }
 
+- (void)manageEmptyWithSchoolName:(NSString *)name
+{
+  manageEmpty = YES;
+  
+  isCurrentLocation = !name.length;
+  schoolName = name;
+}
+
 - (NSMutableDictionary *) mapFilterParameters
 {
   // Parameters
@@ -1605,7 +1624,8 @@ withTitle: (NSString *) title;
         // Compare name places
         if([[neighborhood.name lowercaseString] isEqualToString:
             [userSchool lowercaseString]]){
-               
+          
+          [self manageEmptyWithSchoolName:neighborhood.name];
           centerCoordinate = neighborhood.coordinate;
           sortSelectionLabel.text = [NSString
             stringWithFormat:@"Listings near %@",neighborhood.name];
@@ -1619,6 +1639,8 @@ withTitle: (NSString *) title;
     for(OMBSchool *school in [[OMBSchoolStore sharedStore] schools]){
       
       if([school.realName isEqualToString:userSchool]){
+  
+        [self manageEmptyWithSchoolName:school.displayName];
         centerCoordinate = school.coordinate;
         sortSelectionLabel.text = [NSString
           stringWithFormat:@"Listings near %@",school.displayName];
@@ -2219,6 +2241,28 @@ withMapViewSizeInPixels: (CGSize) viewSizeInPixels
 
   // These two methods must be called on the main thread
   [[NSOperationQueue mainQueue] addOperationWithBlock: ^{
+    
+    if (manageEmpty) {
+      if (!(toKeep.count + toAdd.count)) {
+        emptyOverlayView.hidden = NO;
+        if (isCurrentLocation) {
+          emptyOverlayView.titleLabel.text = @"We're not live in your area.";
+        }
+        else {
+          emptyOverlayView.titleLabel.text = [NSString
+            stringWithFormat:@"We're not live at %@.", schoolName];
+        }
+      }
+      else {
+        emptyOverlayView.hidden = YES;
+      }
+      
+      manageEmpty = NO;
+    }
+    else {
+      emptyOverlayView.hidden = YES;
+    }
+    
     [self.mapView addAnnotations: [toAdd allObjects]];
     [self.mapView removeAnnotations: [toRemove allObjects]];
   }];
