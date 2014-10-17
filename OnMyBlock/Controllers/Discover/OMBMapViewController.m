@@ -1103,6 +1103,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
     }
     [cell loadResidenceData:[residentAnnotations objectAtIndex:
       indexPath.row]];
+    cell.clipsToBounds = YES;
     return cell;
   }
 
@@ -1180,8 +1181,12 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     return screen.size.height * PropertyInfoViewImageHeightPercentage;
   }
   // Resident annotation
-  else if(tableView == _residentListMap){
-    return _residentListMap.frame.size.height / 3.0f;
+  else if (tableView == _residentListMap) {
+    NSInteger factor = [residentAnnotations count];
+    if (factor > 3) {
+      factor = 3;
+    }
+    return _residentListMap.frame.size.height / factor;
   }
   return 0;
 }
