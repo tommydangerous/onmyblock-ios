@@ -95,7 +95,8 @@ CGFloat const OMBStandardHeight       = 44.0f;
   //       size: CGSizeMake(26.0f, 26.0f)] style: UIBarButtonItemStylePlain
   //         target: self action: @selector(showContainer)];
   menuBarButtonItem = 
-    [[OMBMenuBarButtonItem alloc] initWithFrame:CGRectMake(0, 0, 24, 22)];
+    [[OMBMenuBarButtonItem alloc] initWithFrame:
+      CGRectMake(0, 0, OMBStandardHeight, OMBStandardHeight)];
   [menuBarButtonItem addTarget:self action:@selector(showContainer)];
 
   self.navigationItem.backBarButtonItem =
