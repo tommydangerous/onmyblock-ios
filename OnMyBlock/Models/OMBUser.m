@@ -59,6 +59,7 @@
 #import "OMBViewControllerContainer.h"
 
 // Categories
+#import "NSDateFormatter+JSON.h"
 #import "OMBUser+Collections.h"
 #import "UIFont+OnMyBlock.h"
 #import "UIImage+FixOrientation.h"
@@ -1289,60 +1290,25 @@ delegate: (id) delegate completion: (void (^) (NSError *error)) block
 
 - (void) readFromFavoriteResidencesDictionary: (NSDictionary *) dictionary
 {
-  // Sample JSON
-  // {
-  //   objects: [
-  //     {
-  //       created: "2013-10-31 13:26:00 -0700",
-  //       residence: {
-  //         address: "8482 Fun Way"
-  //       },
-  //       user: {
-  //
-  //       }
-  //     }
-  //   ],
-  //   success: 1
-  // }
-  NSArray *array = [dictionary objectForKey: @"objects"];
-  for (NSDictionary *d in array) {
-    NSDictionary *dict = [d objectForKey: @"residence"];
-    NSString *address = [dict objectForKey: @"address"];
-    float latitude, longitude;
-    latitude  = [[dict objectForKey: @"latitude"] floatValue];
-    longitude = [[dict objectForKey: @"longitude"] floatValue];
-    // key = 32,-117-8550 fun street
-    NSString *key = [NSString stringWithFormat: @"%f,%f-%@",
-      latitude, longitude, address];
-    OMBResidence *residence =
-      [[OMBResidenceStore sharedStore].residences objectForKey: key];
-    if (!residence) {
-      residence = [[OMBResidence alloc] init];
-      [residence readFromResidenceDictionary: dict];
-      [[OMBResidenceStore sharedStore] addResidence: residence];
-    }
-    else {
-      [residence readFromResidenceDictionary: dict];
-    }
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat       = @"yyyy-MM-dd HH:mm:ss ZZZ";
-    NSTimeInterval createdAt = [[dateFormatter dateFromString:
-      [d objectForKey: @"created_at"]] timeIntervalSince1970];
+  for (NSDictionary *favoriteDictionary in 
+    [dictionary objectForKey:@"objects"]) {
 
-    // User
-    NSDictionary *userDict = [d objectForKey: @"user"];
-    int userUID = [[userDict objectForKey: @"id"] intValue];
-    OMBUser *user = [[OMBUserStore sharedStore] userWithUID: userUID];
-    if (!user)
-      [user readFromDictionary: userDict];
-
-    // Favorite residence
-    OMBFavoriteResidence *favoriteResidence =
-      [[OMBFavoriteResidence alloc] init];
-    favoriteResidence.createdAt = createdAt;
-    favoriteResidence.residence = residence;
-    favoriteResidence.user      = user;
-    [self addFavoriteResidence: favoriteResidence];
+    if ([favoriteDictionary objectForKey:@"residence"] != [NSNull null]) {
+      OMBResidence *residence = [[OMBResidence alloc] init];
+      [residence readFromResidenceDictionary:
+        [favoriteDictionary objectForKey:@"residence"]];
+      NSDateFormatter *dateFormatter = [NSDateFormatter JSONDateParser];
+      id createdAt = [favoriteDictionary objectForKey:@"created_at"];
+      if (createdAt) {
+        OMBFavoriteResidence *favoriteResidence =
+          [[OMBFavoriteResidence alloc] init];
+        favoriteResidence.createdAt = [[dateFormatter dateFromString:
+          createdAt] timeIntervalSince1970];
+        favoriteResidence.residence = residence;
+        favoriteResidence.user      = self;
+        [self addFavoriteResidence:favoriteResidence];
+      }
+    }
   }
 }
 
