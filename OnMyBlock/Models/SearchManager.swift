@@ -25,7 +25,7 @@ class SearchManager: Object {
         AFHTTPRequestOperationManager()
     }
     StaticOperationManager.instance.requestSerializer = 
-      AFJSONRequestSerializer()
+      AFJSONRequestSerializer() as AFHTTPRequestSerializer
     return StaticOperationManager.instance
   }
   class var sharedInstance: SearchManager {
