@@ -8,9 +8,18 @@
 
 #import "OMBEmptyResultsOverlayView.h"
 
+// Categories
 #import "NSString+Extensions.h"
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
+
+@interface OMBEmptyResultsOverlayView()
+{
+  UILabel *subtitleLabel;
+  UILabel *titleLabel;
+}
+
+@end
 
 @implementation OMBEmptyResultsOverlayView
 

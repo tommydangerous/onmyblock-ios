@@ -9,10 +9,6 @@
 #import "OMBView.h"
 
 @interface OMBEmptyResultsOverlayView : OMBView
-{
-  UILabel *subtitleLabel;
-  UILabel *titleLabel;
-}
 
 #pragma mark - Instance Methods
 

@@ -68,15 +68,62 @@ const NSUInteger MINIMUM_ZOOM_LEVEL      = 12;
 static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
 @interface OMBMapViewController ()
+<
+  CLLocationManagerDelegate, MKMapViewDelegate, UIAlertViewDelegate,
+  UIGestureRecognizerDelegate, UIScrollViewDelegate, UITableViewDataSource,
+  UITableViewDelegate
+>
 {
+  UIActivityIndicatorView *activityIndicatorView;
+  OMBActivityView *activityView;
   OMBActivityViewFullScreen *activityViewFullScreen;
-  BOOL isSpinning;
+  CLLocationCoordinate2D centerCoordinate;
+  CGFloat currentDistanceOfScrolling;
+  NSArray *currentResidencesForList;
+  UIButton *currentLocationButton;
+  OMBMapViewListSortKey currentSortKey;
+  OMBEmptyBackgroundWithImageAndLabel *emptyBackground;
+  OMBEmptyResultsOverlayView *emptyOverlayView;
+  BOOL fetching;
+  UILabel *filterLabel;
+  UIView *filterView;
   BOOL firstLoad;
+  BOOL isCurrentLocation;
+  BOOL isDraggingListView;
   BOOL isFetchingResidencesForMap;
+  BOOL isScrollingFast;
+  BOOL isScrollingListViewDown;
+  BOOL isShowingSortButtons;
+  BOOL isSpinning;
+  CGPoint lastOffset;
+  NSTimeInterval lastOffsetCapture;
+  CLLocationManager *locationManager;
+  BOOL manageEmpty;
+  AMBlurView *navigationBarCover;
   NSMutableArray *neighborhoodAnnotationArray;
+  int pagination;
   NSDictionary *previousMapFilterParameters;
+  CGFloat previousOffsetY;
+  NSUInteger previousZoomLevel;
+  OMBPropertyInfoView *propertyInfoView;
   CGFloat radiusIncrementInMiles;
   OMBAnnotationCity *sanDiegoAnnotationCity;
+  NSString *schoolName;
+  UISegmentedControl *segmentedControl;
+  BOOL showHelpView;
+  UIImageView *sortArrow;
+  UIView *sortButtonsView;
+  NSMutableArray *sortButtonArray;
+  UIButton *sortButtonHighestPrice;
+  UIButton *sortButtonLowestPrice;
+  UIButton *sortButtonPopular;
+  UIButton *sortButtonMostRecent;
+  NSArray *sortKeys;
+  UILabel *sortLabel;
+  UILabel *sortSelectionLabel;
+  AMBlurView *sortView;
+  NSMutableArray *residentAnnotations;
+  QVClusterAnnotation *recentResidence;
   NSTimer *timer;
   NSUInteger timerCounter;
 }

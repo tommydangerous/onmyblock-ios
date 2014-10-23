@@ -8,17 +8,7 @@
 
 #import <CoreLocation/CoreLocation.h>
 
-#import "OMBNavigationController.h"
 #import "OMBViewController.h"
-
-@class AMBlurView;
-@class OCMapView;
-@class OMBActivityView;
-@class OMBEmptyBackgroundWithImageAndLabel;
-@class OMBEmptyResultsOverlayView;
-@class OMBMapFilterViewController;
-@class OMBPropertyInfoView;
-@class QVClusterAnnotation;
 
 extern float const PropertyInfoViewImageHeightPercentage;
 
@@ -30,64 +20,16 @@ typedef NS_ENUM(NSInteger, OMBMapViewListSortKey) {
 };
 
 @interface OMBMapViewController : OMBViewController
-<CLLocationManagerDelegate, MKMapViewDelegate, UIAlertViewDelegate,
-  UIGestureRecognizerDelegate, UIScrollViewDelegate, UITableViewDataSource,
-  UITableViewDelegate>
-{
-  UIActivityIndicatorView *activityIndicatorView;
-  OMBActivityView *activityView;
-  CLLocationCoordinate2D centerCoordinate;
-  CGFloat currentDistanceOfScrolling;
-  NSArray *currentResidencesForList;
-  UIButton *currentLocationButton;
-  OMBMapViewListSortKey currentSortKey;
-  OMBEmptyBackgroundWithImageAndLabel *emptyBackground;
-  OMBEmptyResultsOverlayView *emptyOverlayView;
-  BOOL fetching;
-  UILabel *filterLabel;
-  UIView *filterView;
-  BOOL isCurrentLocation;
-  BOOL isDraggingListView;
-  BOOL isScrollingFast;
-  BOOL isScrollingListViewDown;
-  BOOL isShowingSortButtons;
-  CGPoint lastOffset;
-  NSTimeInterval lastOffsetCapture;
-  CLLocationManager *locationManager;
-  BOOL manageEmpty;
-  AMBlurView *navigationBarCover;
-  int pagination;
-  CGFloat previousOffsetY;
-  NSUInteger previousZoomLevel;
-  OMBPropertyInfoView *propertyInfoView;
-  NSString *schoolName;
-  UISegmentedControl *segmentedControl;
-  BOOL showHelpView;
-  UIImageView *sortArrow;
-  UIView *sortButtonsView;
-  NSMutableArray *sortButtonArray;
-  UIButton *sortButtonHighestPrice;
-  UIButton *sortButtonLowestPrice;
-  UIButton *sortButtonPopular;
-  UIButton *sortButtonMostRecent;
-  NSArray *sortKeys;
-  UILabel *sortLabel;
-  UILabel *sortSelectionLabel;
-  AMBlurView *sortView;
-  NSMutableArray *residentAnnotations;
-  QVClusterAnnotation *recentResidence;
-}
 
 @property (nonatomic, strong) UITableView *listView;
 @property (nonatomic, strong) UIView *listViewContainer;
-// @property (nonatomic, strong) OCMapView *mapView;
 @property (nonatomic, strong) MKMapView *mapView;
 @property (nonatomic) CGFloat radiusInMiles;
 @property (nonatomic, strong) UITableView *residentListMap;
 
 #pragma mark - Methods
 
-#pragma mark Instance Methods
+#pragma mark - Instance Methods
 
 - (void) addAnnotationAtCoordinate: (CLLocationCoordinate2D) coordinate
 withTitle: (NSString *) title;
