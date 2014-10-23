@@ -502,7 +502,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [emptyBackground setLabelText: text];
   [_listViewContainer addSubview: emptyBackground];
 
-  emptyOverlayView= [OMBEmptyResultsOverlayView new];
+  emptyOverlayView        = [[OMBEmptyResultsOverlayView alloc] init];
   emptyOverlayView.hidden = YES;
   [self.mapView addSubview:emptyOverlayView];
   
