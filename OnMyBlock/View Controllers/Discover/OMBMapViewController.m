@@ -1617,7 +1617,7 @@ withMapViewSizeInPixels: (CGSize) viewSizeInPixels
   return zoomLevel;
 }
 
-- (void) updateMapViewAnnotationsWithAnnotations: (NSArray *) annotations
+- (void)updateMapViewAnnotationsWithAnnotations:(NSArray *)annotations
 {
   // The annotations in the snapshot are exactly the mapView's
   // current annotations. We call this the before set
@@ -1628,47 +1628,28 @@ withMapViewSizeInPixels: (CGSize) viewSizeInPixels
   // (set intersection). Get rid of the ones which are not in the
   // after set and add the ones which are left.
 
-  NSMutableSet *before = [NSMutableSet setWithArray: self.mapView.annotations];
-  NSSet *after = [NSSet setWithArray: annotations];
+  NSMutableSet *before = [NSMutableSet setWithArray:self.mapView.annotations];
+  NSSet *after         = [NSSet setWithArray:annotations];
 
   // Annotations circled in blue shared by both sets
-  NSMutableSet *toKeep = [NSMutableSet setWithSet: before];
-  [toKeep intersectSet: after];
+  NSMutableSet *toKeep = [NSMutableSet setWithSet:before];
+  [toKeep intersectSet:after];
 
   // Annotations circled in green
-  NSMutableSet *toAdd = [NSMutableSet setWithSet: after];
-  [toAdd minusSet: toKeep];
+  NSMutableSet *toAdd = [NSMutableSet setWithSet:after];
+  [toAdd minusSet:toKeep];
 
   // Annotations circled in red; to be removed
-  NSMutableSet *toRemove = [NSMutableSet setWithSet: before];
-  [toRemove minusSet: after];
+  NSMutableSet *toRemove = [NSMutableSet setWithSet:before];
+  [toRemove minusSet:after];
 
   // These two methods must be called on the main thread
-  [[NSOperationQueue mainQueue] addOperationWithBlock: ^{
-    
-    if (manageEmpty) {
-      if (!(toKeep.count + toAdd.count)) {
-        emptyOverlayView.hidden = NO;
-        if (isCurrentLocation) {
-          [emptyOverlayView setTitle:@"We're not live in your area."];
-        }
-        else {
-          [emptyOverlayView setTitle:[NSString
-            stringWithFormat:@"We're not live at %@.", schoolName]];
-        }
-      }
-      else {
-        emptyOverlayView.hidden = YES;
-      }
-      
-      manageEmpty = NO;
-    }
-    else {
-      emptyOverlayView.hidden = YES;
-    }
-    
-    [self.mapView addAnnotations: [toAdd allObjects]];
-    [self.mapView removeAnnotations: [toRemove allObjects]];
+  __weak OMBMapViewController *weakSelf = self;
+  [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+    [weakSelf determineShouldShowEmptyOverlayView:
+      [toAdd count] + [toKeep count]];
+    [weakSelf.mapView addAnnotations:[toAdd allObjects]];
+    [weakSelf.mapView removeAnnotations:[toRemove allObjects]];
   }];
 }
 
@@ -1732,6 +1713,32 @@ withMapViewSizeInPixels: (CGSize) viewSizeInPixels
   // so it doesn't always keep changing the center location
   if (shouldSearch) {
     [self appDelegate].container.mapFilterViewController.shouldSearch = NO;
+  }
+}
+
+- (void)determineShouldShowEmptyOverlayView:(CGFloat)totalCount
+{
+  if (manageEmpty) {
+    if (totalCount == 0) {
+      NSString *title = @"";
+      if (isCurrentLocation) {
+        title = @"We're not live in your area.";
+        
+      }
+      else {
+        title = [NSString stringWithFormat:@"We're not live at %@", 
+          schoolName];
+      }
+      [emptyOverlayView setTitle:title];
+      emptyOverlayView.hidden = NO;
+    }
+    else {
+      emptyOverlayView.hidden = YES;
+    }
+    manageEmpty = NO;
+  }
+  else {
+    emptyOverlayView.hidden = YES;
   }
 }
 

@@ -13,6 +13,9 @@
 #import "UIColor+Extensions.h"
 #import "UIFont+OnMyBlock.h"
 
+// View Controllers
+#import "OMBViewController.h"
+
 @interface OMBEmptyResultsOverlayView()
 {
   UILabel *subtitleLabel;
@@ -25,39 +28,52 @@
 
 - (id)init
 {
-  if(!(self = [super init]))
-    return nil;
-  
-  self.backgroundColor = [UIColor colorWithWhite:1.f alpha:0.7f];
+  if (!(self = [super init])) return nil;
+
   self.frame = [UIScreen mainScreen].bounds;
+
+  UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:
+    UIBlurEffectStyleExtraLight];
+  UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:
+    blurEffect];
+  effectView.frame = self.frame;
+  [self addSubview:effectView];
   
-  CGFloat padding = 20.f;
+  CGFloat padding = OMBPadding * 0.75;
   
+  CGFloat imageWidth = CGRectGetWidth(self.frame) * 0.7;
   UIImageView *mapIcon = [UIImageView new];
   mapIcon.frame = CGRectMake(
-    (self.frame.size.width - 112.5f) * .5f,
-      self.frame.size.height * .3f, 112.5f, 112.5f);
-  mapIcon.image = [UIImage imageNamed:@"map_marker_blue_icon"];
+    (self.frame.size.width - imageWidth) * 0.5,
+    (CGRectGetHeight(self.frame) - imageWidth) * 0.3, 
+    imageWidth, imageWidth);
+  mapIcon.image = [UIImage imageNamed:@"map_no_results"];
   [self addSubview:mapIcon];
   
-  titleLabel = [UILabel new];
-  titleLabel.font = [UIFont mediumTextFont];
-  titleLabel.frame = CGRectMake(padding,
-    mapIcon.frame.origin.y + mapIcon.frame.size.height + 2 * padding,
-      self.frame.size.width - 2 * padding, 23.f);
+  titleLabel       = [UILabel new];
+  titleLabel.font  = [UIFont mediumLargeTextFontBold];
+  titleLabel.frame = CGRectMake(
+    padding,
+    mapIcon.frame.origin.y + mapIcon.frame.size.height,
+    self.frame.size.width - (padding * 2), 
+    23.f
+  );
   titleLabel.numberOfLines = 0;
   titleLabel.textAlignment = NSTextAlignmentCenter;
-  titleLabel.textColor = UIColor.darkGrayColor;
+  titleLabel.textColor     = UIColor.darkGrayColor;
   [self addSubview:titleLabel];
   
-  subtitleLabel = [UILabel new];
-  subtitleLabel.font = [UIFont mediumLargeTextFontBold];
-  subtitleLabel.frame = CGRectMake(titleLabel.frame.origin.x,
-    titleLabel.frame.origin.y + titleLabel.frame.size.height + padding * .75f,
-      titleLabel.frame.size.width, 30.f);
-  subtitleLabel.text = @"But we will be soon!";
+  subtitleLabel       = [UILabel new];
+  subtitleLabel.font  = [UIFont mediumLargeTextFontBold];
+  subtitleLabel.frame = CGRectMake(
+    titleLabel.frame.origin.x,
+    titleLabel.frame.origin.y + titleLabel.frame.size.height + padding,
+    titleLabel.frame.size.width, 
+    30.f
+  );
+  subtitleLabel.text          = @"But we will be soon!";
   subtitleLabel.textAlignment = NSTextAlignmentCenter;
-  subtitleLabel.textColor = titleLabel.textColor;
+  subtitleLabel.textColor     = titleLabel.textColor;
   [self addSubview:subtitleLabel];
 
   return self;
