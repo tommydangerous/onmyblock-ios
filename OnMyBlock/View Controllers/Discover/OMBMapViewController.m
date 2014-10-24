@@ -126,6 +126,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   QVClusterAnnotation *recentResidence;
   NSTimer *timer;
   NSUInteger timerCounter;
+
+  // Controllers
+  MapController *mapController;
 }
 
 @property (strong, nonatomic) QVCoordinateQuadTree *coordinateQuadTree;
@@ -136,14 +139,17 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
 #pragma mark Initializer
 
-- (id) init
+- (id)init
 {
   if (!(self = [super init])) return nil;
 
   fetching               = NO;
   firstLoad              = YES;
+  mapController          = [[MapController alloc] init];
+  pagination             = 0;
   radiusIncrementInMiles = 0.25f;
   self.radiusInMiles     = 0;
+  showHelpView           = YES;
 
   // Location manager
   locationManager                 = [[CLLocationManager alloc] init];
@@ -175,8 +181,6 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   timerCounter = MINIMUM_SPINNER_COUNTER;
   [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 
-  self.screenName = @"Map View Controller";
-
   [[NSNotificationCenter defaultCenter] addObserver: self
     selector: @selector(refreshProperties)
       name: OMBUserLoggedInNotification object: nil];
@@ -194,370 +198,41 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   [self resetListViewResidences];
 }
 
-- (void) loadView
+- (void)viewDidDisappear:(BOOL)animated
 {
-  [super loadView];
-
-  CGRect screen = [[UIScreen mainScreen] bounds];
-  self.view     = [[UIView alloc] initWithFrame: screen];
-  CGFloat screenHeight = screen.size.height;
-  CGFloat screenWidth = screen.size.width;
-  CGFloat padding = OMBPadding;
-
-  // Navigation item
-  // Left bar button item
-  [self setMenuBarButtonItem];
-  // Right bar button item
-  self.navigationItem.rightBarButtonItem =
-    [[UIBarButtonItem alloc] initWithImage:
-      [UIImage imageNamed: @"map_search_icon.png"]
-        style: UIBarButtonItemStylePlain target: self
-          action: @selector(showSearch)];
-
-  // Title view
-  segmentedControl = [[UISegmentedControl alloc] initWithItems:
-    @[@"Map", @"List"]];
-  segmentedControl.selectedSegmentIndex = 1;
-  CGRect segmentedFrame = segmentedControl.frame;
-  segmentedFrame.size.width = screen.size.width * 0.4;
-  segmentedControl.frame = segmentedFrame;
-  [segmentedControl addTarget: self action: @selector(switchViews:)
-    forControlEvents: UIControlEventValueChanged];
-  self.navigationItem.titleView = segmentedControl;
-
-  // List view container
-  _listViewContainer = [[UIView alloc] init];
-  _listViewContainer.alpha = 1.0f;
-  _listViewContainer.frame = screen;
-  [self.view addSubview: _listViewContainer];
-
-  navigationBarCover = [[AMBlurView alloc] init];
-  navigationBarCover.alpha = 0.0f;
-  navigationBarCover.blurTintColor = [UIColor whiteColor];
-  navigationBarCover.frame = CGRectMake(0.0f, -20.0f,
-    screen.size.width, 20.0f + 44.0f);
-  [self.view addSubview: navigationBarCover];
-
-  // Sort
-  sortView = [[AMBlurView alloc] init];
-  sortView.blurTintColor = [UIColor grayVeryLight];
-  sortView.frame = CGRectMake(0.0f, 44.0f,
-    _listViewContainer.frame.size.width, 20.0f + 37.0f);
-  [_listViewContainer addSubview: sortView];
-  //UITapGestureRecognizer *sortViewTap =
-  //  [[UITapGestureRecognizer alloc] initWithTarget: self
-  //    action: @selector(showSortButtons)];
-  //[sortView.toolbar addGestureRecognizer: sortViewTap];
-  // Sort label
-  sortLabel = [[UILabel alloc] init];
-  sortLabel.font = [UIFont fontWithName: @"HelveticaNeue" size: 14];
-  sortLabel.frame = CGRectMake(padding, sortView.frame.size.height - 37.0f,
-    0.0f, 37.0f);
-  sortLabel.text = @"Sort by";
-  sortLabel.textColor = [UIColor blue];
-  CGRect sortRect = [sortLabel.text boundingRectWithSize:
-    CGSizeMake(screenWidth, sortLabel.frame.size.height)
-      options: NSStringDrawingUsesLineFragmentOrigin
-        attributes: @{ NSFontAttributeName: sortLabel.font }
-          context: nil];
-  sortLabel.frame = CGRectMake(sortLabel.frame.origin.x,
-    sortLabel.frame.origin.y, sortRect.size.width, sortLabel.frame.size.height);
-  //[sortView addSubview: sortLabel];
-  // Sort selection label
-  sortSelectionLabel = [[UILabel alloc] init];
-  sortSelectionLabel.font = sortLabel.font;
-  sortSelectionLabel.frame = CGRectMake(0.0f, sortLabel.frame.origin.y,
-    screenWidth, sortLabel.frame.size.height);
-  sortSelectionLabel.text = @"Sort your Rental Results";
-  sortSelectionLabel.textAlignment = NSTextAlignmentCenter;
-  sortSelectionLabel.textColor = sortLabel.textColor;
-  [sortView addSubview: sortSelectionLabel];
-  // Sort arrow
-  CGFloat sortArrowSize = sortLabel.frame.size.height - padding;
-  sortArrow = [[UIImageView alloc] init];
-  sortArrow.frame = CGRectMake(screenWidth - (sortArrowSize + padding),
-    sortLabel.frame.origin.y +
-    ((sortLabel.frame.size.height - sortArrowSize) * 0.5),
-      sortArrowSize, sortArrowSize);
-  sortArrow.image = [UIImage changeColorForImage:
-    [UIImage  imageNamed: @"arrow_left_white.png"] toColor:[UIColor blue]];
-  sortArrow.transform = CGAffineTransformMakeRotation(-90 * M_PI / 180.0f);
-  //[sortView addSubview: sortArrow];
-
-  // Sort button array
-  // sortKeys = @[
-  //   @"distance",
-  //   @"recent",
-  //   @"highest price",
-  //   @"lowest price"
-  // ];
-  // sortButtonArray = [NSMutableArray array];
-  sortButtonHighestPrice = [[UIButton alloc] init];
-  sortButtonLowestPrice  = [[UIButton alloc] init];
-  sortButtonPopular      = [[UIButton alloc] init];
-  sortButtonMostRecent   = [[UIButton alloc] init];
-  sortButtonArray = [NSMutableArray arrayWithArray: @[
-    sortButtonPopular,
-    sortButtonMostRecent,
-    sortButtonHighestPrice,
-    sortButtonLowestPrice
-  ]];
-  // Sort Buttons
-  //CGFloat sortButtonViewHeight = sortView.frame.size.height +
-  //  ((1 + 37) * [sortButtonArray count]);
-  sortButtonsView = [[UIView alloc] init];
-  /*sortButtonsView.frame = CGRectMake(0.0f, sortView.frame.origin.y,
-    sortView.frame.size.width, sortButtonViewHeight);
-  sortButtonsView.hidden = YES;
-  // for (int i = 0; i < [sortKeys count]; i++) {
-  //   UIButton *button = [UIButton new];
-  //   button.backgroundColor = [UIColor colorWithWhite: 255/255.0 alpha: 0.95];
-  //   button.frame = CGRectMake(0.0f, 20.0f,
-  //     sortButtonsView.frame.size.width, 44.0f);
-  //   button.hidden = YES;
-  //   button.tag = i;
-  //   button.titleLabel.font = sortLabel.font;
-  //   [button addTarget: self action: @selector(sortButtonSelected:)
-  //     forControlEvents: UIControlEventTouchUpInside];
-  //   [button setBackgroundImage: [UIImage imageWithColor: [UIColor blue]]
-  //     forState: UIControlStateHighlighted];
-  //   [button setTitle: [[sortKeys objectAtIndex: i] capitalizedString]
-  //     forState: UIControlStateNormal];
-    // [button setTitleColor: [UIColor textColor]
-    //   forState: UIControlStateNormal];
-  //   [button setTitleColor: [UIColor whiteColor]
-  //     forState: UIControlStateHighlighted];
-  //   [sortButtonArray addObject: button];
-  //   [sortButtonsView addSubview: button];
-  // }
-  for (UIButton *button in sortButtonArray) {
-    button.backgroundColor = [UIColor colorWithWhite: 255/255.0 alpha: 0.95];
-    button.frame = CGRectMake(0.0f, 20.0f,
-      sortButtonsView.frame.size.width, 37.0f);
-    button.hidden = YES;
-    NSString *string = @"";
-    if (button == sortButtonPopular) {
-      // string = @"Student Popularity";
-      string = @"Distance";
-    }
-    else if (button == sortButtonMostRecent) {
-      string = @"Recent";
-    }
-    else if (button == sortButtonHighestPrice) {
-      string = @"Highest Price";
-    }
-    else if (button == sortButtonLowestPrice) {
-      string = @"Lowest Price";
-    }
-    button.tag = [sortButtonArray indexOfObject: button];
-    button.titleLabel.font = sortLabel.font;
-    [button addTarget: self action: @selector(sortButtonSelected:)
-      forControlEvents: UIControlEventTouchUpInside];
-    [button setBackgroundImage: [UIImage imageWithColor: [UIColor blue]]
-      forState: UIControlStateHighlighted];
-    [button setTitle: string forState: UIControlStateNormal];
-    [button setTitleColor: [UIColor textColor]
-      forState: UIControlStateNormal];
-    [button setTitleColor: [UIColor whiteColor]
-      forState: UIControlStateHighlighted];
-    [sortButtonsView addSubview: button];
-  }
-  [_listViewContainer insertSubview: sortButtonsView belowSubview: sortView];*/
-
-  // List view
-  _listView = [[UITableView alloc] init];
-  _listView.backgroundColor              = [UIColor grayUltraLight];
-  _listView.canCancelContentTouches      = YES;
-  _listView.dataSource                   = self;
-  _listView.delegate                     = self;
-  _listView.frame                        = screen;
-  _listView.separatorColor               = nil;
-  _listView.separatorStyle               = UITableViewCellSeparatorStyleNone;
-  // _listView.showsVerticalScrollIndicator = NO;
-  _listView.tableHeaderView = [[UIView alloc] initWithFrame:
-    CGRectMake(0.0f, 0.0f, _listView.frame.size.width,
-      sortLabel.frame.size.height)];
-  [_listViewContainer insertSubview: _listView atIndex: 0];
-
-  // Map view
-  // self.mapView          = [[OCMapView alloc] init];
-  self.mapView = [[MKMapView alloc] init];
-  self.mapView.alpha    = 0.0f;
-  self.mapView.frame    = screen;
-  self.mapView.mapType  = MKMapTypeStandard;
-  self.mapView.showsPointsOfInterest = NO;
-  self.mapView.showsUserLocation     = NO;
-  [self.view addSubview: self.mapView];
-  UITapGestureRecognizer *mapViewTap =
-    [[UITapGestureRecognizer alloc] initWithTarget: self
-      action: @selector(mapViewTapped)];
-  mapViewTap.delegate = self;
-  [self.mapView addGestureRecognizer: mapViewTap];
-
-  self.coordinateQuadTree = [[QVCoordinateQuadTree alloc] init];
-  self.coordinateQuadTree.mapView = self.mapView;
-  [self.coordinateQuadTree buildTreeWithResidences:
-    [[OMBResidenceMapStore sharedStore] residences]];
-
-  // Filter
-  // View
-  filterView = [[UIView alloc] init];
-  filterView.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
-  filterView.frame = CGRectMake(0.0f, screenHeight - padding, 
-    screenWidth, padding);
-  filterView.hidden = YES;
-  [self.view addSubview: filterView];
-  // Label
-  filterLabel = [[UILabel alloc] init];
-  filterLabel.backgroundColor = [UIColor clearColor];
-  filterLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
-  filterLabel.frame = CGRectMake(10.0f, 0.0f,
-    filterView.frame.size.width - (10 * 2), filterView.frame.size.height);
-  filterLabel.text = @"";
-  filterLabel.textAlignment = NSTextAlignmentCenter;
-  filterLabel.textColor = [UIColor textColor];
-  [filterView addSubview: filterLabel];
-
-  // Current location button
-  currentLocationButton = [[UIButton alloc] init];
-  currentLocationButton.backgroundColor = [UIColor whiteColor];
-  currentLocationButton.frame = CGRectMake(padding * 0.5f,
-    screenHeight - ((padding * 1.5) + (padding * 2)),
-      padding * 2, padding * 2);
-  currentLocationButton.imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-  // currentLocationButton.layer.borderColor = [UIColor grayMedium].CGColor;
-  // currentLocationButton.layer.borderWidth = 1.0;
-  currentLocationButton.layer.cornerRadius = 2.0;
-  currentLocationButton.layer.shadowOffset = CGSizeMake(0, 0);
-  currentLocationButton.layer.shadowRadius = 1;
-  currentLocationButton.layer.shadowOpacity = 0.5;
-  [currentLocationButton setImage: [UIImage imageNamed: @"gps_cursor.png"]
-    forState: UIControlStateNormal];
-  [currentLocationButton setImage: [UIImage imageNamed: @"gps_cursor_blue.png"]
-    forState: UIControlStateHighlighted];
-  [currentLocationButton addTarget: self action: @selector(goToCurrentLocation)
-    forControlEvents: UIControlEventTouchUpInside];
-  [self.mapView addSubview: currentLocationButton];
-
-  // Property info view
-  propertyInfoView = [[OMBPropertyInfoView alloc] init];
-  [_mapView addSubview: propertyInfoView];
-  // Add a tap gesture to property info view
-  UITapGestureRecognizer *tap =
-    [[UITapGestureRecognizer alloc] initWithTarget:
-      self action: @selector(showResidenceDetailViewController)];
-  [propertyInfoView addGestureRecognizer: tap];
-
-  // Resident list on MapView(when cluster <= 5)
-  residentAnnotations = [NSMutableArray array];
-  CGFloat originYreslist = _mapView.frame.size.height;
-  CGRect reslistRect =
-    CGRectMake(_mapView.frame.origin.x,
-      originYreslist, _mapView.frame.size.width,
-        originYreslist * 0.5f);
-  _residentListMap = [UITableView new];
-  _residentListMap.backgroundColor = [UIColor backgroundColor];
-  _residentListMap.dataSource = self;
-  _residentListMap.delegate   = self;
-  _residentListMap.frame      = reslistRect;
-  _residentListMap.separatorColor    = [UIColor grayLight];;
-  _residentListMap.separatorStyle    = UITableViewCellSeparatorStyleSingleLine;
-  _residentListMap.showsVerticalScrollIndicator = NO;
-  [_mapView addSubview: _residentListMap];
-  [_residentListMap removeGestureRecognizer: mapViewTap];
-  // Activity indicator view
-  activityIndicatorView =
-    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
-      UIActivityIndicatorViewStyleWhiteLarge];
-  activityIndicatorView.frame = CGRectMake(
-    (screenWidth - activityIndicatorView.frame.size.width) * 0.5f,
-      screenHeight - (activityIndicatorView.frame.size.height * 2),
-        activityIndicatorView.frame.size.width,
-          activityIndicatorView.frame.size.height);
-  [_listViewContainer addSubview: activityIndicatorView];
-
-  activityView = [[OMBActivityView alloc] init];
-  [_listViewContainer addSubview: activityView];
-  activityView.spinnerView.backgroundColor = [UIColor clearColor];
-  CGRect spinRect = activityView.spinner.frame;
-  spinRect.origin.y = screenHeight -
-    ((spinRect.size.height * 0.5f) +
-      activityView.spinnerView.frame.size.height);
-  activityView.spinner.frame = spinRect;
-
-  activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
-  [_listViewContainer addSubview: activityViewFullScreen];
-
-  // Empty background
-  CGFloat emptyBackgroundHeight = screenHeight - sortView.frame.size.height;
-  CGRect emptyBackgroundRect = CGRectMake(0.0f,
-    screenHeight - emptyBackgroundHeight,
-      screenWidth, emptyBackgroundHeight);
-  emptyBackground = [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame:
-    emptyBackgroundRect];
-  emptyBackground.alpha = 0.0f;
-  emptyBackground.imageView.image = [UIImage imageNamed: @"search.png"];
-  NSString *text = @"Sorry but we found no results near you. Please choose "
-    @"another location or change filters.";
-  [emptyBackground setLabelText: text];
-  [_listViewContainer addSubview: emptyBackground];
-
-  emptyOverlayView        = [[OMBEmptyResultsOverlayView alloc] init];
-  emptyOverlayView.hidden = YES;
-  [self.mapView addSubview:emptyOverlayView];
-  
-  showHelpView = YES;
-  
-  [self setDefaultCenterCoordinate];
-  [self setMapViewRegion: centerCoordinate 
-    withMiles: DEFAULT_MILE_RADIUS animated: YES];
+  [super viewDidDisappear:animated];
+  [self showSortViewAnimated:NO];
 }
 
-- (void) viewDidAppear: (BOOL) animated
-{
-  [super viewDidAppear: animated];
-}
-
-- (void) viewDidDisappear: (BOOL) animated
-{
-  [super viewDidDisappear: animated];
-  [self showSortViewAnimated: NO];
-}
-
-- (void) viewDidLoad
+- (void)viewDidLoad
 {
   [super viewDidLoad];
 
+  [self configureViews];
+  
+  [self setDefaultCenterCoordinate];
+  [self setMapViewRegion:centerCoordinate withMiles:DEFAULT_MILE_RADIUS 
+    animated:YES];
+
   self.mapView.delegate = self;
 
-  __weak OMBMapViewController *weakSelf = self;
-
-  pagination = 0;
-  // setup infinite scrolling
-  [_listView addInfiniteScrollingWithActionHandler:^{
-    [weakSelf reloadWithPagination];
-  }];
+  [self setupInfiniteScrolling];
 }
 
-- (void) viewWillDisappear: (BOOL) animated
+- (void)viewWillDisappear:(BOOL)animated
 {
-  [super viewWillDisappear: animated];
-  [self showNavigationBarAnimated: NO];
+  [super viewWillDisappear:animated];
+  [self showNavigationBarAnimated:NO];
   [[OMBResidenceListStore sharedStore] cancelConnection];
 }
 
-- (void) viewWillAppear: (BOOL) animated
+- (void)viewWillAppear:(BOOL)animated
 {
-  [super viewWillAppear: animated];
+  [super viewWillAppear:animated];
 
   timerCounter = MINIMUM_SPINNER_COUNTER;
 
-  if (centerCoordinate.latitude == 0.0f && centerCoordinate.longitude == 0.0f) {
-    [self setDefaultCenterCoordinate];
-    [self setMapViewRegion: centerCoordinate 
-      withMiles: DEFAULT_MILE_RADIUS animated: YES];
-    // Find user's location
-  }
+  [self resetMap];
 
   // This is so that the spinner doesn't freeze and just stay there
   if (fetching) {
@@ -571,72 +246,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   // This reloads the list view if it is visible
   [self reloadTable];
 
-  NSDictionary *dictionary = (NSDictionary *)
-    [self appDelegate].container.mapFilterViewController.valuesDictionary;
-
-  BOOL shouldSearch = 
-    [self appDelegate].container.mapFilterViewController.shouldSearch;
-  showHelpView = !shouldSearch;
-  
-  // Filter
-  // If there is a neighborhood in the filter, then try to re-fetch
-  if ([dictionary objectForKey: @"neighborhood"] != [NSNull null] &&
-    [[dictionary objectForKey: @"neighborhood"] isKindOfClass:
-      [OMBNeighborhood class]]) {
-    // Neighborhood
-    OMBNeighborhood *neighborhood = [dictionary objectForKey:
-      @"neighborhood"];
-    // If the current center coordinate is not equal to the neighborhood's
-    // and it should search
-    if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate) &&
-        shouldSearch) {
-      
-      if ([[neighborhood.name lowercaseString]
-            isEqualToString:@"my current location"]) {
-        [self goToCurrentLocation];
-      }
-      else {
-        [self manageEmptyWithSchoolName:neighborhood.name];
-        
-        centerCoordinate = neighborhood.coordinate;
-        sortSelectionLabel.text = 
-          [NSString stringWithFormat:@"Listings near %@",neighborhood.name];
-        // If it is on the list, then re-fetch residences for the list
-        if ([self isOnList]) {
-          [self resetAndFetchResidencesForList];
-        }
-        else {
-          // Move the map so it re-fetches residences for the map
-          [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
-            animated: NO];
-          [self resetListViewResidences];
-        }
-      }
-    }
-    // Remove this object so that whenever the user comes back from the
-    // residence detail view, it doesn't refresh everything
-    // [[self appDelegate].container.mapFilterViewController.valuesDictionary
-    //   removeObjectForKey: @"neighborhood"];
-  }
-  // If there are filter values, apply and search
-  else if (shouldSearch) {
-    if ([self isOnList]) {
-      [self resetAndFetchResidencesForList];
-
-      firstLoad = YES;
-      // self.listView.showsPullToRefresh = NO;
-    }
-    else {  
-      [self setMapViewRegion: centerCoordinate withMiles: DEFAULT_MILE_RADIUS
-        animated: NO];
-      [self resetListViewResidences];
-    }
-  }
-
-  // If the view controller should search, then set it back to no
-  // so it doesn't always keep changing the center location
-  if ([self appDelegate].container.mapFilterViewController.shouldSearch)
-    [self appDelegate].container.mapFilterViewController.shouldSearch = NO;
+  [self determineShouldSearch];
 
   // Check any filter values and display them
   [self updateFilterLabel];
@@ -644,269 +254,6 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 }
 
 #pragma mark - Protocol
-
-#pragma mark - Protocol CLLocationManagerDelegate
-
-- (void) locationManager: (CLLocationManager *) manager
-didFailWithError: (NSError *) error
-{
-  NSLog(@"Location manager did fail with error: %@",
-    error.localizedDescription);
-}
-
-- (void) locationManager: (CLLocationManager *) manager
-didUpdateLocations: (NSArray *) locations
-{
-  [self foundLocations: locations];
-}
-
-#pragma mark - Protocol MKMapViewDelegate
-
-- (void) mapView: (MKMapView *) mapView didAddAnnotationViews: (NSArray *) views
-{
-  for (UIView *view in views) {
-    [self addBounceAnimationToView: view];
-  }
-}
-
-- (void) mapView: (MKMapView *) map regionDidChangeAnimated: (BOOL) animated
-{
-  // Tells the delegate that the region displayed by the map view just changed
-  // Need to do this to uncluster when zooming in
-  // CLLocationCoordinate2D coordinate = map.centerCoordinate;
-  // OMBAnnotation *annotation = [[OMBAnnotation alloc] init];
-  // annotation.coordinate = coordinate;
-  // [_mapView addAnnotation: annotation];
-  // [_mapView removeAnnotation: annotation];
-
-  NSUInteger currentZoomLevel =
-    [self zoomLevelForMapRect: self.mapView.visibleMapRect
-      withMapViewSizeInPixels: self.mapView.bounds.size];
-
-  MKCoordinateRegion region = map.region;
-  float maxLatitude, maxLongitude, minLatitude, minLongitude;
-  // Northwest = maxLatitude, minLongitude
-  maxLatitude  = region.center.latitude + (region.span.latitudeDelta / 2.0);
-  minLongitude = region.center.longitude - (region.span.longitudeDelta / 2.0);
-  minLatitude  = region.center.latitude - (region.span.latitudeDelta / 2.0);
-  maxLongitude = region.center.longitude + (region.span.longitudeDelta / 2.0);
-  NSString *bounds = [NSString stringWithFormat: @"[%f,%f,%f,%f]",
-    minLongitude, maxLatitude, maxLongitude, minLatitude];
-
-  NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:
-    @{
-      @"bounds": bounds
-    }
-  ];
-  if ([self mapFilterParameters] != nil) {
-    if ([previousMapFilterParameters isEqual: [self mapFilterParameters]]) {
-
-    }
-    else {
-      [self.mapView removeAnnotations: self.mapView.annotations];
-      previousMapFilterParameters = [NSDictionary dictionaryWithDictionary:
-        [self mapFilterParameters]];
-    }
-    [params addEntriesFromDictionary: [self mapFilterParameters]];
-  }
-
-  if (!isFetchingResidencesForMap) {
-    isFetchingResidencesForMap = YES;
-    [[OMBResidenceMapStore sharedStore] fetchResidencesWithParameters: params
-      delegate: self completion: ^(NSError *error) {
-        isFetchingResidencesForMap = NO;
-        [[NSOperationQueue new] addOperationWithBlock: ^{
-          double zoomScale = self.mapView.bounds.size.width /
-            self.mapView.visibleMapRect.size.width;
-          NSArray *annotations =
-            [self.coordinateQuadTree clusteredAnnotationsWithinMapRect:
-              map.visibleMapRect withZoomScale: zoomScale];
-
-          [self updateMapViewAnnotationsWithAnnotations: annotations];
-        }];
-      }];
-  }
-
-  [self deselectAnnotations];
-  [self hidePropertyInfoView];
-  [self hideResidentListAnnotation];
-
-  if (![self isOnList]) {
-    // If the center coordinate changed
-    if (!CLCOORDINATES_EQUAL2(map.centerCoordinate, centerCoordinate)) {
-      [self resetListViewResidences];
-    }
-  }
-
-  previousZoomLevel = currentZoomLevel;
-}
-
-- (void) DONOTHINGmapView: (MKMapView *) map
-regionWillChangeAnimated: (BOOL) animated
-{
-  // This messes up the map because it drag/scrolls every other time
-
-  // Max zoom level
-  // 1609 meters = 1 mile
-  int distanceInMiles = 1609 * 5;
-  MKCoordinateRegion maxRegion =
-    MKCoordinateRegionMakeWithDistance(map.region.center, distanceInMiles,
-      distanceInMiles);
-
-  if (map.region.span.latitudeDelta > maxRegion.span.latitudeDelta ||
-    map.region.span.longitudeDelta > maxRegion.span.longitudeDelta)
-    [_mapView setRegion: maxRegion animated: YES];
-}
-
-- (void) mapView: (MKMapView *) map
-didDeselectAnnotationView: (MKAnnotationView *) annotationView
-{
-  if (![[NSString stringWithFormat: @"%@",
-    [annotationView class]] isEqualToString: @"MKModernUserLocationView"]) {
-
-    if ([annotationView isKindOfClass: [QVClusterAnnotationView class]]) {
-      QVClusterAnnotationView *aView = (QVClusterAnnotationView *)
-        annotationView;
-      [aView deselect];
-    }
-  }
-}
-
-- (void) mapView: (MKMapView *) map
-didSelectAnnotationView: (MKAnnotationView *) annotationView
-{
-  // If user clicked on the current location
-  if ([annotationView isKindOfClass: [QVClusterAnnotationView class]]) {
-    QVClusterAnnotationView *aView = (QVClusterAnnotationView *)
-      annotationView;
-    // If user clicked on a cluster
-    if (aView.count > 1) {
-      if (aView.count > 5) {
-        [self zoomAtAnnotation: annotationView.annotation];
-      }
-      else {
-        [residentAnnotations removeAllObjects];
-        QVClusterAnnotation *annotation = (QVClusterAnnotation *)
-          aView.annotation;
-        for (NSDictionary *dict in annotation.coordinates) {
-          CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(
-            [dict[@"latitude"] doubleValue], [dict[@"longitude"] doubleValue]);
-          OMBResidence *residence =
-            [[OMBResidenceMapStore sharedStore] residenceForCoordinate: coord];
-          if (residence)
-            [residentAnnotations addObject: residence];
-        }
-        [self.residentListMap reloadData];
-        [self showResidentListAnnotation];
-      }
-    }
-    // If user clicked on a single residence
-    else {
-      if ([aView.annotation isKindOfClass: [QVClusterAnnotation class]]) {
-        [aView select];
-        QVClusterAnnotation *annotation = (QVClusterAnnotation *)
-          aView.annotation;
-        [self showPropertyInfoViewWithResidence:
-          [[OMBResidenceMapStore sharedStore] residenceForCoordinate:
-            annotation.coordinate]];
-      }
-    }
-  }
-}
-
-- (MKAnnotationView *) mapView: (MKMapView *) mapView
-viewForAnnotation: (id <MKAnnotation>) annotation
-{
-  if (annotation == _mapView.userLocation)
-    return nil;
-
-  static NSString *const QVAnnotationViewReuseID = @"QVAnnotationViewReuseID";
-
-  QVClusterAnnotationView *annotationView = (QVClusterAnnotationView *)
-    [mapView dequeueReusableAnnotationViewWithIdentifier:
-      QVAnnotationViewReuseID];
-
-  if (!annotationView) {
-    annotationView = [[QVClusterAnnotationView alloc] initWithAnnotation:
-      annotation reuseIdentifier: QVAnnotationViewReuseID];
-  }
-
-  annotationView.count    = [(QVClusterAnnotation *) annotation count];
-  annotationView.isRented = ((QVClusterAnnotation *) annotation).rented;
-  
-  int residenceId = ((QVClusterAnnotation *) annotation).residenceId;
-  annotationView.visited = NO;
-  if(residenceId && [[OMBUser currentUser] loggedIn]){
-    // Check if user has visited residence in residence detail controller
-    annotationView.visited = [[OMBUser currentUser] visited:residenceId];
-  }
-  
-  return annotationView;
-}
-
-#pragma mark - Protocol OMBConnection
-
-- (void) JSONDictionary: (NSDictionary *) dictionary
-{
-  // List view
-  if ([self isOnList]) {
-    [[OMBResidenceListStore sharedStore] readFromDictionary: dictionary];
-  }
-  // Map
-  else {
-    if (previousZoomLevel >= MINIMUM_ZOOM_LEVEL) {
-      [[OMBResidenceMapStore sharedStore] readFromDictionary: dictionary];
-      [self.coordinateQuadTree buildTreeWithResidences:
-        [[OMBResidenceMapStore sharedStore] residences]];
-
-      // Add annotations that don't exist
-      // NSMutableSet *masterSet = [NSMutableSet setWithSet:
-      //   [[OMBResidenceMapStore sharedStore] annotations]];
-      // [masterSet minusSet: [NSSet setWithArray: self.mapView.annotations]];
-
-      // NSLog(@"ADDING: %i", [[masterSet allObjects] count]);
-      // [self.mapView addAnnotations: [masterSet allObjects]];
-
-      // dispatch_async(dispatch_get_main_queue(), ^{
-      //   [self.mapView addAnnotations:
-      //     [[OMBResidenceMapStore sharedStore] annotations]];
-      // });
-
-      // NSMutableArray *arrayOfDictonaries = [NSMutableArray array];
-      // NSArray *array = [dictionary objectForKey: @"objects"];
-      // NSUInteger arrayCount = [array count];
-      // int size = 500;
-      // for (int i = 0; i < (arrayCount / size) + 1; i++) {
-      //   NSUInteger location = i * size;
-      //   NSUInteger length   = arrayCount - location;
-      //   if (length > size)
-      //     length = size;
-      //   NSArray *subarray = [array subarrayWithRange:
-      //     NSMakeRange(location, length)];
-      //   [arrayOfDictonaries addObject: @{
-      //     @"objects": subarray
-      //   }];
-      // }
-      // for (NSDictionary *dict in arrayOfDictonaries) {
-      //   // Read from dictionary
-      //   dispatch_async(dispatch_get_main_queue(), ^{
-      //     [[OMBResidenceMapStore sharedStore] readFromDictionary: dict];
-      //     // Add annotations that don't exist
-      //     NSMutableSet *masterSet = [NSMutableSet setWithSet:
-      //       [[OMBResidenceMapStore sharedStore] annotations]];
-      //     [masterSet minusSet:
-      //       [NSSet setWithArray: self.mapView.annotations]];
-
-      //     NSLog(@"ADDING: %i", [[masterSet allObjects] count]);
-      //     [self.mapView addAnnotations: [masterSet allObjects]];
-      //     [self addAnnotations: [masterSet allObjects]];
-      //     [self addAnnotations:
-      //       [[[OMBResidenceMapStore sharedStore] annotations] allObjects]];
-      //   });
-      // }
-    }
-  }
-}
 
 #pragma mark - UIAlertViewDelegate Protocol
 
@@ -1591,14 +938,6 @@ withTitle: (NSString *) title;
   for (UIButton *button in sortButtonArray) {
     button.hidden = !visible;
   }
-}
-
-- (void)manageEmptyWithSchoolName:(NSString *)name
-{
-  manageEmpty = YES;
-  
-  isCurrentLocation = !name.length;
-  schoolName = name;
 }
 
 - (NSMutableDictionary *) mapFilterParameters
@@ -2331,6 +1670,550 @@ withMapViewSizeInPixels: (CGSize) viewSizeInPixels
     [self.mapView addAnnotations: [toAdd allObjects]];
     [self.mapView removeAnnotations: [toRemove allObjects]];
   }];
+}
+
+#pragma mark - Private Methods
+
+- (void)determineShouldSearch
+{
+  NSDictionary *dictionary = (NSDictionary *)
+    [self appDelegate].container.mapFilterViewController.valuesDictionary;
+
+  BOOL shouldSearch = 
+    [self appDelegate].container.mapFilterViewController.shouldSearch;
+  showHelpView = !shouldSearch;
+
+  // If there is a chosen OMBNeighborhood in the filter, then try to re-fetch
+  id dictionaryObject = [dictionary objectForKey:@"neighborhood"];
+  if (dictionaryObject != [NSNull null] && 
+    [dictionaryObject isKindOfClass:[OMBNeighborhood class]]) {
+
+    OMBNeighborhood *neighborhood = (OMBNeighborhood *)dictionaryObject;
+    // If the curent center coordinate is not equal to the
+    // neighborhood's and it should search
+    if (!CLCOORDINATES_EQUAL2(centerCoordinate, neighborhood.coordinate) &&
+      shouldSearch) {
+      // Go to current location
+      if ([[neighborhood.name lowercaseString] isEqualToString:
+        @"my current location"]) {
+        [self goToCurrentLocation];
+      }
+      else {
+        [self manageEmptyWithSchoolName:neighborhood.name];
+        centerCoordinate = neighborhood.coordinate;
+        sortSelectionLabel.text = 
+          [NSString stringWithFormat:@"Listings near %@", neighborhood.name];
+        // If it is on the list, then re-fetch residences on the list
+        if ([self isOnList]) {
+          [self resetAndFetchResidencesForList];
+        }
+        else {
+          // Move the map so it re-fetches residences for the map
+          [self setMapViewRegion:centerCoordinate withMiles:DEFAULT_MILE_RADIUS
+            animated:NO];
+          [self resetListViewResidences];
+        }
+      }
+    }
+    // If there are filter values, apply and search
+    else if (shouldSearch) {
+      if ([self isOnList]) {
+        [self resetAndFetchResidencesForList];
+        firstLoad = YES;
+      }
+      else {
+        [self setMapViewRegion:centerCoordinate withMiles:DEFAULT_MILE_RADIUS
+          animated:NO];
+        [self resetListViewResidences];
+      }
+    }
+  }
+  // If the view controller should search, then set it back to no
+  // so it doesn't always keep changing the center location
+  if (shouldSearch) {
+    [self appDelegate].container.mapFilterViewController.shouldSearch = NO;
+  }
+}
+
+- (void)manageEmptyWithSchoolName:(NSString *)name
+{
+  manageEmpty       = YES;
+  isCurrentLocation = !name.length;
+  schoolName        = name;
+}
+
+- (void)resetMap
+{
+  if (centerCoordinate.latitude == 0.0f && centerCoordinate.longitude == 0.0f) {
+    [self setDefaultCenterCoordinate];
+    [self setMapViewRegion:centerCoordinate withMiles:DEFAULT_MILE_RADIUS 
+      animated:YES];
+  }
+}
+
+#pragma mark - Setup
+
+- (void)setupInfiniteScrolling
+{
+  __weak OMBMapViewController *weakSelf = self;
+  [self.listView addInfiniteScrollingWithActionHandler:^{
+    [weakSelf reloadWithPagination];
+  }];
+}
+
+#pragma mark - Views
+
+- (void)configureActivityIndicatorViewForListViewContainer:(CGFloat)screenHeight
+screenWidth:(CGFloat)screenWidth padding:(CGFloat)padding
+{
+  // Activity indicator view
+  activityIndicatorView =
+    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
+      UIActivityIndicatorViewStyleWhiteLarge];
+  activityIndicatorView.frame = CGRectMake(
+    (screenWidth - activityIndicatorView.frame.size.width) * 0.5f,
+      screenHeight - (activityIndicatorView.frame.size.height * 2),
+        activityIndicatorView.frame.size.width,
+          activityIndicatorView.frame.size.height);
+  [_listViewContainer addSubview: activityIndicatorView];
+
+  activityView = [[OMBActivityView alloc] init];
+  [_listViewContainer addSubview: activityView];
+  activityView.spinnerView.backgroundColor = [UIColor clearColor];
+  CGRect spinRect = activityView.spinner.frame;
+  spinRect.origin.y = screenHeight -
+    ((spinRect.size.height * 0.5f) +
+      activityView.spinnerView.frame.size.height);
+  activityView.spinner.frame = spinRect;
+
+  activityViewFullScreen = [[OMBActivityViewFullScreen alloc] init];
+  [_listViewContainer addSubview: activityViewFullScreen]; 
+}
+
+- (void)configureEmptyBackground:(CGFloat)screenHeight 
+screenWidth:(CGFloat)screenWidth padding:(CGFloat)padding
+{
+  CGFloat emptyBackgroundHeight = screenHeight - sortView.frame.size.height;
+  CGRect emptyBackgroundRect = CGRectMake(0.0f,
+    screenHeight - emptyBackgroundHeight,
+      screenWidth, emptyBackgroundHeight);
+  emptyBackground = [[OMBEmptyBackgroundWithImageAndLabel alloc] initWithFrame:
+    emptyBackgroundRect];
+  emptyBackground.alpha = 0;
+  emptyBackground.imageView.image = [UIImage imageNamed: @"search.png"];
+  NSString *text = @"Sorry but we found no results near you. Please choose "
+    @"another location or change filters.";
+  [emptyBackground setLabelText: text];
+  [_listViewContainer addSubview: emptyBackground];
+}
+
+- (void)configureEmptyResultsOverlayView
+{
+  emptyOverlayView        = [[OMBEmptyResultsOverlayView alloc] init];
+  emptyOverlayView.hidden = YES;
+  [self.mapView addSubview:emptyOverlayView];
+}
+
+- (void)configureListContainer:(CGFloat)screenHeight 
+screenWidth:(CGFloat)screenWidth padding:(CGFloat)padding
+{
+  // List view container
+  self.listViewContainer       = [[UIView alloc] init];
+  self.listViewContainer.frame = [self screen];
+  [self.view addSubview:self.listViewContainer];
+
+  navigationBarCover               = [[AMBlurView alloc] init];
+  navigationBarCover.alpha         = 0;
+  navigationBarCover.blurTintColor = [UIColor whiteColor];
+  navigationBarCover.frame = CGRectMake(0.0f, -padding,
+    screenWidth, padding + OMBStandardHeight);
+  [self.view addSubview:navigationBarCover];
+}
+
+- (void)configureListView
+{
+  // List view
+  self.listView                         = [[UITableView alloc] init];
+  self.listView.backgroundColor         = [UIColor grayUltraLight];
+  self.listView.canCancelContentTouches = YES;
+  self.listView.dataSource              = self;
+  self.listView.delegate                = self;
+  self.listView.frame                   = [self screen];
+  self.listView.separatorColor          = nil;
+  self.listView.separatorStyle          = UITableViewCellSeparatorStyleNone;
+  self.listView.tableHeaderView         = [[UIView alloc] initWithFrame:
+    CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.listView.frame),
+      CGRectGetHeight(sortLabel.frame))];
+  [self.listViewContainer insertSubview:self.listView atIndex:0];
+}
+
+- (void)configureMapView:(CGFloat)screenHeight 
+screenWidth:(CGFloat)screenWidth padding:(CGFloat)padding
+{
+  self.mapView                       = [[MKMapView alloc] init];
+  self.mapView.alpha                 = 0.0f;
+  self.mapView.frame                 = [self screen];
+  self.mapView.mapType               = MKMapTypeStandard;
+  self.mapView.showsPointsOfInterest = NO;
+  self.mapView.showsUserLocation     = NO;
+  [self.view addSubview:self.mapView];
+  UITapGestureRecognizer *mapViewTap =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+      action:@selector(mapViewTapped)];
+  mapViewTap.delegate = self;
+  [self.mapView addGestureRecognizer:mapViewTap];
+
+  self.coordinateQuadTree = [[QVCoordinateQuadTree alloc] init];
+  self.coordinateQuadTree.mapView = self.mapView;
+  [self.coordinateQuadTree buildTreeWithResidences:
+    [[OMBResidenceMapStore sharedStore] residences]];
+
+  // Filter
+  // View
+  filterView = [[UIView alloc] init];
+  filterView.backgroundColor = [UIColor colorWithWhite: 1.0f alpha: 0.8f];
+  filterView.frame = CGRectMake(0.0f, screenHeight - padding, 
+    screenWidth, padding);
+  filterView.hidden = YES;
+  [self.view addSubview: filterView];
+  // Label
+  filterLabel = [[UILabel alloc] init];
+  filterLabel.backgroundColor = [UIColor clearColor];
+  filterLabel.font = [UIFont fontWithName: @"HelveticaNeue-Light" size: 13];
+  filterLabel.frame = CGRectMake(10.0f, 0.0f,
+    filterView.frame.size.width - (10 * 2), filterView.frame.size.height);
+  filterLabel.text = @"";
+  filterLabel.textAlignment = NSTextAlignmentCenter;
+  filterLabel.textColor = [UIColor textColor];
+  [filterView addSubview: filterLabel];
+
+  // Current location button
+  currentLocationButton = [[UIButton alloc] init];
+  currentLocationButton.backgroundColor = [UIColor whiteColor];
+  currentLocationButton.frame = CGRectMake(padding * 0.5f,
+    screenHeight - ((padding * 1.5) + (padding * 2)),
+      padding * 2, padding * 2);
+  currentLocationButton.imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+  // currentLocationButton.layer.borderColor = [UIColor grayMedium].CGColor;
+  // currentLocationButton.layer.borderWidth = 1.0;
+  currentLocationButton.layer.cornerRadius = 2.0;
+  currentLocationButton.layer.shadowOffset = CGSizeMake(0, 0);
+  currentLocationButton.layer.shadowRadius = 1;
+  currentLocationButton.layer.shadowOpacity = 0.5;
+  [currentLocationButton setImage: [UIImage imageNamed: @"gps_cursor.png"]
+    forState: UIControlStateNormal];
+  [currentLocationButton setImage: [UIImage imageNamed: @"gps_cursor_blue.png"]
+    forState: UIControlStateHighlighted];
+  [currentLocationButton addTarget: self action: @selector(goToCurrentLocation)
+    forControlEvents: UIControlEventTouchUpInside];
+  [self.mapView addSubview: currentLocationButton];
+
+  // Property info view
+  propertyInfoView = [[OMBPropertyInfoView alloc] init];
+  [_mapView addSubview: propertyInfoView];
+  // Add a tap gesture to property info view
+  UITapGestureRecognizer *tap =
+    [[UITapGestureRecognizer alloc] initWithTarget:
+      self action: @selector(showResidenceDetailViewController)];
+  [propertyInfoView addGestureRecognizer: tap];
+
+  // Resident list on MapView(when cluster <= 5)
+  residentAnnotations = [NSMutableArray array];
+  CGFloat originYreslist = _mapView.frame.size.height;
+  CGRect reslistRect =
+    CGRectMake(_mapView.frame.origin.x,
+      originYreslist, _mapView.frame.size.width,
+        originYreslist * 0.5f);
+  _residentListMap = [UITableView new];
+  _residentListMap.backgroundColor = [UIColor backgroundColor];
+  _residentListMap.dataSource = self;
+  _residentListMap.delegate   = self;
+  _residentListMap.frame      = reslistRect;
+  _residentListMap.separatorColor    = [UIColor grayLight];;
+  _residentListMap.separatorStyle    = UITableViewCellSeparatorStyleSingleLine;
+  _residentListMap.showsVerticalScrollIndicator = NO;
+  [_mapView addSubview: _residentListMap];
+  [_residentListMap removeGestureRecognizer: mapViewTap];
+}
+
+- (void)configureNavigationItem
+{
+  // Left bar button item
+  [self setMenuBarButtonItem];
+  // Right bar button item
+  self.navigationItem.rightBarButtonItem =
+    [[UIBarButtonItem alloc] initWithImage:
+      [UIImage imageNamed:@"map_search_icon"] style:UIBarButtonItemStylePlain 
+        target:self action:@selector(showSearch)];
+
+  // Title view
+  segmentedControl = [[UISegmentedControl alloc] initWithItems:
+    @[@"Map", @"List"]];
+  CGRect segmentedFrame                 = segmentedControl.frame;
+  segmentedFrame.size.width             = CGRectGetWidth(self.view.frame) * 0.4;
+  segmentedControl.frame                = segmentedFrame;
+  segmentedControl.selectedSegmentIndex = 1;
+  [segmentedControl addTarget:self action:@selector(switchViews:)
+    forControlEvents:UIControlEventValueChanged];
+  self.navigationItem.titleView = segmentedControl;
+}
+
+- (void)configureSortView:(CGFloat)screenHeight screenWidth:(CGFloat)screenWidth
+padding:(CGFloat)padding
+{
+  // Sort
+  sortView = [[AMBlurView alloc] init];
+  sortView.blurTintColor = [UIColor grayVeryLight];
+  sortView.frame = CGRectMake(0.0f, 44.0f,
+    self.listViewContainer.frame.size.width, 20.0f + 37.0f);
+  [self.listViewContainer addSubview: sortView];
+
+  // Sort label
+  sortLabel = [[UILabel alloc] init];
+  sortLabel.font = [UIFont fontWithName: @"HelveticaNeue" size: 14];
+  sortLabel.frame = CGRectMake(padding, sortView.frame.size.height - 37.0f,
+    0.0f, 37.0f);
+  sortLabel.text = @"Sort by";
+  sortLabel.textColor = [UIColor blue];
+  CGRect sortRect = [sortLabel.text boundingRectWithSize:
+    CGSizeMake(screenWidth, sortLabel.frame.size.height)
+      options: NSStringDrawingUsesLineFragmentOrigin
+        attributes: @{ NSFontAttributeName: sortLabel.font }
+          context: nil];
+  sortLabel.frame = CGRectMake(sortLabel.frame.origin.x,
+    sortLabel.frame.origin.y, sortRect.size.width, sortLabel.frame.size.height);
+  
+  // Sort selection label
+  sortSelectionLabel = [[UILabel alloc] init];
+  sortSelectionLabel.font = sortLabel.font;
+  sortSelectionLabel.frame = CGRectMake(0.0f, sortLabel.frame.origin.y,
+    screenWidth, sortLabel.frame.size.height);
+  sortSelectionLabel.text = @"Sort your Rental Results";
+  sortSelectionLabel.textAlignment = NSTextAlignmentCenter;
+  sortSelectionLabel.textColor = sortLabel.textColor;
+  [sortView addSubview: sortSelectionLabel];
+  // Sort arrow
+  CGFloat sortArrowSize = sortLabel.frame.size.height - padding;
+  sortArrow = [[UIImageView alloc] init];
+  sortArrow.frame = CGRectMake(screenWidth - (sortArrowSize + padding),
+    sortLabel.frame.origin.y +
+    ((sortLabel.frame.size.height - sortArrowSize) * 0.5),
+      sortArrowSize, sortArrowSize);
+  sortArrow.image = [UIImage changeColorForImage:
+    [UIImage  imageNamed: @"arrow_left_white.png"] toColor:[UIColor blue]];
+  sortArrow.transform = CGAffineTransformMakeRotation(-90 * M_PI / 180.0f);
+  sortButtonHighestPrice = [[UIButton alloc] init];
+  sortButtonLowestPrice  = [[UIButton alloc] init];
+  sortButtonPopular      = [[UIButton alloc] init];
+  sortButtonMostRecent   = [[UIButton alloc] init];
+  sortButtonArray = [NSMutableArray arrayWithArray: @[
+    sortButtonPopular,
+    sortButtonMostRecent,
+    sortButtonHighestPrice,
+    sortButtonLowestPrice
+  ]];
+  sortButtonsView = [[UIView alloc] init]; 
+}
+
+- (void)configureViews
+{
+  CGRect screen        = [self screen];
+  self.view            = [[UIView alloc] initWithFrame:screen];
+  CGFloat screenHeight = CGRectGetHeight(screen);
+  CGFloat screenWidth  = CGRectGetWidth(screen);
+  CGFloat padding      = OMBPadding;
+  
+  [self configureNavigationItem];
+  [self configureListContainer:screenHeight screenWidth:screenWidth 
+    padding:padding];
+  [self configureSortView:screenHeight screenWidth:screenWidth padding:padding];
+  [self configureListView];
+  [self configureMapView:screenHeight screenWidth:screenWidth padding:padding];
+  [self configureActivityIndicatorViewForListViewContainer:screenHeight 
+    screenWidth:screenWidth padding:padding];
+  [self configureEmptyBackground:screenHeight screenWidth:screenWidth 
+    padding:padding];
+  [self configureEmptyResultsOverlayView];
+}
+
+#pragma mark - Protocol
+
+#pragma mark - Protocol CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager
+didFailWithError:(NSError *)error
+{
+  NSLog(@"Location manager did fail with error: %@",
+    error.localizedDescription);
+}
+
+- (void)locationManager:(CLLocationManager *)manager
+didUpdateLocations:(NSArray *)locations
+{
+  [self foundLocations:locations];
+}
+
+#pragma mark - Protocol MKMapViewDelegate
+
+- (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views
+{
+  for (UIView *view in views) {
+    [self addBounceAnimationToView:view];
+  }
+}
+
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+  NSUInteger currentZoomLevel = 
+    [self zoomLevelForMapRect:mapView.visibleMapRect 
+      withMapViewSizeInPixels:mapView.bounds.size];
+
+  NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{
+    @"bounds": [mapController boundsString:mapView]
+  }];
+
+  if ([self mapFilterParameters] != nil) {
+    if (![previousMapFilterParameters isEqual:[self mapFilterParameters]]) {
+      [self.mapView removeAnnotations:self.mapView.annotations];
+      previousMapFilterParameters = 
+        [NSDictionary dictionaryWithDictionary:[self mapFilterParameters]];
+    }
+    [params addEntriesFromDictionary:[self mapFilterParameters]];
+  }
+
+  if (!isFetchingResidencesForMap) {
+    isFetchingResidencesForMap = YES;
+    [[OMBResidenceMapStore sharedStore] fetchResidencesWithParameters:params
+      delegate: self completion: ^(NSError *error) {
+        isFetchingResidencesForMap = NO;
+        [[NSOperationQueue new] addOperationWithBlock: ^{
+          double zoomScale = self.mapView.bounds.size.width /
+            self.mapView.visibleMapRect.size.width;
+          NSArray *annotations =
+            [self.coordinateQuadTree clusteredAnnotationsWithinMapRect:
+              mapView.visibleMapRect withZoomScale: zoomScale];
+
+          [self updateMapViewAnnotationsWithAnnotations: annotations];
+        }];
+      }];
+  }
+
+  [self deselectAnnotations];
+  [self hidePropertyInfoView];
+  [self hideResidentListAnnotation];
+
+  if (![self isOnList]) {
+    // If the center coordinate changed
+    if (!CLCOORDINATES_EQUAL2(mapView.centerCoordinate, centerCoordinate)) {
+      [self resetListViewResidences];
+    }
+  }
+
+  previousZoomLevel = currentZoomLevel;
+}
+
+- (void)mapView:(MKMapView *)map
+didDeselectAnnotationView:(MKAnnotationView *)annotationView
+{
+  if (![[NSString stringWithFormat: @"%@",
+    [annotationView class]] isEqualToString: @"MKModernUserLocationView"]) {
+
+    if ([annotationView isKindOfClass: [QVClusterAnnotationView class]]) {
+      QVClusterAnnotationView *aView = (QVClusterAnnotationView *)
+        annotationView;
+      [aView deselect];
+    }
+  }
+}
+
+- (void)mapView:(MKMapView *)map
+didSelectAnnotationView:(MKAnnotationView *)annotationView
+{
+  // If user clicked on the current location
+  if ([annotationView isKindOfClass: [QVClusterAnnotationView class]]) {
+    QVClusterAnnotationView *aView = (QVClusterAnnotationView *)
+      annotationView;
+    // If user clicked on a cluster
+    if (aView.count > 1) {
+      if (aView.count > 5) {
+        [self zoomAtAnnotation: annotationView.annotation];
+      }
+      else {
+        [residentAnnotations removeAllObjects];
+        QVClusterAnnotation *annotation = (QVClusterAnnotation *)
+          aView.annotation;
+        for (NSDictionary *dict in annotation.coordinates) {
+          CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(
+            [dict[@"latitude"] doubleValue], [dict[@"longitude"] doubleValue]);
+          OMBResidence *residence =
+            [[OMBResidenceMapStore sharedStore] residenceForCoordinate: coord];
+          if (residence)
+            [residentAnnotations addObject: residence];
+        }
+        [self.residentListMap reloadData];
+        [self showResidentListAnnotation];
+      }
+    }
+    // If user clicked on a single residence
+    else {
+      if ([aView.annotation isKindOfClass: [QVClusterAnnotation class]]) {
+        [aView select];
+        QVClusterAnnotation *annotation = (QVClusterAnnotation *)
+          aView.annotation;
+        [self showPropertyInfoViewWithResidence:
+          [[OMBResidenceMapStore sharedStore] residenceForCoordinate:
+            annotation.coordinate]];
+      }
+    }
+  }
+}
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView
+viewForAnnotation:(id <MKAnnotation>)annotation
+{
+  if (annotation == _mapView.userLocation)
+    return nil;
+
+  static NSString *const QVAnnotationViewReuseID = @"QVAnnotationViewReuseID";
+
+  QVClusterAnnotationView *annotationView = (QVClusterAnnotationView *)
+    [mapView dequeueReusableAnnotationViewWithIdentifier:
+      QVAnnotationViewReuseID];
+
+  if (!annotationView) {
+    annotationView = [[QVClusterAnnotationView alloc] initWithAnnotation:
+      annotation reuseIdentifier: QVAnnotationViewReuseID];
+  }
+
+  annotationView.count    = [(QVClusterAnnotation *) annotation count];
+  annotationView.isRented = ((QVClusterAnnotation *) annotation).rented;
+  
+  int residenceId = ((QVClusterAnnotation *) annotation).residenceId;
+  annotationView.visited = NO;
+  if(residenceId && [[OMBUser currentUser] loggedIn]){
+    // Check if user has visited residence in residence detail controller
+    annotationView.visited = [[OMBUser currentUser] visited:residenceId];
+  }
+  
+  return annotationView;
+}
+
+#pragma mark - Protocol OMBConnection
+
+- (void)JSONDictionary:(NSDictionary *)dictionary
+{
+  // List view
+  if ([self isOnList]) {
+    [[OMBResidenceListStore sharedStore] readFromDictionary:dictionary];
+  }
+  // Map
+  else {
+    if (previousZoomLevel >= MINIMUM_ZOOM_LEVEL) {
+      [[OMBResidenceMapStore sharedStore] readFromDictionary:dictionary];
+      [self.coordinateQuadTree buildTreeWithResidences:
+        [[OMBResidenceMapStore sharedStore] residences]];
+    }
+  }
 }
 
 @end
