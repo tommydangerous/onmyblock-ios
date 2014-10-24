@@ -10,6 +10,13 @@
 
 @class OMBResidence;
 
+@protocol OMBResidenceListStoreDelegate <NSObject>
+
+- (void)fetchResidencesForListFailed:(NSError *)error;
+- (void)fetchResidencesForListSucceeded:(id)responseObject;
+
+@end
+
 @interface OMBResidenceListStore : NSObject
 
 @property (nonatomic) CLLocationCoordinate2D centerCoordinate;
@@ -25,8 +32,8 @@
 
 - (void) addResidence: (OMBResidence *) residence;
 - (void) cancelConnection;
-- (void) fetchResidencesWithParameters: (NSDictionary *) parameters
-delegate: (id) delegate completion: (void (^) (NSError *error)) block;
+- (void)fetchResidencesWithParameters:(NSDictionary *)dictionary
+delegate:(id<OMBResidenceListStoreDelegate>)delegate;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (void) removeResidences;
 - (NSArray *) residenceArray;

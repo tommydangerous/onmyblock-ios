@@ -8,13 +8,16 @@
 
 #import "OMBResidenceListStore.h"
 
+// Models
 #import "OMBResidence.h"
-#import "OMBResidenceListConnection.h"
+
+// Networking
+#import "OMBSessionManager.h"
 
 @interface OMBResidenceListStore ()
 {
-  OMBResidenceListConnection *listConnection;
   NSMutableArray *residenceArray;
+  NSURLSessionDataTask *sessionDataTask;
 }
 
 @end
@@ -62,21 +65,30 @@
   //   [_residences addObject: residence];
 }
 
-- (void) cancelConnection
+- (void)cancelConnection
 {
-  if (listConnection) {
-    [listConnection cancelConnection];
+  if (sessionDataTask) {
+    [sessionDataTask cancel];
   }
 }
 
-- (void) fetchResidencesWithParameters: (NSDictionary *) parameters
-delegate: (id) delegate completion: (void (^) (NSError *error)) block
+- (void)fetchResidencesWithParameters:(NSDictionary *)dictionary
+delegate:(id<OMBResidenceListStoreDelegate>)delegate
 {
-  listConnection = [[OMBResidenceListConnection alloc] initWithParameters: 
-    parameters];
-  listConnection.completionBlock = block;
-  listConnection.delegate        = delegate;
-  [listConnection start];
+  sessionDataTask = [[OMBSessionManager sharedManager] GET:@"places/grid" 
+    parameters:dictionary
+    success:^(NSURLSessionDataTask *task, id responseObject) {
+      if ([delegate respondsToSelector:
+        @selector(fetchResidencesForListSucceeded:)]) {
+        [delegate fetchResidencesForListSucceeded:responseObject];
+      }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+      if ([delegate respondsToSelector:
+        @selector(fetchResidencesForListFailed:)]) {
+        [delegate fetchResidencesForListFailed:error];
+      }
+    }
+  ];
 }
 
 - (void) readFromDictionary: (NSDictionary *) dictionary

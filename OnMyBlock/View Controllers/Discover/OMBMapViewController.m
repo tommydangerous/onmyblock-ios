@@ -69,7 +69,9 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
 @interface OMBMapViewController ()
 <
-  CLLocationManagerDelegate, MKMapViewDelegate, UIAlertViewDelegate,
+  CLLocationManagerDelegate, MKMapViewDelegate, 
+  OMBResidenceListStoreDelegate, OMBResidenceMapStoreDelegate,
+  UIAlertViewDelegate,
   UIGestureRecognizerDelegate, UIScrollViewDelegate, UITableViewDataSource,
   UITableViewDelegate
 >
@@ -122,6 +124,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   UILabel *sortLabel;
   UILabel *sortSelectionLabel;
   AMBlurView *sortView;
+  NSUInteger residenceListStoreCurrentCount;
   NSMutableArray *residentAnnotations;
   QVClusterAnnotation *recentResidence;
   NSTimer *timer;
@@ -254,6 +257,89 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 }
 
 #pragma mark - Protocol
+
+#pragma mark - Protocol OMBResidenceListStoreDelegate
+
+- (void)fetchResidencesForListFailed:(NSError *)error
+{
+  [self showAlertViewWithError:error];
+}
+
+- (void)fetchResidencesForListSucceeded:(id)responseObject
+{
+  [[OMBResidenceListStore sharedStore] readFromDictionary:responseObject];
+  if (firstLoad) {
+    [self stopSpinning];
+    firstLoad  = NO;
+  }
+
+  // _listView.showsPullToRefresh = YES;
+
+  fetching = NO;
+  [self resetCurrentResidencesForList];
+  [self reloadTable];
+
+  if (residenceListStoreCurrentCount == 0) {
+    [self downloadResidenceImagesForVisibleCells];
+  }
+
+  if (self.radiusInMiles < kMaxRadiusInMiles) {
+    NSInteger newCount =
+      [[OMBResidenceListStore sharedStore].residences count];
+    // NSLog(@"NEW COUNT:     %i", newCount);
+
+    // If the count never changed
+    if (newCount == residenceListStoreCurrentCount) {
+      // Fetch again
+      [self fetchResidencesForList];
+    }
+    // If new residences were found and added
+    else {
+      [self stopSpinning];
+      if ([[self residencesForList] count]) {
+        emptyBackground.alpha = 0.0f;
+        if ([[self residencesForList] count] < 2) {
+          [self fetchResidencesForList];
+        }
+      }
+    }
+  }
+  else {
+    // Stop fetching residences after 100 mile radius
+    [self stopSpinning];
+    if ([[self residencesForList] count] == 0) {
+      [UIView animateWithDuration: OMBStandardDuration animations: ^{
+        emptyBackground.alpha = 1.0f;
+      }];
+    }
+  }
+  [self reloadTable];
+}
+
+#pragma mark - Protocol OMBResidenceMapStoreDelegate
+
+- (void)fetchResidencesForMapFailed:(NSError *)error
+{
+  [self showAlertViewWithError:error];
+}
+
+- (void)fetchResidencesForMapSucceeded:(id)responseObject
+{
+  if (previousZoomLevel >= MINIMUM_ZOOM_LEVEL) {
+    [[OMBResidenceMapStore sharedStore] readFromDictionary:responseObject];
+    [self.coordinateQuadTree buildTreeWithResidences:
+      [[OMBResidenceMapStore sharedStore] residences]];
+  }
+  isFetchingResidencesForMap = NO;
+  [[NSOperationQueue new] addOperationWithBlock:^{
+    double zoomScale = self.mapView.bounds.size.width /
+      self.mapView.visibleMapRect.size.width;
+    NSArray *annotations =
+      [self.coordinateQuadTree clusteredAnnotationsWithinMapRect:
+        self.mapView.visibleMapRect withZoomScale:zoomScale];
+    [self updateMapViewAnnotationsWithAnnotations:annotations];
+  }];
+}
 
 #pragma mark - UIAlertViewDelegate Protocol
 
@@ -698,7 +784,7 @@ withTitle: (NSString *) title;
   }
 }
 
-- (void) fetchResidencesForList
+- (void)fetchResidencesForList
 {
   // Fetch residences for list
 
@@ -744,60 +830,12 @@ withTitle: (NSString *) title;
   // Current radius
   [params setObject: @(self.radiusInMiles) forKey: @"current_radius"];
 
-  NSInteger currentCount =
+  residenceListStoreCurrentCount =
     [[OMBResidenceListStore sharedStore].residences count];
   // NSLog(@"CURRENT COUNT: %i", currentCount);
 
-  [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters: params
-    delegate: self completion: ^(NSError *error) {
-      if (firstLoad) {
-        [self stopSpinning];
-        firstLoad  = NO;
-      }
-
-      // _listView.showsPullToRefresh = YES;
-
-      fetching = NO;
-      [self resetCurrentResidencesForList];
-      [self reloadTable];
-
-      if (currentCount == 0) {
-        [self downloadResidenceImagesForVisibleCells];
-      }
-
-      if (self.radiusInMiles < kMaxRadiusInMiles) {
-        NSInteger newCount =
-          [[OMBResidenceListStore sharedStore].residences count];
-        // NSLog(@"NEW COUNT:     %i", newCount);
-
-        // If the count never changed
-        if (newCount == currentCount) {
-          // Fetch again
-          [self fetchResidencesForList];
-        }
-        // If new residences were found and added
-        else {
-          [self stopSpinning];
-          if ([[self residencesForList] count]) {
-            emptyBackground.alpha = 0.0f;
-            if ([[self residencesForList] count] < 2) {
-              [self fetchResidencesForList];
-            }
-          }
-        }
-      }
-      // Stop fetching residences after 100 mile radius
-      else {
-        [self stopSpinning];
-        if ([[self residencesForList] count] == 0) {
-          [UIView animateWithDuration: OMBStandardDuration animations: ^{
-            emptyBackground.alpha = 1.0f;
-          }];
-        }
-      }
-      [self reloadTable];
-    }
-  ];
+  [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters:params
+    delegate:self];
 }
 
 - (void) foundLocations: (NSArray *) locations
@@ -2081,7 +2119,7 @@ didUpdateLocations:(NSArray *)locations
 
   if ([self mapFilterParameters] != nil) {
     if (![previousMapFilterParameters isEqual:[self mapFilterParameters]]) {
-      [self.mapView removeAnnotations:self.mapView.annotations];
+      [mapView removeAnnotations:mapView.annotations];
       previousMapFilterParameters = 
         [NSDictionary dictionaryWithDictionary:[self mapFilterParameters]];
     }
@@ -2091,20 +2129,8 @@ didUpdateLocations:(NSArray *)locations
   if (!isFetchingResidencesForMap) {
     isFetchingResidencesForMap = YES;
     [[OMBResidenceMapStore sharedStore] fetchResidencesWithParameters:params
-      delegate: self completion: ^(NSError *error) {
-        isFetchingResidencesForMap = NO;
-        [[NSOperationQueue new] addOperationWithBlock: ^{
-          double zoomScale = self.mapView.bounds.size.width /
-            self.mapView.visibleMapRect.size.width;
-          NSArray *annotations =
-            [self.coordinateQuadTree clusteredAnnotationsWithinMapRect:
-              mapView.visibleMapRect withZoomScale: zoomScale];
-
-          [self updateMapViewAnnotationsWithAnnotations: annotations];
-        }];
-      }];
+      delegate:self];
   }
-
   [self deselectAnnotations];
   [self hidePropertyInfoView];
   [self hideResidentListAnnotation];
@@ -2115,7 +2141,6 @@ didUpdateLocations:(NSArray *)locations
       [self resetListViewResidences];
     }
   }
-
   previousZoomLevel = currentZoomLevel;
 }
 
@@ -2203,24 +2228,6 @@ viewForAnnotation:(id <MKAnnotation>)annotation
   }
   
   return annotationView;
-}
-
-#pragma mark - Protocol OMBConnection
-
-- (void)JSONDictionary:(NSDictionary *)dictionary
-{
-  // List view
-  if ([self isOnList]) {
-    [[OMBResidenceListStore sharedStore] readFromDictionary:dictionary];
-  }
-  // Map
-  else {
-    if (previousZoomLevel >= MINIMUM_ZOOM_LEVEL) {
-      [[OMBResidenceMapStore sharedStore] readFromDictionary:dictionary];
-      [self.coordinateQuadTree buildTreeWithResidences:
-        [[OMBResidenceMapStore sharedStore] residences]];
-    }
-  }
 }
 
 @end

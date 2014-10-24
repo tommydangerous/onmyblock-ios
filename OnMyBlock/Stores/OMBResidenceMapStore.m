@@ -62,14 +62,22 @@ const NSUInteger MAX_ANNOTATIONS = 500;
   return [NSArray arrayWithArray: annotations];
 }
 
-- (void) fetchResidencesWithParameters: (NSDictionary *) parameters
-delegate: (id) delegate completion: (void (^) (NSError *error)) block
+- (void)fetchResidencesWithParameters:(NSDictionary *)dictionary
+delegate:(id<OMBResidenceMapStoreDelegate>)delegate
 {
-  OMBResidenceListConnection *conn =
-    [[OMBResidenceListConnection alloc] initWithParametersForMap: parameters];
-  conn.completionBlock = block;
-  conn.delegate        = delegate;
-  [conn start];
+  [[OMBSessionManager sharedManager] GET:@"places" parameters:dictionary
+    success:^(NSURLSessionDataTask *task, id responseObject) {
+      if ([delegate respondsToSelector:
+        @selector(fetchResidencesForMapSucceeded:)]) {
+        [delegate fetchResidencesForMapSucceeded:responseObject];
+      }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+      if ([delegate respondsToSelector:
+        @selector(fetchResidencesForMapFailed:)]) {
+        [delegate fetchResidencesForMapFailed:error];
+      }
+    }
+  ];
 }
 
 - (void) readFromDictionary: (NSDictionary *) dictionary

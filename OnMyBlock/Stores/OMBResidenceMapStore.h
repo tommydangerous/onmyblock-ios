@@ -10,6 +10,13 @@
 
 @class OMBResidence;
 
+@protocol OMBResidenceMapStoreDelegate <NSObject>
+
+- (void)fetchResidencesForMapFailed:(NSError *)error;
+- (void)fetchResidencesForMapSucceeded:(id)responseObject;
+
+@end
+
 @interface OMBResidenceMapStore : NSObject
 
 #pragma mark - Methods
@@ -21,8 +28,8 @@
 #pragma mark - Instance Methods
 
 - (NSArray *) annotations;
-- (void) fetchResidencesWithParameters: (NSDictionary *) parameters
-delegate: (id) delegate completion: (void (^) (NSError *error)) block;
+- (void)fetchResidencesWithParameters:(NSDictionary *)dictionary
+delegate:(id<OMBResidenceMapStoreDelegate>)delegate;
 - (void) readFromDictionary: (NSDictionary *) dictionary;
 - (NSArray *) residences;
 - (OMBResidence *) residenceForCoordinate: (CLLocationCoordinate2D) coordinate;
