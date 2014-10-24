@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <Mixpanel/Mixpanel.h>
 
-#import "Flurry.h"
 #import "GAI.h"
 #import "GAIDictionaryBuilder.h"
 #import "GAITrackedViewController.h"

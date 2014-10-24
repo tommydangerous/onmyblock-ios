@@ -390,7 +390,6 @@
 		ABBB18DA1824432D00211499 /* OMBImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBB18D91824432D00211499 /* OMBImageScrollView.m */; };
 		ABBB18DD182453BF00211499 /* OMBAnnotationCity.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBB18DC182453BF00211499 /* OMBAnnotationCity.m */; };
 		ABBB18E9182458E200211499 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ABBB18E8182458E200211499 /* libz.dylib */; };
-		ABBC494F19070F2B00BF9F7D /* libFlurry_4.4.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABBC494E19070F2B00BF9F7D /* libFlurry_4.4.0.a */; };
 		ABBC495219070F4300BF9F7D /* OMBSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBC495119070F4300BF9F7D /* OMBSwitch.m */; };
 		ABC48E7A1812397300F01D8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABC48E791812397300F01D8D /* QuartzCore.framework */; };
 		ABC48E7D18125AF000F01D8D /* OMBPropertyInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC48E7C18125AF000F01D8D /* OMBPropertyInfoView.m */; };
@@ -1292,8 +1291,6 @@
 		ABBB18DB182453BF00211499 /* OMBAnnotationCity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAnnotationCity.h; sourceTree = "<group>"; };
 		ABBB18DC182453BF00211499 /* OMBAnnotationCity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAnnotationCity.m; sourceTree = "<group>"; };
 		ABBB18E8182458E200211499 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		ABBC494D19070F2B00BF9F7D /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		ABBC494E19070F2B00BF9F7D /* libFlurry_4.4.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.4.0.a; sourceTree = "<group>"; };
 		ABBC495019070F4300BF9F7D /* OMBSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBSwitch.h; sourceTree = "<group>"; };
 		ABBC495119070F4300BF9F7D /* OMBSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBSwitch.m; sourceTree = "<group>"; };
 		ABC48E791812397300F01D8D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -1599,7 +1596,6 @@
 				6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */,
 				AB01ED6D185966B500333390 /* AVFoundation.framework in Frameworks */,
 				ABB022D3182490D700F98544 /* CoreData.framework in Frameworks */,
-				ABBC494F19070F2B00BF9F7D /* libFlurry_4.4.0.a in Frameworks */,
 				AB802EA018109E5200E04D11 /* CoreGraphics.framework in Frameworks */,
 				AB0269B9182292F500E72F53 /* CoreImage.framework in Frameworks */,
 				AB0E984518ED32630086AF3D /* Parse.framework in Frameworks */,
@@ -1980,7 +1976,6 @@
 				ABED5FE91896FAED00AD630C /* DKLiveBlur */,
 				ABED5FD51896E8CD00AD630C /* DRNRealTimeBlurView */,
 				ABBA58811870C59700E9BF4E /* ELCImagePicker */,
-				ABBC494C19070F2B00BF9F7D /* Flurry */,
 				AB802E9C18109E5200E04D11 /* Frameworks */,
 				ABB9119818998CA80046611F /* IOSLinkedInAPI */,
 				AB0269D31822A12600E72F53 /* iOS-Blur */,
@@ -3089,15 +3084,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		ABBC494C19070F2B00BF9F7D /* Flurry */ = {
-			isa = PBXGroup;
-			children = (
-				ABBC494D19070F2B00BF9F7D /* Flurry.h */,
-				ABBC494E19070F2B00BF9F7D /* libFlurry_4.4.0.a */,
-			);
-			path = Flurry;
-			sourceTree = "<group>";
-		};
 		ABD8EF4D182006EE00C28686 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -4127,7 +4113,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Flurry",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
 				ONLY_ACTIVE_ARCH = NO;
@@ -4164,7 +4149,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Flurry",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";

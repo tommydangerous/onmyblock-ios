@@ -27,15 +27,16 @@ reuseIdentifier: (NSString *) reuseIdentifier
     return nil;
 
   _residencePartialView = [[OMBResidencePartialView alloc] init];
-  self.selectionStyle = UITableViewCellSelectionStyleNone;
-  [self.contentView addSubview: _residencePartialView];
+  self.selectionStyle   = UITableViewCellSelectionStyleNone;
+  [self.contentView addSubview:_residencePartialView];
 
-  UIView *borderView = [UIView new];
-  CGRect borderFrame = _residencePartialView.frame;
-  borderFrame.origin.y = borderFrame.size.height - 2.f;
-  borderFrame.size.height = 2.f;
-  borderView.backgroundColor = [UIColor grayDarkAlpha:0.4];
-  borderView.frame = borderFrame;
+  CGFloat borderHeight       = 1;
+  CGRect borderFrame         = _residencePartialView.frame;
+  UIView *borderView         = [[UIView alloc] init];
+  borderFrame.origin.y       = borderFrame.size.height - borderHeight;
+  borderFrame.size.height    = borderHeight;
+  borderView.backgroundColor = [UIColor grayDark];
+  borderView.frame           = borderFrame;
   [self.contentView addSubview:borderView];
   
   return self;

@@ -24,6 +24,7 @@
 #pragma mark - Instance Methods
 
 - (void)addCallButton;
+- (void)addLogoImage;
 - (void)disableTintView;
 - (void)setBackgroundImage:(NSString *)nameImage withBlur:(BOOL)blur;
 

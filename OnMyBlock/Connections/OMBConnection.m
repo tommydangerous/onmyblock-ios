@@ -128,9 +128,11 @@ didFailWithError: (NSError *) error
   return [OMBUser currentUser].accessToken;
 }
 
-- (void) cancelConnection
+- (void)cancelConnection
 {
-  [internalConnection cancel];
+  if (internalConnection) {
+    [internalConnection cancel];
+  }
 }
 
 - (void) createInternalErrorWithDomain: (NSString *) domain

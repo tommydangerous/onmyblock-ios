@@ -1107,7 +1107,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       UITableViewCellStyleDefault reuseIdentifier: EmptyCellID];
 
   // Resident list
-  if(tableView == _listView){
+  if (tableView == _listView){
     if (indexPath.row == 0 && [self shouldShowHelpView]) {
       static NSString *NeedHelpID = @"NeedHelpID";
       OMBNeedHelpCell *cell = [tableView
@@ -1116,10 +1116,10 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
       if (!cell) {
         cell = [[OMBNeedHelpCell alloc] initWithStyle:
           UITableViewCellStyleDefault reuseIdentifier:NeedHelpID];
-        
-        cell.titleLabel.text = @"Need a place now?";
         cell.secondLabel.text = @"Contact us";
-        [cell setBackgroundImage:@"omb_icon_cell" withBlur:NO];
+        cell.titleLabel.text  = @"Need a place now?";
+        [cell setBackgroundImage:@"background_blue_texture" withBlur:NO];
+        [cell addLogoImage];
         [cell disableTintView];
       }
       return cell;
@@ -1239,7 +1239,7 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
   CGRect screen = [[UIScreen mainScreen] bounds];
   // Resident list
-  if(tableView == _listView){
+  if (tableView == _listView) {
     return screen.size.height * PropertyInfoViewImageHeightPercentage;
   }
   // Resident annotation

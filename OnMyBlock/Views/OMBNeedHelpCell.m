@@ -15,16 +15,16 @@
 @interface OMBNeedHelpCell()
 {
   UIButton *callButton;
+  UIImageView *logoImage;
 }
 @end
 
 @implementation OMBNeedHelpCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style
-    reuseIdentifier:(NSString *)reuseIdentifier
+reuseIdentifier:(NSString *)reuseIdentifier
 {
-  if(!(self = [super initWithStyle:style
-      reuseIdentifier:reuseIdentifier]))
+  if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
     return nil;
   
   self.backgroundColor = UIColor.blackColor;
@@ -36,12 +36,14 @@
   
   float padding = 20.f;
   float originY = (height - (40.f + 35.f)) * .5f;
+
+  self.contentView.frame = CGRectMake(0.0f,
+    0.0f, screen.size.width, height);
   
-  backgroundView = [OMBBlurView new];
+  backgroundView = [[OMBBlurView alloc] init];
   backgroundView.imageView.clipsToBounds = YES;
   backgroundView.contentMode = UIViewContentModeScaleToFill;
-  backgroundView.frame = CGRectMake(0.0f,
-    0.0f, screen.size.width, height);
+  backgroundView.frame = self.contentView.bounds;
   [self.contentView addSubview:backgroundView];
 
   tintView = [[UIView alloc] initWithFrame:backgroundView.bounds];
@@ -56,15 +58,15 @@
   _titleLabel.textColor = UIColor.whiteColor;
   [self.contentView addSubview:_titleLabel];
   
-  _secondLabel       = [UILabel new];
-  _secondLabel.font  = [UIFont mediumTextFont];
+  _secondLabel       = [[UILabel alloc] init];
+  _secondLabel.font  = [UIFont mediumLargeTextFontBold];
   _secondLabel.frame = CGRectMake(
     (screen.size.width - 130.f) * .5f,
       _titleLabel.frame.origin.y +
         _titleLabel.frame.size.height,
           130.f, 35.f);
   _secondLabel.textAlignment = NSTextAlignmentCenter;
-  _secondLabel.textColor = [UIColor textColor];
+  _secondLabel.textColor     = [UIColor grayVeryLight];
   [self.contentView addSubview:_secondLabel];
   
   UIView *borderView = [UIView new];
@@ -103,6 +105,22 @@
   [[NSRunLoop currentRunLoop] addTimer:[NSTimer timerWithTimeInterval:1.3
     target:self selector:@selector(animateCallButton) userInfo:nil repeats:YES] 
       forMode:NSRunLoopCommonModes];
+}
+
+- (void)addLogoImage
+{
+  if (logoImage == nil) {
+    CGFloat totalHeight = CGRectGetHeight(self.contentView.frame);
+    CGFloat totalWidth  = CGRectGetWidth(self.contentView.frame);
+    CGFloat width       = totalHeight * 0.5;
+    logoImage       = [[UIImageView alloc] init];
+    logoImage.alpha = 0.2;
+    logoImage.frame = CGRectMake(
+      (totalWidth - width) * 0.5, (totalHeight - width) * 0.5, width, width
+    );
+    logoImage.image = [UIImage imageNamed:@"logo_white"];
+    [self.contentView insertSubview:logoImage belowSubview:self.titleLabel];
+  }
 }
 
 - (void)disableTintView

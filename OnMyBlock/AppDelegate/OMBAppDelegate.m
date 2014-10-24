@@ -9,7 +9,6 @@
 #import <Mixpanel/Mixpanel.h>
 #import <NewRelicAgent/NewRelicAgent.h>
 #import <Parse/Parse.h>
-#import "Flurry.h"
 #import "GAI.h"
 #import "TestFlight.h"
 
