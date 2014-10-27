@@ -61,9 +61,10 @@ float const PropertyInfoViewImageHeightPercentage = 0.4;
 
 int kMaxRadiusInMiles = 100;
 
-const CGFloat DEFAULT_MILE_RADIUS        = 4.0f;
-const NSUInteger MINIMUM_SPINNER_COUNTER = 3;
-const NSUInteger MINIMUM_ZOOM_LEVEL      = 12;
+const CGFloat DEFAULT_MILE_RADIUS               = 4;
+const NSUInteger MAX_RESIDENCE_LIST_FETCH_TRIES = 10;
+const NSUInteger MINIMUM_SPINNER_COUNTER        = 3;
+const NSUInteger MINIMUM_ZOOM_LEVEL             = 12;
 
 static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
@@ -124,6 +125,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   UILabel *sortLabel;
   UILabel *sortSelectionLabel;
   AMBlurView *sortView;
+  NSUInteger residenceListStoreFetchTries;
   NSUInteger residenceListStoreCurrentCount;
   NSMutableArray *residentAnnotations;
   QVClusterAnnotation *recentResidence;
@@ -153,6 +155,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
   radiusIncrementInMiles = 0.25f;
   self.radiusInMiles     = 0;
   showHelpView           = YES;
+  [self resetResidenceListStoreFetchTries];
 
   // Location manager
   locationManager                 = [[CLLocationManager alloc] init];
@@ -235,7 +238,7 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
   timerCounter = MINIMUM_SPINNER_COUNTER;
 
-  [self resetMap];
+  [self determineShouldResetMap];
 
   // This is so that the spinner doesn't freeze and just stay there
   if (fetching) {
@@ -260,11 +263,6 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
 
 #pragma mark - Protocol OMBResidenceListStoreDelegate
 
-- (void)fetchResidencesForListFailed:(NSError *)error
-{
-  [self showAlertViewWithError:error];
-}
-
 - (void)fetchResidencesForListSucceeded:(id)responseObject
 {
   [[OMBResidenceListStore sharedStore] readFromDictionary:responseObject];
@@ -283,45 +281,38 @@ static NSString *CollectionCellIdentifier = @"CollectionCellIdentifier";
     [self downloadResidenceImagesForVisibleCells];
   }
 
-  if (self.radiusInMiles < kMaxRadiusInMiles) {
-    NSInteger newCount =
-      [[OMBResidenceListStore sharedStore].residences count];
-    // NSLog(@"NEW COUNT:     %i", newCount);
-
-    // If the count never changed
-    if (newCount == residenceListStoreCurrentCount) {
-      // Fetch again
-      [self fetchResidencesForList];
-    }
-    // If new residences were found and added
-    else {
+  if (residenceListStoreFetchTries == MAX_RESIDENCE_LIST_FETCH_TRIES) {
+    [self determineShouldShowEmptyOverlayView:[[self residencesForList] count]];
+    [self resetResidenceListStoreFetchTries];
+  }
+  else if (self.radiusInMiles < kMaxRadiusInMiles) {
+    NSUInteger count  = [[OMBResidenceListStore sharedStore].residences count];
+    BOOL countChanged = residenceListStoreCurrentCount != count;
+    residenceListStoreCurrentCount = count;
+    if (countChanged) {
       [self stopSpinning];
-      if ([[self residencesForList] count]) {
-        emptyBackground.alpha = 0.0f;
-        if ([[self residencesForList] count] < 2) {
-          [self fetchResidencesForList];
-        }
+      if ([[self residencesForList] count] < 2) {
+        [self fetchResidencesForList];
       }
+    }
+    else {
+      [self fetchResidencesForList]; 
+    }
+    if (count == 0) {
+      residenceListStoreFetchTries++;
+    }
+    else {
+      [self determineShouldShowEmptyOverlayView:count];
+      [self resetResidenceListStoreFetchTries];
     }
   }
   else {
-    // Stop fetching residences after 100 mile radius
     [self stopSpinning];
-    if ([[self residencesForList] count] == 0) {
-      [UIView animateWithDuration: OMBStandardDuration animations: ^{
-        emptyBackground.alpha = 1.0f;
-      }];
-    }
   }
   [self reloadTable];
 }
 
 #pragma mark - Protocol OMBResidenceMapStoreDelegate
-
-- (void)fetchResidencesForMapFailed:(NSError *)error
-{
-  [self showAlertViewWithError:error];
-}
 
 - (void)fetchResidencesForMapSucceeded:(id)responseObject
 {
@@ -832,7 +823,6 @@ withTitle: (NSString *) title;
 
   residenceListStoreCurrentCount =
     [[OMBResidenceListStore sharedStore].residences count];
-  // NSLog(@"CURRENT COUNT: %i", currentCount);
 
   [[OMBResidenceListStore sharedStore] fetchResidencesWithParameters:params
     delegate:self];
@@ -859,7 +849,7 @@ withTitle: (NSString *) title;
 
 - (void) goToCurrentLocation
 {
-  [self goToCurrentLocationAnimated: YES];
+  [self goToCurrentLocationAnimated:YES];
 }
 
 - (void) goToCurrentLocationAnimated: (BOOL) animated
@@ -1142,7 +1132,7 @@ withTitle: (NSString *) title;
 
 - (void) resetAndFetchResidencesForList
 {
-  self.mapView.centerCoordinate = centerCoordinate;
+  // self.mapView.centerCoordinate = centerCoordinate;
   [self resetListViewResidences];
   [self fetchResidencesForList];
 }
@@ -1183,12 +1173,12 @@ withTitle: (NSString *) title;
   }
 }
 
-- (void) resetListViewResidences
+- (void)resetListViewResidences
 {
-  centerCoordinate         = self.mapView.centerCoordinate;
+  // centerCoordinate         = self.mapView.centerCoordinate;
   currentResidencesForList = nil;
   pagination               = 0;
-  self.radiusInMiles       = 0.0f;
+  self.radiusInMiles       = 0;
   [[OMBResidenceListStore sharedStore] removeResidences];
   [self.listView reloadData];
 }
@@ -1362,7 +1352,6 @@ withMiles: (int) miles animated: (BOOL) animated
       }
     }];
   }
-  // NSLog(@"SHOW SORT BUTTONS");
 }
 
 - (void) showSortViewAnimated: (BOOL) animated
@@ -1405,10 +1394,6 @@ withMiles: (int) miles animated: (BOOL) animated
     CGFloat distanceRatio = arrowDistance / buttonDistance;
     CGFloat arrowDuration = slowestDuration - (0.1 * index);
     arrowDuration *= distanceRatio;
-    // NSLog(@"Arrow Distance: %f", arrowDistance);
-    // NSLog(@"Button Distance: %f", buttonDistance);
-    // NSLog(@"Distance Ratio: %f", distanceRatio);
-    // NSLog(@"Arrow Duration: %f", arrowDuration);
     [UIView animateWithDuration: arrowDuration animations: ^{
       sortArrow.frame = CGRectMake(sortArrow.frame.origin.x, originalY,
         sortArrow.frame.size.width, sortArrow.frame.size.height);
@@ -1429,7 +1414,6 @@ withMiles: (int) miles animated: (BOOL) animated
     for (UIButton *button2 in sortButtonArray) {
       CGFloat index2 = [sortButtonArray indexOfObject: button2];
       CGFloat duration = slowestDuration - (0.1 * index2);
-      // NSLog(@"%f : %f", index2, duration);
       [UIView animateWithDuration: duration animations: ^{
         button2.frame = CGRectMake(button2.frame.origin.x, 20.0f,
           button2.frame.size.width, button2.frame.size.height);
@@ -1446,7 +1430,6 @@ withMiles: (int) miles animated: (BOOL) animated
       }];
     }
   }];
-  // NSLog(@"SORT BUTTON SELECTED");
 }
 
 - (void)startSpinning
@@ -1470,19 +1453,17 @@ withMiles: (int) miles animated: (BOOL) animated
   [self switchViews: segmentedControl];
 }
 
-- (void) switchViews: (UISegmentedControl *) control
+- (void)switchViews:(UISegmentedControl *)control
 {
   switch (control.selectedSegmentIndex) {
     // Show map
     case 0: {
       if (self.listViewContainer.alpha) {
-        self.listViewContainer.alpha = 0.0f;
-        self.mapView.alpha           = 1.0f;
+        self.listViewContainer.alpha = 0;
+        self.mapView.alpha           = 1;
+        // Only fetch more residences on the map if there are no annotations
         if ([self.mapView.annotations count] == 0) {
-          [self mapView: _mapView regionDidChangeAnimated: NO];
-          // [UIView animateWithDuration: 0.5f animations: ^{
-          //   filterView.transform = CGAffineTransformIdentity;
-          // }];
+          self.mapView.centerCoordinate = centerCoordinate;
         }
       }
       break;
@@ -1490,13 +1471,9 @@ withMiles: (int) miles animated: (BOOL) animated
     // Show list
     case 1: {
       if (self.mapView.alpha) {
-        self.listViewContainer.alpha = 1.0f;
-        self.mapView.alpha           = 0.0f;
+        self.listViewContainer.alpha = 1;
+        self.mapView.alpha           = 0;
         [self fetchResidencesForList];
-        // [UIView animateWithDuration: 0.5f animations: ^{
-        //   filterView.transform = CGAffineTransformMakeTranslation(
-        //     0.0f, self.view.bounds.size.height - 20.0f - 64.0f);
-        // }];
       }
       break;
     }
@@ -1693,6 +1670,15 @@ withMapViewSizeInPixels: (CGSize) viewSizeInPixels
 
 #pragma mark - Private Methods
 
+- (void)determineShouldResetMap
+{
+  if (centerCoordinate.latitude == 0.0f && centerCoordinate.longitude == 0.0f) {
+    [self setDefaultCenterCoordinate];
+    [self setMapViewRegion:centerCoordinate withMiles:DEFAULT_MILE_RADIUS 
+      animated:YES];
+  }
+}
+
 - (void)determineShouldSearch
 {
   NSDictionary *dictionary = (NSDictionary *)
@@ -1756,24 +1742,16 @@ withMapViewSizeInPixels: (CGSize) viewSizeInPixels
 
 - (void)determineShouldShowEmptyOverlayView:(CGFloat)totalCount
 {
-  if (manageEmpty) {
-    if (totalCount == 0) {
-      NSString *title = @"";
-      if (isCurrentLocation) {
-        title = @"We're not live in your area.";
-        
-      }
-      else {
-        title = [NSString stringWithFormat:@"We're not live at %@", 
-          schoolName];
-      }
-      [emptyOverlayView setTitle:title];
-      emptyOverlayView.hidden = NO;
+  if (totalCount == 0) {
+    NSString *title = @"";
+    if (isCurrentLocation) {
+      title = @"We're not live in your area.";
     }
     else {
-      emptyOverlayView.hidden = YES;
+      title = [NSString stringWithFormat:@"We're not live at %@", schoolName];
     }
-    manageEmpty = NO;
+    [emptyOverlayView setTitle:title];
+    emptyOverlayView.hidden = NO;
   }
   else {
     emptyOverlayView.hidden = YES;
@@ -1782,18 +1760,14 @@ withMapViewSizeInPixels: (CGSize) viewSizeInPixels
 
 - (void)manageEmptyWithSchoolName:(NSString *)name
 {
-  manageEmpty       = YES;
+  // manageEmpty       = YES;
   isCurrentLocation = !name.length;
   schoolName        = name;
 }
 
-- (void)resetMap
+- (void)resetResidenceListStoreFetchTries
 {
-  if (centerCoordinate.latitude == 0.0f && centerCoordinate.longitude == 0.0f) {
-    [self setDefaultCenterCoordinate];
-    [self setMapViewRegion:centerCoordinate withMiles:DEFAULT_MILE_RADIUS 
-      animated:YES];
-  }
+  residenceListStoreFetchTries = 0;
 }
 
 #pragma mark - Setup
@@ -1856,7 +1830,7 @@ screenWidth:(CGFloat)screenWidth padding:(CGFloat)padding
 {
   emptyOverlayView        = [[OMBEmptyResultsOverlayView alloc] init];
   emptyOverlayView.hidden = YES;
-  [self.mapView addSubview:emptyOverlayView];
+  [self.view addSubview:emptyOverlayView];
 }
 
 - (void)configureListContainer:(CGFloat)screenHeight 

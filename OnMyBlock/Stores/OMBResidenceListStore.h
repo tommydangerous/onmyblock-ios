@@ -12,8 +12,11 @@
 
 @protocol OMBResidenceListStoreDelegate <NSObject>
 
-- (void)fetchResidencesForListFailed:(NSError *)error;
 - (void)fetchResidencesForListSucceeded:(id)responseObject;
+
+@optional
+
+- (void)fetchResidencesForListFailed:(NSError *)error;
 
 @end
 

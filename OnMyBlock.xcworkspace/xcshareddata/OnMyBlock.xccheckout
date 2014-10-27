@@ -6,26 +6,18 @@
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>1E63FB6E-4039-4EA5-86A1-B43E4469F45B</string>
-	<key>IDESourceControlProjectName</key>
-	<string>OnMyBlock</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>67620B5EFA902936DF04070AF595B76AB0333747</key>
-		<string>https://github.com/Alamofire/Alamofire.git</string>
 		<key>A20FD4CAD2A4B01C314139CE775B26B6365D2C9D</key>
-		<string>ssh://github.com/QuantumVenturess/onmyblock-ios.git</string>
+		<string>github.com:QuantumVenturess/onmyblock-ios.git</string>
 	</dict>
-	<key>IDESourceControlProjectPath</key>
-	<string>OnMyBlock.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>67620B5EFA902936DF04070AF595B76AB0333747</key>
-		<string>../Alamofire</string>
 		<key>A20FD4CAD2A4B01C314139CE775B26B6365D2C9D</key>
-		<string>..</string>
+		<string>onmyblock/</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/QuantumVenturess/onmyblock-ios.git</string>
+	<string>github.com:QuantumVenturess/onmyblock-ios.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
@@ -36,17 +28,9 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>67620B5EFA902936DF04070AF595B76AB0333747</string>
-			<key>IDESourceControlWCCName</key>
-			<string>Alamofire</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>A20FD4CAD2A4B01C314139CE775B26B6365D2C9D</string>
 			<key>IDESourceControlWCCName</key>
-			<string>OnMyBlock</string>
+			<string>onmyblock</string>
 		</dict>
 	</array>
 </dict>

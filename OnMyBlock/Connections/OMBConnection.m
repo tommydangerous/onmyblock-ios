@@ -29,7 +29,7 @@ NSString *const OnMyBlockAPI          = @"/api-v1";
   // NSString *const OnMyBlockAPIURL = @"http://192.168.1.107:3000/api-v1";
 #elif __ENVIRONMENT__ == 2
   // Staging server
-  NSString *const OnMyBlockAPIURL = @"http://ombrb.nodelist.com/api-v1";
+  NSString *const OnMyBlockAPIURL = @"https://staging.onmyblock.com/api-v1";
 #elif __ENVIRONMENT__ == 3
   // Production server
   NSString *const OnMyBlockAPIURL = @"https://onmyblock.com/api-v1";

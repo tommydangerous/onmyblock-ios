@@ -12,8 +12,11 @@
 
 @protocol OMBResidenceMapStoreDelegate <NSObject>
 
-- (void)fetchResidencesForMapFailed:(NSError *)error;
 - (void)fetchResidencesForMapSucceeded:(id)responseObject;
+
+@optional
+
+- (void)fetchResidencesForMapFailed:(NSError *)error;
 
 @end
 
