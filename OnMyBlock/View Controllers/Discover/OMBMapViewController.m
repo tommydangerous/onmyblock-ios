@@ -1585,7 +1585,7 @@ withMiles: (int) miles animated: (BOOL) animated
   }
 }
 
-- (void) zoomAtAnnotation: (id <MKAnnotation>) annotation
+- (void)zoomAtAnnotation:(id <MKAnnotation>)annotation
 {
   MKMapRect zoomRect = MKMapRectNull;
   if ([annotation isKindOfClass: [QVClusterAnnotation class]]) {
@@ -1601,11 +1601,11 @@ withMiles: (int) miles animated: (BOOL) animated
       else
         zoomRect = MKMapRectUnion(zoomRect, pointRect);
     }
-    [self.mapView setVisibleMapRect: zoomRect animated: YES];
+    [self.mapView setVisibleMapRect:zoomRect animated:YES];
   }
 }
 
-- (void) zoomClusterAtAnnotation: (OCAnnotation *) cluster
+- (void)zoomClusterAtAnnotation:(OCAnnotation *)cluster
 {
   MKMapRect zoomRect = MKMapRectNull;
   for (id <MKAnnotation> annotation in [cluster annotationsInCluster]) {
