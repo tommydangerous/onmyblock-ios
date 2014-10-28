@@ -29,6 +29,9 @@
 // Categories
 #import "NSString+PhoneNumber.h"
 
+// Swift
+#import "OnMyBlock-Swift.h"
+
 @interface OMBNeedHelpViewController() <HelpDelegate>
 {
 

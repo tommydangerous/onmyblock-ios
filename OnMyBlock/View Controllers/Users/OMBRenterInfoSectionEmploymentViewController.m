@@ -18,6 +18,9 @@
 #import "OMBRenterInfoAddEmploymentViewController.h"
 #import "UIFont+OnMyBlock.h"
 
+// Swift
+#import "OnMyBlock-Swift.h"
+
 @interface OMBRenterInfoSectionEmploymentViewController ()
 {
   UIButton *linkedInButton;

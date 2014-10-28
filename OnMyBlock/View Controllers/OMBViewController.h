@@ -21,9 +21,6 @@
 // Objects
 #import "OMBMixpanelTracker.h"
 
-// Swift
-#import "OnMyBlock-Swift.h"
-
 @class OMBMenuBarButtonItem;
 
 extern CGFloat const OMBCornerRadius;

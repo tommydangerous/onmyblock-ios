@@ -47,12 +47,16 @@
 #import "UIImage+Color.h"
 #import "UIImage+NegativeImage.h"
 #import "UIImage+Resize.h"
+
 // Stores
 #import "OMBAllResidenceStore.h"
 #import "OMBNeighborhoodStore.h"
 #import "OMBResidenceListStore.h"
 #import "OMBResidenceMapStore.h"
 #import "OMBSchoolStore.h"
+
+// Swift
+#import "OnMyBlock-Swift.h"
 
 #define CLCOORDINATE_EPSILON 0.005f
 #define CLCOORDINATES_EQUAL2(coord1, coord2) (fabs(coord1.latitude - coord2.latitude) < CLCOORDINATE_EPSILON && fabs(coord1.longitude - coord2.longitude) < CLCOORDINATE_EPSILON)
