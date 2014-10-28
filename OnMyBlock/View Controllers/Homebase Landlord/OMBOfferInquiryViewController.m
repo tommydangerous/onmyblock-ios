@@ -1517,35 +1517,35 @@ viewForHeaderInSection: (NSInteger) section
 
   [self appDelegate].currentOfferBeingPaidFor = offer;
 
-  VenmoTransaction *venmoTransaction = [[VenmoTransaction alloc] init];
-  venmoTransaction.type = VenmoTransactionTypePay;
-  venmoTransaction.amount = [NSDecimalNumber decimalNumberWithString:
-    [NSString stringWithFormat: @"%f", [offer remainingBalanceAmount]]];
-  venmoTransaction.note = [NSString stringWithFormat: @"From: %@, To: %@ - %@",
-    [[OMBUser currentUser] fullName], [[self residence].user fullName],
-      [[self residence].address capitalizedString]];
-  venmoTransaction.toUserHandle = @"OnMyBlock";
+  // VenmoTransaction *venmoTransaction = [[VenmoTransaction alloc] init];
+  // venmoTransaction.type = VenmoTransactionTypePay;
+  // venmoTransaction.amount = [NSDecimalNumber decimalNumberWithString:
+  //   [NSString stringWithFormat: @"%f", [offer remainingBalanceAmount]]];
+  // venmoTransaction.note = [NSString stringWithFormat: @"From: %@, To: %@ - %@",
+  //   [[OMBUser currentUser] fullName], [[self residence].user fullName],
+  //     [[self residence].address capitalizedString]];
+  // venmoTransaction.toUserHandle = @"OnMyBlock";
 
-  VenmoViewController *venmoViewController =
-    [[self appDelegate].venmoClient viewControllerWithTransaction:
-      venmoTransaction];
-  // Completion handler for when Venmo is presented in a web view
-  venmoViewController.completionHandler =
-    ^(VenmoViewController *viewController, BOOL canceled) {
-      if (canceled) {
-        didCancelVenmoAppFromWebView = YES;
-        [UIView animateWithDuration: OMBStandardDuration animations: ^{
-          alertBlur.alpha = 1.0f;
-        }];
-      }
-      [viewController dismissViewControllerAnimated: YES
-        completion: nil];
-    };
-  if (venmoViewController)
-    [self presentViewController: venmoViewController animated: YES
-      completion: ^{
+  // VenmoViewController *venmoViewController =
+  //   [[self appDelegate].venmoClient viewControllerWithTransaction:
+  //     venmoTransaction];
+  // // Completion handler for when Venmo is presented in a web view
+  // venmoViewController.completionHandler =
+  //   ^(VenmoViewController *viewController, BOOL canceled) {
+  //     if (canceled) {
+  //       didCancelVenmoAppFromWebView = YES;
+  //       [UIView animateWithDuration: OMBStandardDuration animations: ^{
+  //         alertBlur.alpha = 1.0f;
+  //       }];
+  //     }
+  //     [viewController dismissViewControllerAnimated: YES
+  //       completion: nil];
+  //   };
+  // if (venmoViewController)
+  //   [self presentViewController: venmoViewController animated: YES
+  //     completion: ^{
 
-      }];
+  //     }];
 }
 
 - (NSTimeInterval) moveInDate

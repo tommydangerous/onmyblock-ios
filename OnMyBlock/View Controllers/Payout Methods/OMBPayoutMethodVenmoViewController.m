@@ -179,21 +179,21 @@ navigationType: (UIWebViewNavigationType) navigationType
 
 - (void) connectButtonSelected1
 {
-  VenmoTransaction *venmoTransaction = [[VenmoTransaction alloc] init];
-  venmoTransaction.type   = VenmoTransactionTypePay;
-  venmoTransaction.amount = [NSDecimalNumber decimalNumberWithString: @"0.01"];
-  venmoTransaction.note   = @"OMB Test";
-  venmoTransaction.toUserHandle = @"tommy@onmyblock.com";
+  // VenmoTransaction *venmoTransaction = [[VenmoTransaction alloc] init];
+  // venmoTransaction.type   = VenmoTransactionTypePay;
+  // venmoTransaction.amount = [NSDecimalNumber decimalNumberWithString: @"0.01"];
+  // venmoTransaction.note   = @"OMB Test";
+  // venmoTransaction.toUserHandle = @"tommy@onmyblock.com";
 
-  OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
-    [UIApplication sharedApplication].delegate;
+  // OMBAppDelegate *appDelegate = (OMBAppDelegate *) 
+  //   [UIApplication sharedApplication].delegate;
 
-  VenmoViewController *venmoViewController = 
-    [appDelegate.venmoClient viewControllerWithTransaction: venmoTransaction];
-  if (venmoViewController) {
-    [self presentViewController: venmoViewController animated: YES
-      completion: nil];
-  }
+  // VenmoViewController *venmoViewController = 
+  //   [appDelegate.venmoClient viewControllerWithTransaction: venmoTransaction];
+  // if (venmoViewController) {
+  //   [self presentViewController: venmoViewController animated: YES
+  //     completion: nil];
+  // }
 }
 
 - (void) connectButtonSelected

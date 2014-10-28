@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */; };
 		67E94814188DB97D007703FC /* OMBFilmstripImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E94813188DB97D007703FC /* OMBFilmstripImageCell.m */; };
 		67E9481E188DF726007703FC /* OMBMapFilterDateAvailableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E9481D188DF726007703FC /* OMBMapFilterDateAvailableCell.m */; };
 		9D8BE924EBADCF5709932759 /* OMBGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D8BE205CC89B1ABB0264208 /* OMBGroup.m */; };
@@ -357,7 +356,6 @@
 		ABAF2281185249FC0041BF60 /* OMBRenterApplicationPetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABAF2280185249FC0041BF60 /* OMBRenterApplicationPetCell.m */; };
 		ABAF2288185264BB0041BF60 /* OMBRenterApplicationUpdateConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABAF2287185264BB0041BF60 /* OMBRenterApplicationUpdateConnection.m */; };
 		ABAF229118526DF30041BF60 /* OMBPreviousRental.m in Sources */ = {isa = PBXBuildFile; fileRef = ABAF229018526DF30041BF60 /* OMBPreviousRental.m */; };
-		ABB022C318248D6E00F98544 /* NewRelicAgent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB022C218248D6E00F98544 /* NewRelicAgent.framework */; };
 		ABB022C518248D9100F98544 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB022C418248D9100F98544 /* CoreTelephony.framework */; };
 		ABB022C718248D9800F98544 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB022C618248D9800F98544 /* SystemConfiguration.framework */; };
 		ABB022D3182490D700F98544 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB022D2182490D700F98544 /* CoreData.framework */; };
@@ -1218,7 +1216,6 @@
 		ABA5CB5418EE907B00D80A90 /* OMBViewController+PayPalPayment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OMBViewController+PayPalPayment.m"; sourceTree = "<group>"; };
 		ABABEBF318625DFA008B6768 /* OMBAuthenticationVenmoConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBAuthenticationVenmoConnection.h; sourceTree = "<group>"; };
 		ABABEBF418625DFA008B6768 /* OMBAuthenticationVenmoConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBAuthenticationVenmoConnection.m; sourceTree = "<group>"; };
-		ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VenmoAppSwitch.framework; sourceTree = "<group>"; };
 		ABABEC331863C239008B6768 /* ILTranslucentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILTranslucentView.h; sourceTree = "<group>"; };
 		ABABEC341863C239008B6768 /* ILTranslucentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILTranslucentView.m; sourceTree = "<group>"; };
 		ABABEC511864E443008B6768 /* OMBMapFilterNeighborhoodCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMapFilterNeighborhoodCell.h; sourceTree = "<group>"; };
@@ -1237,7 +1234,6 @@
 		ABAF2287185264BB0041BF60 /* OMBRenterApplicationUpdateConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBRenterApplicationUpdateConnection.m; sourceTree = "<group>"; };
 		ABAF228F18526DF30041BF60 /* OMBPreviousRental.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBPreviousRental.h; sourceTree = "<group>"; };
 		ABAF229018526DF30041BF60 /* OMBPreviousRental.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBPreviousRental.m; sourceTree = "<group>"; };
-		ABB022C218248D6E00F98544 /* NewRelicAgent.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NewRelicAgent.framework; sourceTree = "<group>"; };
 		ABB022C418248D9100F98544 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		ABB022C618248D9800F98544 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		ABB022D2182490D700F98544 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -1595,7 +1591,6 @@
 				AB0E984918ED330A0086AF3D /* MobileCoreServices.framework in Frameworks */,
 				AB0E984718ED32D00086AF3D /* AudioToolbox.framework in Frameworks */,
 				AB01ED71185966C800333390 /* MessageUI.framework in Frameworks */,
-				6758E2E3187B9680004031D7 /* VenmoAppSwitch.framework in Frameworks */,
 				AB01ED6D185966B500333390 /* AVFoundation.framework in Frameworks */,
 				ABB022D3182490D700F98544 /* CoreData.framework in Frameworks */,
 				AB802EA018109E5200E04D11 /* CoreGraphics.framework in Frameworks */,
@@ -1605,7 +1600,6 @@
 				ABB022C518248D9100F98544 /* CoreTelephony.framework in Frameworks */,
 				AB01ED6F185966BD00333390 /* CFNetwork.framework in Frameworks */,
 				AB802E9E18109E5200E04D11 /* Foundation.framework in Frameworks */,
-				ABB022C318248D6E00F98544 /* NewRelicAgent.framework in Frameworks */,
 				ABB3C58718117C1C00DD91C9 /* MapKit.framework in Frameworks */,
 				AB8A9DDF195CA0B7002D6BF2 /* libTestFlight.a in Frameworks */,
 				AB01ED6B185966AC00333390 /* libxml2.dylib in Frameworks */,
@@ -2276,13 +2270,11 @@
 				ABB3C58618117C1C00DD91C9 /* MapKit.framework */,
 				AB01ED70185966C800333390 /* MessageUI.framework */,
 				AB0E984818ED330A0086AF3D /* MobileCoreServices.framework */,
-				ABB022C218248D6E00F98544 /* NewRelicAgent.framework */,
 				AB0E984418ED32620086AF3D /* Parse.framework */,
 				ABC48E791812397300F01D8D /* QuartzCore.framework */,
 				AB0E984A18ED332C0086AF3D /* Security.framework */,
 				ABB022C618248D9800F98544 /* SystemConfiguration.framework */,
 				AB802EA118109E5200E04D11 /* UIKit.framework */,
-				ABABEC311862DED5008B6768 /* VenmoAppSwitch.framework */,
 				AB802EB618109E5200E04D11 /* XCTest.framework */,
 				13DE5B8C062A4BEBBE2A2D69 /* libPods.a */,
 			);
@@ -3354,6 +3346,7 @@
 				AB802E9718109E5200E04D11 /* Frameworks */,
 				CA538827C0154B7F9F50E6CD /* Copy Pods Resources */,
 				ABEB2C0919DC7852009F70F0 /* Copy Frameworks */,
+				AB2A22F41A000CC9009522AA /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -3478,6 +3471,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		AB2A22F41A000CC9009522AA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SCRIPT=`/usr/bin/find \"${SRCROOT}\" -name newrelic_postbuild.sh | head -n 1`\n/bin/bash \"${SCRIPT}\" \"AA232e12d9b2fba4fa3e73a8f3e6b102a75fc517a2\"";
+		};
 		C1FB152133784A0B812335E9 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4127,14 +4133,14 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8f24e704-12f3-4b69-902b-532ab8a9a44f";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "OnMyBlock/OnMyBlock-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -4163,12 +4169,13 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8f24e704-12f3-4b69-902b-532ab8a9a44f";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "OnMyBlock/OnMyBlock-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

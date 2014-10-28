@@ -6,78 +6,73 @@
 	<dict>
 		<key>Pods-AFNetworking.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>4</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>Pods-GoogleAnalytics-iOS-SDK.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>5</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>Pods-Mixpanel.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>6</integer>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-NewRelicAgent.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>Pods-PayPal-iOS-SDK.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>7</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>Pods-SDWebImage.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>8</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>3</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>036D3619CD5349BF853EB332</key>
+		<key>083E5F5171691F0E848FB3F0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>0441E250748187F475DA1DE0</key>
+		<key>1999A91F106EFB93FE2F6A28</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>06B9A901AA595B67B7C99C8F</key>
+		<key>2A58971DEA85E88AFD34033A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>07BF93733E1C381E2CE4C163</key>
+		<key>746D4DFA457B98238D31F8B2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>27E899B5C3818FCA90D0C53E</key>
+		<key>935AEEFD3269D4C378822345</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6BA421367D724BA5A258FAB8</key>
+		<key>9E602927931F6FF71403893E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>95DB4F629460732B3419A028</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D2AAAE18FF6AC2DE1969A3BA</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F1FE9F415FA94E22BCEAB2A7</key>
+		<key>D85C058EC3ADD157F616A523</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -348,7 +348,9 @@ forModelName: (NSString *) modelName
       [model readFromDictionary: dict];
     }
     [self addModel: model];
-    [newSet addObject: [NSNumber numberWithInt: [model uid]]];
+    OMBObject *modelObject = (OMBObject *) model;
+    int modelUID = (int) modelObject.uid;
+    [newSet addObject: [NSNumber numberWithInt:modelUID]];
   }
   // Remove objects no longer suppose to be there
   NSArray *values;

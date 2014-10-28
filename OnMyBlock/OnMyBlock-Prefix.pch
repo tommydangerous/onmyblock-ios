@@ -15,6 +15,7 @@
     #import <Foundation/Foundation.h>
     #import <MapKit/MapKit.h>
     #import <MessageUI/MessageUI.h>
+    #import <NewRelicAgent/NewRelic.h>
 #endif
 
 // Production  = 3

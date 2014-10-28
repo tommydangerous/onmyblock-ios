@@ -20,8 +20,9 @@ PODS:
   - AFNetworking/UIKit (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - GoogleAnalytics-iOS-SDK (3.0.9)
+  - GoogleAnalytics-iOS-SDK (3.0.3c)
   - Mixpanel (2.5.3)
+  - NewRelicAgent (4.83)
   - PayPal-iOS-SDK (2.4.2)
   - SDWebImage (3.7.1):
     - SDWebImage/Core
@@ -29,16 +30,18 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking
-  - GoogleAnalytics-iOS-SDK
+  - GoogleAnalytics-iOS-SDK (= 3.0.3c)
   - Mixpanel
+  - NewRelicAgent
   - PayPal-iOS-SDK
   - SDWebImage (~> 3.6)
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
-  GoogleAnalytics-iOS-SDK: d9e198b1f955259a72886769be7377cdfcdb2250
+  GoogleAnalytics-iOS-SDK: 4377a29aa3e039030df30fd5c6075baeed3c916c
   Mixpanel: 708ec9a6ee6e741f7db107831e18b2fc2e7531f1
+  NewRelicAgent: 1adba1fb51631f598a2a130e7b1c3be1de715736
   PayPal-iOS-SDK: d23a5c671f293e07d1a52884943268c43b7ef99d
   SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
 
-COCOAPODS: 0.34.1
+COCOAPODS: 0.34.4
