@@ -41,7 +41,6 @@
     @"lease_months":  @"6",
     @"longitude":     @"-117.168",
     @"phone":         @"(858) 695-9400",
-    @"rent":          @"2505",
     @"sqft":          @"1466",
     @"state":         @"CA",
     @"updated_at":    @"2013-01-09 00:00:01 +0000",
@@ -109,9 +108,6 @@
   XCTAssertEqual(residence.phone, 
     [residenceDictionary objectForKey: @"phone"], 
       @"Residence should parse phone correctly");
-  XCTAssertEqual(residence.rent, 
-    [[residenceDictionary objectForKey: @"rent"] floatValue], 
-      @"Residence should parse rent correctly");
   XCTAssertEqual(residence.squareFeet, 
     [[residenceDictionary objectForKey: @"sqft"] intValue], 
       @"Residence should parse sqft correctly");

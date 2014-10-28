@@ -4182,12 +4182,16 @@
 		};
 		AB802ECA18109E5200E04D11 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 087253DC80A3480BCA2E2099 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OnMyBlock.app/OnMyBlock";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"Pods/NewRelicAgent/**",
+					"Pods/SDWebImage/**",
+					"Pods/Mixpanel/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OnMyBlock/OnMyBlock-Prefix.pch";
@@ -4198,24 +4202,30 @@
 				INFOPLIST_FILE = "OnMyBlockTests/OnMyBlockTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
+				USER_HEADER_SEARCH_PATHS = "Pod/BuildHeaders/**";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
 		};
 		AB802ECB18109E5200E04D11 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A0B602977704B272C60F1CC /* Pods.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OnMyBlock.app/OnMyBlock";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"Pods/NewRelicAgent/**",
+					"Pods/SDWebImage/**",
+					"Pods/Mixpanel/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OnMyBlock/OnMyBlock-Prefix.pch";
 				INFOPLIST_FILE = "OnMyBlockTests/OnMyBlockTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
+				USER_HEADER_SEARCH_PATHS = "Pod/BuildHeaders/**";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
