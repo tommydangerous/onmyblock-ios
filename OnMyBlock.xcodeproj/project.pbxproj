@@ -42,6 +42,10 @@
 		AB0280641843B2160081B30F /* OMBIntroAuctionView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0280631843B2160081B30F /* OMBIntroAuctionView.m */; };
 		AB02807F1843F2C30081B30F /* OMBBedroomView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB02807E1843F2C30081B30F /* OMBBedroomView.m */; };
 		AB034B151837D3DC00811074 /* OMBGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB034B141837D3DC00811074 /* OMBGradientView.m */; };
+		AB0355551A0060C500655773 /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDAD22D19DDFB43000A3E57 /* SearchManager.swift */; };
+		AB0355561A00615700655773 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEB2BFD19DC7444009F70F0 /* Object.swift */; };
+		AB0355571A00632400655773 /* SchoolSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDAD22F19DDFCAE000A3E57 /* SchoolSearchManager.swift */; };
+		AB0355591A00635D00655773 /* SchoolSearchManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0355581A00635D00655773 /* SchoolSearchManagerTests.swift */; };
 		AB0AD725199683920025D339 /* OMBGroup+Users.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0AD724199683920025D339 /* OMBGroup+Users.m */; };
 		AB0AD7291996DCFC0025D339 /* OMBMenuBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0AD7281996DCFC0025D339 /* OMBMenuBarButtonItem.m */; };
 		AB0BC54718A1D4570067BFF7 /* OMBAlertViewBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = AB0BC54618A1D4570067BFF7 /* OMBAlertViewBlur.m */; };
@@ -120,6 +124,7 @@
 		AB57EA21186BB6D7001682DB /* OMBMessageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AB57EA20186BB6D7001682DB /* OMBMessageCollectionViewCell.m */; };
 		AB57EA27186C788B001682DB /* OMBMessageInputToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = AB57EA26186C788B001682DB /* OMBMessageInputToolbar.m */; };
 		AB57EA2A186CA065001682DB /* OMBTermsOfServiceStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB57EA29186CA065001682DB /* OMBTermsOfServiceStore.m */; };
+		AB59996D1A00574900E49641 /* SearchManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB59996C1A00574900E49641 /* SearchManagerTests.swift */; };
 		AB5B49CE1832D64000ED96DC /* OMBIntroductionView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB5B49CD1832D64000ED96DC /* OMBIntroductionView.m */; };
 		AB5B49D51833C9A400ED96DC /* OMBResidenceGoogleStaticImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = AB5B49D41833C9A400ED96DC /* OMBResidenceGoogleStaticImageDownloader.m */; };
 		AB5DD32C18CE011500237AFC /* OMBAmenityStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB5DD32B18CE011500237AFC /* OMBAmenityStore.m */; };
@@ -433,7 +438,6 @@
 		ABD19B9F18D7698C007DF1E5 /* OMBRoommate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD19B9E18D7698C007DF1E5 /* OMBRoommate.m */; };
 		ABD6FC6C1914428C0070D7F0 /* OMBTextFieldToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD6FC6B1914428C0070D7F0 /* OMBTextFieldToolbar.m */; };
 		ABD6FC6F1915DE030070D7F0 /* OMBFeedbackSendEmailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD6FC6E1915DE030070D7F0 /* OMBFeedbackSendEmailConnection.m */; };
-		ABD8EF4F1820071600C28686 /* OMBResidenceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD8EF4E1820071600C28686 /* OMBResidenceTests.m */; };
 		ABDAD22E19DDFB43000A3E57 /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDAD22D19DDFB43000A3E57 /* SearchManager.swift */; };
 		ABDAD23019DDFCAE000A3E57 /* SchoolSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDAD22F19DDFCAE000A3E57 /* SchoolSearchManager.swift */; };
 		ABDD0BC518F05D8400F837B5 /* OMBModelDetailConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDD0BC418F05D8400F837B5 /* OMBModelDetailConnection.m */; };
@@ -630,6 +634,8 @@
 		AB02807E1843F2C30081B30F /* OMBBedroomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBBedroomView.m; sourceTree = "<group>"; };
 		AB034B131837D3DC00811074 /* OMBGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBGradientView.h; sourceTree = "<group>"; };
 		AB034B141837D3DC00811074 /* OMBGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBGradientView.m; sourceTree = "<group>"; };
+		AB0355531A005BC100655773 /* OnMyBlockTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnMyBlockTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		AB0355581A00635D00655773 /* SchoolSearchManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SchoolSearchManagerTests.swift; path = OnMyBlockTests/Models/SchoolSearchManagerTests.swift; sourceTree = SOURCE_ROOT; };
 		AB0AD723199683920025D339 /* OMBGroup+Users.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OMBGroup+Users.h"; sourceTree = "<group>"; };
 		AB0AD724199683920025D339 /* OMBGroup+Users.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OMBGroup+Users.m"; sourceTree = "<group>"; };
 		AB0AD7271996DCFC0025D339 /* OMBMenuBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBMenuBarButtonItem.h; sourceTree = "<group>"; };
@@ -779,6 +785,7 @@
 		AB57EA26186C788B001682DB /* OMBMessageInputToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBMessageInputToolbar.m; sourceTree = "<group>"; };
 		AB57EA28186CA065001682DB /* OMBTermsOfServiceStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBTermsOfServiceStore.h; sourceTree = "<group>"; };
 		AB57EA29186CA065001682DB /* OMBTermsOfServiceStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTermsOfServiceStore.m; sourceTree = "<group>"; };
+		AB59996C1A00574900E49641 /* SearchManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchManagerTests.swift; path = OnMyBlockTests/Models/SearchManagerTests.swift; sourceTree = SOURCE_ROOT; };
 		AB5B49CC1832D64000ED96DC /* OMBIntroductionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBIntroductionView.h; sourceTree = "<group>"; };
 		AB5B49CD1832D64000ED96DC /* OMBIntroductionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBIntroductionView.m; sourceTree = "<group>"; };
 		AB5B49D31833C9A400ED96DC /* OMBResidenceGoogleStaticImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OMBResidenceGoogleStaticImageDownloader.h; path = OnMyBlock/Downloaders/OMBResidenceGoogleStaticImageDownloader.h; sourceTree = SOURCE_ROOT; };
@@ -1371,7 +1378,6 @@
 		ABD6FC6B1914428C0070D7F0 /* OMBTextFieldToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBTextFieldToolbar.m; sourceTree = "<group>"; };
 		ABD6FC6D1915DE030070D7F0 /* OMBFeedbackSendEmailConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBFeedbackSendEmailConnection.h; sourceTree = "<group>"; };
 		ABD6FC6E1915DE030070D7F0 /* OMBFeedbackSendEmailConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBFeedbackSendEmailConnection.m; sourceTree = "<group>"; };
-		ABD8EF4E1820071600C28686 /* OMBResidenceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMBResidenceTests.m; sourceTree = "<group>"; };
 		ABDAD22D19DDFB43000A3E57 /* SearchManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
 		ABDAD22F19DDFCAE000A3E57 /* SchoolSearchManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchoolSearchManager.swift; sourceTree = "<group>"; };
 		ABDD0BC318F05D8400F837B5 /* OMBModelDetailConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMBModelDetailConnection.h; sourceTree = "<group>"; };
@@ -1826,6 +1832,16 @@
 				AB4ED2E61884807F009AFB01 /* OMBOpenHouseDeleteConnection.m */,
 			);
 			path = "Open Houses";
+			sourceTree = "<group>";
+		};
+		AB59996B1A00573F00E49641 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AB59996C1A00574900E49641 /* SearchManagerTests.swift */,
+				AB0355581A00635D00655773 /* SchoolSearchManagerTests.swift */,
+			);
+			name = Models;
+			path = ../../onmyblock/OnMyBlockTests/Models;
 			sourceTree = "<group>";
 		};
 		AB60D31D19FABDBA00911DF4 /* View Controllers */ = {
@@ -2304,10 +2320,11 @@
 		AB802EBC18109E5200E04D11 /* OnMyBlockTests */ = {
 			isa = PBXGroup;
 			children = (
-				ABD8EF4D182006EE00C28686 /* Models */,
+				AB59996B1A00573F00E49641 /* Models */,
 				ABDAA81A181562EB0027F04C /* Controllers */,
 				AB802EC218109E5200E04D11 /* OnMyBlockTests.m */,
 				AB802EBD18109E5200E04D11 /* Supporting Files */,
+				AB0355531A005BC100655773 /* OnMyBlockTests-Bridging-Header.h */,
 			);
 			path = OnMyBlockTests;
 			sourceTree = "<group>";
@@ -3106,14 +3123,6 @@
 				ABBA58911870C59700E9BF4E /* ELCAssetTablePicker.xib */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		ABD8EF4D182006EE00C28686 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				ABD8EF4E1820071600C28686 /* OMBResidenceTests.m */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		ABDAA81A181562EB0027F04C /* Controllers */ = {
@@ -3949,8 +3958,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ABD8EF4F1820071600C28686 /* OMBResidenceTests.m in Sources */,
+				AB0355551A0060C500655773 /* SearchManager.swift in Sources */,
+				AB0355571A00632400655773 /* SchoolSearchManager.swift in Sources */,
 				AB802EC318109E5200E04D11 /* OnMyBlockTests.m in Sources */,
+				AB0355591A00635D00655773 /* SchoolSearchManagerTests.swift in Sources */,
+				AB0355561A00615700655773 /* Object.swift in Sources */,
+				AB59996D1A00574900E49641 /* SearchManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4137,6 +4150,7 @@
 			baseConfigurationReference = 087253DC80A3480BCA2E2099 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OnMyBlock.app/OnMyBlock";
+				CLANG_ENABLE_MODULES = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4153,8 +4167,11 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "OnMyBlockTests/OnMyBlockTests-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "OnMyBlockTests/OnMyBlockTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				USER_HEADER_SEARCH_PATHS = "Pod/BuildHeaders/**";
 				WRAPPER_EXTENSION = xctest;
@@ -4166,6 +4183,7 @@
 			baseConfigurationReference = 1A0B602977704B272C60F1CC /* Pods.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OnMyBlock.app/OnMyBlock";
+				CLANG_ENABLE_MODULES = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4178,8 +4196,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OnMyBlock/OnMyBlock-Prefix.pch";
 				INFOPLIST_FILE = "OnMyBlockTests/OnMyBlockTests-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "OnMyBlockTests/OnMyBlockTests-Bridging-Header.h";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				USER_HEADER_SEARCH_PATHS = "Pod/BuildHeaders/**";
 				WRAPPER_EXTENSION = xctest;

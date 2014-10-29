@@ -21,8 +21,8 @@ class SchoolSearchManager: SearchManager {
     }
     return Static.instance
   }
+
   // Instance methods
-  
   func cancel() {
     operationManager.operationQueue.cancelAllOperations();
   }
