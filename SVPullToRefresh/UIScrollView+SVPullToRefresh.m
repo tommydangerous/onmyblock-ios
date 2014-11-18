@@ -8,6 +8,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import "NSString+Extensions.h"
 #import "UIScrollView+SVPullToRefresh.h"
 
 //fequal() and fequalzro() from http://stackoverflow.com/a/1614761/184130
@@ -280,15 +281,13 @@ static char UIScrollViewPullToRefreshView;
         NSString *subtitle = [self.subtitles objectAtIndex:self.state];
         self.subtitleLabel.text = subtitle.length > 0 ? subtitle : nil;
         
-        
-        CGSize titleSize = [self.titleLabel.text sizeWithFont:self.titleLabel.font
-                                            constrainedToSize:CGSizeMake(labelMaxWidth,self.titleLabel.font.lineHeight)
-                                                lineBreakMode:self.titleLabel.lineBreakMode];
-        
-        
-        CGSize subtitleSize = [self.subtitleLabel.text sizeWithFont:self.subtitleLabel.font
-                                                  constrainedToSize:CGSizeMake(labelMaxWidth,self.subtitleLabel.font.lineHeight)
-                                                      lineBreakMode:self.subtitleLabel.lineBreakMode];
+      CGSize titleSize = [self.titleLabel.text
+        boundingRectWithSize: CGSizeMake(labelMaxWidth,
+          self.titleLabel.font.lineHeight) font:self.titleLabel.font].size;
+      
+      CGSize subtitleSize = [self.subtitleLabel.text
+        boundingRectWithSize: CGSizeMake(labelMaxWidth,
+          self.subtitleLabel.font.lineHeight) font:self.subtitleLabel.font].size;
         
         CGFloat maxLabelWidth = MAX(titleSize.width,subtitleSize.width);
         
