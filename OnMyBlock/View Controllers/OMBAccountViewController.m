@@ -180,7 +180,8 @@ numberOfRowsInSection: (NSInteger) section
 {
   // The 1 is for the spacing
   if (section == 0) {
-    return 1 + 3;
+    // return 1 + 3;
+    return 1 + 1;
   }
   else if (section == 1) {
     return 1 + 4;
