@@ -42,10 +42,10 @@
   else {
     __weak typeof(objectImageView) weakObjectImageView = objectImageView;
     [object downloadCoverPhotoWithCompletion: ^(NSError *error) {
-      [weakObjectImageView.imageView setImageWithURL:
-       object.coverPhotoURL placeholderImage: nil
-                                             options: SDWebImageRetryFailed completed:
-       ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+      [weakObjectImageView.imageView sd_setImageWithURL:
+        object.coverPhotoURL placeholderImage: nil
+          options: SDWebImageRetryFailed completed:
+       ^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
          weakObjectImageView.image = img;
          [object.coverPhotoSizeDictionary setObject:
           weakObjectImageView.image forKey: sizeKey];

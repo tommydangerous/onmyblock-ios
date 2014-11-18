@@ -127,10 +127,10 @@
   else {
     __weak typeof(leftImageView) weakLeftImageView = leftImageView;
     [offer.residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
-      [weakLeftImageView.imageView setImageWithURL:
+      [weakLeftImageView.imageView sd_setImageWithURL:
         offer.residence.coverPhotoURL placeholderImage: nil
           options: SDWebImageRetryFailed completed:
-            ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+            ^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
               if (!error && img) {
                 leftImageView.image = img;
               }

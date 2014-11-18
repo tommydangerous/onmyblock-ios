@@ -101,10 +101,10 @@ reuseIdentifier: (NSString *) reuseIdentifier
     centeredImageView.image = [UIImage imageNamed:@"residence_placeholder_image.png"];
     __weak typeof(centeredImageView) weakCenteredImageView = centeredImageView;
     [residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
-      [weakCenteredImageView.imageView setImageWithURL: 
+      [weakCenteredImageView.imageView sd_setImageWithURL: 
         residence.coverPhotoURL placeholderImage: nil
           options: SDWebImageRetryFailed completed:
-            ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+            ^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
               if (img) {
                 weakCenteredImageView.image = img;
                 [residence.coverPhotoSizeDictionary setObject: 

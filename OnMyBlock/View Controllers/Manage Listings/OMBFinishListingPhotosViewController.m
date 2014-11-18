@@ -355,9 +355,9 @@ didFinishPickingMediaWithInfo: (NSDictionary *) info
     OMBEditablePhotoView *imageView = [[OMBEditablePhotoView alloc] init];
     if (residenceImage.imageURL) {
       __weak typeof(imageView) weakImageView = imageView;
-      [imageView.imageView setImageWithURL: residenceImage.imageURL 
+      [imageView.imageView sd_setImageWithURL: residenceImage.imageURL 
         placeholderImage: nil options: SDWebImageRetryFailed completed:
-          ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+          ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             if (image)
               weakImageView.image = image;
             else

@@ -389,9 +389,9 @@
 - (void) setResidenceImageViewImage
 {
   __weak typeof (residenceImageView) weakImageView = residenceImageView;
-  [residenceImageView.imageView setImageWithURL: residence.coverPhotoURL
+  [residenceImageView.imageView sd_setImageWithURL: residence.coverPhotoURL
     placeholderImage: nil completed:
-      ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+      ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         if (image)
           weakImageView.image = image;
       }

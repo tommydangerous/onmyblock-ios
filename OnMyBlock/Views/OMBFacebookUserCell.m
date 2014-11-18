@@ -73,11 +73,11 @@
           @"http://graph.facebook.com/%i/picture?type=large",
             idFbUser]];
         __weak typeof(userImageView) weakImageView = userImageView;
-        [userImageView.imageView setImageWithURL: imageURL
+        [userImageView.imageView sd_setImageWithURL: imageURL
           placeholderImage: [OMBUser placeholderImage] options:
             SDWebImageRetryFailed
               completed:
-               ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+               ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                  if(image)
                    weakImageView.image = image;
                  NSLog(@"%@ %@", imageURL, image);

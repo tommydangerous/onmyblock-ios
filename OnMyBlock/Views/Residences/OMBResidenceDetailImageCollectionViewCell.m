@@ -44,9 +44,9 @@
   if (residenceImage) {
     __weak typeof (self.centeredImageView) weakImageView = 
       self.centeredImageView;
-    [self.centeredImageView.imageView setImageWithURL: residenceImage.imageURL
+    [self.centeredImageView.imageView sd_setImageWithURL: residenceImage.imageURL
       placeholderImage: nil options: SDWebImageRetryFailed completed:
-        ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
           if (image && !error) {
             [weakImageView setImage: image];
           }

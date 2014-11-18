@@ -270,9 +270,9 @@ float const photoViewImageHeightPercentage = 0.32;
   }
   else if (residence.coverPhotoURL) {
     __weak typeof (headerImageView) weakImageView = headerImageView;
-    [headerImageView.imageView setImageWithURL: residence.coverPhotoURL
+    [headerImageView.imageView sd_setImageWithURL: residence.coverPhotoURL
       placeholderImage: nil options: SDWebImageRetryFailed completed:
-        ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
           if (image) {
             [weakImageView setImage: image];
           }

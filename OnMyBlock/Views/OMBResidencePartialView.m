@@ -204,9 +204,9 @@ cellForItemAtIndexPath: (NSIndexPath *) indexPath
 
     // Use cached image or download it
     __weak typeof(cell) weakCell = cell;
-    [cell.imageView setImageWithURL: image.imageURL placeholderImage: nil
+    [cell.imageView sd_setImageWithURL: image.imageURL placeholderImage: nil
       options: (SDWebImageRetryFailed | SDWebImageDownloaderProgressiveDownload)
-        completed: ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+        completed: ^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
           if (img && !error) {
             if (cacheType == SDImageCacheTypeNone ||
               cacheType == SDImageCacheTypeDisk) {

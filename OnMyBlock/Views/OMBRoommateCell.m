@@ -115,11 +115,11 @@
         @"http://graph.facebook.com/%i/picture?type=large",
           self.roommate.providerId]];
       __weak typeof(userImageView) weakImageView = userImageView;
-      [userImageView.imageView setImageWithURL: imageURL
+      [userImageView.imageView sd_setImageWithURL: imageURL
         placeholderImage: [OMBUser placeholderImage] options:
           (SDWebImageRetryFailed | SDWebImageDownloaderProgressiveDownload)
             completed:
-              ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+              ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 if (image)
                   weakImageView.image = image;
                 // NSLog(@"%@ %@", imageURL, image);
@@ -138,10 +138,10 @@
   emailLabel.text = @"Invited user";
   if (invitation.providerId && [invitation.providerId length]) {
     __weak typeof(userImageView) weakImageView = userImageView;
-    [userImageView.imageView setImageWithURL:[invitation providerImageURL]
+    [userImageView.imageView sd_setImageWithURL:[invitation providerImageURL]
       placeholderImage:[OMBUser placeholderImage]
       options:(SDWebImageRetryFailed | SDWebImageDownloaderProgressiveDownload)
-      completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+      completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         if (image) {
           weakImageView.image = image;
         }

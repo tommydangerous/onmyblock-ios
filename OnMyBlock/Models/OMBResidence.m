@@ -1050,9 +1050,9 @@ withURL: (NSURL *) url completion: (void (^)(void)) block
         block();
       return;
     }
-    [weakImageView.imageView setImageWithURL: url placeholderImage: nil
+    [weakImageView.imageView sd_setImageWithURL: url placeholderImage: nil
       options: SDWebImageRetryFailed completed:
-        ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
           if (image)
             weakImageView.image = image;
           if (block)

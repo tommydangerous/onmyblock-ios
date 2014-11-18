@@ -1630,10 +1630,11 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     // imageView.image = image;
 
     __weak typeof(scroll) weakScroll = scroll;
-    [scroll.imageView setImageWithURL: residenceImage.imageURL
+    [scroll.imageView sd_setImageWithURL: residenceImage.imageURL
       placeholderImage: nil options: SDWebImageRetryFailed
         completed:
-          ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+          ^(UIImage *image, NSError *error,
+              SDImageCacheType cacheType, NSURL *imageURL) {
             if (error) {
               weakScroll.imageView.image = [OMBResidence placeholderImage];
               NSLog(@"Error: %@, For: %@", error, residenceImage.imageURL);

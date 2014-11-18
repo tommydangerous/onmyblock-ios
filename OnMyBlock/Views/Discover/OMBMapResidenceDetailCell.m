@@ -102,10 +102,10 @@ reuseIdentifier: (NSString *) reuseIdentifier
   else {
     __weak typeof(coverPhoto) weakCoverPhoto = coverPhoto;
     [object downloadCoverPhotoWithCompletion: ^(NSError *error) {
-      [weakCoverPhoto.imageView setImageWithURL:
+      [weakCoverPhoto.imageView sd_setImageWithURL:
          object.coverPhotoURL placeholderImage: nil
            options: SDWebImageRetryFailed completed:
-           ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+           ^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             if (img && !error) {
               weakCoverPhoto.image = img;
               [object.coverPhotoSizeDictionary setObject:

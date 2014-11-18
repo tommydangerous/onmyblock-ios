@@ -119,11 +119,11 @@ reuseIdentifier: (NSString *)reuseIdentifier
     else {
       __weak typeof(userImageView) weakUserImageView = userImageView;
       [residence downloadCoverPhotoWithCompletion: ^(NSError *error) {
-        [weakUserImageView.imageView setImageWithURL: 
+        [weakUserImageView.imageView sd_setImageWithURL: 
           residence.coverPhotoURL 
             placeholderImage: [OMBResidence placeholderImage]
             options: SDWebImageRetryFailed completed:
-              ^(UIImage *img, NSError *error, SDImageCacheType cacheType) {
+              ^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 if (img) {
                   weakUserImageView.image = img;
                   [residence.coverPhotoSizeDictionary setObject: 
