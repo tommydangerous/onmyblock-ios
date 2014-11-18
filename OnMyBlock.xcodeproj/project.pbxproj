@@ -317,7 +317,6 @@
 		AB9B263A1811B7ED00E6DAC4 /* OCAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26331811B7ED00E6DAC4 /* OCAnnotation.m */; };
 		AB9B263B1811B7ED00E6DAC4 /* OCDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26351811B7ED00E6DAC4 /* OCDistance.m */; };
 		AB9B263C1811B7ED00E6DAC4 /* OCMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26381811B7ED00E6DAC4 /* OCMapView.m */; };
-		AB9B26461811CB1300E6DAC4 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B263F1811CB1300E6DAC4 /* NSDate+TimeAgo.m */; };
 		AB9B26471811CB1300E6DAC4 /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26411811CB1300E6DAC4 /* NSString+Extensions.m */; };
 		AB9B26481811CB1300E6DAC4 /* UIColor+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26431811CB1300E6DAC4 /* UIColor+Extensions.m */; };
 		AB9B26491811CB1300E6DAC4 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B26451811CB1300E6DAC4 /* UIImage+Resize.m */; };
@@ -1149,8 +1148,6 @@
 		AB9B26361811B7ED00E6DAC4 /* OCGrouping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCGrouping.h; sourceTree = "<group>"; };
 		AB9B26371811B7ED00E6DAC4 /* OCMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMapView.h; sourceTree = "<group>"; };
 		AB9B26381811B7ED00E6DAC4 /* OCMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCMapView.m; sourceTree = "<group>"; };
-		AB9B263E1811CB1300E6DAC4 /* NSDate+TimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+TimeAgo.h"; sourceTree = "<group>"; };
-		AB9B263F1811CB1300E6DAC4 /* NSDate+TimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+TimeAgo.m"; sourceTree = "<group>"; };
 		AB9B26401811CB1300E6DAC4 /* NSString+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extensions.h"; sourceTree = "<group>"; };
 		AB9B26411811CB1300E6DAC4 /* NSString+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extensions.m"; sourceTree = "<group>"; };
 		AB9B26421811CB1300E6DAC4 /* UIColor+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Extensions.h"; sourceTree = "<group>"; };
@@ -2719,8 +2716,6 @@
 			isa = PBXGroup;
 			children = (
 				9D8BEA631BA8DCFDEE32080C /* Models */,
-				AB9B263E1811CB1300E6DAC4 /* NSDate+TimeAgo.h */,
-				AB9B263F1811CB1300E6DAC4 /* NSDate+TimeAgo.m */,
 				ABE4FBE018902D6A0009D643 /* NSDateFormatter+JSON.h */,
 				ABE4FBE118902D6A0009D643 /* NSDateFormatter+JSON.m */,
 				AB18CF2018DE12680022ABF1 /* NSDictionary+DictionaryWithObject.h */,
@@ -3675,7 +3670,6 @@
 				AB95457D18491A87000513BE /* OMBUserImageDownloader.m in Sources */,
 				ABE706A3188899DA007A4E29 /* OMBResidenceListStore.m in Sources */,
 				AB60D40D19FABDBA00911DF4 /* OMBMyRenterApplicationViewController.m in Sources */,
-				AB9B26461811CB1300E6DAC4 /* NSDate+TimeAgo.m in Sources */,
 				AB60D44419FABDBA00911DF4 /* OMBIntroStillImagesViewController.m in Sources */,
 				AB72D6C21966131F007FBCA2 /* OMBMixpanelTracker.m in Sources */,
 				ABBA58941870C59700E9BF4E /* ELCAlbumPickerController.m in Sources */,
