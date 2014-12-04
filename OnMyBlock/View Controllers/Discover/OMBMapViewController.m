@@ -25,8 +25,8 @@
 #import "OMBMapFilterViewController.h"
 #import "OMBMapResidenceDetailCell.h"
 #import "OMBNavigationController.h"
-#import "OMBNeedHelpCell.h"
-#import "OMBNeedHelpViewController.h"
+//#import "OMBNeedHelpCell.h"
+//#import "OMBNeedHelpViewController.h"
 #import "OMBNeighborhood.h"
 #import "OMBPropertyInfoView.h"
 #import "OMBResidenceBookItConfirmDetailsViewController.h"
@@ -536,31 +536,31 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
 
   // Resident list
   if (tableView == _listView){
-    if (indexPath.row == 0 && [self shouldShowHelpView]) {
-      static NSString *NeedHelpID = @"NeedHelpID";
-      OMBNeedHelpCell *cell = [tableView
-        dequeueReusableCellWithIdentifier:NeedHelpID];
-      
-      if (!cell) {
-        cell = [[OMBNeedHelpCell alloc] initWithStyle:
-          UITableViewCellStyleDefault reuseIdentifier:NeedHelpID];
-        cell.secondLabel.text = @"Contact us";
-        cell.titleLabel.text  = @"Need a place now?";
-        [cell setBackgroundImage:@"background_blue_texture" withBlur:NO];
-        [cell addLogoImage];
-        [cell disableTintView];
-      }
-      return cell;
-    }
-    else{
-      NSInteger originalRow;
-      if ([self shouldShowHelpView]) {
-        originalRow = indexPath.row - 1;
-      }
-      else {
-        originalRow = indexPath.row;
-      }
-      
+//    if (indexPath.row == 0 && [self shouldShowHelpView]) {
+//      static NSString *NeedHelpID = @"NeedHelpID";
+//      OMBNeedHelpCell *cell = [tableView
+//        dequeueReusableCellWithIdentifier:NeedHelpID];
+//      
+//      if (!cell) {
+//        cell = [[OMBNeedHelpCell alloc] initWithStyle:
+//          UITableViewCellStyleDefault reuseIdentifier:NeedHelpID];
+//        cell.secondLabel.text = @"Contact us";
+//        cell.titleLabel.text  = @"Need a place now?";
+//        [cell setBackgroundImage:@"background_blue_texture" withBlur:NO];
+//        [cell addLogoImage];
+//        [cell disableTintView];
+//      }
+//      return cell;
+//    }
+//    else{
+//      NSInteger originalRow;
+//      if ([self shouldShowHelpView]) {
+//        originalRow = indexPath.row - 1;
+//      }
+//      else {
+//        originalRow = indexPath.row;
+//      }
+    
       static NSString *CellIdentifier = @"CellIdentifier";
       OMBResidenceCell *cell = [tableView dequeueReusableCellWithIdentifier:
         CellIdentifier];
@@ -569,7 +569,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
       }
       OMBResidence *residence = [[self residencesForList] objectAtIndex:
-        originalRow];
+        indexPath.row]; // originalRow
       [cell loadResidenceData: residence];
       __weak OMBMapViewController *weakSelf = self;
       cell.residencePartialView.selected =
@@ -579,7 +579,7 @@ cellForRowAtIndexPath: (NSIndexPath *) indexPath
           residence] animated: YES];
       };
       return cell;
-    }
+//    }
   }
   // Resident annotation
   else if(tableView == _residentListMap) {
@@ -607,12 +607,15 @@ numberOfRowsInSection: (NSInteger) section
   if(tableView == _listView){
     NSInteger rows;
     
-    if([currentResidencesForList count] < (pagination + 1) * 10)
+    if ([currentResidencesForList count] < (pagination + 1) * 10) {
       rows = [currentResidencesForList count];
-    else
+    }
+    else {
       rows = (pagination + 1) * 10;
+    }
     
-    return [self shouldShowHelpView] ? rows + 1 : rows;
+    return rows;
+//    return [self shouldShowHelpView] ? rows + 1 : rows;
   }
   // Resident annotation
   else if(tableView == _residentListMap){
@@ -653,11 +656,11 @@ didSelectRowAtIndexPath: (NSIndexPath *) indexPath
         residence] animated: YES];
   }
   // Need help row
-  else if (tableView == _listView &&
-          [[tableView cellForRowAtIndexPath:indexPath]
-            isKindOfClass:[OMBNeedHelpCell class]]) {
-    [self showHelp];
-  }
+//  else if (tableView == _listView &&
+//          [[tableView cellForRowAtIndexPath:indexPath]
+//            isKindOfClass:[OMBNeedHelpCell class]]) {
+//    [self showHelp];
+//  }
 
   [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
@@ -1217,11 +1220,11 @@ withMiles: (int) miles animated: (BOOL) animated
   return showHelpView && ![self hasSentHelpForm];
 }
                                
-- (void) showHelp
-{
-  [self.navigationController pushViewController:
-    [[OMBNeedHelpViewController alloc] init] animated:YES];
-}
+//- (void) showHelp
+//{
+//  [self.navigationController pushViewController:
+//    [[OMBNeedHelpViewController alloc] init] animated:YES];
+//}
 
 - (void) showSearch
 {
