@@ -32,8 +32,6 @@
 
 // Notification badges
 @property (nonatomic, strong) UILabel *inboxNotificationBadge;
-@property (nonatomic, strong) UILabel *renterHomebaseNotificationBadge;
-@property (nonatomic, strong) UILabel *sellerHomebaseNotificationBadge;
 
 @property (nonatomic) BOOL isForLandlord;
 
