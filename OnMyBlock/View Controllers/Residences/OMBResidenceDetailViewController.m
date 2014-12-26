@@ -347,13 +347,12 @@ float kResidenceDetailImagePercentage   = 0.5f;
   //   _countDownTimerLabel.frame.origin.y +
   //   _countDownTimerLabel.frame.size.height + 1.0f,
   //     (_bottomButtonView.frame.size.width - 1.0f) * 0.5, 44.0f);
-  _contactMeButton.frame = CGRectMake(0.0f, 0.0f,
-    (_bottomButtonView.frame.size.width - 1.0f) * 0.5,
-      bottomButtonViewHeight);
-  // _contactMeButton.frame = CGRectMake(0.0f, 0.0f,
-  //   _bottomButtonView.frame.size.width, 44.0f);
+//  _contactMeButton.frame = CGRectMake(0.0f, 0.0f,
+//    (_bottomButtonView.frame.size.width - 1.0f) * 0.5,
+//      bottomButtonViewHeight);
+   _contactMeButton.frame = CGRectMake(0.0f, 0.0f,
+     _bottomButtonView.frame.size.width, bottomButtonViewHeight);
   _contactMeButton.titleLabel.font = [UIFont mediumTextFontBold];
-  // _contactMeButton.titleLabel.font = [UIFont mediumTextFontBold];
   [_contactMeButton addTarget: self action: @selector(contactMeButtonSelected)
     forControlEvents: UIControlEventTouchUpInside];
   [_contactMeButton setBackgroundImage:
@@ -364,21 +363,6 @@ float kResidenceDetailImagePercentage   = 0.5f;
   [_contactMeButton setTitleColor: [UIColor whiteColor]
     forState: UIControlStateNormal];
   [_bottomButtonView addSubview: _contactMeButton];
-
-  // Book it button
-  _bookItButton = [[UIButton alloc] init];
-  _bookItButton.backgroundColor = _contactMeButton.backgroundColor;
-  _bookItButton.frame = CGRectMake(
-    _bottomButtonView.frame.size.width - _contactMeButton.frame.size.width,
-      _contactMeButton.frame.origin.y, _contactMeButton.frame.size.width,
-        _contactMeButton.frame.size.height);
-  _bookItButton.titleLabel.font = _contactMeButton.titleLabel.font;
-  [_bookItButton setBackgroundImage:
-    [UIImage imageWithColor: [UIColor blueHighlighted]]
-      forState: UIControlStateHighlighted];
-  [_bookItButton setTitleColor: [UIColor whiteColor]
-    forState: UIControlStateNormal];
-  [_bottomButtonView addSubview: _bookItButton];
 
   // The scroll view when users view images full screen
   imageScrollView = [UIScrollView new];
@@ -1205,45 +1189,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
   }
 }
 
-- (void)criteriaApplyNow
-{
-  BOOL hasSentApp   = NO;
-  BOOL showApplyNow = residence.isAuction;
-  
-  // If user has sent an application
-  if ([[OMBUser currentUser] loggedIn] && residence.sentApplication) {
-    hasSentApp   = YES;
-    showApplyNow = NO;
-  }
-  
-  if (hasSentApp) {
-    [_bookItButton setTitle: @"Applied" forState: UIControlStateNormal];
-    _bookItButton.enabled = NO;
-  } 
-  else {
-    SEL selector;
-    NSString *title;
-    
-    if (showApplyNow) {
-      title = @"Apply Now";
-      selector = @selector(showApplyNow);
-    } 
-    else {
-      title = @"Book It";
-      selector = @selector(showPlaceOffer);
-    }
-    [_bookItButton addTarget: self action: selector
-      forControlEvents: UIControlEventTouchUpInside];
-    [_bookItButton setTitle: title forState: UIControlStateNormal];
-    
-    // If residence is already rented
-    if (residence.rented) {
-      _bookItButton.layer.opacity = 0.6;
-      _bookItButton.enabled = NO;
-    }
-  }
-}
-
 - (int) currentPageOfImages
 {
   return (1 +
@@ -1495,9 +1440,6 @@ heightForRowAtIndexPath: (NSIndexPath *) indexPath
     if (!residence.user.image)
       [residence.user downloadImageFromImageURLWithCompletion: nil];
   }
-
-  // Criteria to show "Book It" or "Apply Now"
-  [self criteriaApplyNow];
 
   // If it's rented
   if(residence.rented){

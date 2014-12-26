@@ -45,7 +45,6 @@
 @property (nonatomic, strong) OMBResidenceImageSlideViewController
   *imageSlideViewController;
 
-@property (nonatomic, strong) UIButton *bookItButton;
 @property (nonatomic, strong) UIView *bottomButtonView;
 @property (nonatomic, strong) UIButton *contactMeButton;
 @property (nonatomic, strong) UILabel *countDownTimerLabel;
