@@ -4092,9 +4092,9 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8f24e704-12f3-4b69-902b-532ab8a9a44f";
+				PROVISIONING_PROFILE = "98347e42-ff0e-4704-965d-002b4c9bfebc";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "OnMyBlock/OnMyBlock-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -4130,7 +4130,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8f24e704-12f3-4b69-902b-532ab8a9a44f";
+				PROVISIONING_PROFILE = "98347e42-ff0e-4704-965d-002b4c9bfebc";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "OnMyBlock/OnMyBlock-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
