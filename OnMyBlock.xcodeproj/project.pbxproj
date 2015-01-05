@@ -4092,7 +4092,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8f24e704-12f3-4b69-902b-532ab8a9a44f";
 				SDKROOT = iphoneos;
@@ -4128,7 +4128,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8f24e704-12f3-4b69-902b-532ab8a9a44f";
 				SDKROOT = iphoneos;
